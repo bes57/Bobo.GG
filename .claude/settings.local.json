@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.vlr.gg)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/4977/zekken\" -o /tmp/zekken.html)",
+      "Bash(echo \"Exit: $?\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/6054/aspas\" -o /tmp/aspas.html)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/3082/chronicle\" -o /tmp/chronicle.html)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/search/?q=zekken&type=players\" -o /tmp/search_zekken.html)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/search/?q=aspas&type=players\" -o /tmp/search_aspas.html)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/search/?q=chronicle&type=players\" -o /tmp/search_chronicle.html)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/4004/zekken\" -o /tmp/zekken_real.html)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/8480/aspas\" -o /tmp/aspas_real.html)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/458/chronicle\" -o /tmp/chronicle_real.html)",
+      "WebSearch",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36 \\(KHTML, like Gecko\\) Chrome/124.0.0.0 Safari/537.36\" \"https://www.vlr.gg/player/matches/2569/n4rrate\")",
+      "Bash(python3 *)",
+      "Bash(python -c \"from TestVCTAPP import vct_bp; print\\('vct_bp:', vct_bp\\); print\\('routes:', [str\\(r\\) for r in vct_bp.deferred_functions[:3]]\\)\")",
+      "Bash(/tmp/vctenv/bin/pip install *)",
+      "Bash(/tmp/vctenv/bin/python3 *)",
+      "Bash(lsof *)",
+      "Bash(ps *)",
+      "Bash(.venv/bin/pip freeze *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)"
+    ]
+  }
+}

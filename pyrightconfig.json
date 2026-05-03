@@ -1,0 +1,4 @@
+{
+  "include": ["."],
+  "pythonPath": ".venv/bin/python3"
+}
