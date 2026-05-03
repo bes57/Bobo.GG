@@ -1,9 +1,11 @@
 import os
 from flask import Flask, render_template_string, send_from_directory
 from EventLeaderboards import vct_bp
+from AllTimeHighs import highs_bp
 
 app = Flask(__name__)
 app.register_blueprint(vct_bp, url_prefix="/vct")
+app.register_blueprint(highs_bp, url_prefix="/highs")
 
 HOME_HTML = """
 <!DOCTYPE html>
@@ -65,6 +67,11 @@ HOME_HTML = """
     <a class="nav-card" href="/vct/">
       <div class="nav-card-title">Event Leaderboards</div>
       <div class="nav-card-desc">Sift through leaderboards by events, highlighting indivdual performances and percentiles.</div>
+      <div class="nav-card-arrow">Explore &rarr;</div>
+    </a>
+    <a class="nav-card" href="/highs/">
+      <div class="nav-card-title">All-Time Highs (and Lows)</div>
+      <div class="nav-card-desc">The best and worst individual performances across all VCT franchised events.</div>
       <div class="nav-card-arrow">Explore &rarr;</div>
     </a>
   </div>

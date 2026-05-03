@@ -1,0 +1,3835 @@
+MatchID,MapNum,WinnerOrg,Score,MatchName
+167348,113040,NRG,13-11,Bracket Stage: Alpha - Round of 16
+167348,113041,NRG,13-9,Bracket Stage: Alpha - Round of 16
+167348,all,NRG,2-0,Bracket Stage: Alpha - Round of 16
+167349,113043,GIA,13-4,Bracket Stage: Alpha - Round of 16
+167349,113044,GIA,13-7,Bracket Stage: Alpha - Round of 16
+167349,all,GIA,2-0,Bracket Stage: Alpha - Round of 16
+167350,113046,LOUD,13-9,Bracket Stage: Alpha - Round of 16
+167350,113047,LOUD,14-12,Bracket Stage: Alpha - Round of 16
+167350,all,LOUD,2-0,Bracket Stage: Alpha - Round of 16
+167351,113049,KC,13-6,Bracket Stage: Alpha - Round of 16
+167351,113050,FPX,13-8,Bracket Stage: Alpha - Round of 16
+167351,113051,KC,13-6,Bracket Stage: Alpha - Round of 16
+167351,all,KC,2-1,Bracket Stage: Alpha - Round of 16
+167352,113052,KRX,13-3,Bracket Stage: Alpha - Round of 16
+167352,113053,BBL,13-11,Bracket Stage: Alpha - Round of 16
+167352,113054,KRX,13-7,Bracket Stage: Alpha - Round of 16
+167352,all,KRX,2-1,Bracket Stage: Alpha - Round of 16
+167353,113055,C9,13-8,Bracket Stage: Alpha - Round of 16
+167353,113056,C9,13-4,Bracket Stage: Alpha - Round of 16
+167353,all,C9,2-0,Bracket Stage: Alpha - Round of 16
+167354,113058,EG,13-8,Bracket Stage: Alpha - Round of 16
+167354,113059,EG,13-8,Bracket Stage: Alpha - Round of 16
+167354,all,EG,2-0,Bracket Stage: Alpha - Round of 16
+167355,113061,TLN,13-8,Bracket Stage: Alpha - Round of 16
+167355,113062,TLN,13-11,Bracket Stage: Alpha - Round of 16
+167355,all,TLN,2-0,Bracket Stage: Alpha - Round of 16
+167356,113064,GIA,14-12,Bracket Stage: Alpha - Quarterfinals
+167356,113065,NRG,13-1,Bracket Stage: Alpha - Quarterfinals
+167356,113066,NRG,13-7,Bracket Stage: Alpha - Quarterfinals
+167356,all,NRG,2-1,Bracket Stage: Alpha - Quarterfinals
+167357,113067,LOUD,13-10,Bracket Stage: Alpha - Quarterfinals
+167357,113068,LOUD,13-8,Bracket Stage: Alpha - Quarterfinals
+167357,all,LOUD,2-0,Bracket Stage: Alpha - Quarterfinals
+167358,113070,C9,13-3,Bracket Stage: Alpha - Quarterfinals
+167358,113071,KRX,13-7,Bracket Stage: Alpha - Quarterfinals
+167358,113072,KRX,13-2,Bracket Stage: Alpha - Quarterfinals
+167358,all,KRX,2-1,Bracket Stage: Alpha - Quarterfinals
+167359,113073,TLN,13-11,Bracket Stage: Alpha - Quarterfinals
+167359,113074,TLN,13-10,Bracket Stage: Alpha - Quarterfinals
+167359,all,TLN,2-0,Bracket Stage: Alpha - Quarterfinals
+167360,113076,LOUD,13-3,Bracket Stage: Alpha - Semifinals
+167360,113077,NRG,15-13,Bracket Stage: Alpha - Semifinals
+167360,113078,LOUD,18-16,Bracket Stage: Alpha - Semifinals
+167360,all,LOUD,2-1,Bracket Stage: Alpha - Semifinals
+167361,113079,TLN,13-10,Bracket Stage: Alpha - Semifinals
+167361,113080,KRX,13-6,Bracket Stage: Alpha - Semifinals
+167361,113081,KRX,13-10,Bracket Stage: Alpha - Semifinals
+167361,all,KRX,2-1,Bracket Stage: Alpha - Semifinals
+167362,113082,TS,13-8,Bracket Stage: Omega - Round of 16
+167362,113083,TS,13-7,Bracket Stage: Omega - Round of 16
+167362,all,TS,2-0,Bracket Stage: Omega - Round of 16
+167363,113085,NAVI,13-5,Bracket Stage: Omega - Round of 16
+167363,113086,NAVI,13-10,Bracket Stage: Omega - Round of 16
+167363,all,NAVI,2-0,Bracket Stage: Omega - Round of 16
+167364,113088,LEV,13-4,Bracket Stage: Omega - Round of 16
+167364,113089,LEV,13-11,Bracket Stage: Omega - Round of 16
+167364,all,LEV,2-0,Bracket Stage: Omega - Round of 16
+167365,113091,VIT,13-4,Bracket Stage: Omega - Round of 16
+167365,113092,GE,13-9,Bracket Stage: Omega - Round of 16
+167365,113093,VIT,13-6,Bracket Stage: Omega - Round of 16
+167365,all,VIT,2-1,Bracket Stage: Omega - Round of 16
+167366,113094,FUT,13-3,Bracket Stage: Omega - Round of 16
+167366,113095,FUT,13-11,Bracket Stage: Omega - Round of 16
+167366,all,FUT,2-0,Bracket Stage: Omega - Round of 16
+167367,113097,100T,13-10,Bracket Stage: Omega - Round of 16
+167367,113098,EDG,13-9,Bracket Stage: Omega - Round of 16
+167367,113099,100T,14-12,Bracket Stage: Omega - Round of 16
+167367,all,100T,2-1,Bracket Stage: Omega - Round of 16
+167368,113100,FNC,13-6,Bracket Stage: Omega - Round of 16
+167368,113101,FNC,13-7,Bracket Stage: Omega - Round of 16
+167368,all,FNC,2-0,Bracket Stage: Omega - Round of 16
+167369,113103,FUR,13-7,Bracket Stage: Omega - Round of 16
+167369,113104,FUR,13-5,Bracket Stage: Omega - Round of 16
+167369,all,FUR,2-0,Bracket Stage: Omega - Round of 16
+167370,113106,NAVI,13-8,Bracket Stage: Omega - Quarterfinals
+167370,113107,NAVI,13-4,Bracket Stage: Omega - Quarterfinals
+167370,all,NAVI,2-0,Bracket Stage: Omega - Quarterfinals
+167371,113109,LEV,16-14,Bracket Stage: Omega - Quarterfinals
+167371,113110,LEV,13-3,Bracket Stage: Omega - Quarterfinals
+167371,all,LEV,2-0,Bracket Stage: Omega - Quarterfinals
+167372,113112,FUT,13-9,Bracket Stage: Omega - Quarterfinals
+167372,113113,100T,13-11,Bracket Stage: Omega - Quarterfinals
+167372,113114,100T,13-8,Bracket Stage: Omega - Quarterfinals
+167372,all,100T,2-1,Bracket Stage: Omega - Quarterfinals
+167373,113115,FNC,18-16,Bracket Stage: Omega - Quarterfinals
+167373,113116,FNC,13-9,Bracket Stage: Omega - Quarterfinals
+167373,all,FNC,2-0,Bracket Stage: Omega - Quarterfinals
+167374,113118,NAVI,13-10,Bracket Stage: Omega - Semifinals
+167374,113119,NAVI,13-2,Bracket Stage: Omega - Semifinals
+167374,all,NAVI,2-0,Bracket Stage: Omega - Semifinals
+167375,113121,FNC,13-1,Bracket Stage: Omega - Semifinals
+167375,113122,FNC,13-10,Bracket Stage: Omega - Semifinals
+167375,all,FNC,2-0,Bracket Stage: Omega - Semifinals
+167391,113124,LOUD,13-5,Playoffs: Semifinals
+167391,113125,LOUD,13-8,Playoffs: Semifinals
+167391,113126,KRX,13-7,Playoffs: Semifinals
+167391,113127,KRX,13-7,Playoffs: Semifinals
+167391,113128,LOUD,13-8,Playoffs: Semifinals
+167391,all,LOUD,3-2,Playoffs: Semifinals
+167392,113129,FNC,13-11,Playoffs: Semifinals
+167392,113130,FNC,13-4,Playoffs: Semifinals
+167392,113131,FNC,13-11,Playoffs: Semifinals
+167392,all,FNC,3-0,Playoffs: Semifinals
+167393,113134,FNC,13-8,Playoffs: Grand Final
+167393,113135,FNC,13-7,Playoffs: Grand Final
+167393,113136,LOUD,13-9,Playoffs: Grand Final
+167393,113137,LOUD,13-8,Playoffs: Grand Final
+167393,113138,FNC,14-12,Playoffs: Grand Final
+167393,all,FNC,3-2,Playoffs: Grand Final
+173214,117161,FNC,13-3,Regular Season: Week 1
+173214,117162,FNC,13-11,Regular Season: Week 1
+173214,all,FNC,2-0,Regular Season: Week 1
+173215,117164,MKOI,13-7,Regular Season: Week 1
+173215,117165,MKOI,20-18,Regular Season: Week 1
+173215,all,MKOI,2-0,Regular Season: Week 1
+173216,117167,FUT,13-4,Regular Season: Week 1
+173216,117168,FUT,13-9,Regular Season: Week 1
+173216,all,FUT,2-0,Regular Season: Week 1
+173217,117170,VIT,13-6,Regular Season: Week 1
+173217,117171,TL,13-2,Regular Season: Week 1
+173217,117172,VIT,13-10,Regular Season: Week 1
+173217,all,VIT,2-1,Regular Season: Week 1
+173218,117173,GIA,17-15,Regular Season: Week 1
+173218,117174,NAVI,15-13,Regular Season: Week 1
+173218,117175,NAVI,13-7,Regular Season: Week 1
+173218,all,NAVI,2-1,Regular Season: Week 1
+173219,117176,KC,19-17,Regular Season: Week 1
+173219,117177,KC,13-11,Regular Season: Week 1
+173219,all,KC,2-0,Regular Season: Week 1
+173220,117179,FUT,13-10,Regular Season: Week 1
+173220,117180,TL,13-6,Regular Season: Week 1
+173220,117181,TL,13-6,Regular Season: Week 1
+173220,all,TL,2-1,Regular Season: Week 1
+173221,117182,VIT,13-9,Regular Season: Week 1
+173221,117183,VIT,15-13,Regular Season: Week 1
+173221,all,VIT,2-0,Regular Season: Week 1
+173222,117185,BBL,13-6,Regular Season: Week 1
+173222,117186,FNC,13-9,Regular Season: Week 1
+173222,117187,FNC,13-11,Regular Season: Week 1
+173222,all,FNC,2-1,Regular Season: Week 1
+173223,117188,TH,13-5,Regular Season: Week 1
+173223,117189,TH,13-2,Regular Season: Week 1
+173223,all,TH,2-0,Regular Season: Week 1
+180279,118198,FRTTT,13-10,Showmatch: Showmatch
+180279,all,FRTTT,1-0,Showmatch: Showmatch
+183774,118923,SEN,13-11,Regular Season: Week 1
+183774,118924,100T,14-12,Regular Season: Week 1
+183774,118925,SEN,14-12,Regular Season: Week 1
+183774,all,SEN,2-1,Regular Season: Week 1
+183775,118926,FUR,13-11,Regular Season: Week 1
+183775,118927,FUR,13-5,Regular Season: Week 1
+183775,all,FUR,2-0,Regular Season: Week 1
+183776,118929,LOUD,13-5,Regular Season: Week 1
+183776,118930,MIBR,13-11,Regular Season: Week 1
+183776,118931,LOUD,13-11,Regular Season: Week 1
+183776,all,LOUD,2-1,Regular Season: Week 1
+183777,118932,C9,13-11,Regular Season: Week 1
+183777,118933,C9,13-9,Regular Season: Week 1
+183777,all,C9,2-0,Regular Season: Week 1
+183778,118935,LEV,13-11,Regular Season: Week 1
+183778,118936,LEV,13-4,Regular Season: Week 1
+183778,all,LEV,2-0,Regular Season: Week 1
+183779,118938,C9,13-7,Regular Season: Week 2
+183779,118939,LOUD,13-8,Regular Season: Week 2
+183779,118940,LOUD,13-7,Regular Season: Week 2
+183779,all,LOUD,2-1,Regular Season: Week 2
+183780,118941,LEV,13-11,Regular Season: Week 2
+183780,118942,FUR,13-5,Regular Season: Week 2
+183780,118943,FUR,13-10,Regular Season: Week 2
+183780,all,FUR,2-1,Regular Season: Week 2
+183781,118944,NRG,13-10,Regular Season: Week 2
+183781,118945,NRG,13-2,Regular Season: Week 2
+183781,all,NRG,2-0,Regular Season: Week 2
+183782,118947,KRÜ,13-9,Regular Season: Week 2
+183782,118948,MIBR,13-11,Regular Season: Week 2
+183782,118949,MIBR,14-12,Regular Season: Week 2
+183782,all,MIBR,2-1,Regular Season: Week 2
+183783,118950,100T,13-9,Regular Season: Week 2
+183783,118951,100T,13-5,Regular Season: Week 2
+183783,all,100T,2-0,Regular Season: Week 2
+183785,118953,C9,13-7,Regular Season: Week 3
+183785,118954,C9,14-12,Regular Season: Week 3
+183785,all,C9,2-0,Regular Season: Week 3
+183786,118956,MIBR,13-10,Regular Season: Week 3
+183786,118957,NRG,16-14,Regular Season: Week 3
+183786,118958,MIBR,16-14,Regular Season: Week 3
+183786,all,MIBR,2-1,Regular Season: Week 3
+183787,118959,LEV,14-12,Regular Season: Week 3
+183787,118960,SEN,13-11,Regular Season: Week 3
+183787,118961,LEV,13-4,Regular Season: Week 3
+183787,all,LEV,2-1,Regular Season: Week 3
+183788,118962,EG,13-11,Regular Season: Week 3
+183788,118963,KRÜ,13-11,Regular Season: Week 3
+183788,118964,EG,13-7,Regular Season: Week 3
+183788,all,EG,2-1,Regular Season: Week 3
+183789,118965,LOUD,13-9,Regular Season: Week 3
+183789,118966,LOUD,13-4,Regular Season: Week 3
+183789,all,LOUD,2-0,Regular Season: Week 3
+183791,118968,SEN,13-6,Regular Season: Week 4
+183791,118969,LOUD,13-11,Regular Season: Week 4
+183791,118970,LOUD,13-8,Regular Season: Week 4
+183791,all,LOUD,2-1,Regular Season: Week 4
+183792,118971,LEV,13-4,Regular Season: Week 4
+183792,118972,LEV,13-3,Regular Season: Week 4
+183792,all,LEV,2-0,Regular Season: Week 4
+183793,118974,KRÜ,13-4,Regular Season: Week 4
+183793,118975,100T,13-11,Regular Season: Week 4
+183793,118976,100T,13-5,Regular Season: Week 4
+183793,all,100T,2-1,Regular Season: Week 4
+183794,118977,FUR,15-13,Regular Season: Week 4
+183794,118978,EG,13-7,Regular Season: Week 4
+183794,118979,FUR,13-10,Regular Season: Week 4
+183794,all,FUR,2-1,Regular Season: Week 4
+183795,118980,NRG,13-8,Regular Season: Week 4
+183795,118981,C9,13-9,Regular Season: Week 4
+183795,118982,C9,13-7,Regular Season: Week 4
+183795,all,C9,2-1,Regular Season: Week 4
+183796,118983,SEN,13-5,Regular Season: Week 4
+183796,118984,SEN,13-6,Regular Season: Week 4
+183796,all,SEN,2-0,Regular Season: Week 4
+183797,118986,LEV,15-13,Regular Season: Week 4
+183797,118987,100T,13-11,Regular Season: Week 4
+183797,118988,100T,13-11,Regular Season: Week 4
+183797,all,100T,2-1,Regular Season: Week 4
+183798,118989,EG,13-3,Regular Season: Week 4
+183798,118990,LOUD,13-10,Regular Season: Week 4
+183798,118991,LOUD,13-0,Regular Season: Week 4
+183798,all,LOUD,2-1,Regular Season: Week 4
+183799,118992,C9,13-8,Regular Season: Week 4
+183799,118993,C9,13-9,Regular Season: Week 4
+183799,all,C9,2-0,Regular Season: Week 4
+183800,118995,NRG,13-10,Regular Season: Week 4
+183800,118996,NRG,13-4,Regular Season: Week 4
+183800,all,NRG,2-0,Regular Season: Week 4
+183801,118998,NRG,13-7,Regular Season: Week 5
+183801,118999,NRG,13-3,Regular Season: Week 5
+183801,all,NRG,2-0,Regular Season: Week 5
+183802,119001,FUR,13-11,Regular Season: Week 5
+183802,119002,FUR,13-7,Regular Season: Week 5
+183802,all,FUR,2-0,Regular Season: Week 5
+183803,119004,C9,13-4,Regular Season: Week 5
+183803,119005,C9,13-6,Regular Season: Week 5
+183803,all,C9,2-0,Regular Season: Week 5
+183804,119007,EG,13-10,Regular Season: Week 5
+183804,119008,LEV,13-10,Regular Season: Week 5
+183804,119009,EG,13-10,Regular Season: Week 5
+183804,all,EG,2-1,Regular Season: Week 5
+183805,119010,KRÜ,13-10,Regular Season: Week 5
+183805,119011,LOUD,13-11,Regular Season: Week 5
+183805,119012,LOUD,13-10,Regular Season: Week 5
+183805,all,LOUD,2-1,Regular Season: Week 5
+183807,119013,EG,13-6,Regular Season: Week 6
+183807,119014,EG,13-5,Regular Season: Week 6
+183807,all,EG,2-0,Regular Season: Week 6
+183808,119016,C9,13-5,Regular Season: Week 6
+183808,119017,C9,13-4,Regular Season: Week 6
+183808,all,C9,2-0,Regular Season: Week 6
+183809,119019,LOUD,13-5,Regular Season: Week 6
+183809,119020,LOUD,15-13,Regular Season: Week 6
+183809,all,LOUD,2-0,Regular Season: Week 6
+183810,119022,LEV,13-4,Regular Season: Week 6
+183810,119023,LEV,13-4,Regular Season: Week 6
+183810,all,LEV,2-0,Regular Season: Week 6
+183811,119025,NRG,13-11,Regular Season: Week 6
+183811,119026,FUR,13-11,Regular Season: Week 6
+183811,119027,NRG,13-6,Regular Season: Week 6
+183811,all,NRG,2-1,Regular Season: Week 6
+183812,119028,FUR,13-10,Regular Season: Week 7
+183812,119029,100T,13-7,Regular Season: Week 7
+183812,119030,100T,13-11,Regular Season: Week 7
+183812,all,100T,2-1,Regular Season: Week 7
+183813,119031,EG,13-2,Regular Season: Week 7
+183813,119032,EG,13-5,Regular Season: Week 7
+183813,all,EG,2-0,Regular Season: Week 7
+183814,119034,SEN,14-12,Regular Season: Week 7
+183814,119035,SEN,13-10,Regular Season: Week 7
+183814,all,SEN,2-0,Regular Season: Week 7
+183815,119037,NRG,13-5,Regular Season: Week 7
+183815,119038,NRG,13-9,Regular Season: Week 7
+183815,all,NRG,2-0,Regular Season: Week 7
+183816,119040,C9,13-7,Regular Season: Week 7
+183816,119041,C9,13-4,Regular Season: Week 7
+183816,all,C9,2-0,Regular Season: Week 7
+183944,119187,FUT,13-4,Regular Season: Week 2
+183944,119188,FUT,13-10,Regular Season: Week 2
+183944,all,FUT,2-0,Regular Season: Week 2
+183945,119190,NAVI,13-10,Regular Season: Week 2
+183945,119191,NAVI,13-8,Regular Season: Week 2
+183945,all,NAVI,2-0,Regular Season: Week 2
+183946,119193,FNC,13-3,Regular Season: Week 2
+183946,119194,FNC,13-6,Regular Season: Week 2
+183946,all,FNC,2-0,Regular Season: Week 2
+183947,119196,TL,13-5,Regular Season: Week 2
+183947,119197,TL,13-2,Regular Season: Week 2
+183947,all,TL,2-0,Regular Season: Week 2
+183948,119199,GIA,13-1,Regular Season: Week 2
+183948,119200,GIA,13-11,Regular Season: Week 2
+183948,all,GIA,2-0,Regular Season: Week 2
+183949,119202,NAVI,13-3,Regular Season: Week 3
+183949,119203,TH,13-9,Regular Season: Week 3
+183949,119204,NAVI,13-2,Regular Season: Week 3
+183949,all,NAVI,2-1,Regular Season: Week 3
+183950,119206,FUT,13-9,Regular Season: Week 3
+183950,126175,FUT,13-6,Regular Season: Week 3
+183950,all,FUT,2-0,Regular Season: Week 3
+183951,119208,FNC,13-6,Regular Season: Week 3
+183951,119209,FNC,13-6,Regular Season: Week 3
+183951,all,FNC,2-0,Regular Season: Week 3
+183952,119211,GIA,13-10,Regular Season: Week 3
+183952,119212,GIA,13-3,Regular Season: Week 3
+183952,all,GIA,2-0,Regular Season: Week 3
+183953,119214,VIT,13-2,Regular Season: Week 3
+183953,119215,VIT,13-6,Regular Season: Week 3
+183953,all,VIT,2-0,Regular Season: Week 3
+184032,119231,SEN,13-7,Regular Season: Week 8
+184032,119232,FUR,13-5,Regular Season: Week 8
+184032,119233,SEN,19-17,Regular Season: Week 8
+184032,all,SEN,2-1,Regular Season: Week 8
+184033,119234,NRG,13-9,Regular Season: Week 8
+184033,119235,NRG,13-7,Regular Season: Week 8
+184033,all,NRG,2-0,Regular Season: Week 8
+184034,119237,C9,15-13,Regular Season: Week 8
+184034,119238,KRÜ,13-6,Regular Season: Week 8
+184034,119239,C9,13-9,Regular Season: Week 8
+184034,all,C9,2-1,Regular Season: Week 8
+184035,119240,LOUD,13-7,Regular Season: Week 8
+184035,119241,LOUD,13-5,Regular Season: Week 8
+184035,all,LOUD,2-0,Regular Season: Week 8
+184036,119243,MIBR,13-6,Regular Season: Week 8
+184036,119244,100T,14-12,Regular Season: Week 8
+184036,119245,MIBR,13-7,Regular Season: Week 8
+184036,all,MIBR,2-1,Regular Season: Week 8
+184037,119246,TL,13-8,Regular Season: Week 4
+184037,119247,TL,17-15,Regular Season: Week 4
+184037,all,TL,2-0,Regular Season: Week 4
+184038,119249,FNC,13-4,Regular Season: Week 4
+184038,119250,FNC,13-9,Regular Season: Week 4
+184038,all,FNC,2-0,Regular Season: Week 4
+184039,119252,GIA,13-5,Regular Season: Week 4
+184039,119253,GIA,13-11,Regular Season: Week 4
+184039,all,GIA,2-0,Regular Season: Week 4
+184040,119255,NAVI,13-11,Regular Season: Week 4
+184040,119256,NAVI,13-7,Regular Season: Week 4
+184040,all,NAVI,2-0,Regular Season: Week 4
+184041,119258,BBL,13-8,Regular Season: Week 4
+184041,119259,BBL,13-9,Regular Season: Week 4
+184041,all,BBL,2-0,Regular Season: Week 4
+184042,119261,GIA,13-11,Regular Season: Week 5
+184042,119262,TL,13-11,Regular Season: Week 5
+184042,119263,TL,13-10,Regular Season: Week 5
+184042,all,TL,2-1,Regular Season: Week 5
+184043,119264,BBL,14-12,Regular Season: Week 5
+184043,119265,TH,13-10,Regular Season: Week 5
+184043,119266,BBL,13-2,Regular Season: Week 5
+184043,all,BBL,2-1,Regular Season: Week 5
+184044,119267,KC,13-6,Regular Season: Week 5
+184044,119268,MKOI,13-8,Regular Season: Week 5
+184044,119269,KC,13-11,Regular Season: Week 5
+184044,all,KC,2-1,Regular Season: Week 5
+184045,119270,FNC,13-5,Regular Season: Week 5
+184045,119271,FNC,13-5,Regular Season: Week 5
+184045,all,FNC,2-0,Regular Season: Week 5
+184046,119273,NAVI,13-10,Regular Season: Week 5
+184046,119274,NAVI,13-10,Regular Season: Week 5
+184046,all,NAVI,2-0,Regular Season: Week 5
+184047,119276,FNC,14-12,Regular Season: Week 6
+184047,119277,FNC,13-8,Regular Season: Week 6
+184047,all,FNC,2-0,Regular Season: Week 6
+184048,119279,FUT,13-8,Regular Season: Week 6
+184048,119280,FUT,13-5,Regular Season: Week 6
+184048,all,FUT,2-0,Regular Season: Week 6
+184049,119282,MKOI,13-3,Regular Season: Week 6
+184049,119283,BBL,13-4,Regular Season: Week 6
+184049,119284,BBL,13-5,Regular Season: Week 6
+184049,all,BBL,2-1,Regular Season: Week 6
+184050,119285,NAVI,13-11,Regular Season: Week 6
+184050,119286,NAVI,13-11,Regular Season: Week 6
+184050,all,NAVI,2-0,Regular Season: Week 6
+184051,119288,TH,13-9,Regular Season: Week 6
+184051,119289,TH,16-14,Regular Season: Week 6
+184051,all,TH,2-0,Regular Season: Week 6
+184052,119291,GIA,13-6,Regular Season: Week 7
+184052,119292,VIT,13-10,Regular Season: Week 7
+184052,119293,GIA,13-10,Regular Season: Week 7
+184052,all,GIA,2-1,Regular Season: Week 7
+184053,119294,NAVI,13-9,Regular Season: Week 7
+184053,119295,NAVI,13-11,Regular Season: Week 7
+184053,all,NAVI,2-0,Regular Season: Week 7
+184054,119297,FNC,13-2,Regular Season: Week 7
+184054,119298,FNC,13-10,Regular Season: Week 7
+184054,all,FNC,2-0,Regular Season: Week 7
+184055,119300,TL,13-11,Regular Season: Week 7
+184055,119301,BBL,13-7,Regular Season: Week 7
+184055,119302,TL,13-7,Regular Season: Week 7
+184055,all,TL,2-1,Regular Season: Week 7
+184056,119303,MKOI,13-7,Regular Season: Week 7
+184056,119304,TH,13-9,Regular Season: Week 7
+184056,119305,MKOI,13-11,Regular Season: Week 7
+184056,all,MKOI,2-1,Regular Season: Week 7
+184057,119306,FNC,13-9,Regular Season: Week 8
+184057,119307,FNC,13-8,Regular Season: Week 8
+184057,all,FNC,2-0,Regular Season: Week 8
+184058,119309,VIT,13-10,Regular Season: Week 8
+184058,119310,VIT,15-13,Regular Season: Week 8
+184058,all,VIT,2-0,Regular Season: Week 8
+184059,119312,GIA,16-14,Regular Season: Week 8
+184059,119313,GIA,13-5,Regular Season: Week 8
+184059,all,GIA,2-0,Regular Season: Week 8
+184060,119315,TL,13-7,Regular Season: Week 8
+184060,119316,MKOI,13-11,Regular Season: Week 8
+184060,119317,TL,13-8,Regular Season: Week 8
+184060,all,TL,2-1,Regular Season: Week 8
+184061,119318,FUT,13-5,Regular Season: Week 8
+184061,119319,FUT,13-7,Regular Season: Week 8
+184061,all,FUT,2-0,Regular Season: Week 8
+184456,119512,KRX,13-5,League Play: Week 1
+184456,119513,KRX,13-5,League Play: Week 1
+184456,all,KRX,2-0,League Play: Week 1
+184457,119515,T1,13-8,League Play: Week 1
+184457,119516,GE,13-4,League Play: Week 1
+184457,119517,T1,13-7,League Play: Week 1
+184457,all,T1,2-1,League Play: Week 1
+184458,119518,PRX,13-5,League Play: Week 1
+184458,119519,PRX,13-11,League Play: Week 1
+184458,all,PRX,2-0,League Play: Week 1
+184459,119521,TS,13-5,League Play: Week 1
+184459,119522,TLN,13-8,League Play: Week 1
+184459,119523,TS,13-3,League Play: Week 1
+184459,all,TS,2-1,League Play: Week 1
+184460,119524,GEN,13-9,League Play: Week 1
+184460,119525,GEN,13-6,League Play: Week 1
+184460,all,GEN,2-0,League Play: Week 1
+184461,119527,RRQ,13-10,League Play: Week 2
+184461,119528,ZETA,13-10,League Play: Week 2
+184461,119529,ZETA,13-5,League Play: Week 2
+184461,all,ZETA,2-1,League Play: Week 2
+184462,119530,T1,13-8,League Play: Week 2
+184462,119531,T1,13-6,League Play: Week 2
+184462,all,T1,2-0,League Play: Week 2
+184463,119533,PRX,13-11,League Play: Week 2
+184463,119534,TS,13-11,League Play: Week 2
+184463,119535,TS,13-10,League Play: Week 2
+184463,all,TS,2-1,League Play: Week 2
+184465,119536,GEN,13-8,League Play: Week 2
+184465,119537,DFM,13-4,League Play: Week 2
+184465,119538,GEN,13-8,League Play: Week 2
+184465,all,GEN,2-1,League Play: Week 2
+184466,119539,KRX,13-11,League Play: Week 2
+184466,119540,KRX,17-15,League Play: Week 2
+184466,all,KRX,2-0,League Play: Week 2
+184467,119542,RRQ,13-4,League Play: Week 3
+184467,119543,RRQ,13-7,League Play: Week 3
+184467,all,RRQ,2-0,League Play: Week 3
+184468,119545,PRX,13-3,League Play: Week 3
+184468,119546,PRX,13-6,League Play: Week 3
+184468,all,PRX,2-0,League Play: Week 3
+184469,119548,GE,13-9,League Play: Week 3
+184469,119549,ZETA,14-12,League Play: Week 3
+184469,119550,ZETA,13-8,League Play: Week 3
+184469,all,ZETA,2-1,League Play: Week 3
+184470,119551,KRX,13-3,League Play: Week 3
+184470,119552,KRX,13-10,League Play: Week 3
+184470,all,KRX,2-0,League Play: Week 3
+184471,119554,GEN,13-8,League Play: Week 3
+184471,119555,GEN,13-11,League Play: Week 3
+184471,all,GEN,2-0,League Play: Week 3
+184472,119557,KRX,13-5,League Play: Week 4
+184472,119558,KRX,13-10,League Play: Week 4
+184472,all,KRX,2-0,League Play: Week 4
+184473,119560,RRQ,13-10,League Play: Week 4
+184473,119561,RRQ,13-7,League Play: Week 4
+184473,all,RRQ,2-0,League Play: Week 4
+184474,119563,GEN,13-5,League Play: Week 4
+184474,119564,GEN,13-5,League Play: Week 4
+184474,all,GEN,2-0,League Play: Week 4
+184475,119566,ZETA,13-9,League Play: Week 4
+184475,119567,ZETA,13-5,League Play: Week 4
+184475,all,ZETA,2-0,League Play: Week 4
+184476,119569,GE,13-6,League Play: Week 4
+184476,119570,GE,13-11,League Play: Week 4
+184476,all,GE,2-0,League Play: Week 4
+184477,119572,GE,13-7,League Play: Week 5
+184477,119573,PRX,13-6,League Play: Week 5
+184477,119574,PRX,13-7,League Play: Week 5
+184477,all,PRX,2-1,League Play: Week 5
+184478,119575,KRX,13-7,League Play: Week 5
+184478,119576,GEN,13-10,League Play: Week 5
+184478,119577,KRX,13-4,League Play: Week 5
+184478,all,KRX,2-1,League Play: Week 5
+184479,119578,T1,13-9,League Play: Week 5
+184479,119579,T1,13-4,League Play: Week 5
+184479,all,T1,2-0,League Play: Week 5
+184480,119581,TS,13-11,League Play: Week 5
+184480,119582,TS,13-8,League Play: Week 5
+184480,all,TS,2-0,League Play: Week 5
+184481,119584,TLN,13-8,League Play: Week 5
+184481,119585,TLN,16-14,League Play: Week 5
+184481,all,TLN,2-0,League Play: Week 5
+184482,119587,T1,13-9,League Play: Week 6
+184482,119588,DFM,13-9,League Play: Week 6
+184482,119589,T1,13-10,League Play: Week 6
+184482,all,T1,2-1,League Play: Week 6
+184483,119590,ZETA,13-9,League Play: Week 6
+184483,119591,TS,13-10,League Play: Week 6
+184483,119592,ZETA,13-9,League Play: Week 6
+184483,all,ZETA,2-1,League Play: Week 6
+184484,119593,GE,13-8,League Play: Week 6
+184484,119594,GE,13-8,League Play: Week 6
+184484,all,GE,2-0,League Play: Week 6
+184485,119596,RRQ,13-8,League Play: Week 6
+184485,119597,KRX,13-10,League Play: Week 6
+184485,119598,KRX,13-2,League Play: Week 6
+184485,all,KRX,2-1,League Play: Week 6
+184486,119599,TLN,13-11,League Play: Week 6
+184486,119600,PRX,13-4,League Play: Week 6
+184486,119601,PRX,13-10,League Play: Week 6
+184486,all,PRX,2-1,League Play: Week 6
+184488,119602,TLN,13-8,League Play: Week 7
+184488,119603,TLN,13-7,League Play: Week 7
+184488,all,TLN,2-0,League Play: Week 7
+184489,119605,PRX,13-6,League Play: Week 7
+184489,119606,PRX,13-10,League Play: Week 7
+184489,all,PRX,2-0,League Play: Week 7
+184490,119608,RRQ,13-10,League Play: Week 7
+184490,119609,RRQ,13-11,League Play: Week 7
+184490,all,RRQ,2-0,League Play: Week 7
+184491,119611,T1,13-4,League Play: Week 7
+184491,119612,T1,13-8,League Play: Week 7
+184491,all,T1,2-0,League Play: Week 7
+184492,119614,KRX,13-8,League Play: Week 7
+184492,119615,KRX,13-4,League Play: Week 7
+184492,all,KRX,2-0,League Play: Week 7
+184493,119617,PRX,13-7,League Play: Week 8
+184493,119618,PRX,13-2,League Play: Week 8
+184493,all,PRX,2-0,League Play: Week 8
+184494,119620,T1,13-11,League Play: Week 8
+184494,119621,ZETA,13-10,League Play: Week 8
+184494,119622,T1,13-3,League Play: Week 8
+184494,all,T1,2-1,League Play: Week 8
+184495,119623,TS,13-8,League Play: Week 8
+184495,119624,TS,13-11,League Play: Week 8
+184495,all,TS,2-0,League Play: Week 8
+184496,119626,GE,13-7,League Play: Week 8
+184496,119627,GE,13-6,League Play: Week 8
+184496,all,GE,2-0,League Play: Week 8
+184497,119629,TLN,13-3,League Play: Week 8
+184497,119630,RRQ,13-4,League Play: Week 8
+184497,119631,RRQ,13-7,League Play: Week 8
+184497,all,RRQ,2-1,League Play: Week 8
+184498,119632,ZETA,13-8,League Play: Week 8
+184498,119633,GEN,13-4,League Play: Week 8
+184498,119634,ZETA,13-4,League Play: Week 8
+184498,all,ZETA,2-1,League Play: Week 8
+184499,119635,KRX,13-10,League Play: Week 8
+184499,119636,KRX,13-9,League Play: Week 8
+184499,all,KRX,2-0,League Play: Week 8
+184500,119638,TS,13-9,League Play: Week 8
+184500,119639,TS,13-10,League Play: Week 8
+184500,all,TS,2-0,League Play: Week 8
+184501,119641,TLN,13-11,League Play: Week 8
+184501,119642,TLN,13-4,League Play: Week 8
+184501,all,TLN,2-0,League Play: Week 8
+184502,119644,PRX,13-9,League Play: Week 8
+184502,119645,PRX,13-11,League Play: Week 8
+184502,all,PRX,2-0,League Play: Week 8
+184513,119677,TS,15-13,Playoffs: Upper Round 1
+184513,119678,TS,14-12,Playoffs: Upper Round 1
+184513,all,TS,2-0,Playoffs: Upper Round 1
+184514,119680,T1,13-8,Playoffs: Upper Round 1
+184514,119681,GEN,13-11,Playoffs: Upper Round 1
+184514,119682,T1,13-7,Playoffs: Upper Round 1
+184514,all,T1,2-1,Playoffs: Upper Round 1
+184515,119683,TS,13-9,Playoffs: Upper Semifinals
+184515,119684,KRX,13-5,Playoffs: Upper Semifinals
+184515,119685,KRX,13-4,Playoffs: Upper Semifinals
+184515,all,KRX,2-1,Playoffs: Upper Semifinals
+184516,119686,PRX,13-10,Playoffs: Upper Semifinals
+184516,119687,PRX,13-10,Playoffs: Upper Semifinals
+184516,all,PRX,2-0,Playoffs: Upper Semifinals
+184517,119689,T1,13-10,Playoffs: Lower Round 1
+184517,119690,ZETA,14-12,Playoffs: Lower Round 1
+184517,119691,T1,13-10,Playoffs: Lower Round 1
+184517,all,T1,2-1,Playoffs: Lower Round 1
+184518,119692,TS,13-8,Playoffs: Lower Round 1
+184518,119693,GEN,13-8,Playoffs: Lower Round 1
+184518,119694,GEN,14-12,Playoffs: Lower Round 1
+184518,all,GEN,2-1,Playoffs: Lower Round 1
+184519,119695,PRX,13-5,Playoffs: Upper Final
+184519,119696,PRX,13-6,Playoffs: Upper Final
+184519,all,PRX,2-0,Playoffs: Upper Final
+184520,119698,T1,13-10,Playoffs: Lower Round 2
+184520,119699,T1,13-10,Playoffs: Lower Round 2
+184520,all,T1,2-0,Playoffs: Lower Round 2
+184521,119701,T1,13-11,Playoffs: Lower Final
+184521,119702,KRX,13-11,Playoffs: Lower Final
+184521,119703,KRX,13-11,Playoffs: Lower Final
+184521,119704,T1,13-6,Playoffs: Lower Final
+184521,119705,KRX,13-9,Playoffs: Lower Final
+184521,all,KRX,3-2,Playoffs: Lower Final
+184522,119706,KRX,13-6,Playoffs: Grand Final
+184522,119708,KRX,16-14,Playoffs: Grand Final
+184522,119712,PRX,13-8,Playoffs: Grand Final
+184522,119714,PRX,13-6,Playoffs: Grand Final
+184522,131784,PRX,13-3,Playoffs: Grand Final
+184522,all,PRX,3-2,Playoffs: Grand Final
+189050,123159,FUR,13-5,Playoffs: Upper Round 1
+189050,123160,LEV,20-18,Playoffs: Upper Round 1
+189050,123161,FUR,13-6,Playoffs: Upper Round 1
+189050,all,FUR,2-1,Playoffs: Upper Round 1
+189051,123162,NRG,13-11,Playoffs: Upper Round 1
+189051,123163,EG,15-13,Playoffs: Upper Round 1
+189051,123164,EG,13-7,Playoffs: Upper Round 1
+189051,all,EG,2-1,Playoffs: Upper Round 1
+189052,123165,LOUD,13-4,Playoffs: Upper Semifinals
+189052,123166,LOUD,13-5,Playoffs: Upper Semifinals
+189052,all,LOUD,2-0,Playoffs: Upper Semifinals
+189053,123168,EG,13-5,Playoffs: Upper Semifinals
+189053,123169,EG,13-2,Playoffs: Upper Semifinals
+189053,all,EG,2-0,Playoffs: Upper Semifinals
+189054,123171,LOUD,13-9,Playoffs: Upper Final
+189054,123172,EG,13-11,Playoffs: Upper Final
+189054,123173,LOUD,13-3,Playoffs: Upper Final
+189054,all,LOUD,2-1,Playoffs: Upper Final
+189055,123174,LOUD,13-9,Playoffs: Grand Final
+189055,123175,LOUD,13-11,Playoffs: Grand Final
+189055,123176,LOUD,13-11,Playoffs: Grand Final
+189055,all,LOUD,3-0,Playoffs: Grand Final
+189056,123179,C9,13-8,Playoffs: Lower Round 1
+189056,123180,LEV,13-10,Playoffs: Lower Round 1
+189056,123181,C9,13-4,Playoffs: Lower Round 1
+189056,all,C9,2-1,Playoffs: Lower Round 1
+189057,123182,NRG,13-9,Playoffs: Lower Round 1
+189057,123183,NRG,13-10,Playoffs: Lower Round 1
+189057,all,NRG,2-0,Playoffs: Lower Round 1
+189058,123185,C9,13-10,Playoffs: Lower Round 2
+189058,123186,NRG,13-9,Playoffs: Lower Round 2
+189058,123187,NRG,14-12,Playoffs: Lower Round 2
+189058,all,NRG,2-1,Playoffs: Lower Round 2
+189059,123188,EG,13-11,Playoffs: Lower Final
+189059,123189,NRG,13-8,Playoffs: Lower Final
+189059,123190,NRG,13-10,Playoffs: Lower Final
+189059,123191,NRG,13-4,Playoffs: Lower Final
+189059,all,NRG,3-1,Playoffs: Lower Final
+213193,130941,FUT,13-5,Playoffs: Upper Round 1
+213193,130942,FUT,14-12,Playoffs: Upper Round 1
+213193,all,FUT,2-0,Playoffs: Upper Round 1
+213194,130944,VIT,13-6,Playoffs: Upper Round 1
+213194,130945,TL,13-11,Playoffs: Upper Round 1
+213194,130946,TL,13-11,Playoffs: Upper Round 1
+213194,all,TL,2-1,Playoffs: Upper Round 1
+213195,130947,FUT,13-9,Playoffs: Upper Semifinals
+213195,130948,FNC,13-2,Playoffs: Upper Semifinals
+213195,130949,FNC,13-1,Playoffs: Upper Semifinals
+213195,all,FNC,2-1,Playoffs: Upper Semifinals
+213196,130950,TL,13-11,Playoffs: Upper Semifinals
+213196,130951,TL,13-10,Playoffs: Upper Semifinals
+213196,all,TL,2-0,Playoffs: Upper Semifinals
+213197,130953,FNC,14-12,Playoffs: Upper Final
+213197,130954,FNC,13-6,Playoffs: Upper Final
+213197,all,FNC,2-0,Playoffs: Upper Final
+213198,130956,FNC,13-11,Playoffs: Grand Final
+213198,130957,TL,14-12,Playoffs: Grand Final
+213198,130958,TL,13-6,Playoffs: Grand Final
+213198,131673,TL,13-11,Playoffs: Grand Final
+213198,all,TL,3-1,Playoffs: Grand Final
+213199,130959,NAVI,13-9,Playoffs: Lower Round 1
+213199,130960,NAVI,13-9,Playoffs: Lower Round 1
+213199,all,NAVI,2-0,Playoffs: Lower Round 1
+213200,130962,FUT,13-9,Playoffs: Lower Round 1
+213200,130963,VIT,13-9,Playoffs: Lower Round 1
+213200,130964,FUT,13-6,Playoffs: Lower Round 1
+213200,all,FUT,2-1,Playoffs: Lower Round 1
+213201,130965,FUT,13-8,Playoffs: Lower Round 2
+213201,130966,FUT,13-7,Playoffs: Lower Round 2
+213201,all,FUT,2-0,Playoffs: Lower Round 2
+213202,130968,TL,13-5,Playoffs: Lower Final
+213202,130969,TL,17-15,Playoffs: Lower Final
+213202,130970,TL,13-5,Playoffs: Lower Final
+213202,all,TL,3-0,Playoffs: Lower Final
+214088,131114,BNY,13-6,Showmatch: Showmatch
+214088,all,BNY,1-0,Showmatch: Showmatch
+220290,132539,NRG,13-8,Group Stage: Opening (A)
+220290,132540,NAVI,14-12,Group Stage: Opening (A)
+220290,132541,NRG,13-6,Group Stage: Opening (A)
+220290,all,NRG,2-1,Group Stage: Opening (A)
+220292,132542,T1,13-10,Group Stage: Opening (A)
+220292,132543,EDG,13-7,Group Stage: Opening (A)
+220292,132544,T1,14-12,Group Stage: Opening (A)
+220292,all,T1,2-1,Group Stage: Opening (A)
+220293,132545,T1,13-11,Group Stage: Winner's (A)
+220293,132546,NRG,13-7,Group Stage: Winner's (A)
+220293,132547,NRG,13-11,Group Stage: Winner's (A)
+220293,all,NRG,2-1,Group Stage: Winner's (A)
+220294,132548,EDG,17-15,Group Stage: Elimination (A)
+220294,132549,EDG,14-12,Group Stage: Elimination (A)
+220294,all,EDG,2-0,Group Stage: Elimination (A)
+220295,132551,EDG,13-4,Group Stage: Decider (A)
+220295,132552,EDG,13-6,Group Stage: Decider (A)
+220295,all,EDG,2-0,Group Stage: Decider (A)
+220296,132554,KRX,13-10,Group Stage: Opening (B)
+220296,132555,KRX,13-7,Group Stage: Opening (B)
+220296,all,KRX,2-0,Group Stage: Opening (B)
+220297,132557,EG,13-5,Group Stage: Opening (B)
+220297,132558,EG,14-12,Group Stage: Opening (B)
+220297,all,EG,2-0,Group Stage: Opening (B)
+220298,132560,EG,13-5,Group Stage: Winner's (B)
+220298,132561,EG,13-9,Group Stage: Winner's (B)
+220298,all,EG,2-0,Group Stage: Winner's (B)
+220299,132563,ASE,13-8,Group Stage: Elimination (B)
+220299,132564,FUT,13-5,Group Stage: Elimination (B)
+220299,132565,FUT,13-6,Group Stage: Elimination (B)
+220299,all,FUT,2-1,Group Stage: Elimination (B)
+220300,132566,FUT,13-9,Group Stage: Decider (B)
+220300,132567,KRX,13-8,Group Stage: Decider (B)
+220300,132568,KRX,13-4,Group Stage: Decider (B)
+220300,all,KRX,2-1,Group Stage: Decider (B)
+220441,132692,PRX,13-10,Playoffs: Upper Quarterfinals
+220441,132693,PRX,13-10,Playoffs: Upper Quarterfinals
+220441,all,PRX,2-0,Playoffs: Upper Quarterfinals
+220442,132695,FNC,13-9,Playoffs: Upper Quarterfinals
+220442,132696,FNC,13-4,Playoffs: Upper Quarterfinals
+220442,all,FNC,2-0,Playoffs: Upper Quarterfinals
+220443,132698,TL,13-9,Playoffs: Upper Quarterfinals
+220443,132699,EDG,13-8,Playoffs: Upper Quarterfinals
+220443,132700,TL,13-11,Playoffs: Upper Quarterfinals
+220443,all,TL,2-1,Playoffs: Upper Quarterfinals
+220444,132701,EG,13-7,Playoffs: Upper Quarterfinals
+220444,132702,EG,13-5,Playoffs: Upper Quarterfinals
+220444,all,EG,2-0,Playoffs: Upper Quarterfinals
+220445,132704,FNC,13-5,Playoffs: Upper Semifinals
+220445,132705,FNC,13-7,Playoffs: Upper Semifinals
+220445,all,FNC,2-0,Playoffs: Upper Semifinals
+220446,132707,EG,13-2,Playoffs: Upper Semifinals
+220446,132708,EG,13-9,Playoffs: Upper Semifinals
+220446,all,EG,2-0,Playoffs: Upper Semifinals
+220447,132710,FNC,13-3,Playoffs: Upper Final
+220447,132711,EG,13-9,Playoffs: Upper Final
+220447,132712,FNC,13-11,Playoffs: Upper Final
+220447,all,FNC,2-1,Playoffs: Upper Final
+220448,132713,FNC,13-8,Playoffs: Grand Final
+220448,132714,FNC,13-11,Playoffs: Grand Final
+220448,132715,FNC,14-12,Playoffs: Grand Final
+220448,all,FNC,3-0,Playoffs: Grand Final
+220449,132718,NRG,13-11,Playoffs: Lower Round 1
+220449,132719,NRG,13-5,Playoffs: Lower Round 1
+220449,all,NRG,2-0,Playoffs: Lower Round 1
+220450,132721,EDG,13-6,Playoffs: Lower Round 1
+220450,132722,EDG,13-10,Playoffs: Lower Round 1
+220450,all,EDG,2-0,Playoffs: Lower Round 1
+220451,132724,NRG,14-12,Playoffs: Lower Round 2
+220451,132725,TL,13-8,Playoffs: Lower Round 2
+220451,132726,NRG,13-5,Playoffs: Lower Round 2
+220451,all,NRG,2-1,Playoffs: Lower Round 2
+220452,132727,PRX,14-12,Playoffs: Lower Round 2
+220452,132728,EDG,13-9,Playoffs: Lower Round 2
+220452,132729,PRX,13-8,Playoffs: Lower Round 2
+220452,all,PRX,2-1,Playoffs: Lower Round 2
+220453,132730,PRX,15-13,Playoffs: Lower Round 3
+220453,132731,NRG,13-6,Playoffs: Lower Round 3
+220453,132732,PRX,13-11,Playoffs: Lower Round 3
+220453,all,PRX,2-1,Playoffs: Lower Round 3
+220454,132733,EG,13-7,Playoffs: Lower Final
+220454,132734,PRX,14-12,Playoffs: Lower Final
+220454,132735,PRX,13-10,Playoffs: Lower Final
+220454,132736,EG,13-6,Playoffs: Lower Final
+220454,132737,EG,13-8,Playoffs: Lower Final
+220454,all,EG,3-2,Playoffs: Lower Final
+247075,137350,PRX,13-7,Group Stage: Opening (A)
+247075,137351,PRX,13-8,Group Stage: Opening (A)
+247075,all,PRX,2-0,Group Stage: Opening (A)
+247076,137353,GIA,15-13,Group Stage: Opening (A)
+247076,137354,EDG,13-11,Group Stage: Opening (A)
+247076,137355,EDG,13-8,Group Stage: Opening (A)
+247076,all,EDG,2-1,Group Stage: Opening (A)
+247077,137356,PRX,13-7,Group Stage: Winner's (A)
+247077,137357,PRX,16-14,Group Stage: Winner's (A)
+247077,all,PRX,2-0,Group Stage: Winner's (A)
+247078,137359,GIA,13-10,Group Stage: Elimination (A)
+247078,137360,GIA,14-12,Group Stage: Elimination (A)
+247078,all,GIA,2-0,Group Stage: Elimination (A)
+247079,137362,EDG,13-6,Group Stage: Decider (A)
+247079,137363,EDG,13-7,Group Stage: Decider (A)
+247079,all,EDG,2-0,Group Stage: Decider (A)
+247086,137365,EG,13-8,Group Stage: Opening (B)
+247086,137366,EG,13-8,Group Stage: Opening (B)
+247086,all,EG,2-0,Group Stage: Opening (B)
+247087,137368,FUT,13-4,Group Stage: Opening (B)
+247087,137369,FUT,13-7,Group Stage: Opening (B)
+247087,all,FUT,2-0,Group Stage: Opening (B)
+247088,137371,EG,15-13,Group Stage: Winner's (B)
+247088,137372,EG,13-9,Group Stage: Winner's (B)
+247088,all,EG,2-0,Group Stage: Winner's (B)
+247089,137374,T1,13-10,Group Stage: Elimination (B)
+247089,137375,T1,13-7,Group Stage: Elimination (B)
+247089,all,T1,2-0,Group Stage: Elimination (B)
+247090,137377,FUT,13-10,Group Stage: Decider (B)
+247090,137378,FUT,14-12,Group Stage: Decider (B)
+247090,all,FUT,2-0,Group Stage: Decider (B)
+247093,137380,FNC,13-5,Group Stage: Opening (C)
+247093,137381,FNC,13-6,Group Stage: Opening (C)
+247093,all,FNC,2-0,Group Stage: Opening (C)
+247094,137383,BLG,14-12,Group Stage: Opening (C)
+247094,137384,BLG,13-8,Group Stage: Opening (C)
+247094,all,BLG,2-0,Group Stage: Opening (C)
+247095,137386,FNC,13-2,Group Stage: Winner's (C)
+247095,137387,FNC,13-8,Group Stage: Winner's (C)
+247095,all,FNC,2-0,Group Stage: Winner's (C)
+247096,137389,NRG,15-13,Group Stage: Elimination (C)
+247096,137390,NRG,13-1,Group Stage: Elimination (C)
+247096,all,NRG,2-0,Group Stage: Elimination (C)
+247098,137392,BLG,13-10,Group Stage: Decider (C)
+247098,137393,BLG,13-5,Group Stage: Decider (C)
+247098,all,BLG,2-0,Group Stage: Decider (C)
+247100,137395,NAVI,13-11,Group Stage: Opening (D)
+247100,137396,NAVI,17-15,Group Stage: Opening (D)
+247100,all,NAVI,2-0,Group Stage: Opening (D)
+247101,137398,LOUD,15-13,Group Stage: Opening (D)
+247101,137399,KRX,13-6,Group Stage: Opening (D)
+247101,137400,KRX,13-8,Group Stage: Opening (D)
+247101,all,KRX,2-1,Group Stage: Opening (D)
+247102,137401,KRX,15-13,Group Stage: Winner's (D)
+247102,137402,NAVI,13-9,Group Stage: Winner's (D)
+247102,137403,KRX,14-12,Group Stage: Winner's (D)
+247102,all,KRX,2-1,Group Stage: Winner's (D)
+247103,137404,LOUD,13-2,Group Stage: Elimination (D)
+247103,137405,LOUD,13-8,Group Stage: Elimination (D)
+247103,all,LOUD,2-0,Group Stage: Elimination (D)
+247104,137407,NAVI,13-11,Group Stage: Decider (D)
+247104,137408,LOUD,13-11,Group Stage: Decider (D)
+247104,137409,LOUD,13-11,Group Stage: Decider (D)
+247104,all,LOUD,2-1,Group Stage: Decider (D)
+248270,137618,LOUD,13-11,Playoffs: Upper Quarterfinals
+248270,137619,LOUD,13-6,Playoffs: Upper Quarterfinals
+248270,all,LOUD,2-0,Playoffs: Upper Quarterfinals
+248271,137621,PRX,13-10,Playoffs: Upper Quarterfinals
+248271,137622,PRX,13-4,Playoffs: Upper Quarterfinals
+248271,all,PRX,2-0,Playoffs: Upper Quarterfinals
+248272,137624,KRX,13-10,Playoffs: Upper Quarterfinals
+248272,137625,KRX,13-9,Playoffs: Upper Quarterfinals
+248272,all,KRX,2-0,Playoffs: Upper Quarterfinals
+248273,137627,EDG,14-12,Playoffs: Upper Quarterfinals
+248273,137628,EG,13-5,Playoffs: Upper Quarterfinals
+248273,137629,EG,13-5,Playoffs: Upper Quarterfinals
+248273,all,EG,2-1,Playoffs: Upper Quarterfinals
+248274,137630,PRX,15-13,Playoffs: Upper Semifinals
+248274,137631,LOUD,13-2,Playoffs: Upper Semifinals
+248274,137632,PRX,13-10,Playoffs: Upper Semifinals
+248274,all,PRX,2-1,Playoffs: Upper Semifinals
+248275,137633,EG,13-9,Playoffs: Upper Semifinals
+248275,137634,EG,13-4,Playoffs: Upper Semifinals
+248275,all,EG,2-0,Playoffs: Upper Semifinals
+248276,137636,EG,13-10,Playoffs: Upper Final
+248276,137637,PRX,13-9,Playoffs: Upper Final
+248276,137638,PRX,15-13,Playoffs: Upper Final
+248276,all,PRX,2-1,Playoffs: Upper Final
+248277,137639,EG,13-10,Playoffs: Grand Final
+248277,137640,PRX,13-11,Playoffs: Grand Final
+248277,137641,EG,13-5,Playoffs: Grand Final
+248277,137642,EG,13-10,Playoffs: Grand Final
+248277,all,EG,3-1,Playoffs: Grand Final
+248278,137644,FNC,13-5,Playoffs: Lower Round 1
+248278,137645,FNC,13-9,Playoffs: Lower Round 1
+248278,all,FNC,2-0,Playoffs: Lower Round 1
+248279,137647,EDG,13-4,Playoffs: Lower Round 1
+248279,137648,BLG,15-13,Playoffs: Lower Round 1
+248279,137649,EDG,13-10,Playoffs: Lower Round 1
+248279,all,EDG,2-1,Playoffs: Lower Round 1
+248280,137650,KRX,13-1,Playoffs: Lower Round 2
+248280,137651,FNC,13-9,Playoffs: Lower Round 2
+248280,137652,FNC,13-6,Playoffs: Lower Round 2
+248280,all,FNC,2-1,Playoffs: Lower Round 2
+248281,137653,EDG,13-11,Playoffs: Lower Round 2
+248281,137654,LOUD,13-5,Playoffs: Lower Round 2
+248281,137655,LOUD,13-11,Playoffs: Lower Round 2
+248281,all,LOUD,2-1,Playoffs: Lower Round 2
+248282,137656,LOUD,13-4,Playoffs: Lower Round 3
+248282,137657,FNC,13-9,Playoffs: Lower Round 3
+248282,137658,LOUD,13-7,Playoffs: Lower Round 3
+248282,all,LOUD,2-1,Playoffs: Lower Round 3
+248283,137659,EG,14-12,Playoffs: Lower Final
+248283,137660,EG,13-4,Playoffs: Lower Final
+248283,137661,LOUD,13-8,Playoffs: Lower Final
+248283,137662,LOUD,13-7,Playoffs: Lower Final
+248283,137663,EG,13-8,Playoffs: Lower Final
+248283,all,EG,3-2,Playoffs: Lower Final
+295605,153722,NRG,13-10,Group Stage: Opening (A)
+295605,153723,NRG,13-8,Group Stage: Opening (A)
+295605,all,NRG,2-0,Group Stage: Opening (A)
+295606,153725,C9,13-11,Group Stage: Opening (A)
+295606,153726,MIBR,13-8,Group Stage: Opening (A)
+295606,153727,C9,13-10,Group Stage: Opening (A)
+295606,all,C9,2-1,Group Stage: Opening (A)
+295607,153728,NRG,13-7,Group Stage: Winner's (A)
+295607,153729,NRG,14-12,Group Stage: Winner's (A)
+295607,all,NRG,2-0,Group Stage: Winner's (A)
+295608,153731,MIBR,13-9,Group Stage: Elimination (A)
+295608,153732,MIBR,13-11,Group Stage: Elimination (A)
+295608,all,MIBR,2-0,Group Stage: Elimination (A)
+295609,153734,MIBR,14-12,Group Stage: Decider (A)
+295609,153735,MIBR,13-9,Group Stage: Decider (A)
+295609,all,MIBR,2-0,Group Stage: Decider (A)
+295610,153737,LOUD,13-11,Group Stage: Opening (B)
+295610,153738,LOUD,13-9,Group Stage: Opening (B)
+295610,all,LOUD,2-0,Group Stage: Opening (B)
+295611,153740,LEV,13-9,Group Stage: Opening (B)
+295611,153741,100T,13-3,Group Stage: Opening (B)
+295611,153742,LEV,13-11,Group Stage: Opening (B)
+295611,all,LEV,2-1,Group Stage: Opening (B)
+295612,153743,LEV,13-11,Group Stage: Winner's (B)
+295612,153744,LOUD,13-10,Group Stage: Winner's (B)
+295612,153745,LOUD,13-7,Group Stage: Winner's (B)
+295612,all,LOUD,2-1,Group Stage: Winner's (B)
+295613,153746,SEN,13-5,Group Stage: Elimination (B)
+295613,153747,100T,13-6,Group Stage: Elimination (B)
+295613,153748,SEN,13-8,Group Stage: Elimination (B)
+295613,all,SEN,2-1,Group Stage: Elimination (B)
+295614,153749,SEN,13-3,Group Stage: Decider (B)
+295614,153750,LEV,13-6,Group Stage: Decider (B)
+295614,153751,SEN,13-9,Group Stage: Decider (B)
+295614,all,SEN,2-1,Group Stage: Decider (B)
+295615,153752,KRÜ,13-9,Group Stage: Opening (C)
+295615,153753,G2,13-9,Group Stage: Opening (C)
+295615,153754,G2,13-11,Group Stage: Opening (C)
+295615,all,G2,2-1,Group Stage: Opening (C)
+295617,153758,EG,15-13,Group Stage: Winner's (C)
+295617,153759,EG,13-11,Group Stage: Winner's (C)
+295617,all,EG,2-0,Group Stage: Winner's (C)
+295619,153764,G2,13-8,Group Stage: Decider (C)
+295619,153765,G2,13-8,Group Stage: Decider (C)
+295619,all,G2,2-0,Group Stage: Decider (C)
+296730,155114,ZETA,13-10,Group Stage: Opening (A)
+296730,155115,ZETA,13-7,Group Stage: Opening (A)
+296730,all,ZETA,2-0,Group Stage: Opening (A)
+296731,155117,TLN,13-8,Group Stage: Opening (B)
+296731,155118,TLN,13-3,Group Stage: Opening (B)
+296731,all,TLN,2-0,Group Stage: Opening (B)
+296732,155120,KRX,13-10,Group Stage: Winner's (B)
+296732,155121,KRX,13-8,Group Stage: Winner's (B)
+296732,all,KRX,2-0,Group Stage: Winner's (B)
+296733,155123,TS,13-7,Group Stage: Elimination (B)
+296733,155124,TS,13-11,Group Stage: Elimination (B)
+296733,all,TS,2-0,Group Stage: Elimination (B)
+296734,155126,TS,13-8,Group Stage: Decider (B)
+296734,155127,TS,13-7,Group Stage: Decider (B)
+296734,all,TS,2-0,Group Stage: Decider (B)
+296735,155129,T1,18-16,Group Stage: Opening (A)
+296735,155130,T1,13-6,Group Stage: Opening (A)
+296735,all,T1,2-0,Group Stage: Opening (A)
+296736,155132,KRX,13-8,Group Stage: Opening (B)
+296736,155133,KRX,13-8,Group Stage: Opening (B)
+296736,all,KRX,2-0,Group Stage: Opening (B)
+296737,155135,ZETA,13-11,Group Stage: Winner's (A)
+296737,155136,T1,13-4,Group Stage: Winner's (A)
+296737,155137,T1,13-7,Group Stage: Winner's (A)
+296737,all,T1,2-1,Group Stage: Winner's (A)
+296738,155138,GE,13-9,Group Stage: Elimination (A)
+296738,155139,BLD,13-10,Group Stage: Elimination (A)
+296738,155140,GE,13-11,Group Stage: Elimination (A)
+296738,all,GE,2-1,Group Stage: Elimination (A)
+296739,155141,ZETA,13-8,Group Stage: Decider (A)
+296739,155142,ZETA,13-3,Group Stage: Decider (A)
+296739,all,ZETA,2-0,Group Stage: Decider (A)
+296745,155159,GEN,13-11,Group Stage: Opening (C)
+296745,155160,RRQ,13-11,Group Stage: Opening (C)
+296745,155161,GEN,13-8,Group Stage: Opening (C)
+296745,all,GEN,2-1,Group Stage: Opening (C)
+296747,155165,GEN,13-10,Group Stage: Winner's (C)
+296747,155166,PRX,13-10,Group Stage: Winner's (C)
+296747,155167,PRX,13-7,Group Stage: Winner's (C)
+296747,all,PRX,2-1,Group Stage: Winner's (C)
+296749,155171,GEN,13-7,Group Stage: Decider (C)
+296749,155172,RRQ,13-10,Group Stage: Decider (C)
+296749,155173,GEN,13-11,Group Stage: Decider (C)
+296749,all,GEN,2-1,Group Stage: Decider (C)
+297253,155759,TS,13-1,Play-Ins: Play-ins
+297253,155760,TS,13-8,Play-Ins: Play-ins
+297253,all,TS,2-0,Play-Ins: Play-ins
+297254,155762,TS,13-5,Play-Ins: Play-ins
+297254,155763,GEN,13-9,Play-Ins: Play-ins
+297254,155764,GEN,15-13,Play-Ins: Play-ins
+297254,all,GEN,2-1,Play-Ins: Play-ins
+297255,155765,GEN,13-6,Play-Ins: Play-ins
+297255,155766,GEN,13-4,Play-Ins: Play-ins
+297255,all,GEN,2-0,Play-Ins: Play-ins
+297256,155768,PRX,16-14,Playoffs: Semifinals
+297256,155769,PRX,13-6,Playoffs: Semifinals
+297256,all,PRX,2-0,Playoffs: Semifinals
+297257,155771,GEN,14-12,Playoffs: Semifinals
+297257,155772,GEN,13-8,Playoffs: Semifinals
+297257,all,GEN,2-0,Playoffs: Semifinals
+297258,155774,GEN,13-5,Playoffs: Grand Final
+297258,155775,PRX,13-4,Playoffs: Grand Final
+297258,155776,GEN,13-11,Playoffs: Grand Final
+297258,155777,GEN,13-4,Playoffs: Grand Final
+297258,all,GEN,3-1,Playoffs: Grand Final
+297401,156072,TH,13-11,Group Stage: Opening (A)
+297401,156073,TH,13-10,Group Stage: Opening (A)
+297401,all,TH,2-0,Group Stage: Opening (A)
+297402,156075,KC,13-11,Group Stage: Opening (A)
+297402,156076,GX,13-10,Group Stage: Opening (A)
+297402,156077,KC,13-4,Group Stage: Opening (A)
+297402,all,KC,2-1,Group Stage: Opening (A)
+297403,156078,TH,13-4,Group Stage: Winner's (A)
+297403,156079,TH,13-4,Group Stage: Winner's (A)
+297403,all,TH,2-0,Group Stage: Winner's (A)
+297404,156081,FUT,13-6,Group Stage: Elimination (A)
+297404,156082,GX,13-8,Group Stage: Elimination (A)
+297404,156083,FUT,13-7,Group Stage: Elimination (A)
+297404,all,FUT,2-1,Group Stage: Elimination (A)
+297405,156084,KC,20-18,Group Stage: Decider (A)
+297405,156085,FUT,13-4,Group Stage: Decider (A)
+297405,156086,KC,13-7,Group Stage: Decider (A)
+297405,all,KC,2-1,Group Stage: Decider (A)
+297406,156087,BBL,13-8,Group Stage: Opening (B)
+297406,156088,NAVI,13-6,Group Stage: Opening (B)
+297406,156089,NAVI,13-6,Group Stage: Opening (B)
+297406,all,NAVI,2-1,Group Stage: Opening (B)
+297407,156090,TL,13-10,Group Stage: Opening (B)
+297407,156091,TL,13-11,Group Stage: Opening (B)
+297407,all,TL,2-0,Group Stage: Opening (B)
+297408,156093,NAVI,13-7,Group Stage: Winner's (B)
+297408,156094,NAVI,13-7,Group Stage: Winner's (B)
+297408,all,NAVI,2-0,Group Stage: Winner's (B)
+297409,156096,MKOI,13-5,Group Stage: Elimination (B)
+297409,156097,MKOI,13-10,Group Stage: Elimination (B)
+297409,all,MKOI,2-0,Group Stage: Elimination (B)
+297410,156099,MKOI,13-11,Group Stage: Decider (B)
+297410,156100,TL,14-12,Group Stage: Decider (B)
+297410,156101,MKOI,13-10,Group Stage: Decider (B)
+297410,all,MKOI,2-1,Group Stage: Decider (B)
+297412,156102,VIT,13-10,Group Stage: Opening (C)
+297412,156103,VIT,13-7,Group Stage: Opening (C)
+297412,all,VIT,2-0,Group Stage: Opening (C)
+297414,156108,FNC,14-12,Group Stage: Winner's (C)
+297414,156109,FNC,13-5,Group Stage: Winner's (C)
+297414,all,FNC,2-0,Group Stage: Winner's (C)
+297416,156114,M8,13-4,Group Stage: Decider (C)
+297416,156115,VIT,15-13,Group Stage: Decider (C)
+297416,156116,VIT,13-3,Group Stage: Decider (C)
+297416,all,VIT,2-1,Group Stage: Decider (C)
+303086,160715,SEN,13-9,Playoffs: Grand Final
+303086,160716,SEN,13-3,Playoffs: Grand Final
+303086,160717,LOUD,13-11,Playoffs: Grand Final
+303086,160724,LOUD,13-8,Playoffs: Grand Final
+303086,160725,SEN,13-4,Playoffs: Grand Final
+303086,all,SEN,3-2,Playoffs: Grand Final
+303087,160718,EG,13-7,Playoffs: Semifinals
+303087,160719,LOUD,13-7,Playoffs: Semifinals
+303087,160720,LOUD,13-5,Playoffs: Semifinals
+303087,all,LOUD,2-1,Playoffs: Semifinals
+303088,160721,SEN,16-14,Playoffs: Semifinals
+303088,160722,NRG,13-8,Playoffs: Semifinals
+303088,160723,SEN,13-3,Playoffs: Semifinals
+303088,all,SEN,2-1,Playoffs: Semifinals
+303093,160735,TH,16-14,Playoffs: Semifinals
+303093,160736,TH,13-4,Playoffs: Semifinals
+303093,all,TH,2-0,Playoffs: Semifinals
+303094,160738,KC,13-10,Playoffs: Semifinals
+303094,160739,KC,13-8,Playoffs: Semifinals
+303094,all,KC,2-0,Playoffs: Semifinals
+303095,160741,TH,13-9,Playoffs: Grand Final
+303095,160742,KC,13-7,Playoffs: Grand Final
+303095,160743,KC,13-7,Playoffs: Grand Final
+303095,160744,KC,13-5,Playoffs: Grand Final
+303095,all,KC,3-1,Playoffs: Grand Final
+307564,161388,KC,13-4,Play-In Stage: Play-ins
+307564,161389,KC,13-7,Play-In Stage: Play-ins
+307564,all,KC,2-0,Play-In Stage: Play-ins
+307565,161391,VIT,13-9,Play-In Stage: Play-ins
+307565,161392,VIT,13-6,Play-In Stage: Play-ins
+307565,all,VIT,2-0,Play-In Stage: Play-ins
+307567,161394,KC,13-8,Play-In Stage: Play-ins
+307567,161395,KC,15-13,Play-In Stage: Play-ins
+307567,all,KC,2-0,Play-In Stage: Play-ins
+307572,161397,SEN,13-7,Play-Ins: Play-ins
+307572,161398,SEN,13-6,Play-Ins: Play-ins
+307572,all,SEN,2-0,Play-Ins: Play-ins
+307573,161400,MIBR,13-9,Play-Ins: Play-ins
+307573,161401,G2,15-13,Play-Ins: Play-ins
+307573,161402,MIBR,13-10,Play-Ins: Play-ins
+307573,all,MIBR,2-1,Play-Ins: Play-ins
+307574,161403,SEN,13-8,Play-Ins: Play-ins
+307574,161404,G2,13-9,Play-Ins: Play-ins
+307574,161405,G2,13-9,Play-Ins: Play-ins
+307574,all,G2,2-1,Play-Ins: Play-ins
+312765,162326,KC,13-8,Swiss Stage: Round 1
+312765,162327,KC,13-10,Swiss Stage: Round 1
+312765,all,KC,2-0,Swiss Stage: Round 1
+312766,162329,GEN,13-11,Swiss Stage: Round 1
+312766,162330,LOUD,13-8,Swiss Stage: Round 1
+312766,162331,GEN,13-5,Swiss Stage: Round 1
+312766,all,GEN,2-1,Swiss Stage: Round 1
+312767,162332,PRX,13-8,Swiss Stage: Round 1
+312767,162333,EDG,13-9,Swiss Stage: Round 1
+312767,162334,EDG,13-9,Swiss Stage: Round 1
+312767,all,EDG,2-1,Swiss Stage: Round 1
+312768,162335,SEN,13-9,Swiss Stage: Round 1
+312768,162336,TH,13-5,Swiss Stage: Round 1
+312768,162337,SEN,13-11,Swiss Stage: Round 1
+312768,all,SEN,2-1,Swiss Stage: Round 1
+312776,162338,SEN,13-4,Playoffs: Upper Semifinals
+312776,162339,LOUD,14-12,Playoffs: Upper Semifinals
+312776,162340,SEN,14-12,Playoffs: Upper Semifinals
+312776,all,SEN,2-1,Playoffs: Upper Semifinals
+312777,162341,GEN,13-8,Playoffs: Upper Semifinals
+312777,162342,GEN,13-9,Playoffs: Upper Semifinals
+312777,all,GEN,2-0,Playoffs: Upper Semifinals
+312778,162344,GEN,13-5,Playoffs: Upper Final
+312778,162345,SEN,13-7,Playoffs: Upper Final
+312778,162346,GEN,13-3,Playoffs: Upper Final
+312778,all,GEN,2-1,Playoffs: Upper Final
+312779,162347,GEN,13-8,Playoffs: Grand Final
+312779,162348,SEN,14-12,Playoffs: Grand Final
+312779,162349,GEN,13-8,Playoffs: Grand Final
+312779,162350,SEN,13-10,Playoffs: Grand Final
+312779,162351,SEN,13-6,Playoffs: Grand Final
+312779,all,SEN,3-2,Playoffs: Grand Final
+312780,162352,PRX,13-11,Playoffs: Lower Round 1
+312780,163448,PRX,13-8,Playoffs: Lower Round 1
+312780,all,PRX,2-0,Playoffs: Lower Round 1
+312781,162353,SEN,14-12,Playoffs: Lower Final
+312781,162354,SEN,13-6,Playoffs: Lower Final
+312781,162355,PRX,13-5,Playoffs: Lower Final
+312781,162356,SEN,13-3,Playoffs: Lower Final
+312781,all,SEN,3-1,Playoffs: Lower Final
+312797,162358,EDG,13-8,Swiss Stage: Round 2
+312797,162359,GEN,13-5,Swiss Stage: Round 2
+312797,162360,GEN,13-6,Swiss Stage: Round 2
+312797,all,GEN,2-1,Swiss Stage: Round 2
+312798,162361,SEN,13-8,Swiss Stage: Round 2
+312798,162362,SEN,13-11,Swiss Stage: Round 2
+312798,all,SEN,2-0,Swiss Stage: Round 2
+312799,162364,PRX,13-10,Swiss Stage: Round 2
+312799,162365,TH,13-10,Swiss Stage: Round 2
+312799,162366,PRX,13-7,Swiss Stage: Round 2
+312799,all,PRX,2-1,Swiss Stage: Round 2
+312800,162367,LOUD,13-5,Swiss Stage: Round 2
+312800,162368,LOUD,13-11,Swiss Stage: Round 2
+312800,all,LOUD,2-0,Swiss Stage: Round 2
+312802,162370,PRX,13-10,Swiss Stage: Round 3
+312802,162371,KC,13-6,Swiss Stage: Round 3
+312802,162372,PRX,14-12,Swiss Stage: Round 3
+312802,all,PRX,2-1,Swiss Stage: Round 3
+312803,162373,LOUD,13-2,Swiss Stage: Round 3
+312803,162374,LOUD,13-3,Swiss Stage: Round 3
+312803,all,LOUD,2-0,Swiss Stage: Round 3
+314301,163149,ZETA,13-1,Regular Season: Week 1
+314301,163150,GE,13-10,Regular Season: Week 1
+314301,163151,ZETA,13-8,Regular Season: Week 1
+314301,all,ZETA,2-1,Regular Season: Week 1
+314302,163152,KRX,13-8,Regular Season: Week 1
+314302,163153,KRX,13-8,Regular Season: Week 1
+314302,all,KRX,2-0,Regular Season: Week 1
+314303,163155,BLD,13-9,Regular Season: Week 1
+314303,163156,TLN,13-7,Regular Season: Week 1
+314303,163157,TLN,13-6,Regular Season: Week 1
+314303,all,TLN,2-1,Regular Season: Week 1
+314304,163158,PRX,13-10,Regular Season: Week 1
+314304,163159,PRX,14-12,Regular Season: Week 1
+314304,all,PRX,2-0,Regular Season: Week 1
+314305,163161,RRQ,13-10,Regular Season: Week 1
+314305,163162,TS,13-6,Regular Season: Week 1
+314305,163163,RRQ,14-12,Regular Season: Week 1
+314305,all,RRQ,2-1,Regular Season: Week 1
+314306,163164,KRX,13-8,Regular Season: Week 1
+314306,163165,KRX,13-6,Regular Season: Week 1
+314306,all,KRX,2-0,Regular Season: Week 1
+314307,163167,GEN,13-9,Regular Season: Week 1
+314307,163168,GEN,13-8,Regular Season: Week 1
+314307,all,GEN,2-0,Regular Season: Week 1
+314308,163170,DFM,13-10,Regular Season: Week 1
+314308,163171,T1,13-5,Regular Season: Week 1
+314308,163172,DFM,13-11,Regular Season: Week 1
+314308,all,DFM,2-1,Regular Season: Week 1
+314309,163173,GEN,13-11,Regular Season: Week 2
+314309,163174,PRX,13-11,Regular Season: Week 2
+314309,163175,PRX,13-6,Regular Season: Week 2
+314309,all,PRX,2-1,Regular Season: Week 2
+314310,163176,T1,13-9,Regular Season: Week 2
+314310,163177,KRX,13-5,Regular Season: Week 2
+314310,163178,KRX,13-6,Regular Season: Week 2
+314310,all,KRX,2-1,Regular Season: Week 2
+314311,163179,TS,13-8,Regular Season: Week 2
+314311,163180,ZETA,13-6,Regular Season: Week 2
+314311,163181,TS,13-7,Regular Season: Week 2
+314311,all,TS,2-1,Regular Season: Week 2
+314312,163182,RRQ,13-2,Regular Season: Week 2
+314312,163183,RRQ,13-5,Regular Season: Week 2
+314312,all,RRQ,2-0,Regular Season: Week 2
+314313,163185,GEN,13-8,Regular Season: Week 2
+314313,163186,GEN,13-7,Regular Season: Week 2
+314313,all,GEN,2-0,Regular Season: Week 2
+314314,163188,GE,13-4,Regular Season: Week 2
+314314,163189,TLN,14-12,Regular Season: Week 2
+314314,163190,TLN,13-6,Regular Season: Week 2
+314314,all,TLN,2-1,Regular Season: Week 2
+314315,163191,T1,13-6,Regular Season: Week 2
+314315,163192,T1,13-8,Regular Season: Week 2
+314315,all,T1,2-0,Regular Season: Week 2
+314316,163194,ZETA,13-9,Regular Season: Week 2
+314316,163195,BLD,13-9,Regular Season: Week 2
+314316,163196,ZETA,13-8,Regular Season: Week 2
+314316,all,ZETA,2-1,Regular Season: Week 2
+314317,163197,KRX,13-10,Regular Season: Week 3
+314317,163198,GEN,13-9,Regular Season: Week 3
+314317,163199,KRX,13-7,Regular Season: Week 3
+314317,all,KRX,2-1,Regular Season: Week 3
+314318,163200,DFM,13-9,Regular Season: Week 3
+314318,163201,BLD,13-7,Regular Season: Week 3
+314318,163202,BLD,13-4,Regular Season: Week 3
+314318,all,BLD,2-1,Regular Season: Week 3
+314319,163203,GE,13-10,Regular Season: Week 3
+314319,163204,GE,13-4,Regular Season: Week 3
+314319,all,GE,2-0,Regular Season: Week 3
+314320,163206,TS,13-9,Regular Season: Week 3
+314320,163207,TS,13-8,Regular Season: Week 3
+314320,all,TS,2-0,Regular Season: Week 3
+314321,163209,TLN,13-11,Regular Season: Week 3
+314321,163210,TLN,13-10,Regular Season: Week 3
+314321,all,TLN,2-0,Regular Season: Week 3
+314322,163212,GEN,13-8,Regular Season: Week 3
+314322,163213,GEN,14-12,Regular Season: Week 3
+314322,all,GEN,2-0,Regular Season: Week 3
+314323,163215,TS,13-4,Regular Season: Week 3
+314323,163216,DFM,13-9,Regular Season: Week 3
+314323,163217,TS,13-2,Regular Season: Week 3
+314323,all,TS,2-1,Regular Season: Week 3
+314324,163218,PRX,13-4,Regular Season: Week 3
+314324,163219,PRX,13-7,Regular Season: Week 3
+314324,all,PRX,2-0,Regular Season: Week 3
+314325,163221,PRX,13-5,Regular Season: Week 4
+314325,163222,PRX,13-6,Regular Season: Week 4
+314325,all,PRX,2-0,Regular Season: Week 4
+314326,163224,DFM,13-10,Regular Season: Week 4
+314326,163225,GE,13-5,Regular Season: Week 4
+314326,163226,GE,13-11,Regular Season: Week 4
+314326,all,GE,2-1,Regular Season: Week 4
+314327,163227,ZETA,13-11,Regular Season: Week 4
+314327,163228,T1,13-9,Regular Season: Week 4
+314327,163229,T1,13-10,Regular Season: Week 4
+314327,all,T1,2-1,Regular Season: Week 4
+314328,163230,TS,13-11,Regular Season: Week 4
+314328,163231,TLN,13-11,Regular Season: Week 4
+314328,163232,TLN,13-10,Regular Season: Week 4
+314328,all,TLN,2-1,Regular Season: Week 4
+314329,163233,KRX,13-9,Regular Season: Week 4
+314329,163234,KRX,13-4,Regular Season: Week 4
+314329,all,KRX,2-0,Regular Season: Week 4
+314330,163236,GEN,13-3,Regular Season: Week 4
+314330,163237,RRQ,13-11,Regular Season: Week 4
+314330,163238,RRQ,13-10,Regular Season: Week 4
+314330,all,RRQ,2-1,Regular Season: Week 4
+314340,163239,KRX,13-0,Regular Season: Week 1
+314340,163240,ZETA,13-11,Regular Season: Week 1
+314340,163241,KRX,13-4,Regular Season: Week 1
+314340,all,KRX,2-1,Regular Season: Week 1
+314341,163242,BLD,13-10,Regular Season: Week 1
+314341,163243,TS,13-8,Regular Season: Week 1
+314341,163244,TS,13-8,Regular Season: Week 1
+314341,all,TS,2-1,Regular Season: Week 1
+314342,163245,GEN,15-13,Regular Season: Week 1
+314342,163246,T1,13-5,Regular Season: Week 1
+314342,163247,GEN,13-9,Regular Season: Week 1
+314342,all,GEN,2-1,Regular Season: Week 1
+314343,163248,PRX,13-4,Regular Season: Week 1
+314343,163249,PRX,13-7,Regular Season: Week 1
+314343,all,PRX,2-0,Regular Season: Week 1
+314344,163251,RRQ,15-13,Regular Season: Week 1
+314344,163252,RRQ,13-9,Regular Season: Week 1
+314344,all,RRQ,2-0,Regular Season: Week 1
+314345,163254,TS,13-8,Regular Season: Week 1
+314345,163255,TS,13-10,Regular Season: Week 1
+314345,all,TS,2-0,Regular Season: Week 1
+314346,163257,TLN,15-13,Regular Season: Week 2
+314346,163258,RRQ,13-10,Regular Season: Week 2
+314346,163259,TLN,13-10,Regular Season: Week 2
+314346,all,TLN,2-1,Regular Season: Week 2
+314347,163260,PRX,13-4,Regular Season: Week 2
+314347,163261,KRX,13-8,Regular Season: Week 2
+314347,163262,PRX,13-5,Regular Season: Week 2
+314347,all,PRX,2-1,Regular Season: Week 2
+314348,163263,GE,13-6,Regular Season: Week 2
+314348,163264,GE,13-6,Regular Season: Week 2
+314348,all,GE,2-0,Regular Season: Week 2
+314349,163266,ZETA,13-7,Regular Season: Week 2
+314349,163267,DFM,13-9,Regular Season: Week 2
+314349,163268,DFM,13-10,Regular Season: Week 2
+314349,all,DFM,2-1,Regular Season: Week 2
+314350,163269,RRQ,14-12,Regular Season: Week 2
+314350,163270,RRQ,14-12,Regular Season: Week 2
+314350,all,RRQ,2-0,Regular Season: Week 2
+314351,163272,T1,13-10,Regular Season: Week 2
+314351,163273,TS,13-6,Regular Season: Week 2
+314351,163274,TS,14-12,Regular Season: Week 2
+314351,all,TS,2-1,Regular Season: Week 2
+314352,163275,TLN,13-7,Regular Season: Week 3
+314352,163276,TLN,13-10,Regular Season: Week 3
+314352,all,TLN,2-0,Regular Season: Week 3
+314353,163278,RRQ,13-8,Regular Season: Week 3
+314353,163279,RRQ,13-10,Regular Season: Week 3
+314353,all,RRQ,2-0,Regular Season: Week 3
+314354,163281,GE,13-10,Regular Season: Week 3
+314354,163282,T1,13-8,Regular Season: Week 3
+314354,163283,T1,13-8,Regular Season: Week 3
+314354,all,T1,2-1,Regular Season: Week 3
+314355,163284,GEN,13-6,Regular Season: Week 3
+314355,163285,BLD,13-10,Regular Season: Week 3
+314355,163286,GEN,13-11,Regular Season: Week 3
+314355,all,GEN,2-1,Regular Season: Week 3
+314356,163287,PRX,13-4,Regular Season: Week 3
+314356,163288,PRX,13-8,Regular Season: Week 3
+314356,all,PRX,2-0,Regular Season: Week 3
+314357,163290,TLN,13-11,Regular Season: Week 3
+314357,163291,KRX,13-10,Regular Season: Week 3
+314357,163292,KRX,13-5,Regular Season: Week 3
+314357,all,KRX,2-1,Regular Season: Week 3
+314358,163293,PRX,13-7,Regular Season: Week 4
+314358,163294,RRQ,13-7,Regular Season: Week 4
+314358,163295,PRX,13-10,Regular Season: Week 4
+314358,all,PRX,2-1,Regular Season: Week 4
+314359,163296,GEN,13-1,Regular Season: Week 4
+314359,163297,GEN,13-6,Regular Season: Week 4
+314359,all,GEN,2-0,Regular Season: Week 4
+314360,163299,KRX,13-7,Regular Season: Week 4
+314360,163300,DFM,13-6,Regular Season: Week 4
+314360,178343,KRX,13-2,Regular Season: Week 4
+314360,all,KRX,2-1,Regular Season: Week 4
+314361,163302,ZETA,13-6,Regular Season: Week 4
+314361,163303,TLN,13-8,Regular Season: Week 4
+314361,163304,ZETA,13-8,Regular Season: Week 4
+314361,all,ZETA,2-1,Regular Season: Week 4
+314362,163305,TS,13-6,Regular Season: Week 4
+314362,163306,GEN,13-7,Regular Season: Week 4
+314362,163307,TS,14-12,Regular Season: Week 4
+314362,all,TS,2-1,Regular Season: Week 4
+314363,163308,ZETA,13-9,Regular Season: Week 4
+314363,163309,PRX,13-8,Regular Season: Week 4
+314363,163310,PRX,13-4,Regular Season: Week 4
+314363,all,PRX,2-1,Regular Season: Week 4
+314364,163311,T1,13-11,Regular Season: Week 4
+314364,163312,BLD,13-9,Regular Season: Week 4
+314364,163313,T1,13-8,Regular Season: Week 4
+314364,all,T1,2-1,Regular Season: Week 4
+314622,163351,LEV,13-7,Regular Season: Week 1
+314622,163352,C9,13-7,Regular Season: Week 1
+314622,163353,C9,18-16,Regular Season: Week 1
+314622,all,C9,2-1,Regular Season: Week 1
+314623,163354,NRG,13-10,Regular Season: Week 1
+314623,163355,NRG,13-2,Regular Season: Week 1
+314623,all,NRG,2-0,Regular Season: Week 1
+314624,163357,G2,13-8,Regular Season: Week 1
+314624,163358,G2,13-3,Regular Season: Week 1
+314624,all,G2,2-0,Regular Season: Week 1
+314625,163360,SEN,13-10,Regular Season: Week 1
+314625,163361,SEN,13-6,Regular Season: Week 1
+314625,all,SEN,2-0,Regular Season: Week 1
+314626,163363,KRÜ,13-7,Regular Season: Week 1
+314626,163364,FUR,13-11,Regular Season: Week 1
+314626,163365,KRÜ,13-7,Regular Season: Week 1
+314626,all,KRÜ,2-1,Regular Season: Week 1
+314628,163366,100T,13-9,Regular Season: Week 2
+314628,163367,100T,13-8,Regular Season: Week 2
+314628,all,100T,2-0,Regular Season: Week 2
+314629,163369,LEV,19-17,Regular Season: Week 2
+314629,163370,LEV,13-11,Regular Season: Week 2
+314629,all,LEV,2-0,Regular Season: Week 2
+314630,163372,KRÜ,13-6,Regular Season: Week 2
+314630,163373,KRÜ,13-8,Regular Season: Week 2
+314630,all,KRÜ,2-0,Regular Season: Week 2
+314631,163375,NRG,13-2,Regular Season: Week 2
+314631,163376,NRG,13-8,Regular Season: Week 2
+314631,all,NRG,2-0,Regular Season: Week 2
+314632,163378,EG,13-9,Regular Season: Week 2
+314632,163379,C9,13-8,Regular Season: Week 2
+314632,163380,C9,13-4,Regular Season: Week 2
+314632,all,C9,2-1,Regular Season: Week 2
+314634,163381,SEN,13-3,Regular Season: Week 3
+314634,163382,SEN,13-7,Regular Season: Week 3
+314634,all,SEN,2-0,Regular Season: Week 3
+314635,163384,LOUD,13-11,Regular Season: Week 3
+314635,163385,C9,13-4,Regular Season: Week 3
+314635,163386,C9,13-9,Regular Season: Week 3
+314635,all,C9,2-1,Regular Season: Week 3
+314636,163387,KRÜ,13-5,Regular Season: Week 3
+314636,163388,KRÜ,13-9,Regular Season: Week 3
+314636,all,KRÜ,2-0,Regular Season: Week 3
+314637,163390,LEV,13-4,Regular Season: Week 3
+314637,163391,LEV,13-4,Regular Season: Week 3
+314637,all,LEV,2-0,Regular Season: Week 3
+314638,163393,G2,13-3,Regular Season: Week 3
+314638,163394,G2,13-3,Regular Season: Week 3
+314638,all,G2,2-0,Regular Season: Week 3
+314639,163396,100T,13-7,Regular Season: Week 3
+314639,163397,100T,13-6,Regular Season: Week 3
+314639,all,100T,2-0,Regular Season: Week 3
+314640,163399,SEN,13-10,Regular Season: Week 3
+314640,163400,EG,13-11,Regular Season: Week 3
+314640,163401,EG,13-10,Regular Season: Week 3
+314640,all,EG,2-1,Regular Season: Week 3
+314641,163402,NRG,13-9,Regular Season: Week 3
+314641,163403,NRG,13-3,Regular Season: Week 3
+314641,all,NRG,2-0,Regular Season: Week 3
+314642,163405,LEV,13-6,Regular Season: Week 3
+314642,163406,G2,13-8,Regular Season: Week 3
+314642,163407,LEV,13-9,Regular Season: Week 3
+314642,all,LEV,2-1,Regular Season: Week 3
+314643,163408,KRÜ,13-8,Regular Season: Week 3
+314643,163409,KRÜ,13-8,Regular Season: Week 3
+314643,all,KRÜ,2-0,Regular Season: Week 3
+314644,163411,G2,13-9,Regular Season: Week 4
+314644,163412,G2,13-3,Regular Season: Week 4
+314644,all,G2,2-0,Regular Season: Week 4
+314645,163414,LOUD,13-7,Regular Season: Week 4
+314645,163415,LOUD,13-8,Regular Season: Week 4
+314645,all,LOUD,2-0,Regular Season: Week 4
+314646,163417,FUR,13-2,Regular Season: Week 4
+314646,163418,C9,13-3,Regular Season: Week 4
+314646,163419,C9,13-8,Regular Season: Week 4
+314646,all,C9,2-1,Regular Season: Week 4
+314647,163420,EG,13-6,Regular Season: Week 4
+314647,163421,NRG,16-14,Regular Season: Week 4
+314647,163422,EG,13-11,Regular Season: Week 4
+314647,all,EG,2-1,Regular Season: Week 4
+314648,163423,KRÜ,13-7,Regular Season: Week 4
+314648,163424,100T,13-11,Regular Season: Week 4
+314648,163425,KRÜ,13-8,Regular Season: Week 4
+314648,all,KRÜ,2-1,Regular Season: Week 4
+314650,163426,SEN,13-5,Regular Season: Week 5
+314650,163427,SEN,13-9,Regular Season: Week 5
+314650,all,SEN,2-0,Regular Season: Week 5
+314651,163429,100T,13-8,Regular Season: Week 5
+314651,163430,100T,13-7,Regular Season: Week 5
+314651,all,100T,2-0,Regular Season: Week 5
+314652,163432,LEV,13-4,Regular Season: Week 5
+314652,163433,KRÜ,14-12,Regular Season: Week 5
+314652,163434,LEV,13-10,Regular Season: Week 5
+314652,all,LEV,2-1,Regular Season: Week 5
+314653,163435,C9,14-12,Regular Season: Week 5
+314653,163436,C9,13-9,Regular Season: Week 5
+314653,all,C9,2-0,Regular Season: Week 5
+314654,163438,LOUD,13-11,Regular Season: Week 5
+314654,163439,LOUD,13-4,Regular Season: Week 5
+314654,all,LOUD,2-0,Regular Season: Week 5
+318911,164091,KC,13-4,Regular Season: Week 1
+318911,164092,KC,13-9,Regular Season: Week 1
+318911,all,KC,2-0,Regular Season: Week 1
+318913,164094,TL,13-9,Regular Season: Week 1
+318913,164095,TL,13-7,Regular Season: Week 1
+318913,all,TL,2-0,Regular Season: Week 1
+318914,164097,NAVI,13-9,Regular Season: Week 1
+318914,164098,NAVI,13-4,Regular Season: Week 1
+318914,all,NAVI,2-0,Regular Season: Week 1
+318915,164100,TH,13-4,Regular Season: Week 1
+318915,164101,TH,17-15,Regular Season: Week 1
+318915,all,TH,2-0,Regular Season: Week 1
+318916,164103,FUT,13-5,Regular Season: Week 1
+318916,164104,FUT,13-8,Regular Season: Week 1
+318916,all,FUT,2-0,Regular Season: Week 1
+318917,164106,M8,13-7,Regular Season: Week 1
+318917,164107,M8,13-11,Regular Season: Week 1
+318917,all,M8,2-0,Regular Season: Week 1
+318918,164109,KC,13-11,Regular Season: Week 2
+318918,164110,FUT,13-8,Regular Season: Week 2
+318918,164111,FUT,13-7,Regular Season: Week 2
+318918,all,FUT,2-1,Regular Season: Week 2
+318919,164112,VIT,13-9,Regular Season: Week 2
+318919,164113,TH,13-11,Regular Season: Week 2
+318919,164114,VIT,13-9,Regular Season: Week 2
+318919,all,VIT,2-1,Regular Season: Week 2
+318920,164115,TL,13-10,Regular Season: Week 2
+318920,164116,NAVI,13-11,Regular Season: Week 2
+318920,164117,NAVI,13-5,Regular Season: Week 2
+318920,all,NAVI,2-1,Regular Season: Week 2
+318921,164118,BBL,13-4,Regular Season: Week 2
+318921,164119,BBL,13-3,Regular Season: Week 2
+318921,all,BBL,2-0,Regular Season: Week 2
+318922,164121,FNC,13-5,Regular Season: Week 2
+318922,164122,GX,13-5,Regular Season: Week 2
+318922,164123,FNC,13-7,Regular Season: Week 2
+318922,all,FNC,2-1,Regular Season: Week 2
+318923,164124,KC,13-6,Regular Season: Week 2
+318923,164125,KC,13-6,Regular Season: Week 2
+318923,all,KC,2-0,Regular Season: Week 2
+318924,164127,FNC,13-6,Regular Season: Week 3
+318924,164128,FNC,13-4,Regular Season: Week 3
+318924,all,FNC,2-0,Regular Season: Week 3
+318925,164130,KC,13-7,Regular Season: Week 3
+318925,164131,NAVI,13-7,Regular Season: Week 3
+318925,164132,NAVI,13-6,Regular Season: Week 3
+318925,all,NAVI,2-1,Regular Season: Week 3
+318926,164133,BBL,13-7,Regular Season: Week 3
+318926,164134,BBL,13-10,Regular Season: Week 3
+318926,all,BBL,2-0,Regular Season: Week 3
+318927,164136,FUT,13-7,Regular Season: Week 3
+318927,164137,VIT,13-9,Regular Season: Week 3
+318927,164138,VIT,13-9,Regular Season: Week 3
+318927,all,VIT,2-1,Regular Season: Week 3
+318928,164139,GX,16-14,Regular Season: Week 3
+318928,164140,TL,13-7,Regular Season: Week 3
+318928,164141,TL,13-11,Regular Season: Week 3
+318928,all,TL,2-1,Regular Season: Week 3
+318929,164142,FNC,13-11,Regular Season: Week 3
+318929,164143,FNC,13-4,Regular Season: Week 3
+318929,all,FNC,2-0,Regular Season: Week 3
+318930,164145,TH,13-2,Regular Season: Week 4
+318930,164146,TH,13-7,Regular Season: Week 4
+318930,all,TH,2-0,Regular Season: Week 4
+318931,164148,M8,13-5,Regular Season: Week 4
+318931,164149,M8,13-5,Regular Season: Week 4
+318931,all,M8,2-0,Regular Season: Week 4
+318932,164151,FUT,13-7,Regular Season: Week 4
+318932,164152,FUT,15-13,Regular Season: Week 4
+318932,all,FUT,2-0,Regular Season: Week 4
+318933,164154,NAVI,13-8,Regular Season: Week 4
+318933,164155,BBL,13-8,Regular Season: Week 4
+318933,164156,BBL,13-9,Regular Season: Week 4
+318933,all,BBL,2-1,Regular Season: Week 4
+318934,164157,GX,16-14,Regular Season: Week 4
+318934,164158,VIT,13-7,Regular Season: Week 4
+318934,164159,VIT,13-6,Regular Season: Week 4
+318934,all,VIT,2-1,Regular Season: Week 4
+318935,164160,KC,13-7,Regular Season: Week 4
+318935,164161,MKOI,13-7,Regular Season: Week 4
+318935,164162,KC,15-13,Regular Season: Week 4
+318935,all,KC,2-1,Regular Season: Week 4
+318936,164163,GX,13-6,Regular Season: Week 5
+318936,164164,GX,13-11,Regular Season: Week 5
+318936,all,GX,2-0,Regular Season: Week 5
+318937,164166,TH,14-12,Regular Season: Week 5
+318937,164167,KC,13-5,Regular Season: Week 5
+318937,164168,TH,13-9,Regular Season: Week 5
+318937,all,TH,2-1,Regular Season: Week 5
+318938,164169,MKOI,13-5,Regular Season: Week 5
+318938,164170,VIT,13-7,Regular Season: Week 5
+318938,164171,MKOI,13-4,Regular Season: Week 5
+318938,all,MKOI,2-1,Regular Season: Week 5
+318939,164172,FNC,13-6,Regular Season: Week 5
+318939,164173,NAVI,13-8,Regular Season: Week 5
+318939,164174,NAVI,13-3,Regular Season: Week 5
+318939,all,NAVI,2-1,Regular Season: Week 5
+318940,164175,TL,13-4,Regular Season: Week 5
+318940,164176,TL,13-2,Regular Season: Week 5
+318940,all,TL,2-0,Regular Season: Week 5
+318941,164178,FUT,13-9,Regular Season: Week 5
+318941,164179,FUT,13-6,Regular Season: Week 5
+318941,all,FUT,2-0,Regular Season: Week 5
+321373,164449,Team,13-8,Showmatch: Showmatch
+321373,all,Team,1-0,Showmatch: Showmatch
+329907,167267,T1,13-7,Playoffs: Knockout Round
+329907,167268,T1,13-11,Playoffs: Knockout Round
+329907,all,T1,2-0,Playoffs: Knockout Round
+329908,167270,PRX,13-0,Playoffs: Knockout Round
+329908,167272,PRX,13-9,Playoffs: Knockout Round
+329908,169325,TLN,13-7,Playoffs: Knockout Round
+329908,all,PRX,2-1,Playoffs: Knockout Round
+329909,167273,T1,13-9,Playoffs: Upper Semifinals
+329909,167274,GEN,13-8,Playoffs: Upper Semifinals
+329909,167275,T1,13-7,Playoffs: Upper Semifinals
+329909,all,T1,2-1,Playoffs: Upper Semifinals
+329910,167276,PRX,13-6,Playoffs: Upper Semifinals
+329910,167277,KRX,13-10,Playoffs: Upper Semifinals
+329910,167278,PRX,13-6,Playoffs: Upper Semifinals
+329910,all,PRX,2-1,Playoffs: Upper Semifinals
+329911,167279,KRX,13-8,Playoffs: Lower Round 1
+329911,167280,GEN,13-11,Playoffs: Lower Round 1
+329911,167281,GEN,13-8,Playoffs: Lower Round 1
+329911,all,GEN,2-1,Playoffs: Lower Round 1
+329912,167282,PRX,13-3,Playoffs: Upper Final
+329912,167283,PRX,13-5,Playoffs: Upper Final
+329912,all,PRX,2-0,Playoffs: Upper Final
+329913,167285,GEN,13-2,Playoffs: Lower Final
+329913,167286,GEN,13-11,Playoffs: Lower Final
+329913,167287,GEN,13-9,Playoffs: Lower Final
+329913,all,GEN,3-0,Playoffs: Lower Final
+329914,167290,GEN,13-9,Playoffs: Grand Final
+329914,167291,PRX,13-9,Playoffs: Grand Final
+329914,167292,PRX,13-11,Playoffs: Grand Final
+329914,167293,GEN,13-9,Playoffs: Grand Final
+329914,167294,PRX,13-8,Playoffs: Grand Final
+329914,all,PRX,3-2,Playoffs: Grand Final
+337407,168972,G2,13-6,Playoffs: Knockout Round
+337407,168973,G2,15-13,Playoffs: Knockout Round
+337407,all,G2,2-0,Playoffs: Knockout Round
+337408,168975,100T,13-6,Playoffs: Knockout Round
+337408,168976,100T,13-4,Playoffs: Knockout Round
+337408,all,100T,2-0,Playoffs: Knockout Round
+337409,168978,G2,13-5,Playoffs: Upper Semifinals
+337409,168979,G2,13-8,Playoffs: Upper Semifinals
+337409,all,G2,2-0,Playoffs: Upper Semifinals
+337410,168981,100T,13-3,Playoffs: Upper Semifinals
+337410,168982,LEV,14-12,Playoffs: Upper Semifinals
+337410,168983,100T,13-10,Playoffs: Upper Semifinals
+337410,all,100T,2-1,Playoffs: Upper Semifinals
+337411,168984,100T,13-5,Playoffs: Upper Final
+337411,168985,G2,13-8,Playoffs: Upper Final
+337411,168986,100T,13-11,Playoffs: Upper Final
+337411,all,100T,2-1,Playoffs: Upper Final
+337412,168987,100T,13-9,Playoffs: Grand Final
+337412,168988,100T,13-7,Playoffs: Grand Final
+337412,168989,100T,13-8,Playoffs: Grand Final
+337412,all,100T,3-0,Playoffs: Grand Final
+337413,168992,KRÜ,13-6,Playoffs: Lower Round 1
+337413,168993,LEV,13-11,Playoffs: Lower Round 1
+337413,168994,LEV,13-8,Playoffs: Lower Round 1
+337413,all,LEV,2-1,Playoffs: Lower Round 1
+337414,168995,LEV,14-12,Playoffs: Lower Final
+337414,168996,G2,13-7,Playoffs: Lower Final
+337414,168997,LEV,14-12,Playoffs: Lower Final
+337414,168998,G2,13-10,Playoffs: Lower Final
+337414,168999,G2,13-11,Playoffs: Lower Final
+337414,all,G2,3-2,Playoffs: Lower Final
+341816,169368,FNC,13-11,Playoffs: Knockout Round
+341816,169376,TL,14-12,Playoffs: Knockout Round
+341816,169377,FNC,13-5,Playoffs: Knockout Round
+341816,all,FNC,2-1,Playoffs: Knockout Round
+341817,169369,TH,13-11,Playoffs: Knockout Round
+341817,169378,TH,13-9,Playoffs: Knockout Round
+341817,all,TH,2-0,Playoffs: Knockout Round
+341818,169370,FNC,13-11,Playoffs: Upper Semifinals
+341818,169380,FNC,13-9,Playoffs: Upper Semifinals
+341818,all,FNC,2-0,Playoffs: Upper Semifinals
+341819,169371,TH,13-10,Playoffs: Upper Semifinals
+341819,169382,TH,15-13,Playoffs: Upper Semifinals
+341819,all,TH,2-0,Playoffs: Upper Semifinals
+341820,169372,TH,15-13,Playoffs: Upper Final
+341820,169384,TH,13-4,Playoffs: Upper Final
+341820,all,TH,2-0,Playoffs: Upper Final
+341821,169373,TH,13-7,Playoffs: Grand Final
+341821,169386,TH,15-13,Playoffs: Grand Final
+341821,169387,FNC,13-8,Playoffs: Grand Final
+341821,169388,FNC,13-5,Playoffs: Grand Final
+341821,169389,FNC,13-8,Playoffs: Grand Final
+341821,all,FNC,3-2,Playoffs: Grand Final
+341822,169374,FUT,13-3,Playoffs: Lower Round 1
+341822,169390,FUT,13-10,Playoffs: Lower Round 1
+341822,all,FUT,2-0,Playoffs: Lower Round 1
+341823,169375,FUT,13-11,Playoffs: Lower Final
+341823,169392,FNC,13-6,Playoffs: Lower Final
+341823,169393,FNC,13-11,Playoffs: Lower Final
+341823,169394,FNC,14-12,Playoffs: Lower Final
+341823,all,FNC,3-1,Playoffs: Lower Final
+353153,173346,FUT,13-7,Regular Season: Week 1
+353153,173347,MKOI,13-7,Regular Season: Week 1
+353153,173348,FUT,13-6,Regular Season: Week 1
+353153,all,FUT,2-1,Regular Season: Week 1
+353154,173349,FNC,13-9,Regular Season: Week 1
+353154,173350,BBL,13-11,Regular Season: Week 1
+353154,173351,FNC,13-11,Regular Season: Week 1
+353154,all,FNC,2-1,Regular Season: Week 1
+353155,173352,TH,13-3,Regular Season: Week 1
+353155,173353,TH,13-5,Regular Season: Week 1
+353155,all,TH,2-0,Regular Season: Week 1
+353156,173355,VIT,13-10,Regular Season: Week 1
+353156,173356,VIT,17-15,Regular Season: Week 1
+353156,all,VIT,2-0,Regular Season: Week 1
+353157,173358,M8,13-1,Regular Season: Week 1
+353157,173359,GX,13-11,Regular Season: Week 1
+353157,173360,GX,13-11,Regular Season: Week 1
+353157,all,GX,2-1,Regular Season: Week 1
+353158,173361,FUT,13-11,Regular Season: Week 1
+353158,173362,FUT,13-5,Regular Season: Week 1
+353158,all,FUT,2-0,Regular Season: Week 1
+353159,173364,KC,13-6,Regular Season: Week 1
+353159,173365,KC,13-5,Regular Season: Week 1
+353159,all,KC,2-0,Regular Season: Week 1
+353160,173367,FNC,13-6,Regular Season: Week 2
+353160,173368,VIT,13-6,Regular Season: Week 2
+353160,173369,FNC,13-7,Regular Season: Week 2
+353160,all,FNC,2-1,Regular Season: Week 2
+353161,173370,TH,13-10,Regular Season: Week 2
+353161,173371,TH,13-6,Regular Season: Week 2
+353161,all,TH,2-0,Regular Season: Week 2
+353162,173373,BBL,13-6,Regular Season: Week 2
+353162,173374,BBL,13-5,Regular Season: Week 2
+353162,all,BBL,2-0,Regular Season: Week 2
+353163,173376,GX,13-9,Regular Season: Week 2
+353163,173377,GX,13-8,Regular Season: Week 2
+353163,all,GX,2-0,Regular Season: Week 2
+353164,173379,M8,13-11,Regular Season: Week 2
+353164,173380,M8,13-11,Regular Season: Week 2
+353164,all,M8,2-0,Regular Season: Week 2
+353165,173382,FNC,13-3,Regular Season: Week 2
+353165,173383,FNC,13-8,Regular Season: Week 2
+353165,all,FNC,2-0,Regular Season: Week 2
+353166,173385,TH,13-9,Regular Season: Week 3
+353166,173386,GX,15-13,Regular Season: Week 3
+353166,173387,TH,13-9,Regular Season: Week 3
+353166,all,TH,2-1,Regular Season: Week 3
+353167,173388,FUT,13-8,Regular Season: Week 3
+353167,173389,FUT,13-4,Regular Season: Week 3
+353167,all,FUT,2-0,Regular Season: Week 3
+353168,173391,MKOI,13-10,Regular Season: Week 3
+353168,173392,MKOI,13-6,Regular Season: Week 3
+353168,all,MKOI,2-0,Regular Season: Week 3
+353169,173394,TL,13-11,Regular Season: Week 3
+353169,173395,TL,13-2,Regular Season: Week 3
+353169,all,TL,2-0,Regular Season: Week 3
+353170,173397,VIT,13-7,Regular Season: Week 3
+353170,173398,BBL,13-6,Regular Season: Week 3
+353170,173399,VIT,13-11,Regular Season: Week 3
+353170,all,VIT,2-1,Regular Season: Week 3
+353171,173400,TH,13-7,Regular Season: Week 3
+353171,173401,M8,13-10,Regular Season: Week 3
+353171,173402,TH,13-5,Regular Season: Week 3
+353171,all,TH,2-1,Regular Season: Week 3
+353172,173403,FUT,13-4,Regular Season: Week 4
+353172,173404,FUT,13-6,Regular Season: Week 4
+353172,all,FUT,2-0,Regular Season: Week 4
+353173,173406,MKOI,13-11,Regular Season: Week 4
+353173,173407,TH,13-9,Regular Season: Week 4
+353173,173408,TH,13-10,Regular Season: Week 4
+353173,all,TH,2-1,Regular Season: Week 4
+353174,173409,FNC,13-2,Regular Season: Week 4
+353174,173410,FNC,13-9,Regular Season: Week 4
+353174,all,FNC,2-0,Regular Season: Week 4
+353175,173412,NAVI,13-7,Regular Season: Week 4
+353175,173413,M8,13-8,Regular Season: Week 4
+353175,173414,NAVI,13-11,Regular Season: Week 4
+353175,all,NAVI,2-1,Regular Season: Week 4
+353177,173415,LEV,13-9,Regular Season: Week 1
+353177,173416,LEV,13-7,Regular Season: Week 1
+353177,all,LEV,2-0,Regular Season: Week 1
+353178,173418,SEN,13-8,Regular Season: Week 1
+353178,173419,SEN,14-12,Regular Season: Week 1
+353178,all,SEN,2-0,Regular Season: Week 1
+353179,173421,FUR,14-12,Regular Season: Week 1
+353179,173422,FUR,16-14,Regular Season: Week 1
+353179,all,FUR,2-0,Regular Season: Week 1
+353180,173424,LOUD,13-7,Regular Season: Week 1
+353180,173425,EG,13-6,Regular Season: Week 1
+353180,173426,EG,13-11,Regular Season: Week 1
+353180,all,EG,2-1,Regular Season: Week 1
+353181,173427,G2,13-11,Regular Season: Week 1
+353181,173428,C9,13-5,Regular Season: Week 1
+353181,173429,G2,13-8,Regular Season: Week 1
+353181,all,G2,2-1,Regular Season: Week 1
+353182,173430,EG,13-5,Regular Season: Week 2
+353182,173431,EG,13-4,Regular Season: Week 2
+353182,all,EG,2-0,Regular Season: Week 2
+353183,173433,SEN,13-11,Regular Season: Week 2
+353183,173434,SEN,13-10,Regular Season: Week 2
+353183,all,SEN,2-0,Regular Season: Week 2
+353184,173436,LOUD,13-7,Regular Season: Week 2
+353184,173437,MIBR,13-11,Regular Season: Week 2
+353184,173438,LOUD,13-9,Regular Season: Week 2
+353184,all,LOUD,2-1,Regular Season: Week 2
+353185,173439,LEV,13-10,Regular Season: Week 2
+353185,173440,LEV,13-4,Regular Season: Week 2
+353185,all,LEV,2-0,Regular Season: Week 2
+353186,173442,G2,13-7,Regular Season: Week 2
+353186,173443,G2,13-8,Regular Season: Week 2
+353186,all,G2,2-0,Regular Season: Week 2
+353187,173445,SEN,13-5,Regular Season: Week 2
+353187,173446,SEN,13-8,Regular Season: Week 2
+353187,all,SEN,2-0,Regular Season: Week 2
+353188,173448,LEV,13-5,Regular Season: Week 2
+353188,173449,LEV,13-10,Regular Season: Week 2
+353188,all,LEV,2-0,Regular Season: Week 2
+353189,173451,LOUD,13-11,Regular Season: Week 2
+353189,173452,FUR,13-10,Regular Season: Week 2
+353189,173453,FUR,13-9,Regular Season: Week 2
+353189,all,FUR,2-1,Regular Season: Week 2
+353190,173454,100T,13-5,Regular Season: Week 2
+353190,173455,100T,13-6,Regular Season: Week 2
+353190,all,100T,2-0,Regular Season: Week 2
+353191,173457,KRÜ,13-8,Regular Season: Week 2
+353191,173458,NRG,13-8,Regular Season: Week 2
+353191,173459,NRG,13-7,Regular Season: Week 2
+353191,all,NRG,2-1,Regular Season: Week 2
+353192,173460,KRÜ,13-4,Regular Season: Week 3
+353192,173461,G2,16-14,Regular Season: Week 3
+353192,173462,G2,13-5,Regular Season: Week 3
+353192,all,G2,2-1,Regular Season: Week 3
+353193,173463,LEV,13-11,Regular Season: Week 3
+353193,173464,LEV,13-6,Regular Season: Week 3
+353193,all,LEV,2-0,Regular Season: Week 3
+353194,173466,FUR,13-10,Regular Season: Week 3
+353194,173467,FUR,13-7,Regular Season: Week 3
+353194,all,FUR,2-0,Regular Season: Week 3
+353195,173469,NRG,13-3,Regular Season: Week 3
+353195,173470,C9,13-10,Regular Season: Week 3
+353195,173471,C9,14-12,Regular Season: Week 3
+353195,all,C9,2-1,Regular Season: Week 3
+353196,173472,100T,13-10,Regular Season: Week 3
+353196,173473,EG,13-10,Regular Season: Week 3
+353196,173474,100T,13-7,Regular Season: Week 3
+353196,all,100T,2-1,Regular Season: Week 3
+353197,173475,KRÜ,13-7,Regular Season: Week 4
+353197,173476,KRÜ,13-10,Regular Season: Week 4
+353197,all,KRÜ,2-0,Regular Season: Week 4
+353198,173478,MIBR,13-9,Regular Season: Week 4
+353198,173479,MIBR,13-2,Regular Season: Week 4
+353198,all,MIBR,2-0,Regular Season: Week 4
+353199,173481,LEV,13-6,Regular Season: Week 4
+353199,173482,LEV,13-6,Regular Season: Week 4
+353199,all,LEV,2-0,Regular Season: Week 4
+353200,173484,100T,13-1,Regular Season: Week 4
+353200,173485,LOUD,13-8,Regular Season: Week 4
+353200,173486,LOUD,13-10,Regular Season: Week 4
+353200,all,LOUD,2-1,Regular Season: Week 4
+353201,173487,G2,13-6,Regular Season: Week 4
+353201,173488,G2,13-9,Regular Season: Week 4
+353201,all,G2,2-0,Regular Season: Week 4
+353202,173490,MKOI,13-5,Regular Season: Week 2
+353202,173491,MKOI,14-12,Regular Season: Week 2
+353202,all,MKOI,2-0,Regular Season: Week 2
+353203,173493,VIT,13-4,Regular Season: Week 4
+353203,173494,KC,13-9,Regular Season: Week 4
+353203,173495,VIT,14-12,Regular Season: Week 4
+353203,all,VIT,2-1,Regular Season: Week 4
+365316,176169,GEN,13-8,Playoffs: Knockout Round
+365316,176170,GEN,13-11,Playoffs: Knockout Round
+365316,all,GEN,2-0,Playoffs: Knockout Round
+365317,176172,TLN,13-11,Playoffs: Knockout Round
+365317,176173,TLN,13-11,Playoffs: Knockout Round
+365317,all,TLN,2-0,Playoffs: Knockout Round
+365318,176175,GEN,13-10,Playoffs: Upper Semifinals
+365318,176176,GEN,13-5,Playoffs: Upper Semifinals
+365318,all,GEN,2-0,Playoffs: Upper Semifinals
+365319,176178,KRX,13-8,Playoffs: Upper Semifinals
+365319,176179,KRX,13-4,Playoffs: Upper Semifinals
+365319,all,KRX,2-0,Playoffs: Upper Semifinals
+365320,176181,GEN,13-9,Playoffs: Upper Final
+365320,176182,KRX,13-10,Playoffs: Upper Final
+365320,176183,GEN,13-6,Playoffs: Upper Final
+365320,all,GEN,2-1,Playoffs: Upper Final
+365321,176184,KRX,13-6,Playoffs: Grand Final
+365321,176185,GEN,18-16,Playoffs: Grand Final
+365321,176186,GEN,14-12,Playoffs: Grand Final
+365321,176187,GEN,13-6,Playoffs: Grand Final
+365321,all,GEN,3-1,Playoffs: Grand Final
+365322,176189,PRX,13-3,Playoffs: Lower Round 1
+365322,176190,PRX,13-3,Playoffs: Lower Round 1
+365322,all,PRX,2-0,Playoffs: Lower Round 1
+365323,176192,PRX,13-7,Playoffs: Lower Final
+365323,176193,PRX,13-10,Playoffs: Lower Final
+365323,176194,KRX,13-10,Playoffs: Lower Final
+365323,176195,KRX,13-10,Playoffs: Lower Final
+365323,176196,KRX,13-7,Playoffs: Lower Final
+365323,all,KRX,3-2,Playoffs: Lower Final
+371266,178819,KRÜ,13-11,Playoffs: Knockout Round
+371266,178820,C9,13-11,Playoffs: Knockout Round
+371266,178821,KRÜ,13-6,Playoffs: Knockout Round
+371266,all,KRÜ,2-1,Playoffs: Knockout Round
+371267,178822,100T,13-7,Playoffs: Knockout Round
+371267,178823,100T,13-10,Playoffs: Knockout Round
+371267,all,100T,2-0,Playoffs: Knockout Round
+371268,178825,LEV,13-2,Playoffs: Upper Semifinals
+371268,178826,LEV,13-4,Playoffs: Upper Semifinals
+371268,all,LEV,2-0,Playoffs: Upper Semifinals
+371269,178828,G2,13-5,Playoffs: Upper Semifinals
+371269,178829,G2,13-10,Playoffs: Upper Semifinals
+371269,all,G2,2-0,Playoffs: Upper Semifinals
+371270,178831,G2,13-8,Playoffs: Upper Final
+371270,178832,G2,13-6,Playoffs: Upper Final
+371270,all,G2,2-0,Playoffs: Upper Final
+371271,178834,LEV,15-13,Playoffs: Grand Final
+371271,178835,LEV,16-14,Playoffs: Grand Final
+371271,178836,G2,13-9,Playoffs: Grand Final
+371271,178837,LEV,13-4,Playoffs: Grand Final
+371271,all,LEV,3-1,Playoffs: Grand Final
+371272,178839,100T,13-9,Playoffs: Lower Round 1
+371272,178840,KRÜ,13-11,Playoffs: Lower Round 1
+371272,178841,KRÜ,13-11,Playoffs: Lower Round 1
+371272,all,KRÜ,2-1,Playoffs: Lower Round 1
+371273,178842,LEV,13-3,Playoffs: Lower Final
+371273,178843,KRÜ,13-11,Playoffs: Lower Final
+371273,178844,KRÜ,13-7,Playoffs: Lower Final
+371273,178845,LEV,13-10,Playoffs: Lower Final
+371273,178846,LEV,13-10,Playoffs: Lower Final
+371273,all,LEV,3-2,Playoffs: Lower Final
+371278,178847,NAVI,13-8,Playoffs: Knockout Round
+371278,178848,VIT,13-5,Playoffs: Knockout Round
+371278,178849,VIT,13-7,Playoffs: Knockout Round
+371278,all,VIT,2-1,Playoffs: Knockout Round
+371279,178850,KC,13-7,Playoffs: Knockout Round
+371279,178851,FNC,15-13,Playoffs: Knockout Round
+371279,178852,FNC,13-6,Playoffs: Knockout Round
+371279,all,FNC,2-1,Playoffs: Knockout Round
+371280,178853,TH,14-12,Playoffs: Upper Semifinals
+371280,178854,VIT,13-10,Playoffs: Upper Semifinals
+371280,178855,VIT,14-12,Playoffs: Upper Semifinals
+371280,all,VIT,2-1,Playoffs: Upper Semifinals
+371281,178856,FNC,15-13,Playoffs: Upper Semifinals
+371281,178857,FNC,13-5,Playoffs: Upper Semifinals
+371281,all,FNC,2-0,Playoffs: Upper Semifinals
+371282,178859,FNC,13-11,Playoffs: Upper Final
+371282,178860,FNC,13-6,Playoffs: Upper Final
+371282,all,FNC,2-0,Playoffs: Upper Final
+371283,178862,FNC,13-8,Playoffs: Grand Final
+371283,178863,VIT,13-9,Playoffs: Grand Final
+371283,178864,FNC,13-9,Playoffs: Grand Final
+371283,178865,FNC,13-3,Playoffs: Grand Final
+371283,all,FNC,3-1,Playoffs: Grand Final
+371284,178867,TH,13-10,Playoffs: Lower Round 1
+371284,178868,TH,13-11,Playoffs: Lower Round 1
+371284,all,TH,2-0,Playoffs: Lower Round 1
+371285,178870,TH,13-6,Playoffs: Lower Final
+371285,178871,VIT,13-4,Playoffs: Lower Final
+371285,178872,VIT,13-3,Playoffs: Lower Final
+371285,178873,VIT,13-9,Playoffs: Lower Final
+371285,all,VIT,3-1,Playoffs: Lower Final
+378656,180354,FNC,13-9,Group Stage: Opening (A)
+378656,180355,FNC,13-4,Group Stage: Opening (A)
+378656,all,FNC,2-0,Group Stage: Opening (A)
+378657,180357,KRÜ,13-2,Group Stage: Opening (A)
+378657,180358,KRX,13-6,Group Stage: Opening (A)
+378657,180359,KRX,13-6,Group Stage: Opening (A)
+378657,all,KRX,2-1,Group Stage: Opening (A)
+378658,180360,KRX,13-11,Group Stage: Winner's (A)
+378658,180361,KRX,13-6,Group Stage: Winner's (A)
+378658,all,KRX,2-0,Group Stage: Winner's (A)
+378659,180363,KRÜ,13-9,Group Stage: Elimination (A)
+378659,180364,KRÜ,13-4,Group Stage: Elimination (A)
+378659,all,KRÜ,2-0,Group Stage: Elimination (A)
+378660,180366,KRÜ,13-11,Group Stage: Decider (A)
+378660,180367,FNC,13-9,Group Stage: Decider (A)
+378660,180368,FNC,13-5,Group Stage: Decider (A)
+378660,all,FNC,2-1,Group Stage: Decider (A)
+378662,180369,GEN,13-8,Group Stage: Opening (B)
+378662,180370,GEN,13-7,Group Stage: Opening (B)
+378662,all,GEN,2-0,Group Stage: Opening (B)
+378663,180372,TH,14-12,Group Stage: Opening (B)
+378663,180373,FPX,13-9,Group Stage: Opening (B)
+378663,180374,TH,15-13,Group Stage: Opening (B)
+378663,all,TH,2-1,Group Stage: Opening (B)
+378664,180375,GEN,13-11,Group Stage: Winner's (B)
+378664,180376,TH,13-11,Group Stage: Winner's (B)
+378664,180377,TH,13-10,Group Stage: Winner's (B)
+378664,all,TH,2-1,Group Stage: Winner's (B)
+378665,180378,SEN,13-8,Group Stage: Elimination (B)
+378665,180379,SEN,13-5,Group Stage: Elimination (B)
+378665,all,SEN,2-0,Group Stage: Elimination (B)
+378666,180381,SEN,13-9,Group Stage: Decider (B)
+378666,180382,SEN,13-6,Group Stage: Decider (B)
+378666,all,SEN,2-0,Group Stage: Decider (B)
+378667,180384,LEV,13-11,Group Stage: Opening (C)
+378667,180385,LEV,13-8,Group Stage: Opening (C)
+378667,all,LEV,2-0,Group Stage: Opening (C)
+378669,180387,TE,15-13,Group Stage: Opening (C)
+378669,180388,VIT,13-7,Group Stage: Opening (C)
+378669,180389,TE,13-7,Group Stage: Opening (C)
+378669,all,TE,2-1,Group Stage: Opening (C)
+378670,180390,TE,13-10,Group Stage: Winner's (C)
+378670,180391,LEV,13-9,Group Stage: Winner's (C)
+378670,180392,TE,13-5,Group Stage: Winner's (C)
+378670,all,TE,2-1,Group Stage: Winner's (C)
+378671,180393,VIT,13-6,Group Stage: Elimination (C)
+378671,180394,VIT,13-8,Group Stage: Elimination (C)
+378671,all,VIT,2-0,Group Stage: Elimination (C)
+378672,180396,LEV,14-12,Group Stage: Decider (C)
+378672,180397,LEV,13-4,Group Stage: Decider (C)
+378672,all,LEV,2-0,Group Stage: Decider (C)
+378673,180399,EDG,13-9,Group Stage: Opening (D)
+378673,180400,EDG,13-10,Group Stage: Opening (D)
+378673,all,EDG,2-0,Group Stage: Opening (D)
+378674,180402,G2,13-8,Group Stage: Opening (D)
+378674,180403,G2,13-9,Group Stage: Opening (D)
+378674,all,G2,2-0,Group Stage: Opening (D)
+378675,180405,EDG,13-8,Group Stage: Winner's (D)
+378675,180406,G2,13-11,Group Stage: Winner's (D)
+378675,180407,G2,13-11,Group Stage: Winner's (D)
+378675,all,G2,2-1,Group Stage: Winner's (D)
+378676,180408,PRX,13-11,Group Stage: Elimination (D)
+378676,180409,PRX,13-6,Group Stage: Elimination (D)
+378676,all,PRX,2-0,Group Stage: Elimination (D)
+378677,180411,PRX,13-3,Group Stage: Decider (D)
+378677,180412,EDG,13-8,Group Stage: Decider (D)
+378677,180413,EDG,13-4,Group Stage: Decider (D)
+378677,all,EDG,2-1,Group Stage: Decider (D)
+378822,180414,SEN,15-13,Playoffs: Upper Quarterfinals
+378822,180415,SEN,13-8,Playoffs: Upper Quarterfinals
+378822,all,SEN,2-0,Playoffs: Upper Quarterfinals
+378823,180417,EDG,13-7,Playoffs: Upper Quarterfinals
+378823,180418,EDG,13-10,Playoffs: Upper Quarterfinals
+378823,all,EDG,2-0,Playoffs: Upper Quarterfinals
+378824,180420,LEV,16-14,Playoffs: Upper Quarterfinals
+378824,180421,LEV,13-5,Playoffs: Upper Quarterfinals
+378824,all,LEV,2-0,Playoffs: Upper Quarterfinals
+378825,180423,TH,13-3,Playoffs: Upper Quarterfinals
+378825,180424,TH,14-12,Playoffs: Upper Quarterfinals
+378825,all,TH,2-0,Playoffs: Upper Quarterfinals
+378826,180426,SEN,13-9,Playoffs: Upper Semifinals
+378826,180427,EDG,13-9,Playoffs: Upper Semifinals
+378826,180428,EDG,13-6,Playoffs: Upper Semifinals
+378826,all,EDG,2-1,Playoffs: Upper Semifinals
+378827,180429,LEV,15-13,Playoffs: Upper Semifinals
+378827,180430,LEV,13-10,Playoffs: Upper Semifinals
+378827,all,LEV,2-0,Playoffs: Upper Semifinals
+378828,180432,LEV,16-14,Playoffs: Upper Final
+378828,180433,EDG,13-4,Playoffs: Upper Final
+378828,182971,EDG,13-11,Playoffs: Upper Final
+378828,all,EDG,2-1,Playoffs: Upper Final
+378829,180435,TH,13-6,Playoffs: Grand Final
+378829,180436,EDG,13-4,Playoffs: Grand Final
+378829,180437,EDG,13-9,Playoffs: Grand Final
+378829,180438,TH,13-11,Playoffs: Grand Final
+378829,180439,EDG,13-9,Playoffs: Grand Final
+378829,all,EDG,3-2,Playoffs: Grand Final
+378831,180440,KRX,13-3,Playoffs: Lower Round 1
+378831,180441,KRX,13-5,Playoffs: Lower Round 1
+378831,all,KRX,2-0,Playoffs: Lower Round 1
+378832,180443,FNC,13-3,Playoffs: Lower Round 1
+378832,180444,FNC,13-11,Playoffs: Lower Round 1
+378832,all,FNC,2-0,Playoffs: Lower Round 1
+378833,180446,KRX,13-5,Playoffs: Lower Round 2
+378833,180447,TH,13-5,Playoffs: Lower Round 2
+378833,180448,TH,13-10,Playoffs: Lower Round 2
+378833,all,TH,2-1,Playoffs: Lower Round 2
+378834,180449,SEN,13-11,Playoffs: Lower Round 2
+378834,180450,FNC,13-9,Playoffs: Lower Round 2
+378834,180451,SEN,13-6,Playoffs: Lower Round 2
+378834,all,SEN,2-1,Playoffs: Lower Round 2
+378835,180452,SEN,13-8,Playoffs: Lower Round 3
+378835,180453,TH,13-9,Playoffs: Lower Round 3
+378835,180454,TH,13-7,Playoffs: Lower Round 3
+378835,all,TH,2-1,Playoffs: Lower Round 3
+378836,180455,TH,13-7,Playoffs: Lower Final
+378836,180456,TH,15-13,Playoffs: Lower Final
+378836,180457,LEV,13-9,Playoffs: Lower Final
+378836,180458,TH,13-3,Playoffs: Lower Final
+378836,all,TH,3-1,Playoffs: Lower Final
+427991,195761,LOUD,14-12,Main Event: Upper Round 1
+427991,195762,LOUD,13-10,Main Event: Upper Round 1
+427991,all,LOUD,2-0,Main Event: Upper Round 1
+427992,195764,100T,13-4,Main Event: Upper Round 1
+427992,195765,100T,13-9,Main Event: Upper Round 1
+427992,all,100T,2-0,Main Event: Upper Round 1
+427993,195767,C9,14-12,Main Event: Upper Round 1
+427993,195768,C9,13-10,Main Event: Upper Round 1
+427993,all,C9,2-0,Main Event: Upper Round 1
+427994,195770,FUR,13-7,Main Event: Upper Round 1
+427994,195771,FUR,13-5,Main Event: Upper Round 1
+427994,all,FUR,2-0,Main Event: Upper Round 1
+427995,195773,LOUD,13-7,Main Event: Upper Quarterfinals
+427995,195774,LOUD,13-10,Main Event: Upper Quarterfinals
+427995,all,LOUD,2-0,Main Event: Upper Quarterfinals
+427996,195776,100T,13-4,Main Event: Upper Quarterfinals
+427996,195777,SEN,13-9,Main Event: Upper Quarterfinals
+427996,195778,SEN,13-9,Main Event: Upper Quarterfinals
+427996,all,SEN,2-1,Main Event: Upper Quarterfinals
+427997,195779,G2,13-6,Main Event: Upper Quarterfinals
+427997,195780,G2,13-8,Main Event: Upper Quarterfinals
+427997,all,G2,2-0,Main Event: Upper Quarterfinals
+427998,195782,LEV,13-8,Main Event: Upper Quarterfinals
+427998,195783,LEV,13-6,Main Event: Upper Quarterfinals
+427998,all,LEV,2-0,Main Event: Upper Quarterfinals
+427999,195785,LOUD,13-11,Main Event: Upper Semifinals
+427999,195786,SEN,13-11,Main Event: Upper Semifinals
+427999,195787,SEN,13-9,Main Event: Upper Semifinals
+427999,all,SEN,2-1,Main Event: Upper Semifinals
+428000,195788,G2,13-5,Main Event: Upper Semifinals
+428000,195789,G2,13-9,Main Event: Upper Semifinals
+428000,all,G2,2-0,Main Event: Upper Semifinals
+428001,195791,G2,13-7,Main Event: Upper Final
+428001,195792,G2,13-7,Main Event: Upper Final
+428001,all,G2,2-0,Main Event: Upper Final
+428002,195794,SEN,13-4,Main Event: Grand Final
+428002,195795,G2,13-8,Main Event: Grand Final
+428002,195796,SEN,13-9,Main Event: Grand Final
+428002,195797,G2,13-5,Main Event: Grand Final
+428002,195798,G2,13-10,Main Event: Grand Final
+428002,all,G2,3-2,Main Event: Grand Final
+428003,195799,EG,13-7,Main Event: Lower Round 1
+428003,195800,EG,13-7,Main Event: Lower Round 1
+428003,all,EG,2-0,Main Event: Lower Round 1
+428004,195802,C9,13-7,Main Event: Lower Round 1
+428004,195803,MIBR,13-10,Main Event: Lower Round 1
+428004,195804,MIBR,13-7,Main Event: Lower Round 1
+428004,all,MIBR,2-1,Main Event: Lower Round 1
+428005,195805,100T,14-12,Main Event: Lower Round 1
+428005,195806,NRG,13-9,Main Event: Lower Round 1
+428005,195807,NRG,13-9,Main Event: Lower Round 1
+428005,all,NRG,2-1,Main Event: Lower Round 1
+428006,195808,KRÜ,13-3,Main Event: Lower Round 1
+428006,195809,KRÜ,13-2,Main Event: Lower Round 1
+428006,all,KRÜ,2-0,Main Event: Lower Round 1
+428007,195811,MIBR,13-10,Main Event: Lower Round 2
+428007,195812,MIBR,13-3,Main Event: Lower Round 2
+428007,all,MIBR,2-0,Main Event: Lower Round 2
+428008,195814,KRÜ,13-8,Main Event: Lower Round 2
+428008,195815,NRG,13-10,Main Event: Lower Round 2
+428008,195816,KRÜ,13-7,Main Event: Lower Round 2
+428008,all,KRÜ,2-1,Main Event: Lower Round 2
+428009,195817,LEV,13-7,Main Event: Lower Round 3
+428009,195818,MIBR,13-9,Main Event: Lower Round 3
+428009,195819,MIBR,14-12,Main Event: Lower Round 3
+428009,all,MIBR,2-1,Main Event: Lower Round 3
+428010,195820,KRÜ,13-5,Main Event: Lower Round 3
+428010,195821,KRÜ,13-11,Main Event: Lower Round 3
+428010,all,KRÜ,2-0,Main Event: Lower Round 3
+428011,195823,KRÜ,13-8,Main Event: Lower Round 4
+428011,195824,MIBR,13-8,Main Event: Lower Round 4
+428011,195825,MIBR,13-11,Main Event: Lower Round 4
+428011,all,MIBR,2-1,Main Event: Lower Round 4
+428012,195826,SEN,13-7,Main Event: Lower Final
+428012,195827,SEN,13-5,Main Event: Lower Final
+428012,195828,MIBR,21-19,Main Event: Lower Final
+428012,195829,SEN,13-7,Main Event: Lower Final
+428012,all,SEN,3-1,Main Event: Lower Final
+429379,196067,MKOI,13-10,Main Event: Upper Round 1
+429379,196068,TL,13-3,Main Event: Upper Round 1
+429379,196069,TL,13-10,Main Event: Upper Round 1
+429379,all,TL,2-1,Main Event: Upper Round 1
+429380,196070,NAVI,13-10,Main Event: Upper Round 1
+429380,196071,KC,13-2,Main Event: Upper Round 1
+429380,196072,KC,13-6,Main Event: Upper Round 1
+429380,all,KC,2-1,Main Event: Upper Round 1
+429381,196073,BBL,13-9,Main Event: Upper Round 1
+429381,196074,GX,14-12,Main Event: Upper Round 1
+429381,196075,BBL,13-5,Main Event: Upper Round 1
+429381,all,BBL,2-1,Main Event: Upper Round 1
+429382,196076,M8,13-7,Main Event: Upper Round 1
+429382,196077,M8,14-12,Main Event: Upper Round 1
+429382,all,M8,2-0,Main Event: Upper Round 1
+429383,196079,FUT,13-7,Main Event: Upper Quarterfinals
+429383,196080,FUT,13-6,Main Event: Upper Quarterfinals
+429383,all,FUT,2-0,Main Event: Upper Quarterfinals
+429384,196082,VIT,13-5,Main Event: Upper Quarterfinals
+429384,196083,KC,13-9,Main Event: Upper Quarterfinals
+429384,196084,VIT,17-15,Main Event: Upper Quarterfinals
+429384,all,VIT,2-1,Main Event: Upper Quarterfinals
+429385,196085,BBL,13-8,Main Event: Upper Quarterfinals
+429385,196086,FNC,13-8,Main Event: Upper Quarterfinals
+429385,196087,BBL,13-10,Main Event: Upper Quarterfinals
+429385,all,BBL,2-1,Main Event: Upper Quarterfinals
+429386,196088,M8,13-4,Main Event: Upper Quarterfinals
+429386,196089,TH,13-3,Main Event: Upper Quarterfinals
+429386,196090,TH,13-8,Main Event: Upper Quarterfinals
+429386,all,TH,2-1,Main Event: Upper Quarterfinals
+429387,196091,VIT,13-7,Main Event: Upper Semifinals
+429387,196092,VIT,13-4,Main Event: Upper Semifinals
+429387,all,VIT,2-0,Main Event: Upper Semifinals
+429388,196094,TH,13-11,Main Event: Upper Semifinals
+429388,196095,TH,13-7,Main Event: Upper Semifinals
+429388,all,TH,2-0,Main Event: Upper Semifinals
+429389,196097,VIT,13-10,Main Event: Upper Final
+429389,196098,VIT,13-1,Main Event: Upper Final
+429389,all,VIT,2-0,Main Event: Upper Final
+429390,196100,TL,13-10,Main Event: Grand Final
+429390,196101,TL,13-7,Main Event: Grand Final
+429390,196102,VIT,13-6,Main Event: Grand Final
+429390,196103,VIT,13-7,Main Event: Grand Final
+429390,196104,VIT,13-8,Main Event: Grand Final
+429390,all,VIT,3-2,Main Event: Grand Final
+429391,196105,M8,13-3,Main Event: Lower Round 1
+429391,196106,MKOI,13-7,Main Event: Lower Round 1
+429391,196107,M8,13-6,Main Event: Lower Round 1
+429391,all,M8,2-1,Main Event: Lower Round 1
+429392,196108,FNC,13-9,Main Event: Lower Round 1
+429392,196109,NAVI,13-8,Main Event: Lower Round 1
+429392,196110,FNC,15-13,Main Event: Lower Round 1
+429392,all,FNC,2-1,Main Event: Lower Round 1
+429393,196111,KC,14-12,Main Event: Lower Round 1
+429393,196112,GX,13-8,Main Event: Lower Round 1
+429393,196113,GX,13-10,Main Event: Lower Round 1
+429393,all,GX,2-1,Main Event: Lower Round 1
+429394,196114,TL,13-9,Main Event: Lower Round 1
+429394,196115,APK,13-11,Main Event: Lower Round 1
+429394,196116,TL,13-6,Main Event: Lower Round 1
+429394,all,TL,2-1,Main Event: Lower Round 1
+429395,196117,FNC,13-5,Main Event: Lower Round 2
+429395,196118,FNC,13-6,Main Event: Lower Round 2
+429395,all,FNC,2-0,Main Event: Lower Round 2
+429396,196120,TL,13-8,Main Event: Lower Round 2
+429396,196121,TL,13-6,Main Event: Lower Round 2
+429396,all,TL,2-0,Main Event: Lower Round 2
+429397,196123,FUT,13-10,Main Event: Lower Round 3
+429397,196124,FUT,13-6,Main Event: Lower Round 3
+429397,all,FUT,2-0,Main Event: Lower Round 3
+429398,196126,TL,13-11,Main Event: Lower Round 3
+429398,196127,BBL,13-9,Main Event: Lower Round 3
+429398,196128,TL,13-10,Main Event: Lower Round 3
+429398,all,TL,2-1,Main Event: Lower Round 3
+429400,196129,TL,13-7,Main Event: Lower Round 4
+429400,196130,FUT,13-11,Main Event: Lower Round 4
+429400,196131,TL,13-4,Main Event: Lower Round 4
+429400,all,TL,2-1,Main Event: Lower Round 4
+429401,196132,TL,13-4,Main Event: Lower Final
+429401,196133,TL,13-4,Main Event: Lower Final
+429401,196134,TL,13-7,Main Event: Lower Final
+429401,all,TL,3-0,Main Event: Lower Final
+430514,196410,T1,13-11,Main Event: Upper Round 1
+430514,196411,BME,13-8,Main Event: Upper Round 1
+430514,196412,T1,13-7,Main Event: Upper Round 1
+430514,all,T1,2-1,Main Event: Upper Round 1
+430515,196413,NS,13-9,Main Event: Upper Round 1
+430515,196414,NS,13-9,Main Event: Upper Round 1
+430515,all,NS,2-0,Main Event: Upper Round 1
+430516,196416,TS,13-3,Main Event: Upper Round 1
+430516,196417,GE,13-7,Main Event: Upper Round 1
+430516,196418,GE,13-6,Main Event: Upper Round 1
+430516,all,GE,2-1,Main Event: Upper Round 1
+430517,196419,DFM,14-12,Main Event: Upper Round 1
+430517,196420,RRQ,13-3,Main Event: Upper Round 1
+430517,196421,RRQ,13-3,Main Event: Upper Round 1
+430517,all,RRQ,2-1,Main Event: Upper Round 1
+430518,196422,T1,13-6,Main Event: Upper Quarterfinals
+430518,196423,PRX,13-8,Main Event: Upper Quarterfinals
+430518,196424,T1,13-11,Main Event: Upper Quarterfinals
+430518,all,T1,2-1,Main Event: Upper Quarterfinals
+430519,196425,GE,13-6,Main Event: Upper Quarterfinals
+430519,196426,TLN,13-9,Main Event: Upper Quarterfinals
+430519,196427,TLN,13-8,Main Event: Upper Quarterfinals
+430519,all,TLN,2-1,Main Event: Upper Quarterfinals
+430520,196428,RRQ,13-6,Main Event: Upper Quarterfinals
+430520,196429,GEN,13-8,Main Event: Upper Quarterfinals
+430520,196430,GEN,14-12,Main Event: Upper Quarterfinals
+430520,all,GEN,2-1,Main Event: Upper Quarterfinals
+430521,196431,KRX,13-11,Main Event: Upper Quarterfinals
+430521,196432,NS,13-6,Main Event: Upper Quarterfinals
+430521,196433,KRX,13-9,Main Event: Upper Quarterfinals
+430521,all,KRX,2-1,Main Event: Upper Quarterfinals
+430522,196434,T1,13-5,Main Event: Upper Semifinals
+430522,196435,TLN,13-4,Main Event: Upper Semifinals
+430522,196436,T1,13-9,Main Event: Upper Semifinals
+430522,all,T1,2-1,Main Event: Upper Semifinals
+430523,196437,KRX,13-9,Main Event: Upper Semifinals
+430523,196438,KRX,15-13,Main Event: Upper Semifinals
+430523,all,KRX,2-0,Main Event: Upper Semifinals
+430524,196440,T1,13-11,Main Event: Upper Final
+430524,196441,KRX,15-13,Main Event: Upper Final
+430524,196442,KRX,13-10,Main Event: Upper Final
+430524,all,KRX,2-1,Main Event: Upper Final
+430525,196443,KRX,13-3,Main Event: Grand Final
+430525,196444,T1,13-6,Main Event: Grand Final
+430525,196445,KRX,13-9,Main Event: Grand Final
+430525,196446,T1,14-12,Main Event: Grand Final
+430525,196447,KRX,13-11,Main Event: Grand Final
+430525,all,KRX,3-2,Main Event: Grand Final
+430526,196448,NS,13-3,Main Event: Lower Round 1
+430526,196449,BME,13-7,Main Event: Lower Round 1
+430526,196450,NS,13-9,Main Event: Lower Round 1
+430526,all,NS,2-1,Main Event: Lower Round 1
+430527,196451,TS,13-9,Main Event: Lower Round 1
+430527,196452,RRQ,13-4,Main Event: Lower Round 1
+430527,196453,RRQ,13-4,Main Event: Lower Round 1
+430527,all,RRQ,2-1,Main Event: Lower Round 1
+430528,196454,DFM,13-8,Main Event: Lower Round 1
+430528,196455,DFM,14-12,Main Event: Lower Round 1
+430528,all,DFM,2-0,Main Event: Lower Round 1
+430529,196457,PRX,13-5,Main Event: Lower Round 1
+430529,196458,PRX,13-8,Main Event: Lower Round 1
+430529,all,PRX,2-0,Main Event: Lower Round 1
+430530,196460,RRQ,14-12,Main Event: Lower Round 2
+430530,196461,NS,22-20,Main Event: Lower Round 2
+430530,196462,NS,13-8,Main Event: Lower Round 2
+430530,all,NS,2-1,Main Event: Lower Round 2
+430531,196463,DFM,13-10,Main Event: Lower Round 2
+430531,196464,DFM,13-1,Main Event: Lower Round 2
+430531,all,DFM,2-0,Main Event: Lower Round 2
+430532,196466,NS,13-9,Main Event: Lower Round 3
+430532,196467,TLN,13-10,Main Event: Lower Round 3
+430532,196468,TLN,13-5,Main Event: Lower Round 3
+430532,all,TLN,2-1,Main Event: Lower Round 3
+430533,196469,GEN,13-6,Main Event: Lower Round 3
+430533,196470,GEN,13-6,Main Event: Lower Round 3
+430533,all,GEN,2-0,Main Event: Lower Round 3
+430534,196472,GEN,13-7,Main Event: Lower Round 4
+430534,196473,GEN,13-2,Main Event: Lower Round 4
+430534,all,GEN,2-0,Main Event: Lower Round 4
+430535,196475,T1,13-8,Main Event: Lower Final
+430535,196476,T1,13-8,Main Event: Lower Final
+430535,196477,GEN,13-5,Main Event: Lower Final
+430535,196478,GEN,17-15,Main Event: Lower Final
+430535,196479,T1,13-10,Main Event: Lower Final
+430535,all,T1,3-2,Main Event: Lower Final
+448597,202492,G2,13-8,Swiss Stage: Round 1
+448597,202493,G2,13-3,Swiss Stage: Round 1
+448597,all,G2,2-0,Swiss Stage: Round 1
+448598,202495,EDG,18-16,Swiss Stage: Round 1
+448598,202496,EDG,13-6,Swiss Stage: Round 1
+448598,all,EDG,2-0,Swiss Stage: Round 1
+448599,202498,VIT,13-10,Swiss Stage: Round 1
+448599,202499,VIT,13-9,Swiss Stage: Round 1
+448599,all,VIT,2-0,Swiss Stage: Round 1
+448600,202501,KRX,13-3,Swiss Stage: Round 1
+448600,202502,KRX,13-10,Swiss Stage: Round 1
+448600,all,KRX,2-0,Swiss Stage: Round 1
+449000,202765,VIT,13-8,Swiss Stage: Round 2 (1-0)
+449000,202766,KRX,13-11,Swiss Stage: Round 2 (1-0)
+449000,202767,VIT,13-11,Swiss Stage: Round 2 (1-0)
+449000,all,VIT,2-1,Swiss Stage: Round 2 (1-0)
+449001,202768,G2,18-16,Swiss Stage: Round 2 (1-0)
+449001,202769,EDG,13-8,Swiss Stage: Round 2 (1-0)
+449001,202770,EDG,13-4,Swiss Stage: Round 2 (1-0)
+449001,all,EDG,2-1,Swiss Stage: Round 2 (1-0)
+449002,202771,T1,13-3,Swiss Stage: Round 2 (0-1)
+449002,202772,T1,13-8,Swiss Stage: Round 2 (0-1)
+449002,all,T1,2-0,Swiss Stage: Round 2 (0-1)
+449003,202774,SEN,13-7,Swiss Stage: Round 2 (0-1)
+449003,202775,TL,16-14,Swiss Stage: Round 2 (0-1)
+449003,202776,TL,13-1,Swiss Stage: Round 2 (0-1)
+449003,all,TL,2-1,Swiss Stage: Round 2 (0-1)
+449004,202777,T1,13-11,Swiss Stage: Round 3
+449004,202778,T1,13-4,Swiss Stage: Round 3
+449004,all,T1,2-0,Swiss Stage: Round 3
+449005,202780,G2,13-5,Swiss Stage: Round 3
+449005,202781,G2,13-7,Swiss Stage: Round 3
+449005,all,G2,2-0,Swiss Stage: Round 3
+449008,202783,EDG,13-7,Playoffs: Upper Semifinals
+449008,202784,T1,13-6,Playoffs: Upper Semifinals
+449008,202785,EDG,13-11,Playoffs: Upper Semifinals
+449008,all,EDG,2-1,Playoffs: Upper Semifinals
+449009,202786,G2,15-13,Playoffs: Upper Semifinals
+449009,202787,G2,13-9,Playoffs: Upper Semifinals
+449009,all,G2,2-0,Playoffs: Upper Semifinals
+449010,202789,G2,13-8,Playoffs: Upper Final
+449010,202790,G2,13-7,Playoffs: Upper Final
+449010,all,G2,2-0,Playoffs: Upper Final
+449011,202792,G2,13-5,Playoffs: Grand Final
+449011,202793,T1,13-9,Playoffs: Grand Final
+449011,202794,G2,13-11,Playoffs: Grand Final
+449011,202795,T1,15-13,Playoffs: Grand Final
+449011,202796,T1,16-14,Playoffs: Grand Final
+449011,all,T1,3-2,Playoffs: Grand Final
+449012,202797,VIT,14-12,Playoffs: Lower Round 1
+449012,202798,T1,13-4,Playoffs: Lower Round 1
+449012,202799,T1,13-5,Playoffs: Lower Round 1
+449012,all,T1,2-1,Playoffs: Lower Round 1
+449013,202800,T1,13-4,Playoffs: Lower Final
+449013,202801,T1,13-10,Playoffs: Lower Final
+449013,202802,EDG,14-12,Playoffs: Lower Final
+449013,202803,T1,13-5,Playoffs: Lower Final
+449013,all,T1,3-1,Playoffs: Lower Final
+450589,203837,THAi,13-9,Showmatch: Main Event
+450589,all,THAi,1-0,Showmatch: Main Event
+458805,206150,GE,13-7,Group Stage: Week 1
+458805,206151,GE,13-11,Group Stage: Week 1
+458805,all,GE,2-0,Group Stage: Week 1
+458806,206153,T1,13-7,Group Stage: Week 1
+458806,206154,ZETA,14-12,Group Stage: Week 1
+458806,206155,T1,13-5,Group Stage: Week 1
+458806,all,T1,2-1,Group Stage: Week 1
+458807,206156,KRX,13-9,Group Stage: Week 1
+458807,206157,PRX,13-10,Group Stage: Week 1
+458807,206158,KRX,13-7,Group Stage: Week 1
+458807,all,KRX,2-1,Group Stage: Week 1
+458808,206159,TS,13-5,Group Stage: Week 1
+458808,206160,TLN,13-2,Group Stage: Week 1
+458808,206161,TLN,13-9,Group Stage: Week 1
+458808,all,TLN,2-1,Group Stage: Week 1
+458809,206162,BME,13-8,Group Stage: Week 1
+458809,206163,BME,17-15,Group Stage: Week 1
+458809,all,BME,2-0,Group Stage: Week 1
+458810,206165,RRQ,13-5,Group Stage: Week 1
+458810,206166,NS,13-8,Group Stage: Week 1
+458810,206167,NS,13-10,Group Stage: Week 1
+458810,all,NS,2-1,Group Stage: Week 1
+458811,206168,ZETA,13-11,Group Stage: Week 2
+458811,206169,ZETA,13-10,Group Stage: Week 2
+458811,all,ZETA,2-0,Group Stage: Week 2
+458812,206171,T1,13-10,Group Stage: Week 2
+458812,206172,T1,13-11,Group Stage: Week 2
+458812,all,T1,2-0,Group Stage: Week 2
+458813,206174,GEN,13-10,Group Stage: Week 2
+458813,206175,PRX,13-6,Group Stage: Week 2
+458813,206176,GEN,13-4,Group Stage: Week 2
+458813,all,GEN,2-1,Group Stage: Week 2
+458814,206177,KRX,13-3,Group Stage: Week 2
+458814,206178,KRX,13-8,Group Stage: Week 2
+458814,all,KRX,2-0,Group Stage: Week 2
+458815,206180,RRQ,13-8,Group Stage: Week 2
+458815,206181,RRQ,13-5,Group Stage: Week 2
+458815,all,RRQ,2-0,Group Stage: Week 2
+458816,206183,BME,13-1,Group Stage: Week 2
+458816,206184,BME,13-11,Group Stage: Week 2
+458816,all,BME,2-0,Group Stage: Week 2
+458817,206186,GEN,13-2,Group Stage: Week 3
+458817,206187,GEN,13-4,Group Stage: Week 3
+458817,all,GEN,2-0,Group Stage: Week 3
+458818,206189,RRQ,13-6,Group Stage: Week 3
+458818,210878,RRQ,13-9,Group Stage: Week 3
+458818,all,RRQ,2-0,Group Stage: Week 3
+458819,206193,PRX,13-8,Group Stage: Week 3
+458819,206194,BME,13-9,Group Stage: Week 3
+458819,211027,BME,13-10,Group Stage: Week 3
+458819,all,BME,2-1,Group Stage: Week 3
+458820,206195,NS,13-5,Group Stage: Week 3
+458820,206196,TLN,13-8,Group Stage: Week 3
+458820,206197,TLN,13-6,Group Stage: Week 3
+458820,all,TLN,2-1,Group Stage: Week 3
+458821,211411,KRX,13-3,Group Stage: Week 3
+458821,211440,KRX,13-10,Group Stage: Week 3
+458821,all,KRX,2-0,Group Stage: Week 3
+458822,206201,T1,13-6,Group Stage: Week 3
+458822,206202,TS,13-9,Group Stage: Week 3
+458822,206203,T1,13-8,Group Stage: Week 3
+458822,all,T1,2-1,Group Stage: Week 3
+458823,206204,NS,13-10,Group Stage: Week 4
+458823,206205,NS,13-3,Group Stage: Week 4
+458823,all,NS,2-0,Group Stage: Week 4
+458824,206207,BME,13-8,Group Stage: Week 4
+458824,206208,KRX,14-12,Group Stage: Week 4
+458824,206209,BME,13-8,Group Stage: Week 4
+458824,all,BME,2-1,Group Stage: Week 4
+458825,206210,T1,13-10,Group Stage: Week 4
+458825,206211,RRQ,13-10,Group Stage: Week 4
+458825,206212,RRQ,13-5,Group Stage: Week 4
+458825,all,RRQ,2-1,Group Stage: Week 4
+458826,206213,GEN,13-5,Group Stage: Week 4
+458826,206214,GEN,13-7,Group Stage: Week 4
+458826,all,GEN,2-0,Group Stage: Week 4
+458827,206216,ZETA,13-4,Group Stage: Week 4
+458827,206217,ZETA,13-10,Group Stage: Week 4
+458827,all,ZETA,2-0,Group Stage: Week 4
+458828,206219,DFM,13-11,Group Stage: Week 4
+458828,206220,PRX,13-7,Group Stage: Week 4
+458828,206221,PRX,15-13,Group Stage: Week 4
+458828,all,PRX,2-1,Group Stage: Week 4
+458830,206222,PRX,13-5,Group Stage: Week 5
+458830,206223,PRX,13-9,Group Stage: Week 5
+458830,all,PRX,2-0,Group Stage: Week 5
+458831,206225,TLN,13-6,Group Stage: Week 5
+458831,206226,TLN,13-7,Group Stage: Week 5
+458831,all,TLN,2-0,Group Stage: Week 5
+458832,206228,GEN,13-8,Group Stage: Week 5
+458832,206229,KRX,13-10,Group Stage: Week 5
+458832,206230,KRX,13-9,Group Stage: Week 5
+458832,all,KRX,2-1,Group Stage: Week 5
+458833,206231,NS,13-6,Group Stage: Week 5
+458833,206232,ZETA,13-11,Group Stage: Week 5
+458833,206233,NS,13-7,Group Stage: Week 5
+458833,all,NS,2-1,Group Stage: Week 5
+458834,206234,BME,13-8,Group Stage: Week 5
+458834,206235,BME,13-6,Group Stage: Week 5
+458834,all,BME,2-0,Group Stage: Week 5
+458835,206237,RRQ,15-13,Group Stage: Week 5
+458835,206238,TS,13-5,Group Stage: Week 5
+458835,206239,TS,13-9,Group Stage: Week 5
+458835,all,TS,2-1,Group Stage: Week 5
+459517,206933,NRG,13-6,Group Stage: Week 1
+459517,206934,C9,13-5,Group Stage: Week 1
+459517,206935,C9,13-9,Group Stage: Week 1
+459517,all,C9,2-1,Group Stage: Week 1
+459518,206936,LOUD,13-3,Group Stage: Week 1
+459518,206937,KRÜ,13-2,Group Stage: Week 1
+459518,206938,KRÜ,13-10,Group Stage: Week 1
+459518,all,KRÜ,2-1,Group Stage: Week 1
+459519,206939,G2,13-10,Group Stage: Week 1
+459519,206940,G2,13-7,Group Stage: Week 1
+459519,all,G2,2-0,Group Stage: Week 1
+459520,206942,MIBR,13-7,Group Stage: Week 1
+459520,206943,MIBR,13-8,Group Stage: Week 1
+459520,all,MIBR,2-0,Group Stage: Week 1
+459521,206945,EG,13-11,Group Stage: Week 1
+459521,206946,EG,13-8,Group Stage: Week 1
+459521,all,EG,2-0,Group Stage: Week 1
+459522,206948,SEN,13-5,Group Stage: Week 1
+459522,206949,100T,13-9,Group Stage: Week 1
+459522,206950,SEN,13-1,Group Stage: Week 1
+459522,all,SEN,2-1,Group Stage: Week 1
+459523,206951,FUR,13-10,Group Stage: Week 2
+459523,206952,NRG,13-2,Group Stage: Week 2
+459523,206953,NRG,13-4,Group Stage: Week 2
+459523,all,NRG,2-1,Group Stage: Week 2
+459524,206954,KRÜ,13-7,Group Stage: Week 2
+459524,206955,KRÜ,13-8,Group Stage: Week 2
+459524,all,KRÜ,2-0,Group Stage: Week 2
+459525,206957,100T,13-10,Group Stage: Week 2
+459525,206958,100T,13-7,Group Stage: Week 2
+459525,all,100T,2-0,Group Stage: Week 2
+459526,206960,MIBR,14-12,Group Stage: Week 2
+459526,206961,G2,13-11,Group Stage: Week 2
+459526,206962,G2,13-8,Group Stage: Week 2
+459526,all,G2,2-1,Group Stage: Week 2
+459527,206963,2G,14-12,Group Stage: Week 2
+459527,206964,2G,13-11,Group Stage: Week 2
+459527,all,2G,2-0,Group Stage: Week 2
+459528,206966,C9,13-8,Group Stage: Week 2
+459528,206967,C9,13-3,Group Stage: Week 2
+459528,all,C9,2-0,Group Stage: Week 2
+459529,206969,SEN,13-4,Group Stage: Week 3
+459529,206970,SEN,13-6,Group Stage: Week 3
+459529,all,SEN,2-0,Group Stage: Week 3
+459530,206972,LOUD,13-6,Group Stage: Week 3
+459530,206973,100T,13-11,Group Stage: Week 3
+459530,206974,100T,13-8,Group Stage: Week 3
+459530,all,100T,2-1,Group Stage: Week 3
+459531,206975,KRÜ,13-6,Group Stage: Week 3
+459531,206976,2G,13-6,Group Stage: Week 3
+459531,206977,KRÜ,13-6,Group Stage: Week 3
+459531,all,KRÜ,2-1,Group Stage: Week 3
+459532,206978,G2,13-1,Group Stage: Week 3
+459532,206979,G2,13-6,Group Stage: Week 3
+459532,all,G2,2-0,Group Stage: Week 3
+459533,206981,LEV,13-4,Group Stage: Week 3
+459533,206982,LEV,13-5,Group Stage: Week 3
+459533,all,LEV,2-0,Group Stage: Week 3
+459534,206984,C9,13-9,Group Stage: Week 3
+459534,206985,MIBR,15-13,Group Stage: Week 3
+459534,206986,MIBR,13-11,Group Stage: Week 3
+459534,all,MIBR,2-1,Group Stage: Week 3
+459535,206987,100T,15-13,Group Stage: Week 4
+459535,206988,100T,13-6,Group Stage: Week 4
+459535,all,100T,2-0,Group Stage: Week 4
+459536,206990,G2,13-10,Group Stage: Week 4
+459536,206991,LEV,13-11,Group Stage: Week 4
+459536,206992,G2,13-7,Group Stage: Week 4
+459536,all,G2,2-1,Group Stage: Week 4
+459537,206993,C9,16-14,Group Stage: Week 4
+459537,206994,C9,13-1,Group Stage: Week 4
+459537,all,C9,2-0,Group Stage: Week 4
+459538,206996,SEN,13-10,Group Stage: Week 4
+459538,206997,LOUD,13-11,Group Stage: Week 4
+459538,211889,SEN,13-5,Group Stage: Week 4
+459538,all,SEN,2-1,Group Stage: Week 4
+459539,206999,EG,13-4,Group Stage: Week 4
+459539,207000,EG,13-7,Group Stage: Week 4
+459539,all,EG,2-0,Group Stage: Week 4
+459540,207002,MIBR,13-6,Group Stage: Week 4
+459540,207003,MIBR,13-5,Group Stage: Week 4
+459540,all,MIBR,2-0,Group Stage: Week 4
+459541,207005,G2,13-5,Group Stage: Week 5
+459541,207006,C9,13-4,Group Stage: Week 5
+459541,207007,G2,13-11,Group Stage: Week 5
+459541,all,G2,2-1,Group Stage: Week 5
+459542,207008,MIBR,13-3,Group Stage: Week 5
+459542,207009,FUR,13-9,Group Stage: Week 5
+459542,207010,MIBR,13-8,Group Stage: Week 5
+459542,all,MIBR,2-1,Group Stage: Week 5
+459543,207011,SEN,13-4,Group Stage: Week 5
+459543,207012,SEN,13-5,Group Stage: Week 5
+459543,all,SEN,2-0,Group Stage: Week 5
+459544,207014,KRÜ,13-10,Group Stage: Week 5
+459544,207015,KRÜ,13-9,Group Stage: Week 5
+459544,all,KRÜ,2-0,Group Stage: Week 5
+459545,207017,LOUD,13-11,Group Stage: Week 5
+459545,207018,EG,14-12,Group Stage: Week 5
+459545,207019,EG,13-11,Group Stage: Week 5
+459545,all,EG,2-1,Group Stage: Week 5
+459546,207020,NRG,15-13,Group Stage: Week 5
+459546,207021,NRG,13-8,Group Stage: Week 5
+459546,all,NRG,2-0,Group Stage: Week 5
+459826,207147,VIT,13-9,Group Stage: Week 1
+459826,207148,VIT,13-2,Group Stage: Week 1
+459826,all,VIT,2-0,Group Stage: Week 1
+459827,207150,KC,13-3,Group Stage: Week 1
+459827,207151,BBL,13-11,Group Stage: Week 1
+459827,207152,BBL,13-8,Group Stage: Week 1
+459827,all,BBL,2-1,Group Stage: Week 1
+459828,207153,APK,13-5,Group Stage: Week 1
+459828,207154,TH,13-8,Group Stage: Week 1
+459828,207155,TH,13-6,Group Stage: Week 1
+459828,all,TH,2-1,Group Stage: Week 1
+459829,207156,FUT,13-4,Group Stage: Week 1
+459829,207157,FUT,14-12,Group Stage: Week 1
+459829,all,FUT,2-0,Group Stage: Week 1
+459830,207159,FNC,13-5,Group Stage: Week 1
+459830,207160,FNC,13-11,Group Stage: Week 1
+459830,all,FNC,2-0,Group Stage: Week 1
+459831,207162,TL,13-6,Group Stage: Week 1
+459831,207163,M8,14-12,Group Stage: Week 1
+459831,207164,M8,13-6,Group Stage: Week 1
+459831,all,M8,2-1,Group Stage: Week 1
+459832,207165,TL,13-7,Group Stage: Week 2
+459832,207166,BBL,13-4,Group Stage: Week 2
+459832,207167,TL,13-4,Group Stage: Week 2
+459832,all,TL,2-1,Group Stage: Week 2
+459833,207168,APK,13-10,Group Stage: Week 2
+459833,207169,NAVI,13-11,Group Stage: Week 2
+459833,207170,NAVI,13-6,Group Stage: Week 2
+459833,all,NAVI,2-1,Group Stage: Week 2
+459834,207171,M8,13-10,Group Stage: Week 2
+459834,207172,FUT,18-16,Group Stage: Week 2
+459834,207173,FUT,13-4,Group Stage: Week 2
+459834,all,FUT,2-1,Group Stage: Week 2
+459835,207174,TH,13-3,Group Stage: Week 2
+459835,207175,GX,13-11,Group Stage: Week 2
+459835,207176,TH,13-8,Group Stage: Week 2
+459835,all,TH,2-1,Group Stage: Week 2
+459836,207177,VIT,18-16,Group Stage: Week 2
+459836,207178,FNC,13-6,Group Stage: Week 2
+459836,207179,FNC,13-10,Group Stage: Week 2
+459836,all,FNC,2-1,Group Stage: Week 2
+459837,207180,KC,13-2,Group Stage: Week 2
+459837,207181,KC,14-12,Group Stage: Week 2
+459837,all,KC,2-0,Group Stage: Week 2
+459839,207183,BBL,13-6,Group Stage: Week 3
+459839,207184,BBL,13-9,Group Stage: Week 3
+459839,all,BBL,2-0,Group Stage: Week 3
+459840,207186,GX,13-9,Group Stage: Week 3
+459840,207187,NAVI,13-7,Group Stage: Week 3
+459840,207188,NAVI,13-0,Group Stage: Week 3
+459840,all,NAVI,2-1,Group Stage: Week 3
+459841,207189,TL,13-1,Group Stage: Week 3
+459841,207190,TL,13-9,Group Stage: Week 3
+459841,all,TL,2-0,Group Stage: Week 3
+459842,207192,TH,13-10,Group Stage: Week 3
+459842,207193,TH,13-6,Group Stage: Week 3
+459842,all,TH,2-0,Group Stage: Week 3
+459843,207195,FNC,13-5,Group Stage: Week 3
+459843,207196,FNC,16-14,Group Stage: Week 3
+459843,all,FNC,2-0,Group Stage: Week 3
+459844,207198,KC,14-12,Group Stage: Week 3
+459844,207199,KC,13-2,Group Stage: Week 3
+459844,all,KC,2-0,Group Stage: Week 3
+459845,207201,VIT,13-5,Group Stage: Week 4
+459845,207202,VIT,13-10,Group Stage: Week 4
+459845,all,VIT,2-0,Group Stage: Week 4
+459846,212700,TL,13-5,Group Stage: Week 4
+459846,212701,TL,13-9,Group Stage: Week 4
+459846,all,TL,2-0,Group Stage: Week 4
+459847,207207,BBL,14-12,Group Stage: Week 4
+459847,207208,BBL,13-2,Group Stage: Week 4
+459847,all,BBL,2-0,Group Stage: Week 4
+459848,207210,GX,13-10,Group Stage: Week 4
+459848,207211,FNC,13-5,Group Stage: Week 4
+459848,207212,FNC,13-10,Group Stage: Week 4
+459848,all,FNC,2-1,Group Stage: Week 4
+459849,207214,FUT,13-5,Group Stage: Week 4
+459849,207215,FUT,13-11,Group Stage: Week 4
+459849,212913,KC,14-12,Group Stage: Week 4
+459849,all,FUT,2-1,Group Stage: Week 4
+459850,207216,TH,13-3,Group Stage: Week 4
+459850,207217,TH,13-8,Group Stage: Week 4
+459850,all,TH,2-0,Group Stage: Week 4
+459852,207219,BBL,25-23,Group Stage: Week 5
+459852,207220,BBL,13-11,Group Stage: Week 5
+459852,all,BBL,2-0,Group Stage: Week 5
+459853,207222,GX,13-7,Group Stage: Week 5
+459853,207223,GX,13-9,Group Stage: Week 5
+459853,all,GX,2-0,Group Stage: Week 5
+459854,207225,M8,13-11,Group Stage: Week 5
+459854,207226,MKOI,13-6,Group Stage: Week 5
+459854,207227,MKOI,13-9,Group Stage: Week 5
+459854,all,MKOI,2-1,Group Stage: Week 5
+459855,207228,NAVI,13-5,Group Stage: Week 5
+459855,207229,NAVI,13-11,Group Stage: Week 5
+459855,all,NAVI,2-0,Group Stage: Week 5
+459856,207232,KC,13-9,Group Stage: Week 5
+459856,207233,TL,13-6,Group Stage: Week 5
+459856,214836,TL,13-6,Group Stage: Week 5
+459856,all,TL,2-1,Group Stage: Week 5
+459857,207235,TH,13-5,Group Stage: Week 5
+459857,215378,TH,13-10,Group Stage: Week 5
+459857,all,TH,2-0,Group Stage: Week 5
+473833,212502,TLN,13-6,Playoffs: Upper Round 1
+473833,212503,GEN,13-6,Playoffs: Upper Round 1
+473833,212504,GEN,13-3,Playoffs: Upper Round 1
+473833,all,GEN,2-1,Playoffs: Upper Round 1
+473834,212505,KRX,15-13,Playoffs: Upper Round 1
+473834,212506,KRX,14-12,Playoffs: Upper Round 1
+473834,all,KRX,2-0,Playoffs: Upper Round 1
+473835,212508,TLN,13-9,Playoffs: Lower Round 1
+473835,212509,NS,13-7,Playoffs: Lower Round 1
+473835,212510,TLN,13-9,Playoffs: Lower Round 1
+473835,all,TLN,2-1,Playoffs: Lower Round 1
+473836,212511,T1,13-3,Playoffs: Lower Round 1
+473836,212512,PRX,13-4,Playoffs: Lower Round 1
+473836,212513,PRX,13-2,Playoffs: Lower Round 1
+473836,all,PRX,2-1,Playoffs: Lower Round 1
+473837,212514,GEN,13-8,Playoffs: Upper Semifinals
+473837,212515,GEN,13-6,Playoffs: Upper Semifinals
+473837,all,GEN,2-0,Playoffs: Upper Semifinals
+473838,212517,KRX,13-11,Playoffs: Upper Semifinals
+473838,212518,RRQ,13-4,Playoffs: Upper Semifinals
+473838,212519,RRQ,14-12,Playoffs: Upper Semifinals
+473838,all,RRQ,2-1,Playoffs: Upper Semifinals
+473839,212520,KRX,13-4,Playoffs: Lower Round 2
+473839,212521,KRX,14-12,Playoffs: Lower Round 2
+473839,all,KRX,2-0,Playoffs: Lower Round 2
+473840,212523,PRX,13-5,Playoffs: Lower Round 2
+473840,212524,PRX,13-8,Playoffs: Lower Round 2
+473840,all,PRX,2-0,Playoffs: Lower Round 2
+473841,212526,GEN,13-5,Playoffs: Upper Final
+473841,212527,GEN,13-8,Playoffs: Upper Final
+473841,all,GEN,2-0,Playoffs: Upper Final
+473842,212529,PRX,13-11,Playoffs: Lower Round 3
+473842,212530,PRX,13-8,Playoffs: Lower Round 3
+473842,all,PRX,2-0,Playoffs: Lower Round 3
+473843,212532,PRX,13-2,Playoffs: Lower Final
+473843,212533,RRQ,14-12,Playoffs: Lower Final
+473843,212534,RRQ,14-12,Playoffs: Lower Final
+473843,212535,PRX,13-3,Playoffs: Lower Final
+473843,212536,RRQ,13-6,Playoffs: Lower Final
+473843,all,RRQ,3-2,Playoffs: Lower Final
+473844,212537,GEN,13-8,Playoffs: Grand Final
+473844,212538,RRQ,13-11,Playoffs: Grand Final
+473844,212539,RRQ,13-9,Playoffs: Grand Final
+473844,212540,RRQ,13-11,Playoffs: Grand Final
+473844,all,RRQ,3-1,Playoffs: Grand Final
+475897,213487,MIBR,13-10,Playoffs: Upper Round 1
+475897,213488,MIBR,13-4,Playoffs: Upper Round 1
+475897,all,MIBR,2-0,Playoffs: Upper Round 1
+475898,213490,SEN,13-9,Playoffs: Upper Round 1
+475898,213491,SEN,13-9,Playoffs: Upper Round 1
+475898,all,SEN,2-0,Playoffs: Upper Round 1
+475899,213493,MIBR,13-8,Playoffs: Upper Semifinals
+475899,213494,MIBR,13-5,Playoffs: Upper Semifinals
+475899,all,MIBR,2-0,Playoffs: Upper Semifinals
+475900,213496,G2,13-5,Playoffs: Upper Semifinals
+475900,213497,SEN,13-11,Playoffs: Upper Semifinals
+475900,213498,SEN,13-11,Playoffs: Upper Semifinals
+475900,all,SEN,2-1,Playoffs: Upper Semifinals
+475901,213499,SEN,13-7,Playoffs: Upper Final
+475901,213500,SEN,13-11,Playoffs: Upper Final
+475901,all,SEN,2-0,Playoffs: Upper Final
+475902,213502,G2,13-9,Playoffs: Grand Final
+475902,213503,G2,13-9,Playoffs: Grand Final
+475902,213504,SEN,13-10,Playoffs: Grand Final
+475902,213505,G2,13-10,Playoffs: Grand Final
+475902,all,G2,3-1,Playoffs: Grand Final
+475903,213507,100T,13-5,Playoffs: Lower Round 1
+475903,213508,100T,13-11,Playoffs: Lower Round 1
+475903,all,100T,2-0,Playoffs: Lower Round 1
+475904,213510,EG,13-9,Playoffs: Lower Round 1
+475904,213511,EG,15-13,Playoffs: Lower Round 1
+475904,all,EG,2-0,Playoffs: Lower Round 1
+475905,213513,G2,13-4,Playoffs: Lower Round 2
+475905,213514,100T,14-12,Playoffs: Lower Round 2
+475905,213515,G2,16-14,Playoffs: Lower Round 2
+475905,all,G2,2-1,Playoffs: Lower Round 2
+475906,213516,EG,14-12,Playoffs: Lower Round 2
+475906,213517,EG,13-11,Playoffs: Lower Round 2
+475906,all,EG,2-0,Playoffs: Lower Round 2
+475907,213519,EG,13-9,Playoffs: Lower Round 3
+475907,213520,G2,13-7,Playoffs: Lower Round 3
+475907,213521,G2,13-11,Playoffs: Lower Round 3
+475907,all,G2,2-1,Playoffs: Lower Round 3
+475908,213522,MIBR,13-10,Playoffs: Lower Final
+475908,213523,G2,15-13,Playoffs: Lower Final
+475908,213524,G2,13-10,Playoffs: Lower Final
+475908,215607,G2,13-8,Playoffs: Lower Final
+475908,all,G2,3-1,Playoffs: Lower Final
+482503,215379,BBL,13-9,Playoffs: Upper Round 1
+482503,215380,BBL,13-10,Playoffs: Upper Round 1
+482503,all,BBL,2-0,Playoffs: Upper Round 1
+482504,215383,FNC,13-8,Playoffs: Upper Round 1
+482504,216517,FNC,13-6,Playoffs: Upper Round 1
+482504,all,FNC,2-0,Playoffs: Upper Round 1
+482505,215385,KC,14-12,Playoffs: Lower Round 1
+482505,215386,NAVI,13-11,Playoffs: Lower Round 1
+482505,216537,NAVI,13-11,Playoffs: Lower Round 1
+482505,all,NAVI,2-1,Playoffs: Lower Round 1
+482506,215389,FUT,13-6,Playoffs: Lower Round 1
+482506,216584,FUT,13-7,Playoffs: Lower Round 1
+482506,all,FUT,2-0,Playoffs: Lower Round 1
+482507,215392,TH,14-12,Playoffs: Upper Semifinals
+482507,216644,TH,13-10,Playoffs: Upper Semifinals
+482507,all,TH,2-0,Playoffs: Upper Semifinals
+482508,215394,FNC,13-10,Playoffs: Upper Semifinals
+482508,215395,TL,13-11,Playoffs: Upper Semifinals
+482508,215396,FNC,14-12,Playoffs: Upper Semifinals
+482508,all,FNC,2-1,Playoffs: Upper Semifinals
+482509,215397,NAVI,13-11,Playoffs: Lower Round 2
+482509,215398,TL,13-4,Playoffs: Lower Round 2
+482509,215399,TL,13-8,Playoffs: Lower Round 2
+482509,all,TL,2-1,Playoffs: Lower Round 2
+482510,215402,BBL,13-10,Playoffs: Lower Round 2
+482510,216645,BBL,13-2,Playoffs: Lower Round 2
+482510,216646,FUT,14-12,Playoffs: Lower Round 2
+482510,all,BBL,2-1,Playoffs: Lower Round 2
+482511,215403,TL,13-11,Playoffs: Lower Round 3
+482511,215404,BBL,13-7,Playoffs: Lower Round 3
+482511,215405,TL,13-8,Playoffs: Lower Round 3
+482511,all,TL,2-1,Playoffs: Lower Round 3
+482512,215406,TH,13-3,Playoffs: Lower Final
+482512,215407,TH,13-10,Playoffs: Lower Final
+482512,215408,TH,13-2,Playoffs: Lower Final
+482512,all,TH,3-0,Playoffs: Lower Final
+482513,215411,FNC,13-4,Playoffs: Grand Final
+482513,215412,FNC,13-9,Playoffs: Grand Final
+482513,215413,FNC,14-12,Playoffs: Grand Final
+482513,all,FNC,3-0,Playoffs: Grand Final
+482515,215416,FNC,13-6,Playoffs: Upper Final
+482515,217080,FNC,13-8,Playoffs: Upper Final
+482515,all,FNC,2-0,Playoffs: Upper Final
+490306,217247,GEN,13-5,Swiss Stage: Round 1
+490306,217248,GEN,13-1,Swiss Stage: Round 1
+490306,all,GEN,2-0,Swiss Stage: Round 1
+490307,217250,BLG,13-10,Swiss Stage: Round 1
+490307,217251,TL,16-14,Swiss Stage: Round 1
+490307,217252,BLG,13-10,Swiss Stage: Round 1
+490307,all,BLG,2-1,Swiss Stage: Round 1
+490308,217253,SEN,13-11,Swiss Stage: Round 1
+490308,217254,SEN,13-8,Swiss Stage: Round 1
+490308,all,SEN,2-0,Swiss Stage: Round 1
+490309,217256,PRX,13-1,Swiss Stage: Round 1
+490309,217257,PRX,13-9,Swiss Stage: Round 1
+490309,all,PRX,2-0,Swiss Stage: Round 1
+490310,217259,GEN,13-11,Swiss Stage: Round 2 (1-0)
+490310,217260,GEN,13-3,Swiss Stage: Round 2 (1-0)
+490310,all,GEN,2-0,Swiss Stage: Round 2 (1-0)
+490311,217262,BLG,13-9,Swiss Stage: Round 2 (1-0)
+490311,217263,SEN,13-5,Swiss Stage: Round 2 (1-0)
+490311,217264,SEN,13-9,Swiss Stage: Round 2 (1-0)
+490311,all,SEN,2-1,Swiss Stage: Round 2 (1-0)
+490312,217265,WOL,13-10,Swiss Stage: Round 2 (0-1)
+490312,217266,WOL,13-9,Swiss Stage: Round 2 (0-1)
+490312,all,WOL,2-0,Swiss Stage: Round 2 (0-1)
+490313,217268,TL,13-6,Swiss Stage: Round 2 (0-1)
+490313,217269,TL,13-7,Swiss Stage: Round 2 (0-1)
+490313,all,TL,2-0,Swiss Stage: Round 2 (0-1)
+490314,217271,TL,15-13,Swiss Stage: Round 3 (1-1)
+490314,217272,PRX,13-5,Swiss Stage: Round 3 (1-1)
+490314,217273,PRX,14-12,Swiss Stage: Round 3 (1-1)
+490314,all,PRX,2-1,Swiss Stage: Round 3 (1-1)
+490315,217275,WOL,13-10,Swiss Stage: Round 3 (1-1)
+490315,221383,WOL,13-5,Swiss Stage: Round 3 (1-1)
+490315,all,WOL,2-0,Swiss Stage: Round 3 (1-1)
+498621,221147,SEN,13-6,Playoffs: Upper Quarterfinals
+498621,221148,SEN,13-6,Playoffs: Upper Quarterfinals
+498621,all,SEN,2-0,Playoffs: Upper Quarterfinals
+498622,221150,PRX,13-10,Playoffs: Upper Quarterfinals
+498622,221151,PRX,13-11,Playoffs: Upper Quarterfinals
+498622,all,PRX,2-0,Playoffs: Upper Quarterfinals
+498623,221153,WOL,13-11,Playoffs: Upper Quarterfinals
+498623,221154,WOL,13-8,Playoffs: Upper Quarterfinals
+498623,all,WOL,2-0,Playoffs: Upper Quarterfinals
+498624,221156,GEN,13-11,Playoffs: Upper Quarterfinals
+498624,221157,FNC,14-12,Playoffs: Upper Quarterfinals
+498624,221158,GEN,13-6,Playoffs: Upper Quarterfinals
+498624,all,GEN,2-1,Playoffs: Upper Quarterfinals
+498625,221159,PRX,13-3,Playoffs: Upper Semifinals
+498625,221160,PRX,13-11,Playoffs: Upper Semifinals
+498625,all,PRX,2-0,Playoffs: Upper Semifinals
+498626,221162,WOL,13-11,Playoffs: Upper Semifinals
+498626,221163,WOL,13-9,Playoffs: Upper Semifinals
+498626,all,WOL,2-0,Playoffs: Upper Semifinals
+498627,221165,PRX,14-12,Playoffs: Upper Final
+498627,221166,PRX,13-8,Playoffs: Upper Final
+498627,all,PRX,2-0,Playoffs: Upper Final
+498628,221168,PRX,13-11,Playoffs: Grand Final
+498628,221169,FNC,17-15,Playoffs: Grand Final
+498628,221170,PRX,13-10,Playoffs: Grand Final
+498628,221171,PRX,14-12,Playoffs: Grand Final
+498628,all,PRX,3-1,Playoffs: Grand Final
+498629,221173,G2,13-3,Playoffs: Lower Round 1
+498629,221174,G2,13-8,Playoffs: Lower Round 1
+498629,all,G2,2-0,Playoffs: Lower Round 1
+498630,221176,FNC,13-5,Playoffs: Lower Round 1
+498630,221177,RRQ,13-6,Playoffs: Lower Round 1
+498630,221178,FNC,13-5,Playoffs: Lower Round 1
+498630,all,FNC,2-1,Playoffs: Lower Round 1
+498631,221179,G2,13-7,Playoffs: Lower Round 2
+498631,221180,GEN,13-11,Playoffs: Lower Round 2
+498631,221181,G2,13-11,Playoffs: Lower Round 2
+498631,all,G2,2-1,Playoffs: Lower Round 2
+498632,221182,SEN,13-9,Playoffs: Lower Round 2
+498632,221183,FNC,13-7,Playoffs: Lower Round 2
+498632,221184,FNC,13-9,Playoffs: Lower Round 2
+498632,all,FNC,2-1,Playoffs: Lower Round 2
+498633,221185,FNC,13-10,Playoffs: Lower Round 3
+498633,221186,FNC,13-10,Playoffs: Lower Round 3
+498633,all,FNC,2-0,Playoffs: Lower Round 3
+498634,221188,FNC,13-9,Playoffs: Lower Final
+498634,221189,FNC,13-4,Playoffs: Lower Final
+498634,221190,WOL,13-10,Playoffs: Lower Final
+498634,221191,FNC,13-5,Playoffs: Lower Final
+498634,all,FNC,3-1,Playoffs: Lower Final
+507067,223246,Team,13-7,Showmatch: Showmatch
+507067,all,Team,1-0,Showmatch: Showmatch
+508815,223654,TLN,13-8,Group Stage: Week 1
+508815,223655,TLN,13-3,Group Stage: Week 1
+508815,all,TLN,2-0,Group Stage: Week 1
+508816,223657,TS,13-8,Group Stage: Week 1
+508816,223658,NS,13-10,Group Stage: Week 1
+508816,223659,NS,13-3,Group Stage: Week 1
+508816,all,NS,2-1,Group Stage: Week 1
+508817,223660,PRX,17-15,Group Stage: Week 1
+508817,223661,PRX,14-12,Group Stage: Week 1
+508817,all,PRX,2-0,Group Stage: Week 1
+508818,223664,GEN,13-8,Group Stage: Week 1
+508818,227727,GEN,13-6,Group Stage: Week 1
+508818,all,GEN,2-0,Group Stage: Week 1
+508819,223667,GE,13-7,Group Stage: Week 1
+508819,227752,GE,13-5,Group Stage: Week 1
+508819,all,GE,2-0,Group Stage: Week 1
+508820,223669,DFM,13-1,Group Stage: Week 1
+508820,223670,ZETA,13-1,Group Stage: Week 1
+508820,223671,DFM,13-7,Group Stage: Week 1
+508820,all,DFM,2-1,Group Stage: Week 1
+508821,223672,KRX,13-5,Group Stage: Week 1
+508821,227984,NS,13-4,Group Stage: Week 1
+508821,227985,KRX,13-11,Group Stage: Week 1
+508821,all,KRX,2-1,Group Stage: Week 1
+508822,223673,T1,13-9,Group Stage: Week 1
+508822,223674,T1,13-10,Group Stage: Week 1
+508822,all,T1,2-0,Group Stage: Week 1
+508823,223676,TS,13-5,Group Stage: Week 1
+508823,223677,GE,13-9,Group Stage: Week 1
+508823,223678,TS,13-11,Group Stage: Week 1
+508823,all,TS,2-1,Group Stage: Week 1
+508824,223680,PRX,13-7,Group Stage: Week 1
+508824,228042,PRX,13-7,Group Stage: Week 1
+508824,all,PRX,2-0,Group Stage: Week 1
+508825,223682,TLN,13-5,Group Stage: Week 1
+508825,223683,TLN,13-6,Group Stage: Week 1
+508825,all,TLN,2-0,Group Stage: Week 1
+508826,223686,GEN,13-6,Group Stage: Week 1
+508826,223687,RRQ,13-11,Group Stage: Week 1
+508826,228313,RRQ,13-6,Group Stage: Week 1
+508826,all,RRQ,2-1,Group Stage: Week 1
+508828,223688,GE,13-3,Group Stage: Week 2
+508828,223689,GEN,13-3,Group Stage: Week 2
+508828,223690,GEN,13-7,Group Stage: Week 2
+508828,all,GEN,2-1,Group Stage: Week 2
+508829,223692,TLN,13-9,Group Stage: Week 2
+508829,223693,DFM,13-8,Group Stage: Week 2
+508829,229069,DFM,13-9,Group Stage: Week 2
+508829,all,DFM,2-1,Group Stage: Week 2
+508830,223694,T1,13-8,Group Stage: Week 2
+508830,223695,T1,13-6,Group Stage: Week 2
+508830,all,T1,2-0,Group Stage: Week 2
+508831,223697,NS,13-11,Group Stage: Week 2
+508831,223698,RRQ,13-8,Group Stage: Week 2
+508831,223699,RRQ,13-3,Group Stage: Week 2
+508831,all,RRQ,2-1,Group Stage: Week 2
+508832,223701,KRX,13-4,Group Stage: Week 2
+508832,229399,KRX,13-4,Group Stage: Week 2
+508832,all,KRX,2-0,Group Stage: Week 2
+508833,223703,PRX,13-8,Group Stage: Week 2
+508833,223704,PRX,13-10,Group Stage: Week 2
+508833,all,PRX,2-0,Group Stage: Week 2
+508834,223706,GEN,13-3,Group Stage: Week 3
+508834,223707,GEN,13-8,Group Stage: Week 3
+508834,all,GEN,2-0,Group Stage: Week 3
+508835,223709,TLN,13-10,Group Stage: Week 3
+508835,223710,TLN,13-6,Group Stage: Week 3
+508835,all,TLN,2-0,Group Stage: Week 3
+508836,223712,DFM,13-10,Group Stage: Week 3
+508836,223713,DFM,13-2,Group Stage: Week 3
+508836,all,DFM,2-0,Group Stage: Week 3
+508837,223715,KRX,14-12,Group Stage: Week 3
+508837,223716,KRX,13-7,Group Stage: Week 3
+508837,all,KRX,2-0,Group Stage: Week 3
+508838,223718,NS,13-7,Group Stage: Week 3
+508838,223719,NS,13-8,Group Stage: Week 3
+508838,all,NS,2-0,Group Stage: Week 3
+508839,223721,ZETA,13-9,Group Stage: Week 3
+508839,223722,ZETA,13-7,Group Stage: Week 3
+508839,all,ZETA,2-0,Group Stage: Week 3
+508840,223724,NS,13-9,Group Stage: Week 4
+508840,223725,NS,14-12,Group Stage: Week 4
+508840,all,NS,2-0,Group Stage: Week 4
+508841,223727,PRX,13-11,Group Stage: Week 4
+508841,223728,PRX,16-14,Group Stage: Week 4
+508841,all,PRX,2-0,Group Stage: Week 4
+508842,223730,KRX,13-10,Group Stage: Week 4
+508842,223731,KRX,13-10,Group Stage: Week 4
+508842,all,KRX,2-0,Group Stage: Week 4
+508843,223733,BME,15-13,Group Stage: Week 4
+508843,223734,ZETA,13-9,Group Stage: Week 4
+508843,223735,ZETA,13-8,Group Stage: Week 4
+508843,all,ZETA,2-1,Group Stage: Week 4
+508844,223736,TS,15-13,Group Stage: Week 4
+508844,223737,RRQ,13-4,Group Stage: Week 4
+508844,223738,RRQ,13-3,Group Stage: Week 4
+508844,all,RRQ,2-1,Group Stage: Week 4
+508845,223739,T1,13-6,Group Stage: Week 4
+508845,223740,T1,13-9,Group Stage: Week 4
+508845,all,T1,2-0,Group Stage: Week 4
+509801,224713,C9,13-5,Group Stage: Week 1
+509801,224714,C9,13-4,Group Stage: Week 1
+509801,all,C9,2-0,Group Stage: Week 1
+509802,224716,LEV,13-10,Group Stage: Week 1
+509802,224717,LOUD,13-10,Group Stage: Week 1
+509802,224718,LOUD,13-11,Group Stage: Week 1
+509802,all,LOUD,2-1,Group Stage: Week 1
+509803,224719,2G,13-7,Group Stage: Week 1
+509803,224720,EG,13-11,Group Stage: Week 1
+509803,224721,EG,13-9,Group Stage: Week 1
+509803,all,EG,2-1,Group Stage: Week 1
+509804,224722,MIBR,13-9,Group Stage: Week 1
+509804,224723,KRÜ,13-1,Group Stage: Week 1
+509804,224724,KRÜ,13-9,Group Stage: Week 1
+509804,all,KRÜ,2-1,Group Stage: Week 1
+509805,224725,100T,13-10,Group Stage: Week 1
+509805,224726,100T,13-4,Group Stage: Week 1
+509805,all,100T,2-0,Group Stage: Week 1
+509806,224728,SEN,13-8,Group Stage: Week 1
+509806,224729,G2,13-6,Group Stage: Week 1
+509806,224730,SEN,14-12,Group Stage: Week 1
+509806,all,SEN,2-1,Group Stage: Week 1
+509807,224731,G2,13-8,Group Stage: Week 2
+509807,224732,G2,13-5,Group Stage: Week 2
+509807,all,G2,2-0,Group Stage: Week 2
+509808,224734,SEN,13-4,Group Stage: Week 2
+509808,224735,SEN,13-0,Group Stage: Week 2
+509808,all,SEN,2-0,Group Stage: Week 2
+509809,224737,100T,13-4,Group Stage: Week 2
+509809,224738,100T,13-5,Group Stage: Week 2
+509809,all,100T,2-0,Group Stage: Week 2
+509810,224740,NRG,13-4,Group Stage: Week 2
+509810,224741,NRG,13-9,Group Stage: Week 2
+509810,all,NRG,2-0,Group Stage: Week 2
+509811,224743,C9,13-7,Group Stage: Week 2
+509811,224744,C9,13-10,Group Stage: Week 2
+509811,all,C9,2-0,Group Stage: Week 2
+509812,224746,LEV,13-8,Group Stage: Week 2
+509812,224747,LEV,13-3,Group Stage: Week 2
+509812,all,LEV,2-0,Group Stage: Week 2
+509813,224749,FUR,14-12,Group Stage: Week 3
+509813,224750,2G,13-3,Group Stage: Week 3
+509813,224751,2G,13-2,Group Stage: Week 3
+509813,all,2G,2-1,Group Stage: Week 3
+509814,224752,NRG,13-7,Group Stage: Week 3
+509814,224753,LEV,14-12,Group Stage: Week 3
+509814,224754,NRG,13-11,Group Stage: Week 3
+509814,all,NRG,2-1,Group Stage: Week 3
+509815,224755,SEN,13-5,Group Stage: Week 3
+509815,224756,SEN,13-9,Group Stage: Week 3
+509815,all,SEN,2-0,Group Stage: Week 3
+509816,224758,MIBR,13-10,Group Stage: Week 3
+509816,224759,MIBR,14-12,Group Stage: Week 3
+509816,all,MIBR,2-0,Group Stage: Week 3
+509817,224761,EG,13-11,Group Stage: Week 3
+509817,224762,G2,13-4,Group Stage: Week 3
+509817,224763,G2,13-4,Group Stage: Week 3
+509817,all,G2,2-1,Group Stage: Week 3
+509818,224764,KRÜ,13-7,Group Stage: Week 3
+509818,224765,LOUD,13-9,Group Stage: Week 3
+509818,224766,KRÜ,13-4,Group Stage: Week 3
+509818,all,KRÜ,2-1,Group Stage: Week 3
+509819,224767,C9,13-1,Group Stage: Week 4
+509819,224768,C9,13-7,Group Stage: Week 4
+509819,all,C9,2-0,Group Stage: Week 4
+509820,224770,NRG,15-13,Group Stage: Week 4
+509820,224771,NRG,13-10,Group Stage: Week 4
+509820,all,NRG,2-0,Group Stage: Week 4
+509821,224773,SEN,13-8,Group Stage: Week 4
+509821,224774,SEN,13-4,Group Stage: Week 4
+509821,all,SEN,2-0,Group Stage: Week 4
+509822,224776,KRÜ,13-6,Group Stage: Week 4
+509822,224777,LEV,13-10,Group Stage: Week 4
+509822,224778,LEV,13-4,Group Stage: Week 4
+509822,all,LEV,2-1,Group Stage: Week 4
+509823,224779,G2,13-2,Group Stage: Week 4
+509823,224780,G2,13-5,Group Stage: Week 4
+509823,all,G2,2-0,Group Stage: Week 4
+509824,224782,LOUD,13-2,Group Stage: Week 4
+509824,224783,100T,13-7,Group Stage: Week 4
+509824,224784,100T,14-12,Group Stage: Week 4
+509824,all,100T,2-1,Group Stage: Week 4
+509825,224785,KRÜ,13-6,Group Stage: Week 5
+509825,224786,NRG,13-7,Group Stage: Week 5
+509825,224787,NRG,13-5,Group Stage: Week 5
+509825,all,NRG,2-1,Group Stage: Week 5
+509826,224788,100T,13-10,Group Stage: Week 5
+509826,224789,LEV,13-10,Group Stage: Week 5
+509826,224790,LEV,13-2,Group Stage: Week 5
+509826,all,LEV,2-1,Group Stage: Week 5
+509827,224791,EG,13-6,Group Stage: Week 5
+509827,224792,EG,13-9,Group Stage: Week 5
+509827,all,EG,2-0,Group Stage: Week 5
+509829,224794,2G,13-9,Group Stage: Week 5
+509829,224795,SEN,13-4,Group Stage: Week 5
+509829,224796,SEN,13-4,Group Stage: Week 5
+509829,all,SEN,2-1,Group Stage: Week 5
+509830,224797,G2,13-8,Group Stage: Week 5
+509830,224798,G2,13-9,Group Stage: Week 5
+509830,all,G2,2-0,Group Stage: Week 5
+509831,224800,MIBR,13-11,Group Stage: Week 5
+509831,224801,MIBR,13-10,Group Stage: Week 5
+509831,all,MIBR,2-0,Group Stage: Week 5
+511543,226424,NAVI,13-4,Group Stage: Week 1
+511543,226425,APK,13-6,Group Stage: Week 1
+511543,226426,NAVI,13-3,Group Stage: Week 1
+511543,all,NAVI,2-1,Group Stage: Week 1
+511544,226427,GX,13-10,Group Stage: Week 1
+511544,226428,GX,13-11,Group Stage: Week 1
+511544,all,GX,2-0,Group Stage: Week 1
+511545,226430,M8,13-7,Group Stage: Week 1
+511545,226431,FUT,13-5,Group Stage: Week 1
+511545,226432,FUT,16-14,Group Stage: Week 1
+511545,all,FUT,2-1,Group Stage: Week 1
+511546,226433,TL,13-4,Group Stage: Week 1
+511546,226434,MKOI,13-10,Group Stage: Week 1
+511546,226435,TL,13-8,Group Stage: Week 1
+511546,all,TL,2-1,Group Stage: Week 1
+511547,226436,BBL,13-5,Group Stage: Week 1
+511547,226437,TH,13-9,Group Stage: Week 1
+511547,226438,TH,13-11,Group Stage: Week 1
+511547,all,TH,2-1,Group Stage: Week 1
+511548,226439,FNC,13-7,Group Stage: Week 1
+511548,226440,KC,13-10,Group Stage: Week 1
+511548,226441,FNC,13-11,Group Stage: Week 1
+511548,all,FNC,2-1,Group Stage: Week 1
+511549,226442,KC,13-7,Group Stage: Week 2
+511549,226443,APK,13-11,Group Stage: Week 2
+511549,226444,KC,13-11,Group Stage: Week 2
+511549,all,KC,2-1,Group Stage: Week 2
+511550,226445,GX,13-7,Group Stage: Week 2
+511550,226446,BBL,13-11,Group Stage: Week 2
+511550,226447,GX,13-11,Group Stage: Week 2
+511550,all,GX,2-1,Group Stage: Week 2
+511551,226448,TL,13-7,Group Stage: Week 2
+511551,226449,TL,13-4,Group Stage: Week 2
+511551,all,TL,2-0,Group Stage: Week 2
+511552,226451,TH,14-12,Group Stage: Week 2
+511552,226452,M8,14-12,Group Stage: Week 2
+511552,226453,TH,13-5,Group Stage: Week 2
+511552,all,TH,2-1,Group Stage: Week 2
+511553,226454,VIT,13-2,Group Stage: Week 2
+511553,226455,VIT,13-5,Group Stage: Week 2
+511553,all,VIT,2-0,Group Stage: Week 2
+511554,226457,FNC,13-7,Group Stage: Week 2
+511554,226458,FNC,13-11,Group Stage: Week 2
+511554,all,FNC,2-0,Group Stage: Week 2
+511562,226460,GX,13-11,Group Stage: Week 3
+511562,226461,FUT,13-6,Group Stage: Week 3
+511562,226462,FUT,13-5,Group Stage: Week 3
+511562,all,FUT,2-1,Group Stage: Week 3
+511563,226463,BBL,13-3,Group Stage: Week 3
+511563,226464,BBL,14-12,Group Stage: Week 3
+511563,all,BBL,2-0,Group Stage: Week 3
+511564,226466,TL,14-12,Group Stage: Week 3
+511564,226467,APK,13-11,Group Stage: Week 3
+511564,226468,TL,13-6,Group Stage: Week 3
+511564,all,TL,2-1,Group Stage: Week 3
+511565,226469,MKOI,13-9,Group Stage: Week 3
+511565,226470,KC,13-2,Group Stage: Week 3
+511565,226471,KC,13-4,Group Stage: Week 3
+511565,all,KC,2-1,Group Stage: Week 3
+511566,226473,NAVI,13-10,Group Stage: Week 3
+511566,226474,FNC,13-11,Group Stage: Week 3
+511566,230237,FNC,15-13,Group Stage: Week 3
+511566,all,FNC,2-1,Group Stage: Week 3
+511567,226475,TH,13-11,Group Stage: Week 3
+511567,226476,TH,13-9,Group Stage: Week 3
+511567,all,TH,2-0,Group Stage: Week 3
+511568,226478,TH,13-6,Group Stage: Week 4
+511568,226479,TH,13-7,Group Stage: Week 4
+511568,all,TH,2-0,Group Stage: Week 4
+511569,226481,APK,13-9,Group Stage: Week 4
+511569,226482,MKOI,13-4,Group Stage: Week 4
+511569,226483,MKOI,13-8,Group Stage: Week 4
+511569,all,MKOI,2-1,Group Stage: Week 4
+511570,226484,M8,13-8,Group Stage: Week 4
+511570,226485,GX,14-12,Group Stage: Week 4
+511570,226486,GX,13-4,Group Stage: Week 4
+511570,all,GX,2-1,Group Stage: Week 4
+511571,226487,NAVI,14-12,Group Stage: Week 4
+511571,226488,NAVI,13-8,Group Stage: Week 4
+511571,all,NAVI,2-0,Group Stage: Week 4
+511572,226490,VIT,13-11,Group Stage: Week 4
+511572,226491,BBL,13-7,Group Stage: Week 4
+511572,226492,BBL,13-10,Group Stage: Week 4
+511572,all,BBL,2-1,Group Stage: Week 4
+511573,226493,TL,14-12,Group Stage: Week 4
+511573,226494,TL,13-1,Group Stage: Week 4
+511573,all,TL,2-0,Group Stage: Week 4
+511575,226496,NAVI,13-9,Group Stage: Week 5
+511575,226497,MKOI,16-14,Group Stage: Week 5
+511575,226498,NAVI,13-3,Group Stage: Week 5
+511575,all,NAVI,2-1,Group Stage: Week 5
+511576,226499,FNC,13-5,Group Stage: Week 5
+511576,226500,FNC,13-10,Group Stage: Week 5
+511576,all,FNC,2-0,Group Stage: Week 5
+511577,226502,TH,13-7,Group Stage: Week 5
+511577,226503,TH,13-3,Group Stage: Week 5
+511577,all,TH,2-0,Group Stage: Week 5
+511579,226505,VIT,13-4,Group Stage: Week 5
+511579,226506,M8,13-9,Group Stage: Week 5
+511579,226507,VIT,13-10,Group Stage: Week 5
+511579,all,VIT,2-1,Group Stage: Week 5
+511580,226508,BBL,13-11,Group Stage: Week 5
+511580,226509,BBL,13-9,Group Stage: Week 5
+511580,all,BBL,2-0,Group Stage: Week 5
+511581,226511,TL,14-12,Group Stage: Week 5
+511581,226512,KC,15-13,Group Stage: Week 5
+511581,226513,KC,14-12,Group Stage: Week 5
+511581,all,KC,2-1,Group Stage: Week 5
+530354,231305,TLN,13-5,Playoffs: Upper Round 1
+530354,231306,TLN,16-14,Playoffs: Upper Round 1
+530354,all,TLN,2-0,Playoffs: Upper Round 1
+530355,231308,T1,13-9,Playoffs: Upper Round 1
+530355,231309,RRQ,13-7,Playoffs: Upper Round 1
+530355,231310,T1,13-8,Playoffs: Upper Round 1
+530355,all,T1,2-1,Playoffs: Upper Round 1
+530356,231311,KRX,13-11,Playoffs: Upper Semifinals
+530356,231312,TLN,13-9,Playoffs: Upper Semifinals
+530356,231313,TLN,13-7,Playoffs: Upper Semifinals
+530356,all,TLN,2-1,Playoffs: Upper Semifinals
+530357,231314,PRX,13-8,Playoffs: Upper Semifinals
+530357,231315,PRX,13-6,Playoffs: Upper Semifinals
+530357,all,PRX,2-0,Playoffs: Upper Semifinals
+530358,231317,NS,13-6,Playoffs: Lower Round 1
+530358,231318,NS,13-10,Playoffs: Lower Round 1
+530358,all,NS,2-0,Playoffs: Lower Round 1
+530359,231320,GEN,13-10,Playoffs: Lower Round 1
+530359,231321,RRQ,13-11,Playoffs: Lower Round 1
+530359,231322,RRQ,13-6,Playoffs: Lower Round 1
+530359,all,RRQ,2-1,Playoffs: Lower Round 1
+530360,231324,T1,13-9,Playoffs: Lower Round 2
+530360,231894,T1,13-6,Playoffs: Lower Round 2
+530360,all,T1,2-0,Playoffs: Lower Round 2
+530361,231326,RRQ,13-7,Playoffs: Lower Round 2
+530361,231327,RRQ,13-9,Playoffs: Lower Round 2
+530361,all,RRQ,2-0,Playoffs: Lower Round 2
+530362,231329,PRX,13-11,Playoffs: Upper Final
+530362,231330,PRX,13-7,Playoffs: Upper Final
+530362,all,PRX,2-0,Playoffs: Upper Final
+530363,231333,T1,13-11,Playoffs: Lower Round 3
+530363,231334,RRQ,15-13,Playoffs: Lower Round 3
+530363,232077,RRQ,13-7,Playoffs: Lower Round 3
+530363,all,RRQ,2-1,Playoffs: Lower Round 3
+530364,231335,TLN,13-4,Playoffs: Lower Final
+530364,231336,TLN,13-7,Playoffs: Lower Final
+530364,231337,RRQ,13-10,Playoffs: Lower Final
+530364,231338,RRQ,13-6,Playoffs: Lower Final
+530364,231339,RRQ,14-12,Playoffs: Lower Final
+530364,all,RRQ,3-2,Playoffs: Lower Final
+530365,231341,PRX,13-7,Playoffs: Grand Final
+530365,231342,RRQ,13-6,Playoffs: Grand Final
+530365,231343,PRX,13-7,Playoffs: Grand Final
+530365,233353,PRX,13-8,Playoffs: Grand Final
+530365,all,PRX,3-1,Playoffs: Grand Final
+530514,231345,WOR,13-8,Showmatch: Main Event
+530514,all,WOR,1-0,Showmatch: Main Event
+530902,231348,C9,13-10,Playoffs: Upper Round 1
+530902,231349,LEV,13-10,Playoffs: Upper Round 1
+530902,231350,C9,13-11,Playoffs: Upper Round 1
+530902,all,C9,2-1,Playoffs: Upper Round 1
+530903,231351,G2,13-4,Playoffs: Upper Round 1
+530903,231352,G2,13-5,Playoffs: Upper Round 1
+530903,all,G2,2-0,Playoffs: Upper Round 1
+530904,231354,LEV,14-12,Playoffs: Lower Round 1
+530904,231355,KRÜ,13-6,Playoffs: Lower Round 1
+530904,231356,LEV,13-8,Playoffs: Lower Round 1
+530904,all,LEV,2-1,Playoffs: Lower Round 1
+530905,231357,100T,13-4,Playoffs: Lower Round 1
+530905,231358,100T,14-12,Playoffs: Lower Round 1
+530905,all,100T,2-0,Playoffs: Lower Round 1
+530906,231360,SEN,13-10,Playoffs: Upper Semifinals
+530906,231361,C9,13-9,Playoffs: Upper Semifinals
+530906,231362,SEN,13-10,Playoffs: Upper Semifinals
+530906,all,SEN,2-1,Playoffs: Upper Semifinals
+530907,231363,NRG,13-10,Playoffs: Upper Semifinals
+530907,231364,G2,13-11,Playoffs: Upper Semifinals
+530907,231365,G2,13-7,Playoffs: Upper Semifinals
+530907,all,G2,2-1,Playoffs: Upper Semifinals
+530908,231366,NRG,13-2,Playoffs: Lower Round 2
+530908,231367,NRG,13-2,Playoffs: Lower Round 2
+530908,all,NRG,2-0,Playoffs: Lower Round 2
+530909,231369,C9,13-9,Playoffs: Lower Round 2
+530909,231370,C9,14-12,Playoffs: Lower Round 2
+530909,all,C9,2-0,Playoffs: Lower Round 2
+530910,231372,G2,13-8,Playoffs: Upper Final
+530910,231373,G2,13-9,Playoffs: Upper Final
+530910,all,G2,2-0,Playoffs: Upper Final
+530911,231376,NRG,13-2,Playoffs: Lower Round 3
+530911,231377,NRG,13-10,Playoffs: Lower Round 3
+530911,233203,C9,13-10,Playoffs: Lower Round 3
+530911,all,NRG,2-1,Playoffs: Lower Round 3
+530912,231378,NRG,13-4,Playoffs: Lower Final
+530912,231379,NRG,13-11,Playoffs: Lower Final
+530912,231380,SEN,13-10,Playoffs: Lower Final
+530912,231381,NRG,13-8,Playoffs: Lower Final
+530912,all,NRG,3-1,Playoffs: Lower Final
+530913,231383,G2,13-11,Playoffs: Grand Final
+530913,231384,G2,13-8,Playoffs: Grand Final
+530913,231385,G2,13-10,Playoffs: Grand Final
+530913,all,G2,3-0,Playoffs: Grand Final
+530924,231388,FNC,13-7,Playoffs: Upper Round 1
+530924,231389,BBL,13-7,Playoffs: Upper Round 1
+530924,231390,BBL,13-9,Playoffs: Upper Round 1
+530924,all,BBL,2-1,Playoffs: Upper Round 1
+530925,231391,NAVI,13-5,Playoffs: Upper Round 1
+530925,231392,GX,13-8,Playoffs: Upper Round 1
+530925,231393,GX,13-6,Playoffs: Upper Round 1
+530925,all,GX,2-1,Playoffs: Upper Round 1
+530926,231394,KC,14-12,Playoffs: Lower Round 1
+530926,231395,FNC,14-12,Playoffs: Lower Round 1
+530926,232628,FNC,13-8,Playoffs: Lower Round 1
+530926,all,FNC,2-1,Playoffs: Lower Round 1
+530927,231397,NAVI,13-7,Playoffs: Lower Round 1
+530927,231398,NAVI,13-11,Playoffs: Lower Round 1
+530927,all,NAVI,2-0,Playoffs: Lower Round 1
+530928,231400,BBL,13-6,Playoffs: Upper Semifinals
+530928,231401,BBL,13-11,Playoffs: Upper Semifinals
+530928,all,BBL,2-0,Playoffs: Upper Semifinals
+530929,231403,TL,13-4,Playoffs: Upper Semifinals
+530929,231404,GX,13-11,Playoffs: Upper Semifinals
+530929,231405,TL,14-12,Playoffs: Upper Semifinals
+530929,all,TL,2-1,Playoffs: Upper Semifinals
+530930,231406,GX,13-10,Playoffs: Lower Round 2
+530930,231407,GX,13-10,Playoffs: Lower Round 2
+530930,all,GX,2-0,Playoffs: Lower Round 2
+530931,231409,NAVI,13-3,Playoffs: Lower Round 2
+530931,231410,NAVI,13-7,Playoffs: Lower Round 2
+530931,all,NAVI,2-0,Playoffs: Lower Round 2
+530932,231412,TL,13-10,Playoffs: Upper Final
+530932,231413,BBL,13-10,Playoffs: Upper Final
+530932,231414,TL,14-12,Playoffs: Upper Final
+530932,all,TL,2-1,Playoffs: Upper Final
+530933,231415,NAVI,13-6,Playoffs: Lower Round 3
+530933,231416,GX,13-6,Playoffs: Lower Round 3
+530933,231417,GX,13-4,Playoffs: Lower Round 3
+530933,all,GX,2-1,Playoffs: Lower Round 3
+530934,231418,GX,13-2,Playoffs: Lower Final
+530934,231419,GX,13-8,Playoffs: Lower Final
+530934,233349,GX,13-6,Playoffs: Lower Final
+530934,all,GX,3-0,Playoffs: Lower Final
+530935,231423,TL,13-10,Playoffs: Grand Final
+530935,231424,TL,13-9,Playoffs: Grand Final
+530935,231425,TL,13-10,Playoffs: Grand Final
+530935,all,TL,3-0,Playoffs: Grand Final
+536985,232626,ALP,13-4,Showmatch: Override
+536985,all,ALP,1-0,Showmatch: Override
+538583,232785,EMEA,13-7,Showmatch: Main Event
+538583,all,EMEA,1-0,Showmatch: Main Event
+542195,233397,PRX,13-9,Group Stage: Opening (A)
+542195,233398,PRX,13-5,Group Stage: Opening (A)
+542195,all,PRX,2-0,Group Stage: Opening (A)
+542196,233400,SEN,13-6,Group Stage: Opening (A)
+542196,233401,GX,13-4,Group Stage: Opening (A)
+542196,233402,GX,13-9,Group Stage: Opening (A)
+542196,all,GX,2-1,Group Stage: Opening (A)
+542197,233403,GX,13-11,Group Stage: Winner's (A)
+542197,233404,PRX,13-10,Group Stage: Winner's (A)
+542197,233405,PRX,13-6,Group Stage: Winner's (A)
+542197,all,PRX,2-1,Group Stage: Winner's (A)
+542198,233406,SEN,13-10,Group Stage: Elimination (A)
+542198,233407,XLG,13-11,Group Stage: Elimination (A)
+542198,233408,XLG,13-8,Group Stage: Elimination (A)
+542198,all,XLG,2-1,Group Stage: Elimination (A)
+542199,233409,GX,14-12,Group Stage: Decider (A)
+542199,233410,GX,13-10,Group Stage: Decider (A)
+542199,all,GX,2-0,Group Stage: Decider (A)
+542200,233412,MIBR,13-2,Group Stage: Opening (B)
+542200,233413,MIBR,13-9,Group Stage: Opening (B)
+542200,all,MIBR,2-0,Group Stage: Opening (B)
+542201,233415,FNC,13-10,Group Stage: Opening (B)
+542201,233416,FNC,13-7,Group Stage: Opening (B)
+542201,all,FNC,2-0,Group Stage: Opening (B)
+542202,233418,MIBR,13-5,Group Stage: Winner's (B)
+542202,233419,FNC,13-7,Group Stage: Winner's (B)
+542202,233420,FNC,13-10,Group Stage: Winner's (B)
+542202,all,FNC,2-1,Group Stage: Winner's (B)
+542203,233421,BLG,13-7,Group Stage: Elimination (B)
+542203,233422,RRQ,13-8,Group Stage: Elimination (B)
+542203,233423,RRQ,13-4,Group Stage: Elimination (B)
+542203,all,RRQ,2-1,Group Stage: Elimination (B)
+542204,233424,MIBR,13-5,Group Stage: Decider (B)
+542204,233425,MIBR,13-5,Group Stage: Decider (B)
+542204,all,MIBR,2-0,Group Stage: Decider (B)
+542205,233427,KRX,13-8,Group Stage: Opening (C)
+542205,233428,KRX,13-10,Group Stage: Opening (C)
+542205,all,KRX,2-0,Group Stage: Opening (C)
+542207,233430,NRG,17-15,Group Stage: Opening (C)
+542207,233431,NRG,13-11,Group Stage: Opening (C)
+542207,all,NRG,2-0,Group Stage: Opening (C)
+542208,233433,KRX,13-4,Group Stage: Winner's (C)
+542208,233434,NRG,13-11,Group Stage: Winner's (C)
+542208,233435,NRG,13-11,Group Stage: Winner's (C)
+542208,all,NRG,2-1,Group Stage: Winner's (C)
+542209,233436,EDG,13-3,Group Stage: Elimination (C)
+542209,233437,TL,13-6,Group Stage: Elimination (C)
+542209,233438,TL,15-13,Group Stage: Elimination (C)
+542209,all,TL,2-1,Group Stage: Elimination (C)
+542210,233439,KRX,13-8,Group Stage: Decider (C)
+542210,233440,KRX,13-7,Group Stage: Decider (C)
+542210,all,KRX,2-0,Group Stage: Decider (C)
+542211,233442,TH,13-10,Group Stage: Opening (D)
+542211,233443,TH,13-10,Group Stage: Opening (D)
+542211,all,TH,2-0,Group Stage: Opening (D)
+542212,233445,T1,15-13,Group Stage: Opening (D)
+542212,233446,T1,16-14,Group Stage: Opening (D)
+542212,all,T1,2-0,Group Stage: Opening (D)
+542213,233448,TH,13-10,Group Stage: Winner's (D)
+542213,233449,TH,13-11,Group Stage: Winner's (D)
+542213,all,TH,2-0,Group Stage: Winner's (D)
+542214,233451,G2,13-7,Group Stage: Elimination (D)
+542214,233452,G2,13-7,Group Stage: Elimination (D)
+542214,all,G2,2-0,Group Stage: Elimination (D)
+542215,233454,G2,13-9,Group Stage: Decider (D)
+542215,233455,G2,13-8,Group Stage: Decider (D)
+542215,all,G2,2-0,Group Stage: Decider (D)
+542264,233457,FNC,13-11,Playoffs: Upper Quarterfinals
+542264,233458,KRX,13-8,Playoffs: Upper Quarterfinals
+542264,233459,FNC,13-5,Playoffs: Upper Quarterfinals
+542264,all,FNC,2-1,Playoffs: Upper Quarterfinals
+542265,233460,PRX,13-11,Playoffs: Upper Quarterfinals
+542265,233461,G2,15-13,Playoffs: Upper Quarterfinals
+542265,233462,PRX,13-11,Playoffs: Upper Quarterfinals
+542265,all,PRX,2-1,Playoffs: Upper Quarterfinals
+542266,233463,MIBR,14-12,Playoffs: Upper Quarterfinals
+542266,233464,MIBR,13-6,Playoffs: Upper Quarterfinals
+542266,all,MIBR,2-0,Playoffs: Upper Quarterfinals
+542267,233466,NRG,13-1,Playoffs: Upper Quarterfinals
+542267,233467,NRG,13-6,Playoffs: Upper Quarterfinals
+542267,all,NRG,2-0,Playoffs: Upper Quarterfinals
+542268,233469,PRX,13-10,Playoffs: Upper Semifinals
+542268,233470,FNC,13-4,Playoffs: Upper Semifinals
+542268,233471,FNC,13-9,Playoffs: Upper Semifinals
+542268,all,FNC,2-1,Playoffs: Upper Semifinals
+542269,233472,NRG,16-14,Playoffs: Upper Semifinals
+542269,233473,MIBR,13-4,Playoffs: Upper Semifinals
+542269,233474,NRG,16-14,Playoffs: Upper Semifinals
+542269,all,NRG,2-1,Playoffs: Upper Semifinals
+542270,233475,NRG,14-12,Playoffs: Upper Final
+542270,233476,NRG,13-5,Playoffs: Upper Final
+542270,all,NRG,2-0,Playoffs: Upper Final
+542272,233478,NRG,13-3,Playoffs: Grand Final
+542272,233479,NRG,13-6,Playoffs: Grand Final
+542272,233480,FNC,15-13,Playoffs: Grand Final
+542272,233481,FNC,13-8,Playoffs: Grand Final
+542272,233482,NRG,13-5,Playoffs: Grand Final
+542272,all,NRG,3-2,Playoffs: Grand Final
+542273,233483,G2,13-7,Playoffs: Lower Round 1
+542273,233484,KRX,13-10,Playoffs: Lower Round 1
+542273,233485,KRX,13-7,Playoffs: Lower Round 1
+542273,all,KRX,2-1,Playoffs: Lower Round 1
+542274,233486,TH,13-4,Playoffs: Lower Round 1
+542274,233487,GX,13-3,Playoffs: Lower Round 1
+542274,233488,TH,13-9,Playoffs: Lower Round 1
+542274,all,TH,2-1,Playoffs: Lower Round 1
+542276,233489,MIBR,13-10,Playoffs: Lower Round 2
+542276,233490,KRX,15-13,Playoffs: Lower Round 2
+542276,233491,KRX,13-10,Playoffs: Lower Round 2
+542276,all,KRX,2-1,Playoffs: Lower Round 2
+542277,233492,PRX,13-11,Playoffs: Lower Round 2
+542277,233493,TH,13-9,Playoffs: Lower Round 2
+542277,233494,PRX,13-4,Playoffs: Lower Round 2
+542277,all,PRX,2-1,Playoffs: Lower Round 2
+542278,233495,KRX,15-13,Playoffs: Lower Round 3
+542278,233496,KRX,13-8,Playoffs: Lower Round 3
+542278,all,KRX,2-0,Playoffs: Lower Round 3
+542279,233498,KRX,13-8,Playoffs: Lower Final
+542279,233499,FNC,13-3,Playoffs: Lower Final
+542279,233500,FNC,13-11,Playoffs: Lower Final
+542279,233501,FNC,13-4,Playoffs: Lower Final
+542279,all,FNC,3-1,Playoffs: Lower Final
+594740,244304,NAVI,13-11,Main Event: Upper Round 1
+594740,244305,NAVI,13-7,Main Event: Upper Round 1
+594740,all,NAVI,2-0,Main Event: Upper Round 1
+594741,244307,M8,13-8,Main Event: Upper Round 1
+594741,244308,M8,13-6,Main Event: Upper Round 1
+594741,all,M8,2-0,Main Event: Upper Round 1
+594742,244310,BBL,13-10,Main Event: Upper Round 1
+594742,244311,PCF,13-7,Main Event: Upper Round 1
+594742,244312,BBL,13-4,Main Event: Upper Round 1
+594742,all,BBL,2-1,Main Event: Upper Round 1
+594743,244313,VIT,13-3,Main Event: Upper Round 1
+594743,244314,VIT,13-1,Main Event: Upper Round 1
+594743,all,VIT,2-0,Main Event: Upper Round 1
+594744,244316,NAVI,13-10,Main Event: Upper Round 2
+594744,244317,TH,13-11,Main Event: Upper Round 2
+594744,244318,NAVI,13-6,Main Event: Upper Round 2
+594744,all,NAVI,2-1,Main Event: Upper Round 2
+594745,244319,M8,13-10,Main Event: Upper Round 2
+594745,244320,M8,13-10,Main Event: Upper Round 2
+594745,all,M8,2-0,Main Event: Upper Round 2
+594746,244322,BBL,13-11,Main Event: Upper Round 2
+594746,244323,BBL,13-4,Main Event: Upper Round 2
+594746,all,BBL,2-0,Main Event: Upper Round 2
+594747,244325,VIT,13-11,Main Event: Upper Round 2
+594747,244326,TL,14-12,Main Event: Upper Round 2
+594747,244327,VIT,13-9,Main Event: Upper Round 2
+594747,all,VIT,2-1,Main Event: Upper Round 2
+594748,244328,M8,13-7,Main Event: Upper Round 3
+594748,244329,M8,13-9,Main Event: Upper Round 3
+594748,all,M8,2-0,Main Event: Upper Round 3
+594749,244331,BBL,13-9,Main Event: Upper Round 3
+594749,244332,BBL,13-8,Main Event: Upper Round 3
+594749,all,BBL,2-0,Main Event: Upper Round 3
+594750,244334,M8,13-11,Main Event: Upper Final
+594750,244335,BBL,15-13,Main Event: Upper Final
+594750,244336,BBL,16-14,Main Event: Upper Final
+594750,244337,M8,13-4,Main Event: Upper Final
+594750,244338,BBL,13-6,Main Event: Upper Final
+594750,all,BBL,3-2,Main Event: Upper Final
+594751,244339,KC,13-2,Main Event: Middle Round 1
+594751,244340,TL,13-8,Main Event: Middle Round 1
+594751,244341,TL,13-10,Main Event: Middle Round 1
+594751,all,TL,2-1,Main Event: Middle Round 1
+594752,244342,FNC,13-3,Main Event: Middle Round 1
+594752,244343,FUT,18-16,Main Event: Middle Round 1
+594752,244344,FNC,16-14,Main Event: Middle Round 1
+594752,all,FNC,2-1,Main Event: Middle Round 1
+594753,244345,GX,13-8,Main Event: Middle Round 1
+594753,244346,PCF,14-12,Main Event: Middle Round 1
+594753,244347,GX,13-10,Main Event: Middle Round 1
+594753,all,GX,2-1,Main Event: Middle Round 1
+594754,244348,TH,13-7,Main Event: Middle Round 1
+594754,244349,TH,13-8,Main Event: Middle Round 1
+594754,all,TH,2-0,Main Event: Middle Round 1
+594755,244351,FNC,13-5,Main Event: Middle Round 2
+594755,244352,FNC,13-9,Main Event: Middle Round 2
+594755,all,FNC,2-0,Main Event: Middle Round 2
+594756,244354,GX,13-10,Main Event: Middle Round 2
+594756,244355,GX,13-7,Main Event: Middle Round 2
+594756,all,GX,2-0,Main Event: Middle Round 2
+594757,244357,FNC,13-10,Main Event: Middle Round 3
+594757,244358,NAVI,13-6,Main Event: Middle Round 3
+594757,244359,FNC,17-15,Main Event: Middle Round 3
+594757,all,FNC,2-1,Main Event: Middle Round 3
+594758,244360,VIT,13-0,Main Event: Middle Round 3
+594758,244361,VIT,13-11,Main Event: Middle Round 3
+594758,all,VIT,2-0,Main Event: Middle Round 3
+594759,244363,FNC,13-5,Main Event: Middle Round 4
+594759,244364,FNC,13-8,Main Event: Middle Round 4
+594759,all,FNC,2-0,Main Event: Middle Round 4
+594760,244366,FNC,13-10,Main Event: Middle Final
+594760,244367,FNC,16-14,Main Event: Middle Final
+594760,244368,M8,13-6,Main Event: Middle Final
+594760,244369,M8,14-12,Main Event: Middle Final
+594760,244370,M8,14-12,Main Event: Middle Final
+594760,all,M8,3-2,Main Event: Middle Final
+594761,244371,KC,14-12,Main Event: Lower Round 1
+594761,244372,FUT,13-8,Main Event: Lower Round 1
+594761,244373,KC,13-7,Main Event: Lower Round 1
+594761,all,KC,2-1,Main Event: Lower Round 1
+594762,244374,ULF,13-5,Main Event: Lower Round 1
+594762,244375,ULF,13-8,Main Event: Lower Round 1
+594762,all,ULF,2-0,Main Event: Lower Round 1
+594763,244378,TH,13-8,Main Event: Lower Round 2
+594763,244379,TH,13-11,Main Event: Lower Round 2
+594763,252723,KC,13-2,Main Event: Lower Round 2
+594763,all,TH,2-1,Main Event: Lower Round 2
+594764,244380,ULF,13-8,Main Event: Lower Round 2
+594764,244382,TL,14-12,Main Event: Lower Round 2
+594764,252724,TL,13-5,Main Event: Lower Round 2
+594764,all,TL,2-1,Main Event: Lower Round 2
+594765,244383,TH,13-5,Main Event: Lower Round 3
+594765,244384,TH,13-4,Main Event: Lower Round 3
+594765,all,TH,2-0,Main Event: Lower Round 3
+594766,244386,TL,13-4,Main Event: Lower Round 3
+594766,244387,GX,13-6,Main Event: Lower Round 3
+594766,244388,TL,16-14,Main Event: Lower Round 3
+594766,all,TL,2-1,Main Event: Lower Round 3
+594767,244389,TL,13-11,Main Event: Lower Round 4
+594767,244390,TL,13-3,Main Event: Lower Round 4
+594767,all,TL,2-0,Main Event: Lower Round 4
+594768,244392,VIT,13-8,Main Event: Lower Round 5
+594768,244393,TL,13-3,Main Event: Lower Round 5
+594768,244394,TL,13-9,Main Event: Lower Round 5
+594768,all,TL,2-1,Main Event: Lower Round 5
+594769,244395,TL,13-6,Main Event: Lower Final
+594769,244396,TL,13-10,Main Event: Lower Final
+594769,244397,TL,18-16,Main Event: Lower Final
+594769,all,TL,3-0,Main Event: Lower Final
+595630,244560,NS,13-5,Main Event: Upper Round 1
+595630,244561,NS,13-8,Main Event: Upper Round 1
+595630,all,NS,2-0,Main Event: Upper Round 1
+595631,244563,FS,13-4,Main Event: Upper Round 1
+595631,244564,FS,13-2,Main Event: Upper Round 1
+595631,all,FS,2-0,Main Event: Upper Round 1
+595632,244567,GE,13-7,Main Event: Upper Round 1
+595632,248947,GE,13-7,Main Event: Upper Round 1
+595632,all,GE,2-0,Main Event: Upper Round 1
+595633,244569,DFM,13-8,Main Event: Upper Round 1
+595633,244570,DFM,13-10,Main Event: Upper Round 1
+595633,all,DFM,2-0,Main Event: Upper Round 1
+595634,244573,NS,13-4,Main Event: Upper Round 2
+595634,244574,NS,13-9,Main Event: Upper Round 2
+595634,249401,T1,13-9,Main Event: Upper Round 2
+595634,all,NS,2-1,Main Event: Upper Round 2
+595635,244575,KRX,13-10,Main Event: Upper Round 2
+595635,244576,FS,13-8,Main Event: Upper Round 2
+595635,244577,FS,13-8,Main Event: Upper Round 2
+595635,all,FS,2-1,Main Event: Upper Round 2
+595636,244578,PRX,13-10,Main Event: Upper Round 2
+595636,244579,GE,13-5,Main Event: Upper Round 2
+595636,244580,PRX,13-10,Main Event: Upper Round 2
+595636,all,PRX,2-1,Main Event: Upper Round 2
+595637,244581,RRQ,13-10,Main Event: Upper Round 2
+595637,244582,RRQ,13-5,Main Event: Upper Round 2
+595637,all,RRQ,2-0,Main Event: Upper Round 2
+595638,244584,NS,14-12,Main Event: Upper Round 3
+595638,244585,NS,13-2,Main Event: Upper Round 3
+595638,all,NS,2-0,Main Event: Upper Round 3
+595639,244587,RRQ,13-6,Main Event: Upper Round 3
+595639,244588,RRQ,13-5,Main Event: Upper Round 3
+595639,all,RRQ,2-0,Main Event: Upper Round 3
+595640,244590,RRQ,14-12,Main Event: Upper Final
+595640,244591,NS,13-8,Main Event: Upper Final
+595640,244592,NS,13-5,Main Event: Upper Final
+595640,244593,RRQ,13-11,Main Event: Upper Final
+595640,244594,NS,13-7,Main Event: Upper Final
+595640,all,NS,3-2,Main Event: Upper Final
+595641,244595,DFM,13-2,Main Event: Middle Round 1
+595641,251314,DFM,13-8,Main Event: Middle Round 1
+595641,all,DFM,2-0,Main Event: Middle Round 1
+595642,244598,GE,13-11,Main Event: Middle Round 1
+595642,244599,GE,13-9,Main Event: Middle Round 1
+595642,all,GE,2-0,Main Event: Middle Round 1
+595643,244601,VL,13-10,Main Event: Middle Round 1
+595643,244602,KRX,13-10,Main Event: Middle Round 1
+595643,244603,KRX,13-5,Main Event: Middle Round 1
+595643,all,KRX,2-1,Main Event: Middle Round 1
+595644,244604,GEN,13-7,Main Event: Middle Round 1
+595644,244605,T1,13-8,Main Event: Middle Round 1
+595644,244606,T1,13-9,Main Event: Middle Round 1
+595644,all,T1,2-1,Main Event: Middle Round 1
+595645,244607,GE,13-3,Main Event: Middle Round 2
+595645,244608,DFM,13-9,Main Event: Middle Round 2
+595645,244609,DFM,13-8,Main Event: Middle Round 2
+595645,all,DFM,2-1,Main Event: Middle Round 2
+595646,244610,T1,13-8,Main Event: Middle Round 2
+595646,244611,T1,13-8,Main Event: Middle Round 2
+595646,all,T1,2-0,Main Event: Middle Round 2
+595647,244613,FS,13-7,Main Event: Middle Round 3
+595647,244614,DFM,13-9,Main Event: Middle Round 3
+595647,244615,DFM,13-6,Main Event: Middle Round 3
+595647,all,DFM,2-1,Main Event: Middle Round 3
+595648,244616,PRX,13-10,Main Event: Middle Round 3
+595648,244617,T1,13-9,Main Event: Middle Round 3
+595648,244618,T1,13-8,Main Event: Middle Round 3
+595648,all,T1,2-1,Main Event: Middle Round 3
+595649,244619,T1,13-7,Main Event: Middle Round 4
+595649,244620,T1,13-10,Main Event: Middle Round 4
+595649,all,T1,2-0,Main Event: Middle Round 4
+595650,244622,T1,13-7,Main Event: Middle Final
+595650,244623,T1,13-2,Main Event: Middle Final
+595650,244624,T1,19-17,Main Event: Middle Final
+595650,all,T1,3-0,Main Event: Middle Final
+595651,244627,TS,13-4,Main Event: Lower Round 1
+595651,244628,ZETA,13-4,Main Event: Lower Round 1
+595651,244629,ZETA,13-11,Main Event: Lower Round 1
+595651,all,ZETA,2-1,Main Event: Lower Round 1
+595652,244630,GEN,13-10,Main Event: Lower Round 1
+595652,244631,VL,20-18,Main Event: Lower Round 1
+595652,244632,GEN,13-9,Main Event: Lower Round 1
+595652,all,GEN,2-1,Main Event: Lower Round 1
+595653,244633,KRX,13-7,Main Event: Lower Round 2
+595653,244634,ZETA,13-7,Main Event: Lower Round 2
+595653,244635,KRX,13-9,Main Event: Lower Round 2
+595653,all,KRX,2-1,Main Event: Lower Round 2
+595654,244636,GEN,15-13,Main Event: Lower Round 2
+595654,244637,GE,13-11,Main Event: Lower Round 2
+595654,244638,GE,13-11,Main Event: Lower Round 2
+595654,all,GE,2-1,Main Event: Lower Round 2
+595655,244639,KRX,13-3,Main Event: Lower Round 3
+595655,244640,KRX,13-9,Main Event: Lower Round 3
+595655,all,KRX,2-0,Main Event: Lower Round 3
+595656,244642,PRX,13-10,Main Event: Lower Round 3
+595656,244643,GE,13-6,Main Event: Lower Round 3
+595656,244644,PRX,14-12,Main Event: Lower Round 3
+595656,all,PRX,2-1,Main Event: Lower Round 3
+595657,244645,PRX,13-11,Main Event: Lower Round 4
+595657,244646,KRX,13-8,Main Event: Lower Round 4
+595657,244647,PRX,13-10,Main Event: Lower Round 4
+595657,all,PRX,2-1,Main Event: Lower Round 4
+595658,244648,PRX,13-11,Main Event: Lower Round 5
+595658,244649,PRX,13-2,Main Event: Lower Round 5
+595658,all,PRX,2-0,Main Event: Lower Round 5
+595659,244651,PRX,13-8,Main Event: Lower Final
+595659,244652,RRQ,13-10,Main Event: Lower Final
+595659,244653,PRX,13-10,Main Event: Lower Final
+595659,244654,PRX,13-10,Main Event: Lower Final
+595659,all,PRX,3-1,Main Event: Lower Final
+596398,244775,C9,13-7,Main Event: Upper Round 1
+596398,244776,C9,13-11,Main Event: Upper Round 1
+596398,all,C9,2-0,Main Event: Upper Round 1
+596399,244778,EG,13-9,Main Event: Upper Round 1
+596399,244779,ENVY,13-10,Main Event: Upper Round 1
+596399,244780,ENVY,13-9,Main Event: Upper Round 1
+596399,all,ENVY,2-1,Main Event: Upper Round 1
+596400,244781,KRÜ,13-10,Main Event: Upper Round 1
+596400,244782,FUR,13-8,Main Event: Upper Round 1
+596400,244783,FUR,13-5,Main Event: Upper Round 1
+596400,all,FUR,2-1,Main Event: Upper Round 1
+596401,244784,100T,13-9,Main Event: Upper Round 1
+596401,244785,LEV,13-10,Main Event: Upper Round 1
+596401,244786,100T,13-9,Main Event: Upper Round 1
+596401,all,100T,2-1,Main Event: Upper Round 1
+596402,244787,NRG,13-2,Main Event: Upper Round 2
+596402,244788,NRG,13-9,Main Event: Upper Round 2
+596402,all,NRG,2-0,Main Event: Upper Round 2
+596403,244790,MIBR,13-7,Main Event: Upper Round 2
+596403,244791,MIBR,13-11,Main Event: Upper Round 2
+596403,all,MIBR,2-0,Main Event: Upper Round 2
+596404,244793,FUR,13-5,Main Event: Upper Round 2
+596404,244794,FUR,13-11,Main Event: Upper Round 2
+596404,all,FUR,2-0,Main Event: Upper Round 2
+596405,244796,G2,13-11,Main Event: Upper Round 2
+596405,244797,100T,13-3,Main Event: Upper Round 2
+596405,244798,G2,13-8,Main Event: Upper Round 2
+596405,all,G2,2-1,Main Event: Upper Round 2
+596406,244799,NRG,13-6,Main Event: Upper Round 3
+596406,244800,MIBR,13-11,Main Event: Upper Round 3
+596406,244801,MIBR,13-8,Main Event: Upper Round 3
+596406,all,MIBR,2-1,Main Event: Upper Round 3
+596407,244802,FUR,13-7,Main Event: Upper Round 3
+596407,244803,G2,13-6,Main Event: Upper Round 3
+596407,244804,FUR,13-3,Main Event: Upper Round 3
+596407,all,FUR,2-1,Main Event: Upper Round 3
+596408,244805,MIBR,13-8,Main Event: Upper Final
+596408,244806,FUR,13-8,Main Event: Upper Final
+596408,244807,FUR,13-11,Main Event: Upper Final
+596408,244808,MIBR,13-2,Main Event: Upper Final
+596408,244809,FUR,13-8,Main Event: Upper Final
+596408,all,FUR,3-2,Main Event: Upper Final
+596409,244810,LOUD,13-11,Main Event: Middle Round 1
+596409,244812,100T,13-6,Main Event: Middle Round 1
+596409,249108,100T,13-2,Main Event: Middle Round 1
+596409,all,100T,2-1,Main Event: Middle Round 1
+596410,244813,SEN,13-8,Main Event: Middle Round 1
+596410,244814,SEN,13-11,Main Event: Middle Round 1
+596410,all,SEN,2-0,Main Event: Middle Round 1
+596411,244816,KRÜ,13-9,Main Event: Middle Round 1
+596411,244817,ENVY,13-5,Main Event: Middle Round 1
+596411,244818,ENVY,13-9,Main Event: Middle Round 1
+596411,all,ENVY,2-1,Main Event: Middle Round 1
+596412,244819,C9,13-3,Main Event: Middle Round 1
+596412,244820,C9,13-8,Main Event: Middle Round 1
+596412,all,C9,2-0,Main Event: Middle Round 1
+596413,244822,100T,13-11,Main Event: Middle Round 2
+596413,244823,100T,16-14,Main Event: Middle Round 2
+596413,all,100T,2-0,Main Event: Middle Round 2
+596414,244825,C9,20-18,Main Event: Middle Round 2
+596414,244826,ENVY,13-8,Main Event: Middle Round 2
+596414,244827,C9,13-11,Main Event: Middle Round 2
+596414,all,C9,2-1,Main Event: Middle Round 2
+596415,244828,NRG,13-9,Main Event: Middle Round 3
+596415,244829,NRG,13-11,Main Event: Middle Round 3
+596415,all,NRG,2-0,Main Event: Middle Round 3
+596416,244831,G2,13-11,Main Event: Middle Round 3
+596416,244832,G2,13-9,Main Event: Middle Round 3
+596416,all,G2,2-0,Main Event: Middle Round 3
+596417,244834,G2,13-3,Main Event: Middle Round 4
+596417,244835,G2,13-8,Main Event: Middle Round 4
+596417,all,G2,2-0,Main Event: Middle Round 4
+596418,244837,G2,13-6,Main Event: Middle Final
+596418,244838,G2,13-4,Main Event: Middle Final
+596418,244839,G2,13-7,Main Event: Middle Final
+596418,all,G2,3-0,Main Event: Middle Final
+596419,244842,EG,13-5,Main Event: Lower Round 1
+596419,244843,EG,14-12,Main Event: Lower Round 1
+596419,all,EG,2-0,Main Event: Lower Round 1
+596420,244845,LEV,13-4,Main Event: Lower Round 1
+596420,244846,LEV,13-10,Main Event: Lower Round 1
+596420,all,LEV,2-0,Main Event: Lower Round 1
+596421,244848,EG,16-14,Main Event: Lower Round 2
+596421,244849,EG,13-5,Main Event: Lower Round 2
+596421,all,EG,2-0,Main Event: Lower Round 2
+596422,244851,LEV,13-10,Main Event: Lower Round 2
+596422,244852,LEV,14-12,Main Event: Lower Round 2
+596422,all,LEV,2-0,Main Event: Lower Round 2
+596423,244854,100T,13-11,Main Event: Lower Round 3
+596423,244855,100T,15-13,Main Event: Lower Round 3
+596423,all,100T,2-0,Main Event: Lower Round 3
+596424,244857,C9,13-5,Main Event: Lower Round 3
+596424,244858,C9,13-7,Main Event: Lower Round 3
+596424,all,C9,2-0,Main Event: Lower Round 3
+596425,244860,100T,14-12,Main Event: Lower Round 4
+596425,244861,C9,13-11,Main Event: Lower Round 4
+596425,244862,100T,13-2,Main Event: Lower Round 4
+596425,all,100T,2-1,Main Event: Lower Round 4
+596426,244863,NRG,13-3,Main Event: Lower Round 5
+596426,244864,NRG,13-8,Main Event: Lower Round 5
+596426,all,NRG,2-0,Main Event: Lower Round 5
+596427,244866,MIBR,13-9,Main Event: Lower Final
+596427,244867,MIBR,13-5,Main Event: Lower Final
+596427,244868,NRG,13-10,Main Event: Lower Final
+596427,244869,NRG,13-4,Main Event: Lower Final
+596427,244870,NRG,13-5,Main Event: Lower Final
+596427,all,NRG,3-2,Main Event: Lower Final
+625788,254143,M8,13-11,Swiss Stage: Round 1
+625788,254144,M8,13-7,Swiss Stage: Round 1
+625788,all,M8,2-0,Swiss Stage: Round 1
+625789,254146,TL,13-8,Swiss Stage: Round 1
+625789,254147,TL,15-13,Swiss Stage: Round 1
+625789,all,TL,2-0,Swiss Stage: Round 1
+625790,254149,PRX,13-9,Swiss Stage: Round 1
+625790,254150,PRX,13-5,Swiss Stage: Round 1
+625790,all,PRX,2-0,Swiss Stage: Round 1
+625791,254152,NRG,13-2,Swiss Stage: Round 1
+625791,254153,NRG,13-10,Swiss Stage: Round 1
+625791,all,NRG,2-0,Swiss Stage: Round 1
+626529,254342,PRX,13-10,Swiss Stage: Round 2 (1-0)
+626529,254343,NRG,13-10,Swiss Stage: Round 2 (1-0)
+626529,254344,PRX,13-11,Swiss Stage: Round 2 (1-0)
+626529,all,PRX,2-1,Swiss Stage: Round 2 (1-0)
+626530,254345,M8,13-11,Swiss Stage: Round 2 (1-0)
+626530,254346,M8,13-3,Swiss Stage: Round 2 (1-0)
+626530,all,M8,2-0,Swiss Stage: Round 2 (1-0)
+626532,254348,T1,13-1,Swiss Stage: Round 2 (0-1)
+626532,254349,T1,13-10,Swiss Stage: Round 2 (0-1)
+626532,all,T1,2-0,Swiss Stage: Round 2 (0-1)
+626533,254351,G2,13-8,Swiss Stage: Round 2 (0-1)
+626533,254352,G2,13-3,Swiss Stage: Round 2 (0-1)
+626533,all,G2,2-0,Swiss Stage: Round 2 (0-1)
+626534,254354,G2,13-6,Swiss Stage: Round 3
+626534,254355,G2,16-14,Swiss Stage: Round 3
+626534,all,G2,2-0,Swiss Stage: Round 3
+626535,254357,NRG,13-11,Swiss Stage: Round 3
+626535,254358,NRG,13-4,Swiss Stage: Round 3
+626535,all,NRG,2-0,Swiss Stage: Round 3
+626537,254360,NS,13-10,Playoffs: Upper Quarterfinals
+626537,254361,NS,13-10,Playoffs: Upper Quarterfinals
+626537,all,NS,2-0,Playoffs: Upper Quarterfinals
+626538,254363,G2,13-6,Playoffs: Upper Quarterfinals
+626538,254364,G2,13-4,Playoffs: Upper Quarterfinals
+626538,all,G2,2-0,Playoffs: Upper Quarterfinals
+626539,254366,FUR,13-9,Playoffs: Upper Quarterfinals
+626539,254367,PRX,13-4,Playoffs: Upper Quarterfinals
+626539,254368,PRX,13-7,Playoffs: Upper Quarterfinals
+626539,all,PRX,2-1,Playoffs: Upper Quarterfinals
+626540,254369,NRG,13-6,Playoffs: Upper Quarterfinals
+626540,254370,BBL,13-6,Playoffs: Upper Quarterfinals
+626540,254371,NRG,17-15,Playoffs: Upper Quarterfinals
+626540,all,NRG,2-1,Playoffs: Upper Quarterfinals
+626541,254373,NS,13-7,Playoffs: Upper Semifinals
+626541,254374,NS,14-12,Playoffs: Upper Semifinals
+626541,256753,G2,13-7,Playoffs: Upper Semifinals
+626541,all,NS,2-1,Playoffs: Upper Semifinals
+626542,254375,NRG,14-12,Playoffs: Upper Semifinals
+626542,254376,NRG,13-11,Playoffs: Upper Semifinals
+626542,all,NRG,2-0,Playoffs: Upper Semifinals
+626543,254378,NS,13-9,Playoffs: Upper Final
+626543,254379,NS,13-11,Playoffs: Upper Final
+626543,all,NS,2-0,Playoffs: Upper Final
+626544,254381,NS,13-11,Playoffs: Grand Final
+626544,254382,NS,13-4,Playoffs: Grand Final
+626544,254383,NS,13-3,Playoffs: Grand Final
+626544,all,NS,3-0,Playoffs: Grand Final
+626545,254386,M8,13-5,Playoffs: Lower Round 1
+626545,254387,AG,13-4,Playoffs: Lower Round 1
+626545,254388,AG,13-8,Playoffs: Lower Round 1
+626545,all,AG,2-1,Playoffs: Lower Round 1
+626546,254389,BBL,13-7,Playoffs: Lower Round 1
+626546,254390,FUR,13-10,Playoffs: Lower Round 1
+626546,254391,BBL,13-11,Playoffs: Lower Round 1
+626546,all,BBL,2-1,Playoffs: Lower Round 1
+626547,254392,AG,13-10,Playoffs: Lower Round 2
+626547,254393,PRX,13-7,Playoffs: Lower Round 2
+626547,254394,PRX,13-4,Playoffs: Lower Round 2
+626547,all,PRX,2-1,Playoffs: Lower Round 2
+626548,254395,G2,13-5,Playoffs: Lower Round 2
+626548,256892,G2,13-8,Playoffs: Lower Round 2
+626548,all,G2,2-0,Playoffs: Lower Round 2
+626549,254398,G2,13-11,Playoffs: Lower Round 3
+626549,254399,PRX,13-9,Playoffs: Lower Round 3
+626549,254400,PRX,13-4,Playoffs: Lower Round 3
+626549,all,PRX,2-1,Playoffs: Lower Round 3
+626550,254401,NRG,13-8,Playoffs: Lower Final
+626550,254402,PRX,13-7,Playoffs: Lower Final
+626550,254403,PRX,13-6,Playoffs: Lower Final
+626550,254404,PRX,13-9,Playoffs: Lower Final
+626550,all,PRX,3-1,Playoffs: Lower Final

@@ -105,6 +105,9 @@ def _scrape_event_live(event):
         cache = cache[r2.notna() & (r2 > 0)].reset_index(drop=True)
     if list(event["regions"].keys()) == ["International"] and "Org" in cache.columns:
         cache["Region"] = cache["Org"].map(lambda org: ORG_REGIONS.get(org, "International"))
+    # Strip showmatch / non-franchised players
+    if "Org" in cache.columns:
+        cache = cache[cache["Org"].isin(ORG_REGIONS)].reset_index(drop=True)
     return cache
 
 
@@ -199,138 +202,90 @@ ORG_REGIONS = {
     "XLG":  "CN",
 }
 
-# ── Player best-match scraping ────────────────────────────────────────────────
+# ── Player best-match lookup ──────────────────────────────────────────────────
 
 _player_match_cache = {}  # (profile_url, event_id) -> result dict
 
-# Keywords that ALL must appear (case-sensitive) in the .m-item-event text on
-# VLR.gg's player match-history page, verified by live inspection of the HTML.
-EVENT_CARD_KEYWORDS = {
-    "2026_stage1":           ["VCT 26:", "Stage 1"],
-    "2026_masters_santiago": ["Santiago"],
-    "2026_kickoff":          ["VCT 26:", "Kickoff"],
-    "2025_champions":        ["Champions 2025"],
-    "2025_stage2":           ["VCT 25:", "Stage 2"],
-    "2025_masters_toronto":  ["Toronto"],
-    "2025_stage1":           ["VCT 25:", "Stage 1"],
-    "2025_masters_bangkok":  ["Bangkok"],
-    "2025_kickoff":          ["VCT 25:", "Kickoff"],
-    "2024_champions":        ["VCT 2024:", "Champions"],
-    "2024_stage2":           ["VCT 24:", "Stage 2"],
-    "2024_masters_madrid":   ["Masters Madrid"],
-    "2024_stage1":           ["VCT 24:", "Stage 1"],
-    "2024_kickoff":          ["VCT 24:", "Kickoff"],
-    "2023_champions":        ["VCT 2023:", "Champions"],
-    "2023_masters_tokyo":    ["Masters Tokyo"],
-    "2023_league":           ["VCT 2023:", "Regular Season"],
-    "2023_lock_in":          ["LOCK//IN"],
-}
+SERIES_DIR = os.path.join(DATA_DIR, "series")
 
-def parse_match_page_for_player(match_url, profile_path):
-    """Return the player's highest-rated map entry from a match page."""
+def _fetch_agents_from_match(match_id, profile_url):
+    """Fetch one match page and return all unique agents the player used across maps."""
+    from urllib.parse import urlparse
+    profile_path = urlparse(profile_url).path
     try:
-        res = requests.get(match_url, headers=HEADERS, timeout=15)
+        res = requests.get(f"https://www.vlr.gg/{match_id}", headers=HEADERS, timeout=15)
         soup = BeautifulSoup(res.text, "html.parser")
     except Exception:
-        return None
+        return []
 
-    teams = [el.get_text(strip=True)
-             for el in soup.select(".match-header-link-name .wf-title-med")]
-
-    best = None
-    for table_idx, table in enumerate(soup.find_all("table")):
-        tbody = table.find("tbody")
-        if not tbody:
+    seen = []
+    # Iterate individual map divs (numeric data-game-id), skip "all"
+    for game_div in soup.find_all("div", attrs={"data-game-id": True}):
+        if game_div["data-game-id"] == "all":
             continue
-        for row in tbody.find_all("tr"):
-            if not row.find("a", href=profile_path):
-                continue
-            cells = row.find_all("td")
-            if len(cells) < 6:
-                continue
+        for tr in game_div.find_all("tr"):
+            if tr.find("a", href=lambda h: h and profile_path in (h or "")):
+                tds = tr.find_all("td")
+                if len(tds) > 1:
+                    for img in tds[1].find_all("img"):
+                        name = img.get("alt", "").capitalize()
+                        if name and name not in seen:
+                            seen.append(name)
+                break  # found the player in this map, move to next map
+    return seen
 
-            agents = [img.get("alt", "").capitalize()
-                      for img in cells[1].select("img") if img.get("alt")]
 
-            def grab_f(cell):
-                s = cell.find(class_=lambda c: c and "mod-both" in c)
-                try: return float(s.get_text(strip=True)) if s else None
-                except: return None
-
-            def grab_i(cell):
-                s = cell.find(class_=lambda c: c and "mod-both" in c)
-                try: return int(s.get_text(strip=True)) if s else None
-                except: return None
-
-            rating = grab_f(cells[2])
-            kills  = grab_i(cells[4])
-            deaths = grab_i(cells[5])
-            if rating is None:
-                continue
-
-            opponent = teams[1 - (table_idx % 2)] if len(teams) >= 2 else "Unknown"
-            if best is None or rating > best["rating"]:
-                best = {"rating": rating, "kills": kills or 0,
-                        "deaths": deaths or 0, "agents": agents,
-                        "opponent": opponent, "match_url": match_url}
-    return best
-
-def scrape_player_best_match(profile_url, event_id):
+def get_player_best_match(profile_url, event_id):
     cache_key = (profile_url, event_id)
     if cache_key in _player_match_cache:
         return _player_match_cache[cache_key]
 
-    from urllib.parse import urlparse
-    profile_path = urlparse(profile_url).path          # /player/729/zellsis
-    parts = profile_path.strip("/").split("/")          # ["player","729","zellsis"]
-    if len(parts) < 3:
-        return {"error": "Invalid profile URL"}
-
-    base_url = f"https://www.vlr.gg/player/matches/{parts[1]}/{parts[2]}"
-    keywords = EVENT_CARD_KEYWORDS.get(event_id, [])
-
-    # Paginate up to 4 pages: recent events land on page 1, but for 2024/2023
-    # events a player's history may push those matches to page 2+.
-    match_hrefs = []
-    for page in range(1, 5):
-        url = base_url if page == 1 else f"{base_url}?page={page}"
-        try:
-            res = requests.get(url, headers=HEADERS, timeout=15)
-            soup = BeautifulSoup(res.text, "html.parser")
-        except Exception as e:
-            return {"error": f"Network error: {e}"}
-
-        cards = soup.select("a.wf-card.m-item")
-        if not cards:
-            break  # no more pages
-
-        for card in cards:
-            event_div = card.select_one(".m-item-event")
-            if not event_div:
-                continue
-            event_text = " ".join(event_div.get_text(separator=" ", strip=True).split())
-            if keywords and all(kw in event_text for kw in keywords):
-                href = card.get("href", "")
-                if href:
-                    match_hrefs.append(href)
-
-        if match_hrefs:
-            break  # found matches for this event, no need to go further
-        time.sleep(0.5)
-
-    if not match_hrefs:
-        result = {"error": "No matches found for this player at this event"}
+    series_path = os.path.join(SERIES_DIR, f"{event_id}.csv")
+    if not os.path.exists(series_path):
+        result = {"error": "Match data not available for this event"}
         _player_match_cache[cache_key] = result
         return result
 
-    best = None
-    for href in match_hrefs[:20]:
-        data = parse_match_page_for_player("https://www.vlr.gg" + href, profile_path)
-        if data and (best is None or data["rating"] > best["rating"]):
-            best = data
-        time.sleep(0.3)
+    try:
+        df = pd.read_csv(series_path)
+    except Exception:
+        result = {"error": "Could not read match data"}
+        _player_match_cache[cache_key] = result
+        return result
 
-    result = best or {"error": "Could not parse match data"}
+    # Normalise URL for matching (strip trailing slashes)
+    df["_url"] = df["ProfileURL"].astype(str).str.rstrip("/")
+    player_rows = df[df["_url"] == profile_url.rstrip("/")].copy()
+
+    if player_rows.empty:
+        result = {"error": "No match data found for this player"}
+        _player_match_cache[cache_key] = result
+        return result
+
+    player_rows["R2.0"] = pd.to_numeric(player_rows["R2.0"], errors="coerce")
+    best = player_rows.loc[player_rows["R2.0"].idxmax()]
+
+    match_id   = str(best.get("MatchID", ""))
+    rating     = best.get("R2.0")
+    kills      = best.get("K")
+    deaths     = best.get("D")
+    player_org = str(best.get("Org", ""))
+
+    # Derive opponent from other org in the same match
+    match_rows   = df[df["MatchID"].astype(str) == match_id]
+    other_orgs   = [o for o in match_rows["Org"].unique() if o != player_org]
+    opponent_org = other_orgs[0] if other_orgs else "Unknown"
+
+    # Single match-page fetch just for agents
+    agents = _fetch_agents_from_match(match_id, profile_url) if match_id else []
+
+    result = {
+        "rating":   float(rating) if pd.notna(rating) else None,
+        "kills":    int(kills)    if pd.notna(kills)   else None,
+        "deaths":   int(deaths)   if pd.notna(deaths)  else None,
+        "agents":   agents,
+        "opponent": opponent_org,
+    }
     _player_match_cache[cache_key] = result
     return result
 
@@ -449,6 +404,11 @@ MAIN_HTML = """
   </header>
   <div class="event-title">{{ event.label }}</div>
 
+  <div style="text-align:center;margin-bottom:10px;line-height:1.7;">
+    <span style="font-size:.72rem;color:var(--soft);font-style:italic;">Quick Notes:</span><br>
+    <span style="font-size:.72rem;color:var(--soft);font-style:italic;">- 2024 Masters Shanghai has been omitted due to missing data from CN servers</span><br>
+    <span style="font-size:.72rem;color:var(--soft);font-style:italic;">- 2023 Regular Season only has aggregate &ldquo;League&rdquo; data instead of being partitioned into Split 1 and Split 2</span>
+  </div>
   <div class="event-selector-wrap">
     <div class="event-wrap">
       <select class="event-select" onchange="window.location='/vct/?event='+this.value">
@@ -489,7 +449,7 @@ MAIN_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Map Performance of the Event</div>
+      <div class="modal-section-title">Best Match Performance of the Event</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -776,8 +736,8 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
 
   // Player label
   ctx.font = 'bold 12px "Syne",sans-serif'; ctx.fillStyle = '#7c3aed';
-  ctx.textAlign = pPx > W*0.7 ? 'right' : 'left';
-  ctx.fillText(String(playerVal), pPx + (pPx > W*0.7 ? -8 : 8), toY(pdf(playerVal)) - 8);
+  ctx.textAlign = 'center';
+  ctx.fillText(String(playerVal), pPx, toY(pdf(playerVal)) - 14);
 
   // Percentile caption
   const below  = values.filter(v => v < playerVal).length;
@@ -985,7 +945,7 @@ RANKING_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Map Performance</div>
+      <div class="modal-section-title">Best Match Performance</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -1200,8 +1160,8 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
   });
 
   ctx.font = 'bold 12px "Syne",sans-serif'; ctx.fillStyle = '#7c3aed';
-  ctx.textAlign = pPx > W*0.7 ? 'right' : 'left';
-  ctx.fillText(String(playerVal), pPx + (pPx > W*0.7 ? -8 : 8), toY(pdf(playerVal)) - 8);
+  ctx.textAlign = 'center';
+  ctx.fillText(String(playerVal), pPx, toY(pdf(playerVal)) - 14);
 
   const below  = values.filter(v => v < playerVal).length;
   const topPct = Math.round((1 - below/values.length)*100);
@@ -1249,7 +1209,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
 def index():
     _ensure_headshots_loaded()
 
-    default_id = ALL_EVENTS[0]["id"]
+    default_id = "2026_masters_santiago"
     event_id = request.args.get("event", default_id)
     event = next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
 
@@ -1274,7 +1234,7 @@ def ranking(stat):
     if stat not in STAT_LABELS:
         return "Unknown stat", 404
 
-    default_id = ALL_EVENTS[0]["id"]
+    default_id = "2026_masters_santiago"
     event_id = request.args.get("event", default_id)
     event = next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
     active_region = request.args.get("region", "All")
@@ -1322,7 +1282,7 @@ def player_best_match_api():
     event_id    = request.args.get("event", "")
     if not profile_url or not event_id:
         return json.dumps({"error": "Missing parameters"}), 400
-    result = scrape_player_best_match(profile_url, event_id)
+    result = get_player_best_match(profile_url, event_id)
     return json.dumps(result)
 
 
