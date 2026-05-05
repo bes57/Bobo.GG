@@ -699,6 +699,7 @@ PAGE_HTML = """
 <body>
 <nav class="toc">
   <div class="toc-title">Sections</div>
+  <a href="#intro">Introduction</a>
   <a href="#tuning">Tuning the Definition</a>
   <a href="#mapping">Mapping the Definition</a>
   <a href="#model">Putting It All Together</a>
@@ -713,32 +714,32 @@ PAGE_HTML = """
     <div class="label">Research / Opinion</div>
     <h1>Overperforming in VCT: who&rsquo;s doing it?</h1>
     <div class="byline">Bobo &mdash; May 2026</div>
-    <div class="cover">
+    <div class="cover" id="intro">
       <img src="/static/Patmen.jpg" alt="Patmen at VCT Pacific Kickoff 2026">
     </div>
     <p class="cover-caption">Patmen at VCT Pacific Kickoff 2026, where GE went on to eventually finish 7th&ndash;8th &mdash; eliminated in the lower bracket by his former team, PRX.</p>
     <div class="content">
-      <p>Earlier in VCT Pacific Kickoff 2026, Patmen pulled off one of the craziest performances I&rsquo;ve ever seen, dropping 32 kills and 5 deaths on Breeze. Consequently, he had a 2.81 rating, which was (and is) the highest map rating of ALL TIME. Even crazier? Global Esports lost that match 1-2. Even crazier? They lost that match to DFM (yes, the only team to end an entire VCT season without a single series win back in 2023). Even crazier? He was playing OMEN. Even crazier? He didn&rsquo;t bitch slap each and every one of his teammates (well, as far as we know).</p>
-      <p>As sad as it is that Patmen is clearly better than the overall zenith of mediocrity that is Global Esports, it makes it weirder to flashback to 6 months ago, when Patmen was dropped by PRX for being the weak link in the juggernaut of a team that is Paper Rex. The two realities seem contradictory. Can Patmen really exist in this void where he&rsquo;s not good enough for the best but too good for the mediocre teams? However, I think this prompts a larger question of: what does it even mean to be an over/underperformer in VCT?</p>
+      <p>Earlier in VCT Pacific Kickoff 2026, Patmen pulled off one of the craziest VCT performances of all time, dropping 32 kills and 5 deaths on Breeze. Consequently, he had a 2.81 rating, which was (and is) the highest map rating of ALL TIME. Even crazier? Global Esports lost that match 1-2. Even crazier? They lost that match to DFM (the only team to end an entire VCT season without a single series win). Even crazier? He was playing OMEN. Even crazier? He didn&rsquo;t fist fight each and every one of his teammates (well, as far as we know).</p>
+      <p>It seems clear that Patmen is better than the mediocrity that is Global Esports. However, it makes it even weirder to flash back to 6 months ago, when Patmen was dropped by PRX for being the weak link in that juggernaut of a team. The two realities seem contradictory. Can Patmen really exist in this void where he underperforms on the best teams, but he overperforms on the mediocre teams? However, in order to answer that question, we have to answer the question: what does it even mean to be an over/underperformer in VCT?</p>
 
       <h2 id="tuning">Tuning the Definition</h2>
 
       <p>Despite its detractions, the holistic approach underpinning VLR&rsquo;s rating system gives us as close to a good measure of player performance as we&rsquo;ve seen. Beyond just looking at simple (but important) numbers like kills and deaths, it weights kills based on the player count and the duel&rsquo;s subsequent weight on the round win percentage, accounts for economic differences between teams, looks at trades/tradability, and incorporates assists. For more details, you can read more about VLR rating <a href="https://www.vlr.gg/160667/vlr-gg-player-rating-explained" target="_blank">here</a>. At the end of the day, it emphasizes the basic yet important statistics while remaining wise to the fact that all kills and deaths are not made equal. Of course, there are still intangibles such as IGLing, midrounding, or &ldquo;vibes&rdquo; that have a real impact on the game, but I&rsquo;m yet to see a statistic that incorporates this as well. This is all to say that VLR rating will be my response variable for this article&rsquo;s sake.</p>
 
-      <p>Next, I want to call back to a point I made in my sympathy rant for Patmen; he was playing Omen when he dropped that supercalifragilisticexpialidocious statline. For those who don&rsquo;t know much about Valorant or are ridiculously casual, Omen is a controller (one of the four agent classes in this game), which means that his arsenal is centered around casting smokes for his team and other strategic/movement abilities (rather than offensive ones). This is noteworthy because that would, presumably, make it harder to rack up such a high rating on a passive and selfless role. Well, let&rsquo;s check if this initial presumption is even true by looking at the average VLR rating by role across all regions this Kickoff 2026.</p>
+      <p>Next, I want to call back to a point I made in my sympathy rant for Patmen; he was playing Omen when he dropped that supercalifragilisticexpialidocious statline. For those who don&rsquo;t know much about Valorant or are ridiculously casual, Omen is a Controller (one of the four agent classes in this game), which means that his arsenal is centered around casting smokes for his team and other strategic/movement abilities (rather than offensive ones). This is noteworthy because that would, presumably, make it harder to rack up such a high rating on a passive and selfless role. Well, let&rsquo;s check if this initial presumption is even true by looking at the average VLR rating by role across all regions in 2026 Kickoff.</p>
 
       <div class="chart-wrap">
-        <div class="chart-label">Avg. VLR Rating by Role &mdash; 2026 Kickoff (all regions)</div>
+        <div class="chart-label">Avg. VLR Rating (in a Map) by Role &mdash; 2026 Kickoff (all regions)</div>
         <div class="chart-canvas-box"><canvas id="overallChart"></canvas></div>
       </div>
 
       <div class="chart-wrap">
-        <div class="chart-label">Avg. VLR Rating by Role &mdash; 2026 Kickoff (by region)</div>
+        <div class="chart-label">Avg. VLR Rating (in a Map) by Role &mdash; 2026 Kickoff (by region)</div>
         <div class="chart-canvas-box"><canvas id="roleChart"></canvas></div>
       </div>
 
 
-      <p>As you can see, there is a marginal, but notable difference in VLR rating by agent role. Surprisingly to me, it was the sentinel role that had the highest rating. I postulate that duelists are often dying first too frequently on site executes, controllers and initiators are forced to play with the pack, while sentinels are fully able to both lurk and bait in whatever way suits their personal performance, but I digress. The important result here is the obvious difference by role (and for those who don&rsquo;t know, 0.03 is a non-negligible difference between rating averages by role).</p>
+      <p>As you can see, there is a marginal, but notable difference in VLR rating by agent role. Surprisingly, it was the Sentinel role that had the highest rating. I postulate that Duelists are often dying first too frequently on site executes, Controllers and Initiators are forced to play with the pack, while Sentinels are fully able to both lurk and bait in whatever way suits their personal performance, but I digress. The important result here is the obvious difference by role (and for those who don&rsquo;t know, 0.03 is a non-negligible difference between rating averages by role).</p>
 
       <p>All that being said about roles, the larger point about Patmen was that his team wasn&rsquo;t winning at the rate you&rsquo;d expect from a player posting numbers like that <em>irrespective of the role he was playing</em>. Player rating and team success usually (and should) move together in Valorant. The theory here is that, when there&rsquo;s a wide gap between a player&rsquo;s rating and his team&rsquo;s round win %, it&rsquo;s a pretty clean signal that he&rsquo;s either hard carrying or getting hard carried. Let&rsquo;s see how this shakes out across Kickoff 2026 with a scatterplot of player VLR rating against round win %.</p>
 
@@ -748,7 +749,7 @@ PAGE_HTML = """
       </div>
 
 
-      <p>So many fun observations to be had! First off, my initial assumption was true &mdash; there&rsquo;s a clear positive linear relationship between winning at a higher rate and higher VLR ratings, though any other result would be befuddling. In my opinion, it&rsquo;s surprising that the trend isn&rsquo;t even more drastic. There are a decent number of players on the winning end of teams with sub-1.0 ratings (I&rsquo;m looking at you <span class="player-ref" onclick="highlightPlayer('jawgemo')">Jawgemo</span>), though the majority are healthily above 1. While we&rsquo;ll discuss this more explicitly later, you can hover your mouse over some of the notable datapoints in the top left/bottom right to see some of the biggest over/underperformers. Poor <span class="player-ref" onclick="highlightPlayer('lukxo')">Lukxo</span>, sitting there with a 1.13 rating at the lowest end of the Round Win % axis, a higher rating than any player on NS (the highest Round Win % team). At least he got this clip:</p>
+      <p>So many fun observations to be had! First off, my initial assumption was true &mdash; there&rsquo;s a clear positive linear relationship between winning at a higher rate and higher VLR ratings, though any other result would be befuddling. Honestly, it&rsquo;s surprising that the trend isn&rsquo;t even more drastic. There are a decent number of players on the winning end of teams with sub-1.0 ratings (I&rsquo;m looking at you <span class="player-ref" onclick="highlightPlayer('jawgemo')">Jawgemo</span>), though the majority are healthily above 1. While we&rsquo;ll discuss this more explicitly later, you can hover your mouse over some of the notable datapoints in the top left/bottom right to see some of the biggest over/underperformers. Poor <span class="player-ref" onclick="highlightPlayer('lukxo')">Lukxo</span>, sitting there with a 1.13 rating at the lowest end of the Round Win % axis, a higher rating than any player on NS (the highest Round Win % team). At least he got this clip:</p>
 
       <div style="margin:16px 0 32px;height:460px;position:relative;">
         <video id="clipVideo" src="/static/lukxo_clip.mp4" controls playsinline style="width:100%;height:100%;border-radius:10px;display:block;"></video>
@@ -769,7 +770,7 @@ PAGE_HTML = """
 
       <p><em>A quick clarification of the methodology:</em></p>
       <ul>
-        <li>To determine a player&rsquo;s &ldquo;role&rdquo;, we look at their proportional breakdown of agent play counts in a given event and then assign them to whichever role they played on a majority (&ge;50%) of their maps. In the case where there is no simple majority, as multiple roles occupy large proportions, they are classified as &ldquo;Flex&rdquo; and shown in a fifth chart. Additionally, as players are analyzed on a per-event basis, it&rsquo;s possible for a player to show up in multiple scatterplots if they switched roles.</li>
+        <li>To determine a player&rsquo;s &ldquo;role&rdquo;, I looked at their proportional breakdown of agent play counts in a given event and then assigned them to whichever role they played on a majority (&ge;50%) of their maps. In the case where there is no simple majority, as multiple roles occupy large proportions, they are classified as &ldquo;Flex&rdquo; and shown in a fifth chart. Additionally, as players are analyzed on a per-event basis, it&rsquo;s possible for a player to show up in multiple scatterplots if they switched roles.</li>
         <li>These graphs only use regional data, as international events introduce noise from varying competitiveness by region. Furthermore, they will skew the strongest teams&rsquo; numbers downward, since making a deep run at an international means you play the best teams from every other region. Meanwhile, in regional play, every team plays through a designated schedule, so a top team&rsquo;s round win % is buoyed by equal-level matchups.</li>
       </ul>
 
@@ -800,11 +801,11 @@ PAGE_HTML = """
 
       <p>These graphs are treasure troves for highlights (and lowlights) of player performances throughout VCT history. But first, the important things to note:</p>
       <ul>
-        <li>The main trend continues of a strong positive linear relationship between round win % and individual ratings. Just as before, different roles operate at different baseline rating scores and thus different expectations for what is &ldquo;overperforming&rdquo; and &ldquo;underperforming.&rdquo; Perhaps more interesting (and likely to come up later) is the fact that the slopes seem to be slightly different. For instance, the increase in ratings for the duelist class is noticeably steeper than the sentinel class. The implication here seems to be that a duelist&rsquo;s individual performance is more closely bound by their team&rsquo;s performance than a sentinel&rsquo;s, who has more skill expression allowed irrespective of team performance. Still, the positive correlation exists in both cases. Interesting!</li>
-        <li>The scatterplots are clearly informative in the context of VCT. Players in the top-left quadrant of these scatterplots are players who are outperforming their team and deserve better. For instance, look at <span class="player-ref" onclick="highlightRolePlayer('invy', '2025 Stage 1')">Invy</span>&rsquo;s 2025 Stage 1 performance, where the scatterplot makes it obvious he has the pedigree to be a great player on a great team (hopefully one with a round win % higher than 45.8%). In fact, we now know this to be true, as he got scouted to PRX and led them to a second-place finish at Masters Santiago. In this same school of thought, it allows us to find other pros with hidden potential. For instance, a player like <span class="player-ref" onclick="highlightRolePlayer('UdoTan', '2025 Stage 1')">UdoTan</span> wouldn&rsquo;t appear immediately if you looked at the highest VLR ratings in Pacific Stage 1; 1.04 is only moderately above average. However, given his team&rsquo;s horrendous performance, we know his rating is much more impressive than it may initially seem. Again, the scatterplots work.</li>
+        <li>The main trend continues of a strong positive linear relationship between round win % and individual ratings. Just as before, different roles operate at different baseline rating scores and thus different expectations for what is &ldquo;overperforming&rdquo; and &ldquo;underperforming.&rdquo; Perhaps more interesting (and likely to come up later) is the fact that the slopes seem to be slightly different. For instance, the increase in ratings for the Duelist class is noticeably steeper than the Sentinel class. The implication here seems to be that a Duelist&rsquo;s individual performance is more closely bound by their team&rsquo;s performance than a Sentinel&rsquo;s, who has more skill expression allowed irrespective of team performance. Still, the positive correlation exists in both cases. Interesting!</li>
+        <li>The scatterplots are clearly informative in the context of VCT. Players in the top-left quadrant of these scatterplots are players who are outperforming their team and deserve better. For instance, look at <span class="player-ref" onclick="highlightRolePlayer('invy', '2025 Stage 1')">Invy</span>&rsquo;s 2025 Stage 1 performance, where the scatterplot makes it obvious he has the pedigree to be a great player on a great team (hopefully one with a round win % higher than 45.8%). In fact, we now know this to be true, as he got scouted to PRX and led them to a second-place finish at Masters Santiago. In this same school of thought, it allows us to find other pros with hidden potential. For instance, a player like <span class="player-ref" onclick="highlightRolePlayer('UdoTan', '2025 Stage 1')">UdoTan</span> wouldn&rsquo;t stand out to you if you looked at VLR ratings in Pacific Stage 1; 1.04 is only moderately above average. However, given his team&rsquo;s horrendous performance, we know his rating is much more impressive than it may initially seem. Again, the scatterplots work.</li>
       </ul>
       <p>As for some personal thoughts, these graphs remind me of some of the notable individual forms we&rsquo;ve seen in VCT history. Trent&rsquo;s form in 2025 is something people seem to have moved past (probably because they choked at every international), but his datapoints for <span class="player-ref" onclick="highlightRolePlayer('trent', '2025 Kickoff')">Kickoff</span> and <span class="player-ref" onclick="highlightRolePlayer('trent', '2025 Stage 1')">Stage 1</span> are reminders of not only how insanely good he was, but how good he was even for a team that was as domestically dominant as G2 in 2025. People forget that he was in discussion for the greatest player in the world throughout 2025. What&rsquo;s more, he managed to put up those numbers without acing a single time in 2025 (weird but true).</p>
-      <p>On the opposite end of the spectrum, if you go to the controller scatterplot and just look at the lowest data points for high round win %, they&rsquo;re all Boaster. That checks out. However, this is a good reminder that these graphs are not gospel. Boaster is the backbone of Fnatic and does more for that organization&rsquo;s success than statistics will ever be able to show.</p>
+      <p>On the opposite end of the spectrum, if you go to the Controller scatterplot and just look at the lowest data points for high round win %, they&rsquo;re all Boaster. That checks out. However, this is a good reminder that these graphs are not gospel. Boaster is the backbone of Fnatic and does more for that organization&rsquo;s success than statistics will ever be able to show.</p>
       <p>Lastly, it seems like Gen.G were pretty warranted in dropping <span class="player-ref" onclick="highlightRolePlayer('Suggest', '2025 Stage 1')">Suggest</span>. There are more and more little anecdotes hidden amongst these scatterplots, but I&rsquo;ll leave that to you if you want to look around.</p>
 
       <h2 id="model">Putting It All Together</h2>
@@ -830,7 +831,7 @@ PAGE_HTML = """
         <div class="chart-canvas-box"><canvas id="modelChart"></canvas></div>
       </div>
 
-      <p>By adding an interaction effect between role and round win %, we can see that of the four main roles, duelist (with a &beta; value of ~0.12) has the most positive relationship with round win % and sentinel has the least positive relationship (with a &beta; value of ~0.10), affirming my previous observation.</p>
+      <p>Adding an interaction effect between role and round win % reveals that among the four main roles, Duelist has the strongest positive relationship with round win % (&beta;&nbsp;&asymp;&nbsp;0.12) and Sentinel the weakest (&beta;&nbsp;&asymp;&nbsp;0.10), confirming my earlier observation.</p>
 
       <p>Finally, by looking at residuals (the difference between expected and true rating), we can begin to answer the question of who are the greatest over/underperformers of both all-time and the current era!</p>
 
@@ -901,7 +902,7 @@ PAGE_HTML = """
 
       <p>Using this, we can identify &ldquo;baiting&rdquo; while being fair to players on better teams. The name of this new variable, PTD, means Proportion of Team&rsquo;s Deaths.</p>
 
-      <p>As a sanity check to make sure PTD was calculated correctly, let&rsquo;s make sure the PTDs for a given team add up to 100. Pun intended, let&rsquo;s look at 100 Thieves.</p>
+      <p>As a sanity check to make sure PTD was calculated correctly, let&rsquo;s make sure the PTDs for a given team add up to 100. Pun intended, here&rsquo;s 100 Thieves:</p>
 
       <div class="chart-wrap">
         <div class="chart-label">100 Thieves &mdash; PTD, Kickoff 2026</div>
@@ -911,7 +912,7 @@ PAGE_HTML = """
         </table>
       </div>
 
-      <p>Checks out! For fun, and before moving on, let&rsquo;s see who the biggest baiters (lowest PTD) of all time were:</p>
+      <p>Checks out! For fun, and before moving on, let&rsquo;s see who the biggest baiters (lowest PTD) of all time are:</p>
 
       <div class="chart-wrap">
         <div class="chart-label">Lowest PTD &mdash; All Time (i.e. baiting)</div>
@@ -930,7 +931,7 @@ PAGE_HTML = """
       <div class="chart-wrap" id="ptdEqBox" style="font-family:'DM Sans',sans-serif;font-size:.9rem;line-height:2;"></div>
 
       <div class="chart-wrap">
-        <div class="chart-label">Line of Best Fit &mdash; PTD Model &mdash; Select a Role</div>
+        <div class="chart-label">Line of Best Fit &mdash; PTD Model &mdash; Select a Role &amp; Adjust PTD</div>
         <div class="role-btns" id="ptdModelRoleBtns"></div>
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="model-slope" id="ptdModelSlopeLabel" style="flex:1;margin-bottom:0;"></div>
