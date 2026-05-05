@@ -27,7 +27,30 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git branch *)",
-      "Bash(git remote *)"
+      "Bash(git remote *)",
+      "Bash(curl -s \"https://www.vlr.gg/420805/sentinels-vs-cloud9-vct-2025-americas-stage-1-w1\")",
+      "Bash(curl -s \"https://www.vlr.gg/event/matches/2347/vct-2025-americas-stage-1/\")",
+      "Bash(curl -s \"https://www.vlr.gg/459517/\")",
+      "Bash(.venv/bin/python3 *)",
+      "Bash(awk -F',' '{print $1,$2,$4,$5,$6}')",
+      "Bash(awk -F',' '{print $5}')",
+      "Bash(awk -F',' '{print $5}' /Users/benny_es1/PythonTest/data/2026_kickoff.csv)",
+      "Bash(awk -F',' 'NR==1{print NF, \"columns\"}' /Users/benny_es1/PythonTest/data/maps/2026_kickoff.csv)",
+      "Bash(awk -F',' 'NR>1 && $6!=\"all\" {print $5}' /Users/benny_es1/PythonTest/data/maps/2026_kickoff.csv)",
+      "Bash(awk -F',' 'NR>1 && $6!=\"all\" {print $6}' /Users/benny_es1/PythonTest/data/maps/2026_kickoff.csv)",
+      "Bash(yt-dlp --version)",
+      "Bash(pip install *)",
+      "Bash(yt-dlp *)",
+      "Bash(brew install *)",
+      "Bash(python *)",
+      "Bash(curl -s http://127.0.0.1:5001/articles/over-underperformers/)",
+      "WebFetch(domain:bes57.github.io)",
+      "Bash(gh api *)",
+      "Bash(kill %1)",
+      "Bash(ffmpeg -version)",
+      "Bash(ffmpeg -y -i /tmp/florescent_raw.mp4 -ss 30 -to 39 -c:v libx264 -c:a aac /tmp/seg1.mp4)",
+      "Bash(ffmpeg -y -i /tmp/florescent_raw.mp4 -ss 54 -to 63 -c:v libx264 -c:a aac /tmp/seg2.mp4)",
+      "Bash(ffmpeg -y -i /tmp/seg1.mp4 -i /tmp/seg2.mp4 -filter_complex '[0:v][1:v]xfade=transition=fade:duration=0.4:offset=8.6[v];[0:a][1:a]acrossfade=d=0.4[a]' -map '[v]' -map '[a]' /Users/benny_es1/PythonTest/static/florescent_clip.mp4)"
     ]
   }
 }

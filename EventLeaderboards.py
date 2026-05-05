@@ -33,7 +33,7 @@ _event_cache = {}       # event_id -> DataFrame
 _headshot_cache = {}    # profile_url -> headshot_url or ""
 _headshots_loaded = False
 
-_HEADSHOTS_FILE = os.path.join(os.path.dirname(__file__), "headshots.json")
+_HEADSHOTS_FILE = os.path.join(os.path.dirname(__file__), "data", "headshots.json")
 
 def _ensure_headshots_loaded():
     global _headshots_loaded

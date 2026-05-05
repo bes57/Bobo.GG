@@ -9,7 +9,7 @@ highs_bp = Blueprint('highs', __name__)
 DATA_DIR    = os.path.join(os.path.dirname(__file__), "data")
 MAPS_DIR    = os.path.join(DATA_DIR, "maps")
 SERIES_DIR  = os.path.join(DATA_DIR, "series")
-HEADSHOTS_FILE = os.path.join(os.path.dirname(__file__), "headshots.json")
+HEADSHOTS_FILE = os.path.join(os.path.dirname(__file__), "data", "headshots.json")
 
 _headshot_cache   = {}
 _headshots_loaded = False
