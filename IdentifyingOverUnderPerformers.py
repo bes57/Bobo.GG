@@ -2356,7 +2356,7 @@ def index():
     ptd_model         = get_model_with_ptd(all_roles, model_params, ptd_vals)
     ptd_lookup        = {f"{k[0]}|{k[1]}": v for k, v in ptd_vals.items()}
     ptd_all_scatter   = get_ptd_all_scatter(all_roles, ptd_vals)
-    ptd_formula = json.dumps(r'\mathrm{PTD}_i = \frac{D_i / \mathrm{Rnd}_i}{\displaystyle\sum_{j=1}^{\underbrace{n}_{\text{qualifying players on team}}}\left(D_j / \mathrm{Rnd}_j\right)} \times \frac{\underbrace{n}_{\text{qualifying players on team}}}{5}')
+    ptd_formula = json.dumps(r'\mathrm{PTD}_i = \frac{D_i / \mathrm{Rnd}_i}{\displaystyle\sum_{j=1}^{n}\left(D_j / \mathrm{Rnd}_j\right)} \times \frac{\underbrace{n}_{\text{qualifying players on team}}}{5}')
     _ptd_coeff = ptd_model.get("role_eqs", {}).get("Initiator", {}).get("ptd", 0)
     _ptd_sign  = "+" if _ptd_coeff >= 0 else "-"
     ptd_eq_latex = json.dumps(
