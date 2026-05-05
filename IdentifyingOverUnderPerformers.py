@@ -1483,11 +1483,11 @@ var rolePinned = { canvas: null, chart: null, pt: null, raf: null };
       }
       var HIT = 8;
       var nearest = null, minDist = Infinity;
-      chart.data.datasets.forEach(function(ds) {
-        ds.data.forEach(function(pt) {
-          var px = chart.scales.x.getPixelForValue(pt.x);
-          var py = chart.scales.y.getPixelForValue(pt.y);
-          var d  = Math.hypot(mouseX - px, mouseY - py);
+      chart.data.datasets.forEach(function(ds, di) {
+        var meta = chart.getDatasetMeta(di);
+        ds.data.forEach(function(pt, pi) {
+          var el = meta.data[pi];
+          var d  = Math.hypot(mouseX - el.x, mouseY - el.y);
           if (d < HIT && d < minDist) { minDist = d; nearest = pt; }
         });
       });

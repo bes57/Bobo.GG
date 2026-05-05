@@ -49,6 +49,7 @@ HOME_HTML = """
   }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
   h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:700; letter-spacing:-2px; line-height:1; }
+  .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
   .tagline { margin-top:16px; color:var(--soft); font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:52px; width:100%; max-width:900px; }
   .section-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--ink); margin-bottom:20px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:10px; user-select:none; letter-spacing:-0.5px; }
@@ -95,6 +96,7 @@ HOME_HTML = """
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
         <a class="nav-card" href="/articles/over-underperformers/">
+          <img class="nav-card-cover" src="/patmen.jpg" alt="Patmen">
           <div class="nav-card-title">Overperforming in VCT: who's doing it?</div>
           <div class="nav-card-desc">Using VCT stats to surface players who are outperforming (or underperforming) their team.</div>
           <div class="nav-card-arrow">Read &rarr;</div>
@@ -132,6 +134,10 @@ def favicon():
 @app.route("/logo.svg")
 def logo():
     return send_from_directory(STATIC_DIR, "BoboLogo.svg", mimetype="image/svg+xml")
+
+@app.route("/patmen.jpg")
+def patmen():
+    return send_from_directory(os.path.dirname(__file__), "Patmen.jpg", mimetype="image/jpeg")
 
 @app.route("/")
 def home():
