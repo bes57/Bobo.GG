@@ -378,11 +378,14 @@ def get_ptd_values():
         df["Rnd"] = pd.to_numeric(df["Rnd"], errors="coerce")
         df = df[df["Rnd"] > 75].dropna(subset=["D", "Rnd"])
         df["death_rate"] = df["D"] / df["Rnd"]
-        team_rate = df.groupby("Org")["death_rate"].sum()
+        team_rate  = df.groupby("Org")["death_rate"].sum()
+        team_count = df.groupby("Org").size()
         for _, row in df.iterrows():
             total = float(team_rate.get(row["Org"], 0))
+            n     = int(team_count.get(row["Org"], 5))
             if total > 0:
-                ptd_map[(row["ProfileURL"], label)] = round(float(row["death_rate"]) / total, 4)
+                ptd = float(row["death_rate"]) / total * (n / 5)
+                ptd_map[(row["ProfileURL"], label)] = round(ptd, 4)
     return ptd_map
 
 
@@ -461,6 +464,8 @@ def get_model_with_ptd(all_roles_data, model_params, ptd_values):
 
     kickoff = [p for p in all_pts if p["event"] == "2026 Kickoff"]
     by_res  = sorted(all_pts, key=lambda p: p["residual"], reverse=True)
+    patmen  = next((p for p in all_pts if p["profile"] == "https://www.vlr.gg/player/13744/patmen"
+                    and p["event"] == "2026 Kickoff"), None)
 
     return {
         "r2_old":        r2_old,
@@ -470,6 +475,7 @@ def get_model_with_ptd(all_roles_data, model_params, ptd_values):
         "alltime_worst": by_res[-10:][::-1],
         "kickoff_best":  sorted(kickoff, key=lambda p: p["residual"], reverse=True)[:10],
         "kickoff_worst": sorted(kickoff, key=lambda p: p["residual"])[:10],
+        "patmen":        patmen,
     }
 
 
@@ -487,6 +493,18 @@ def get_ptd_all_scatter(all_roles_data, ptd_values):
             result.append({"player": pt["player"], "org": pt["org"], "profile": pt["profile"],
                            "event": pt["event"], "x": ptd, "y": pt["y"]})
     return result
+
+
+def get_oxy_ptd_chart_data(ptd_values):
+    oxy_profile = "https://www.vlr.gg/player/18796/oxy"
+    oxy_ptd = ptd_values.get((oxy_profile, "2024 Stage 1"))
+    if oxy_ptd is None:
+        return {}
+    arr = np.array(list(ptd_values.values()), dtype=float)
+    mean = float(arr.mean())
+    std  = float(arr.std())
+    pct  = round(float(np.mean(arr < oxy_ptd)) * 100, 1)
+    return {"ptd": round(oxy_ptd, 4), "mean": round(mean, 4), "std": round(std, 4), "percentile": pct}
 
 
 def get_ptd_kickoff_analysis(all_roles_data, ptd_values):
@@ -671,6 +689,9 @@ PAGE_HTML = """
   .content ul { list-style:none; margin:-8px 0 24px; display:flex; flex-direction:column; gap:8px; }
   .content ul li { font-size:1rem; font-weight:300; line-height:1.8; padding-left:20px; position:relative; }
   .content ul li::before { content:'—'; position:absolute; left:0; color:var(--soft); }
+  .content ul.bullet-list { list-style:disc; padding-left:24px; }
+  .content ul.bullet-list li { padding-left:0; }
+  .content ul.bullet-list li::before { content:none; }
   .content ol { list-style:decimal; margin:-8px 0 24px; display:flex; flex-direction:column; gap:8px; padding-left:24px; }
   .content ol li { font-size:1rem; font-weight:300; line-height:1.8; padding-left:8px; }
   .role-table { width:100%; border-collapse:collapse; font-size:.88rem; font-weight:300; margin-top:20px; }
@@ -692,6 +713,9 @@ PAGE_HTML = """
   .res-table .td-pos { color:#3aaa6e; font-weight:500; }
   .res-table .td-neg { color:#d45870; font-weight:500; }
   .omit-search { width:100%; border:1.5px solid #e0d8ea; border-radius:10px; padding:7px 14px; font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--ink); background:white; outline:none; margin-bottom:12px; }
+  .interact-role { font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; padding:6px 14px; border-radius:20px; border:1.5px solid #e0d8ea; background:white; color:var(--ink); cursor:pointer; transition:all .15s; }
+  .interact-role.active { background:#9060c4; border-color:#9060c4; color:white; }
+  .interact-role:hover:not(.active) { border-color:#b09ad4; }
   .omit-search:focus { border-color:#b09ad4; }
   .omit-scroll { max-height:240px; overflow-y:auto; border-radius:8px; border:1px solid #f0eaf4; }
 </style>
@@ -703,10 +727,11 @@ PAGE_HTML = """
   <a href="#tuning">Tuning the Definition</a>
   <a href="#mapping">Mapping the Definition</a>
   <a href="#model">Putting It All Together</a>
-  <a href="#alltime">Greatest Over/Underperformers</a>
+  <a href="#alltime">Preliminary Greatest Over/Underperformers</a>
   <a href="#baiting">The Baiting Problem</a>
   <a href="#ptd-model">Final PTD Model</a>
   <a href="#ptd-alltime">PTD: Updated Greatest Over/Underperformers</a>
+  <a href="#conclusion">Conclusion</a>
 </nav>
 <div class="page">
   <a class="back" href="/">&larr; Back</a>
@@ -833,9 +858,11 @@ PAGE_HTML = """
 
       <p>Adding an interaction effect between role and round win % reveals that among the four main roles, Duelist has the strongest positive relationship with round win % (&beta;&nbsp;&asymp;&nbsp;0.12) and Sentinel the weakest (&beta;&nbsp;&asymp;&nbsp;0.10), confirming my earlier observation.</p>
 
-      <p>Finally, by looking at residuals (the difference between expected and true rating), we can begin to answer the question of who are the greatest over/underperformers of both all-time and the current era!</p>
+      <p>By looking at residuals (the difference between expected and true rating), we can get an initial sense for who the greatest over/underperformers are of both all-time and the current era!</p>
 
-      <h2 id="alltime">Greatest Over/Underperformers of All Time</h2>
+      <h2 id="alltime">Preliminary Greatest Over/Underperformers of All Time</h2>
+
+      <p><em>Note: This model is not final, and thus neither are these rankings. The final rankings are further down.</em></p>
 
       <div class="chart-wrap">
         <div class="chart-label">Greatest Overperformers of All Time</div>
@@ -873,8 +900,8 @@ PAGE_HTML = """
 
       <p>Awesome! Some quick thoughts:</p>
       <ul>
-        <li>No Patmen in the top 10 overperformers of this Kickoff. I&rsquo;ll stop complaining on his behalf.</li>
-        <li>Every single member of the top 10 underperformers of all time is no longer in VCT, except for Derke (which makes sense as an all-time great) and Crws (who proceeded to get dropped and then, just recently, get picked back up by Full Sense). The point here is that this analysis has merit.</li>
+        <li>No Patmen in the top 10 overperformers of this Kickoff. Maybe I overreacted on his behalf.</li>
+        <li>Every single member of the top 10 underperformers of all time is no longer in VCT, except for Derke (which makes sense as an all-time great) and Crws (who proceeded to get dropped and then, just recently, get picked back up by Full Sense). This initial analysis has some merit.</li>
         <li>2 of the 3 greatest &ldquo;overperformers&rdquo; of all time came from this most recent Kickoff &mdash; Johnqt and Hiro. Perhaps we should be more grateful for the quality of players that we&rsquo;re currently witnessing. I can&rsquo;t speak so much for Hiro as I didn&rsquo;t closely follow EMEA this Kickoff, but Johnqt did have a ridiculously good Kickoff. However, he was also accused of baiting and statfarming this Kickoff (hence the nickname JohnKD), which would potentially skew the validity of using rating as our outcome variable.</li>
       </ul>
 
@@ -892,7 +919,7 @@ PAGE_HTML = """
 
 
 
-      <p>Aaaaaaaaand there go Johnqt and Hiro. However, this feels a bit crude. I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed historically well <em>even after accounting for their baiting</em>. But how do you account for their baiting? I could just add FDPR into the model, but that comes with problems. Better teams will have fewer first deaths, so just plugging in this variable would be unwise. There&rsquo;s a difference between Zekken and Cauanzin having 0.11 FDPR in Kickoff 2026 (namely that Zekken is a selfless player who is just on a good team while Cauanzin is a massive baiter who&rsquo;s on a bad team).</p>
+      <p>Aaaaaaaaand there go Johnqt and Hiro. However, this feels a bit crude. I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed well <em>even after accounting for their baiting</em>. But how do you account for their baiting? I could just add FDPR into the model, but that comes with problems. Better teams will have fewer first deaths, so just plugging in this variable would be unwise, so it&rsquo;s not a &ldquo;fair&rdquo; variable per se. There&rsquo;s a difference between Zekken and Cauanzin having 0.11 FDPR in 2026 Kickoff (namely that Zekken is a selfless player who is just on a good team while Cauanzin is a massive baiter who&rsquo;s on a bad team).</p>
 
 
       <p>After thinking through this problem, I came to a solution &mdash; create a new variable that is the proportion of a player&rsquo;s deaths relative to their team&rsquo;s total deaths, namely:</p>
@@ -912,7 +939,7 @@ PAGE_HTML = """
         </table>
       </div>
 
-      <p>Checks out! For fun, and before moving on, let&rsquo;s see who the biggest baiters (lowest PTD) of all time are:</p>
+      <p>Checks out! Before moving on, let&rsquo;s see who the biggest baiters (lowest PTD) of all time are:</p>
 
       <div class="chart-wrap">
         <div class="chart-label">Lowest PTD &mdash; All Time (i.e. baiting)</div>
@@ -922,7 +949,7 @@ PAGE_HTML = """
         </table>
       </div>
 
-      <p>Sorry Flickless.</p>
+      <p>Seems like we can move past &ldquo;accused of baiting&rdquo; and just say &ldquo;baiting&rdquo; for Johnqt.</p>
 
       <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;margin:40px 0 16px;letter-spacing:-0.5px;" id="ptd-model">Final PTD Model</h2>
 
@@ -984,22 +1011,81 @@ PAGE_HTML = """
         </table>
       </div>
 
-      <p>After all that work, we finally have a model that accounts for team performance, propensity to bait, and role played to see which players have vastly overperformed their team in a <em>meaningful manner</em> (re: accounting for baiting). Again, I find this fascinating. Once again, I have thoughts:</p>
+      <p>After all that work, we finally have a model that accounts for team performance, propensity to bait, and role played to see which players have vastly overperformed their team in a <em>meaningful manner</em> (re: accounting for baiting). Again, I find this fascinating. With these being my final findings, I have final thoughts:</p>
 
       <ol>
-        <li>Florescent&rsquo;s 2025 Kickoff being the largest overperformance of all time is the kind of fascinating result that I hoped to discover. What&rsquo;s more, I appreciate this result because I&rsquo;ve been a strong believer that Florescent has what it takes to not just be a great player, but be a top-10 or even top-5 player in VCT. In fact, back in 2024, I predicted that Florescent would be a top 5 player in EMEA. Can I say I&rsquo;m right now? Probably not, but let&rsquo;s not forget what she gave us:
+        <li>Congratulations to Oxy for winning my award for greatest performance of all time! I can&rsquo;t say I disagree with the model&rsquo;s assessment either. Oxy was dying at 23% (a ridiculously high rate) for a team that was composed of&hellip;
+          <br><br>
+          <ul class="bullet-list">
+            <li>Runi (no longer in VCT)</li>
+            <li>Moose (no longer in VCT)</li>
+            <li>Vanity (no longer in VCT)</li>
+            <li>Xeppaa (infamous paycheck stealer &mdash; for those who don&rsquo;t know, he&rsquo;s just straight up bad)</li>
+          </ul>
+          <div style="margin-top:16px;margin-bottom:8px;" class="chart-wrap">
+            <div class="chart-label">Oxy &mdash; PTD vs. Every Domestic VCT Player in History</div>
+            <div class="chart-canvas-box"><canvas id="oxyPtdNormalChart"></canvas></div>
+          </div>
+          <br>In fact, Oxy was taking more deaths for his team than 99.2% of players in domestic VCT history. Amidst playing this selflessly for teammates that we now know were middling (at best), he still managed to put up a 1.24 rating on a team that got bounced in the first round of Stage 1 playoffs.
+        </li>
+        <li>Florescent&rsquo;s 2025 Kickoff being in the top 10 greatest overperformances of all time is the kind of fascinating result that I hoped to discover. What&rsquo;s more, I appreciate this result because I&rsquo;ve been a strong believer that Florescent has what it takes to not just be a great player, but be a top-10 player in VCT. In fact, back in 2024, I predicted that Florescent would be a top 5 player in EMEA. Can I say I&rsquo;m right now? Probably not.<br><br>In any case, the model&rsquo;s result is a reminder of the squandered potential she consistently showed throughout the event. For instance:
           <div style="margin-top:16px;height:460px;position:relative;">
             <video id="floresentVideo" src="/static/florescent_clip.mp4" controls playsinline style="width:100%;height:100%;border-radius:10px;display:block;"></video>
           </div>
-          <p style="margin-top:10px;margin-bottom:0;">The eye test is certainly passed. Now, let&rsquo;s recall that Florescent finished with a 1.17 rating (the third-highest at EMEA Kickoff 2025) on a team that finished DEAD LAST, all while tanking more than 1/4th of the team&rsquo;s deaths on a 5-person team. All in all, I think she clearly deserves the number one spot, as she gaps Invy by 0.3 standard deviations.</p>
+          <p style="margin-top:10px;margin-bottom:0;">The eye test is certainly passed. Recall that Florescent concluded 2025 EMEA Kickoff with a 1.17 rating (third-highest at the event) on a team that finished DEAD LAST, all while tanking an above-average amount of her team&rsquo;s deaths. A historically great performance on a historically horrible team.</p>
         </li>
         <li>Ironically, Aspas went from appearing twice in the &ldquo;Greatest Overperformers of All Time&rdquo; list to zero times after accounting for baiting. I&rsquo;m not saying anything, just noticing.</li>
-        <li>Earlier, I wrote that &ldquo;I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed historically well even after accounting for their baiting.&rdquo; My new model affirms this. Johnqt&rsquo;s expected rating did go from 0.96 to 1.01, but he still makes both of the greatest overperformance lists. He&rsquo;s dropped a few spots on the all-time list, but it&rsquo;s as things should be.</li>
-        <li>Tomaszy only having 15.6% of his team deaths (i.e. baiting a whole lot) just to drop a 0.65 rating is criminal. Fair placement for him.</li>
+        <li>Earlier, I wrote that &ldquo;I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed well even after accounting for their baiting.&rdquo; My new model affirms this. Johnqt&rsquo;s expected rating went from 0.96 to 1.01 while Hiro&rsquo;s went from 0.95 to 1.06. While it&rsquo;s clear neither of these performances was historically great enough to be in the top 10 for all time, they both still make the top 10 for Kickoff 2026. I&rsquo;m happy with this result, and it&rsquo;s as things should be. Overperformers are those who play better than their team while playing <em>with</em> them, not those who bait because their teams are subpar. Johnqt and Hiro are two great players who had great Kickoff performances, but it&rsquo;s less surprising when you consider the rate at which they were saving.</li>
+        <li>Suggest may have had a 0.66 rating, but at least he wasn&rsquo;t baiting!</li>
         <li>Now, 9 (not 8) of the players in the all-time underperformers list are no longer in VCT. Even better!</li>
         <li>Based on the fact that the overperformers&rsquo; lists aren&rsquo;t just occupied with high PTD players and the inverse for the underperformers&rsquo; lists, this model seems fairly calibrated.</li>
-        <li>If I&rsquo;m a team looking to make changes, I&rsquo;d be looking at players like Seven, al0rante, or dgzin. Players like Primmie, Karon, and Lukxo are insane, but everyone already knows that.</li>
+        <li>If I&rsquo;m a team wanting to make changes, I&rsquo;d be looking at players like Seven or al0rante. Players like Primmie, Karon, and Lukxo are insane, but everyone already knows that.</li>
+        <li>Based on this list for Kickoff 2026, I&rsquo;ll predict that at least 3 of C1ndeR, Okeanos, Eggster, and GLYPH will be dropped by the end of the year. The rest have already been dropped (thyy, d3mur, UNFAKE, and baha) or have too much historical credit (Boaster and Jawgemo).</li>
       </ol>
+
+      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;margin:48px 0 20px;letter-spacing:-0.5px;" id="conclusion">Conclusion</h2>
+
+      <p>Finally, we&rsquo;ve answered many questions: how do we understand being an &ldquo;overperformer&rdquo; or &ldquo;underperformer&rdquo;? Who are the greatest over/underperformers of all time? What about in current times? Yet, one question remains:</p><p>How much is Patmen truly &ldquo;better than the mediocrity that is Global Esports&rdquo;?</p>
+
+      <div class="chart-wrap">
+        <div class="chart-label">PatMen &mdash; 2026 Kickoff (Final PTD Model)</div>
+        <table class="res-table">
+          <thead><tr><th></th><th>Player</th><th>Rating</th><th>Expected</th><th>Residual</th><th>Std. Devs.</th><th>PTD</th></tr></thead>
+          <tbody id="patmenBody"></tbody>
+        </table>
+      </div>
+
+      <p>He&rsquo;s performing over a full standard-deviation&rsquo;s worth better than we&rsquo;d expect from a controller player on that Global Esports team. Also, he&rsquo;s doing it without baiting. It&rsquo;s not egregious, but he&rsquo;s certainly better than his team. No fist fighting is necessary, though.</p>
+
+      <p>As a final gift, I&rsquo;ll leave an interactive version of this model to mess around with. Input values for a prospective VCT player and the model will give you their expected rating as well as the closest comparison we&rsquo;ve seen domestically, including their true values.</p>
+
+      <div class="chart-wrap" id="interactiveModel">
+        <div class="chart-label">Interactive Model</div>
+        <div style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:16px;">
+          <div style="flex:1;min-width:180px;">
+            <div style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;margin-bottom:6px;">Round Win % &mdash; <span id="interactWinVal">50</span>%</div>
+            <input type="range" id="interactWinSlider" min="30" max="70" value="50" step="1" style="width:100%;">
+          </div>
+          <div style="flex:1;min-width:180px;">
+            <div style="font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;margin-bottom:6px;">PTD &mdash; <span id="interactPtdVal">20</span>%</div>
+            <input type="range" id="interactPtdSlider" min="15" max="25" value="20" step="0.1" style="width:100%;">
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;" id="interactRoleButtons">
+          <button class="interact-role active" data-role="Initiator">Initiator</button>
+          <button class="interact-role" data-role="Controller">Controller</button>
+          <button class="interact-role" data-role="Duelist">Duelist</button>
+          <button class="interact-role" data-role="Sentinel">Sentinel</button>
+          <button class="interact-role" data-role="Flex">Flex</button>
+        </div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:1rem;margin-bottom:16px;">
+          Expected Rating: <strong id="interactExpected">&mdash;</strong>
+        </div>
+        <table class="res-table" id="interactMatchTable">
+          <thead><tr><th>Closest Match</th><th>Org</th><th>Event</th><th>True Win%</th><th>True PTD</th><th>True Rating</th></tr></thead>
+          <tbody id="interactMatchBody"></tbody>
+        </table>
+      </div>
 
     </div>
   </div>
@@ -1734,7 +1820,8 @@ const alltimeNoBaiters = {{ alltime_nobaiters_json | safe }};
 
 const ptdKickoffData = {{ ptd_kickoff_json | safe }};
 const ptdModelData   = {{ ptd_model_json   | safe }};
-const ptdLookup      = {{ ptd_lookup_json      | safe }};
+const ptdLookup      = {{ ptd_lookup_json  | safe }};
+const oxyPtdChart    = {{ oxy_ptd_chart_json  | safe }};
 (function() {
   if (!ptdKickoffData || !ptdModelData) return;
 
@@ -1897,6 +1984,92 @@ const ptdLookup      = {{ ptd_lookup_json      | safe }};
   buildPtdResTable('ptdKickoffBestBody',  ptdModelData.kickoff_best);
   buildPtdResTable('ptdKickoffWorstBody', ptdModelData.kickoff_worst);
 
+  // Patmen conclusion table
+  (function() {
+    var tbody = document.getElementById('patmenBody');
+    if (!tbody || !ptdModelData.patmen) return;
+    var p = ptdModelData.patmen;
+    var hs = headshots[p.profile] || '';
+    var imgHtml = hs ? '<img src="' + hs + '" alt="">' : '';
+    var resSign  = p.residual >= 0 ? '+' : '';
+    var zSign    = p.z >= 0 ? '+' : '';
+    var resClass = p.residual >= 0 ? 'td-pos' : 'td-neg';
+    var zClass   = p.z >= 0 ? 'td-pos' : 'td-neg';
+    var ptdVal   = ptdLookup[p.profile + '|' + p.event];
+    var ptdHtml  = ptdVal != null ? (ptdVal * 100).toFixed(1) + '%' : '—';
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="td-img">' + imgHtml + '</td>' +
+      '<td>' + p.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + p.org + ' &middot; ' + p.event + '</span></td>' +
+      '<td>' + p.rating.toFixed(2) + '</td>' +
+      '<td>' + p.expected.toFixed(2) + '</td>' +
+      '<td class="' + resClass + '">' + resSign + p.residual.toFixed(3) + '</td>' +
+      '<td class="' + zClass   + '">' + zSign   + p.z.toFixed(2) + '&sigma;</td>' +
+      '<td>' + ptdHtml + '</td>';
+    tbody.appendChild(tr);
+  })();
+
+  // Oxy PTD normal distribution chart
+  (function() {
+    var ctx = document.getElementById('oxyPtdNormalChart');
+    if (!ctx || !oxyPtdChart || !oxyPtdChart.mean) return;
+    var mean = oxyPtdChart.mean, std = oxyPtdChart.std, oxyVal = oxyPtdChart.ptd;
+    var pts = 200, lo = mean - 4 * std, hi = mean + 4 * std;
+    var labels = [], normalData = [], oxyData = [];
+    for (var i = 0; i <= pts; i++) {
+      var x = lo + (hi - lo) * i / pts;
+      var y = (1 / (std * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / std, 2));
+      labels.push(x);
+      normalData.push({x: x, y: y});
+      oxyData.push({x: x, y: Math.abs(x - oxyVal) < (hi - lo) / pts * 1.5 ? y : null});
+    }
+    new Chart(ctx.getContext('2d'), {
+      type: 'line',
+      data: {
+        datasets: [
+          {
+            label: 'PTD Distribution',
+            data: normalData,
+            borderColor: '#9060c4',
+            backgroundColor: 'rgba(144,96,196,0.15)',
+            borderWidth: 2,
+            pointRadius: 0,
+            fill: true,
+            tension: 0.4,
+          },
+          {
+            label: 'Oxy — 2024 Stage 1 (' + (oxyVal * 100).toFixed(1) + '%)',
+            data: [{x: oxyVal, y: 0}, {x: oxyVal, y: (1 / (std * Math.sqrt(2 * Math.PI)))}],
+            borderColor: '#f9a855',
+            borderWidth: 2,
+            borderDash: [6, 3],
+            pointRadius: 0,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+        parsing: false,
+        plugins: {
+          legend: { labels: { font: { family: 'DM Sans', size: 12 }, color: '#2a1f2d' }, onClick: null },
+          tooltip: { enabled: false }
+        },
+        scales: {
+          x: {
+            type: 'linear',
+            title: { display: true, text: 'PTD', font: { family: 'DM Sans', size: 11 }, color: '#2a1f2d' },
+            ticks: {
+              callback: function(v) { return (v * 100).toFixed(0) + '%'; },
+              font: { family: 'DM Sans', size: 11 }, color: '#2a1f2d'
+            },
+            grid: { color: 'rgba(0,0,0,0.06)' }
+          },
+          y: { display: false }
+        }
+      }
+    });
+  })();
 
   // PTD model line-of-best-fit chart
   if (ptdModelData.role_eqs) {
@@ -2063,6 +2236,70 @@ const ptdLookup      = {{ ptd_lookup_json      | safe }};
 })();
 
 (function() {
+  var winSlider  = document.getElementById('interactWinSlider');
+  var ptdSlider  = document.getElementById('interactPtdSlider');
+  var winVal     = document.getElementById('interactWinVal');
+  var ptdVal     = document.getElementById('interactPtdVal');
+  var expectedEl = document.getElementById('interactExpected');
+  var matchBody  = document.getElementById('interactMatchBody');
+  if (!winSlider || !ptdSlider) return;
+
+  var selectedRole = 'Initiator';
+  document.getElementById('interactRoleButtons').addEventListener('click', function(e) {
+    var btn = e.target.closest('.interact-role');
+    if (!btn) return;
+    document.querySelectorAll('.interact-role').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    selectedRole = btn.dataset.role;
+    update();
+  });
+
+  function update() {
+    var win = parseFloat(winSlider.value);
+    var ptd = parseFloat(ptdSlider.value);
+    winVal.textContent = win.toFixed(0);
+    ptdVal.textContent = ptd.toFixed(1);
+
+    var eq = ptdModelData.role_eqs && ptdModelData.role_eqs[selectedRole];
+    if (!eq) return;
+    var expected = eq.intercept + eq.slope * (win / 100) + eq.ptd * (ptd / 100);
+    expectedEl.textContent = expected.toFixed(3);
+
+    // Find closest match in allRolesData for selected role
+    var pts = allRolesData[selectedRole] || [];
+    var best = null, bestDist = Infinity;
+    pts.forEach(function(p) {
+      var pPtd = ptdLookup[p.profile + '|' + p.event];
+      if (pPtd == null) return;
+      var dx = (p.x - win / 100) / 0.20;
+      var dy = (pPtd - ptd / 100) / 0.05;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < bestDist) { bestDist = dist; best = { pt: p, ptd: pPtd }; }
+    });
+
+    matchBody.innerHTML = '';
+    if (best) {
+      var p = best.pt;
+      var hs = headshots[p.profile] || '';
+      var imgHtml = hs ? '<img src="' + hs + '" alt="">' : '';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="td-img">' + imgHtml + p.player + '</td>' +
+        '<td>' + p.org + '</td>' +
+        '<td>' + p.event + '</td>' +
+        '<td>' + (p.x * 100).toFixed(1) + '%</td>' +
+        '<td>' + (best.ptd * 100).toFixed(1) + '%</td>' +
+        '<td>' + p.y.toFixed(2) + '</td>';
+      matchBody.appendChild(tr);
+    }
+  }
+
+  winSlider.addEventListener('input', update);
+  ptdSlider.addEventListener('input', update);
+  update();
+})();
+
+(function() {
   var tocLinks = document.querySelectorAll('.toc a');
   var ids = Array.from(tocLinks).map(function(a) { return a.getAttribute('href').slice(1); });
   function onScroll() {
@@ -2115,10 +2352,11 @@ def index():
     alltime_nobaiters = get_alltime_no_baiters(all_roles, model_params)
     ptd_vals          = get_ptd_values()
     ptd_kickoff       = get_ptd_kickoff_analysis(all_roles, ptd_vals)
+    oxy_ptd_chart     = get_oxy_ptd_chart_data(ptd_vals)
     ptd_model         = get_model_with_ptd(all_roles, model_params, ptd_vals)
     ptd_lookup        = {f"{k[0]}|{k[1]}": v for k, v in ptd_vals.items()}
     ptd_all_scatter   = get_ptd_all_scatter(all_roles, ptd_vals)
-    ptd_formula = json.dumps(r'\mathrm{PTD}_i = \frac{D_i / \mathrm{Rnd}_i}{\displaystyle\sum_{j=1}^{n}\left(D_j / \mathrm{Rnd}_j\right)}')
+    ptd_formula = json.dumps(r'\mathrm{PTD}_i = \frac{D_i / \mathrm{Rnd}_i}{\displaystyle\sum_{j=1}^{\underbrace{n}_{\text{qualifying players on team}}}\left(D_j / \mathrm{Rnd}_j\right)} \times \frac{\underbrace{n}_{\text{qualifying players on team}}}{5}')
     _ptd_coeff = ptd_model.get("role_eqs", {}).get("Initiator", {}).get("ptd", 0)
     _ptd_sign  = "+" if _ptd_coeff >= 0 else "-"
     ptd_eq_latex = json.dumps(
@@ -2134,6 +2372,7 @@ def index():
         residuals_json=json.dumps(residuals),
         alltime_nobaiters_json=json.dumps(alltime_nobaiters),
         ptd_kickoff_json=json.dumps(ptd_kickoff),
+        oxy_ptd_chart_json=json.dumps(oxy_ptd_chart),
         ptd_model_json=json.dumps(ptd_model),
         ptd_lookup_json=json.dumps(ptd_lookup),
         ptd_all_scatter_json=json.dumps(ptd_all_scatter),
