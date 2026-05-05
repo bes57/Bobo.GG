@@ -919,7 +919,7 @@ PAGE_HTML = """
 
 
 
-      <p>Aaaaaaaaand there go Johnqt and Hiro. However, this feels a bit crude. I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed well <em>even after accounting for their baiting</em>. But how do you account for their baiting? I could just add FDPR into the model, but that comes with problems. Better teams will have fewer first deaths, so just plugging in this variable would be unwise, so it&rsquo;s not a &ldquo;fair&rdquo; variable per se. There&rsquo;s a difference between Zekken and Cauanzin having 0.11 FDPR in 2026 Kickoff (namely that Zekken is a selfless player who is just on a good team while Cauanzin is a massive baiter who&rsquo;s on a bad team).</p>
+      <p>Aaaaaaaaand there go Johnqt and Hiro. However, this feels a bit crude. I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed well <em>even after accounting for their baiting</em>. But how do you account for their baiting? I could just add FDPR into the model, but that comes with problems. Better teams will have fewer first deaths, so just plugging in this variable would be unwise; it&rsquo;s not a &ldquo;fair&rdquo; variable per se. There&rsquo;s a difference between Zekken and Cauanzin having 0.11 FDPR in 2026 Kickoff (namely that Zekken is a selfless player who is just on a good team while Cauanzin is a massive baiter who&rsquo;s on a bad team).</p>
 
 
       <p>After thinking through this problem, I came to a solution &mdash; create a new variable that is the proportion of a player&rsquo;s deaths relative to their team&rsquo;s total deaths, namely:</p>
@@ -929,7 +929,7 @@ PAGE_HTML = """
 
       <p>Using this, we can identify &ldquo;baiting&rdquo; while being fair to players on better teams. The name of this new variable, PTD, means Proportion of Team&rsquo;s Deaths.</p>
 
-      <p>As a sanity check to make sure PTD was calculated correctly, let&rsquo;s make sure the PTDs for a given team add up to 100. Pun intended, here&rsquo;s 100 Thieves:</p>
+      <p>As a sanity check to make sure PTD was calculated correctly, let&rsquo;s see if the PTDs for a given team add up to 100. Pun intended, here&rsquo;s 100 Thieves:</p>
 
       <div class="chart-wrap">
         <div class="chart-label">100 Thieves &mdash; PTD, Kickoff 2026</div>
@@ -939,7 +939,7 @@ PAGE_HTML = """
         </table>
       </div>
 
-      <p>Checks out! Before moving on, let&rsquo;s see who the biggest baiters (lowest PTD) of all time are:</p>
+      <p>Checks out! Before moving on, let&rsquo;s see who the biggest baiters (lowest PTDs) of all time are:</p>
 
       <div class="chart-wrap">
         <div class="chart-label">Lowest PTD &mdash; All Time (i.e. baiting)</div>
@@ -1014,7 +1014,7 @@ PAGE_HTML = """
       <p>After all that work, we finally have a model that accounts for team performance, propensity to bait, and role played to see which players have vastly overperformed their team in a <em>meaningful manner</em> (re: accounting for baiting). Again, I find this fascinating. With these being my final findings, I have final thoughts:</p>
 
       <ol>
-        <li>Congratulations to Oxy for winning my award for greatest performance of all time! I can&rsquo;t say I disagree with the model&rsquo;s assessment either. Oxy was dying at 23% (a ridiculously high rate) for a team that was composed of&hellip;
+        <li>Congratulations to Oxy for winning my award for greatest overperformance of all time! I can&rsquo;t say I disagree with the model&rsquo;s assessment either. Oxy was incurring 23% of his team&rsquo;s deaths (a ridiculously high rate) when the team was composed of&hellip;
           <br><br>
           <ul class="bullet-list">
             <li>Runi (no longer in VCT)</li>
@@ -1028,7 +1028,7 @@ PAGE_HTML = """
           </div>
           <br>In fact, Oxy was taking more deaths for his team than 99.2% of players in domestic VCT history. Amidst playing this selflessly for teammates that we now know were middling (at best), he still managed to put up a 1.24 rating on a team that got bounced in the first round of Stage 1 playoffs.
         </li>
-        <li>Florescent&rsquo;s 2025 Kickoff being in the top 10 greatest overperformances of all time is the kind of fascinating result that I hoped to discover. What&rsquo;s more, I appreciate this result because I&rsquo;ve been a strong believer that Florescent has what it takes to not just be a great player, but be a top-10 player in VCT. In fact, back in 2024, I predicted that Florescent would be a top 5 player in EMEA. Can I say I&rsquo;m right now? Probably not.<br><br>In any case, the model&rsquo;s result is a reminder of the squandered potential she consistently showed throughout the event. For instance:
+        <li>Florescent&rsquo;s 2025 Kickoff being in the top 10 greatest overperformances of all time is the kind of fascinating result that I hoped to discover. What&rsquo;s more, I appreciate this result because I&rsquo;ve been a strong believer that Florescent has what it takes to not just be a great player, but a top-10 player in VCT. In fact, back in 2024, I predicted that Florescent would be a top 5 player in EMEA. Can I say I&rsquo;m right now? Probably not.<br><br>In any case, the model&rsquo;s result is a reminder of the squandered potential she consistently showed throughout the event. For instance:
           <div style="margin-top:16px;height:460px;position:relative;">
             <video id="floresentVideo" src="/static/florescent_clip.mp4" controls playsinline style="width:100%;height:100%;border-radius:10px;display:block;"></video>
           </div>
@@ -1038,7 +1038,7 @@ PAGE_HTML = """
         <li>Earlier, I wrote that &ldquo;I have no doubt that Hiro and Johnqt baited in order to get the statistics they got, but I also have no doubt that they still performed well even after accounting for their baiting.&rdquo; My new model affirms this. Johnqt&rsquo;s expected rating went from 0.96 to 1.01 while Hiro&rsquo;s went from 0.95 to 1.06. While it&rsquo;s clear neither of these performances was historically great enough to be in the top 10 for all time, they both still make the top 10 for Kickoff 2026. I&rsquo;m happy with this result, and it&rsquo;s as things should be. Overperformers are those who play better than their team while playing <em>with</em> them, not those who bait because their teams are subpar. Johnqt and Hiro are two great players who had great Kickoff performances, but it&rsquo;s less surprising when you consider the rate at which they were saving.</li>
         <li>Suggest may have had a 0.66 rating, but at least he wasn&rsquo;t baiting!</li>
         <li>Now, 9 (not 8) of the players in the all-time underperformers list are no longer in VCT. Even better!</li>
-        <li>Based on the fact that the overperformers&rsquo; lists aren&rsquo;t just occupied with high PTD players and the inverse for the underperformers&rsquo; lists, this model seems fairly calibrated.</li>
+        <li>Based on the fact that the overperformers lists aren&rsquo;t just occupied with high PTD players and the inverse for the underperformers lists, this model seems fairly calibrated.</li>
         <li>If I&rsquo;m a team wanting to make changes, I&rsquo;d be looking at players like Seven or al0rante. Players like Primmie, Karon, and Lukxo are insane, but everyone already knows that.</li>
         <li>Based on this list for Kickoff 2026, I&rsquo;ll predict that at least 3 of C1ndeR, Okeanos, Eggster, and GLYPH will be dropped by the end of the year. The rest have already been dropped (thyy, d3mur, UNFAKE, and baha) or have too much historical credit (Boaster and Jawgemo).</li>
       </ol>
@@ -1057,7 +1057,7 @@ PAGE_HTML = """
 
       <p>He&rsquo;s performing over a full standard-deviation&rsquo;s worth better than we&rsquo;d expect from a controller player on that Global Esports team. Also, he&rsquo;s doing it without baiting. It&rsquo;s not egregious, but he&rsquo;s certainly better than his team. No fist fighting is necessary, though.</p>
 
-      <p>As a final gift, I&rsquo;ll leave an interactive version of this model to mess around with. Input values for a prospective VCT player and the model will give you their expected rating as well as the closest comparison we&rsquo;ve seen domestically, including their true values.</p>
+      <p>As a final gift, I&rsquo;ll leave an interactive version of this model to mess around with. Input values for a prospective VCT player and the model will give you their expected rating as well as the closest comparison we&rsquo;ve seen domestically.</p>
 
       <div class="chart-wrap" id="interactiveModel">
         <div class="chart-label">Interactive Model</div>
