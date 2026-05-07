@@ -447,11 +447,16 @@ def _compute_pyth_data():
 
 
 _pyth_cache = None
+_PYTH_JSON_PATH = os.path.join(ROOT, 'data', 'pyth_data.json')
 
 def get_pyth_data():
     global _pyth_cache
     if _pyth_cache is None:
-        _pyth_cache = _compute_pyth_data()
+        if os.path.exists(_PYTH_JSON_PATH):
+            with open(_PYTH_JSON_PATH) as f:
+                _pyth_cache = json.load(f)
+        else:
+            _pyth_cache = _compute_pyth_data()
     return _pyth_cache
 
 
