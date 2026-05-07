@@ -637,8 +637,9 @@ PAGE_HTML = """
     100% { transform:translate(7%,5%) scale(1.1); }
   }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; padding:60px 32px 80px; }
-  .back { align-self:flex-start; font-size:.82rem; color:var(--soft); text-decoration:none; font-weight:400; margin-bottom:40px; }
-  .back:hover { color:var(--ink); }
+  .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
+  .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
+  .home-logo:hover { opacity:1; }
   .toc { position:fixed; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:220px; }
   .toc-title { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
@@ -733,8 +734,10 @@ PAGE_HTML = """
   <a href="#ptd-alltime">PTD: Updated Greatest Over/Underperformers</a>
   <a href="#conclusion">Conclusion</a>
 </nav>
+<div class="top-nav">
+  <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+</div>
 <div class="page">
-  <a class="back" href="/">&larr; Back</a>
   <div class="article">
     <div class="label">Research / Opinion</div>
     <h1>Overperforming in VCT: who&rsquo;s doing it?</h1>

@@ -1,0 +1,2114 @@
+{
+  "2023_lock_in": {
+    "label": "LOCK//IN S\u00e3o Paulo 2023",
+    "matches": [
+      {
+        "match_id": 167348,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "NRG",
+        "loser": "MKOI",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167349,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "GIA",
+        "loser": "DFM",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167350,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "LOUD",
+        "loser": "GEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167351,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "KC",
+        "loser": "FPX",
+        "score": "3-1"
+      },
+      {
+        "match_id": 167352,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "KRX",
+        "loser": "BBL",
+        "score": "3-1"
+      },
+      {
+        "match_id": 167353,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "C9",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167354,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "EG",
+        "loser": "TH",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167355,
+        "stage": "Bracket Stage: Alpha - Round of 16",
+        "winner": "TLN",
+        "loser": "MIBR",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167356,
+        "stage": "Bracket Stage: Alpha - Quarterfinals",
+        "winner": "GIA",
+        "loser": "NRG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 167357,
+        "stage": "Bracket Stage: Alpha - Quarterfinals",
+        "winner": "LOUD",
+        "loser": "KC",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167358,
+        "stage": "Bracket Stage: Alpha - Quarterfinals",
+        "winner": "C9",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 167359,
+        "stage": "Bracket Stage: Alpha - Quarterfinals",
+        "winner": "TLN",
+        "loser": "EG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167360,
+        "stage": "Bracket Stage: Alpha - Semifinals",
+        "winner": "LOUD",
+        "loser": "NRG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 167361,
+        "stage": "Bracket Stage: Alpha - Semifinals",
+        "winner": "TLN",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 167362,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "TS",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167363,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "NAVI",
+        "loser": "KR\u00dc",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167364,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "LEV",
+        "loser": "ZETA",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167365,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "VIT",
+        "loser": "GE",
+        "score": "3-1"
+      },
+      {
+        "match_id": 167366,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "FUT",
+        "loser": "RRQ",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167367,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "100T",
+        "loser": "EDG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 167368,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "FNC",
+        "loser": "SEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167369,
+        "stage": "Bracket Stage: Omega - Round of 16",
+        "winner": "FUR",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167370,
+        "stage": "Bracket Stage: Omega - Quarterfinals",
+        "winner": "NAVI",
+        "loser": "TS",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167371,
+        "stage": "Bracket Stage: Omega - Quarterfinals",
+        "winner": "LEV",
+        "loser": "VIT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167372,
+        "stage": "Bracket Stage: Omega - Quarterfinals",
+        "winner": "FUT",
+        "loser": "100T",
+        "score": "1-3"
+      },
+      {
+        "match_id": 167373,
+        "stage": "Bracket Stage: Omega - Quarterfinals",
+        "winner": "FNC",
+        "loser": "FUR",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167374,
+        "stage": "Bracket Stage: Omega - Semifinals",
+        "winner": "NAVI",
+        "loser": "LEV",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167375,
+        "stage": "Bracket Stage: Omega - Semifinals",
+        "winner": "FNC",
+        "loser": "100T",
+        "score": "3-0"
+      },
+      {
+        "match_id": 167391,
+        "stage": "Playoffs: Semifinals",
+        "winner": "LOUD",
+        "loser": "KRX",
+        "score": "4-2"
+      },
+      {
+        "match_id": 167392,
+        "stage": "Playoffs: Semifinals",
+        "winner": "FNC",
+        "loser": "NAVI",
+        "score": "4-0"
+      },
+      {
+        "match_id": 167393,
+        "stage": "Playoffs: Grand Final",
+        "winner": "FNC",
+        "loser": "LOUD",
+        "score": "4-2"
+      }
+    ],
+    "orgs": [
+      "100T",
+      "BBL",
+      "C9",
+      "DFM",
+      "EDG",
+      "EG",
+      "FNC",
+      "FPX",
+      "FUR",
+      "FUT",
+      "GE",
+      "GEN",
+      "GIA",
+      "KC",
+      "KRX",
+      "KR\u00dc",
+      "LEV",
+      "LOUD",
+      "MIBR",
+      "MKOI",
+      "NAVI",
+      "NRG",
+      "PRX",
+      "RRQ",
+      "SEN",
+      "T1",
+      "TH",
+      "TL",
+      "TLN",
+      "TS",
+      "VIT",
+      "ZETA"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "FNATIC",
+        "slug": "fnatic"
+      },
+      {
+        "place": 2,
+        "team": "LOUD",
+        "slug": "loud"
+      },
+      {
+        "place": 3,
+        "team": "Kiwoom DRX",
+        "slug": "kiwoom-drx"
+      },
+      {
+        "place": 3,
+        "team": "Natus Vincere",
+        "slug": "natus-vincere"
+      }
+    ]
+  },
+  "2023_masters_tokyo": {
+    "label": "Masters Tokyo 2023",
+    "matches": [
+      {
+        "match_id": 220290,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "NRG",
+        "loser": "NAVI",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220292,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "T1",
+        "loser": "EDG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220293,
+        "stage": "Group Stage: Winner's (A)",
+        "winner": "T1",
+        "loser": "NRG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 220294,
+        "stage": "Group Stage: Elimination (A)",
+        "winner": "EDG",
+        "loser": "NAVI",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220295,
+        "stage": "Group Stage: Decider (A)",
+        "winner": "EDG",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220296,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "KRX",
+        "loser": "ASE",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220297,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "EG",
+        "loser": "FUT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220298,
+        "stage": "Group Stage: Winner's (B)",
+        "winner": "EG",
+        "loser": "KRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220299,
+        "stage": "Group Stage: Elimination (B)",
+        "winner": "ASE",
+        "loser": "FUT",
+        "score": "1-3"
+      },
+      {
+        "match_id": 220300,
+        "stage": "Group Stage: Decider (B)",
+        "winner": "FUT",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 220441,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "PRX",
+        "loser": "KRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220442,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "FNC",
+        "loser": "NRG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220443,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "TL",
+        "loser": "EDG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220444,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "EG",
+        "loser": "LOUD",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220445,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "FNC",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220446,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "EG",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220447,
+        "stage": "Playoffs: Upper Final",
+        "winner": "FNC",
+        "loser": "EG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220448,
+        "stage": "Playoffs: Grand Final",
+        "winner": "FNC",
+        "loser": "EG",
+        "score": "4-0"
+      },
+      {
+        "match_id": 220449,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "NRG",
+        "loser": "KRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220450,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "EDG",
+        "loser": "LOUD",
+        "score": "3-0"
+      },
+      {
+        "match_id": 220451,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "NRG",
+        "loser": "TL",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220452,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "PRX",
+        "loser": "EDG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220453,
+        "stage": "Playoffs: Lower Round 3",
+        "winner": "PRX",
+        "loser": "NRG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 220454,
+        "stage": "Playoffs: Lower Final",
+        "winner": "EG",
+        "loser": "PRX",
+        "score": "4-2"
+      }
+    ],
+    "orgs": [
+      "ASE",
+      "EDG",
+      "EG",
+      "FNC",
+      "FUT",
+      "KRX",
+      "LOUD",
+      "NAVI",
+      "NRG",
+      "PRX",
+      "T1",
+      "TL"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "FNATIC",
+        "slug": "fnatic"
+      },
+      {
+        "place": 2,
+        "team": "Evil Geniuses",
+        "slug": "evil-geniuses"
+      },
+      {
+        "place": 3,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 4,
+        "team": "NRG",
+        "slug": "nrg"
+      }
+    ]
+  },
+  "2023_champions": {
+    "label": "Champions 2023",
+    "matches": [
+      {
+        "match_id": 247075,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "PRX",
+        "loser": "KR\u00dc",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247076,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "GIA",
+        "loser": "EDG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 247077,
+        "stage": "Group Stage: Winner's (A)",
+        "winner": "PRX",
+        "loser": "EDG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247078,
+        "stage": "Group Stage: Elimination (A)",
+        "winner": "GIA",
+        "loser": "KR\u00dc",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247079,
+        "stage": "Group Stage: Decider (A)",
+        "winner": "EDG",
+        "loser": "GIA",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247086,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "EG",
+        "loser": "FPX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247087,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "FUT",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247088,
+        "stage": "Group Stage: Winner's (B)",
+        "winner": "EG",
+        "loser": "FUT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247089,
+        "stage": "Group Stage: Elimination (B)",
+        "winner": "T1",
+        "loser": "FPX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247090,
+        "stage": "Group Stage: Decider (B)",
+        "winner": "FUT",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247093,
+        "stage": "Group Stage: Opening (C)",
+        "winner": "FNC",
+        "loser": "ZETA",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247094,
+        "stage": "Group Stage: Opening (C)",
+        "winner": "BLG",
+        "loser": "NRG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247095,
+        "stage": "Group Stage: Winner's (C)",
+        "winner": "FNC",
+        "loser": "BLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247096,
+        "stage": "Group Stage: Elimination (C)",
+        "winner": "NRG",
+        "loser": "ZETA",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247098,
+        "stage": "Group Stage: Decider (C)",
+        "winner": "BLG",
+        "loser": "NRG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247100,
+        "stage": "Group Stage: Opening (D)",
+        "winner": "NAVI",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247101,
+        "stage": "Group Stage: Opening (D)",
+        "winner": "LOUD",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 247102,
+        "stage": "Group Stage: Winner's (D)",
+        "winner": "KRX",
+        "loser": "NAVI",
+        "score": "3-1"
+      },
+      {
+        "match_id": 247103,
+        "stage": "Group Stage: Elimination (D)",
+        "winner": "LOUD",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 247104,
+        "stage": "Group Stage: Decider (D)",
+        "winner": "NAVI",
+        "loser": "LOUD",
+        "score": "1-3"
+      },
+      {
+        "match_id": 248270,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "LOUD",
+        "loser": "FNC",
+        "score": "3-0"
+      },
+      {
+        "match_id": 248271,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "PRX",
+        "loser": "FUT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 248272,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "KRX",
+        "loser": "BLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 248273,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "EDG",
+        "loser": "EG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 248274,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "PRX",
+        "loser": "LOUD",
+        "score": "3-1"
+      },
+      {
+        "match_id": 248275,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "EG",
+        "loser": "KRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 248276,
+        "stage": "Playoffs: Upper Final",
+        "winner": "EG",
+        "loser": "PRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 248277,
+        "stage": "Playoffs: Grand Final",
+        "winner": "EG",
+        "loser": "PRX",
+        "score": "4-1"
+      },
+      {
+        "match_id": 248278,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "FNC",
+        "loser": "FUT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 248279,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "EDG",
+        "loser": "BLG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 248280,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "KRX",
+        "loser": "FNC",
+        "score": "1-3"
+      },
+      {
+        "match_id": 248281,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "EDG",
+        "loser": "LOUD",
+        "score": "1-3"
+      },
+      {
+        "match_id": 248282,
+        "stage": "Playoffs: Lower Round 3",
+        "winner": "LOUD",
+        "loser": "FNC",
+        "score": "3-1"
+      },
+      {
+        "match_id": 248283,
+        "stage": "Playoffs: Lower Final",
+        "winner": "EG",
+        "loser": "LOUD",
+        "score": "4-2"
+      }
+    ],
+    "orgs": [
+      "BLG",
+      "EDG",
+      "EG",
+      "FNC",
+      "FPX",
+      "FUT",
+      "GIA",
+      "KRX",
+      "KR\u00dc",
+      "LOUD",
+      "NAVI",
+      "NRG",
+      "PRX",
+      "T1",
+      "TL",
+      "ZETA"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "Evil Geniuses",
+        "slug": "evil-geniuses"
+      },
+      {
+        "place": 2,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 3,
+        "team": "LOUD",
+        "slug": "loud"
+      },
+      {
+        "place": 4,
+        "team": "FNATIC",
+        "slug": "fnatic"
+      }
+    ]
+  },
+  "2024_masters_madrid": {
+    "label": "Masters Madrid 2024",
+    "matches": [
+      {
+        "match_id": 312765,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "KC",
+        "loser": "FPX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 312766,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "GEN",
+        "loser": "LOUD",
+        "score": "3-1"
+      },
+      {
+        "match_id": 312767,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "PRX",
+        "loser": "EDG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 312768,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "SEN",
+        "loser": "TH",
+        "score": "3-1"
+      },
+      {
+        "match_id": 312776,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "SEN",
+        "loser": "LOUD",
+        "score": "3-1"
+      },
+      {
+        "match_id": 312777,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "GEN",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 312778,
+        "stage": "Playoffs: Upper Final",
+        "winner": "GEN",
+        "loser": "SEN",
+        "score": "3-1"
+      },
+      {
+        "match_id": 312779,
+        "stage": "Playoffs: Grand Final",
+        "winner": "GEN",
+        "loser": "SEN",
+        "score": "2-4"
+      },
+      {
+        "match_id": 312780,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "PRX",
+        "loser": "LOUD",
+        "score": "3-0"
+      },
+      {
+        "match_id": 312781,
+        "stage": "Playoffs: Lower Final",
+        "winner": "SEN",
+        "loser": "PRX",
+        "score": "4-1"
+      },
+      {
+        "match_id": 312797,
+        "stage": "Swiss Stage: Round 2",
+        "winner": "EDG",
+        "loser": "GEN",
+        "score": "1-3"
+      },
+      {
+        "match_id": 312798,
+        "stage": "Swiss Stage: Round 2",
+        "winner": "SEN",
+        "loser": "KC",
+        "score": "3-0"
+      },
+      {
+        "match_id": 312799,
+        "stage": "Swiss Stage: Round 2",
+        "winner": "PRX",
+        "loser": "TH",
+        "score": "3-1"
+      },
+      {
+        "match_id": 312800,
+        "stage": "Swiss Stage: Round 2",
+        "winner": "LOUD",
+        "loser": "FPX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 312802,
+        "stage": "Swiss Stage: Round 3",
+        "winner": "PRX",
+        "loser": "KC",
+        "score": "3-1"
+      },
+      {
+        "match_id": 312803,
+        "stage": "Swiss Stage: Round 3",
+        "winner": "LOUD",
+        "loser": "EDG",
+        "score": "3-0"
+      }
+    ],
+    "orgs": [
+      "EDG",
+      "FPX",
+      "GEN",
+      "KC",
+      "LOUD",
+      "PRX",
+      "SEN",
+      "TH"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "Sentinels",
+        "slug": "sentinels"
+      },
+      {
+        "place": 2,
+        "team": "Gen.G",
+        "slug": "gen-g"
+      },
+      {
+        "place": 3,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 4,
+        "team": "LOUD",
+        "slug": "loud"
+      }
+    ]
+  },
+  "2024_champions": {
+    "label": "Champions 2024",
+    "matches": [
+      {
+        "match_id": 378656,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "FNC",
+        "loser": "BLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378657,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "KR\u00dc",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378658,
+        "stage": "Group Stage: Winner's (A)",
+        "winner": "KRX",
+        "loser": "FNC",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378659,
+        "stage": "Group Stage: Elimination (A)",
+        "winner": "KR\u00dc",
+        "loser": "BLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378660,
+        "stage": "Group Stage: Decider (A)",
+        "winner": "KR\u00dc",
+        "loser": "FNC",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378662,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "GEN",
+        "loser": "SEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378663,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "TH",
+        "loser": "FPX",
+        "score": "3-1"
+      },
+      {
+        "match_id": 378664,
+        "stage": "Group Stage: Winner's (B)",
+        "winner": "GEN",
+        "loser": "TH",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378665,
+        "stage": "Group Stage: Elimination (B)",
+        "winner": "SEN",
+        "loser": "FPX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378666,
+        "stage": "Group Stage: Decider (B)",
+        "winner": "SEN",
+        "loser": "GEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378667,
+        "stage": "Group Stage: Opening (C)",
+        "winner": "LEV",
+        "loser": "TLN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378669,
+        "stage": "Group Stage: Opening (C)",
+        "winner": "TE",
+        "loser": "VIT",
+        "score": "3-1"
+      },
+      {
+        "match_id": 378670,
+        "stage": "Group Stage: Winner's (C)",
+        "winner": "TE",
+        "loser": "LEV",
+        "score": "3-1"
+      },
+      {
+        "match_id": 378671,
+        "stage": "Group Stage: Elimination (C)",
+        "winner": "VIT",
+        "loser": "TLN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378672,
+        "stage": "Group Stage: Decider (C)",
+        "winner": "LEV",
+        "loser": "VIT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378673,
+        "stage": "Group Stage: Opening (D)",
+        "winner": "EDG",
+        "loser": "FUT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378674,
+        "stage": "Group Stage: Opening (D)",
+        "winner": "G2",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378675,
+        "stage": "Group Stage: Winner's (D)",
+        "winner": "EDG",
+        "loser": "G2",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378676,
+        "stage": "Group Stage: Elimination (D)",
+        "winner": "PRX",
+        "loser": "FUT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378677,
+        "stage": "Group Stage: Decider (D)",
+        "winner": "PRX",
+        "loser": "EDG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378822,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "SEN",
+        "loser": "KRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378823,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "EDG",
+        "loser": "TE",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378824,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "LEV",
+        "loser": "G2",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378825,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "TH",
+        "loser": "FNC",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378826,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "SEN",
+        "loser": "EDG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378827,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "LEV",
+        "loser": "TH",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378828,
+        "stage": "Playoffs: Upper Final",
+        "winner": "LEV",
+        "loser": "EDG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378829,
+        "stage": "Playoffs: Grand Final",
+        "winner": "TH",
+        "loser": "EDG",
+        "score": "2-4"
+      },
+      {
+        "match_id": 378831,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "KRX",
+        "loser": "TE",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378832,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "FNC",
+        "loser": "G2",
+        "score": "3-0"
+      },
+      {
+        "match_id": 378833,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "KRX",
+        "loser": "TH",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378834,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "SEN",
+        "loser": "FNC",
+        "score": "3-1"
+      },
+      {
+        "match_id": 378835,
+        "stage": "Playoffs: Lower Round 3",
+        "winner": "SEN",
+        "loser": "TH",
+        "score": "1-3"
+      },
+      {
+        "match_id": 378836,
+        "stage": "Playoffs: Lower Final",
+        "winner": "TH",
+        "loser": "LEV",
+        "score": "4-1"
+      }
+    ],
+    "orgs": [
+      "BLG",
+      "EDG",
+      "FNC",
+      "FPX",
+      "FUT",
+      "G2",
+      "GEN",
+      "KRX",
+      "KR\u00dc",
+      "LEV",
+      "PRX",
+      "SEN",
+      "TE",
+      "TH",
+      "TLN",
+      "VIT"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "EDward Gaming",
+        "slug": "edward-gaming"
+      },
+      {
+        "place": 2,
+        "team": "Team Heretics",
+        "slug": "team-heretics"
+      },
+      {
+        "place": 3,
+        "team": "LEVIAT\u00c1N",
+        "slug": "leviat-n"
+      },
+      {
+        "place": 4,
+        "team": "Sentinels",
+        "slug": "sentinels"
+      }
+    ]
+  },
+  "2025_masters_bangkok": {
+    "label": "Masters Bangkok 2025",
+    "matches": [
+      {
+        "match_id": 448597,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "G2",
+        "loser": "TE",
+        "score": "3-0"
+      },
+      {
+        "match_id": 448598,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "EDG",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 448599,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "VIT",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 448600,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "KRX",
+        "loser": "SEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 449000,
+        "stage": "Swiss Stage: Round 2 (1-0)",
+        "winner": "VIT",
+        "loser": "KRX",
+        "score": "3-1"
+      },
+      {
+        "match_id": 449001,
+        "stage": "Swiss Stage: Round 2 (1-0)",
+        "winner": "G2",
+        "loser": "EDG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 449002,
+        "stage": "Swiss Stage: Round 2 (0-1)",
+        "winner": "T1",
+        "loser": "TE",
+        "score": "3-0"
+      },
+      {
+        "match_id": 449003,
+        "stage": "Swiss Stage: Round 2 (0-1)",
+        "winner": "SEN",
+        "loser": "TL",
+        "score": "1-3"
+      },
+      {
+        "match_id": 449004,
+        "stage": "Swiss Stage: Round 3",
+        "winner": "T1",
+        "loser": "KRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 449005,
+        "stage": "Swiss Stage: Round 3",
+        "winner": "G2",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 449008,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "EDG",
+        "loser": "T1",
+        "score": "3-1"
+      },
+      {
+        "match_id": 449009,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "G2",
+        "loser": "VIT",
+        "score": "3-0"
+      },
+      {
+        "match_id": 449010,
+        "stage": "Playoffs: Upper Final",
+        "winner": "G2",
+        "loser": "EDG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 449011,
+        "stage": "Playoffs: Grand Final",
+        "winner": "G2",
+        "loser": "T1",
+        "score": "2-4"
+      },
+      {
+        "match_id": 449012,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "VIT",
+        "loser": "T1",
+        "score": "1-3"
+      },
+      {
+        "match_id": 449013,
+        "stage": "Playoffs: Lower Final",
+        "winner": "T1",
+        "loser": "EDG",
+        "score": "4-1"
+      }
+    ],
+    "orgs": [
+      "EDG",
+      "G2",
+      "KRX",
+      "SEN",
+      "T1",
+      "TE",
+      "TL",
+      "VIT"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "T1",
+        "slug": "t1"
+      },
+      {
+        "place": 2,
+        "team": "G2 Esports",
+        "slug": "g2-esports"
+      },
+      {
+        "place": 3,
+        "team": "EDward Gaming",
+        "slug": "edward-gaming"
+      },
+      {
+        "place": 4,
+        "team": "Team Vitality",
+        "slug": "team-vitality"
+      }
+    ]
+  },
+  "2025_masters_toronto": {
+    "label": "Masters Toronto 2025",
+    "matches": [
+      {
+        "match_id": 490306,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "GEN",
+        "loser": "MIBR",
+        "score": "3-0"
+      },
+      {
+        "match_id": 490307,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "BLG",
+        "loser": "TL",
+        "score": "3-1"
+      },
+      {
+        "match_id": 490308,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "SEN",
+        "loser": "WOL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 490309,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "PRX",
+        "loser": "TH",
+        "score": "3-0"
+      },
+      {
+        "match_id": 490310,
+        "stage": "Swiss Stage: Round 2 (1-0)",
+        "winner": "GEN",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 490311,
+        "stage": "Swiss Stage: Round 2 (1-0)",
+        "winner": "BLG",
+        "loser": "SEN",
+        "score": "1-3"
+      },
+      {
+        "match_id": 490312,
+        "stage": "Swiss Stage: Round 2 (0-1)",
+        "winner": "WOL",
+        "loser": "TH",
+        "score": "3-0"
+      },
+      {
+        "match_id": 490313,
+        "stage": "Swiss Stage: Round 2 (0-1)",
+        "winner": "TL",
+        "loser": "MIBR",
+        "score": "3-0"
+      },
+      {
+        "match_id": 490314,
+        "stage": "Swiss Stage: Round 3 (1-1)",
+        "winner": "TL",
+        "loser": "PRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 490315,
+        "stage": "Swiss Stage: Round 3 (1-1)",
+        "winner": "WOL",
+        "loser": "BLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498621,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "SEN",
+        "loser": "XLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498622,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "PRX",
+        "loser": "G2",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498623,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "WOL",
+        "loser": "RRQ",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498624,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "GEN",
+        "loser": "FNC",
+        "score": "3-1"
+      },
+      {
+        "match_id": 498625,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "PRX",
+        "loser": "SEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498626,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "WOL",
+        "loser": "GEN",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498627,
+        "stage": "Playoffs: Upper Final",
+        "winner": "PRX",
+        "loser": "WOL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498628,
+        "stage": "Playoffs: Grand Final",
+        "winner": "PRX",
+        "loser": "FNC",
+        "score": "4-1"
+      },
+      {
+        "match_id": 498629,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "G2",
+        "loser": "XLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498630,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "FNC",
+        "loser": "RRQ",
+        "score": "3-1"
+      },
+      {
+        "match_id": 498631,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "G2",
+        "loser": "GEN",
+        "score": "3-1"
+      },
+      {
+        "match_id": 498632,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "SEN",
+        "loser": "FNC",
+        "score": "1-3"
+      },
+      {
+        "match_id": 498633,
+        "stage": "Playoffs: Lower Round 3",
+        "winner": "FNC",
+        "loser": "G2",
+        "score": "3-0"
+      },
+      {
+        "match_id": 498634,
+        "stage": "Playoffs: Lower Final",
+        "winner": "FNC",
+        "loser": "WOL",
+        "score": "4-1"
+      }
+    ],
+    "orgs": [
+      "BLG",
+      "FNC",
+      "G2",
+      "GEN",
+      "MIBR",
+      "PRX",
+      "RRQ",
+      "SEN",
+      "TH",
+      "TL",
+      "WOL",
+      "XLG"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 2,
+        "team": "FNATIC",
+        "slug": "fnatic"
+      },
+      {
+        "place": 3,
+        "team": "Wolves Esports",
+        "slug": "wolves-esports"
+      },
+      {
+        "place": 4,
+        "team": "G2 Esports",
+        "slug": "g2-esports"
+      },
+      {
+        "place": 5,
+        "team": "Gen.G",
+        "slug": "gen-g"
+      },
+      {
+        "place": 5,
+        "team": "Sentinels",
+        "slug": "sentinels"
+      },
+      {
+        "place": 7,
+        "team": "Xi Lai Gaming",
+        "slug": "xi-lai-gaming"
+      },
+      {
+        "place": 7,
+        "team": "Rex Regum Qeon",
+        "slug": "rex-regum-qeon"
+      }
+    ]
+  },
+  "2025_champions": {
+    "label": "Champions 2025",
+    "matches": [
+      {
+        "match_id": 542195,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "PRX",
+        "loser": "XLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542196,
+        "stage": "Group Stage: Opening (A)",
+        "winner": "SEN",
+        "loser": "GX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542197,
+        "stage": "Group Stage: Winner's (A)",
+        "winner": "GX",
+        "loser": "PRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542198,
+        "stage": "Group Stage: Elimination (A)",
+        "winner": "SEN",
+        "loser": "XLG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542199,
+        "stage": "Group Stage: Decider (A)",
+        "winner": "GX",
+        "loser": "XLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542200,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "MIBR",
+        "loser": "BLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542201,
+        "stage": "Group Stage: Opening (B)",
+        "winner": "FNC",
+        "loser": "RRQ",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542202,
+        "stage": "Group Stage: Winner's (B)",
+        "winner": "MIBR",
+        "loser": "FNC",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542203,
+        "stage": "Group Stage: Elimination (B)",
+        "winner": "BLG",
+        "loser": "RRQ",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542204,
+        "stage": "Group Stage: Decider (B)",
+        "winner": "MIBR",
+        "loser": "RRQ",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542205,
+        "stage": "Group Stage: Opening (C)",
+        "winner": "KRX",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542207,
+        "stage": "Group Stage: Opening (C)",
+        "winner": "NRG",
+        "loser": "EDG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542208,
+        "stage": "Group Stage: Winner's (C)",
+        "winner": "KRX",
+        "loser": "NRG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542209,
+        "stage": "Group Stage: Elimination (C)",
+        "winner": "EDG",
+        "loser": "TL",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542210,
+        "stage": "Group Stage: Decider (C)",
+        "winner": "KRX",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542211,
+        "stage": "Group Stage: Opening (D)",
+        "winner": "TH",
+        "loser": "G2",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542212,
+        "stage": "Group Stage: Opening (D)",
+        "winner": "T1",
+        "loser": "DRG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542213,
+        "stage": "Group Stage: Winner's (D)",
+        "winner": "TH",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542214,
+        "stage": "Group Stage: Elimination (D)",
+        "winner": "G2",
+        "loser": "DRG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542215,
+        "stage": "Group Stage: Decider (D)",
+        "winner": "G2",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542264,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "FNC",
+        "loser": "KRX",
+        "score": "3-1"
+      },
+      {
+        "match_id": 542265,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "PRX",
+        "loser": "G2",
+        "score": "3-1"
+      },
+      {
+        "match_id": 542266,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "MIBR",
+        "loser": "TH",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542267,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "NRG",
+        "loser": "GX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542268,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "PRX",
+        "loser": "FNC",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542269,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "NRG",
+        "loser": "MIBR",
+        "score": "3-1"
+      },
+      {
+        "match_id": 542270,
+        "stage": "Playoffs: Upper Final",
+        "winner": "NRG",
+        "loser": "FNC",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542272,
+        "stage": "Playoffs: Grand Final",
+        "winner": "NRG",
+        "loser": "FNC",
+        "score": "4-2"
+      },
+      {
+        "match_id": 542273,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "G2",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542274,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "TH",
+        "loser": "GX",
+        "score": "3-1"
+      },
+      {
+        "match_id": 542276,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "MIBR",
+        "loser": "KRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 542277,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "PRX",
+        "loser": "TH",
+        "score": "3-1"
+      },
+      {
+        "match_id": 542278,
+        "stage": "Playoffs: Lower Round 3",
+        "winner": "KRX",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 542279,
+        "stage": "Playoffs: Lower Final",
+        "winner": "KRX",
+        "loser": "FNC",
+        "score": "1-4"
+      }
+    ],
+    "orgs": [
+      "BLG",
+      "DRG",
+      "EDG",
+      "FNC",
+      "G2",
+      "GX",
+      "KRX",
+      "MIBR",
+      "NRG",
+      "PRX",
+      "RRQ",
+      "SEN",
+      "T1",
+      "TH",
+      "TL",
+      "XLG"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "NRG",
+        "slug": "nrg"
+      },
+      {
+        "place": 2,
+        "team": "FNATIC",
+        "slug": "fnatic"
+      },
+      {
+        "place": 3,
+        "team": "Kiwoom DRX",
+        "slug": "kiwoom-drx"
+      },
+      {
+        "place": 4,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 5,
+        "team": "MIBR",
+        "slug": "mibr"
+      },
+      {
+        "place": 5,
+        "team": "Team Heretics",
+        "slug": "team-heretics"
+      },
+      {
+        "place": 7,
+        "team": "G2 Esports",
+        "slug": "g2-esports"
+      },
+      {
+        "place": 7,
+        "team": "GIANTX",
+        "slug": "giantx"
+      }
+    ]
+  },
+  "2026_masters_santiago": {
+    "label": "Masters Santiago 2026",
+    "matches": [
+      {
+        "match_id": 625788,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "M8",
+        "loser": "EDG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 625789,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "TL",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 625790,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "PRX",
+        "loser": "G2",
+        "score": "3-0"
+      },
+      {
+        "match_id": 625791,
+        "stage": "Swiss Stage: Round 1",
+        "winner": "NRG",
+        "loser": "XLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626529,
+        "stage": "Swiss Stage: Round 2 (1-0)",
+        "winner": "PRX",
+        "loser": "NRG",
+        "score": "3-1"
+      },
+      {
+        "match_id": 626530,
+        "stage": "Swiss Stage: Round 2 (1-0)",
+        "winner": "M8",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626532,
+        "stage": "Swiss Stage: Round 2 (0-1)",
+        "winner": "T1",
+        "loser": "EDG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626533,
+        "stage": "Swiss Stage: Round 2 (0-1)",
+        "winner": "G2",
+        "loser": "XLG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626534,
+        "stage": "Swiss Stage: Round 3",
+        "winner": "G2",
+        "loser": "T1",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626535,
+        "stage": "Swiss Stage: Round 3",
+        "winner": "NRG",
+        "loser": "TL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626537,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "NS",
+        "loser": "M8",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626538,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "G2",
+        "loser": "AG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626539,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "FUR",
+        "loser": "PRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 626540,
+        "stage": "Playoffs: Upper Quarterfinals",
+        "winner": "NRG",
+        "loser": "BBL",
+        "score": "3-1"
+      },
+      {
+        "match_id": 626541,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "NS",
+        "loser": "G2",
+        "score": "3-1"
+      },
+      {
+        "match_id": 626542,
+        "stage": "Playoffs: Upper Semifinals",
+        "winner": "NRG",
+        "loser": "PRX",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626543,
+        "stage": "Playoffs: Upper Final",
+        "winner": "NS",
+        "loser": "NRG",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626544,
+        "stage": "Playoffs: Grand Final",
+        "winner": "NS",
+        "loser": "PRX",
+        "score": "4-0"
+      },
+      {
+        "match_id": 626545,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "M8",
+        "loser": "AG",
+        "score": "1-3"
+      },
+      {
+        "match_id": 626546,
+        "stage": "Playoffs: Lower Round 1",
+        "winner": "BBL",
+        "loser": "FUR",
+        "score": "3-1"
+      },
+      {
+        "match_id": 626547,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "AG",
+        "loser": "PRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 626548,
+        "stage": "Playoffs: Lower Round 2",
+        "winner": "G2",
+        "loser": "BBL",
+        "score": "3-0"
+      },
+      {
+        "match_id": 626549,
+        "stage": "Playoffs: Lower Round 3",
+        "winner": "G2",
+        "loser": "PRX",
+        "score": "1-3"
+      },
+      {
+        "match_id": 626550,
+        "stage": "Playoffs: Lower Final",
+        "winner": "NRG",
+        "loser": "PRX",
+        "score": "1-4"
+      }
+    ],
+    "orgs": [
+      "AG",
+      "BBL",
+      "EDG",
+      "FUR",
+      "G2",
+      "M8",
+      "NRG",
+      "NS",
+      "PRX",
+      "T1",
+      "TL",
+      "XLG"
+    ],
+    "standings": [
+      {
+        "place": 1,
+        "team": "Nongshim RedForce",
+        "slug": "nongshim-redforce"
+      },
+      {
+        "place": 2,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 3,
+        "team": "NRG",
+        "slug": "nrg"
+      },
+      {
+        "place": 4,
+        "team": "G2 Esports",
+        "slug": "g2-esports"
+      },
+      {
+        "place": 5,
+        "team": "All Gamers",
+        "slug": "all-gamers"
+      },
+      {
+        "place": 5,
+        "team": "BBL Esports",
+        "slug": "bbl-esports"
+      },
+      {
+        "place": 7,
+        "team": "Gentle Mates",
+        "slug": "gentle-mates"
+      },
+      {
+        "place": 7,
+        "team": "FURIA",
+        "slug": "furia"
+      }
+    ]
+  }
+}

@@ -3,11 +3,15 @@ from flask import Flask, render_template_string, send_from_directory
 from EventLeaderboards import vct_bp
 from AllTimeHighs import highs_bp
 from IdentifyingOverUnderPerformers import article_overunder_bp
+from MapElo import mapelo_bp
+from InternationalEvents import intl_bp
 
 app = Flask(__name__)
 app.register_blueprint(vct_bp, url_prefix="/vct")
 app.register_blueprint(highs_bp, url_prefix="/highs")
 app.register_blueprint(article_overunder_bp, url_prefix="/articles/over-underperformers")
+app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
+app.register_blueprint(intl_bp, url_prefix="/intl")
 
 HOME_HTML = """
 <!DOCTYPE html>
@@ -75,9 +79,14 @@ HOME_HTML = """
   <p class="tagline" id="tagline">Misceallneous analyses in the competitive Valorant space</p>
   <div class="sections">
     <div class="section">
-      <div class="section-title">General Statistics and Databases<span class="section-chevron">▾</span></div>
+      <div class="section-title">Statistics and Databases<span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
+        <a class="nav-card" href="/mapelo/pythagorean/">
+          <div class="nav-card-title">VCT's Pythagorean Rating</div>
+          <div class="nav-card-desc">A pythagorean win% model hand-tuned for VCT, ranking teams by how dominant they've been beyond just their win-loss record.</div>
+          <div class="nav-card-arrow">Explore &rarr;</div>
+        </a>
         <a class="nav-card" href="/vct/">
           <div class="nav-card-title">Event Leaderboards</div>
           <div class="nav-card-desc">Sift through leaderboards by events, highlighting indivdual performances and percentiles.</div>
@@ -100,6 +109,19 @@ HOME_HTML = """
           <div class="nav-card-title">Overperforming in VCT: who's doing it?</div>
           <div class="nav-card-desc">Using VCT stats to surface players who are outperforming (or underperforming) their team.</div>
           <div class="nav-card-arrow">Read &rarr;</div>
+        </a>
+      </div>
+      </div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Projects <span class="section-chevron">▾</span></div>
+      <div class="cards-wrap"><div class="cards-inner">
+      <div class="cards">
+        <a class="nav-card" href="/mapelo/">
+          <div style="width:calc(100% + 48px);margin:-32px -24px 20px;height:140px;overflow:hidden;border-radius:24px 24px 0 0;"><img src="/mapelo.png" alt="Map Elo" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transform:scale(1.08) translateY(-4px);transform-origin:center top;"></div>
+          <div class="nav-card-title">Map Elo</div>
+          <div class="nav-card-desc">Calculating VCT team's relative map strength as well as probabilistic previews of matchups.</div>
+          <div class="nav-card-arrow">Explore &rarr;</div>
         </a>
       </div>
       </div></div>
@@ -138,6 +160,18 @@ def logo():
 @app.route("/patmen.jpg")
 def patmen():
     return send_from_directory(os.path.dirname(__file__), "Patmen.jpg", mimetype="image/jpeg")
+
+@app.route("/mapelo.png")
+def mapelo_img():
+    return send_from_directory(os.path.dirname(__file__), "MapElo.png", mimetype="image/png")
+
+@app.route("/maps/<filename>")
+def map_img(filename):
+    return send_from_directory(os.path.join(os.path.dirname(__file__), "static/maps"), filename)
+
+@app.route("/logos/<filename>")
+def team_logo(filename):
+    return send_from_directory(os.path.join(os.path.dirname(__file__), "static/logos"), filename)
 
 @app.route("/")
 def home():
