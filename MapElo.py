@@ -582,6 +582,8 @@ MAPELO_PYTH_HTML = """
 <title>Pythagorean Win% — VCT Map Model</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
   SHARED_CSS
@@ -593,8 +595,22 @@ MAPELO_PYTH_HTML = """
   .card-header { display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap; }
   .exponent-badge { font-size:.75rem; font-weight:500; background:#f4edb8; color:#6a5a1a; padding:3px 10px; border-radius:99px; }
   .card-desc { font-size:.82rem; color:var(--soft); line-height:1.6; margin-bottom:18px; }
+  .intro-details { max-width:780px; margin:0 auto 32px; }
+  .intro-details summary { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; letter-spacing:.02em; cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; color:var(--soft); user-select:none; margin-bottom:0; }
+  .intro-details summary::-webkit-details-marker { display:none; }
+  .intro-details summary::before { content:'▸'; font-size:.75rem; transition:transform .2s; display:inline-block; }
+  .intro-details[open] summary::before { transform:rotate(90deg); }
+  .intro-details[open] summary { margin-bottom:18px; }
+  .intro-body { display:flex; flex-direction:column; gap:14px; overflow:hidden; transition:max-height .35s ease; }
+  .intro-p { font-size:.9rem; color:var(--ink); line-height:1.75; }
+  .intro-note { background:#f8f4fc; border-radius:16px; padding:18px 22px; display:flex; flex-direction:column; gap:10px; }
+  .intro-note-label { font-family:'Syne',sans-serif; font-weight:800; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); }
+  .intro-note-list { padding-left:1.4em; display:flex; flex-direction:column; gap:10px; }
+  .intro-note-subp { margin-top:8px; }
+  .intro-formula-block { background:#f8f4fc; border-radius:14px; padding:12px 20px; text-align:center; }
+  .section-divider { border:none; border-top:1px solid #f0ecf4; margin:4px 0; }
   .formula-block { background:#f8f4fc; border-radius:14px; padding:14px 20px; margin-bottom:16px; text-align:center; }
-  .formula { font-family:Georgia,serif; font-size:1rem; color:var(--ink); margin-bottom:6px; }
+  .formula { font-size:1.05rem; color:var(--ink); margin-bottom:6px; }
   .formula-caption { font-size:.75rem; color:var(--soft); }
   .chart-wrap { margin-bottom:24px; }
   .filter-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
@@ -680,11 +696,35 @@ MAPELO_PYTH_HTML = """
   <div class="page">
     <a class="back-link" href="/mapelo/">&larr; VCT Map Model</a>
     <div class="page-title">Pythagorean Win%</div>
+
+    <details class="intro-details" open>
+      <summary>Explanation</summary>
+      <div class="intro-body">
+        <p class="intro-p">The Pythagorean Rating formula originates from baseball statistician Bill James, who crafted a formula that settles the discrepancy between how many games a team <em>should</em> win vs. how many they actually won by using a team&rsquo;s margins of victory over a season. Specifically, it looks like:</p>
+        <div class="intro-formula-block">
+          <div id="baseball-formula"></div>
+        </div>
+        <p class="intro-p">For instance, the 2023 Baltimore Orioles finished 101&ndash;61, the best record in the American League, but their margins were not quite as great as their record. They scored 807 runs and allowed 678, which works out to a Pythagorean record of just 94&ndash;68, seven full wins below their actual mark. This overperformance was immediately realized in the playoffs, where they were first-round exits.</p>
+        <p class="intro-p">The brilliance of this framework is that it can be applied to any sport, so long as the exponent is tuned to minimize the MSE. For instance, basketball uses a team&rsquo;s point margins and has an exponent tuned to 13.91. Hockey uses a team&rsquo;s goal margins and has an exponent tuned to 2.15. In this school of thought, I personally tuned Bill James&rsquo; formula to VCT by using round-differentials.</p>
+        <p class="intro-p">The below Pyth% is a mathematically-proven way of seeing the true strength level of a team relative to the year &mdash; the true rate at which they should win maps.</p>
+        <hr class="section-divider">
+        <div class="intro-note">
+          <div class="intro-note-label">Additional Note</div>
+          <ul class="intro-note-list">
+            <li class="intro-p">In keeping with Bill James&rsquo; framework, only domestic events are used to calculate Pyth%. This is because in domestic splits, a team&rsquo;s schedule is balanced to play all opponents, or at least an even distribution of opponents by strength. Adding internationals would skew the teams&rsquo; Pyth%.
+              <p class="intro-p intro-note-subp">For example, at LOCK//IN, NAVI played Kr&uuml; (2023 Pyth% of 37.6%), TS (2023 Pyth% of 47.7%), Lev (2023 Pyth% of 47.3%), and eventually Fnatic (who were the best team of 2023). Meanwhile, a team like Sentinels just played Fnatic (again, the best team of 2023), where they got stomped 6&ndash;13 and 7&ndash;13. The two teams clearly got different luck when it came to their LOCK//IN draw. If internationals were included in Pyth%, NAVI&rsquo;s 2023 value would be unfairly skewed upwards, and Sentinels&rsquo; 2023 value would be unfairly skewed downwards.</p>
+            </li>
+            <li class="intro-p">If you&rsquo;re interested in seeing international Pyth%, those are calculated separately and located within the all-time category in the &ldquo;Internationals&rdquo; filter.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
     <div class="card">
       <p class="card-desc"></p>
       <div class="formula-block">
-        <div class="formula">Win% &asymp; RW<sup>k</sup> / (RW<sup>k</sup> + RL<sup>k</sup>)</div>
-        <div class="formula-caption">RW = rounds won &nbsp;|&nbsp; RL = rounds lost &nbsp;|&nbsp; k = optimal exponent fit to VCT data</div>
+        <div class="formula" id="pyth-formula"></div>
+        <div class="formula-caption" id="pyth-caption"></div>
       </div>
       <div class="chart-wrap">
         <canvas id="exp-chart" height="90"></canvas>
@@ -720,6 +760,36 @@ MAPELO_PYTH_HTML = """
 
 <script>
 var PYTH = PYTH_JSON;
+
+document.addEventListener('DOMContentLoaded', function() {
+  katex.render('\\\\text{Win\\\\%} \\\\approx \\\\dfrac{RS^{1.83}}{RS^{1.83} + RA^{1.83}}',
+    document.getElementById('baseball-formula'),
+    { throwOnError: false, displayMode: true });
+  katex.render('\\\\text{Pyth\\\\%} \\\\approx \\\\dfrac{RW^k}{RW^k + RL^k}',
+    document.getElementById('pyth-formula'),
+    { throwOnError: false, displayMode: true });
+  var cap = document.getElementById('pyth-caption');
+  cap.innerHTML =
+    katex.renderToString('RW', {throwOnError:false}) + ' = rounds won  |  ' +
+    katex.renderToString('RL', {throwOnError:false}) + ' = rounds lost  |  ' +
+    katex.renderToString('k',  {throwOnError:false}) + ' = optimal exponent fit to VCT data';
+
+  var details = document.querySelector('.intro-details');
+  var body    = details.querySelector('.intro-body');
+  body.style.maxHeight = body.scrollHeight + 'px';
+  details.querySelector('summary').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (details.open) {
+      body.style.maxHeight = body.scrollHeight + 'px';
+      requestAnimationFrame(function() { body.style.maxHeight = '0'; });
+      setTimeout(function() { details.removeAttribute('open'); }, 350);
+    } else {
+      details.setAttribute('open', '');
+      body.style.maxHeight = '0';
+      requestAnimationFrame(function() { body.style.maxHeight = body.scrollHeight + 'px'; });
+    }
+  });
+});
 
 
 // Exponent curve chart
@@ -767,6 +837,15 @@ var isAllTime  = false;
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 function fmt(v, d) { return (v * 100).toFixed(d) + '%'; }
+
+function teamLabel(year, split) {
+  if (split) return year + ' ' + split;
+  if (isAllTime) return year + ' Domestic';
+  if (activeKey === activeYear) return year + ' Domestic';
+  var evs = PYTH.events_by_year[String(year || activeYear)] || [];
+  var ev  = evs.find(function(e) { return e.id === activeKey; });
+  return year + (ev ? ' ' + ev.label : '');
+}
 
 function makeTab(label, isActive, cls, onClick) {
   var btn = document.createElement('button');
@@ -834,7 +913,7 @@ yearRow.appendChild(allTimeBtn);
 
 // All-time sub-row: Full Year / By Splits / Internationals
 var allTimeSubRow  = document.getElementById('alltime-sub');
-var allTimeFullBtn  = makeTab('Full Year',      true,  '', function() { showAllTime(false);   });
+var allTimeFullBtn  = makeTab('Full Year (Domestic)', true,  '', function() { showAllTime(false);   });
 var allTimeSplitBtn = makeTab('By Splits',      false, '', function() { showAllTime(true);    });
 var allTimeIntlBtn  = makeTab('Internationals', false, '', function() { showAllTime('intl');  });
 allTimeSubRow.appendChild(allTimeFullBtn);
@@ -851,7 +930,7 @@ function buildSplitRow() {
 
   splitRow.style.display = 'flex';
 
-  var allBtn = makeTab('All', activeKey === activeYear, '', function() { setKey(activeYear); });
+  var allBtn = makeTab('All (Domestic)', activeKey === activeYear, '', function() { setKey(activeYear); });
   splitRow.appendChild(allBtn);
 
   var today = new Date().toISOString().slice(0, 10);
@@ -1043,7 +1122,7 @@ function openMatchModal(org, year, split) {
   backdrop.className = 'modal-backdrop';
   backdrop.innerHTML = '<div class="modal-box">' +
     '<button class="modal-close">&times;</button>' +
-    '<div class="modal-title">' + year + ' ' + org + ' &mdash; Map Results</div>' +
+    '<div class="modal-title">' + teamLabel(year, split) + ' ' + org + ' &mdash; Map Results</div>' +
     html + '</div>';
   backdrop.querySelector('.modal-close').addEventListener('click', function() { backdrop.remove(); });
   backdrop.addEventListener('click', function(e) { if (e.target === backdrop) backdrop.remove(); });
@@ -1106,7 +1185,7 @@ function openTeamModal(org, year, split) {
   backdrop.className = 'modal-backdrop';
   backdrop.innerHTML = '<div class="modal-box">' +
     '<button class="modal-close">&times;</button>' +
-    '<div class="team-modal-header">' + logoTag + year + ' ' + org + '</div>' +
+    '<div class="team-modal-header">' + logoTag + teamLabel(year, split) + ' ' + org + '</div>' +
     rosterHtml +
     '<div class="map-cards">' +
       mapCard(best, 'Best Map') +
