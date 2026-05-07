@@ -743,7 +743,7 @@ PAGE_HTML = """
     <h1>Overperforming in VCT: who&rsquo;s doing it?</h1>
     <div class="byline">Bobo &mdash; May 2026</div>
     <div class="cover" id="intro">
-      <img src="/static/Patmen.jpg" alt="Patmen at VCT Pacific Kickoff 2026">
+      <img src="/patmen.jpg" alt="Patmen at VCT Pacific Kickoff 2026">
     </div>
     <p class="cover-caption">Patmen at VCT Pacific Kickoff 2026, where GE went on to eventually finish 7th&ndash;8th &mdash; eliminated in the lower bracket by his former team, PRX.</p>
     <div class="content">
