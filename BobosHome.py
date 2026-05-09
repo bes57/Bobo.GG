@@ -119,7 +119,7 @@ HOME_HTML = """
       <div class="cards">
         <a class="nav-card" href="/mapelo/">
           <div style="width:calc(100% + 48px);margin:-32px -24px 20px;height:140px;overflow:hidden;border-radius:24px 24px 0 0;"><img src="/mapelo.png" alt="Map Elo" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transform:scale(1.08) translateY(-4px);transform-origin:center top;"></div>
-          <div class="nav-card-title">Map Elo</div>
+          <div class="nav-card-title">BenPom</div>
           <div class="nav-card-desc">Calculating VCT team's relative map strength as well as probabilistic previews of matchups.</div>
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>

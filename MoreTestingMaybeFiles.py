@@ -135,6 +135,14 @@ ALL_EVENTS = [
         },
     },
     {
+        "id": "2024_masters_shanghai",
+        "label": "2024 Masters Shanghai",
+        "year": 2024,
+        "regions": {
+            "International": "https://www.vlr.gg/event/stats/1999/champions-tour-2024-masters-shanghai",
+        },
+    },
+    {
         "id": "2024_masters_madrid",
         "label": "2024 Masters Madrid",
         "year": 2024,

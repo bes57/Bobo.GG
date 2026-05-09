@@ -43,6 +43,27 @@ INTL_EVENTS = {
     '2026_masters_santiago',
 }
 
+# VCT franchised-era regional assignments (org abbreviation → league region)
+TEAM_REGIONS = {
+    # EMEA
+    "TL": "EMEA", "FNC": "EMEA", "NAVI": "EMEA", "VIT": "EMEA",
+    "BBL": "EMEA", "GX": "EMEA", "KC": "EMEA", "TH": "EMEA",
+    "FUT": "EMEA", "GIA": "EMEA", "MKOI": "EMEA", "WOL": "EMEA",
+    "M8": "EMEA", "FPX": "EMEA",
+    # Americas
+    "SEN": "Americas", "G2": "Americas", "MIBR": "Americas",
+    "NRG": "Americas", "100T": "Americas", "C9": "Americas",
+    "EG": "Americas", "KRÜ": "Americas", "LEV": "Americas",
+    "FUR": "Americas", "LOUD": "Americas",
+    # Pacific
+    "PRX": "Pacific", "DRX": "Pacific", "T1": "Pacific",
+    "TLN": "Pacific", "GEN": "Pacific", "DFM": "Pacific",
+    "ZETA": "Pacific", "RRQ": "Pacific", "TS": "Pacific", "GE": "Pacific",
+    # CN
+    "EDG": "CN", "BLG": "CN", "KRX": "CN", "TE": "CN",
+    "DRG": "CN", "ASE": "CN", "NS": "CN", "AG": "CN", "XLG": "CN",
+}
+
 # ── Event metadata ─────────────────────────────────────────────────────────────
 
 EVENT_DATES = {
@@ -103,8 +124,7 @@ YEAR_CONFIGS = {
             'before_champions': {'events': ['2023_lock_in', '2023_masters_tokyo', '2023_league'],
                                  'label': 'Before Champions'},
             'after_champions':  {'events': ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
-                                 'label': 'After Champions',
-                                 'champs_filter': '2023_champions'},
+                                 'label': 'After Champions'},
         },
         'min_games': 5,
     },
@@ -121,8 +141,7 @@ YEAR_CONFIGS = {
             'before_champions': {'events': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2'],
                                  'label': 'Before Champions'},
             'after_champions':  {'events': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions'],
-                                 'label': 'After Champions',
-                                 'champs_filter': '2024_champions'},
+                                 'label': 'After Champions'},
         },
         'min_games': 5,
     },
@@ -139,8 +158,7 @@ YEAR_CONFIGS = {
             'before_champions': {'events': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2'],
                                  'label': 'Before Champions'},
             'after_champions':  {'events': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2', '2025_champions'],
-                                 'label': 'After Champions',
-                                 'champs_filter': '2025_champions'},
+                                 'label': 'After Champions'},
         },
         'min_games': 5,
     },
@@ -605,6 +623,92 @@ def effective_counts(games, lambda_decay, ref_date):
     return {t: round(v, 2) for t, v in counts.items()}
 
 
+# ── Within-region qualification cap ───────────────────────────────────────────
+
+def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
+    """
+    Within-region qualification adjustment.
+
+    Non-qualifying teams that sit above the lowest qualifier from their region
+    are compressed into the gap between that qualifier and the highest
+    non-qualifier already below it.  Teams already below the threshold are
+    unchanged.  Cross-regional ordering is never touched.
+
+    When some non-qualifiers are already below cap:
+        floor = below_cap_max + ε
+        new_r = floor + (r - floor) / (max_above - floor) * (cap - ε - floor)
+
+    When all non-qualifiers are above cap: uniform shift so max → cap - ε.
+    """
+    qualifiers = set()
+    for g in all_games:
+        if g['event_id'] == intl_event_id:
+            qualifiers.add(g['winner'])
+            qualifiers.add(g['loser'])
+
+    if not qualifiers:
+        return teams_out, 0
+
+    # Minimum overall_rating per region among qualifying teams
+    region_min = {}
+    for team, data in teams_out.items():
+        if team not in qualifiers:
+            continue
+        region = TEAM_REGIONS.get(team)
+        if not region:
+            continue
+        r = data['overall_rating']
+        if region not in region_min or r < region_min[region]:
+            region_min[region] = r
+
+    if not region_min:
+        return teams_out, 0
+
+    n_adjusted = 0
+    for region, min_qual in region_min.items():
+        cap = min_qual - epsilon
+
+        nonquals = [(t, teams_out[t]['overall_rating'])
+                    for t in teams_out
+                    if t not in qualifiers and TEAM_REGIONS.get(t) == region]
+        if not nonquals:
+            continue
+
+        above = [(t, r) for t, r in nonquals if r > cap]
+        if not above:
+            continue
+
+        below = [(t, r) for t, r in nonquals if r <= cap]
+        max_above = max(r for _, r in above)
+
+        if below:
+            below_max = max(r for _, r in below)
+            floor     = below_max + epsilon
+            cap_adj   = cap - epsilon
+            denom     = max_above - floor
+            if denom <= 0 or cap_adj <= floor:
+                for t, _ in above:
+                    teams_out[t]['overall_rating'] = round(cap - epsilon, 3)
+                    n_adjusted += 1
+            else:
+                scale = (cap_adj - floor) / denom
+                for t, r in above:
+                    new_r = floor + (r - floor) * scale
+                    teams_out[t]['overall_rating'] = round(new_r, 3)
+                    n_adjusted += 1
+        else:
+            # All non-qualifiers above cap: uniform shift preserves spacing
+            shift = max_above - (cap - epsilon)
+            for t, r in above:
+                teams_out[t]['overall_rating'] = round(r - shift, 3)
+                n_adjusted += 1
+
+    if n_adjusted:
+        teams_out = dict(sorted(teams_out.items(), key=lambda x: -x[1]['overall_rating']))
+
+    return teams_out, n_adjusted
+
+
 # ── Per-year ratings builder ───────────────────────────────────────────────────
 
 def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=None):
@@ -818,11 +922,22 @@ def main():
                 filter_teams=filter_teams,
             )
             snap_data['label'] = snap_cfg['label']
+
+            # Qualification cap: only for snapshots ending with a completed international
+            last_event = snap_cfg['events'][-1] if snap_cfg['events'] else None
+            n_capped = 0
+            if last_event and last_event in INTL_EVENTS:
+                snap_data['teams'], n_capped = apply_qualification_cap(
+                    snap_data['teams'], last_event, all_games
+                )
+
             snaps_out[snap_id] = snap_data
             n_filtered = len(filter_teams) if filter_teams else '—'
+            cap_note = f', qual cap: {n_capped} capped' if n_capped else ''
             print(f'  {year}/{snap_id}: {len(snap_games)} games  '
                   f'({len(snap_data["teams"])} teams shown'
-                  f'{", champs filter: " + str(n_filtered) + " attendees" if filter_teams else ""},'
+                  f'{", champs filter: " + str(n_filtered) + " attendees" if filter_teams else ""}'
+                  f'{cap_note},'
                   f' beta={snap_data["beta"]})')
         ratings_out[year] = {'snapshots': snaps_out}
 

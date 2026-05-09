@@ -93,7 +93,11 @@ def scrape_event(event):
     cache = pd.concat(dfs, ignore_index=True)
     if "R2.0" in cache.columns:
         r2 = pd.to_numeric(cache["R2.0"].astype(str).str.replace("%", ""), errors="coerce")
-        cache = cache[r2.notna() & (r2 > 0)].reset_index(drop=True)
+        if r2.notna().any():
+            cache = cache[r2.notna() & (r2 > 0)].reset_index(drop=True)
+        elif "ACS" in cache.columns:
+            acs = pd.to_numeric(cache["ACS"], errors="coerce")
+            cache = cache[acs.notna() & (acs > 0)].reset_index(drop=True)
     if list(event["regions"].keys()) == ["International"] and "Org" in cache.columns:
         cache["Region"] = cache["Org"].map(lambda org: ORG_REGIONS.get(org, "International"))
     return cache
