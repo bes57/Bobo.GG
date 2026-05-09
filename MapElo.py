@@ -913,10 +913,10 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <style>
   SHARED_CSS
   .hub-hero { position:relative; width:100%; padding:24px 32px 170px; min-height:520px; text-align:center; overflow:hidden; isolation:isolate; background-color:#0e0a14; }
-  .hub-hero-img { position:absolute; inset:0; background-image:url('/static/MastersShanghaiFinal.jpg'); background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear; }
+  .hub-hero-img { position:absolute; inset:0; background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear, opacity .8s ease; opacity:0; }
   .hub-hero:hover .hub-hero-img { transform:scale(1.06); }
   /* darken at top for legibility, fade to cream at the bottom edge */
-  .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 28%, rgba(14,10,20,0.18) 55%, rgba(253,246,240,0.55) 80%, var(--cream) 96%, var(--cream) 100%); z-index:-1; pointer-events:none; }
+  .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 30%, rgba(14,10,20,0.20) 55%, rgba(253,246,240,0.40) 72%, rgba(253,246,240,0.85) 88%, #fdf6f0 100%); z-index:-1; pointer-events:none; }
   .hub-hero-content { position:relative; z-index:1; max-width:840px; margin:0 auto; }
   .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#e8dff4; margin-bottom:14px; display:inline-flex; align-items:center; gap:12px; }
   .hub-hero-eyebrow::before, .hub-hero-eyebrow::after { content:''; display:inline-block; width:36px; height:2px; background:linear-gradient(90deg, transparent, #d4b8f4, transparent); }
@@ -931,22 +931,31 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   /* No overscroll on the hub — both top and bottom rubber-band disabled. */
   html { background:var(--cream); overscroll-behavior:none; }
   body { overscroll-behavior:none; }
-  /* Hub stays calm — kill the floating purple gradient from SHARED_CSS */
-  body::after { display:none !important; }
-  body::before { animation:none !important; }
+  /* Hub stays calm — kill BOTH SHARED_CSS body backdrops so nothing tints
+     the area below the hero and breaks the gradient blend. */
+  body::before, body::after { display:none !important; }
 
   .hub-page { position:relative; z-index:1; padding:0 32px 64px; max-width:760px; margin:0 auto; text-align:center; }
   .hub-cards { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
-  .hub-card { background:white; border-radius:24px; padding:32px 26px 26px; width:300px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .25s,box-shadow .25s; text-align:center; position:relative; overflow:hidden; }
+  .hub-card { background:white; border-radius:24px; padding:32px 26px 26px; width:300px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .25s,box-shadow .25s; text-align:center; position:relative; overflow:hidden; display:flex; flex-direction:column; }
   .hub-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg, transparent 60%, #d4b8f422 100%); opacity:0; transition:opacity .25s; pointer-events:none; }
   .hub-card:hover { transform:translateY(-6px); box-shadow:0 16px 44px #00000018; }
   .hub-card:hover::after { opacity:1; }
   .hub-card-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; }
+  .hub-card-title--sm { font-size:.92rem; }
   .hub-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
-  .hub-card-arrow { margin-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
-  .hub-logo-strip { display:flex; gap:14px; justify-content:center; flex-wrap:nowrap; margin:0 -32px 20px; padding:14px 32px; opacity:.85; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
-  .hub-logo-strip::-webkit-scrollbar { display:none; }
-  .hub-logo-strip img { height:30px; width:30px; object-fit:contain; flex-shrink:0; filter:grayscale(.4); transition:filter .2s, transform .2s; cursor:pointer; user-select:none; }
+  .hub-card-arrow { margin-top:auto; padding-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
+
+  /* Wide hero-card row underneath the two regular cards (Modern VCT Hub) */
+  .hub-cards-wide { display:flex; justify-content:center; margin-top:24px; padding:0 4px; }
+  .hub-card-wide { position:relative; display:flex; align-items:center; justify-content:center; width:100%; max-width:660px; height:240px; border-radius:24px; overflow:hidden; text-decoration:none; color:white; box-shadow:0 6px 28px #00000018; transition:transform .25s, box-shadow .25s; isolation:isolate; }
+  .hub-card-wide:hover { transform:translateY(-6px); box-shadow:0 18px 48px #00000028; }
+  .hub-card-wide-bg { position:absolute; inset:0; background-size:cover; background-position:center 40%; background-repeat:no-repeat; transform:scale(1.03); transition:transform 14s linear, opacity .8s ease; z-index:-2; opacity:0; }
+  .hub-card-wide:hover .hub-card-wide-bg { transform:scale(1.10); }
+  .hub-card-wide::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, #0e0a1422 0%, #0e0a1488 70%, #0e0a14bb 100%), radial-gradient(ellipse 60% 40% at 50% 60%, #00000044 0%, transparent 70%); z-index:-1; pointer-events:none; }
+  .hub-card-wide-title { position:relative; font-family:'Syne',sans-serif; font-size:clamp(1.8rem, 4vw, 2.6rem); font-weight:800; letter-spacing:-.02em; line-height:1; text-shadow:0 4px 22px #0e0a14cc; background:linear-gradient(135deg,#fff 0%,#ffd9b3 100%); -webkit-background-clip:text; background-clip:text; color:transparent; padding:0 24px; text-align:center; }
+  .hub-logo-strip { width:100vw; position:relative; left:50%; transform:translateX(-50%); display:flex; justify-content:space-evenly; align-items:center; flex-wrap:nowrap; padding:14px 24px; margin-bottom:20px; opacity:.85; }
+  .hub-logo-strip img { height:28px; width:28px; object-fit:contain; flex-shrink:0; filter:grayscale(.4); transition:filter .2s, transform .2s; cursor:pointer; user-select:none; }
   .hub-logo-strip img:hover { filter:none; transform:scale(1.18); }
   .hub-logo-strip img.shaking { animation:logoShake .6s cubic-bezier(.36,.07,.19,.97); transform-origin:center; filter:none; }
   @keyframes logoShake {
@@ -987,20 +996,48 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     <div class="hub-logo-strip" id="hub-logo-strip"></div>
     <div class="hub-cards">
       <a class="hub-card" href="/mapelo/rankings/">
-        <div class="hub-card-title">Historical Rankings</div>
+        <div class="hub-card-title hub-card-title--sm">Historical Rankings</div>
         <div class="hub-card-desc">Per-map Massey ratings with decay, James&ndash;Stein shrinkage, and pick/ban-adjusted overall scores.</div>
         <div class="hub-card-arrow">Explore &rarr;</div>
       </a>
       <a class="hub-card" href="/mapelo/matchup/">
-        <div class="hub-card-title">Matchup Predictor</div>
+        <div class="hub-card-title hub-card-title--sm">Historical Matchup Predictor</div>
         <div class="hub-card-desc">Test matchups between every VCT team throughout history using Monte Carlo simulations; this includes a statistical breakdown of picks/bans, map differences, and win/loss frequencies.</div>
         <div class="hub-card-arrow">Explore &rarr;</div>
+      </a>
+    </div>
+    <div class="hub-cards-wide">
+      <a class="hub-card-wide" href="/mapelo/modern/">
+        <div class="hub-card-wide-bg"></div>
+        <div class="hub-card-wide-title">Modern VCT Hub</div>
       </a>
     </div>
   </div>
   <script>
   (function(){
-    var teams = ['SEN','LOUD','PRX','GEN','FNC','EG','NRG','TH','T1','DRX','KC','C9','LEV','G2','TL','BBL','100T','VIT','GX','DRG'];
+    var heroImg = document.querySelector('.hub-hero-img');
+    if (heroImg) {
+      var src = '/static/MastersShanghaiFinal.jpg';
+      var img = new Image();
+      img.onload = function() {
+        heroImg.style.backgroundImage = 'url(' + src + ')';
+        requestAnimationFrame(function() { heroImg.style.opacity = '1'; });
+      };
+      img.src = src;
+    }
+    var wideImg = document.querySelector('.hub-card-wide-bg');
+    if (wideImg) {
+      var src2 = '/static/Champs25Arena.jpg';
+      var img2 = new Image();
+      img2.onload = function() {
+        wideImg.style.backgroundImage = 'url(' + src2 + ')';
+        requestAnimationFrame(function() { wideImg.style.opacity = '1'; });
+      };
+      img2.src = src2;
+    }
+  })();
+  (function(){
+    var teams = ['FNC','LOUD','KRX','FNC','EG','PRX','EG','PRX','LOUD','SEN','GEN','PRX','GEN','TH','G2','EDG','TH','LEV','T1','G2','EDG','PRX','FNC','WOL','NRG','FNC','KRX','NS','PRX','NRG'];
     var strip = document.getElementById('hub-logo-strip');
     if(!strip) return;
     var html = '';
@@ -1012,7 +1049,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     var TEAM_COLORS = {
       'SEN':  ['#c8102e','#f5d6a8','#000000','#ffffff'],
       'LOUD': ['#2dff5d','#000000','#ffffff','#52ff8d'],
-      'PRX':  ['#ffd400','#ffa500','#000000','#ffffff'],
+      'PRX':  ['#7b2fff','#c0392b','#e040fb','#ff6b6b'],
       'GEN':  ['#f6c61b','#000000','#ffffff','#fbe085'],
       'FNC':  ['#ff5c00','#000000','#ffffff','#ff8c40'],
       'EG':   ['#0089d0','#fbb521','#ffffff','#003d7a'],
@@ -1022,14 +1059,17 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
       'DRX':  ['#0080a8','#1ed8e6','#ffffff','#000000'],
       'KC':   ['#0099ff','#e60014','#000000','#ffffff'],
       'C9':   ['#00a3e0','#ffffff','#0050a0','#73d2ff'],
-      'LEV':  ['#fdb913','#101e44','#ffffff','#ffd560'],
+      'LEV':  ['#5bc8e8','#a0b0bc','#d0e8f0','#7a9aaa'],
       'G2':   ['#000000','#ffffff','#cccccc','#ed1c24'],
       'TL':   ['#0033a0','#ffd400','#ffffff','#000000'],
       'BBL':  ['#00b4d8','#0e132d','#ffffff','#5cdfff'],
       '100T': ['#e80024','#000000','#ffffff','#ff6680'],
       'VIT':  ['#fff200','#000000','#ffffff','#fff066'],
       'GX':   ['#fbb121','#000000','#ffffff','#fdd97e'],
-      'DRG':  ['#56e84d','#000000','#ffffff','#aaff9c']
+      'DRG':  ['#56e84d','#000000','#ffffff','#aaff9c'],
+      'NS':   ['#e00000','#111111','#ff4444','#333333'],
+      'KRX':  ['#005bac','#3a9edb','#ffffff','#7ec8f0'],
+      'WOL':  ['#f5c400','#111111','#ffe066','#333333']
     };
     var DEFAULT_COLORS = ['#f4b8c1','#f9cba7','#b8e8d4','#b8d8f4','#d4b8f4','#f4edb8','#5a2a7a','#9a4ab4'];
 
@@ -4383,6 +4423,41 @@ def mapelo_mvp_stat(org):
     n_maps = _req.args.get('n_maps', '3')  # maps PLAYED in the simulated series
     data = _get_mvp_stat(org, year, snap, n_maps) or {}
     return Response(json.dumps(data), mimetype='application/json')
+
+MAPELO_MODERN_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Modern VCT Hub — Bobo.GG</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { background: #e8d5f5; font-family: 'DM Sans', sans-serif; color: #2a1a3e; }
+    .top-nav { padding: 32px 32px 0; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .home-logo { height: 80px; width: auto; display: block; opacity: .85; transition: opacity .2s; }
+    .home-logo:hover { opacity: 1; }
+    .modern-page { padding: 48px 32px; text-align: center; }
+    .modern-title { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 800; letter-spacing: -.03em; line-height: 1; color: #3d1a6e; }
+  </style>
+</head>
+<body>
+  <div class="top-nav">
+    <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+  </div>
+  <div class="modern-page">
+    <h1 class="modern-title">Modern VCT Hub</h1>
+  </div>
+</body>
+</html>
+"""
+
+@mapelo_bp.route('/modern/')
+def mapelo_modern():
+    return MAPELO_MODERN_HTML
 
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
 def mapelo_map_matches(org, map_name):
