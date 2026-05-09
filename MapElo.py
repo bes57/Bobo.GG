@@ -909,11 +909,12 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preload" as="image" fetchpriority="high" href="/static/MastersShanghaiFinal.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   SHARED_CSS
   .hub-hero { position:relative; width:100%; padding:24px 32px 170px; min-height:520px; text-align:center; overflow:hidden; isolation:isolate; background-color:#0e0a14; }
-  .hub-hero-img { position:absolute; inset:0; background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear, opacity .8s ease; opacity:0; }
+  .hub-hero-img { position:absolute; inset:0; background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear, opacity 1.2s ease; opacity:0; }
   .hub-hero:hover .hub-hero-img { transform:scale(1.06); }
   /* darken at top for legibility, fade to cream at the bottom edge */
   .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 30%, rgba(14,10,20,0.20) 55%, rgba(253,246,240,0.40) 72%, rgba(253,246,240,0.85) 88%, #fdf6f0 100%); z-index:-1; pointer-events:none; }
@@ -1017,13 +1018,8 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   (function(){
     var heroImg = document.querySelector('.hub-hero-img');
     if (heroImg) {
-      var src = '/static/MastersShanghaiFinal.jpg';
-      var img = new Image();
-      img.onload = function() {
-        heroImg.style.backgroundImage = 'url(' + src + ')';
-        requestAnimationFrame(function() { heroImg.style.opacity = '1'; });
-      };
-      img.src = src;
+      heroImg.style.backgroundImage = 'url(/static/MastersShanghaiFinal.jpg)';
+      requestAnimationFrame(function() { heroImg.style.opacity = '1'; });
     }
     var wideImg = document.querySelector('.hub-card-wide-bg');
     if (wideImg) {
