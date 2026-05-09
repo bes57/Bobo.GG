@@ -664,6 +664,95 @@ def _get_team_info(org, year='2025', snap='after_champions'):
     return result
 
 
+def _get_random_win_stat(org, year='2025', snap='after_champions'):
+    """Pick a random player from one of the team's 3 most recent series wins
+    in the selected snapshot, return their series statline."""
+    import random
+    cache_key = (_TEAM_INFO_VER, 'win_stat', org, year, snap)
+    # No cache — we want a fresh random pick each call.
+
+    data_dir    = os.path.join(ROOT, 'data')
+    snap_events = _SNAPSHOT_EVENTS.get(year, {}).get(snap, [])
+
+    mr_path = os.path.join(data_dir, 'match_results.csv')
+    if not os.path.exists(mr_path) or not snap_events:
+        return None
+
+    mr = pd.read_csv(mr_path)
+    mr_series = mr[mr['MapNum'] == 'all'].set_index('MatchID')
+
+    from MoreTestingMaybeFiles import ALL_EVENTS
+    label_by_id = {e['id']: e.get('label', e['id']) for e in ALL_EVENTS}
+
+    # Walk events newest-first; collect up to 3 wins.
+    wins = []  # list of (event_id, ev_label, match_id, sdf)
+    for event_id in reversed(snap_events):
+        series_path = os.path.join(data_dir, 'series', f'{event_id}.csv')
+        if not os.path.exists(series_path):
+            continue
+        try:
+            sdf = pd.read_csv(series_path)
+        except Exception:
+            continue
+        # series CSV row order is roughly chronological for the event
+        org_mids = sdf[sdf['Org'] == org]['MatchID'].unique().tolist()
+        for mid in reversed(org_mids):
+            if mid not in mr_series.index:
+                continue
+            try:
+                if str(mr_series.loc[mid].get('WinnerOrg')) != org:
+                    continue
+            except Exception:
+                continue
+            wins.append((event_id, label_by_id.get(event_id, event_id), int(mid), sdf))
+            if len(wins) >= 3:
+                break
+        if len(wins) >= 3:
+            break
+
+    if not wins:
+        return None
+
+    event_id, ev_label, match_id, sdf = random.choice(wins)
+
+    # Series-level rows for that match (MapNum == 'all'); fall back to any rows for the team.
+    rows = sdf[(sdf['MatchID'] == match_id) & (sdf['Org'] == org)]
+    series_rows = rows[rows['MapNum'].astype(str) == 'all']
+    if not series_rows.empty:
+        rows = series_rows
+    if rows.empty:
+        return None
+
+    pick = rows.sample(1).iloc[0]
+
+    sr = mr_series.loc[match_id]
+    opponent = '?'
+    for o in sdf[sdf['MatchID'] == match_id]['Org'].unique():
+        if o != org:
+            opponent = str(o)
+            break
+
+    def _i(v):
+        try: return int(float(v))
+        except Exception: return None
+    def _f(v):
+        try: return float(v)
+        except Exception: return None
+
+    return {
+        'player':        str(pick.get('Player', '')),
+        'org':           org,
+        'opponent':      opponent,
+        'event':         ev_label,
+        'series_score':  str(sr.get('Score', '')),
+        'K':   _i(pick.get('K')),
+        'D':   _i(pick.get('D')),
+        'A':   _i(pick.get('A')),
+        'ACS': _f(pick.get('ACS')),
+        'R':   _f(pick.get('R2.0')),
+    }
+
+
 def _get_map_matches(org, map_name, year='2025', snap='after_champions'):
     cache_key = (_TEAM_INFO_VER, 'map_matches', org, map_name, year, snap)
     if cache_key in _team_info_cache:
@@ -787,19 +876,23 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   SHARED_CSS
-  .hub-hero { position:relative; z-index:1; margin:24px auto 32px; max-width:1100px; height:360px; border-radius:28px; overflow:hidden; box-shadow:0 18px 60px #00000022; isolation:isolate; }
-  .hub-hero-img { position:absolute; inset:0; background-image:url('/static/SantiagoFinal.jpg'); background-size:cover; background-position:center 35%; transform:scale(1.04); transition:transform 12s linear; }
-  .hub-hero:hover .hub-hero-img { transform:scale(1.1); }
-  .hub-hero::after { content:''; position:absolute; inset:0; background:
-    linear-gradient(180deg, #0e0a1455 0%, #0e0a1488 60%, #0e0a14ee 100%),
-    radial-gradient(ellipse 70% 50% at 50% 100%, #5a2a7a55 0%, transparent 70%);
-    pointer-events:none; }
-  .hub-hero-content { position:absolute; left:0; right:0; bottom:0; padding:36px 40px 32px; color:white; text-align:left; z-index:2; }
-  .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#d4b8f4; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
-  .hub-hero-eyebrow::before { content:''; display:inline-block; width:24px; height:2px; background:linear-gradient(90deg,#d4b8f4,transparent); }
-  .hub-hero-title { font-family:'Syne',sans-serif; font-size:clamp(2rem,6vw,4rem); font-weight:800; letter-spacing:-1.5px; line-height:1; margin-bottom:10px; background:linear-gradient(135deg,#fff 0%,#d4b8f4 100%); -webkit-background-clip:text; background-clip:text; color:transparent; word-break:keep-all; }
-  .hub-hero-sub { font-family:'DM Sans',sans-serif; font-size:.95rem; color:#e8dff4cc; max-width:520px; line-height:1.45; }
-  .hub-hero-cap { position:absolute; top:14px; right:18px; z-index:2; font-family:'Syne',sans-serif; font-size:.55rem; font-weight:800; letter-spacing:.15em; text-transform:uppercase; color:#ffffffaa; padding:4px 10px; border-radius:99px; background:#0e0a1466; backdrop-filter:blur(6px); }
+  .hub-hero { position:relative; width:100%; padding:24px 32px 170px; min-height:520px; text-align:center; overflow:hidden; isolation:isolate; background-color:#0e0a14; }
+  .hub-hero-img { position:absolute; inset:0; background-image:url('/static/MastersShanghaiFinal.jpg'); background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear; }
+  .hub-hero:hover .hub-hero-img { transform:scale(1.06); }
+  /* darken at top for legibility, fade to cream at the bottom edge */
+  .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 28%, rgba(14,10,20,0.18) 55%, rgba(253,246,240,0.55) 80%, var(--cream) 96%, var(--cream) 100%); z-index:-1; pointer-events:none; }
+  .hub-hero-content { position:relative; z-index:1; max-width:840px; margin:0 auto; }
+  .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#e8dff4; margin-bottom:14px; display:inline-flex; align-items:center; gap:12px; }
+  .hub-hero-eyebrow::before, .hub-hero-eyebrow::after { content:''; display:inline-block; width:36px; height:2px; background:linear-gradient(90deg, transparent, #d4b8f4, transparent); }
+  .hub-hero-title { font-family:'Syne',sans-serif; font-size:clamp(2.6rem,7.5vw,5.4rem); font-weight:800; letter-spacing:-2px; line-height:1; margin-bottom:18px; background:linear-gradient(135deg,#fff 0%,#e6d6f7 60%,#d4b8f4 100%); -webkit-background-clip:text; background-clip:text; color:transparent; word-break:keep-all; text-shadow:0 8px 36px #0e0a1455; }
+  .hub-hero-sub { font-family:'DM Sans',sans-serif; font-size:1rem; color:#f5eaf5; max-width:560px; margin:0 auto; line-height:1.5; text-shadow:0 2px 14px #0e0a1466; }
+  .hub-hero-cap { position:absolute; top:22px; right:24px; z-index:2; font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:#ffffffcc; padding:6px 12px; border-radius:99px; background:#0e0a1466; backdrop-filter:blur(6px); }
+  .hub-hero-nav { position:absolute; top:0; left:0; right:0; z-index:3; padding:24px 32px 0; }
+  .hub-hero-nav .home-logo { filter:drop-shadow(0 4px 18px #0e0a1466); }
+  /* Top overscroll shows the dark hero color, bottom overscroll shows cream.
+     Use a fixed-attached gradient on html so the top half always paints dark and the
+     bottom half cream — body's solid cream paints over it for normal viewing. */
+  html { background:linear-gradient(180deg, #0e0a14 0%, #0e0a14 50%, var(--cream) 50%, var(--cream) 100%) no-repeat fixed; background-color:var(--cream); }
 
   .hub-page { position:relative; z-index:1; padding:0 32px 64px; max-width:760px; margin:0 auto; text-align:center; }
   .hub-cards { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
@@ -810,9 +903,25 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   .hub-card-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; }
   .hub-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
   .hub-card-arrow { margin-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
-  .hub-logo-strip { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:32px; opacity:.55; max-width:560px; margin-left:auto; margin-right:auto; }
-  .hub-logo-strip img { height:26px; width:26px; object-fit:contain; filter:grayscale(.4); transition:filter .2s, transform .2s; }
+  .hub-logo-strip { display:flex; gap:14px; justify-content:center; flex-wrap:nowrap; margin:0 -32px 20px; padding:14px 32px; opacity:.85; overflow-x:auto; overflow-y:hidden; scrollbar-width:none; }
+  .hub-logo-strip::-webkit-scrollbar { display:none; }
+  .hub-logo-strip img { height:30px; width:30px; object-fit:contain; flex-shrink:0; filter:grayscale(.4); transition:filter .2s, transform .2s; cursor:pointer; user-select:none; }
   .hub-logo-strip img:hover { filter:none; transform:scale(1.18); }
+  .hub-logo-strip img.shaking { animation:logoShake .6s cubic-bezier(.36,.07,.19,.97); transform-origin:center; filter:none; }
+  @keyframes logoShake {
+    0%   { transform:translateX(0) rotate(0) scale(1); }
+    15%  { transform:translateX(-3px) rotate(-12deg) scale(1.18); }
+    30%  { transform:translateX(3px)  rotate(10deg)  scale(1.20); }
+    45%  { transform:translateX(-2px) rotate(-8deg)  scale(1.15); }
+    60%  { transform:translateX(2px)  rotate(6deg)   scale(1.12); }
+    80%  { transform:translateX(-1px) rotate(-3deg)  scale(1.08); }
+    100% { transform:translateX(0) rotate(0) scale(1); }
+  }
+  .hub-confetti { position:fixed; width:8px; height:8px; border-radius:2px; pointer-events:none; z-index:1000; will-change:transform, opacity; animation:confettiFly .9s cubic-bezier(.2,.8,.4,1) forwards; }
+  @keyframes confettiFly {
+    0%   { transform:translate(-50%,-50%) rotate(0deg); opacity:1; }
+    100% { transform:translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,0px))) rotate(var(--rot,360deg)); opacity:0; }
+  }
   @media(max-width:640px){
     .hub-hero { height:280px; margin:16px 16px 24px; border-radius:18px; }
     .hub-hero-content { padding:24px 22px 20px; }
@@ -821,12 +930,12 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 </head>
 <body>
 <div id="content-wrap">
-  <div class="top-nav">
-    <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-  </div>
   <section class="hub-hero">
     <div class="hub-hero-img"></div>
-    <div class="hub-hero-cap">2026 Masters Santiago</div>
+    <div class="top-nav hub-hero-nav">
+      <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+    </div>
+    <div class="hub-hero-cap">2024 Masters Shanghai</div>
     <div class="hub-hero-content">
       <div class="hub-hero-eyebrow">Bobo&rsquo;s VCT Database</div>
       <h1 class="hub-hero-title">BenPom</h1>
@@ -858,6 +967,67 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
       html += '<img src="/logos/'+t+'.png" alt="'+t+'" onerror="this.style.display=\\'none\\'">';
     });
     strip.innerHTML = html;
+
+    var TEAM_COLORS = {
+      'SEN':  ['#c8102e','#f5d6a8','#000000','#ffffff'],
+      'LOUD': ['#2dff5d','#000000','#ffffff','#52ff8d'],
+      'PRX':  ['#ffd400','#ffa500','#000000','#ffffff'],
+      'GEN':  ['#f6c61b','#000000','#ffffff','#fbe085'],
+      'FNC':  ['#ff5c00','#000000','#ffffff','#ff8c40'],
+      'EG':   ['#0089d0','#fbb521','#ffffff','#003d7a'],
+      'NRG':  ['#ff3c3c','#000000','#ffffff','#ffa1a1'],
+      'TH':   ['#fbb521','#000000','#ffffff','#fdd97e'],
+      'T1':   ['#e2012d','#000000','#ffffff','#fb8a9c'],
+      'DRX':  ['#0080a8','#1ed8e6','#ffffff','#000000'],
+      'KC':   ['#0099ff','#e60014','#000000','#ffffff'],
+      'C9':   ['#00a3e0','#ffffff','#0050a0','#73d2ff'],
+      'LEV':  ['#fdb913','#101e44','#ffffff','#ffd560'],
+      'G2':   ['#000000','#ffffff','#cccccc','#ed1c24'],
+      'TL':   ['#0033a0','#ffd400','#ffffff','#000000'],
+      'BBL':  ['#00b4d8','#0e132d','#ffffff','#5cdfff'],
+      '100T': ['#e80024','#000000','#ffffff','#ff6680'],
+      'VIT':  ['#fff200','#000000','#ffffff','#fff066'],
+      'GX':   ['#fbb121','#000000','#ffffff','#fdd97e'],
+      'DRG':  ['#56e84d','#000000','#ffffff','#aaff9c']
+    };
+    var DEFAULT_COLORS = ['#f4b8c1','#f9cba7','#b8e8d4','#b8d8f4','#d4b8f4','#f4edb8','#5a2a7a','#9a4ab4'];
+
+    function spawnConfetti(cx, cy, palette){
+      var colors = palette && palette.length ? palette : DEFAULT_COLORS;
+      for(var i=0;i<22;i++){
+        var p = document.createElement('div');
+        p.className = 'hub-confetti';
+        var angle = Math.random() * Math.PI * 2;
+        var dist  = 70 + Math.random() * 80;
+        var dx = Math.cos(angle) * dist;
+        var dy = Math.sin(angle) * dist - 28;
+        p.style.left = cx + 'px';
+        p.style.top  = cy + 'px';
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        p.style.width  = (5 + Math.random()*6) + 'px';
+        p.style.height = (5 + Math.random()*6) + 'px';
+        p.style.setProperty('--dx', dx + 'px');
+        p.style.setProperty('--dy', dy + 'px');
+        p.style.setProperty('--rot', (Math.random()*720 - 360) + 'deg');
+        p.style.animationDuration = (.7 + Math.random()*.4) + 's';
+        document.body.appendChild(p);
+        (function(el){ setTimeout(function(){ el.remove(); }, 1200); })(p);
+      }
+    }
+
+    strip.querySelectorAll('img').forEach(function(img){
+      img.addEventListener('click', function(e){
+        e.preventDefault();
+        img.classList.remove('shaking');
+        // restart animation
+        void img.offsetWidth;
+        img.classList.add('shaking');
+        var r = img.getBoundingClientRect();
+        var team = img.getAttribute('alt') || '';
+        spawnConfetti(r.left + r.width/2, r.top + r.height/2, TEAM_COLORS[team]);
+        setTimeout(function(){ img.classList.remove('shaking'); }, 650);
+      });
+    });
   })();
   </script>
 </div>
@@ -2130,7 +2300,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .vs-text { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; color:#c0b8c8; }
   .sim-btn { background:#2a1f2d; color:white; border:none; border-radius:99px; padding:9px 18px; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:background .15s; white-space:nowrap; }
   .sim-btn:hover { background:#5a2a7a; }
-  .controls-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:24px; margin-top:-10px; }
+  .controls-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:28px; margin-top:18px; }
   .fmt-row { display:flex; gap:5px; }
   .fmt-btn { padding:5px 16px; border-radius:99px; border:1.5px solid #f0ecf4; background:white; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; cursor:pointer; color:var(--soft); transition:all .15s; white-space:nowrap; }
   .fmt-btn:hover { border-color:#d4b8f4; color:var(--ink); }
@@ -2228,7 +2398,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .mode-btn:not(.active):hover { color:var(--ink); }
 
   /* === SIDE PANEL (replaces team-panel) === */
-  .side-grid { display:grid; grid-template-columns:1fr 80px 1fr; gap:0; align-items:stretch; margin-bottom:18px; }
+  .side-grid { display:grid; grid-template-columns:1fr 80px 1fr; gap:0; align-items:stretch; margin-bottom:36px; }
   .side-panel { background:white; border-radius:24px; padding:18px 16px 22px; box-shadow:0 4px 24px #0000000a; display:flex; flex-direction:column; align-items:stretch; }
   .side-label { font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; text-align:center; }
 
@@ -2304,14 +2474,14 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 
   /* Veto reveal grid */
   .rv-veto-grid { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:14px 0; }
-  .rv-veto-slot { width:88px; height:104px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 4px; opacity:.4; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
+  .rv-veto-slot { width:104px; height:108px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 6px; opacity:.4; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
   .rv-veto-slot.revealed { opacity:1; transform:scale(1); animation:rvPop .4s ease; }
   @keyframes rvPop { 0%{transform:scale(.7);} 60%{transform:scale(1.08);} 100%{transform:scale(1);} }
   .rv-veto-slot.banned::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent 0 6px,#f4b8c133 6px 12px); pointer-events:none; }
   .rv-veto-slot.banned img { filter:grayscale(1); opacity:.55; }
   .rv-veto-slot img { width:54px; height:54px; object-fit:cover; border-radius:8px; }
   .rv-veto-slot .rv-vs-map { font-family:'Syne',sans-serif; font-weight:800; font-size:.75rem; color:var(--ink); text-align:center; }
-  .rv-veto-slot .rv-vs-act { font-family:'Syne',sans-serif; font-weight:800; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; padding:1px 6px; border-radius:99px; }
+  .rv-veto-slot .rv-vs-act { font-family:'Syne',sans-serif; font-weight:800; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:99px; white-space:nowrap; max-width:100%; text-align:center; }
   .rv-act-banA, .rv-act-banB   { background:#fde8ec; color:#b03050; }
   .rv-act-pickA, .rv-act-pickB { background:#e3f6ea; color:#206040; }
   .rv-act-dec                  { background:#f0ecf4; color:#7a6e7e; }
@@ -2342,8 +2512,12 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .rv-map-result-badge.shown { opacity:1; transform:scale(1); }
 
   /* Series clinch */
-  .rv-clinch { text-align:center; padding:20px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; transform:scale(.85); transition:opacity .4s, transform .4s; }
+  .rv-clinch { text-align:center; padding:20px 20px 4px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; transform:scale(.85); transition:opacity .4s, transform .4s; }
   .rv-clinch.shown { opacity:1; transform:scale(1); }
+  .rv-statline { text-align:center; padding:6px 24px 22px; font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--soft); opacity:0; transform:translateY(8px); transition:opacity .5s, transform .5s; line-height:1.45; max-width:640px; margin:0 auto; }
+  .rv-statline.shown { opacity:1; transform:translateY(0); }
+  .rv-statline strong { font-family:'Syne',sans-serif; font-weight:800; color:var(--ink); }
+  .rv-statline em { font-style:italic; color:#5a2a7a; font-weight:600; }
 
   /* Final breakdown card grid */
   .breakdown-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px; }
@@ -2425,16 +2599,16 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
         <div class="side-label">Team B</div>
         <div class="yr-scrubber" data-side="b">
           <div class="yr-track">
-            <div class="yr-tick active" data-year="2023" style="left:0%"></div>
+            <div class="yr-tick" data-year="2023" style="left:0%"></div>
             <div class="yr-tick" data-year="2024" style="left:33.33%"></div>
-            <div class="yr-tick" data-year="2025" style="left:66.66%"></div>
+            <div class="yr-tick active" data-year="2025" style="left:66.66%"></div>
             <div class="yr-tick" data-year="2026" style="left:100%"></div>
-            <div class="yr-knob" style="left:0%"></div>
+            <div class="yr-knob" style="left:66.66%"></div>
           </div>
           <div class="yr-labels">
-            <span class="active" data-year="2023">2023</span>
+            <span data-year="2023">2023</span>
             <span data-year="2024">2024</span>
-            <span data-year="2025">2025</span>
+            <span class="active" data-year="2025">2025</span>
             <span data-year="2026">2026</span>
           </div>
         </div>
@@ -2472,7 +2646,7 @@ var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
 var yearA = '2023', snapA = 'after_champions';
-var yearB = '2023', snapB = 'after_champions';
+var yearB = '2025', snapB = 'after_champions';
 var fmt = 'bo3';
 
 function getGlobalRating(org, snapKey, domesticRating) {
@@ -3142,6 +3316,28 @@ function rvScroll(el, block){
   catch(e){ el.scrollIntoView(); }
 }
 
+function fetchWinStat(org, year, snap, host){
+  fetch('/mapelo/win-stat/' + encodeURIComponent(org) + '?year=' + encodeURIComponent(year) + '&snap=' + encodeURIComponent(snap))
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(s){
+      if(!s || !s.player) return;
+      var line = document.createElement('div');
+      line.className = 'rv-statline';
+      var kda = (s.K!=null && s.D!=null && s.A!=null) ? (s.K+'/'+s.D+'/'+s.A) : '';
+      var extras = [];
+      if(s.ACS) extras.push(Math.round(s.ACS)+' ACS');
+      if(s.R)   extras.push((+s.R).toFixed(2)+' rtg');
+      var suffix = extras.length ? ' ('+extras.join(', ')+')' : '';
+      var ctx = '';
+      if(s.opponent && s.opponent !== '?') ctx += ' vs <strong>'+s.opponent+'</strong>';
+      if(s.event) ctx += ' at '+s.event;
+      line.innerHTML = '<strong>'+s.player+'</strong> went <em>'+kda+suffix+'</em> in the win'+ctx+'.';
+      host.appendChild(line);
+      setTimeout(function(){ line.classList.add('shown'); rvScroll(line, 'center'); }, 80);
+    })
+    .catch(function(){});
+}
+
 function setStepLabel(txt){
   var el = document.getElementById('rv-step-label');
   if(el) el.textContent = txt;
@@ -3275,15 +3471,20 @@ function revealMaps(R, seq, body){
         if(revealAbort) return;
         var thresh = R.thresh;
         if(seriesA >= thresh || seriesB >= thresh){
+          var winnerSide = seriesA > seriesB ? 'A' : 'B';
+          var winnerOrg = winnerSide==='A' ? R.orgA : R.orgB;
+          var winnerYear = winnerSide==='A' ? R.yearA : R.yearB;
+          var winnerSnap = winnerSide==='A' ? R.snapA : R.snapB;
           var clinch = document.createElement('div');
           clinch.className = 'rv-clinch';
-          clinch.textContent = (seriesA>seriesB?R.orgA:R.orgB) + ' clinches the series ' +
+          clinch.textContent = winnerOrg + ' clinches the series ' +
             Math.max(seriesA,seriesB) + '-' + Math.min(seriesA,seriesB);
           mapsHost.appendChild(clinch);
           setTimeout(function(){ clinch.classList.add('shown'); }, 20);
           rvScroll(clinch, 'center');
           tick({freq:1500,dur:.18,vol:.07,type:'sine'});
           setTimeout(function(){ tick({freq:1900,dur:.22,vol:.07,type:'sine'}); }, 110);
+          fetchWinStat(winnerOrg, winnerYear, winnerSnap, mapsHost);
           revealAbort = true; // halt remaining maps after clinch
         }
         return abortable(700);
@@ -4102,6 +4303,14 @@ def mapelo_team_info(org):
     year = _req.args.get('year', '2025')
     snap = _req.args.get('snap', 'after_champions')
     data = _get_team_info(org, year, snap)
+    return Response(json.dumps(data), mimetype='application/json')
+
+@mapelo_bp.route('/win-stat/<org>')
+def mapelo_win_stat(org):
+    from flask import request as _req
+    year = _req.args.get('year', '2025')
+    snap = _req.args.get('snap', 'after_champions')
+    data = _get_random_win_stat(org, year, snap) or {}
     return Response(json.dumps(data), mimetype='application/json')
 
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
