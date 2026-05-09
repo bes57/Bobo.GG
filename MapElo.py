@@ -737,37 +737,7 @@ def _get_map_matches(org, map_name, year='2025', snap='after_champions'):
     return result
 
 
-PW_JS = """
-var PW_KEY = 'mapelo_unlocked';
-var wrap = document.getElementById('content-wrap');
-(function() {
-  if (sessionStorage.getItem(PW_KEY) !== '1') {
-    wrap.classList.add('blurred');
-    var overlay = document.createElement('div');
-    overlay.id = 'pw-overlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;';
-    overlay.innerHTML = '<div style="background:white;border-radius:24px;padding:36px 40px;box-shadow:0 8px 48px #00000018;display:flex;flex-direction:column;align-items:center;gap:16px;min-width:280px;">' +
-      '<h2 style="font-family:Syne,sans-serif;font-size:1.1rem;font-weight:800;">Enter password</h2>' +
-      '<input id="pw-input" type="password" placeholder="Password" autofocus style="width:100%;padding:10px 16px;border-radius:99px;border:2px solid #f0ecf4;font-family:DM Sans,sans-serif;font-size:.95rem;text-align:center;outline:none;">' +
-      '<button onclick="checkPw()" style="padding:10px 28px;border-radius:99px;border:none;background:#2a1f2d;color:white;font-family:DM Sans,sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;">Enter</button>' +
-      '</div>';
-    document.body.appendChild(overlay);
-    document.getElementById('pw-input').addEventListener('keydown', function(e){ if(e.key==='Enter') checkPw(); });
-  }
-})();
-function checkPw() {
-  var input = document.getElementById('pw-input');
-  if (input.value === 'TenZ') {
-    sessionStorage.setItem(PW_KEY, '1');
-    document.getElementById('pw-overlay').remove();
-    wrap.classList.remove('blurred');
-  } else {
-    input.style.borderColor = '#f4b8c1';
-    input.value = '';
-    setTimeout(function(){ input.style.borderColor = '#f0ecf4'; }, 400);
-  }
-}
-"""
+PW_JS = "/* password gate removed */"
 
 SHARED_CSS = """
   :root {
@@ -817,15 +787,36 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   SHARED_CSS
-  .hub-page { position:relative; z-index:1; padding:48px 32px; max-width:700px; margin:0 auto; }
-  .hub-title { font-family:'Syne',sans-serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; }
-  .hub-sub { font-size:.85rem; color:var(--soft); margin-bottom:36px; }
-  .hub-cards { display:flex; gap:20px; flex-wrap:wrap; }
-  .hub-card { background:white; border-radius:24px; padding:28px 24px; width:280px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .2s,box-shadow .2s; }
-  .hub-card:hover { transform:translateY(-5px); box-shadow:0 16px 40px #00000014; }
-  .hub-card-title { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:8px; }
+  .hub-hero { position:relative; z-index:1; margin:24px auto 32px; max-width:1100px; height:360px; border-radius:28px; overflow:hidden; box-shadow:0 18px 60px #00000022; isolation:isolate; }
+  .hub-hero-img { position:absolute; inset:0; background-image:url('/static/SantiagoFinal.jpg'); background-size:cover; background-position:center 35%; transform:scale(1.04); transition:transform 12s linear; }
+  .hub-hero:hover .hub-hero-img { transform:scale(1.1); }
+  .hub-hero::after { content:''; position:absolute; inset:0; background:
+    linear-gradient(180deg, #0e0a1455 0%, #0e0a1488 60%, #0e0a14ee 100%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, #5a2a7a55 0%, transparent 70%);
+    pointer-events:none; }
+  .hub-hero-content { position:absolute; left:0; right:0; bottom:0; padding:36px 40px 32px; color:white; text-align:left; z-index:2; }
+  .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#d4b8f4; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+  .hub-hero-eyebrow::before { content:''; display:inline-block; width:24px; height:2px; background:linear-gradient(90deg,#d4b8f4,transparent); }
+  .hub-hero-title { font-family:'Syne',sans-serif; font-size:clamp(2rem,6vw,4rem); font-weight:800; letter-spacing:-1.5px; line-height:1; margin-bottom:10px; background:linear-gradient(135deg,#fff 0%,#d4b8f4 100%); -webkit-background-clip:text; background-clip:text; color:transparent; word-break:keep-all; }
+  .hub-hero-sub { font-family:'DM Sans',sans-serif; font-size:.95rem; color:#e8dff4cc; max-width:520px; line-height:1.45; }
+  .hub-hero-cap { position:absolute; top:14px; right:18px; z-index:2; font-family:'Syne',sans-serif; font-size:.55rem; font-weight:800; letter-spacing:.15em; text-transform:uppercase; color:#ffffffaa; padding:4px 10px; border-radius:99px; background:#0e0a1466; backdrop-filter:blur(6px); }
+
+  .hub-page { position:relative; z-index:1; padding:0 32px 64px; max-width:760px; margin:0 auto; text-align:center; }
+  .hub-cards { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
+  .hub-card { background:white; border-radius:24px; padding:32px 26px 26px; width:300px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .25s,box-shadow .25s; text-align:left; position:relative; overflow:hidden; }
+  .hub-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg, transparent 60%, #d4b8f422 100%); opacity:0; transition:opacity .25s; pointer-events:none; }
+  .hub-card:hover { transform:translateY(-6px); box-shadow:0 16px 44px #00000018; }
+  .hub-card:hover::after { opacity:1; }
+  .hub-card-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; }
   .hub-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
-  .hub-card-arrow { margin-top:18px; font-size:.8rem; color:#ccc; }
+  .hub-card-arrow { margin-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
+  .hub-logo-strip { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:32px; opacity:.55; max-width:560px; margin-left:auto; margin-right:auto; }
+  .hub-logo-strip img { height:26px; width:26px; object-fit:contain; filter:grayscale(.4); transition:filter .2s, transform .2s; }
+  .hub-logo-strip img:hover { filter:none; transform:scale(1.18); }
+  @media(max-width:640px){
+    .hub-hero { height:280px; margin:16px 16px 24px; border-radius:18px; }
+    .hub-hero-content { padding:24px 22px 20px; }
+  }
 </style>
 </head>
 <body>
@@ -833,9 +824,17 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
   </div>
+  <section class="hub-hero">
+    <div class="hub-hero-img"></div>
+    <div class="hub-hero-cap">2026 Masters Santiago</div>
+    <div class="hub-hero-content">
+      <div class="hub-hero-eyebrow">Bobo&rsquo;s VCT Database</div>
+      <h1 class="hub-hero-title">BenPom</h1>
+      <p class="hub-hero-sub">Opponent-adjusted map ratings, KenPom-style. Pick two teams from any season and see the head-to-head play out, map by map.</p>
+    </div>
+  </section>
   <div class="hub-page">
-    <div class="hub-title">BenPom</div>
-    <p class="hub-sub">Opponent-adjusted map ratings for VCT franchised teams, 2023&ndash;2025.</p>
+    <div class="hub-logo-strip" id="hub-logo-strip"></div>
     <div class="hub-cards">
       <a class="hub-card" href="/mapelo/rankings/">
         <div class="hub-card-title">Rankings</div>
@@ -849,6 +848,18 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
       </a>
     </div>
   </div>
+  <script>
+  (function(){
+    var teams = ['SEN','LOUD','PRX','GEN','FNC','EG','NRG','TH','T1','DRX','KC','C9','LEV','G2','TL','BBL','100T','VIT','GX','DRG'];
+    var strip = document.getElementById('hub-logo-strip');
+    if(!strip) return;
+    var html = '';
+    teams.forEach(function(t){
+      html += '<img src="/logos/'+t+'.png" alt="'+t+'" onerror="this.style.display=\\'none\\'">';
+    });
+    strip.innerHTML = html;
+  })();
+  </script>
 </div>
 <script>PW_JS</script>
 </body>
@@ -2100,8 +2111,8 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:980px; margin:0 auto; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; }
-  .page-sub { font-size:.83rem; color:var(--soft); margin-bottom:28px; line-height:1.5; }
+  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; text-align:center; }
+  .page-sub { font-size:.83rem; color:var(--soft); margin-bottom:28px; line-height:1.5; text-align:center; }
   /* Team selector panels */
   .teams-grid { display:grid; grid-template-columns:1fr 96px 1fr; gap:0; align-items:start; margin-bottom:24px; }
   .team-panel { background:white; border-radius:24px; padding:22px 24px; box-shadow:0 4px 24px #0000000a; }
@@ -2141,18 +2152,30 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .result-bar-b { background:#e0d8ec; height:100%; transition:width .6s ease; }
   .result-bar-label { font-family:'Syne',sans-serif; font-size:.55rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
   /* Legend */
-  .fate-legend { display:flex; gap:12px; flex-wrap:wrap; padding:0 32px 14px; }
+  .fate-legend { display:flex; gap:12px; flex-wrap:wrap; padding:22px 32px 14px; }
   .fate-legend-item { display:flex; align-items:center; gap:5px; font-size:.67rem; color:var(--soft); }
   .fate-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
   /* Map table */
-  .map-tbl { width:100%; border-collapse:collapse; font-size:.81rem; }
-  .map-tbl thead th { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 14px; border-top:1px solid #f0ecf4; border-bottom:1px solid #f0ecf4; text-align:center; background:#faf8fc; white-space:nowrap; }
-  .map-tbl thead th:first-child { text-align:left; }
+  .map-tbl { width:100%; border-collapse:collapse; font-size:.86rem; }
+  .map-tbl thead th { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:10px 14px; border-top:1px solid #f0ecf4; border-bottom:1px solid #f0ecf4; text-align:center; background:#faf8fc; white-space:nowrap; }
+  .map-tbl thead th:first-child { text-align:left; padding-left:24px; }
+  .map-tbl thead th:nth-child(2) { text-align:left; }
   .map-tbl tbody tr { border-bottom:1px solid #f8f4fc; transition:background .1s; }
   .map-tbl tbody tr:last-child { border-bottom:none; }
   .map-tbl tbody tr:hover { background:#fdf6f0; }
-  .map-tbl tbody td { padding:10px 14px; text-align:center; vertical-align:middle; }
-  .map-tbl tbody td:first-child { text-align:left; font-family:'Syne',sans-serif; font-weight:800; }
+  .map-tbl tbody td { padding:18px 14px; text-align:center; vertical-align:middle; }
+  .map-tbl tbody td:first-child { text-align:left; font-family:'Syne',sans-serif; font-weight:800; padding-left:24px; }
+  .bd-map-mini { display:flex; align-items:center; gap:12px; font-size:1.05rem; }
+  .bd-map-mini img { width:38px; height:38px; object-fit:cover; border-radius:8px; }
+  /* Prominent probability cell */
+  .wp-prom { display:flex; align-items:center; gap:10px; justify-content:flex-start; }
+  .wp-prom-num { font-family:'Syne',sans-serif; font-size:1.45rem; font-weight:800; min-width:62px; text-align:left; line-height:1; }
+  .wp-prom-num.fav { color:#1a6a4a; }
+  .wp-prom-num.dog { color:#7a1a1a; }
+  .wp-prom-num.neu { color:var(--soft); }
+  .wp-prom-bg { width:90px; height:9px; border-radius:99px; background:#f0ecf4; overflow:hidden; }
+  .wp-prom-fill { height:100%; background:linear-gradient(90deg,#5a2a7a,#9a4ab4); border-radius:99px; transition:width .4s; }
+  .wp-prom-empty { font-family:'Syne',sans-serif; font-size:1rem; color:var(--soft); }
   /* Fate bar */
   .fate-bar-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; }
   .fate-bar { display:flex; border-radius:4px; overflow:hidden; height:8px; width:110px; background:#f0ecf4; }
@@ -2190,19 +2213,160 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .veto-steps { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
   .veto-step { display:flex; flex-direction:column; align-items:center; gap:2px; }
   .step-lbl { font-size:.55rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; border-radius:4px; padding:2px 5px; white-space:nowrap; }
-  .step-lbl-banA  { background:#fde8ec; color:#b03050; }
-  .step-lbl-banB  { background:#e8f8ee; color:#206040; }
-  .step-lbl-pickA { background:#ede0f8; color:#5a2a7a; }
-  .step-lbl-pickB { background:#deeef8; color:#1a508a; }
-  .step-lbl-dec   { background:#f0ecf4; color:#7a6e7e; }
+  .step-lbl-banA, .step-lbl-banB   { background:#fde8ec; color:#b03050; }
+  .step-lbl-pickA, .step-lbl-pickB { background:#e3f6ea; color:#206040; }
+  .step-lbl-dec                    { background:#f0ecf4; color:#7a6e7e; }
   .step-map { font-family:'Syne',sans-serif; font-weight:800; font-size:.72rem; color:#2a1f2d; white-space:nowrap; }
   .step-arrow { font-size:.7rem; color:#ccc; align-self:center; margin-top:10px; }
   .no-veto-data { font-size:.78rem; color:var(--soft); font-style:italic; }
-  @media(max-width:700px){
-    .teams-grid { grid-template-columns:1fr; }
-    .vs-col { flex-direction:row; padding:10px 0; justify-content:center; }
+
+  /* === MODE TOGGLE === */
+  .mode-toggle-row { display:flex; justify-content:center; margin-bottom:22px; }
+  .mode-toggle { display:inline-flex; background:white; border-radius:99px; padding:4px; box-shadow:0 4px 18px #0000000a; gap:2px; }
+  .mode-btn { background:transparent; border:none; padding:8px 18px; border-radius:99px; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); cursor:pointer; transition:all .2s; }
+  .mode-btn.active { background:linear-gradient(135deg,#5a2a7a,#9a4ab4); color:white; box-shadow:0 4px 12px #5a2a7a33; }
+  .mode-btn:not(.active):hover { color:var(--ink); }
+
+  /* === SIDE PANEL (replaces team-panel) === */
+  .side-grid { display:grid; grid-template-columns:1fr 80px 1fr; gap:0; align-items:stretch; margin-bottom:18px; }
+  .side-panel { background:white; border-radius:24px; padding:18px 16px 22px; box-shadow:0 4px 24px #0000000a; display:flex; flex-direction:column; align-items:stretch; }
+  .side-label { font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; text-align:center; }
+
+  /* === YEAR SCRUBBER === */
+  .yr-scrubber { position:relative; padding:6px 12px 22px; user-select:none; }
+  .yr-track { position:relative; height:4px; border-radius:99px; background:linear-gradient(90deg,#f4b8c1,#d4b8f4,#b8d8f4,#b8e8d4); margin:14px 0 4px; }
+  .yr-tick { position:absolute; top:50%; width:8px; height:8px; border-radius:50%; background:white; border:2px solid #d4b8f4; transform:translate(-50%,-50%); transition:transform .15s; cursor:pointer; }
+  .yr-tick.active { background:var(--ink); border-color:var(--ink); transform:translate(-50%,-50%) scale(1.4); }
+  .yr-tick:hover { transform:translate(-50%,-50%) scale(1.3); }
+  .yr-knob { position:absolute; top:50%; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); transform:translate(-50%,-50%); box-shadow:0 4px 12px #5a2a7a55, 0 0 0 4px white; transition:left .35s cubic-bezier(.5,1.6,.4,1); pointer-events:none; }
+  .yr-labels { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
+  .yr-labels span { cursor:pointer; padding:2px 4px; transition:color .15s; }
+  .yr-labels span.active { color:var(--ink); }
+  .yr-labels span:hover { color:var(--ink); }
+
+  /* === SNAPSHOT SEGMENTED === */
+  .snap-seg { display:flex; gap:3px; flex-wrap:wrap; justify-content:center; margin:6px 0 14px; }
+  .snap-seg-btn { background:#faf6fc; border:1.5px solid transparent; padding:4px 10px; border-radius:99px; font-family:'DM Sans',sans-serif; font-size:.68rem; color:var(--soft); cursor:pointer; transition:all .15s; }
+  .snap-seg-btn:hover { color:var(--ink); border-color:#e0d0ec; }
+  .snap-seg-btn.active { background:var(--ink); color:white; border-color:var(--ink); }
+
+  /* === TEAM SEARCH === */
+  .cf-search-wrap { position:relative; margin:6px 8px 12px; }
+  .cf-search { width:100%; padding:7px 30px 7px 30px; border-radius:99px; border:1.5px solid #f0ecf4; background:#faf8fc; font-family:'DM Sans',sans-serif; font-size:.78rem; color:var(--ink); outline:none; transition:border-color .15s, background .15s; }
+  .cf-search:focus { border-color:#d4b8f4; background:white; }
+  .cf-search::placeholder { color:#bcb2c4; }
+  .cf-search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:#bcb2c4; font-size:.75rem; pointer-events:none; }
+  .cf-search-clear { position:absolute; right:8px; top:50%; transform:translateY(-50%); width:18px; height:18px; border-radius:50%; background:#e8dff4; color:var(--soft); font-size:.7rem; border:none; cursor:pointer; display:none; align-items:center; justify-content:center; }
+  .cf-search-clear.visible { display:flex; }
+  .cf-search-clear:hover { background:var(--ink); color:white; }
+
+  /* === CYLINDER (drum) === */
+  .cf-stage { position:relative; height:170px; perspective:900px; perspective-origin:center 50%; overflow:hidden; cursor:grab; touch-action:pan-y; }
+  .cf-stage:active { cursor:grabbing; }
+  .cf-stage::before, .cf-stage::after { content:''; position:absolute; top:0; bottom:0; width:50px; pointer-events:none; z-index:5; }
+  .cf-stage::before { left:0; background:linear-gradient(90deg,white 5%,transparent); }
+  .cf-stage::after { right:0; background:linear-gradient(-90deg,white 5%,transparent); }
+  .cf-track { position:absolute; left:50%; top:50%; width:0; height:0; transform-style:preserve-3d; transition:transform .45s cubic-bezier(.45,1.5,.4,1); }
+  .cf-item { position:absolute; left:0; top:0; width:96px; height:96px; margin:-48px 0 0 -48px; display:flex; flex-direction:column; align-items:center; justify-content:center; transform-style:preserve-3d; backface-visibility:hidden; transition:opacity .3s; cursor:pointer; }
+  .cf-item .cf-card { width:96px; height:96px; border-radius:18px; background:white; display:flex; align-items:center; justify-content:center; padding:8px; box-shadow:0 4px 14px #00000014; transition:box-shadow .2s, transform .2s; }
+  .cf-item.center .cf-card { box-shadow:0 10px 28px #5a2a7a33, 0 0 0 2px #d4b8f4; transform:scale(1.04); }
+  .cf-item img { max-width:74px; max-height:74px; object-fit:contain; }
+  .cf-item .cf-fallback { font-family:'Syne',sans-serif; font-weight:800; font-size:.85rem; color:var(--ink); text-align:center; }
+  .cf-name { text-align:center; font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:-.02em; color:var(--ink); margin-top:6px; min-height:1.4em; }
+  .cf-region { text-align:center; font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:2px; min-height:1em; }
+  .cf-arrows { display:flex; justify-content:space-between; padding:0 6px; pointer-events:none; position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); z-index:6; }
+  .cf-arrow { pointer-events:all; background:white; border:none; width:32px; height:32px; border-radius:50%; box-shadow:0 2px 10px #00000018; cursor:pointer; font-size:1rem; color:var(--ink); display:flex; align-items:center; justify-content:center; transition:transform .15s, background .15s; }
+  .cf-arrow:hover { background:var(--ink); color:white; transform:scale(1.1); }
+  .cf-arrow:disabled { opacity:.3; cursor:not-allowed; }
+  .cf-arrow:disabled:hover { background:white; color:var(--ink); transform:none; }
+
+  /* === VS DIVIDER === */
+  .vs-divider { display:flex; align-items:center; justify-content:center; }
+  .vs-badge { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); color:white; font-family:'Syne',sans-serif; font-weight:800; font-size:.9rem; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px #5a2a7a44; letter-spacing:.05em; }
+
+  /* === REVEAL OVERLAY === */
+  .reveal-stage { background:white; border-radius:24px; box-shadow:0 4px 24px #0000000a; padding:30px; margin-bottom:20px; position:relative; min-height:240px; overflow:hidden; }
+  .reveal-skip { position:absolute; top:14px; right:16px; background:transparent; border:1.5px solid #e8dff4; color:var(--soft); border-radius:99px; padding:5px 14px; font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:all .15s; z-index:10; }
+  .reveal-skip:hover { color:var(--ink); border-color:#5a2a7a; }
+  .rv-step { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:14px; text-align:center; }
+
+  /* Sim intro */
+  .rv-intro { display:flex; align-items:center; justify-content:center; gap:40px; padding:30px 0; }
+  .rv-intro-team { display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; transform:translateX(-60px); animation:rvSlideIn .5s ease forwards; }
+  .rv-intro-team.b { transform:translateX(60px); animation-name:rvSlideInR; }
+  @keyframes rvSlideIn { to { opacity:1; transform:translateX(0); } }
+  @keyframes rvSlideInR { to { opacity:1; transform:translateX(0); } }
+  .rv-intro-team img { width:72px; height:72px; object-fit:contain; }
+  .rv-intro-vs { font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; animation:rvFadeIn .4s .3s forwards; }
+  @keyframes rvFadeIn { to { opacity:1; } }
+  .rv-shimmer { position:absolute; inset:0; background:linear-gradient(110deg,transparent 30%,#d4b8f455 50%,transparent 70%); transform:translateX(-100%); animation:rvShimmer 1.6s ease-in-out infinite; pointer-events:none; }
+  @keyframes rvShimmer { to { transform:translateX(100%); } }
+
+  /* Veto reveal grid */
+  .rv-veto-grid { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:14px 0; }
+  .rv-veto-slot { width:88px; height:104px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 4px; opacity:.4; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
+  .rv-veto-slot.revealed { opacity:1; transform:scale(1); animation:rvPop .4s ease; }
+  @keyframes rvPop { 0%{transform:scale(.7);} 60%{transform:scale(1.08);} 100%{transform:scale(1);} }
+  .rv-veto-slot.banned::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent 0 6px,#f4b8c133 6px 12px); pointer-events:none; }
+  .rv-veto-slot.banned img { filter:grayscale(1); opacity:.55; }
+  .rv-veto-slot img { width:54px; height:54px; object-fit:cover; border-radius:8px; }
+  .rv-veto-slot .rv-vs-map { font-family:'Syne',sans-serif; font-weight:800; font-size:.75rem; color:var(--ink); text-align:center; }
+  .rv-veto-slot .rv-vs-act { font-family:'Syne',sans-serif; font-weight:800; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; padding:1px 6px; border-radius:99px; }
+  .rv-act-banA, .rv-act-banB   { background:#fde8ec; color:#b03050; }
+  .rv-act-pickA, .rv-act-pickB { background:#e3f6ea; color:#206040; }
+  .rv-act-dec                  { background:#f0ecf4; color:#7a6e7e; }
+
+  /* Map result reveal cards */
+  .rv-maps { display:flex; flex-direction:column; gap:14px; padding:8px 0; }
+  .rv-map-card { background:#0e0a14; color:white; border-radius:18px; overflow:hidden; position:relative; min-height:140px; display:flex; align-items:stretch; opacity:0; transform:translateY(24px); transition:opacity .55s, transform .55s; }
+  .rv-map-card.shown { opacity:1; transform:translateY(0); }
+  .rv-map-card .rv-map-bg { position:absolute; inset:0; background-size:cover; background-position:center; opacity:.55; }
+  .rv-map-card .rv-map-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#0e0a1499 0%,#0e0a14ee 100%); }
+  .rv-map-inner { position:relative; z-index:1; padding:18px 22px; display:flex; align-items:center; gap:18px; width:100%; }
+  .rv-map-name { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; letter-spacing:.04em; text-transform:uppercase; flex:0 0 auto; }
+  .rv-map-num { font-family:'Syne',sans-serif; font-weight:800; font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:#a08fbf; margin-bottom:3px; }
+  .rv-map-pickedby { font-family:'Syne',sans-serif; font-size:.55rem; letter-spacing:.1em; text-transform:uppercase; color:#9a7ab4; margin-top:2px; }
+  .rv-map-h2h { display:flex; flex:1; align-items:center; justify-content:flex-end; gap:18px; }
+  .rv-map-team { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:84px; }
+  .rv-map-team img { width:38px; height:38px; object-fit:contain; filter:drop-shadow(0 2px 6px #00000060); }
+  .rv-map-team-name { font-family:'Syne',sans-serif; font-weight:800; font-size:.6rem; letter-spacing:.08em; color:#a08fbf; }
+  .rv-map-score { font-family:'Syne',sans-serif; font-weight:800; font-size:2.4rem; line-height:1; color:white; transition:color .3s, transform .25s, text-shadow .3s; }
+  .rv-map-score.bumped { transform:scale(1.18); }
+  .rv-map-score.win { color:#9affd0; text-shadow:0 0 22px #9affd088; }
+  .rv-map-score.lose { color:#7d6a8e; }
+  .rv-map-team-pct { font-family:'DM Sans',sans-serif; font-weight:600; font-size:.78rem; color:#a08fbf; min-height:1.1em; opacity:0; transition:opacity .35s; }
+  .rv-map-team-pct.shown { opacity:1; }
+  .rv-map-team-pct.win { color:#9affd0; }
+  .rv-map-vs-mini { font-family:'Syne',sans-serif; font-weight:800; font-size:.7rem; color:#796a89; align-self:center; }
+  .rv-map-result-badge { font-family:'Syne',sans-serif; font-weight:800; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; padding:5px 10px; border-radius:99px; background:#9a4ab4; color:white; align-self:center; opacity:0; transform:scale(.6); transition:opacity .35s, transform .35s; }
+  .rv-map-result-badge.shown { opacity:1; transform:scale(1); }
+
+  /* Series clinch */
+  .rv-clinch { text-align:center; padding:20px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; transform:scale(.85); transition:opacity .4s, transform .4s; }
+  .rv-clinch.shown { opacity:1; transform:scale(1); }
+
+  /* Final breakdown card grid */
+  .breakdown-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px; }
+  .bd-card { background:white; border-radius:18px; padding:16px 18px; box-shadow:0 4px 18px #00000008; }
+  .bd-card-title { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
+  .bd-mini-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; font-size:.78rem; border-bottom:1px solid #f6f1fa; }
+  .bd-mini-row:last-child { border-bottom:none; }
+  .bd-map-mini { display:flex; align-items:center; gap:8px; }
+  .bd-map-mini img { width:22px; height:22px; object-fit:cover; border-radius:5px; }
+
+  .replay-btn { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1.5px solid #e0d0ec; color:#5a2a7a; padding:6px 14px; border-radius:99px; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:all .15s; margin-top:10px; }
+  .replay-btn:hover { background:#5a2a7a; color:white; border-color:#5a2a7a; }
+
+  /* Smooth result-section dismissal */
+  #result-section { transition:opacity .32s ease, transform .32s ease, max-height .42s ease; max-height:9999px; overflow:hidden; }
+  #result-section.rs-fade-out { opacity:0; transform:translateY(-8px); max-height:0 !important; }
+
+  @media(max-width:740px){
+    .side-grid { grid-template-columns:1fr; }
+    .vs-divider { padding:6px 0; }
     .result-mid { flex:0 0 80px; }
     .result-pct { font-size:1.8rem; }
+    .rv-map-h2h { flex-wrap:wrap; gap:8px; }
   }
 </style>
 </head>
@@ -2216,31 +2380,76 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
     <div class="page-title">Matchup Predictor</div>
     <p class="page-sub">Monte Carlo veto simulation. Each team can be set to a different season and timeframe.</p>
 
-    <div class="teams-grid">
-      <div class="team-panel">
-        <div class="tp-side">Team A</div>
-        <div class="yr-row">
-          <button class="yr-btn" data-side="a" data-year="2026">2026</button>
-          <button class="yr-btn active" data-side="a" data-year="2025">2025</button>
-          <button class="yr-btn" data-side="a" data-year="2024">2024</button>
-          <button class="yr-btn" data-side="a" data-year="2023">2023</button>
-        </div>
-        <select id="snap-a" class="snap-sel"></select>
-        <select id="team-a" class="team-sel"></select>
+    <div class="mode-toggle-row">
+      <div class="mode-toggle">
+        <button class="mode-btn active" data-mode="dramatic">Dramatic Reveal</button>
+        <button class="mode-btn" data-mode="straight">Straightforward</button>
       </div>
-      <div class="vs-col">
-        <div class="vs-text">vs</div>
-      </div>
-      <div class="team-panel">
-        <div class="tp-side">Team B</div>
-        <div class="yr-row">
-          <button class="yr-btn" data-side="b" data-year="2026">2026</button>
-          <button class="yr-btn active" data-side="b" data-year="2025">2025</button>
-          <button class="yr-btn" data-side="b" data-year="2024">2024</button>
-          <button class="yr-btn" data-side="b" data-year="2023">2023</button>
+    </div>
+
+    <div class="side-grid">
+      <div class="side-panel">
+        <div class="side-label">Team A</div>
+        <div class="yr-scrubber" data-side="a">
+          <div class="yr-track">
+            <div class="yr-tick active" data-year="2023" style="left:0%"></div>
+            <div class="yr-tick" data-year="2024" style="left:33.33%"></div>
+            <div class="yr-tick" data-year="2025" style="left:66.66%"></div>
+            <div class="yr-tick" data-year="2026" style="left:100%"></div>
+            <div class="yr-knob" style="left:0%"></div>
+          </div>
+          <div class="yr-labels">
+            <span class="active" data-year="2023">2023</span>
+            <span data-year="2024">2024</span>
+            <span data-year="2025">2025</span>
+            <span data-year="2026">2026</span>
+          </div>
         </div>
-        <select id="snap-b" class="snap-sel"></select>
-        <select id="team-b" class="team-sel"></select>
+        <div class="snap-seg" id="snap-a"></div>
+        <div class="cf-search-wrap">
+          <span class="cf-search-icon">&#9906;</span>
+          <input class="cf-search" id="cf-search-a" data-side="a" placeholder="Search teams…" autocomplete="off">
+          <button class="cf-search-clear" data-side="a" type="button">&times;</button>
+        </div>
+        <div class="cf-stage" id="cf-a">
+          <div class="cf-track"></div>
+          <div class="cf-arrows"><button class="cf-arrow" data-side="a" data-dir="-1">&lsaquo;</button><button class="cf-arrow" data-side="a" data-dir="1">&rsaquo;</button></div>
+        </div>
+        <div class="cf-name" id="cf-name-a"></div>
+        <div class="cf-region" id="cf-region-a"></div>
+      </div>
+      <div class="vs-divider">
+        <div class="vs-badge">VS</div>
+      </div>
+      <div class="side-panel">
+        <div class="side-label">Team B</div>
+        <div class="yr-scrubber" data-side="b">
+          <div class="yr-track">
+            <div class="yr-tick active" data-year="2023" style="left:0%"></div>
+            <div class="yr-tick" data-year="2024" style="left:33.33%"></div>
+            <div class="yr-tick" data-year="2025" style="left:66.66%"></div>
+            <div class="yr-tick" data-year="2026" style="left:100%"></div>
+            <div class="yr-knob" style="left:0%"></div>
+          </div>
+          <div class="yr-labels">
+            <span class="active" data-year="2023">2023</span>
+            <span data-year="2024">2024</span>
+            <span data-year="2025">2025</span>
+            <span data-year="2026">2026</span>
+          </div>
+        </div>
+        <div class="snap-seg" id="snap-b"></div>
+        <div class="cf-search-wrap">
+          <span class="cf-search-icon">&#9906;</span>
+          <input class="cf-search" id="cf-search-b" data-side="b" placeholder="Search teams…" autocomplete="off">
+          <button class="cf-search-clear" data-side="b" type="button">&times;</button>
+        </div>
+        <div class="cf-stage" id="cf-b">
+          <div class="cf-track"></div>
+          <div class="cf-arrows"><button class="cf-arrow" data-side="b" data-dir="-1">&lsaquo;</button><button class="cf-arrow" data-side="b" data-dir="1">&rsaquo;</button></div>
+        </div>
+        <div class="cf-name" id="cf-name-b"></div>
+        <div class="cf-region" id="cf-region-b"></div>
       </div>
     </div>
 
@@ -2250,7 +2459,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
         <button class="fmt-btn active" data-fmt="bo3">Bo3</button>
         <button class="fmt-btn" data-fmt="bo5">Bo5</button>
       </div>
-      <button class="sim-btn" onclick="runMatchup()">Run</button>
+      <button class="sim-btn" onclick="runMatchup()">Run Simulation</button>
     </div>
 
     <div id="result-section"></div>
@@ -2262,8 +2471,8 @@ var VETO = DATA.veto_model || {teams:{}, snap_pools:{}};
 var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
-var yearA = '2025', snapA = 'after_champions';
-var yearB = '2025', snapB = 'after_champions';
+var yearA = '2023', snapA = 'after_champions';
+var yearB = '2023', snapB = 'after_champions';
 var fmt = 'bo3';
 
 function getGlobalRating(org, snapKey, domesticRating) {
@@ -2313,44 +2522,290 @@ function getSnapData(year, snap) {
   var snaps = getSnapsFor(year);
   return snaps[snap] || snaps['after_champions'] || snaps['before_champions'] || snaps[Object.keys(snaps)[0]] || {};
 }
-function populateSnapSel(side) {
-  var year = side==='a' ? yearA : yearB;
-  var cur  = side==='a' ? snapA  : snapB;
-  var snaps = getSnapsFor(year), keys = Object.keys(snaps);
-  var sel = document.getElementById('snap-'+side);
-  sel.innerHTML = keys.map(function(k){
-    return '<option value="'+k+'"'+(k===cur?' selected':'')+'>'+((snaps[k]||{}).label||k)+'</option>';
-  }).join('');
-  if (!snaps[cur]){ var f=keys[0]; if(side==='a') snapA=f; else snapB=f; sel.value=f; }
+var mode = 'dramatic';
+var YEARS = ['2023','2024','2025','2026'];
+var CF = {a:{teams:[],idx:0,startX:0,dragging:false,startIdx:0}, b:{teams:[],idx:0,startX:0,dragging:false,startIdx:0}};
+
+// ── Tick SFX (Web Audio) ─────────────────────────────────────────────────────
+var audioCtx=null, audioOn=true;
+function ensureAudio(){ if(audioCtx) return; try{ audioCtx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+function tick(opts){
+  if(!audioOn) return;
+  ensureAudio(); if(!audioCtx) return;
+  opts = opts||{};
+  var t=audioCtx.currentTime, freq=opts.freq||1100, dur=opts.dur||0.045, vol=opts.vol||0.06, type=opts.type||'square';
+  var o=audioCtx.createOscillator(), g=audioCtx.createGain();
+  o.type=type; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(t); o.stop(t+dur+0.02);
 }
-function populateTeamSel(side) {
+function tickSeq(seq){ seq.forEach(function(s,i){ setTimeout(function(){ tick(s); }, s.delay||(i*60)); }); }
+
+// ── Snapshot segmented control ───────────────────────────────────────────────
+function populateSnapSeg(side){
+  var year = side==='a'?yearA:yearB, cur = side==='a'?snapA:snapB;
+  var snaps = getSnapsFor(year), keys = Object.keys(snaps);
+  var host = document.getElementById('snap-'+side);
+  if(!keys.length){ host.innerHTML=''; return; }
+  if(keys.indexOf(cur)<0){ cur=keys[0]; if(side==='a') snapA=cur; else snapB=cur; }
+  host.innerHTML = keys.map(function(k){
+    var lbl = (snaps[k]||{}).label || k;
+    return '<button class="snap-seg-btn'+(k===cur?' active':'')+'" data-side="'+side+'" data-snap="'+k+'">'+lbl+'</button>';
+  }).join('');
+  host.querySelectorAll('.snap-seg-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      var s=b.dataset.side, sn=b.dataset.snap;
+      if(s==='a'){ if(snapA===sn) return; snapA=sn; } else { if(snapB===sn) return; snapB=sn; }
+      populateSnapSeg(s); populateTeams(s);
+      clearResult();
+    });
+  });
+}
+
+// ── Coverflow ────────────────────────────────────────────────────────────────
+function populateTeams(side){
   var year=side==='a'?yearA:yearB, snap=side==='a'?snapA:snapB;
   var teams=Object.keys((getSnapData(year,snap).teams)||{}).sort();
-  var sel=document.getElementById('team-'+side), cur=sel.value;
-  sel.innerHTML=teams.map(function(t){ return '<option value="'+t+'">'+t+'</option>'; }).join('');
-  if(teams.indexOf(cur)>=0) sel.value=cur;
-  else sel.value=(side==='a'?teams[0]:teams[1])||teams[0]||'';
+  var st = CF[side];
+  var prev = st.teams[st.idx];
+  st.teams = teams;
+  var newIdx = teams.indexOf(prev);
+  if(newIdx<0){
+    if(side==='a') newIdx = 0;
+    else newIdx = teams.length>1 ? 1 : 0;
+  }
+  st.idx = Math.max(0, newIdx);
+  buildCoverflow(side);
+  // suppress the cylinder-rotation transition during a rebuild — items appear in place
+  var stage = document.getElementById('cf-'+side);
+  var track = stage.querySelector('.cf-track');
+  var prevTrans = track.style.transition;
+  track.style.transition = 'none';
+  updateCoverflow(side);
+  void track.offsetWidth; // force reflow so the suppression takes effect
+  track.style.transition = prevTrans;
 }
-document.querySelectorAll('.yr-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    var side=btn.dataset.side, year=btn.dataset.year;
-    if(side==='a'){ if(yearA===year) return; yearA=year; snapA=getLastSnap(year); }
-    else           { if(yearB===year) return; yearB=year; snapB=getLastSnap(year); }
-    document.querySelectorAll('.yr-btn[data-side="'+side+'"]').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    populateSnapSel(side); populateTeamSel(side);
-    document.getElementById('result-section').innerHTML='';
+
+var CF_ANGLE = 26;   // degrees per item slot
+var CF_RADIUS = 200; // cylinder radius (px)
+
+function buildCoverflow(side){
+  var stage = document.getElementById('cf-'+side);
+  var track = stage.querySelector('.cf-track');
+  var st = CF[side];
+  track.innerHTML = st.teams.map(function(t,i){
+    return '<div class="cf-item" data-side="'+side+'" data-idx="'+i+'">'+
+      '<div class="cf-card">'+
+        '<img src="/logos/'+t+'.png" alt="'+t+'" onerror="this.outerHTML=\\'<div class=cf-fallback>'+t+'</div>\\'">'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  track.querySelectorAll('.cf-item').forEach(function(el){
+    el.addEventListener('click', function(){
+      var idx = parseInt(el.dataset.idx,10);
+      if(idx === CF[side].idx) return;
+      CF[side].idx = idx;
+      updateCoverflow(side);
+      clearResult();
+    });
+  });
+}
+
+function updateCoverflow(side){
+  var st = CF[side];
+  var stage = document.getElementById('cf-'+side);
+  var track = stage.querySelector('.cf-track');
+  // rotate the cylinder so the selected item sits at the front
+  track.style.transform = 'translateZ(-'+CF_RADIUS+'px) rotateY('+(-st.idx * CF_ANGLE)+'deg)';
+  var items = track.querySelectorAll('.cf-item');
+  items.forEach(function(el, i){
+    var off = i - st.idx;
+    var abs = Math.abs(off);
+    el.classList.toggle('center', off===0);
+    el.style.transform = 'rotateY('+(i*CF_ANGLE)+'deg) translateZ('+CF_RADIUS+'px)';
+    if(abs > 5){
+      el.style.opacity = 0;
+      el.style.pointerEvents = 'none';
+    } else {
+      el.style.opacity = Math.max(0.12, 1 - abs*0.22);
+      el.style.pointerEvents = abs<=3 ? 'auto' : 'none';
+    }
+  });
+  // arrow disabled state
+  var prevBtn = stage.querySelector('.cf-arrow[data-dir="-1"]');
+  var nextBtn = stage.querySelector('.cf-arrow[data-dir="1"]');
+  if(prevBtn) prevBtn.disabled = (st.idx <= 0);
+  if(nextBtn) nextBtn.disabled = (st.idx >= st.teams.length-1);
+  var org = st.teams[st.idx] || '';
+  document.getElementById('cf-name-'+side).textContent = org;
+  document.getElementById('cf-region-'+side).textContent = ORG_REGIONS[org] || '';
+}
+
+function shiftCoverflow(side, delta){
+  var st = CF[side];
+  if(!st.teams.length) return;
+  var n = st.teams.length;
+  var ni = Math.max(0, Math.min(n-1, st.idx + delta));
+  if(ni === st.idx) return;
+  st.idx = ni;
+  updateCoverflow(side);
+  clearResult();
+}
+
+var _clearTimer = null;
+function clearResult(){
+  var sec = document.getElementById('result-section');
+  if(!sec || !sec.children.length) return;
+  if(_clearTimer){ clearTimeout(_clearTimer); _clearTimer=null; }
+  // bring the team selectors into view so the fade has somewhere to "go" instead of jolting
+  var sg = document.querySelector('.side-grid');
+  if(sg){
+    var r = sg.getBoundingClientRect();
+    if(r.top < -20 || r.top > window.innerHeight - 200){
+      try { sg.scrollIntoView({behavior:'smooth', block:'start'}); } catch(e){ sg.scrollIntoView(); }
+    }
+  }
+  sec.classList.add('rs-fade-out');
+  _clearTimer = setTimeout(function(){
+    sec.innerHTML = '';
+    sec.classList.remove('rs-fade-out');
+    _clearTimer = null;
+  }, 340);
+}
+
+// ── Year scrubber ────────────────────────────────────────────────────────────
+function setYear(side, year){
+  if(YEARS.indexOf(year)<0) return;
+  if(side==='a' && yearA===year) return;
+  if(side==='b' && yearB===year) return;
+  if(side==='a'){ yearA=year; snapA=getLastSnap(year); }
+  else { yearB=year; snapB=getLastSnap(year); }
+  // update scrubber visuals
+  var pct = (YEARS.indexOf(year)/(YEARS.length-1))*100;
+  var scrubber = document.querySelector('.yr-scrubber[data-side="'+side+'"]');
+  scrubber.querySelectorAll('.yr-tick').forEach(function(t){ t.classList.toggle('active', t.dataset.year===year); });
+  scrubber.querySelectorAll('.yr-labels span').forEach(function(s){ s.classList.toggle('active', s.dataset.year===year); });
+  scrubber.querySelector('.yr-knob').style.left = pct+'%';
+  populateSnapSeg(side); populateTeams(side);
+  clearResult();
+}
+
+document.querySelectorAll('.yr-scrubber').forEach(function(sc){
+  var side = sc.dataset.side;
+  sc.querySelectorAll('.yr-tick, .yr-labels span').forEach(function(el){
+    el.addEventListener('click', function(){ setYear(side, el.dataset.year); });
+  });
+  // drag knob
+  var track = sc.querySelector('.yr-track');
+  var dragging = false;
+  function knobFromX(clientX){
+    var r = track.getBoundingClientRect();
+    var ratio = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    var idx = Math.round(ratio * (YEARS.length-1));
+    return YEARS[idx];
+  }
+  sc.querySelector('.yr-knob').addEventListener('mousedown', function(e){ dragging=true; e.preventDefault(); });
+  track.addEventListener('mousedown', function(e){ var y=knobFromX(e.clientX); setYear(side, y); dragging=true; });
+  document.addEventListener('mousemove', function(e){ if(!dragging) return; setYear(side, knobFromX(e.clientX)); });
+  document.addEventListener('mouseup', function(){ dragging=false; });
+  // touch
+  track.addEventListener('touchstart', function(e){ var t=e.touches[0]; setYear(side, knobFromX(t.clientX)); dragging=true; }, {passive:true});
+  document.addEventListener('touchmove', function(e){ if(!dragging) return; var t=e.touches[0]; setYear(side, knobFromX(t.clientX)); }, {passive:true});
+  document.addEventListener('touchend', function(){ dragging=false; });
+});
+
+// ── Coverflow controls ───────────────────────────────────────────────────────
+document.querySelectorAll('.cf-arrow').forEach(function(b){
+  b.addEventListener('click', function(){ shiftCoverflow(b.dataset.side, parseInt(b.dataset.dir,10)); });
+});
+['a','b'].forEach(function(side){
+  var stage = document.getElementById('cf-'+side);
+  // wheel
+  stage.addEventListener('wheel', function(e){
+    e.preventDefault();
+    var d = (e.deltaY||e.deltaX) > 0 ? 1 : -1;
+    if(stage._wt && Date.now()-stage._wt < 90) return;
+    stage._wt = Date.now();
+    shiftCoverflow(side, d);
+  }, {passive:false});
+  // drag
+  var st = CF[side];
+  stage.addEventListener('mousedown', function(e){ st.dragging=true; st.startX=e.clientX; st.startIdx=st.idx; });
+  document.addEventListener('mousemove', function(e){
+    if(!st.dragging) return;
+    var dx = e.clientX - st.startX;
+    var ni = Math.max(0, Math.min(st.teams.length-1, st.startIdx - Math.round(dx/60)));
+    if(ni !== st.idx){ st.idx = ni; updateCoverflow(side); clearResult(); }
+  });
+  document.addEventListener('mouseup', function(){ st.dragging=false; });
+  stage.addEventListener('touchstart', function(e){ var t=e.touches[0]; st.dragging=true; st.startX=t.clientX; st.startIdx=st.idx; }, {passive:true});
+  document.addEventListener('touchmove', function(e){
+    if(!st.dragging) return;
+    var t=e.touches[0]; var dx = t.clientX - st.startX;
+    var ni = Math.max(0, Math.min(st.teams.length-1, st.startIdx - Math.round(dx/55)));
+    if(ni !== st.idx){ st.idx = ni; updateCoverflow(side); clearResult(); }
+  }, {passive:true});
+  document.addEventListener('touchend', function(){ st.dragging=false; });
+});
+
+// ── Team search ──────────────────────────────────────────────────────────────
+['a','b'].forEach(function(side){
+  var input = document.getElementById('cf-search-'+side);
+  var clear = document.querySelector('.cf-search-clear[data-side="'+side+'"]');
+  if(!input) return;
+  function applySearch(q){
+    q = (q||'').trim().toLowerCase();
+    clear.classList.toggle('visible', q.length>0);
+    if(!q) return;
+    var teams = CF[side].teams;
+    var prefix = -1, contain = -1;
+    for(var i=0;i<teams.length;i++){
+      var t = teams[i].toLowerCase();
+      if(prefix<0 && t.indexOf(q)===0){ prefix=i; break; }
+      if(contain<0 && t.indexOf(q)>=0) contain=i;
+    }
+    var hit = prefix>=0 ? prefix : contain;
+    if(hit>=0 && hit !== CF[side].idx){ CF[side].idx = hit; updateCoverflow(side); clearResult(); }
+  }
+  input.addEventListener('input', function(){ applySearch(input.value); });
+  input.addEventListener('keydown', function(e){
+    if(e.key==='Enter'){ e.preventDefault(); applySearch(input.value); input.blur(); }
+    if(e.key==='Escape'){ input.value=''; applySearch(''); input.blur(); }
+  });
+  if(clear) clear.addEventListener('click', function(){ input.value=''; applySearch(''); input.focus(); });
+});
+
+// keyboard: left/right cycles last-focused side
+var lastSide = 'a';
+document.querySelectorAll('.cf-stage').forEach(function(s){
+  s.addEventListener('mouseenter', function(){ lastSide = s.id.split('-')[1]; });
+});
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowLeft'){ shiftCoverflow(lastSide,-1); e.preventDefault(); }
+  else if(e.key==='ArrowRight'){ shiftCoverflow(lastSide,1); e.preventDefault(); }
+});
+
+// ── Mode toggle ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.mode-btn').forEach(function(b){
+  b.addEventListener('click', function(){
+    if(mode===b.dataset.mode) return;
+    mode = b.dataset.mode;
+    document.querySelectorAll('.mode-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
   });
 });
-document.getElementById('snap-a').addEventListener('change', function(){ snapA=this.value; populateTeamSel('a'); document.getElementById('result-section').innerHTML=''; });
-document.getElementById('snap-b').addEventListener('change', function(){ snapB=this.value; populateTeamSel('b'); document.getElementById('result-section').innerHTML=''; });
+
 document.querySelectorAll('.fmt-btn').forEach(function(btn){
   btn.addEventListener('click', function(){
     if(fmt===btn.dataset.fmt) return;
     fmt=btn.dataset.fmt;
     document.querySelectorAll('.fmt-btn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
-    document.getElementById('result-section').innerHTML='';
+    clearResult();
   });
 });
 
@@ -2435,18 +2890,47 @@ function topVetoSequences(tA, tB, orgA, orgB, pool, yA, yB, sA, sB, f, K) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
-function runMatchup() {
-  var orgA=document.getElementById('team-a').value;
-  var orgB=document.getElementById('team-b').value;
-  if(!orgA||!orgB) return;
+var ACTION_CLS = {banA:['step-lbl-banA','rv-act-banA'], banB:['step-lbl-banB','rv-act-banB'], pickA:['step-lbl-pickA','rv-act-pickA'], pickB:['step-lbl-pickB','rv-act-pickB'], dec:['step-lbl-dec','rv-act-dec']};
+function actionLabel(orgA, orgB, key){
+  if(key==='dec') return 'Decider';
+  var verb = key.indexOf('ban')===0 ? 'Ban' : 'Pick';
+  var team = key.charAt(key.length-1)==='A' ? orgA : orgB;
+  return verb+' '+team;
+}
+function fateLabel(orgA, orgB, key){
+  if(key==='dec') return 'Decider';
+  var verb = key.indexOf('ban')===0 ? 'Banned by' : 'Picked by';
+  var team = key.charAt(key.length-1)==='A' ? orgA : orgB;
+  return verb+' '+team;
+}
+var RANK_LABELS = ['#1 Most likely','#2','#3'];
+var MAP_IMG_OVERRIDES = {}; // map names match files in /static/maps/ (lowercase). For odd casing, fall back gracefully.
+
+function mapImg(name){ return '/maps/' + (name||'').toLowerCase() + '.png'; }
+function logoImg(org){ return '/logos/' + org + '.png'; }
+function logoTag(org, cls){
+  cls = cls || '';
+  return '<img src="'+logoImg(org)+'" class="'+cls+'" alt="'+org+'" onerror="this.style.visibility=\\'hidden\\'">';
+}
+function intlBadgeHtml(org, bd) {
+  if(!bd.region || (!bd.regOff && !bd.indBonus)) return '';
+  var tot=bd.total, cls=tot>0.05?'rd-pos':tot<-0.05?'rd-neg':'rt-neu';
+  var parts=[];
+  if(Math.abs(bd.regOff)>0.005) parts.push((bd.regOff>=0?'+':'')+bd.regOff.toFixed(2)+' '+bd.region+' region');
+  if(Math.abs(bd.indBonus)>0.005) parts.push((bd.indBonus>=0?'+':'')+bd.indBonus.toFixed(2)+' indiv.');
+  return '<div class="intl-adj"><span class="intl-adj-label">Intl adj</span><span class="intl-adj-val '+cls+'">'+(tot>=0?'+':'')+tot.toFixed(2)+'</span><span class="intl-adj-tip">'+parts.join(', ')+'</span></div>';
+}
+
+function simulate() {
+  var orgA = CF.a.teams[CF.a.idx], orgB = CF.b.teams[CF.b.idx];
+  if(!orgA||!orgB) return null;
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
-  if(!tA||!tB) return;
+  if(!tA||!tB) return null;
   var rawBeta=((sdA.beta||0.08)+(sdB.beta||0.08))/2;
   var crossRegional = (ORG_REGIONS[orgA] && ORG_REGIONS[orgB] && ORG_REGIONS[orgA] !== ORG_REGIONS[orgB]);
   var beta = crossRegional ? rawBeta * (INTL_PARAMS.cross_regional_beta_mult || 1.0) : rawBeta;
 
-  // Map pool: use the older era so both teams have played every map in it
   var rdA = sdA.ref_date || (yearA + '-01-01');
   var rdB = sdB.ref_date || (yearB + '-01-01');
   var olderYear = rdA <= rdB ? yearA : yearB;
@@ -2480,124 +2964,463 @@ function runMatchup() {
     });
     if(sw>=thresh) seriesWins++;
   }
+
   var pA_=seriesWins/nSims, pctA=Math.round(pA_*100), pctB=100-pctA;
   var lblA=((getSnapsFor(yearA)[snapA])||{}).label||snapA;
   var lblB=((getSnapsFor(yearB)[snapB])||{}).label||snapB;
   var fmtLabel = fmt==='bo1'?'Map win prob.':fmt==='bo5'?'Series win prob. (Bo5)':'Series win prob. (Bo3)';
-
-  // ── Beam search for top predicted sequences ──
   var topSeqs = topVetoSequences(tA,tB,orgA,orgB,pool,yearA,yearB,snapA,snapB,fmt,3);
-  var hasPatt = (((VETO.teams||{})[yearA+'_'+snapA]||{})[orgA] || ((VETO.teams||{})[yearB+'_'+snapB]||{})[orgB]);
-  var RANK_LABELS = ['#1 Most likely','#2','#3'];
-  var ACTION_LBCLS = {banA:['Ban A','step-lbl-banA'],banB:['Ban B','step-lbl-banB'],pickA:['Pick A','step-lbl-pickA'],pickB:['Pick B','step-lbl-pickB'],dec:['Decider','step-lbl-dec']};
-  var vetoHtml;
-  if(!hasPatt){
-    vetoHtml='<div class="no-veto-data">No historical veto data available for these teams in the selected year.</div>';
-  } else {
-    vetoHtml = topSeqs.map(function(seq,idx){
-      var pct = Math.round(seq.prob*100);
-      var steps = seq.seq.map(function(step,si){
-        var ac = ACTION_LBCLS[step.action+step.side]||['?','step-lbl-dec'];
-        var arrow = si < seq.seq.length-1 ? '<span class="step-arrow">›</span>' : '';
-        return '<div class="veto-step"><span class="step-lbl '+ac[1]+'">'+ac[0]+'</span><span class="step-map">'+step.map+'</span></div>'+arrow;
-      }).join('');
-      return '<div class="veto-seq">'+
-        '<div class="veto-seq-header">'+
-          '<span class="veto-seq-rank">'+RANK_LABELS[idx]+'</span>'+
-          '<span class="veto-seq-pct">~'+pct+'%</span>'+
-        '</div>'+
-        '<div class="veto-steps">'+steps+'</div>'+
-      '</div>';
-    }).join('');
-  }
+  var hasPatt = !!((((VETO.teams||{})[yearA+'_'+snapA]||{})[orgA]) || (((VETO.teams||{})[yearB+'_'+snapB]||{})[orgB]));
 
-  // ── Map table ──
-  var sorted=pool.slice().sort(function(a,b){return mapPlays[b]-mapPlays[a];});
-  var rows=sorted.map(function(m){
-    var dA=(tA.maps[m]||{}).rating!=null?(tA.maps[m]||{}).rating:tA.overall_rating;
-    var dB=(tB.maps[m]||{}).rating!=null?(tB.maps[m]||{}).rating:tB.overall_rating;
-    var rA=getGlobalRating(orgA, snapKeyA, dA), rB=getGlobalRating(orgB, snapKeyB, dB);
-    var bA_=fateCnt.banA[m]/nSims, pA_m=fateCnt.pickA[m]/nSims, dc=fateCnt.dec[m]/nSims, pB_m=fateCnt.pickB[m]/nSims, bB_=fateCnt.banB[m]/nSims;
+  return {
+    orgA:orgA, orgB:orgB, tA:tA, tB:tB, beta:beta,
+    yearA:yearA, snapA:snapA, lblA:lblA, snapKeyA:snapKeyA, intlA:intlA,
+    yearB:yearB, snapB:snapB, lblB:lblB, snapKeyB:snapKeyB, intlB:intlB,
+    fmt:fmt, fmtLabel:fmtLabel, thresh:thresh, pool:pool,
+    pctA:pctA, pctB:pctB,
+    fateCnt:fateCnt, mapPlays:mapPlays, mapWins:mapWins, nSims:nSims,
+    topSeqs:topSeqs, hasPatt:hasPatt
+  };
+}
+
+function buildMapRows(R){
+  var sorted = R.pool.slice().sort(function(a,b){ return R.mapPlays[b] - R.mapPlays[a]; });
+  return sorted.map(function(m){
+    var dA=(R.tA.maps[m]||{}).rating!=null?(R.tA.maps[m]||{}).rating:R.tA.overall_rating;
+    var dB=(R.tB.maps[m]||{}).rating!=null?(R.tB.maps[m]||{}).rating:R.tB.overall_rating;
+    var rA=getGlobalRating(R.orgA, R.snapKeyA, dA), rB=getGlobalRating(R.orgB, R.snapKeyB, dB);
+    var bA_=R.fateCnt.banA[m]/R.nSims, pA_m=R.fateCnt.pickA[m]/R.nSims, dc=R.fateCnt.dec[m]/R.nSims, pB_m=R.fateCnt.pickB[m]/R.nSims, bB_=R.fateCnt.banB[m]/R.nSims;
     var bar=''; [[bA_,'fs-banA'],[pA_m,'fs-pickA'],[dc,'fs-dec'],[pB_m,'fs-pickB'],[bB_,'fs-banB']].forEach(function(p){ if(p[0]>0.005) bar+='<div class="fate-seg '+p[1]+'" style="width:'+(p[0]*100).toFixed(1)+'%"></div>'; });
     var fv={banA:bA_,pickA:pA_m,pickB:pB_m,banB:bB_,dec:dc};
     var dom='banA'; Object.keys(fv).forEach(function(k){if(fv[k]>fv[dom]) dom=k;});
-    var fateLabels={banA:'Banned by A',pickA:'Picked by A',pickB:'Picked by B',banB:'Banned by B',dec:'Decider'};
+    var fateLabels = {banA:fateLabel(R.orgA,R.orgB,'banA'), pickA:fateLabel(R.orgA,R.orgB,'pickA'), pickB:fateLabel(R.orgA,R.orgB,'pickB'), banB:fateLabel(R.orgA,R.orgB,'banB'), dec:'Decider'};
     var rACls=rA>0.05?'rt-pos':rA<-0.05?'rt-neg':'rt-neu';
     var rBCls=rB>0.05?'rt-pos':rB<-0.05?'rt-neg':'rt-neu';
-    var p_m=mapPlays[m]>0?1/(1+Math.exp(-beta*(rA-rB))):0.5;
+    var p_m=R.mapPlays[m]>0?1/(1+Math.exp(-R.beta*(rA-rB))):0.5;
     var projRd=(2*p_m-1)*13, rdCls=projRd>0.5?'rd-pos':projRd<-0.5?'rd-neg':'rt-neu';
-    var wpHtml='<span class="rt-neu">—</span>';
-    if(mapPlays[m]>0){
-      var wp=mapWins[m]/mapPlays[m], wpCls=wp>=0.55?'rd-pos':wp<=0.45?'rd-neg':'rt-neu';
-      wpHtml='<div class="wp-cell"><div class="wp-bg"><div class="wp-fill" style="width:'+Math.round(wp*52)+'px"></div></div><span class="wp-num '+wpCls+'">'+(wp*100).toFixed(0)+'%</span></div>';
+    var probHtml='<span class="wp-prom-empty">— map banned —</span>';
+    if(R.mapPlays[m]>0){
+      var wp=R.mapWins[m]/R.mapPlays[m];
+      var wpCls = wp>=0.55?'fav':(wp<=0.45?'dog':'neu');
+      probHtml = '<div class="wp-prom">'+
+        '<div class="wp-prom-num '+wpCls+'">'+(wp*100).toFixed(0)+'%</div>'+
+        '<div class="wp-prom-bg"><div class="wp-prom-fill" style="width:'+Math.round(wp*100)+'%"></div></div>'+
+      '</div>';
     }
-    return '<tr><td>'+m+'</td>'+
+    return '<tr><td><div class="bd-map-mini"><img src="'+mapImg(m)+'" onerror="this.style.display=\\'none\\'">'+m+'</div></td>'+
+      '<td style="text-align:left;">'+probHtml+'</td>'+
       '<td><div class="fate-bar-wrap"><div class="fate-bar">'+bar+'</div><div class="fate-txt">'+fateLabels[dom]+'</div></div></td>'+
       '<td class="'+rACls+'">'+(rA>=0?'+':'')+rA.toFixed(2)+'</td>'+
       '<td class="'+rBCls+'">'+(rB>=0?'+':'')+rB.toFixed(2)+'</td>'+
-      '<td class="'+rdCls+'">'+(projRd>=0?'+':'')+projRd.toFixed(1)+'</td>'+
-      '<td>'+wpHtml+'</td></tr>';
+      '<td class="'+rdCls+'">'+(projRd>=0?'+':'')+projRd.toFixed(1)+'</td></tr>';
   }).join('');
+}
 
-  // ── International adjustment badges ──
-  function intlBadgeHtml(org, bd) {
-    if(!bd.region || (!bd.regOff && !bd.indBonus)) return '';
-    var tot=bd.total, cls=tot>0.05?'rd-pos':tot<-0.05?'rd-neg':'rt-neu';
-    var parts=[];
-    if(Math.abs(bd.regOff)>0.005) parts.push((bd.regOff>=0?'+':'')+bd.regOff.toFixed(2)+' '+bd.region+' region');
-    if(Math.abs(bd.indBonus)>0.005) parts.push((bd.indBonus>=0?'+':'')+bd.indBonus.toFixed(2)+' indiv.');
-    return '<div class="intl-adj"><span class="intl-adj-label">Intl adj</span><span class="intl-adj-val '+cls+'">'+(tot>=0?'+':'')+tot.toFixed(2)+'</span><span class="intl-adj-tip">'+parts.join(', ')+'</span></div>';
-  }
+function vetoListHtml(R){
+  if(!R.hasPatt) return '<div class="no-veto-data">No historical veto data available for these teams in the selected year.</div>';
+  return R.topSeqs.map(function(seq,idx){
+    var steps = seq.seq.map(function(step,si){
+      var key = step.action + step.side;
+      var cls = (ACTION_CLS[key] || ACTION_CLS.dec)[0];
+      var lbl = actionLabel(R.orgA, R.orgB, key);
+      var arrow = si < seq.seq.length-1 ? '<span class="step-arrow">›</span>' : '';
+      return '<div class="veto-step"><span class="step-lbl '+cls+'">'+lbl+'</span><span class="step-map">'+step.map+'</span></div>'+arrow;
+    }).join('');
+    return '<div class="veto-seq">'+
+      '<div class="veto-seq-header">'+
+        '<span class="veto-seq-rank">'+RANK_LABELS[idx]+'</span>'+
+      '</div>'+
+      '<div class="veto-steps">'+steps+'</div>'+
+    '</div>';
+  }).join('');
+}
 
-  document.getElementById('result-section').innerHTML=
-    '<div class="result-card" style="margin-bottom:20px;">'+
-      '<div class="result-top">'+
-        '<div class="result-teams-row">'+
-          '<div class="result-team-block">'+
-            '<img src="/logos/'+orgA+'.png" class="result-logo" onerror="this.style.visibility=\\'hidden\\'">'+
-            '<div class="result-org">'+orgA+'</div>'+
-            '<div class="result-ctx">'+yearA+'&thinsp;&middot;&thinsp;'+lblA+'</div>'+
-            intlBadgeHtml(orgA, intlA)+
-            '<div class="result-pct '+(pctA>=50?'fav':'dog')+'">'+pctA+'%</div>'+
-          '</div>'+
-          '<div class="result-mid">'+
-            '<div class="result-bar-label">'+fmtLabel+'</div>'+
-            '<div class="result-bar-outer"><div class="result-bar-a" style="width:'+pctA+'%"></div><div class="result-bar-b" style="width:'+pctB+'%"></div></div>'+
-          '</div>'+
-          '<div class="result-team-block">'+
-            '<img src="/logos/'+orgB+'.png" class="result-logo" onerror="this.style.visibility=\\'hidden\\'">'+
-            '<div class="result-org">'+orgB+'</div>'+
-            '<div class="result-ctx">'+yearB+'&thinsp;&middot;&thinsp;'+lblB+'</div>'+
-            intlBadgeHtml(orgB, intlB)+
-            '<div class="result-pct '+(pctB>=50?'fav':'dog')+'">'+pctB+'%</div>'+
-          '</div>'+
+function topHeaderHtml(R){
+  return '<div class="result-card" style="margin-bottom:20px;">'+
+    '<div class="result-top">'+
+      '<div class="result-teams-row">'+
+        '<div class="result-team-block">'+
+          logoTag(R.orgA,'result-logo')+
+          '<div class="result-org">'+R.orgA+'</div>'+
+          '<div class="result-ctx">'+R.yearA+'&thinsp;&middot;&thinsp;'+R.lblA+'</div>'+
+          intlBadgeHtml(R.orgA, R.intlA)+
+          '<div class="result-pct '+(R.pctA>=50?'fav':'dog')+'">'+R.pctA+'%</div>'+
+        '</div>'+
+        '<div class="result-mid">'+
+          '<div class="result-bar-label">'+R.fmtLabel+'</div>'+
+          '<div class="result-bar-outer"><div class="result-bar-a" style="width:'+R.pctA+'%"></div><div class="result-bar-b" style="width:'+R.pctB+'%"></div></div>'+
+        '</div>'+
+        '<div class="result-team-block">'+
+          logoTag(R.orgB,'result-logo')+
+          '<div class="result-org">'+R.orgB+'</div>'+
+          '<div class="result-ctx">'+R.yearB+'&thinsp;&middot;&thinsp;'+R.lblB+'</div>'+
+          intlBadgeHtml(R.orgB, R.intlB)+
+          '<div class="result-pct '+(R.pctB>=50?'fav':'dog')+'">'+R.pctB+'%</div>'+
         '</div>'+
       '</div>'+
     '</div>'+
-    '<div class="veto-pred-card">'+
-      '<div class="veto-pred-title">Predicted Veto — '+orgA+' vs '+orgB+'</div>'+
-      vetoHtml+
+  '</div>';
+}
+
+function breakdownHtml(R){
+  return '<div class="veto-pred-card">'+
+    '<div class="veto-pred-title">Predicted Veto — '+R.orgA+' vs '+R.orgB+'</div>'+
+    vetoListHtml(R)+
+  '</div>'+
+  '<div class="result-card">'+
+    '<div class="fate-legend">'+
+      '<div class="fate-legend-item"><div class="fate-dot" style="background:#f4b8c1"></div>Banned by '+R.orgA+'</div>'+
+      '<div class="fate-legend-item"><div class="fate-dot" style="background:#5a2a7a"></div>Picked by '+R.orgA+'</div>'+
+      '<div class="fate-legend-item"><div class="fate-dot" style="background:#c8b8d8"></div>Decider</div>'+
+      '<div class="fate-legend-item"><div class="fate-dot" style="background:#7ab8e8"></div>Picked by '+R.orgB+'</div>'+
+      '<div class="fate-legend-item"><div class="fate-dot" style="background:#b8e8d4"></div>Banned by '+R.orgB+'</div>'+
     '</div>'+
-    '<div class="result-card">'+
-      '<div class="fate-legend">'+
-        '<div class="fate-legend-item"><div class="fate-dot" style="background:#f4b8c1"></div>Banned by A</div>'+
-        '<div class="fate-legend-item"><div class="fate-dot" style="background:#5a2a7a"></div>Picked by A</div>'+
-        '<div class="fate-legend-item"><div class="fate-dot" style="background:#c8b8d8"></div>Decider</div>'+
-        '<div class="fate-legend-item"><div class="fate-dot" style="background:#7ab8e8"></div>Picked by B</div>'+
-        '<div class="fate-legend-item"><div class="fate-dot" style="background:#b8e8d4"></div>Banned by B</div>'+
-      '</div>'+
-      '<table class="map-tbl"><thead><tr>'+
-        '<th>Map</th><th>Veto outcome</th>'+
-        '<th>'+orgA+' rtg</th><th>'+orgB+' rtg</th>'+
-        '<th>Proj. RD (A)</th><th>A win% if played</th>'+
-      '</tr></thead><tbody>'+rows+'</tbody></table>'+
-      '<div class="result-note">'+nSims.toLocaleString()+' simulations &middot; '+fmt.toUpperCase()+' &middot; veto driven by historical ban/pick patterns &middot; ratings not normalized across seasons</div>'+
+    '<table class="map-tbl"><thead><tr>'+
+      '<th>Map</th>'+
+      '<th>'+R.orgA+' win% if played</th>'+
+      '<th>Veto outcome</th>'+
+      '<th>'+R.orgA+' rtg</th><th>'+R.orgB+' rtg</th>'+
+      '<th>Proj. RD ('+R.orgA+')</th>'+
+    '</tr></thead><tbody>'+buildMapRows(R)+'</tbody></table>'+
+    '<div class="result-note">'+R.nSims.toLocaleString()+' simulations &middot; '+R.fmt.toUpperCase()+' &middot; veto driven by historical ban/pick patterns &middot; ratings not normalized across seasons</div>'+
+  '</div>';
+}
+
+function renderStraight(R){
+  document.getElementById('result-section').innerHTML = topHeaderHtml(R) + breakdownHtml(R);
+}
+
+// ── Dramatic reveal ──────────────────────────────────────────────────────────
+var revealAbort = false;
+
+function wait(ms){ return new Promise(function(res){ setTimeout(res, ms); }); }
+function abortable(ms){
+  return new Promise(function(res){
+    var t0=Date.now();
+    (function step(){
+      if(revealAbort) return res();
+      if(Date.now()-t0 >= ms) return res();
+      setTimeout(step, Math.min(50, ms-(Date.now()-t0)));
+    })();
+  });
+}
+
+function rvSeqFor(R){
+  if(R.topSeqs && R.topSeqs.length) return R.topSeqs[0].seq;
+  // fallback: build deterministic sequence from VETO_STEPS using uniform pool
+  var rem=R.pool.slice(), seq=[];
+  (VETO_STEPS[R.fmt]||VETO_STEPS.bo3).forEach(function(step){
+    var m = rem[Math.floor(Math.random()*rem.length)];
+    seq.push({side:step.side, action:step.action, map:m});
+    rem = rem.filter(function(x){return x!==m;});
+  });
+  if(rem.length) seq.push({side:'',action:'dec',map:rem[0]});
+  return seq;
+}
+
+function renderDramatic(R){
+  revealAbort = false;
+  R._finished = false;
+  var section = document.getElementById('result-section');
+  section.innerHTML =
+    '<div class="reveal-stage" id="reveal-stage">'+
+      '<button class="reveal-skip" id="reveal-skip">Skip &raquo;</button>'+
+      '<div class="rv-step" id="rv-step-label">Initializing simulation</div>'+
+      '<div id="rv-body"></div>'+
     '</div>';
+  document.getElementById('reveal-skip').addEventListener('click', function(){
+    revealAbort = true;
+    finishReveal(R);
+  });
+  rvScroll(document.getElementById('reveal-stage'), 'start');
+  playReveal(R);
+}
+
+function rvScroll(el, block){
+  if(!el) return;
+  try { el.scrollIntoView({behavior:'smooth', block: block || 'center'}); }
+  catch(e){ el.scrollIntoView(); }
+}
+
+function setStepLabel(txt){
+  var el = document.getElementById('rv-step-label');
+  if(el) el.textContent = txt;
+}
+
+function playReveal(R){
+  var body = document.getElementById('rv-body');
+  // Phase 1 — intro
+  setStepLabel('Simulating');
+  body.innerHTML =
+    '<div class="rv-shimmer"></div>'+
+    '<div class="rv-intro">'+
+      '<div class="rv-intro-team">'+logoTag(R.orgA,'')+'<div style="font-family:Syne,sans-serif;font-weight:800;">'+R.orgA+'</div></div>'+
+      '<div class="rv-intro-vs">VS</div>'+
+      '<div class="rv-intro-team b">'+logoTag(R.orgB,'')+'<div style="font-family:Syne,sans-serif;font-weight:800;">'+R.orgB+'</div></div>'+
+    '</div>';
+  tick({freq:520,dur:.18,vol:.04,type:'sine'});
+
+  abortable(1100).then(function(){
+    if(revealAbort) return;
+    // Phase 2 — veto reveal
+    setStepLabel('Predicted veto sequence');
+    var seq = rvSeqFor(R);
+    body.innerHTML = '<div class="rv-veto-grid" id="rv-veto-grid"></div>';
+    var grid = document.getElementById('rv-veto-grid');
+    rvScroll(grid, 'center');
+    seq.forEach(function(step){
+      var key = step.action + step.side;
+      var cls = (ACTION_CLS[key] || ACTION_CLS.dec)[1];
+      var lbl = actionLabel(R.orgA, R.orgB, key);
+      var slot = document.createElement('div');
+      slot.className = 'rv-veto-slot';
+      if(step.action==='ban') slot.classList.add('banned');
+      slot.innerHTML =
+        '<img src="'+mapImg(step.map)+'" onerror="this.style.visibility=\\'hidden\\'">'+
+        '<div class="rv-vs-map">'+step.map+'</div>'+
+        '<div class="rv-vs-act '+cls+'">'+lbl+'</div>';
+      grid.appendChild(slot);
+    });
+    return revealVetoSlots(grid).then(function(){
+      if(revealAbort) return;
+      return revealMaps(R, seq, body);
+    });
+  }).then(function(){
+    finishReveal(R);
+  });
+}
+
+function revealVetoSlots(grid){
+  var slots = grid.querySelectorAll('.rv-veto-slot');
+  return new Promise(function(res){
+    var i = 0;
+    function next(){
+      if(revealAbort || i>=slots.length){ return res(); }
+      slots[i].classList.add('revealed');
+      var cls = slots[i].querySelector('.rv-vs-act').className;
+      if(cls.indexOf('banA')>=0||cls.indexOf('banB')>=0) tick({freq:380,dur:.07,vol:.05,type:'square'});
+      else if(cls.indexOf('pick')>=0) tick({freq:1200,dur:.06,vol:.06,type:'square'});
+      else tick({freq:900,dur:.08,vol:.05,type:'square'});
+      i++;
+      setTimeout(next, 360);
+    }
+    next();
+  });
+}
+
+function revealMaps(R, seq, body){
+  // collect picked + decider in order
+  var played = seq.filter(function(s){ return s.action==='pick' || s.action==='dec'; });
+  if(!played.length) return Promise.resolve();
+  setStepLabel('Map results');
+  var mapsHost = document.createElement('div');
+  mapsHost.className = 'rv-maps';
+  mapsHost.id = 'rv-maps-host';
+  body.appendChild(mapsHost);
+
+  var seriesA = 0, seriesB = 0;
+  return played.reduce(function(p, step, idx){
+    return p.then(function(){
+      if(revealAbort) return;
+      var m = step.map;
+      var dA=(R.tA.maps[m]||{}).rating!=null?(R.tA.maps[m]||{}).rating:R.tA.overall_rating;
+      var dB=(R.tB.maps[m]||{}).rating!=null?(R.tB.maps[m]||{}).rating:R.tB.overall_rating;
+      var rA=getGlobalRating(R.orgA, R.snapKeyA, dA), rB=getGlobalRating(R.orgB, R.snapKeyB, dB);
+      var pA = 1/(1+Math.exp(-R.beta*(rA-rB)));
+      var winA = Math.random() < pA;
+      if(winA) seriesA++; else seriesB++;
+      var pickedBy = step.action==='dec' ? 'Decider' :
+                      (step.side==='A' ? R.orgA+' pick' : R.orgB+' pick');
+      var pAFav = Math.max(pA, 1-pA);
+      var score = sampleScore(pAFav);
+
+      var card = document.createElement('div');
+      card.className = 'rv-map-card';
+      card.innerHTML =
+        '<div class="rv-map-bg" style="background-image:url('+mapImg(m)+')"></div>'+
+        '<div class="rv-map-inner">'+
+          '<div>'+
+            '<div class="rv-map-num">Map '+(idx+1)+'</div>'+
+            '<div class="rv-map-name">'+m+'</div>'+
+            '<div class="rv-map-pickedby">'+pickedBy+'</div>'+
+          '</div>'+
+          '<div class="rv-map-h2h">'+
+            '<div class="rv-map-team">'+
+              logoTag(R.orgA,'')+
+              '<div class="rv-map-team-name">'+R.orgA+'</div>'+
+              '<div class="rv-map-score" id="rv-score-A-'+idx+'">0</div>'+
+              '<div class="rv-map-team-pct" id="rv-pct-A-'+idx+'"></div>'+
+            '</div>'+
+            '<div class="rv-map-vs-mini">VS</div>'+
+            '<div class="rv-map-team">'+
+              logoTag(R.orgB,'')+
+              '<div class="rv-map-team-name">'+R.orgB+'</div>'+
+              '<div class="rv-map-score" id="rv-score-B-'+idx+'">0</div>'+
+              '<div class="rv-map-team-pct" id="rv-pct-B-'+idx+'"></div>'+
+            '</div>'+
+          '</div>'+
+          '<div class="rv-map-result-badge" id="rv-badge-'+idx+'">'+(winA?R.orgA:R.orgB)+' takes it</div>'+
+        '</div>';
+      mapsHost.appendChild(card);
+      setTimeout(function(){ card.classList.add('shown'); }, 20);
+      rvScroll(card, 'center');
+      tick({freq:660,dur:.12,vol:.06,type:'sine'});
+      return abortable(420).then(function(){
+        if(revealAbort) return;
+        return animateRoundTally(idx, winA, score);
+      }).then(function(){
+        if(revealAbort) return;
+        return revealMapPct(idx, pA, winA);
+      }).then(function(){
+        if(revealAbort) return;
+        var thresh = R.thresh;
+        if(seriesA >= thresh || seriesB >= thresh){
+          var clinch = document.createElement('div');
+          clinch.className = 'rv-clinch';
+          clinch.textContent = (seriesA>seriesB?R.orgA:R.orgB) + ' clinches the series ' +
+            Math.max(seriesA,seriesB) + '-' + Math.min(seriesA,seriesB);
+          mapsHost.appendChild(clinch);
+          setTimeout(function(){ clinch.classList.add('shown'); }, 20);
+          rvScroll(clinch, 'center');
+          tick({freq:1500,dur:.18,vol:.07,type:'sine'});
+          setTimeout(function(){ tick({freq:1900,dur:.22,vol:.07,type:'sine'}); }, 110);
+          revealAbort = true; // halt remaining maps after clinch
+        }
+        return abortable(700);
+      });
+    });
+  }, Promise.resolve());
+}
+
+function sampleScore(pFav){
+  // pFav in [0.5, 1]. Stronger favorite → larger margin.
+  // Valorant: first to 13, win by 2. Tie at 12-12 → OT, must win by 2 (14-12, 15-13, ...).
+  var projRD = (2*pFav - 1) * 13;
+  var jitter = (Math.random()*2 - 1) * 2.0;
+  var loser = Math.round(13 - projRD + jitter);
+  loser = Math.max(3, Math.min(13, loser));
+  if(loser <= 11) return {winner: 13, loser: loser};
+  // OT zone — score becomes 14-12, 15-13, 16-14, ...
+  var loserOT = 12;
+  var r = Math.random();
+  if(r > 0.78){ loserOT = 13; }   // ~22% chance of an extended OT (15-13)
+  if(r > 0.94){ loserOT = 14; }   // ~6% even longer (16-14)
+  return {winner: loserOT + 2, loser: loserOT};
+}
+
+function genRoundSequence(winnerScore, loserScore){
+  // Build a credible round sequence ending with a winner round (the clincher).
+  // For OT we still just shuffle then append a final winner round.
+  var seq = [];
+  for(var i=0;i<winnerScore-1;i++) seq.push(true);
+  for(var i=0;i<loserScore;i++) seq.push(false);
+  // Fisher-Yates shuffle
+  for(var i=seq.length-1; i>0; i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var tmp = seq[i]; seq[i]=seq[j]; seq[j]=tmp;
+  }
+  seq.push(true); // clincher
+  return seq;
+}
+
+function animateRoundTally(idx, winA, score){
+  return new Promise(function(res){
+    var elA = document.getElementById('rv-score-A-'+idx);
+    var elB = document.getElementById('rv-score-B-'+idx);
+    if(!elA || !elB) return res();
+    var seq = genRoundSequence(score.winner, score.loser);
+    var winnerEl = winA ? elA : elB;
+    var loserEl  = winA ? elB : elA;
+    var sW = 0, sL = 0;
+    var i = 0;
+    var perRound = 95;
+    function bump(el){
+      el.classList.add('bumped');
+      setTimeout(function(){ el.classList.remove('bumped'); }, 110);
+    }
+    function step(){
+      if(revealAbort){
+        winnerEl.textContent = score.winner;
+        loserEl.textContent = score.loser;
+        return finish();
+      }
+      if(i >= seq.length) return finish();
+      var winnerRd = seq[i];
+      if(winnerRd){ sW++; winnerEl.textContent = sW; bump(winnerEl); }
+      else        { sL++; loserEl.textContent  = sL; bump(loserEl);  }
+      var isClincher = (i === seq.length - 1);
+      if(isClincher){
+        tick({freq:1500,dur:.16,vol:.07,type:'sine'});
+        setTimeout(function(){ tick({freq:1850,dur:.18,vol:.06,type:'sine'}); }, 90);
+      } else {
+        tick({freq: 1080 + Math.random()*180, dur:.028, vol:.035, type:'square'});
+      }
+      i++;
+      setTimeout(step, perRound);
+    }
+    function finish(){
+      winnerEl.classList.add('win');
+      loserEl.classList.add('lose');
+      setTimeout(res, 320);
+    }
+    step();
+  });
+}
+
+function revealMapPct(idx, pA, winA){
+  return new Promise(function(res){
+    var elA = document.getElementById('rv-pct-A-'+idx);
+    var elB = document.getElementById('rv-pct-B-'+idx);
+    var b   = document.getElementById('rv-badge-'+idx);
+    if(elA){ elA.textContent = Math.round(pA*100)+'% to win'; if(winA) elA.classList.add('win'); elA.classList.add('shown'); }
+    if(elB){ elB.textContent = Math.round((1-pA)*100)+'% to win'; if(!winA) elB.classList.add('win'); elB.classList.add('shown'); }
+    if(b) b.classList.add('shown');
+    setTimeout(res, 360);
+  });
+}
+
+function finishReveal(R){
+  if(R._finished) return;
+  R._finished = true;
+  revealAbort = true;
+  var section = document.getElementById('result-section');
+  // pop the skip button — reveal is done
+  var skip = document.getElementById('reveal-skip');
+  if(skip) skip.remove();
+  // remove any old breakdown (replay edge case)
+  var oldBd = document.getElementById('reveal-breakdown');
+  if(oldBd) oldBd.remove();
+  var bd = document.createElement('div');
+  bd.id = 'reveal-breakdown';
+  bd.style.marginTop = '20px';
+  bd.innerHTML = topHeaderHtml(R) + breakdownHtml(R) +
+    '<div style="text-align:center;margin-top:6px;"><button class="replay-btn" id="replay-btn">&#9654; Replay reveal</button></div>';
+  section.appendChild(bd);
+  var rb = document.getElementById('replay-btn');
+  if(rb) rb.addEventListener('click', function(){ renderDramatic(R); });
+  rvScroll(bd, 'start');
+}
+
+function runMatchup() {
+  ensureAudio();
+  // cancel any in-flight fade-out so we don't wipe the new content
+  if(_clearTimer){ clearTimeout(_clearTimer); _clearTimer = null; }
+  var sec = document.getElementById('result-section');
+  if(sec){ sec.classList.remove('rs-fade-out'); sec.innerHTML = ''; }
+  var R = simulate();
+  if(!R) return;
+  if(mode==='dramatic') renderDramatic(R);
+  else renderStraight(R);
 }
 
 (function(){
-  populateSnapSel('a'); populateSnapSel('b');
-  populateTeamSel('a'); populateTeamSel('b');
+  populateSnapSeg('a'); populateSnapSeg('b');
+  populateTeams('a'); populateTeams('b');
+  // Default selection: EG (A) vs NRG (B)
+  var ai = CF.a.teams.indexOf('EG');
+  var bi = CF.b.teams.indexOf('NRG');
+  if(ai >= 0){ CF.a.idx = ai; updateCoverflow('a'); }
+  if(bi >= 0){ CF.b.idx = bi; updateCoverflow('b'); }
 })();
 </script>
 <script>PW_JS</script>
