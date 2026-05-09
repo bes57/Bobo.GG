@@ -1339,6 +1339,7 @@ MAPELO_HOME_HTML = """
 <script>
 var DATA = RATINGS_JSON;
 var INTL = DATA.intl_calib || {};
+var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
 var currentYear     = '2026';
 var currentSnap     = (function(){ var keys=Object.keys((DATA.ratings['2026']||{}).snapshots||{}); return keys.indexOf('after_champions')>=0?'after_champions':keys[keys.length-1]||'after_champions'; })();
@@ -2259,6 +2260,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 var DATA = RATINGS_JSON;
 var VETO = DATA.veto_model || {teams:{}, snap_pools:{}};
 var INTL = DATA.intl_calib || {};
+var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
 var yearA = '2025', snapA = 'after_champions';
 var yearB = '2025', snapB = 'after_champions';
@@ -2440,10 +2442,16 @@ function runMatchup() {
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return;
-  var beta=((sdA.beta||0.08)+(sdB.beta||0.08))/2;
+  var rawBeta=((sdA.beta||0.08)+(sdB.beta||0.08))/2;
+  var crossRegional = (ORG_REGIONS[orgA] && ORG_REGIONS[orgB] && ORG_REGIONS[orgA] !== ORG_REGIONS[orgB]);
+  var beta = crossRegional ? rawBeta * (INTL_PARAMS.cross_regional_beta_mult || 1.0) : rawBeta;
 
-  // Map pool: prefer snap_pool (event-accurate), fall back to union of rated maps
-  var pool = getActivePool(yearA, snapA);
+  // Map pool: use the older era so both teams have played every map in it
+  var rdA = sdA.ref_date || (yearA + '-01-01');
+  var rdB = sdB.ref_date || (yearB + '-01-01');
+  var olderYear = rdA <= rdB ? yearA : yearB;
+  var olderSnap = rdA <= rdB ? snapA  : snapB;
+  var pool = getActivePool(olderYear, olderSnap);
   if(!pool){
     var seen={}; Object.keys(tA.maps||{}).forEach(function(m){seen[m]=true;}); Object.keys(tB.maps||{}).forEach(function(m){seen[m]=true;});
     pool=Object.keys(seen).sort();
@@ -3239,6 +3247,7 @@ def mapelo_home():
         'lambda_grid':  full.get('lambda_grid', []),
         'ratings':      full['ratings'],
         'intl_calib':   intl.get('calibration', {}),
+        'intl_params':  intl.get('params', {}),
         'org_regions':  ORG_REGIONS,
     }
     return MAPELO_HOME_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
@@ -3254,6 +3263,7 @@ def mapelo_matchup():
         'ratings':     full['ratings'],
         'veto_model':  {'teams': veto.get('teams', {}), 'snap_pools': veto.get('snap_pools', {})},
         'intl_calib':  intl.get('calibration', {}),
+        'intl_params': intl.get('params', {}),
         'org_regions': ORG_REGIONS,
     }
     return MAPELO_MATCHUP_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
