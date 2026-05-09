@@ -683,10 +683,14 @@ def _mvp_of(rows):
         pass
     return rows.sample(1).iloc[0]
 
-def _get_random_win_stat(org, year='2025', snap='after_champions', n_maps=3):
-    """MVP function: take the team's last 20 maps played (any opponent, win or loss),
-    randomly sample `n_maps` of them, aggregate every player's stats across the sample,
-    and return the highest-average-rated player's combined statline."""
+def _get_mvp_stat(org, year='2025', snap='after_champions', n_maps=3):
+    """MVP function. Pool = the team's most recent 20 *maps played* (win or loss,
+    any opponent). Sample `n_maps` of them at random, aggregate every player's
+    stats across the sample (sums for K/D/A, averages for ACS and R 2.0), and
+    return the highest-average-rated player's combined statline.
+
+    `n_maps` is the number of maps that were played in the simulated series
+    (e.g. 4 for a 3-1 Bo5), NOT the number won."""
     import random
 
     try: n_maps = max(1, int(n_maps))
@@ -917,21 +921,23 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#e8dff4; margin-bottom:14px; display:inline-flex; align-items:center; gap:12px; }
   .hub-hero-eyebrow::before, .hub-hero-eyebrow::after { content:''; display:inline-block; width:36px; height:2px; background:linear-gradient(90deg, transparent, #d4b8f4, transparent); }
   .hub-hero-title { font-family:'Syne',sans-serif; font-size:clamp(2.6rem,7.5vw,5.4rem); font-weight:800; letter-spacing:-2px; line-height:1; margin-bottom:18px; background:linear-gradient(135deg,#fff 0%,#e6d6f7 60%,#d4b8f4 100%); -webkit-background-clip:text; background-clip:text; color:transparent; word-break:keep-all; text-shadow:0 8px 36px #0e0a1455; }
-  .hub-hero-sub { font-family:'DM Sans',sans-serif; font-size:1rem; color:#f5eaf5; max-width:560px; margin:0 auto; line-height:1.5; text-shadow:0 2px 14px #0e0a1466; }
+  .hub-hero-sub { font-family:'DM Sans',sans-serif; font-size:1rem; color:#f5eaf5; max-width:none; margin:0 auto; line-height:1.5; text-shadow:0 2px 14px #0e0a1466; white-space:nowrap; }
   .hub-hero-cap { position:absolute; top:22px; right:24px; z-index:2; font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:#ffffffcc; padding:6px 12px; border-radius:99px; background:#0e0a1466; backdrop-filter:blur(6px); }
   .hub-hero-nav { position:absolute; top:0; left:0; right:0; z-index:3; padding:24px 32px 0; }
   .hub-hero-nav .home-logo { filter:drop-shadow(0 4px 18px #0e0a1466); }
   /* Top overscroll shows the dark hero color, bottom overscroll shows cream.
      Use a fixed-attached gradient on html so the top half always paints dark and the
      bottom half cream — body's solid cream paints over it for normal viewing. */
-  html { background:linear-gradient(180deg, #0e0a14 0%, #0e0a14 50%, var(--cream) 50%, var(--cream) 100%) no-repeat fixed; background-color:var(--cream); }
+  /* No overscroll on the hub — both top and bottom rubber-band disabled. */
+  html { background:var(--cream); overscroll-behavior:none; }
+  body { overscroll-behavior:none; }
   /* Hub stays calm — kill the floating purple gradient from SHARED_CSS */
   body::after { display:none !important; }
   body::before { animation:none !important; }
 
   .hub-page { position:relative; z-index:1; padding:0 32px 64px; max-width:760px; margin:0 auto; text-align:center; }
   .hub-cards { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
-  .hub-card { background:white; border-radius:24px; padding:32px 26px 26px; width:300px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .25s,box-shadow .25s; text-align:left; position:relative; overflow:hidden; }
+  .hub-card { background:white; border-radius:24px; padding:32px 26px 26px; width:300px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .25s,box-shadow .25s; text-align:center; position:relative; overflow:hidden; }
   .hub-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg, transparent 60%, #d4b8f422 100%); opacity:0; transition:opacity .25s; pointer-events:none; }
   .hub-card:hover { transform:translateY(-6px); box-shadow:0 16px 44px #00000018; }
   .hub-card:hover::after { opacity:1; }
@@ -974,20 +980,20 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     <div class="hub-hero-content">
       <div class="hub-hero-eyebrow">Bobo&rsquo;s VCT Database</div>
       <h1 class="hub-hero-title">BenPom</h1>
-      <p class="hub-hero-sub">Opponent-adjusted map ratings, KenPom-style. Pick two teams from any season and see the head-to-head play out, map by map.</p>
+      <p class="hub-hero-sub">Kenpom-Style ratings and analyses of VCT teams. Explore VCT history through BenPom.</p>
     </div>
   </section>
   <div class="hub-page">
     <div class="hub-logo-strip" id="hub-logo-strip"></div>
     <div class="hub-cards">
       <a class="hub-card" href="/mapelo/rankings/">
-        <div class="hub-card-title">Rankings</div>
+        <div class="hub-card-title">Historical Rankings</div>
         <div class="hub-card-desc">Per-map Massey ratings with decay, James&ndash;Stein shrinkage, and pick/ban-adjusted overall scores.</div>
         <div class="hub-card-arrow">Explore &rarr;</div>
       </a>
       <a class="hub-card" href="/mapelo/matchup/">
         <div class="hub-card-title">Matchup Predictor</div>
-        <div class="hub-card-desc">Monte Carlo BO3 veto simulation &mdash; pick two teams and see head-to-head win probability with a map-by-map breakdown.</div>
+        <div class="hub-card-desc">Test matchups between every VCT team throughout history using Monte Carlo simulations; this includes a statistical breakdown of picks/bans, map differences, and win/loss frequencies.</div>
         <div class="hub-card-arrow">Explore &rarr;</div>
       </a>
     </div>
@@ -1080,6 +1086,8 @@ MAPELO_HOME_HTML = """
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
   SHARED_CSS
@@ -1120,12 +1128,12 @@ MAPELO_HOME_HTML = """
   .pipe-desc code { background:#efe8f8; border-radius:4px; padding:1px 5px; font-size:.73rem; color:#5a2a7a; }
   /* Stage graphics */
   .pipe-graphic { max-height:0; overflow:hidden; opacity:0; margin-top:8px; transition:max-height .5s ease .1s, opacity .4s ease .15s; }
-  .pipe-stage.active .pipe-graphic { max-height:340px; opacity:1; }
+  .pipe-stage.active .pipe-graphic { max-height:380px; opacity:1; padding-top:6px; }
   .pg-note { font-size:.64rem; color:var(--soft); padding-top:4px; }
   /* Score bars (Stage 1) */
   .pg-scorebar { display:flex; flex-direction:column; gap:7px; padding:4px 0 2px; }
   .pg-score-row { display:flex; align-items:center; gap:10px; }
-  .pg-score-label { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; color:var(--soft); width:34px; text-align:right; flex-shrink:0; }
+  .pg-score-label { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; color:var(--soft); min-width:46px; text-align:right; flex-shrink:0; white-space:nowrap; }
   .pg-bar-track { flex:1; height:10px; background:#f0ecf8; border-radius:5px; overflow:hidden; }
   .pg-bar-fill { height:100%; border-radius:5px; width:0; transition:width 1.1s cubic-bezier(.4,0,.2,1); }
   .pg-bar-big { background:linear-gradient(90deg,#a060d0,#d080f8); }
@@ -1308,7 +1316,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n0">1</div>
           <div class="pipe-content">
             <div class="pipe-title">Round Differential</div>
-            <div class="pipe-desc">Every map is scored by round margin &mdash; a 13&ndash;2 win carries far more signal than a 13&ndash;11 grind. This <em>dominance signal</em> is what feeds the solver, not just win/loss.</div>
+            <div class="pipe-desc">Every map is scored by round margin. Therefore, a 13&ndash;2 win carries far more signal than a 13&ndash;11 win.</div>
             <div class="pipe-graphic">
               <div class="pg-scorebar">
                 <div class="pg-score-row">
@@ -1334,7 +1342,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n1">2</div>
           <div class="pipe-content">
             <div class="pipe-title">Massey Rating System</div>
-            <div class="pipe-desc">A linear algebra solve finds the rating vector that best explains all observed round differentials simultaneously &mdash; accounting for every opponent&rsquo;s strength. One solve per map. Mean-zero constraint.</div>
+            <div class="pipe-desc">A linear algebra solve finds the rating vector that best explains all observed round differentials simultaneously. One solve per map. Mean-zero constraint.</div>
             <div class="pipe-graphic">
               <div style="padding:4px 0 2px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
                 <svg width="134" height="62" style="display:block;flex-shrink:0;overflow:visible">
@@ -1374,7 +1382,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n2">3</div>
           <div class="pipe-content">
             <div class="pipe-title">Recency Decay</div>
-            <div class="pipe-desc">Game weights follow <code>exp(&minus;&lambda;&thinsp;&times;&thinsp;weeks&thinsp;ago)</code>. International games get 4&times; multiplier so attending Masters/Champions boosts ratings above domestic-only teams. Half-life &asymp;&thinsp;6 weeks, CV-optimized.</div>
+            <div class="pipe-desc">Game weights follow <code>exp(&minus;&lambda;&thinsp;&times;&thinsp;weeks&thinsp;ago)</code>. Half-life &asymp;&thinsp;6 weeks.</div>
             <div class="pipe-graphic">
               <div class="pg-decay-wrap"><canvas class="pg-decay-canvas" id="pg2-canvas"></canvas></div>
             </div>
@@ -1388,7 +1396,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n3">4</div>
           <div class="pipe-content">
             <div class="pipe-title">James&ndash;Stein Shrinkage</div>
-            <div class="pipe-desc">Per-map ratings with thin data are blended toward the team&rsquo;s overall rating &mdash; preventing wild swings from 2&ndash;3 maps. More games = less shrinkage = more trust in the map-specific signal.</div>
+            <div class="pipe-desc">Per-map ratings with smaller sample sizes are blended toward the team&rsquo;s overall rating.</div>
             <div class="pipe-graphic">
               <div style="padding:4px 0 2px;display:flex;gap:10px;flex-wrap:wrap">
                 <div style="background:#f8f4fc;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
@@ -1400,7 +1408,7 @@ MAPELO_HOME_HTML = """
                   <span style="color:var(--soft)">&alpha; &asymp; 0.63<br>mostly raw map signal</span>
                 </div>
               </div>
-              <div class="pg-note">&alpha; = n&thinsp;/&thinsp;(n+k) where k=12</div>
+              <div class="pg-note"><span id="pg3-alpha-formula"></span></div>
             </div>
           </div>
         </div>
@@ -1412,7 +1420,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n4">5</div>
           <div class="pipe-content">
             <div class="pipe-title">Monte Carlo Veto Simulation</div>
-            <div class="pipe-desc">10,000 simulated BO3 vetoes against a league-average opponent using historical ban/pick patterns. Expected round-diff across the surviving maps becomes the headline rating. A great ban target is worth as much as a great map.</div>
+            <div class="pipe-desc">Each team runs through 10,000 simulated BO3 vetoes against league-average opponents using historical ban/pick patterns. Expected round-diff across the surviving maps becomes the headline rating. Thus, a great ban target is worth as much as a great map.</div>
             <div class="pipe-graphic">
               <div style="display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap">
                 <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
@@ -1444,7 +1452,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n5">6</div>
           <div class="pipe-content">
             <div class="pipe-title">International Calibration</div>
-            <div class="pipe-desc">Masters &amp; Champions maps receive a 4&times; weight in the Massey solve, directly inflating ratings for teams that perform well internationally. Cross-regional strength is baked into the rating number, not a side note.</div>
+            <div class="pipe-desc">Masters &amp; Champions maps receive a 4&times; weight in the Massey solve, directly inflating ratings for teams that perform well on the biggest stages. Furthermore, regional strength disparity is baked into the rating number.</div>
             <div class="pipe-graphic">
               <div class="pg-regions" id="pg5-regions">
                 <div class="pg-region">
@@ -1474,7 +1482,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n6">&#10003;</div>
           <div class="pipe-content">
             <div class="pipe-title">Global Rating &amp; Win Probability</div>
-            <div class="pipe-desc">The final rating reflects domestic results + international performance in a single number. The matchup predictor runs 10,000 Monte Carlo veto sims using these global ratings, returning a calibrated series win probability.</div>
+            <div class="pipe-desc">The final rating reflects domestic results + international performance in a single number.</div>
             <div class="pipe-graphic">
               <div class="pg-formula" id="pg6-formula">
                 <div class="pg-formula-part pg-formula-dom"  id="pg6-p0">domestic</div>
@@ -2298,6 +2306,19 @@ document.querySelectorAll('.year-btn').forEach(function(btn) {
   renderPeriodFilter();
   renderMapFilter();
   renderTable();
+
+  // Render the shrinkage formula in LaTeX (KaTeX is loaded with `defer`).
+  function renderAlphaFormula(){
+    var el = document.getElementById('pg3-alpha-formula');
+    if(!el) return;
+    if(typeof katex === 'undefined'){ setTimeout(renderAlphaFormula, 50); return; }
+    try {
+      katex.render('\\\\alpha = \\\\dfrac{n}{n + k} \\\\;\\\\text{where}\\\\; k = 12', el, {throwOnError:false, displayMode:false});
+    } catch(e){
+      el.textContent = 'α = n / (n + k) where k = 12';
+    }
+  }
+  renderAlphaFormula();
 })();
 </script>
 <script>PW_JS</script>
@@ -2593,7 +2614,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 
     <div class="mode-toggle-row">
       <div class="mode-toggle">
-        <button class="mode-btn active" data-mode="dramatic">Dramatic Reveal</button>
+        <button class="mode-btn active" data-mode="dramatic">Full Reveal</button>
         <button class="mode-btn" data-mode="straight">Straightforward</button>
       </div>
     </div>
@@ -3352,8 +3373,8 @@ function rvScroll(el, block){
   catch(e){ el.scrollIntoView(); }
 }
 
-function fetchWinStat(org, year, snap, nMaps, host){
-  fetch('/mapelo/win-stat/' + encodeURIComponent(org)
+function fetchMvpStat(org, year, snap, nMaps, host){
+  fetch('/mapelo/mvp-stat/' + encodeURIComponent(org)
         + '?year='   + encodeURIComponent(year)
         + '&snap='   + encodeURIComponent(snap)
         + '&n_maps=' + encodeURIComponent(nMaps))
@@ -3532,7 +3553,8 @@ function revealMaps(R, seq, body){
           rvScroll(clinch, 'center');
           tick({freq:1500,dur:.18,vol:.07,type:'sine'});
           setTimeout(function(){ tick({freq:1900,dur:.22,vol:.07,type:'sine'}); }, 110);
-          fetchWinStat(winnerOrg, winnerYear, winnerSnap, seriesA + seriesB, mapsHost);
+          // n_maps = total maps played in the simulated series (not maps won)
+          fetchMvpStat(winnerOrg, winnerYear, winnerSnap, seriesA + seriesB, mapsHost);
           revealAbort = true; // halt remaining maps after clinch
         }
         return abortable(700);
@@ -4353,13 +4375,13 @@ def mapelo_team_info(org):
     data = _get_team_info(org, year, snap)
     return Response(json.dumps(data), mimetype='application/json')
 
-@mapelo_bp.route('/win-stat/<org>')
-def mapelo_win_stat(org):
+@mapelo_bp.route('/mvp-stat/<org>')
+def mapelo_mvp_stat(org):
     from flask import request as _req
     year   = _req.args.get('year', '2025')
     snap   = _req.args.get('snap', 'after_champions')
-    n_maps = _req.args.get('n_maps', '3')
-    data = _get_random_win_stat(org, year, snap, n_maps) or {}
+    n_maps = _req.args.get('n_maps', '3')  # maps PLAYED in the simulated series
+    data = _get_mvp_stat(org, year, snap, n_maps) or {}
     return Response(json.dumps(data), mimetype='application/json')
 
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
