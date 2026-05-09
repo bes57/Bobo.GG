@@ -664,92 +664,124 @@ def _get_team_info(org, year='2025', snap='after_champions'):
     return result
 
 
-def _get_random_win_stat(org, year='2025', snap='after_champions'):
-    """Pick a random player from one of the team's 3 most recent series wins
-    in the selected snapshot, return their series statline."""
+def _i(v):
+    try: return int(float(v))
+    except Exception: return None
+def _f(v):
+    try: return float(v)
+    except Exception: return None
+def _mvp_of(rows):
+    """Return the row with the highest R2.0; falls back to a random row."""
     import random
-    cache_key = (_TEAM_INFO_VER, 'win_stat', org, year, snap)
-    # No cache — we want a fresh random pick each call.
+    if rows.empty: return None
+    try:
+        rows = rows.copy()
+        rows['_r'] = pd.to_numeric(rows['R2.0'], errors='coerce')
+        if rows['_r'].notna().any():
+            return rows.loc[rows['_r'].idxmax()]
+    except Exception:
+        pass
+    return rows.sample(1).iloc[0]
+
+def _get_random_win_stat(org, year='2025', snap='after_champions', n_maps=3):
+    """MVP function: take the team's last 20 maps played (any opponent, win or loss),
+    randomly sample `n_maps` of them, aggregate every player's stats across the sample,
+    and return the highest-average-rated player's combined statline."""
+    import random
+
+    try: n_maps = max(1, int(n_maps))
+    except Exception: n_maps = 3
 
     data_dir    = os.path.join(ROOT, 'data')
     snap_events = _SNAPSHOT_EVENTS.get(year, {}).get(snap, [])
-
-    mr_path = os.path.join(data_dir, 'match_results.csv')
-    if not os.path.exists(mr_path) or not snap_events:
+    if not snap_events:
         return None
 
-    mr = pd.read_csv(mr_path)
-    mr_series = mr[mr['MapNum'] == 'all'].set_index('MatchID')
-
-    from MoreTestingMaybeFiles import ALL_EVENTS
-    label_by_id = {e['id']: e.get('label', e['id']) for e in ALL_EVENTS}
-
-    # Walk events newest-first; collect up to 3 wins.
-    wins = []  # list of (event_id, ev_label, match_id, sdf)
+    # Walk events newest-first; collect up to 20 unique (MatchID, MapNum) pairs the team played.
+    pool = []   # list of dataframe slices (one slice per map, holding all of the team's player rows)
+    seen = set()
     for event_id in reversed(snap_events):
-        series_path = os.path.join(data_dir, 'series', f'{event_id}.csv')
-        if not os.path.exists(series_path):
+        maps_path = os.path.join(data_dir, 'maps', f'{event_id}.csv')
+        if not os.path.exists(maps_path):
             continue
         try:
-            sdf = pd.read_csv(series_path)
+            mdf = pd.read_csv(maps_path)
         except Exception:
             continue
-        # series CSV row order is roughly chronological for the event
-        org_mids = sdf[sdf['Org'] == org]['MatchID'].unique().tolist()
-        for mid in reversed(org_mids):
-            if mid not in mr_series.index:
-                continue
+        org_rows = mdf[mdf['Org'] == org]
+        ordered = []
+        ev_seen = set()
+        for _, row in org_rows.iterrows():
             try:
-                if str(mr_series.loc[mid].get('WinnerOrg')) != org:
-                    continue
+                key = (int(row['MatchID']), str(row['MapNum']))
             except Exception:
                 continue
-            wins.append((event_id, label_by_id.get(event_id, event_id), int(mid), sdf))
-            if len(wins) >= 3:
+            if key in ev_seen: continue
+            ev_seen.add(key); ordered.append(key)
+        for mid, mn in reversed(ordered):  # newest first within the event
+            if (mid, mn) in seen: continue
+            seen.add((mid, mn))
+            grp = mdf[(mdf['MatchID'] == mid) & (mdf['MapNum'].astype(str) == mn) & (mdf['Org'] == org)]
+            if grp.empty: continue
+            # Skip maps with no usable rating data (e.g. Shanghai, where R2.0 is all NaN).
+            try:
+                if 'R2.0' in grp.columns and pd.to_numeric(grp['R2.0'], errors='coerce').dropna().empty:
+                    continue
+            except Exception:
+                pass
+            pool.append(grp)
+            if len(pool) >= 20:
                 break
-        if len(wins) >= 3:
+        if len(pool) >= 20:
             break
 
-    if not wins:
+    if not pool:
         return None
 
-    event_id, ev_label, match_id, sdf = random.choice(wins)
+    n = min(n_maps, len(pool))
+    sample = random.sample(pool, n)
 
-    # Series-level rows for that match (MapNum == 'all'); fall back to any rows for the team.
-    rows = sdf[(sdf['MatchID'] == match_id) & (sdf['Org'] == org)]
-    series_rows = rows[rows['MapNum'].astype(str) == 'all']
-    if not series_rows.empty:
-        rows = series_rows
-    if rows.empty:
+    import math
+    def _num(v):
+        try:
+            f = float(v)
+            if math.isnan(f) or math.isinf(f): return None
+            return f
+        except Exception:
+            return None
+
+    # Aggregate per-player stats across the sampled maps. Rating uses its own
+    # counter so NaN-rated rows don't pull the average toward zero.
+    agg = {}  # player -> {K, D, A, ACS_sum, ACS_n, R_sum, R_n, n}
+    for grp in sample:
+        for _, row in grp.iterrows():
+            name = str(row.get('Player', ''))
+            if not name: continue
+            e = agg.setdefault(name, {'K':0,'D':0,'A':0,'ACS_sum':0.0,'ACS_n':0,'R_sum':0.0,'R_n':0,'n':0})
+            k = _num(row.get('K'));   e['K'] += int(k) if k is not None else 0
+            d = _num(row.get('D'));   e['D'] += int(d) if d is not None else 0
+            a = _num(row.get('A'));   e['A'] += int(a) if a is not None else 0
+            ac = _num(row.get('ACS'));
+            if ac is not None: e['ACS_sum'] += ac; e['ACS_n'] += 1
+            r = _num(row.get('R2.0'))
+            if r is not None: e['R_sum']   += r;  e['R_n']   += 1
+            e['n'] += 1
+
+    if not agg:
         return None
 
-    pick = rows.sample(1).iloc[0]
-
-    sr = mr_series.loc[match_id]
-    opponent = '?'
-    for o in sdf[sdf['MatchID'] == match_id]['Org'].unique():
-        if o != org:
-            opponent = str(o)
-            break
-
-    def _i(v):
-        try: return int(float(v))
-        except Exception: return None
-    def _f(v):
-        try: return float(v)
-        except Exception: return None
+    def avg_r(e): return (e['R_sum'] / e['R_n']) if e['R_n'] else 0.0
+    mvp_name, mvp = max(agg.items(), key=lambda kv: avg_r(kv[1]))
 
     return {
-        'player':        str(pick.get('Player', '')),
-        'org':           org,
-        'opponent':      opponent,
-        'event':         ev_label,
-        'series_score':  str(sr.get('Score', '')),
-        'K':   _i(pick.get('K')),
-        'D':   _i(pick.get('D')),
-        'A':   _i(pick.get('A')),
-        'ACS': _f(pick.get('ACS')),
-        'R':   _f(pick.get('R2.0')),
+        'player': mvp_name,
+        'org':    org,
+        'K':      mvp['K'],
+        'D':      mvp['D'],
+        'A':      mvp['A'],
+        'ACS':    (mvp['ACS_sum'] / mvp['ACS_n']) if mvp['ACS_n'] else None,
+        'R':      (mvp['R_sum']   / mvp['R_n'])   if mvp['R_n']   else None,
+        'maps_used': n,
     }
 
 
@@ -893,6 +925,9 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
      Use a fixed-attached gradient on html so the top half always paints dark and the
      bottom half cream — body's solid cream paints over it for normal viewing. */
   html { background:linear-gradient(180deg, #0e0a14 0%, #0e0a14 50%, var(--cream) 50%, var(--cream) 100%) no-repeat fixed; background-color:var(--cream); }
+  /* Hub stays calm — kill the floating purple gradient from SHARED_CSS */
+  body::after { display:none !important; }
+  body::before { animation:none !important; }
 
   .hub-page { position:relative; z-index:1; padding:0 32px 64px; max-width:760px; margin:0 auto; text-align:center; }
   .hub-cards { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; }
@@ -2474,7 +2509,8 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 
   /* Veto reveal grid */
   .rv-veto-grid { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:14px 0; }
-  .rv-veto-slot { width:104px; height:108px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 6px; opacity:.4; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
+  .rv-veto-slot { width:104px; height:108px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 6px; opacity:.55; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
+  .rv-veto-slot.rv-vs-pending .rv-vs-q { font-family:'Syne',sans-serif; font-weight:800; font-size:2.4rem; color:#bcb2c4; line-height:1; }
   .rv-veto-slot.revealed { opacity:1; transform:scale(1); animation:rvPop .4s ease; }
   @keyframes rvPop { 0%{transform:scale(.7);} 60%{transform:scale(1.08);} 100%{transform:scale(1);} }
   .rv-veto-slot.banned::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent 0 6px,#f4b8c133 6px 12px); pointer-events:none; }
@@ -2518,6 +2554,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .rv-statline.shown { opacity:1; transform:translateY(0); }
   .rv-statline strong { font-family:'Syne',sans-serif; font-weight:800; color:var(--ink); }
   .rv-statline em { font-style:italic; color:#5a2a7a; font-weight:600; }
+  .rv-mvp-tag { display:inline-block; font-family:'Syne',sans-serif; font-weight:800; font-size:.62rem; letter-spacing:.14em; color:white; background:linear-gradient(135deg,#9a4ab4,#5a2a7a); padding:3px 10px; border-radius:99px; vertical-align:1px; margin-right:6px; box-shadow:0 2px 8px #5a2a7a44; }
 
   /* Final breakdown card grid */
   .breakdown-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px; }
@@ -2808,7 +2845,6 @@ function updateCoverflow(side){
       el.style.pointerEvents = abs<=3 ? 'auto' : 'none';
     }
   });
-  // arrow disabled state
   var prevBtn = stage.querySelector('.cf-arrow[data-dir="-1"]');
   var nextBtn = stage.querySelector('.cf-arrow[data-dir="1"]');
   if(prevBtn) prevBtn.disabled = (st.idx <= 0);
@@ -3316,8 +3352,11 @@ function rvScroll(el, block){
   catch(e){ el.scrollIntoView(); }
 }
 
-function fetchWinStat(org, year, snap, host){
-  fetch('/mapelo/win-stat/' + encodeURIComponent(org) + '?year=' + encodeURIComponent(year) + '&snap=' + encodeURIComponent(snap))
+function fetchWinStat(org, year, snap, nMaps, host){
+  fetch('/mapelo/win-stat/' + encodeURIComponent(org)
+        + '?year='   + encodeURIComponent(year)
+        + '&snap='   + encodeURIComponent(snap)
+        + '&n_maps=' + encodeURIComponent(nMaps))
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(s){
       if(!s || !s.player) return;
@@ -3328,10 +3367,7 @@ function fetchWinStat(org, year, snap, host){
       if(s.ACS) extras.push(Math.round(s.ACS)+' ACS');
       if(s.R)   extras.push((+s.R).toFixed(2)+' rtg');
       var suffix = extras.length ? ' ('+extras.join(', ')+')' : '';
-      var ctx = '';
-      if(s.opponent && s.opponent !== '?') ctx += ' vs <strong>'+s.opponent+'</strong>';
-      if(s.event) ctx += ' at '+s.event;
-      line.innerHTML = '<strong>'+s.player+'</strong> went <em>'+kda+suffix+'</em> in the win'+ctx+'.';
+      line.innerHTML = '<span class="rv-mvp-tag">MVP:</span> <strong>'+s.player+'</strong> goes <em>'+kda+suffix+'</em>.';
       host.appendChild(line);
       setTimeout(function(){ line.classList.add('shown'); rvScroll(line, 'center'); }, 80);
     })
@@ -3369,12 +3405,14 @@ function playReveal(R){
       var cls = (ACTION_CLS[key] || ACTION_CLS.dec)[1];
       var lbl = actionLabel(R.orgA, R.orgB, key);
       var slot = document.createElement('div');
-      slot.className = 'rv-veto-slot';
-      if(step.action==='ban') slot.classList.add('banned');
-      slot.innerHTML =
-        '<img src="'+mapImg(step.map)+'" onerror="this.style.visibility=\\'hidden\\'">'+
-        '<div class="rv-vs-map">'+step.map+'</div>'+
-        '<div class="rv-vs-act '+cls+'">'+lbl+'</div>';
+      slot.className = 'rv-veto-slot rv-vs-pending';
+      // Placeholder content — actual map is hidden until this slot is revealed.
+      slot.innerHTML = '<div class="rv-vs-q">?</div>';
+      // Stash the real content for the reveal step.
+      slot.dataset.map = step.map;
+      slot.dataset.action = step.action;
+      slot.dataset.cls = cls;
+      slot.dataset.lbl = lbl;
       grid.appendChild(slot);
     });
     return revealVetoSlots(grid).then(function(){
@@ -3392,11 +3430,21 @@ function revealVetoSlots(grid){
     var i = 0;
     function next(){
       if(revealAbort || i>=slots.length){ return res(); }
-      slots[i].classList.add('revealed');
-      var cls = slots[i].querySelector('.rv-vs-act').className;
-      if(cls.indexOf('banA')>=0||cls.indexOf('banB')>=0) tick({freq:380,dur:.07,vol:.05,type:'square'});
-      else if(cls.indexOf('pick')>=0) tick({freq:1200,dur:.06,vol:.06,type:'square'});
-      else tick({freq:900,dur:.08,vol:.05,type:'square'});
+      var slot = slots[i];
+      var map    = slot.dataset.map || '';
+      var action = slot.dataset.action || 'dec';
+      var cls    = slot.dataset.cls || 'rv-act-dec';
+      var lbl    = slot.dataset.lbl || 'Decider';
+      slot.classList.remove('rv-vs-pending');
+      if(action === 'ban') slot.classList.add('banned');
+      slot.innerHTML =
+        '<img src="'+mapImg(map)+'" onerror="this.style.visibility=\\'hidden\\'">'+
+        '<div class="rv-vs-map">'+map+'</div>'+
+        '<div class="rv-vs-act '+cls+'">'+lbl+'</div>';
+      slot.classList.add('revealed');
+      if(action === 'ban')      tick({freq:380, dur:.07, vol:.05, type:'square'});
+      else if(action === 'pick') tick({freq:1200,dur:.06, vol:.06, type:'square'});
+      else                       tick({freq:900, dur:.08, vol:.05, type:'square'});
       i++;
       setTimeout(next, 360);
     }
@@ -3484,7 +3532,7 @@ function revealMaps(R, seq, body){
           rvScroll(clinch, 'center');
           tick({freq:1500,dur:.18,vol:.07,type:'sine'});
           setTimeout(function(){ tick({freq:1900,dur:.22,vol:.07,type:'sine'}); }, 110);
-          fetchWinStat(winnerOrg, winnerYear, winnerSnap, mapsHost);
+          fetchWinStat(winnerOrg, winnerYear, winnerSnap, seriesA + seriesB, mapsHost);
           revealAbort = true; // halt remaining maps after clinch
         }
         return abortable(700);
@@ -4308,9 +4356,10 @@ def mapelo_team_info(org):
 @mapelo_bp.route('/win-stat/<org>')
 def mapelo_win_stat(org):
     from flask import request as _req
-    year = _req.args.get('year', '2025')
-    snap = _req.args.get('snap', 'after_champions')
-    data = _get_random_win_stat(org, year, snap) or {}
+    year   = _req.args.get('year', '2025')
+    snap   = _req.args.get('snap', 'after_champions')
+    n_maps = _req.args.get('n_maps', '3')
+    data = _get_random_win_stat(org, year, snap, n_maps) or {}
     return Response(json.dumps(data), mimetype='application/json')
 
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
