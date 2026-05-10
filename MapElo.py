@@ -908,11 +908,11 @@ SHARED_CSS = """
     66%  { transform:translate(-9%,12%) scale(0.9); }
     100% { transform:translate(7%,5%) scale(1.1); }
   }
-  .top-nav { padding:32px 32px 0; position:relative; z-index:1; display:flex; flex-direction:column; align-items:flex-start; gap:10px; }
+  .top-nav { padding:32px 32px 0; position:relative; z-index:1; display:flex; flex-direction:row; align-items:center; gap:16px; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  .back-link { display:inline-flex; align-items:center; gap:4px; font-family:'Syne',sans-serif; font-size:.8rem; font-weight:800; letter-spacing:.03em; color:var(--soft); text-decoration:none; padding:5px 14px 5px 10px; border:1.5px solid #ece6f4; border-radius:99px; background:rgba(255,255,255,.75); backdrop-filter:blur(4px); transition:all .15s; }
-  .back-link:hover { color:var(--ink); border-color:#d4b8f4; background:white; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; font-family:'DM Sans',sans-serif; font-size:.8rem; font-weight:600; color:#7c3aed; text-decoration:none; padding:6px 14px; border-radius:99px; border:1.5px solid rgba(124,58,237,.25); background:rgba(124,58,237,.06); transition:background .18s,border-color .18s,color .18s; white-space:nowrap; }
+  .back-link:hover { background:rgba(124,58,237,.12); border-color:rgba(124,58,237,.5); color:#5b21b6; }
   #content-wrap { transition:filter .4s ease; }
   #content-wrap.blurred { filter:blur(12px); pointer-events:none; user-select:none; }
 """
@@ -1348,7 +1348,7 @@ MAPELO_HOME_HTML = """
 <div id="content-wrap">
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-    <a class="back-link" href="/mapelo/">&larr; BenPom</a>
+    <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
   </div>
   <div class="page">
     <div class="page-title">Rankings</div>
@@ -2658,7 +2658,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <div id="content-wrap">
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-    <a class="back-link" href="/mapelo/">&larr; BenPom</a>
+    <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
   </div>
   <div class="page">
     <div class="page-title">Matchup Predictor</div>
@@ -4728,6 +4728,42 @@ def _mhub_load():
                     "match_id": me.get("match_id", ""),
                 })
 
+    # Build most-recently-used roster for each org from 2026 player CSVs
+    _roster_by_org = {}
+    _hs_cache = {}
+    try:
+        _hs_path = os.path.join(ROOT, 'data', 'headshots.json')
+        if os.path.exists(_hs_path):
+            with open(_hs_path) as _hf:
+                _hs_cache = json.load(_hf)
+    except Exception:
+        pass
+    _player_frames = []
+    for _eid in ("2026_stage1", "2026_masters_santiago", "2026_kickoff"):
+        _ep = os.path.join(ROOT, 'data', 'maps', f'{_eid}.csv')
+        if os.path.exists(_ep):
+            try:
+                _pf = pd.read_csv(_ep, usecols=['MatchID', 'Org', 'Player', 'ProfileURL'])
+                _player_frames.append(_pf)
+            except Exception:
+                pass
+    if _player_frames:
+        _pdf = pd.concat(_player_frames, ignore_index=True).dropna(subset=['Player'])
+        _pdf = _pdf.sort_values('MatchID', ascending=False)
+        for _org, _grp in _pdf.groupby('Org'):
+            _url_map = dict(zip(_grp['Player'], _grp['ProfileURL']))
+            _seen = []
+            for _p in _grp['Player']:
+                if _p not in _seen:
+                    _seen.append(_p)
+                    if len(_seen) >= 5:
+                        break
+            _roster_by_org[_org] = [
+                {'player': _p, 'url': _url_map.get(_p, ''),
+                 'headshot': _hs_cache.get(_url_map.get(_p, ''), '')}
+                for _p in _seen
+            ]
+
     teams_list = []
     if snap_data:
         beta       = snap_data.get("beta", 0.3237)
@@ -4756,6 +4792,7 @@ def _mhub_load():
                 "worst_maps": [{"map": m, "rating": round(v["rating"], 2),
                                 "w": v["w"], "l": v["l"]} for m, v in worst_maps],
                 "recent_matches": recent_by_org.get(org, []),
+                "roster": _roster_by_org.get(org, []),
             })
         # Add any timeline teams not in snapshot (e.g. EMEA teams that missed Santiago)
         snap_orgs = {t["org"] for t in teams_list}
@@ -4769,6 +4806,7 @@ def _mhub_load():
                 "w": 0, "l": 0,
                 "all_maps": [], "best_maps": [], "worst_maps": [],
                 "recent_matches": recent_by_org.get(org, []),
+                "roster": _roster_by_org.get(org, []),
             })
         teams_list = [t for t in teams_list if t["org"] in ACTIVE_2026_ORGS]
         teams_list.sort(key=lambda x: -x["rating"])
@@ -4789,6 +4827,7 @@ def _mhub_load():
                 "rating": round(rating, 4), "rank": i,
                 "w": 0, "l": 0, "all_maps": [], "best_maps": [], "worst_maps": [],
                 "recent_matches": recent_by_org.get(org, []),
+                "roster": _roster_by_org.get(org, []),
             })
         result["leaderboard"] = {
             "teams":    teams_list,
@@ -4974,9 +5013,12 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 html,body{height:100%}
 body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:100vh}
 
-.top-nav{padding:24px 32px 0}
+.top-nav{padding:24px 32px 0;display:flex;align-items:center;gap:16px}
 .home-logo{display:block;height:72px;width:auto;opacity:.85;transition:opacity .2s}
 .home-logo:hover{opacity:1}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:#7c3aed;text-decoration:none;padding:6px 14px;border-radius:99px;border:1.5px solid rgba(124,58,237,.25);background:rgba(124,58,237,.06);transition:background .18s,border-color .18s,color .18s;white-space:nowrap}
+.back-btn:hover{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.5);color:#5b21b6}
+.back-btn svg{flex-shrink:0}
 
 .hub-main{padding:20px 0 60px;width:100%}
 .hub-header{text-align:center;margin-bottom:20px}
@@ -5002,16 +5044,27 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
 .pill:hover:not(.active){border-color:#9c6ec8}
 
 /* Progress */
-.progress-card{background:#1a0a2e;border-radius:16px;padding:36px 32px;margin-bottom:18px;text-align:center}
-.progress-label{color:rgba(232,213,245,.9);font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:8px}
-.progress-msg{color:rgba(232,213,245,.5);font-size:.82rem;margin-bottom:20px;font-variant-numeric:tabular-nums}
-.progress-track{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:10px}
-.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7c3aed,#a78bfa);transition:width .8s ease;width:0%}
-.progress-pct{color:rgba(232,213,245,.4);font-size:.75rem;font-variant-numeric:tabular-nums}
-#progressLog{margin-top:16px;text-align:left;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(167,139,250,.12);padding-top:12px}
-.plog-entry{font-size:.82rem;color:rgba(167,139,250,.8);padding:1px 0;font-family:'DM Sans',sans-serif;line-height:1.45}
-.plog-entry.new{animation:plog-in .25s ease}
-@keyframes plog-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.progress-card{background:#1a0a2e;border-radius:20px;padding:44px 48px;margin:0 auto 18px;max-width:560px;text-align:center}
+.progress-label{color:rgba(232,213,245,.95);font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;margin-bottom:6px;letter-spacing:.01em}
+.progress-msg{color:rgba(232,213,245,.55);font-size:.82rem;margin-bottom:28px;font-variant-numeric:tabular-nums}
+.progress-track{height:10px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;margin-bottom:10px;position:relative}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd);background-size:200% 100%;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;animation:progressShimmer 1.8s linear infinite}
+@keyframes progressShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.progress-pct{color:rgba(232,213,245,.5);font-size:.75rem;font-variant-numeric:tabular-nums;margin-bottom:0}
+@keyframes fillDone{0%{background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd)}50%{background:#fff;box-shadow:0 0 18px 8px rgba(255,255,255,.7)}100%{background:#e9d5ff;box-shadow:0 0 6px 2px rgba(255,255,255,.15)}}
+.progress-fill.done{animation:fillDone .45s ease forwards!important;width:100%!important;transition:none!important}
+@keyframes cardExit{
+  0%  {opacity:1;transform:translateY(0);filter:none}
+  100%{opacity:0;transform:translateY(48px);filter:blur(4px)}
+}
+.progress-card.exiting{animation:cardExit .55s cubic-bezier(.4,0,1,1) forwards;pointer-events:none}
+@keyframes chartEnter{from{transform:translateX(-100vw)}to{transform:none}}
+.chart-card.entering{animation:chartEnter 2.4s cubic-bezier(.16,1,.3,1) forwards}
+#progressLog{margin-top:20px;text-align:center;max-height:140px;overflow:hidden;display:flex;flex-direction:column;gap:3px;border-top:1px solid rgba(167,139,250,.12);padding-top:14px}
+.plog-entry{font-size:.78rem;color:rgba(167,139,250,.75);padding:1px 0;font-family:'DM Sans',sans-serif;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.5}
+.plog-entry:last-child{opacity:1;color:rgba(200,180,255,.95)}
+.plog-entry.new{animation:plog-in .3s ease}
+@keyframes plog-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Chart card */
 .chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin-bottom:18px;position:relative}
@@ -5083,30 +5136,35 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
 
 /* Chart + leaderboard full-width layout */
 #chartSection{padding:0 48px}
-.lb-card-wrap{padding:0 24px;max-width:520px;margin:0 auto}
+.lb-card-wrap{padding:0 24px;max-width:780px;margin:0 auto}
 
 /* Leaderboard */
 .lb-card{background:rgba(255,255,255,.72);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px)}
 .lb-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(61,26,110,.1)}
 .lb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#000}
 .lb-asof{font-size:.7rem;color:#666;text-align:right;max-width:240px}
-.lb-row{display:grid;grid-template-columns:34px 34px 1fr 84px 76px 20px;align-items:center;padding:9px 20px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(61,26,110,.06);gap:8px}
+.lb-col-hdr{display:grid;grid-template-columns:44px 2fr 1fr 1fr 24px;align-items:center;padding:8px 24px;gap:10px;border-bottom:2px solid rgba(61,26,110,.1)}
+.lb-col-hdr span{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#888;text-align:center}
+.lb-row{display:grid;grid-template-columns:44px 2fr 1fr 1fr 24px;align-items:center;padding:13px 24px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(61,26,110,.06);gap:10px}
 .lb-row:last-child{border-bottom:none}
-.lb-row:hover{background:rgba(61,26,110,.06)}
-.lb-row.selected{background:rgba(61,26,110,.1)}
-.lb-rank{color:#666;font-size:.76rem;font-weight:500;text-align:center}
-.lb-logo img{width:26px;height:26px;object-fit:contain;display:block}
-.lb-name{font-weight:600;font-size:.87rem;color:#000}
-.lb-rating{font-weight:700;font-size:.92rem;text-align:right;font-variant-numeric:tabular-nums}
-.lb-region{font-size:.67rem;font-weight:600;padding:2px 7px;border-radius:100px;text-align:center}
+.lb-row:hover{background:rgba(61,26,110,.05)}
+.lb-row.selected{background:rgba(61,26,110,.08)}
+.lb-rank{color:#aaa;font-size:.78rem;font-weight:600;text-align:center}
+.lb-team{display:flex;align-items:center;justify-content:center;gap:10px}
+.lb-team img{width:30px;height:30px;object-fit:contain;flex-shrink:0}
+.lb-name{font-weight:700;font-size:.92rem;color:#111}
+.lb-rating{font-weight:700;font-size:1rem;text-align:center;justify-self:center;font-variant-numeric:tabular-nums;color:#111}
+.lb-region{font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:100px;text-align:center;justify-self:center}
 .lb-region.americas{background:rgba(234,88,12,.12);color:#c2410c}
 .lb-region.emea{background:rgba(22,163,74,.12);color:#15803d}
 .lb-region.pacific{background:rgba(37,99,235,.12);color:#1d4ed8}
-.lb-chevron{color:#aaa;font-size:.6rem;text-align:center;transition:transform .2s}
+.lb-chevron{color:#bbb;font-size:.62rem;text-align:center;transition:transform .2s}
 .lb-row.selected .lb-chevron{transform:rotate(180deg)}
 
 .lb-detail{border-bottom:1px solid rgba(61,26,110,.07);animation:sd .18s ease}
 @keyframes sd{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+@keyframes su{from{opacity:1;max-height:800px}to{opacity:0;max-height:0}}
+.lb-detail.closing{animation:su .22s ease forwards;pointer-events:none;overflow:hidden}
 .lb-detail-inner{padding:16px 24px 20px}
 .lb-sec-label{font-size:.68rem;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.1em;margin:16px 0 8px}
 .lb-sec-label:first-child{margin-top:0}
@@ -5136,6 +5194,30 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
 .lb-mt-wl{text-align:right;color:#666;font-size:.75rem}
 .lb-mt-pct{text-align:right;color:#666;font-size:.74rem}
 .lb-empty{padding:44px;text-align:center;color:#666;font-size:.88rem}
+.lb-player-row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-bottom:4px}
+.lb-player-card{display:flex;flex-direction:column;align-items:center;gap:6px;width:72px}
+.lb-player-hs{width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:top;background:#f0ecf4;flex-shrink:0}
+.lb-player-hs-empty{background:#e8e4f0}
+.lb-player-name{font-size:.67rem;font-weight:600;text-align:center;color:#333;line-height:1.2;word-break:break-word}
+.lb-map-row-click{cursor:pointer}
+.lb-map-row-click:hover td{background:rgba(61,26,110,.04)}
+.lb-map-chevron{display:inline-block;font-size:.55rem;color:#bbb;transition:transform .2s;margin-left:3px;vertical-align:middle}
+.lb-map-row-click.open .lb-map-chevron{transform:rotate(180deg)}
+.lb-map-games-tr>td{padding:0!important}
+.lb-map-games-wrap{padding:2px 0 6px 4px;animation:sd .15s ease;overflow:hidden}
+.lb-map-games-wrap.closing{animation:su .2s ease forwards}
+.lb-map-games-tbl{width:100%;border-collapse:collapse}
+.lb-mg-inner{display:flex;align-items:center;gap:7px;padding:4px 8px}
+.lb-mg-result{font-weight:700;font-size:.76rem;min-width:11px}
+.lb-map-game-row.win .lb-mg-result{color:#16a34a}.lb-map-game-row.loss .lb-mg-result{color:#dc2626}
+.lb-mg-logo{width:16px;height:16px;object-fit:contain;flex-shrink:0}
+.lb-mg-opp{font-size:.78rem;font-weight:600;flex:1;color:#111}
+.lb-mg-score{font-size:.78rem;font-weight:700;font-variant-numeric:tabular-nums}
+.lb-map-game-row.win .lb-mg-score{color:#16a34a}.lb-map-game-row.loss .lb-mg-score{color:#dc2626}
+.lb-mg-diff{font-size:.72rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
+.lb-mg-diff.pos{color:#16a34a}.lb-mg-diff.neg{color:#dc2626}
+.lb-mg-meta{font-size:.67rem;color:#888;white-space:nowrap}
+.lb-map-no-games{padding:6px 10px;color:#888;font-size:.73rem;font-style:italic}
 
 /* Upcoming */
 .upcoming-panel{padding:4px 0 20px}
@@ -5156,7 +5238,7 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
 .upc-team-a,.upc-team-b{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:60px}
 .upc-logo{width:36px;height:36px;object-fit:contain}
 .upc-org{font-family:'Syne',sans-serif;font-weight:800;font-size:.84rem;color:#000;text-align:center}
-.upc-rtg{font-size:.66rem;color:#555;font-weight:600}
+.upc-rtg{font-size:.95rem;color:#111;font-weight:800;font-variant-numeric:tabular-nums}
 .upc-center{flex:1;text-align:center;padding:0 4px}
 .upc-date-event{font-size:.65rem;color:#666;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .upc-bar-wrap{height:7px;border-radius:4px;overflow:hidden;display:flex;margin-bottom:4px}
@@ -5221,6 +5303,7 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
 <body>
 <div class="top-nav">
   <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+  <a href="/mapelo/" class="back-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
 </div>
 
 <main class="hub-main">
@@ -5284,6 +5367,9 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
             <div class="lb-header-row">
               <span class="lb-title">Current Rankings</span>
               <span class="lb-asof" id="lbAsOf"></span>
+            </div>
+            <div class="lb-col-hdr">
+              <span>#</span><span>Team</span><span>Rating</span><span>Region</span><span></span>
             </div>
             <div id="lbBody"></div>
           </div>
@@ -5522,7 +5608,7 @@ function updateProgress(prog) {
   document.getElementById('progressFill').style.width = (prog.pct || 0) + '%';
   document.getElementById('progressMsg').textContent  = prog.message || 'Checking…';
   document.getElementById('progressPct').textContent  = (prog.pct || 0) + '%';
-  // Append new log entries
+  // Append new log entries, keep only last 4 visible
   const logEl = document.getElementById('progressLog');
   const seen  = new Set([...logEl.querySelectorAll('.plog-entry')].map(e => e.textContent));
   (prog.log || []).forEach(line => {
@@ -5531,8 +5617,12 @@ function updateProgress(prog) {
     d.className = 'plog-entry new';
     d.textContent = line;
     logEl.appendChild(d);
-    logEl.scrollTop = logEl.scrollHeight;
   });
+  // Trim to last 4 entries
+  const entries = logEl.querySelectorAll('.plog-entry');
+  if (entries.length > 4) {
+    for (let i = 0; i < entries.length - 4; i++) entries[i].remove();
+  }
 }
 
 async function pollUntilReady() {
@@ -5723,7 +5813,7 @@ const logoPlugin = {
   afterDatasetsDraw(chart) {
     const {ctx, chartArea, scales:{x,y}} = chart;
     chart.data.datasets.forEach(ds => {
-      if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
+      if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed || ds._noLogo) return;
       const last = ds.data[ds.data.length - 1];
       const px   = x.getPixelForValue(new Date(last.x));
       const py   = y.getPixelForValue(last.y);
@@ -5740,7 +5830,20 @@ const logoPlugin = {
 };
 
 // ── Chart build ──────────────────────────────────────────────────────────────
-function buildChart(data) {
+var _chartYMin = null, _chartYMax = null;
+function _computeGlobalYRange(data) {
+  var allVals = [];
+  (data.chart.checkpoints || []).forEach(function(cp) {
+    Object.values(cp.ratings || {}).forEach(function(v){ allVals.push(v); });
+  });
+  if (!allVals.length) { _chartYMin = -5; _chartYMax = 5; return; }
+  var mn = Math.min.apply(null, allVals), mx = Math.max.apply(null, allVals);
+  var pad = Math.max(0.3, (mx - mn) * 0.05);
+  _chartYMin = Math.floor((mn - pad) * 10) / 10;
+  _chartYMax = Math.ceil( (mx + pad) * 10) / 10;
+}
+
+function buildChart(data, noLines = false) {
   const checkpoints = data.chart.checkpoints || [];
   const matchEvents = data.chart.match_events || [];
   const allTeams    = data.leaderboard.teams  || [];
@@ -5762,11 +5865,11 @@ function buildChart(data) {
     datasets.push({
       label: org, org,
       data: pts,
-      borderColor: isDimmed ? color + '28' : color,
+      borderColor: noLines ? 'transparent' : (isDimmed ? color + '28' : color),
       backgroundColor: 'transparent',
-      borderWidth: isSel ? 2.5 : (selectedTeam ? 1 : 1.5),
+      borderWidth: noLines ? 0 : (isSel ? 2.5 : (selectedTeam ? 1 : 1.5)),
       pointRadius: 0, pointHoverRadius: 0,
-      tension: 0.25, _dimmed: isDimmed,
+      tension: 0.25, _dimmed: isDimmed, _noLogo: noLines,
     });
   });
 
@@ -5817,6 +5920,8 @@ function buildChart(data) {
           border:{color:'rgba(0,0,0,.12)'},
         },
         y: {
+          min: _chartYMin,
+          max: _chartYMax,
           grid:{color:'rgba(0,0,0,.07)'},
           ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, stepSize:0.1, callback:v=>(v>0?'+':'')+v.toFixed(1)},
           border:{color:'rgba(0,0,0,.12)'},
@@ -5929,8 +6034,17 @@ function _applyLogoHover(org) {
 // Clicking anywhere outside a logo clears the selection
 document.addEventListener('click', () => {
   if (!selectedTeam || !hubData) return;
+  const det = document.querySelector('.lb-detail');
   selectedTeam = null;
   expandedOrg  = null;
+  if (det) {
+    document.querySelectorAll('.lb-row.selected').forEach(r => r.classList.remove('selected'));
+    det.classList.add('closing');
+    setTimeout(() => {
+      if (hubData) { renderLeaderboard(hubData); buildChart(hubData); }
+    }, 220);
+    return;
+  }
   buildChart(hubData);
   renderLeaderboard(hubData);
 });
@@ -5985,7 +6099,7 @@ let _isZoomed     = false;
 let _savedZoomMin = null;
 let _savedZoomMax = null;
 
-async function revealChart(duration = 4000) {
+async function revealChart(duration = 4000, startFromLeft = false) {
   if (!myChart || !hubData) return;
   _isReplaying = true;
   const btn = document.getElementById('replayBtn');
@@ -6003,7 +6117,7 @@ async function revealChart(duration = 4000) {
   const firstMs = cps.length ? new Date(cps[0].date).getTime() : new Date('2026-01-15').getTime();
   const lastMs  = new Date(hubData.as_of_date || '2026-05-10').getTime();
 
-  // Overlay canvas — sits on top of chart, sweeps a dark curtain left→right
+  // Overlay canvas — sits on top of chart, sweeps a white curtain left→right
   const mainCanvas = document.getElementById('benpomChart');
   const wrap = document.getElementById('chartWrap');
   const dpr  = window.devicePixelRatio || 1;
@@ -6017,7 +6131,8 @@ async function revealChart(duration = 4000) {
   const oc = ov.getContext('2d');
   oc.scale(dpr, dpr);
 
-  const ca = myChart.chartArea;
+  const ca   = myChart.chartArea;
+  const endX = startFromLeft ? myChart.scales.x.getPixelForValue(lastMs) : null;
 
   await new Promise(resolve => {
     const startT = performance.now();
@@ -6025,14 +6140,34 @@ async function revealChart(duration = 4000) {
       const p      = Math.min((ts - startT) / duration, 1);
       const ep     = 1 - Math.pow(1 - p, 3);
       const nowMs  = firstMs + ep * (lastMs - firstMs);
-      const revX   = myChart.scales.x.getPixelForValue(nowMs);
+      const revX   = startFromLeft
+        ? ca.left + ep * (endX - ca.left)
+        : myChart.scales.x.getPixelForValue(nowMs);
 
       oc.clearRect(0, 0, ov.offsetWidth, ov.offsetHeight);
 
-      // Dark curtain covers everything to the right of the reveal line
+      // White curtain covers everything to the right of the reveal line
       if (revX < ca.right) {
         oc.fillStyle = '#ffffff';
         oc.fillRect(revX, ca.top, ca.right - revX + 2, ca.bottom - ca.top);
+
+        // Re-draw event bands on top of curtain so they stay visible
+        const _bands = hubData.event_bands || [];
+        const _BCOLS = ['rgba(147,112,219,.08)','rgba(100,149,237,.08)','rgba(128,200,100,.08)',
+                        'rgba(255,180,100,.08)','rgba(100,200,220,.08)','rgba(200,120,180,.08)'];
+        _bands.forEach((_b, _i) => {
+          const _bx1 = Math.max(revX, myChart.scales.x.getPixelForValue(new Date(_b.start)));
+          const _bx2 = Math.min(ca.right, myChart.scales.x.getPixelForValue(new Date(_b.end)));
+          if (_bx2 <= _bx1) return;
+          oc.fillStyle = _BCOLS[_i % _BCOLS.length];
+          oc.fillRect(_bx1, ca.top, _bx2 - _bx1, ca.bottom - ca.top);
+          oc.save();
+          oc.font = 'bold 10px DM Sans,sans-serif';
+          oc.fillStyle = 'rgba(60,30,100,.35)';
+          oc.textAlign = 'center';
+          oc.fillText(_b.label, (_bx1 + _bx2) / 2, ca.top + 14);
+          oc.restore();
+        });
       }
 
       // Glowing edge at the reveal boundary
@@ -6089,7 +6224,7 @@ async function revealChart(duration = 4000) {
 
 async function replayChart() {
   if (_isReplaying) return;
-  await revealChart(12000); // 12s replay
+  await revealChart(6000);
 }
 
 async function animateZoom(toMin, toMax, duration) {
@@ -6162,13 +6297,21 @@ async function showChartAndLeaderboard(data) {
   await preloadLogos(data.leaderboard.teams || []);
   setAsOf(data);
 
-  showEl('chartSection');
-  await sleep(250);
+  _computeGlobalYRange(data);
 
-  buildChart(data);
+  // Build chart without lines so shading/axes are visible during slide-in
+  buildChart(data, true);
   _initCanvasListeners();   // register once after first build
-  await sleep(80);
-  await revealChart(4000);
+
+  // Slide card in from the left — lines hidden, bands/axes visible
+  showEl('chartSection');
+  const chartCard = document.querySelector('.chart-card');
+  if (chartCard) chartCard.classList.add('entering');
+  await sleep(2500);
+
+  // Rebuild with real lines, then immediately sweep curtain from left
+  buildChart(data);
+  await revealChart(7000, true);
 
   // Show leaderboard and pills after reveal completes
   showEl('lbCard');
@@ -6193,7 +6336,23 @@ async function init() {
   showEl('progressSection');
   if (data.progress) updateProgress(data.progress);
   await pollUntilReady();
+
+  // Bar done — flash white, then glitch-exit the card
+  const fill = document.getElementById('progressFill');
+  if (fill) fill.classList.add('done');
+  const pLabel = document.querySelector('.progress-label');
+  if (pLabel) pLabel.textContent = 'Ready';
+  await sleep(520);
+  const pSec = document.getElementById('progressSection');
+  if (pSec) pSec.style.overflow = 'visible';
+  const pOuter = document.querySelector('.panels-outer');
+  if (pOuter) pOuter.style.overflow = 'visible';
+  const pCard = document.querySelector('.progress-card');
+  if (pCard) pCard.classList.add('exiting');
+  await sleep(560);
   document.getElementById('progressSection').classList.add('hidden');
+  // Restore overflow:hidden so the chart card clips correctly during slide-in
+  if (pOuter) pOuter.style.overflow = '';
 
   await showChartAndLeaderboard(hubData);
 }
@@ -6224,9 +6383,11 @@ function renderLeaderboard(data) {
     row.className = 'lb-row' + (isSel ? ' selected' : '');
     row.innerHTML = `
       <div class="lb-rank">${team.rank}</div>
-      <div class="lb-logo"><img src="/static/logos/${org}.png" onerror="this.style.display='none'" alt="${org}"></div>
-      <div class="lb-name">${org}</div>
-      <div class="lb-rating" style="color:${color}">${rStr}</div>
+      <div class="lb-team">
+        <img src="/static/logos/${org}.png" onerror="this.style.display='none'" alt="${org}">
+        <span class="lb-name">${org}</span>
+      </div>
+      <div class="lb-rating">${rStr}</div>
       <div class="lb-region ${regCls}">${team.region || ''}</div>
       <div class="lb-chevron">&#9660;</div>`;
     row.onclick = e => { e.stopPropagation(); toggleTeam(org); };
@@ -6236,44 +6397,81 @@ function renderLeaderboard(data) {
       const det = document.createElement('div');
       det.className = 'lb-detail';
       det.innerHTML = buildDetailHTML(team);
+      det.addEventListener('click', e => e.stopPropagation());
       body.appendChild(det);
     }
   });
 }
 
 const EVENT_LABELS = {
-  '2026_kickoff':  'Kickoff 2026',
-  '2026_santiago': 'Masters Santiago',
-  '2026_stage1':   'Stage 1 2026',
-  '2026_london':   'Masters London',
-  '2026_stage2':   'Stage 2 2026',
-  '2026_champions':'Champions 2026',
+  // 2026
+  '2026_kickoff':           'Kickoff 2026',
+  '2026_masters_santiago':  'Masters Santiago',
+  '2026_stage1':            'Stage 1 2026',
+  '2026_masters_london':    'Masters London',
+  '2026_stage2':            'Stage 2 2026',
+  '2026_champions':         'Champions 2026',
+  // 2025
+  '2025_kickoff':           'Kickoff 2025',
+  '2025_masters_bangkok':   'Masters Bangkok',
+  '2025_stage1':            'Stage 1 2025',
+  '2025_masters_toronto':   'Masters Toronto',
+  '2025_stage2':            'Stage 2 2025',
+  '2025_champions':         'Champions 2025',
+  // 2024
+  '2024_kickoff':           'Kickoff 2024',
+  '2024_masters_madrid':    'Masters Madrid',
+  '2024_stage1':            'Stage 1 2024',
+  '2024_masters_shanghai':  'Masters Shanghai',
+  '2024_stage2':            'Stage 2 2024',
+  '2024_champions':         'Champions 2024',
+  // 2023
+  '2023_lock_in':           'LOCK//IN 2023',
+  '2023_masters_tokyo':     'Masters Tokyo',
+  '2023_league':            'League 2023',
+  '2023_champions':         'Champions 2023',
 };
 
 function buildDetailHTML(team) {
   const recent  = (team.recent_matches || []).slice(0, 4);
   const allMaps = team.all_maps || [];
+  const org     = team.org;
 
-  // Map result chips for each game in a match
-  const mapChips = (maps, teamWon) => (maps || []).map((mp, idx) => {
-    const isByTeam = teamWon ? (idx % 2 === 0) : (idx % 2 !== 0); // approximate
-    // Use wr/lr: winner rounds vs loser rounds
-    const cls = teamWon ? (mp.wr > mp.lr ? 'mw' : 'ml') : (mp.lr > mp.wr ? 'mw' : 'ml');
-    const scoreStr = teamWon ? `${mp.wr}–${mp.lr}` : `${mp.lr}–${mp.wr}`;
+  // Map result chips: green + 13-first if team won map, red + 13-last if lost
+  const mapChips = (maps, o) => (maps || []).map(mp => {
+    const mapWon = mp.winner === o;
+    const cls = mapWon ? 'mw' : 'ml';
+    const scoreStr = mapWon ? `${mp.wr}–${mp.lr}` : `${mp.lr}–${mp.wr}`;
     return `<span class="lb-mmap-chip ${cls}">${mp.map} ${scoreStr}</span>`;
   }).join('');
+
+  // Player headshots row
+  const roster = (team.roster || []).slice(0, 5);
+  const rosterHtml = roster.length ? `
+    <div class="lb-sec-label">Players</div>
+    <div class="lb-player-row">${roster.map(p => {
+      const name = p.player || '';
+      const hs   = p.headshot || '';
+      const img  = hs
+        ? `<img class="lb-player-hs" src="${hs}" alt="${name}" onerror="this.style.visibility='hidden'">`
+        : `<div class="lb-player-hs lb-player-hs-empty"></div>`;
+      return `<div class="lb-player-card">${img}<span class="lb-player-name">${name}</span></div>`;
+    }).join('')}</div>` : '';
 
   const recentHtml = recent.map(m => {
     const d    = (m.delta >= 0 ? '+' : '') + parseFloat(m.delta).toFixed(2);
     const won  = m.result === 'W';
     const evt  = EVENT_LABELS[m.event_id] || '';
-    const chips = mapChips(m.maps || [], won);
+    const chips = mapChips(m.maps || [], org);
+    const scoreParts = (m.score||'').split('-');
+    const displayScore = (!won && scoreParts.length===2)
+      ? scoreParts[1]+'-'+scoreParts[0] : m.score;
     return `<div class="lb-match-card ${won?'win':'loss'}">
       <div class="lb-match-head">
         <span class="lb-mr">${m.result}</span>
         <img class="lb-mlogo" src="/static/logos/${m.opponent}.png" onerror="this.style.display='none'" alt="">
         <span class="lb-mopp">vs ${m.opponent}</span>
-        <span class="lb-mscore">${m.score}</span>
+        <span class="lb-mscore">${displayScore}</span>
         <span class="lb-mdelta">${d}</span>
       </div>
       <div class="lb-mmeta">${evt ? `<span>${evt}</span>` : ''}<span>${m.date}</span></div>
@@ -6289,8 +6487,11 @@ function buildDetailHTML(team) {
         const tot = m.w + m.l;
         const pct = tot ? Math.round(100 * m.w / tot) + '%' : '—';
         const cls = m.rating >= 0 ? 'pos' : 'neg';
-        return `<tr>
-          <td class="lb-mt-map">${m.map}</td>
+        const sid = 'mdr_' + org.replace(/[^a-z0-9]/gi,'_') + '_' + m.map.replace(/[^a-z0-9]/gi,'_');
+        const eOrg = encodeURIComponent(org);
+        const eMap = encodeURIComponent(m.map);
+        return `<tr id="${sid}" class="lb-map-row-click" onclick="_expandMapRow('${eOrg}','${eMap}','${sid}')">
+          <td class="lb-mt-map">${m.map}<span class="lb-map-chevron">▾</span></td>
           <td class="lb-mt-rat ${cls}">${r}</td>
           <td class="lb-mt-wl">${m.w}–${m.l}</td>
           <td class="lb-mt-pct">${pct}</td>
@@ -6299,14 +6500,90 @@ function buildDetailHTML(team) {
     </table>` : '';
 
   return `<div class="lb-detail-inner">
+    ${rosterHtml}
     ${recent.length ? `<div class="lb-sec-label">Recent Matches</div>${recentHtml}` : ''}
     ${mapsHtml ? `<div class="lb-sec-label">Map Breakdown</div>${mapsHtml}` : ''}
   </div>`;
 }
 
+function _expandMapRow(encOrg, encMap, rowId) {
+  const org    = decodeURIComponent(encOrg);
+  const map    = decodeURIComponent(encMap);
+  const detId  = rowId + '_d';
+  const tr     = document.getElementById(rowId);
+  if (!tr) return;
+  const existing = document.getElementById(detId);
+  if (existing) {
+    tr.classList.remove('open');
+    const wrap = existing.querySelector('.lb-map-games-wrap');
+    if (wrap) {
+      wrap.classList.add('closing');
+      setTimeout(() => existing.remove(), 200);
+    } else {
+      existing.remove();
+    }
+    return;
+  }
+  tr.classList.add('open');
+  const events = (hubData?.chart?.match_events || []);
+  const games  = events.filter(me =>
+    (me.winner === org || me.loser === org) &&
+    (me.maps  || []).some(m => m.map === map)
+  ).sort((a, b) => (b.match_id || 0) - (a.match_id || 0));
+
+  let innerHtml;
+  if (!games.length) {
+    innerHtml = `<td colspan="4" class="lb-map-no-games">No recorded games</td>`;
+  } else {
+    const rows = games.map(me => {
+      const won    = me.winner === org;
+      const opp    = won ? me.loser : me.winner;
+      const mInfo  = (me.maps || []).find(m => m.map === map);
+      const orgRd  = mInfo ? (mInfo.winner === org ? mInfo.wr : mInfo.lr) : '?';
+      const oppRd  = mInfo ? (mInfo.winner === org ? mInfo.lr : mInfo.wr) : '?';
+      const diff   = (typeof orgRd === 'number' && typeof oppRd === 'number') ? orgRd - oppRd : null;
+      const diffStr = diff !== null ? (diff >= 0 ? '+' : '') + diff : '';
+      const diffCls = diff !== null ? (diff >= 0 ? 'pos' : 'neg') : '';
+      const evt    = EVENT_LABELS[me.event_id] || '';
+      return `<tr class="lb-map-game-row ${won?'win':'loss'}">
+        <td colspan="4"><div class="lb-mg-inner">
+          <span class="lb-mg-result">${won?'W':'L'}</span>
+          <img class="lb-mg-logo" src="/static/logos/${opp}.png" onerror="this.style.display='none'" alt="">
+          <span class="lb-mg-opp">${opp}</span>
+          <span class="lb-mg-score">${orgRd}–${oppRd}</span>
+          <span class="lb-mg-diff ${diffCls}">${diffStr}</span>
+          <span class="lb-mg-meta">${me.date}${evt?' · '+evt:''}</span>
+        </div></td>
+      </tr>`;
+    }).join('');
+    innerHtml = `<td colspan="4"><div class="lb-map-games-wrap">
+      <table class="lb-map-games-tbl">${rows}</table>
+    </div></td>`;
+  }
+  const gamesTr = document.createElement('tr');
+  gamesTr.id = detId;
+  gamesTr.className = 'lb-map-games-tr';
+  gamesTr.innerHTML = innerHtml;
+  tr.after(gamesTr);
+}
+
 function toggleTeam(org) {
-  expandedOrg  = expandedOrg  === org ? null : org;
-  selectedTeam = selectedTeam === org ? null : org;
+  const wasOpen = expandedOrg === org;
+  if (wasOpen) {
+    const det = document.querySelector('.lb-detail');
+    expandedOrg  = null;
+    selectedTeam = null;
+    document.querySelectorAll('.lb-row.selected').forEach(r => r.classList.remove('selected'));
+    if (det) {
+      det.classList.add('closing');
+      setTimeout(() => {
+        if (hubData) { renderLeaderboard(hubData); buildChart(hubData); }
+      }, 230);
+      return;
+    }
+  }
+  expandedOrg  = org;
+  selectedTeam = org;
   if (hubData) {
     renderLeaderboard(hubData);
     buildChart(hubData);
@@ -6330,9 +6607,9 @@ function _matchTooltipHTML(m, won) {
     : `${rawParts[1]}-${rawParts[0]}`;
 
   const mapsRows = (m.maps || []).map(mp => {
-    const orgRd = won ? mp.wr : mp.lr;
-    const oppRd = won ? mp.lr : mp.wr;
-    const mapWon = orgRd > oppRd;
+    const mapWon = mp.winner === org;
+    const orgRd = mapWon ? mp.wr : mp.lr;
+    const oppRd = mapWon ? mp.lr : mp.wr;
     const diff   = orgRd - oppRd;
     return `<tr>
       <td class="popup-map-name">${mp.map}</td>
@@ -6491,12 +6768,12 @@ function renderUpcoming(data) {
     }
 
     var pctA = (m.win_prob_a != null)
-      ? Math.round(m.win_prob_a * 100)
-      : (tA&&tB) ? Math.round(seriesWins/nSims*100)
-                 : Math.round(100/(1+Math.exp(-beta*(ratingA-ratingB))));
-    var pctB = 100-pctA;
+      ? (m.win_prob_a * 100).toFixed(1)
+      : (tA&&tB) ? (seriesWins/nSims*100).toFixed(1)
+                 : (100/(1+Math.exp(-beta*(ratingA-ratingB)))).toFixed(1);
+    var pctB = (100 - parseFloat(pctA)).toFixed(1);
     var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
-    var topSeqs = (tA&&tB&&pool.length) ? topVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt,3) : [];
+    var topSeqs = (tA&&tB&&pool.length) ? topVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt,1) : [];
 
     // Played maps sorted by frequency
     var playedMaps = pool.filter(function(mp){ return mapPlays[mp]>0; })
@@ -6505,24 +6782,18 @@ function renderUpcoming(data) {
     // Build veto sequences section
     var vetoSeqsHtml = '';
     if (hasPatt && topSeqs.length) {
-      vetoSeqsHtml = '<div class="upc-section-lbl">Predicted Veto</div><div class="upc-veto-seqs">';
-      topSeqs.forEach(function(sq, si){
-        var seqRow = sq.seq.map(function(step, idx){
-          var key = step.action+step.side;
-          var cls = (ACTION_CLS[key]||ACTION_CLS.dec)[0];
-          var lbl = actionLabelHUB(orgA, orgB, key);
-          return '<div class="upc-veto-step">'+
-            '<span class="step-lbl '+cls+'">'+lbl+'</span>'+
-            '<span class="upc-veto-map">'+step.map+'</span>'+
-          '</div>'+(idx<sq.seq.length-1?'<span class="step-arrow">›</span>':'');
-        }).join('');
-        var prob = sq.prob != null ? Math.round(sq.prob*100)+'%' : '';
-        vetoSeqsHtml += '<div class="upc-veto-seq-row">'+
-          (prob?'<span class="upc-veto-seq-prob">'+prob+'</span>':'')+
-          seqRow+
-        '</div>';
-      });
-      vetoSeqsHtml += '</div>';
+      var sq = topSeqs[0];
+      var seqRow = sq.seq.map(function(step, idx){
+        var key = step.action+step.side;
+        var cls = (ACTION_CLS[key]||ACTION_CLS.dec)[0];
+        var lbl = actionLabelHUB(orgA, orgB, key);
+        return '<div class="upc-veto-step">'+
+          '<span class="step-lbl '+cls+'">'+lbl+'</span>'+
+          '<span class="upc-veto-map">'+step.map+'</span>'+
+        '</div>'+(idx<sq.seq.length-1?'<span class="step-arrow">›</span>':'');
+      }).join('');
+      vetoSeqsHtml = '<div class="upc-section-lbl">Predicted Veto</div>'+
+        '<div class="upc-veto-seqs"><div class="upc-veto-seq-row">'+seqRow+'</div></div>';
     }
 
     // Build map breakdown table
@@ -6574,10 +6845,14 @@ function renderUpcoming(data) {
       return recent.map(function(r){
         var resultCls = r.result==='W' ? 'w' : 'l';
         var dateStr = r.date ? new Date(r.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        // Score is always winner-first; flip it for losses so team's score is always on the left
+        var scoreParts = (r.score||'').split('-');
+        var displayScore = (r.result==='L' && scoreParts.length===2)
+          ? scoreParts[1]+'-'+scoreParts[0] : r.score;
         return '<div class="upc-recent-match">'+
           '<span class="upc-recent-result '+resultCls+'">'+r.result+'</span>'+
           '<span class="upc-recent-opp">vs '+r.opponent+'</span>'+
-          '<span class="upc-recent-score">'+r.score+'</span>'+
+          '<span class="upc-recent-score">'+displayScore+'</span>'+
           '<span class="upc-recent-evt">'+dateStr+'</span>'+
         '</div>';
       }).join('');

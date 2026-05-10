@@ -1,25 +1,5 @@
 [
   {
-    "team_a": "FNATIC",
-    "team_b": "Team Heretics",
-    "org_a": "FNC",
-    "org_b": "TH",
-    "date": "2026-05-10",
-    "region": "EMEA",
-    "event": "Stage 1 \u2014 EMEA",
-    "format": "bo3"
-  },
-  {
-    "team_a": "Eternal Fire",
-    "team_b": "Gentle Mates",
-    "org_a": "EF",
-    "org_b": "M8",
-    "date": "2026-05-10",
-    "region": "EMEA",
-    "event": "Stage 1 \u2014 EMEA",
-    "format": "bo3"
-  },
-  {
     "team_a": "LOUD",
     "team_b": "LEVIAT\u00c1N",
     "org_a": "LOUD",
@@ -27,7 +7,7 @@
     "date": "2026-05-10",
     "region": "Americas",
     "event": "Stage 1 \u2014 Americas",
-    "format": "bo5"
+    "format": "bo3"
   },
   {
     "team_a": "Sentinels",
@@ -37,16 +17,6 @@
     "date": "2026-05-10",
     "region": "Americas",
     "event": "Stage 1 \u2014 Americas",
-    "format": "bo5"
-  },
-  {
-    "team_a": "Paper Rex",
-    "team_b": "Kiwoom DRX",
-    "org_a": "PRX",
-    "org_b": "KRX",
-    "date": "2026-05-10",
-    "region": "Pacific",
-    "event": "Stage 1 \u2014 Pacific",
     "format": "bo3"
   },
   {
@@ -64,6 +34,16 @@
     "team_b": "FULL SENSE",
     "org_a": "GE",
     "org_b": "FS",
+    "date": "2026-05-15",
+    "region": "Pacific",
+    "event": "Stage 1 \u2014 Pacific",
+    "format": "bo3"
+  },
+  {
+    "team_a": "T1",
+    "team_b": "Paper Rex",
+    "org_a": "T1",
+    "org_b": "PRX",
     "date": "2026-05-15",
     "region": "Pacific",
     "event": "Stage 1 \u2014 Pacific",

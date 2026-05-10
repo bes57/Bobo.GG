@@ -220,10 +220,14 @@ def build_2026_timeline(all_games):
     """
     Build checkpoint ratings at every match day in 2026, plus per-match deltas.
 
-    Pure fresh-slate: only 2026 games are used. Each team starts at 0 on
-    Jan 1 and ratings evolve entirely from 2026 results. 5-week half-life
-    ensures recent results dominate (Kickoff from 17 weeks ago has ~10% weight
-    by May; Stage 1 from 2 weeks ago has ~76% weight).
+    Uses previous years' international games as a decayed prior so that the
+    three regional clusters (Americas/EMEA/Pacific) are always connected before
+    Masters Santiago begins.  Without this, the first 1-2 cross-regional games
+    at Santiago create a "component fusion" shock that produces wild spikes.
+    With the prior, those games are incremental updates to an existing calibration.
+
+    Checkpoints and match-event deltas come from 2026 results only; prior games
+    silently anchor the inter-regional offset without appearing in the output.
 
     Returns:
       checkpoints:   [{date, ratings:{org:float}}]
@@ -231,9 +235,14 @@ def build_2026_timeline(all_games):
                        winner_before, winner_after, winner_delta,
                        loser_before,  loser_after,  loser_delta}]
     """
-    # Include CN-team games in the solve (they affect opponent ratings) but
-    # strip CN teams from the displayed checkpoints/events below.
-    year_games = [g for g in all_games if g["date"].year == 2026]
+    year_games  = [g for g in all_games if g["date"].year == 2026]
+    # Prior: all previous-year international games.  They decay naturally via the
+    # same LAMBDA_DECAY (5-week half-life).  By March 2026, 2025 Champions games
+    # (~27 weeks old) carry ~2% weight each — enough to keep clusters connected
+    # without distorting current-season ratings.
+    prior_games = [g for g in all_games
+                   if g["date"].year < 2026 and g.get("event_id") in INTL_EVENTS]
+    print(f"  Prior anchor: {len(prior_games)} international map games from 2023-2025")
 
     if not year_games:
         print("  No 2026 games found — timeline will be empty.")
@@ -249,12 +258,11 @@ def build_2026_timeline(all_games):
     for i, day in enumerate(match_days):
         day_dt = datetime(day.year, day.month, day.day)
 
-        # Fresh-slate: only 2026 games through today
-        games_to_day = [g for g in year_games if g["date"].date() <= day]
+        # Solve includes prior + all 2026 games through today
+        solve_games  = prior_games + [g for g in year_games if g["date"].date() <= day]
+        ratings_before = prev_ratings
 
-        ratings_before = prev_ratings  # {} on day 0
-
-        ratings_after = massey_ratings(games_to_day, LAMBDA_DECAY, day_dt, MIN_GAMES)
+        ratings_after = massey_ratings(solve_games, LAMBDA_DECAY, day_dt, MIN_GAMES)
         prev_ratings  = ratings_after
 
         checkpoints.append({
@@ -263,7 +271,7 @@ def build_2026_timeline(all_games):
                         if k not in CN_TEAMS},
         })
 
-        # Group today's games by match_id for delta computation
+        # Match events use only today's 2026 games
         day_games = [g for g in year_games if g["date"].date() == day]
         by_match  = defaultdict(list)
         for g in day_games:
@@ -278,10 +286,9 @@ def build_2026_timeline(all_games):
                 teams_seen.add(g["loser"])
             if len(teams_seen) < 2:
                 continue
-            teams = list(teams_seen)
+            teams  = list(teams_seen)
             winner = max(teams, key=lambda t: map_wins.get(t, 0))
             loser  = min(teams, key=lambda t: map_wins.get(t, 0))
-
             w_maps = map_wins.get(winner, 0)
             l_maps = map_wins.get(loser, 0)
 
@@ -292,7 +299,8 @@ def build_2026_timeline(all_games):
                 "winner":        winner,
                 "loser":         loser,
                 "series_score":  f"{w_maps}-{l_maps}",
-                "maps":          [{"map": g["map_name"], "wr": g["wr"], "lr": g["lr"]} for g in maps],
+                "maps":          [{"map": g["map_name"], "wr": g["wr"], "lr": g["lr"],
+                                   "winner": g["winner"]} for g in maps],
                 "winner_before": round(ratings_before.get(winner, 0.0), 4),
                 "winner_after":  round(ratings_after.get(winner, 0.0),  4),
                 "winner_delta":  round(ratings_after.get(winner, 0.0) - ratings_before.get(winner, 0.0), 4),

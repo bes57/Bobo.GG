@@ -118,7 +118,7 @@ def _scrape_match_page(url, region_tag):
 
     fmt_el  = soup.select_one(".match-header-vs-note")
     fmt_raw = fmt_el.get_text(strip=True).lower() if fmt_el else ""
-    series_fmt = "bo5" if "5" in fmt_raw else ("bo3" if "3" in fmt_raw else "bo1")
+    series_fmt = "bo5" if "bo5" in fmt_raw or "best of 5" in fmt_raw else ("bo1" if "bo1" in fmt_raw or "best of 1" in fmt_raw else "bo3")
 
     mid = _match_id_from_url(url) or ""
 
@@ -288,7 +288,7 @@ def _scrape_upcoming(all_urls_by_region):
                 org_b = VLR_NAME_TO_ORG.get(team_b, team_b)
                 fmt_el = a.select_one(".match-item-event-series")
                 fmt_raw = fmt_el.get_text(strip=True).lower() if fmt_el else ""
-                fmt = "bo5" if "5" in fmt_raw else ("bo1" if "1" in fmt_raw else "bo3")
+                fmt = "bo5" if "bo5" in fmt_raw or "best of 5" in fmt_raw else ("bo1" if "bo1" in fmt_raw or "best of 1" in fmt_raw else "bo3")
                 upcoming.append({
                     "team_a": team_a,
                     "team_b": team_b,

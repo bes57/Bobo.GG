@@ -52,10 +52,7 @@ HOME_HTML = """
     100% { transform:translate(7%,5%) scale(1.1); }
   }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
-  .top-nav { padding:32px 32px 0; position:relative; z-index:1; display:flex; align-items:center; gap:4px; }
-  .home-logo { height:56px; width:auto; display:block; cursor:pointer; opacity:.9; transition:opacity .2s; }
-  .home-logo:hover { opacity:1; }
-  .site-title { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; letter-spacing:-0.5px; line-height:1; }
+  h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:700; letter-spacing:-2px; line-height:1; }
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
   .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:20px; width:100%; max-width:900px; }
@@ -83,11 +80,8 @@ HOME_HTML = """
 </style>
 </head>
 <body>
-<div class="top-nav">
-  <img src="/logo.svg" alt="B" class="home-logo" onclick="easterEgg()">
-  <span class="site-title">obo's VCT Database</span>
-</div>
 <div class="page">
+  <h1><img src="/logo.svg" alt="B" style="height:1.65em;width:auto;vertical-align:-0.2em;margin-right:-0.2em;object-fit:contain;cursor:pointer;" onclick="easterEgg()">obo's VCT Database</h1>
   <p class="tagline" id="tagline">Misceallneous analyses in the competitive Valorant space</p>
   <details class="ai-disclosure">
     <summary>AI Disclosure</summary>
