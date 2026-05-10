@@ -74,7 +74,7 @@ HOME_HTML = """
   .ai-disclosure summary::-webkit-details-marker { display:none; }
   .ai-disclosure summary::before { content:'▸'; font-size:.7rem; transition:transform .25s ease; display:inline-block; }
   .ai-disclosure[open] summary::before { transform:rotate(90deg); }
-  .ai-disclosure-body { margin-top:6px; font-size:.82rem; font-weight:500; color:#111; max-width:480px; margin-left:auto; margin-right:auto; line-height:1.5; overflow:hidden; height:0; opacity:0; transition:height .24s ease, opacity .24s ease; }
+  .ai-disclosure-body { margin-top:6px; font-size:.82rem; font-weight:500; color:#111; white-space:nowrap; line-height:1.5; overflow:hidden; height:0; opacity:0; transition:height .24s ease, opacity .24s ease; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
 </style>

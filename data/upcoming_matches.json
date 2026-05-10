@@ -30,6 +30,16 @@
     "format": "bo3"
   },
   {
+    "team_a": "Team Heretics",
+    "team_b": "Eternal Fire",
+    "org_a": "TH",
+    "org_b": "EF",
+    "date": "2026-05-15",
+    "region": "EMEA",
+    "event": "Stage 1 \u2014 EMEA",
+    "format": "bo3"
+  },
+  {
     "team_a": "Global Esports",
     "team_b": "FULL SENSE",
     "org_a": "GE",

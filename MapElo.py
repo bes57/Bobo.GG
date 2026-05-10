@@ -1434,7 +1434,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n2">3</div>
           <div class="pipe-content">
             <div class="pipe-title">Recency Decay</div>
-            <div class="pipe-desc">Game weights follow <code>exp(&minus;&lambda;&thinsp;&times;&thinsp;weeks&thinsp;ago)</code>. Half-life &asymp;&thinsp;6 weeks.</div>
+            <div class="pipe-desc">Game weights follow <code>exp(&minus;&lambda;&thinsp;&times;&thinsp;weeks&thinsp;ago)</code>. Half-life = 5 weeks.</div>
             <div class="pipe-graphic">
               <div class="pg-decay-wrap"><canvas class="pg-decay-canvas" id="pg2-canvas"></canvas></div>
             </div>
@@ -1504,7 +1504,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n5">6</div>
           <div class="pipe-content">
             <div class="pipe-title">International Calibration</div>
-            <div class="pipe-desc">Masters &amp; Champions maps receive a 4&times; weight in the Massey solve, directly inflating ratings for teams that perform well on the biggest stages. Furthermore, regional strength disparity is baked into the rating number.</div>
+            <div class="pipe-desc">All Masters &amp; Champions maps from 2023&ndash;2025 are included as time-decayed prior anchors. Older games naturally carry less weight via the same exp(&minus;&lambda;t) decay, stabilizing inter-regional offsets so the first cross-region matches in 2026 produce incremental updates rather than wild swings.</div>
             <div class="pipe-graphic">
               <div class="pg-regions" id="pg5-regions">
                 <div class="pg-region">
@@ -1522,7 +1522,7 @@ MAPELO_HOME_HTML = """
                   <div class="pg-region-name">Pacific</div>
                 </div>
               </div>
-              <div class="pg-note">4&times; multiplier on intl maps &rarr; top-3 finishers always in global top 5&ndash;10</div>
+              <div class="pg-note">2023&ndash;2025 intl priors &rarr; calibrated inter-regional offsets without artificial inflation</div>
             </div>
           </div>
         </div>
@@ -1534,12 +1534,12 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n6">&#10003;</div>
           <div class="pipe-content">
             <div class="pipe-title">Global Rating &amp; Win Probability</div>
-            <div class="pipe-desc">The final rating reflects domestic results + international performance in a single number.</div>
+            <div class="pipe-desc">The final rating combines domestic league results with inter-regional calibration from decayed international priors into a single globally-comparable number.</div>
             <div class="pipe-graphic">
               <div class="pg-formula" id="pg6-formula">
                 <div class="pg-formula-part pg-formula-dom"  id="pg6-p0">domestic</div>
                 <div class="pg-formula-part pg-formula-op"   id="pg6-p1">+</div>
-                <div class="pg-formula-part pg-formula-intl" id="pg6-p2">4&times; intl maps</div>
+                <div class="pg-formula-part pg-formula-intl" id="pg6-p2">intl priors</div>
                 <div class="pg-formula-part pg-formula-op"   id="pg6-p3">=</div>
                 <div class="pg-formula-part pg-formula-global" id="pg6-p4">global rating</div>
               </div>
@@ -1699,31 +1699,24 @@ function _drawDecayCanvas() {
   c.width = W * dpr; c.height = H * dpr;
   var ctx = c.getContext('2d');
   ctx.scale(dpr, dpr);
-  var PL=46, PB=22, PT=12, PR=12;
+  var PL=32, PB=22, PT=12, PR=12;
   var cW=W-PL-PR, cH=H-PB-PT;
-  var MAX_W=4.5, MAX_WKS=20, STEPS=60;
-  var lam = Math.LN2/6;
+  var MAX_W=1.15, MAX_WKS=20, STEPS=60;
+  var lam = Math.LN2/5;
   function toX(wk){ return PL+(wk/MAX_WKS)*cW; }
   function toY(wt){ return (H-PB)-(wt/MAX_W)*cH; }
-  function drawCurvePath(mult, steps) {
+  function drawCurvePath(steps) {
     ctx.beginPath();
     for(var i=0;i<=steps;i++){
-      var wk=(i/STEPS)*MAX_WKS, wt=mult*Math.exp(-lam*wk);
+      var wk=(i/STEPS)*MAX_WKS, wt=Math.exp(-lam*wk);
       i===0?ctx.moveTo(toX(wk),toY(wt)):ctx.lineTo(toX(wk),toY(wt));
     }
   }
   function drawStatic() {
-    // Grid lines + y-axis tick labels
-    [1,2,3,4].forEach(function(wt){
-      ctx.strokeStyle='#edeaf4'; ctx.lineWidth=.6;
-      ctx.beginPath(); ctx.moveTo(PL,toY(wt)); ctx.lineTo(W-PR,toY(wt)); ctx.stroke();
-      ctx.fillStyle='#b0a0c0'; ctx.font='8px DM Sans,sans-serif'; ctx.textAlign='right';
-      ctx.fillText(wt, PL-5, toY(wt)+3);
-    });
     // Axes
     ctx.strokeStyle='#ddd8e8'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(PL,PT); ctx.lineTo(PL,H-PB); ctx.lineTo(W-PR,H-PB); ctx.stroke();
-    // X-axis ticks + label
+    // X-axis ticks
     [0,6,12,18].forEach(function(wk){
       ctx.fillStyle='#c0b8cc'; ctx.font='8px DM Sans,sans-serif'; ctx.textAlign='center';
       ctx.fillText(wk, toX(wk), H-PB+10);
@@ -1736,50 +1729,24 @@ function _drawDecayCanvas() {
     ctx.clearRect(0,0,W,H);
     drawStatic();
     if (t===0) { requestAnimationFrame(step); t=1; return; }
-    // ── Intl curve (pink, 4×) ────────────────────
-    drawCurvePath(4, t);
-    var gI=ctx.createLinearGradient(PL,0,W-PR,0);
-    gI.addColorStop(0,'#d83898'); gI.addColorStop(1,'#f060b8');
-    ctx.strokeStyle=gI; ctx.lineWidth=2.5; ctx.stroke();
-    drawCurvePath(4,t);
+    // ── Single decay curve (all games, same weight) ──
+    drawCurvePath(t);
+    var gC=ctx.createLinearGradient(PL,0,W-PR,0);
+    gC.addColorStop(0,'#a060d0'); gC.addColorStop(1,'#d080f8');
+    ctx.strokeStyle=gC; ctx.lineWidth=2.5; ctx.stroke();
+    drawCurvePath(t);
     ctx.lineTo(toX((t/STEPS)*MAX_WKS),H-PB); ctx.lineTo(PL,H-PB); ctx.closePath();
-    var fI=ctx.createLinearGradient(0,PT,0,H-PB);
-    fI.addColorStop(0,'rgba(216,56,152,.14)'); fI.addColorStop(1,'rgba(216,56,152,0)');
-    ctx.fillStyle=fI; ctx.fill();
-    // ── Domestic curve (purple, 1×) ───────────────
-    drawCurvePath(1, t);
-    var gD=ctx.createLinearGradient(PL,0,W-PR,0);
-    gD.addColorStop(0,'#a060d0'); gD.addColorStop(1,'#d080f8');
-    ctx.strokeStyle=gD; ctx.lineWidth=2.5; ctx.stroke();
-    drawCurvePath(1,t);
-    ctx.lineTo(toX((t/STEPS)*MAX_WKS),H-PB); ctx.lineTo(PL,H-PB); ctx.closePath();
-    var fD=ctx.createLinearGradient(0,PT,0,H-PB);
-    fD.addColorStop(0,'rgba(160,96,208,.15)'); fD.addColorStop(1,'rgba(160,96,208,0)');
-    ctx.fillStyle=fD; ctx.fill();
-    // ── Curve labels ─────────────────────────────
-    if (t>=10) {
-      ctx.font='bold 8.5px Syne,sans-serif'; ctx.textAlign='left';
-      ctx.fillStyle='#c02888'; ctx.fillText('intl ×4', PL+6, toY(4)-5);
-      ctx.fillStyle='#7030b8'; ctx.fillText('domestic', PL+6, toY(1)-5);
-    }
-    // ── 4× bracket on left ───────────────────────
-    if (t>=14) {
-      var bx=PL-14, y1=toY(4), y4=toY(1), mid=(y1+y4)/2;
-      ctx.strokeStyle='#d090c0'; ctx.lineWidth=1;
-      ctx.beginPath();
-      ctx.moveTo(bx+5,y1); ctx.lineTo(bx,y1); ctx.lineTo(bx,y4); ctx.lineTo(bx+5,y4);
-      ctx.stroke();
-      ctx.fillStyle='#b05090'; ctx.font='bold 8px Syne,sans-serif'; ctx.textAlign='right';
-      ctx.fillText('4×', bx-2, mid+3);
-    }
-    // ── Half-life dashed line ─────────────────────
-    if (t >= Math.round((6/MAX_WKS)*STEPS)) {
-      var hlX=toX(6), hlY=toY(0.5);
+    var fC=ctx.createLinearGradient(0,PT,0,H-PB);
+    fC.addColorStop(0,'rgba(160,96,208,.18)'); fC.addColorStop(1,'rgba(160,96,208,0)');
+    ctx.fillStyle=fC; ctx.fill();
+    // ── Half-life dashed line at 5 weeks ──────────
+    if (t >= Math.round((5/MAX_WKS)*STEPS)) {
+      var hlX=toX(5), hlY=toY(Math.exp(-lam*5));
       ctx.strokeStyle='#ccc0e0'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
       ctx.beginPath(); ctx.moveTo(hlX,H-PB); ctx.lineTo(hlX,hlY); ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle='#9060b8'; ctx.font='bold 8px Syne,sans-serif'; ctx.textAlign='center';
-      ctx.fillText('t½=6w', hlX, hlY-4);
+      ctx.fillText('t½=5w', hlX, hlY-4);
     }
     t=Math.min(t+2, STEPS);
     if (t<STEPS) requestAnimationFrame(step);
@@ -5011,16 +4978,19 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:100vh}
+body{background:#fdf6f0;font-family:'DM Sans',sans-serif;color:#000;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 10% 10%,#f4b8c155 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%)}
+body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;background:radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);animation:purpleFloat 12s ease-in-out infinite alternate}
+@keyframes purpleFloat{0%{transform:translate(0,0) scale(1)}33%{transform:translate(10%,-9%) scale(1.14)}66%{transform:translate(-9%,12%) scale(.9)}100%{transform:translate(7%,5%) scale(1.1)}}
 
-.top-nav{padding:24px 32px 0;display:flex;align-items:center;gap:16px}
+.top-nav{padding:24px 32px 0;display:flex;align-items:center;gap:16px;position:relative;z-index:1}
 .home-logo{display:block;height:72px;width:auto;opacity:.85;transition:opacity .2s}
 .home-logo:hover{opacity:1}
 .back-btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:#7c3aed;text-decoration:none;padding:6px 14px;border-radius:99px;border:1.5px solid rgba(124,58,237,.25);background:rgba(124,58,237,.06);transition:background .18s,border-color .18s,color .18s;white-space:nowrap}
 .back-btn:hover{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.5);color:#5b21b6}
 .back-btn svg{flex-shrink:0}
 
-.hub-main{padding:20px 0 60px;width:100%}
+.hub-main{padding:20px 0 60px;width:100%;position:relative;z-index:1}
 .hub-header{text-align:center;margin-bottom:20px}
 .hub-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-.03em;color:#000;line-height:1;min-height:1.2em;transition:opacity .2s}
 .type-cursor{opacity:1;animation:blink .55s step-end infinite}
@@ -5067,9 +5037,11 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
 @keyframes plog-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Chart card */
+.chart-hint{font-size:.72rem;color:rgba(0,0,0,.38);text-align:center;padding:6px 0 2px;letter-spacing:.01em}
+.chart-hint kbd{display:inline-block;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;background:rgba(0,0,0,.07);border-radius:4px;padding:1px 5px;margin:0 1px}
 .chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin-bottom:18px;position:relative}
-.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;padding:0 20px}
-.chart-title{color:#000;font-weight:600;font-size:.9rem}
+.chart-header{display:flex;justify-content:flex-end;align-items:center;margin-bottom:10px;gap:10px;padding:0 20px;position:relative}
+.chart-title{position:absolute;left:50%;transform:translateX(-50%);font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;pointer-events:none}
 .chart-asof{color:rgba(0,0,0,.4);font-size:.75rem}
 .chart-controls{display:flex;gap:8px;align-items:center;flex-shrink:0}
 .chart-btn{padding:5px 14px;border-radius:100px;border:1.5px solid rgba(0,0,0,.15);background:rgba(0,0,0,.03);color:rgba(0,0,0,.55);font-size:.75rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
@@ -5322,7 +5294,7 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
     <button class="pill" data-region="Americas">Americas</button>
     <button class="pill" data-region="EMEA">EMEA</button>
     <button class="pill" data-region="Pacific">Pacific</button>
-    <button class="pill" data-region="Top10" id="top10Pill">Top 10 only</button>
+    <button class="pill" data-region="Top10" id="top10Pill">Top 10 Globally</button>
   </div>
 
   <div class="panels-outer">
@@ -5345,6 +5317,7 @@ body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:1
         <!-- Chart section (shown when ready) -->
         <div id="chartSection" class="hidden">
           <div class="chart-card">
+            <p class="chart-hint"><kbd>W</kbd> up &nbsp;<kbd>S</kbd> down &nbsp;<kbd>X</kbd> clear selection</p>
             <div class="chart-header">
               <span class="chart-title">BenPom Rating &mdash; 2026 Season</span>
               <div class="chart-controls">
@@ -5825,6 +5798,57 @@ const logoPlugin = {
       ctx.beginPath(); ctx.arc(cx, py, sz / 2, 0, Math.PI * 2); ctx.clip();
       ctx.drawImage(logos[ds.org], cx - sz / 2, py - sz / 2, sz, sz);
       ctx.restore();
+
+      // Mini info card for the selected team
+      if (selectedTeam !== ds.org || !hubData) return;
+      const team = (hubData.leaderboard.teams || []).find(t => t.org === ds.org);
+      if (!team) return;
+      const rStr = (team.rating >= 0 ? '+' : '') + team.rating.toFixed(2);
+
+      // W-L in current event
+      const asOf  = hubData.as_of_date || '';
+      const bands = hubData.event_bands || [];
+      const curBand = bands.find(b => b.start <= asOf && asOf <= b.end)
+                   || [...bands].reverse().find(b => b.start <= asOf);
+      const mes   = hubData.chart.match_events || [];
+      const evMes = curBand ? mes.filter(m => m.date >= curBand.start && m.date <= curBand.end) : mes;
+      const wins   = evMes.filter(m => m.winner === ds.org).length;
+      const losses = evMes.filter(m => m.loser  === ds.org).length;
+      const wlStr  = `${wins}W – ${losses}L`;
+      const evLabel = curBand ? curBand.label.replace(' 2026','').replace(' 2025','') : '';
+
+      const cardX = cx + sz / 2 + 8;
+      const cardW = 88, cardH = 52, cardR = 8;
+      const cardY = py - cardH / 2;
+
+      ctx.save();
+      ctx.shadowBlur = 10; ctx.shadowColor = 'rgba(0,0,0,.14)';
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
+      ctx.fillStyle = 'rgba(255,255,255,.97)'; ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
+      ctx.strokeStyle = ds.borderColor + '55'; ctx.lineWidth = 1.5; ctx.stroke();
+      // Colored top stripe
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, 4, [cardR, cardR, 0, 0]);
+      ctx.fillStyle = ds.borderColor; ctx.fill();
+      // Rating
+      ctx.font = 'bold 14px "DM Sans",sans-serif';
+      ctx.fillStyle = ds.borderColor; ctx.textAlign = 'center';
+      ctx.fillText(rStr, cardX + cardW / 2, cardY + 22);
+      // W-L
+      ctx.font = '10.5px "DM Sans",sans-serif';
+      ctx.fillStyle = '#555';
+      ctx.fillText(wlStr, cardX + cardW / 2, cardY + 36);
+      // Event label
+      if (evLabel) {
+        ctx.font = '9px "DM Sans",sans-serif';
+        ctx.fillStyle = '#999';
+        ctx.fillText(evLabel, cardX + cardW / 2, cardY + 48);
+      }
+      ctx.restore();
     });
   },
 };
@@ -5837,10 +5861,10 @@ function _computeGlobalYRange(data) {
     Object.values(cp.ratings || {}).forEach(function(v){ allVals.push(v); });
   });
   if (!allVals.length) { _chartYMin = -5; _chartYMax = 5; return; }
-  var mn = Math.min.apply(null, allVals), mx = Math.max.apply(null, allVals);
-  var pad = Math.max(0.3, (mx - mn) * 0.05);
-  _chartYMin = Math.floor((mn - pad) * 10) / 10;
-  _chartYMax = Math.ceil( (mx + pad) * 10) / 10;
+  var peak = Math.max.apply(null, allVals.map(Math.abs));
+  var absMax = Math.ceil(peak * 1.15 * 2) / 2;  // 15% headroom, snapped to nearest 0.5
+  _chartYMin = -absMax;
+  _chartYMax =  absMax;
 }
 
 function buildChart(data, noLines = false) {
@@ -5923,7 +5947,14 @@ function buildChart(data, noLines = false) {
           min: _chartYMin,
           max: _chartYMax,
           grid:{color:'rgba(0,0,0,.07)'},
-          ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, stepSize:0.1, callback:v=>(v>0?'+':'')+v.toFixed(1)},
+          ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, callback:v => v===0 ? '0' : (v>0?'+':'')+v.toFixed(1)},
+          afterBuildTicks(scale) {
+            const ticks = [];
+            for (let v = _chartYMin; v <= _chartYMax + 0.001; v += 0.5) {
+              ticks.push({value: Math.round(v * 10) / 10});
+            }
+            scale.ticks = ticks;
+          },
           border:{color:'rgba(0,0,0,.12)'},
         },
       },
@@ -6156,17 +6187,23 @@ async function revealChart(duration = 4000, startFromLeft = false) {
         const _BCOLS = ['rgba(147,112,219,.08)','rgba(100,149,237,.08)','rgba(128,200,100,.08)',
                         'rgba(255,180,100,.08)','rgba(100,200,220,.08)','rgba(200,120,180,.08)'];
         _bands.forEach((_b, _i) => {
-          const _bx1 = Math.max(revX, myChart.scales.x.getPixelForValue(new Date(_b.start)));
-          const _bx2 = Math.min(ca.right, myChart.scales.x.getPixelForValue(new Date(_b.end)));
+          const _truex1 = myChart.scales.x.getPixelForValue(new Date(_b.start));
+          const _truex2 = myChart.scales.x.getPixelForValue(new Date(_b.end));
+          const _bx1 = Math.max(revX, _truex1);
+          const _bx2 = Math.min(ca.right, _truex2);
           if (_bx2 <= _bx1) return;
           oc.fillStyle = _BCOLS[_i % _BCOLS.length];
           oc.fillRect(_bx1, ca.top, _bx2 - _bx1, ca.bottom - ca.top);
-          oc.save();
-          oc.font = 'bold 10px DM Sans,sans-serif';
-          oc.fillStyle = 'rgba(60,30,100,.35)';
-          oc.textAlign = 'center';
-          oc.fillText(_b.label, (_bx1 + _bx2) / 2, ca.top + 14);
-          oc.restore();
+          // Label always at true band center — never shifts with curtain
+          const _labelX = Math.max(_truex1, Math.min(_truex2, (_truex1 + _truex2) / 2));
+          if (_labelX >= revX && _labelX <= ca.right) {
+            oc.save();
+            oc.font = 'bold 10px DM Sans,sans-serif';
+            oc.fillStyle = 'rgba(60,30,100,.35)';
+            oc.textAlign = 'center';
+            oc.fillText(_b.label, _labelX, ca.top + 14);
+            oc.restore();
+          }
         });
       }
 
@@ -6252,9 +6289,14 @@ async function toggleZoom() {
   if (_isReplaying || !myChart) return;
   const btn = document.getElementById('zoomBtn');
   if (_isZoomed) {
+    const prevMin = myChart.options.scales.x.min;
+    const prevMax = myChart.options.scales.x.max;
     _isZoomed = false;
     _savedZoomMin = null; _savedZoomMax = null;
     buildChart(hubData);
+    myChart.options.scales.x.min = prevMin;
+    myChart.options.scales.x.max = prevMax;
+    myChart.update('none');
     await animateZoom('2026-01-07', '2026-10-25', 600);
     if (btn) { btn.textContent = '⊕ Zoom Split'; btn.classList.remove('active'); }
   } else {
@@ -6276,9 +6318,14 @@ async function toggleZoom() {
 
 async function resetZoom() {
   if (!myChart) return;
+  const prevMin = myChart.options.scales.x.min;
+  const prevMax = myChart.options.scales.x.max;
   _isZoomed     = false;
   _savedZoomMin = null; _savedZoomMax = null;
   buildChart(hubData);
+  myChart.options.scales.x.min = prevMin;
+  myChart.options.scales.x.max = prevMax;
+  myChart.update('none');
   await animateZoom('2026-01-07', '2026-10-25', 400);
   const zBtn = document.getElementById('zoomBtn');
   if (zBtn) { zBtn.textContent = '⊕ Zoom Split'; zBtn.classList.remove('active'); }
