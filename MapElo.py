@@ -929,7 +929,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <style>
   SHARED_CSS
   .hub-hero { position:relative; width:100%; padding:24px 32px 170px; min-height:520px; text-align:center; overflow:hidden; isolation:isolate; background-color:#0e0a14; }
-  .hub-hero-img { position:absolute; inset:0; background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear, opacity 1.2s ease; opacity:0; }
+  .hub-hero-img { position:absolute; inset:0; background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear, opacity 2s ease; opacity:0; }
   .hub-hero:hover .hub-hero-img { transform:scale(1.06); }
   /* darken at top for legibility, fade to Modern VCT Hub bg at the bottom edge */
   .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 30%, rgba(14,10,20,0.20) 55%, rgba(232,213,245,0.40) 72%, rgba(232,213,245,0.85) 88%, #e8d5f5 100%); z-index:-1; pointer-events:none; }
@@ -1034,8 +1034,13 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   (function(){
     var heroImg = document.querySelector('.hub-hero-img');
     if (heroImg) {
-      heroImg.style.backgroundImage = 'url(/static/MastersShanghaiFinal.jpg)';
-      requestAnimationFrame(function() { heroImg.style.opacity = '1'; });
+      var src1 = '/static/MastersShanghaiFinal.jpg';
+      var img1 = new Image();
+      img1.onload = function() {
+        heroImg.style.backgroundImage = 'url(' + src1 + ')';
+        requestAnimationFrame(function() { requestAnimationFrame(function() { heroImg.style.opacity = '1'; }); });
+      };
+      img1.src = src1;
     }
     var wideImg = document.querySelector('.hub-card-wide-bg');
     if (wideImg) {
