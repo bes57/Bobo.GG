@@ -52,7 +52,10 @@ HOME_HTML = """
     100% { transform:translate(7%,5%) scale(1.1); }
   }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
-  h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:700; letter-spacing:-2px; line-height:1; }
+  .top-nav { padding:32px 32px 0; position:relative; z-index:1; display:flex; align-items:center; gap:4px; }
+  .home-logo { height:56px; width:auto; display:block; cursor:pointer; opacity:.9; transition:opacity .2s; }
+  .home-logo:hover { opacity:1; }
+  .site-title { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; letter-spacing:-0.5px; line-height:1; }
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
   .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:20px; width:100%; max-width:900px; }
@@ -63,11 +66,11 @@ HOME_HTML = """
   .section.collapsed .cards-wrap { grid-template-rows:0fr; opacity:0; }
   .cards-inner { min-height:0; }
   .cards { display:flex; gap:20px; flex-wrap:wrap; justify-content:flex-start; padding:8px 0 8px; }
-  .nav-card { background:white; border-radius:24px; padding:32px 24px; width:275px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .2s,box-shadow .2s; text-align:left; }
+  .nav-card { background:white; border-radius:24px; padding:32px 24px 26px; width:275px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .2s,box-shadow .2s; text-align:center; display:flex; flex-direction:column; }
   .nav-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px #00000014; }
-  .nav-card-title { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:6px; overflow-wrap:anywhere; }
-  .nav-card-desc { font-size:.82rem; color:var(--soft); font-weight:300; line-height:1.5; }
-  .nav-card-arrow { margin-top:18px; font-size:.8rem; color:#ccc; }
+  .nav-card-title { font-family:'Syne',sans-serif; font-size:.92rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; overflow-wrap:anywhere; }
+  .nav-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
+  .nav-card-arrow { margin-top:auto; padding-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   .ai-disclosure { margin-top:10px; margin-bottom:4px; }
   .ai-disclosure summary { list-style:none; cursor:pointer; font-size:.82rem; font-weight:600; color:#111; user-select:none; display:inline-flex; align-items:center; gap:5px; }
@@ -80,8 +83,11 @@ HOME_HTML = """
 </style>
 </head>
 <body>
+<div class="top-nav">
+  <img src="/logo.svg" alt="B" class="home-logo" onclick="easterEgg()">
+  <span class="site-title">obo's VCT Database</span>
+</div>
 <div class="page">
-  <h1><img src="/logo.svg" alt="B" style="height:1.65em;width:auto;vertical-align:-0.2em;margin-right:-0.2em;object-fit:contain;cursor:pointer;" onclick="easterEgg()">obo's VCT Database</h1>
   <p class="tagline" id="tagline">Misceallneous analyses in the competitive Valorant space</p>
   <details class="ai-disclosure">
     <summary>AI Disclosure</summary>
@@ -103,7 +109,7 @@ HOME_HTML = """
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>
         <a class="nav-card" href="/highs/">
-          <div class="nav-card-title">All-Time Highs (and Lows)</div>
+          <div class="nav-card-title">All-Time Highs<br>(and Lows)</div>
           <div class="nav-card-desc">The best and worst individual performances across all VCT franchised events.</div>
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>

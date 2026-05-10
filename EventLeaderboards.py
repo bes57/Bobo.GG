@@ -307,7 +307,7 @@ MAIN_HTML = """
     --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e;
   }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
     background:
@@ -315,6 +315,19 @@ MAIN_HTML = """
       radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
       radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
       radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
+  }
+  body::after {
+    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
+      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
+    animation:purpleFloat 12s ease-in-out infinite alternate;
+  }
+  @keyframes purpleFloat {
+    0%   { transform:translate(0,0) scale(1); }
+    33%  { transform:translate(10%,-9%) scale(1.14); }
+    66%  { transform:translate(-9%,12%) scale(0.9); }
+    100% { transform:translate(7%,5%) scale(1.1); }
   }
   .page { position:relative; z-index:1; padding:40px 32px 60px; }
   .top-nav { display:flex; align-items:center; margin-bottom:32px; animation:fadeDown .7s ease both; }
@@ -793,7 +806,7 @@ RANKING_HTML = """
 <style>
   :root { --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e; --lavender:#d4b8f4; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
     background:
@@ -801,6 +814,19 @@ RANKING_HTML = """
       radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
       radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
       radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
+  }
+  body::after {
+    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
+      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
+    animation:purpleFloat 12s ease-in-out infinite alternate;
+  }
+  @keyframes purpleFloat {
+    0%   { transform:translate(0,0) scale(1); }
+    33%  { transform:translate(10%,-9%) scale(1.14); }
+    66%  { transform:translate(-9%,12%) scale(0.9); }
+    100% { transform:translate(7%,5%) scale(1.1); }
   }
   .page { position:relative; z-index:1; padding:40px 32px 60px; max-width:900px; margin:0 auto; }
   .top-nav { padding:32px 32px 0; }

@@ -102,9 +102,11 @@ TEST_EVENTS = [
 ]
 
 # Fixed hyper-parameters (CV-validated; same Brier score as optimised values)
-HALF_LIFE_WEEKS = 6      # calendar-weeks half-life for recency decay (CV-optimised: 5.9w)
-INTL_MULTIPLIER = 4.0    # international map games count this many times more than domestic
-SHRINK_K        = 12     # James-Stein shrinkage strength for per-map ratings
+HALF_LIFE_WEEKS   = 8      # calendar-weeks half-life — shorter to punish stale domestic records
+INTL_WIN_MULT     = 4.0    # intl games: both sides get 4x — symmetric, full-weight international games
+INTL_LOSS_MULT    = 4.0    # symmetric with win mult — losing at intl hurts as much as winning helps
+INTL_MULTIPLIER   = INTL_WIN_MULT  # legacy alias used in shrinkage weight counts
+SHRINK_K          = 12     # James-Stein shrinkage strength for per-map ratings
 MC_N_SIMS         = 10000 # Monte Carlo veto simulations per team per snapshot
 VETO_NOISE_STD    = 2.0  # Gaussian noise on map advantages during veto (round diff units)
 
@@ -328,21 +330,23 @@ def massey_ratings(games, lambda_decay, ref_date, min_games=0):
         if g['winner'] not in idx or g['loser'] not in idx:
             continue
         weeks_ago = max(0, (ref_date - g['date']).days / 7.0)
-        w = math.exp(-lambda_decay * weeks_ago)
-        if g.get('event_id') in INTL_EVENTS:
-            w *= INTL_MULTIPLIER
+        base_w = math.exp(-lambda_decay * weeks_ago)
+        is_intl = g.get('event_id') in INTL_EVENTS
+        w_win = base_w * (INTL_WIN_MULT  if is_intl else 1.0)
+        w_los = base_w * (INTL_LOSS_MULT if is_intl else 1.0)
+        w_sym = min(w_win, w_los)  # symmetric part for M matrix (ensures PSD)
         rd = g['wr'] - g['lr']
         i, j = idx[g['winner']], idx[g['loser']]
-        M[i, i] += w;  M[j, j] += w
-        M[i, j] -= w;  M[j, i] -= w
-        p[i] += w * rd;  p[j] -= w * rd
+        M[i, i] += w_sym;  M[j, j] += w_sym
+        M[i, j] -= w_sym;  M[j, i] -= w_sym
+        p[i] += w_win * rd;  p[j] -= w_los * rd
 
     # Anchor: mean(r) = 0
     M[-1, :] = 1.0
     p[-1]    = 0.0
 
-    # Ridge: prevents near-singular matrices when early games are decayed near zero
-    ridge = 1e-4
+    # Ridge: regularize toward zero; 0.5 ≈ one "virtual" draw against a neutral opponent
+    ridge = 0.5
     for i in range(n - 1):
         M[i, i] += ridge
 
@@ -711,6 +715,10 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 
 # ── Per-year ratings builder ───────────────────────────────────────────────────
 
+CN_TEAMS = {
+    "EDG", "BLG", "TE", "DRG", "ASE", "AG", "XLG",
+}
+
 def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=None):
     """
     Compute pick/ban-adjusted ratings for one snapshot's games.
@@ -718,12 +726,13 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=N
     overall_rating = Monte Carlo pick/ban-adjusted rating vs league-average opponent.
     per-map ratings use per-map recency decay (date-based).
     filter_teams: if set, only emit these teams in the output (Massey solve uses all teams).
+    CN teams are always excluded from the solve.
     """
     if not games:
         return {'n_games': 0, 'beta': 0, 'ref_date': None, 'teams': {}}
 
     # Overall Massey: pooled across all maps, used as shrinkage prior only
-    rtgs     = massey_ratings(games, lam, ref_date)
+    rtgs     = massey_ratings(games, lam, ref_date, min_games=min_games)
     beta     = fit_beta(games, rtgs)
     map_rtgs = compute_per_map_ratings(games, rtgs, lam, shrink_k=shrink_k)
     records  = build_records(games)
@@ -753,6 +762,8 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=N
 
     teams_out = {}
     for team in sorted(pb_ratings, key=lambda t: -pb_ratings[t]):
+        if team in CN_TEAMS:
+            continue
         if filter_teams is not None and team not in filter_teams:
             continue
         rec = records.get(team, {'w': 0, 'l': 0, 'maps': {}})

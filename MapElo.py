@@ -1,6 +1,9 @@
 import os
 import re
 import json
+import threading as _th
+import time as _time_mod
+import math as _math_mod
 import pandas as pd
 import numpy as np
 from scipy.optimize import minimize_scalar
@@ -480,21 +483,33 @@ def get_intl_calibration():
             _intl_cache = json.load(f)
     return _intl_cache
 
-# Static region lookup — teams that have competed in VCT franchised play
+# Active 2026 VCT league teams (36 total, 12 per region)
+ACTIVE_2026_ORGS = {
+    # EMEA
+    "TL", "FNC", "NAVI", "VIT", "BBL", "GX", "KC", "TH", "FUT", "M8", "EF", "PCF",
+    # Americas
+    "SEN", "G2", "MIBR", "NRG", "100T", "C9", "EG", "KRÜ", "LEV", "FUR", "LOUD", "ENVY",
+    # Pacific
+    "PRX", "T1", "GEN", "DFM", "ZETA", "RRQ", "TS", "GE", "NS", "FS", "VL", "KRX",
+}
+
+# Static region lookup — includes historical teams for match data context
 ORG_REGIONS = {
     "TL":   "EMEA",  "FNC":  "EMEA",  "NAVI": "EMEA",  "VIT":  "EMEA",
     "BBL":  "EMEA",  "GX":   "EMEA",  "KC":   "EMEA",  "TH":   "EMEA",
     "FUT":  "EMEA",  "GIA":  "EMEA",  "MKOI": "EMEA",  "WOL":  "EMEA",
     "M8":   "EMEA",  "FPX":  "EMEA",  "BME":  "EMEA",
+    "PCF":  "EMEA",  "ULF":  "EMEA",  "EF":   "EMEA",
     "SEN":  "Americas",  "G2":   "Americas",  "MIBR": "Americas",
     "NRG":  "Americas",  "100T": "Americas",  "C9":   "Americas",
     "EG":   "Americas",  "KRÜ":  "Americas",  "LEV":  "Americas",
     "FUR":  "Americas",  "LOUD": "Americas",  "2G":   "Americas",
-    "APK":  "Americas",
+    "APK":  "Americas",  "ENVY": "Americas",
     "PRX":  "Pacific",  "DRX":  "Pacific",  "T1":   "Pacific",
     "TLN":  "Pacific",  "GEN":  "Pacific",  "DFM":  "Pacific",
     "ZETA": "Pacific",  "RRQ":  "Pacific",  "TS":   "Pacific",
     "GE":   "Pacific",  "NS":   "Pacific",
+    "FS":   "Pacific",  "VL":   "Pacific",  "KRX":  "Pacific",
 }
 
 def get_pyth_data():
@@ -916,8 +931,8 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   .hub-hero { position:relative; width:100%; padding:24px 32px 170px; min-height:520px; text-align:center; overflow:hidden; isolation:isolate; background-color:#0e0a14; }
   .hub-hero-img { position:absolute; inset:0; background-size:cover; background-position:center 5%; background-repeat:no-repeat; z-index:-2; transform:scale(1.02); transition:transform 18s linear, opacity 1.2s ease; opacity:0; }
   .hub-hero:hover .hub-hero-img { transform:scale(1.06); }
-  /* darken at top for legibility, fade to cream at the bottom edge */
-  .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 30%, rgba(14,10,20,0.20) 55%, rgba(253,246,240,0.40) 72%, rgba(253,246,240,0.85) 88%, #fdf6f0 100%); z-index:-1; pointer-events:none; }
+  /* darken at top for legibility, fade to Modern VCT Hub bg at the bottom edge */
+  .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 30%, rgba(14,10,20,0.20) 55%, rgba(232,213,245,0.40) 72%, rgba(232,213,245,0.85) 88%, #e8d5f5 100%); z-index:-1; pointer-events:none; }
   .hub-hero-content { position:relative; z-index:1; max-width:840px; margin:0 auto; }
   .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#e8dff4; margin-bottom:14px; display:inline-flex; align-items:center; gap:12px; }
   .hub-hero-eyebrow::before, .hub-hero-eyebrow::after { content:''; display:inline-block; width:36px; height:2px; background:linear-gradient(90deg, transparent, #d4b8f4, transparent); }
@@ -930,8 +945,9 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
      Use a fixed-attached gradient on html so the top half always paints dark and the
      bottom half cream — body's solid cream paints over it for normal viewing. */
   /* No overscroll on the hub — both top and bottom rubber-band disabled. */
-  html { background:var(--cream); overscroll-behavior:none; }
-  body { overscroll-behavior:none; }
+  html { background:#e8d5f5; overscroll-behavior:none; }
+  body { background:#e8d5f5 !important; overscroll-behavior:none; }
+  #content-wrap { width:100%; }
   /* Hub stays calm — kill BOTH SHARED_CSS body backdrops so nothing tints
      the area below the hero and breaks the gradient blend. */
   body::before, body::after { display:none !important; }
@@ -3079,7 +3095,10 @@ document.querySelectorAll('.fmt-btn').forEach(function(btn){
 // ── Veto model ───────────────────────────────────────────────────────────────
 
 function getActivePool(year, snap) {
-  return (VETO.snap_pools||{})[year+'_'+snap] || null;
+  var key = year+'_'+snap;
+  var cp = (VETO.computed_pools||{})[key];
+  if (cp && cp.length >= 7) return cp;
+  return (VETO.snap_pools||{})[key] || null;
 }
 
 function getBanProbs(patt, oppTeam, rem) {
@@ -3750,7 +3769,7 @@ MAPELO_PYTH_HTML = """
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:1000px; margin:0 auto; width:100%; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.5rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; }
+  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.5rem); font-weight:700; letter-spacing:-1px; margin-bottom:28px; }
   .card { background:white; border-radius:24px; padding:28px 32px; box-shadow:0 4px 24px #0000000a; }
   .card-header { display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap; }
   .exponent-badge { font-size:.75rem; font-weight:500; background:#f4edb8; color:#6a5a1a; padding:3px 10px; border-radius:99px; }
@@ -3782,8 +3801,8 @@ MAPELO_PYTH_HTML = """
   .tab-btn.onwards.active { border-style:solid; }
   .filter-divider { width:1px; height:20px; background:#f0ecf4; margin:0 4px; }
   .table-wrap { overflow-x:auto; margin-top:20px; }
-  table { width:100%; border-collapse:collapse; font-size:.85rem; }
-  thead th { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 12px; text-align:right; border-bottom:2px solid #f0ecf4; cursor:pointer; user-select:none; white-space:nowrap; }
+  table { width:100%; border-collapse:collapse; font-size:.88rem; }
+  thead th { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 12px; text-align:right; border-bottom:2px solid #f0ecf4; cursor:pointer; user-select:none; white-space:nowrap; }
   thead th:nth-child(2) { text-align:left; }
   thead th.sorted-asc::after  { content:' ▲'; font-size:.6rem; }
   thead th.sorted-desc::after { content:' ▼'; font-size:.6rem; }
@@ -3854,7 +3873,6 @@ MAPELO_PYTH_HTML = """
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
   </div>
   <div class="page">
-    <a class="back-link" href="/mapelo/">&larr; BenPom</a>
     <div class="page-title">Pythagorean Win%</div>
 
     <details class="intro-details" open>
@@ -4391,7 +4409,7 @@ def mapelo_matchup():
     frontend_data = {
         'metadata':    {k: v for k, v in full['metadata'].items() if k in keep_meta},
         'ratings':     full['ratings'],
-        'veto_model':  {'teams': veto.get('teams', {}), 'snap_pools': veto.get('snap_pools', {})},
+        'veto_model':  {'teams': veto.get('teams', {}), 'snap_pools': veto.get('snap_pools', {}), 'computed_pools': _build_computed_pools()},
         'intl_calib':  intl.get('calibration', {}),
         'intl_params': intl.get('params', {}),
         'org_regions': ORG_REGIONS,
@@ -4420,33 +4438,2231 @@ def mapelo_mvp_stat(org):
     data = _get_mvp_stat(org, year, snap, n_maps) or {}
     return Response(json.dumps(data), mimetype='application/json')
 
+# ─── Modern VCT Hub — backend ────────────────────────────────────────────────
+
+_RATING_TIMELINE_PATH = os.path.join(ROOT, "data", "rating_timeline.json")
+_MAP_RATINGS_PATH     = os.path.join(ROOT, "data", "map_ratings.json")
+
+_mhub_cache        = {"data": None, "ts": 0.0}
+_mhub_cache_lock   = _th.Lock()
+_mhub_build_running = False
+_MHUB_TTL          = 1800  # 30 min
+_MHUB_PROGRESS_FILE = "/tmp/mhub_refresh_progress.json"
+
+_MAPS_DIR       = os.path.join(ROOT, "data", "maps")
+_MATCH_DATES_PATH = os.path.join(ROOT, "data", "match_dates.json")
+
+# Snap key → event CSV stems (most representative first) for pool detection
+_SNAP_POOL_EVENTS = {
+    "2026_after_kickoff":    ["2026_kickoff"],
+    "2026_before_santiago":  ["2026_kickoff"],
+    "2026_after_santiago":   ["2026_masters_santiago"],
+    "2026_after_stage1":     ["2026_stage1"],
+    "2025_before_bangkok":   ["2025_kickoff"],
+    "2025_after_bangkok":    ["2025_masters_bangkok"],
+    "2025_before_toronto":   ["2025_stage1"],
+    "2025_after_toronto":    ["2025_masters_toronto"],
+    "2025_before_champions": ["2025_stage2"],
+    "2025_after_champions":  ["2025_champions"],
+    "2024_before_madrid":    ["2024_kickoff"],
+    "2024_after_madrid":     ["2024_masters_madrid"],
+    "2024_before_shanghai":  ["2024_stage1"],
+    "2024_after_shanghai":   ["2024_masters_shanghai"],
+    "2024_before_champions": ["2024_stage2"],
+    "2024_after_champions":  ["2024_champions"],
+}
+
+def _load_event_map_records(event_ids):
+    """
+    Load (date, match_id, frozenset_of_maps) for the given event CSV stems.
+    Map names in the CSVs are like 'BreezePICK', 'SplitBAN', 'Haven' (bare = decider).
+    """
+    try:
+        with open(_MATCH_DATES_PATH) as f:
+            match_dates = json.load(f)
+    except Exception:
+        return []
+
+    records = []
+    for eid in event_ids:
+        fpath = os.path.join(_MAPS_DIR, f"{eid}.csv")
+        if not os.path.exists(fpath):
+            continue
+        try:
+            df = pd.read_csv(fpath, usecols=lambda c: c in ("MatchID", "MapName"))
+            if "MapName" not in df.columns:
+                continue
+            for mid, grp in df.groupby("MatchID"):
+                date = match_dates.get(str(int(mid)), "")
+                if not date:
+                    continue
+                maps = set()
+                for mn in grp["MapName"].unique():
+                    clean = mn
+                    for sfx in ("PICK", "BAN", "DECIDER", "REMAIN"):
+                        if mn.endswith(sfx):
+                            clean = mn[:-len(sfx)]
+                            break
+                    maps.add(clean)
+                records.append((date, int(mid), frozenset(maps)))
+        except Exception:
+            pass
+
+    records.sort()
+    return records
+
+
+def _detect_pool(records_sorted, as_of_date=None, target_size=7):
+    """
+    Derive the active map pool from played-map records.
+
+    Algorithm: the most recently introduced map marks the start of the current
+    pool era.  Pool = union of all maps played since that date, trimmed to
+    `target_size` by frequency when a pool transition produces more than
+    target_size maps (the least-played map is the one that was replaced).
+    """
+    if as_of_date:
+        recs = [(d, mid, m) for d, mid, m in records_sorted if d <= as_of_date]
+    else:
+        recs = records_sorted[:]
+
+    if not recs:
+        return []
+
+    # Find when each map was first seen
+    first_seen: dict = {}
+    for date, mid, maps in recs:
+        for m in maps:
+            if m not in first_seen:
+                first_seen[m] = date
+
+    if not first_seen:
+        return []
+
+    # The most-recently introduced map defines the start of the current era
+    era_start = max(first_seen.values())
+
+    # Pool = every map that appeared on or after era_start
+    pool: set = set()
+    freq: dict = {}
+    for date, mid, maps in recs:
+        if date >= era_start:
+            pool |= maps
+            for m in maps:
+                freq[m] = freq.get(m, 0) + 1
+
+    # If pool transition produced more maps than expected, keep only the
+    # target_size most-frequently played ones (the dropped map is least frequent)
+    if len(pool) > target_size:
+        pool = set(sorted(pool, key=lambda m: -freq.get(m, 0))[:target_size])
+
+    return sorted(pool)
+
+
+def _build_computed_pools():
+    """
+    Return {snap_key: [map, ...]} for all known snaps using event map CSVs.
+    Only emits pools with ≥ 7 maps; smaller results are omitted so the
+    frontend falls back to the veto_model snap_pools for that key.
+    """
+    computed = {}
+    for snap_key, event_ids in _SNAP_POOL_EVENTS.items():
+        recs = _load_event_map_records(event_ids)
+        pool = _detect_pool(recs)
+        if len(pool) >= 7:
+            computed[snap_key] = pool
+    return computed
+
+
+def _build_live_map_stats(beta=0.3237, min_games=2, shrink_prior=4):
+    """
+    Build per-team, per-map Stage-1 win rates from the most recent event's
+    match data.  Returns {org: {map: {w, l, win_pct, rating}}} where
+    `rating` is a Massey-scale estimate (logit(blended_win_pct) / beta),
+    shrunk toward 0.5 for small samples.
+    """
+    import math as _m
+    results_path  = os.path.join(ROOT, "data", "match_results.csv")
+    stage1_path   = os.path.join(ROOT, "data", "maps", "2026_stage1.csv")
+    if not os.path.exists(results_path) or not os.path.exists(stage1_path):
+        return {}
+    try:
+        mr = pd.read_csv(results_path)
+        s1 = pd.read_csv(stage1_path, usecols=lambda c: c in ("MatchID","MapNum","MapName","Org"))
+        mr_maps = mr[mr["MapNum"].astype(str) != "all"].copy()
+        mr_maps["MapNum"] = mr_maps["MapNum"].astype(int)
+        s1["MapNum"] = s1["MapNum"].astype(int)
+        joined = s1.merge(mr_maps[["MatchID","MapNum","WinnerOrg"]],
+                          on=["MatchID","MapNum"], how="inner")
+        # Deduplicate to one row per (MatchID, MapNum, Org) — CSV has one row per player
+        map_level = joined[["MatchID","MapNum","MapName","Org","WinnerOrg"]].drop_duplicates(
+            subset=["MatchID","MapNum","Org"])
+        raw: dict = {}
+        for _, row in map_level.iterrows():
+            mn = row["MapName"]
+            for sfx in ("PICK","BAN","DECIDER","REMAIN"):
+                if mn.endswith(sfx): mn = mn[:-len(sfx)]; break
+            org    = str(row["Org"])
+            winner = row["WinnerOrg"]
+            raw.setdefault(org, {}).setdefault(mn, {"w":0,"l":0})
+            if org == winner:
+                raw[org][mn]["w"] += 1
+            else:
+                raw[org][mn]["l"] += 1
+        out: dict = {}
+        for org, maps in raw.items():
+            out[org] = {}
+            for mp, v in maps.items():
+                n   = v["w"] + v["l"]
+                if n < min_games:
+                    continue
+                # Bayesian shrink toward 50%
+                wp  = (v["w"] + shrink_prior * 0.5) / (n + shrink_prior)
+                wp  = max(0.05, min(0.95, wp))
+                rtg = round(_m.log(wp / (1 - wp)) / beta, 4)
+                out[org][mp] = {"w": v["w"], "l": v["l"],
+                                "win_pct": round(wp, 4), "rating": rtg}
+        return out
+    except Exception as e:
+        print(f"[live_map_stats] {e}")
+        return {}
+
+
+_MHUB_STALE_HOURS  = 6     # refresh if last checkpoint > 6h old
+
+MHUB_EVENT_BANDS = [
+    {"id": "kickoff",   "label": "Kickoff",         "start": "2026-01-15", "end": "2026-02-16"},
+    {"id": "santiago",  "label": "Masters Santiago", "start": "2026-02-28", "end": "2026-03-15"},
+    {"id": "stage1",    "label": "Stage 1",          "start": "2026-04-01", "end": "2026-05-25"},
+    {"id": "london",    "label": "Masters London",   "start": "2026-06-05", "end": "2026-06-21"},
+    {"id": "stage2",    "label": "Stage 2",          "start": "2026-07-15", "end": "2026-09-06"},
+    {"id": "champions", "label": "Champions",        "start": "2026-09-24", "end": "2026-10-18"},
+]
+
+MHUB_COLORS = {
+    "SEN":  "#e3001a", "G2":   "#e8b800", "NRG":  "#ff6600", "100T": "#be0000",
+    "C9":   "#0d8ac8", "EG":   "#1565c0", "MIBR": "#18a040", "KRÜ":  "#f9c200",
+    "LEV":  "#7c3aed", "FUR":  "#ff4500", "LOUD": "#a3e635", "ENVY": "#9333ea",
+    "TL":   "#f59e0b", "FNC":  "#f97316", "NAVI": "#fbbf24", "VIT":  "#dc2626",
+    "BBL":  "#db2777", "GX":   "#ec4899", "KC":   "#ef4444", "TH":   "#6d28d9",
+    "FUT":  "#0d9488", "M8":   "#be185d", "PCF":  "#65a30d", "ULF":  "#0284c7",
+    "EF":   "#b91c1c",
+    "PRX":  "#0ea5e9", "DRX":  "#c53030", "T1":   "#cc0000", "GEN":  "#15803d",
+    "ZETA": "#7e22ce", "RRQ":  "#9f1239", "TS":   "#475569", "GE":   "#0e7490",
+    "NS":   "#134e4a", "FS":   "#ea580c", "VL":   "#1d4ed8", "KRX":  "#1e40af",
+    "DFM":  "#b91c1c", "ZETA": "#7e22ce", "TLN":  "#0369a1",
+}
+
+
+def _mhub_load():
+    """Load rating_timeline.json + map_ratings.json and merge into hub payload."""
+    result = {
+        "status":      "ready",
+        "event_bands": MHUB_EVENT_BANDS,
+        "chart":       {"checkpoints": [], "match_events": []},
+        "leaderboard": {"teams": [], "beta": 0.3237, "as_of_date": None},
+    }
+
+    # ── Chart data ─────────────────────────────────────────────────────────────
+    if os.path.exists(_RATING_TIMELINE_PATH):
+        with open(_RATING_TIMELINE_PATH) as f:
+            tl = json.load(f)
+        checkpoints   = tl.get("checkpoints",  [])
+        match_events  = tl.get("match_events", [])
+        result["chart"]["checkpoints"]  = checkpoints
+        result["chart"]["match_events"] = match_events
+        if checkpoints:
+            result["as_of_date"] = checkpoints[-1]["date"]
+            # Always trigger a refresh unless we checked VLR within the last 15 min
+            needs_check = True
+            try:
+                if os.path.exists(_MHUB_PROGRESS_FILE):
+                    with open(_MHUB_PROGRESS_FILE) as _pf:
+                        _pd = json.load(_pf)
+                    if _pd.get("phase") == "done" and \
+                       (_time_mod.time() - _pd.get("ts", 0)) < 900:  # 15 min
+                        needs_check = False
+            except Exception:
+                pass
+            if needs_check:
+                result["status"] = "building"
+    else:
+        result["status"] = "building"
+
+    # ── Leaderboard from map_ratings.json (most recent 2026 snapshot) ─────────
+    snap_data = None
+    snap_name = None
+    if os.path.exists(_MAP_RATINGS_PATH):
+        with open(_MAP_RATINGS_PATH) as f:
+            mr_json = json.load(f)
+        snaps = mr_json.get("ratings", {}).get("2026", {}).get("snapshots", {})
+        for sn in ("after_stage2", "after_london", "after_stage1",
+                   "after_santiago", "before_santiago", "after_kickoff"):
+            if sn in snaps:
+                snap_data = snaps[sn]
+                snap_name = sn
+                break
+
+    # If timeline is available, override overall ratings with last checkpoint
+    last_checkpoint_ratings = {}
+    if result["chart"]["checkpoints"]:
+        last_checkpoint_ratings = result["chart"]["checkpoints"][-1]["ratings"]
+
+    # Build per-team recent-matches from match_events (include maps + event)
+    recent_by_org: dict = {}
+    for me in reversed(result["chart"]["match_events"]):
+        for role in ("winner", "loser"):
+            org = me[role]
+            if org not in recent_by_org:
+                recent_by_org[org] = []
+            if len(recent_by_org[org]) < 4:
+                is_winner = (role == "winner")
+                recent_by_org[org].append({
+                    "date":     me["date"],
+                    "opponent": me["loser"] if is_winner else me["winner"],
+                    "result":   "W" if is_winner else "L",
+                    "score":    me["series_score"],
+                    "delta":    me["winner_delta"] if is_winner else me["loser_delta"],
+                    "maps":     me.get("maps", []),
+                    "event_id": me.get("event_id", ""),
+                    "match_id": me.get("match_id", ""),
+                })
+
+    teams_list = []
+    if snap_data:
+        beta       = snap_data.get("beta", 0.3237)
+        teams_raw  = snap_data.get("teams", {})
+        for org, td in teams_raw.items():
+            region   = ORG_REGIONS.get(org, "Unknown")
+            maps_d   = td.get("maps", {})
+            eligible = [(m, v) for m, v in maps_d.items() if v.get("w", 0) + v.get("l", 0) >= 3]
+            all_maps   = sorted(maps_d.items(), key=lambda x: -x[1]["rating"])
+            best_maps  = sorted(eligible, key=lambda x: -x[1]["rating"])[:3]
+            worst_maps = sorted(eligible, key=lambda x:  x[1]["rating"])[:3]
+
+            # Use live timeline rating if available, else snapshot
+            rating = last_checkpoint_ratings.get(org, td.get("overall_rating", 0.0))
+
+            teams_list.append({
+                "org":    org,
+                "region": region,
+                "rating": round(float(rating), 4),
+                "w":      td.get("w", 0),
+                "l":      td.get("l", 0),
+                "all_maps":  [{"map": m, "rating": round(v["rating"], 2),
+                               "w": v["w"], "l": v["l"]} for m, v in all_maps],
+                "best_maps":  [{"map": m, "rating": round(v["rating"], 2),
+                                "w": v["w"], "l": v["l"]} for m, v in best_maps],
+                "worst_maps": [{"map": m, "rating": round(v["rating"], 2),
+                                "w": v["w"], "l": v["l"]} for m, v in worst_maps],
+                "recent_matches": recent_by_org.get(org, []),
+            })
+        # Add any timeline teams not in snapshot (e.g. EMEA teams that missed Santiago)
+        snap_orgs = {t["org"] for t in teams_list}
+        for org, rating in last_checkpoint_ratings.items():
+            if org in snap_orgs or org not in ACTIVE_2026_ORGS:
+                continue
+            teams_list.append({
+                "org":    org,
+                "region": ORG_REGIONS.get(org, "Unknown"),
+                "rating": round(float(rating), 4),
+                "w": 0, "l": 0,
+                "all_maps": [], "best_maps": [], "worst_maps": [],
+                "recent_matches": recent_by_org.get(org, []),
+            })
+        teams_list = [t for t in teams_list if t["org"] in ACTIVE_2026_ORGS]
+        teams_list.sort(key=lambda x: -x["rating"])
+        for i, t in enumerate(teams_list):
+            t["rank"] = i + 1
+        result["leaderboard"] = {
+            "teams":       teams_list,
+            "beta":        snap_data.get("beta", 0.3237),
+            "snapshot":    snap_name,
+            "as_of_date":  result.get("as_of_date"),
+        }
+    elif last_checkpoint_ratings:
+        # Fallback: leaderboard from timeline ratings only (no map breakdown)
+        for i, (org, rating) in enumerate(
+                sorted(((o, r) for o, r in last_checkpoint_ratings.items() if o in ACTIVE_2026_ORGS), key=lambda x: -x[1]), 1):
+            teams_list.append({
+                "org": org, "region": ORG_REGIONS.get(org, "Unknown"),
+                "rating": round(rating, 4), "rank": i,
+                "w": 0, "l": 0, "all_maps": [], "best_maps": [], "worst_maps": [],
+                "recent_matches": recent_by_org.get(org, []),
+            })
+        result["leaderboard"] = {
+            "teams":    teams_list,
+            "beta":     0.3237,
+            "snapshot": "timeline",
+            "as_of_date": result.get("as_of_date"),
+        }
+
+    # ── Upcoming matches — compute win probs from timeline ratings ────────────
+    upcoming_path = os.path.join(ROOT, "data", "upcoming_matches.json")
+    if os.path.exists(upcoming_path):
+        try:
+            with open(upcoming_path) as f:
+                upcoming_raw = json.load(f)
+        except Exception:
+            upcoming_raw = []
+    else:
+        upcoming_raw = []
+
+    # Calibrate beta from timeline match events and compute series win probs
+    if last_checkpoint_ratings and result["chart"]["match_events"]:
+        import math as _math
+        import numpy as _np
+        from scipy.special import expit as _expit
+        from scipy.optimize import minimize_scalar as _msc
+
+        _evts = result["chart"]["match_events"]
+        _diffs, _outs = [], []
+        for _me in _evts:
+            _d = _me.get("winner_before", 0.0) - _me.get("loser_before", 0.0)
+            _diffs.append(_d);  _outs.append(1.0)
+            _diffs.append(-_d); _outs.append(0.0)
+        _da = _np.array(_diffs); _oa = _np.array(_outs)
+
+        def _nll(b):
+            _p = _np.clip(_expit(b * _da), 1e-9, 1-1e-9)
+            return -_np.mean(_oa * _np.log(_p) + (1-_oa) * _np.log(1-_p))
+
+        _tl_beta = float(_msc(_nll, bounds=(0.01, 10.0), method="bounded").x)
+
+        def _series_wp(p, fmt):
+            if fmt == "bo5":
+                return p**3 * (1 + 3*(1-p) + 6*(1-p)**2)
+            return p**2 * (3 - 2*p)  # bo3
+
+        for _m in upcoming_raw:
+            _ra = last_checkpoint_ratings.get(_m.get("org_a", ""), 0.0)
+            _rb = last_checkpoint_ratings.get(_m.get("org_b", ""), 0.0)
+            _p  = float(_expit(_tl_beta * (_ra - _rb)))
+            _m["win_prob_a"] = round(_series_wp(_p, _m.get("format", "bo3")), 3)
+            _m["win_prob_b"] = round(1.0 - _m["win_prob_a"], 3)
+            _m["rating_a"]   = round(_ra, 3)
+            _m["rating_b"]   = round(_rb, 3)
+
+    result["upcoming"] = upcoming_raw
+
+    # ── Veto simulation data for upcoming predictions ─────────────────────────
+    veto = get_veto_model()
+    computed_pools   = _build_computed_pools()
+    live_map_stats   = _build_live_map_stats()
+    # Derive the live current pool — always the most recent event regardless of snap_key
+    _live_pool = None
+    for _eid in ("2026_stage1", "2026_masters_santiago", "2026_kickoff"):
+        _recs = _load_event_map_records([_eid])
+        _p = _detect_pool(_recs)
+        if len(_p) >= 7:
+            _live_pool = _p
+            break
+    result["veto_model"]  = {
+        "teams":           veto.get("teams", {}),
+        "snap_pools":      veto.get("snap_pools", {}),
+        "computed_pools":  computed_pools,
+        "current_pool":    _live_pool or [],
+        "live_map_stats":  live_map_stats,
+    }
+    result["org_regions"] = ORG_REGIONS
+    result["snap_teams"]  = snap_data.get("teams", {}) if snap_data else {}
+    result["snap_beta"]   = snap_data.get("beta", 0.3237) if snap_data else 0.3237
+    result["snap_key"]    = snap_name or "after_stage1"
+    if os.path.exists(_MAP_RATINGS_PATH):
+        try:
+            with open(_MAP_RATINGS_PATH) as _mrf:
+                _mrd = json.load(_mrf)
+            result["intl_calib"] = _mrd.get("intl_calib", {})
+        except Exception:
+            result["intl_calib"] = {}
+    else:
+        result["intl_calib"] = {}
+
+    return result
+
+
+def _mhub_event_for_date(date_str):
+    """Return the event label whose date range contains date_str (YYYY-MM-DD)."""
+    if not date_str:
+        return None
+    for band in MHUB_EVENT_BANDS:
+        if band["start"] <= date_str <= band["end"]:
+            return band["label"]
+    return None
+
+
+def _mhub_scrape_progress():
+    """Read build progress from RefreshLiveData.py's progress file."""
+    try:
+        if os.path.exists(_MHUB_PROGRESS_FILE):
+            with open(_MHUB_PROGRESS_FILE) as f:
+                p = json.load(f)
+            if _time_mod.time() - p.get("ts", 0) < 1800:
+                return p
+    except Exception:
+        pass
+    return {"phase": "init", "pct": 3, "message": "Initializing…"}
+
+
+def _mhub_trigger_build():
+    """Kick off the full RefreshLiveData pipeline (once; ignores concurrent calls)."""
+    global _mhub_build_running
+    with _mhub_cache_lock:
+        if _mhub_build_running:
+            return
+        _mhub_build_running = True
+
+    def _run():
+        global _mhub_build_running
+        try:
+            import subprocess as _sp
+            _sp.run(
+                ["python3", os.path.join(ROOT, "scrapers", "RefreshLiveData.py")],
+                cwd=ROOT,
+            )
+        except Exception as e:
+            print(f"[mhub] RefreshLiveData failed: {e}")
+        finally:
+            _mhub_build_running = False
+            with _mhub_cache_lock:
+                _mhub_cache["ts"] = 0.0   # force cache invalidation on next request
+
+    _th.Thread(target=_run, daemon=True).start()
+
+
+def _mhub_get():
+    """Return cached modern-hub data; short TTL when building for live progress."""
+    now = _time_mod.time()
+    with _mhub_cache_lock:
+        cached   = _mhub_cache["data"]
+        building = bool(cached and cached.get("status") == "building")
+        # 3s TTL while building (live progress), 5s when idle-but-running, else 30min
+        ttl = 3 if building else (5 if _mhub_build_running else _MHUB_TTL)
+        if cached is not None and (now - _mhub_cache["ts"]) < ttl:
+            return cached
+
+    data = _mhub_load()
+
+    if data.get("status") == "building":
+        _mhub_trigger_build()
+
+    # Always attach progress so frontend can show log even on "ready"
+    data["progress"] = _mhub_scrape_progress()
+    data["as_of_event"] = _mhub_event_for_date(data.get("as_of_date"))
+
+    with _mhub_cache_lock:
+        _mhub_cache["data"] = data
+        _mhub_cache["ts"]   = now
+
+    return data
+
+
 MAPELO_MODERN_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Modern VCT Hub — Bobo.GG</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; }
-    body { background: #e8d5f5; font-family: 'DM Sans', sans-serif; color: #2a1a3e; }
-    .top-nav { padding: 32px 32px 0; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-    .home-logo { height: 80px; width: auto; display: block; opacity: .85; transition: opacity .2s; }
-    .home-logo:hover { opacity: 1; }
-    .modern-page { padding: 48px 32px; text-align: center; }
-    .modern-title { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 800; letter-spacing: -.03em; line-height: 1; color: #3d1a6e; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modern VCT Hub — Bobo.GG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<!-- v2 -->
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:#e8d5f5;font-family:'DM Sans',sans-serif;color:#000;min-height:100vh}
+
+.top-nav{padding:24px 32px 0}
+.home-logo{display:block;height:72px;width:auto;opacity:.85;transition:opacity .2s}
+.home-logo:hover{opacity:1}
+
+.hub-main{padding:20px 0 60px;width:100%}
+.hub-header{text-align:center;margin-bottom:20px}
+.hub-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-.03em;color:#000;line-height:1;min-height:1.2em;transition:opacity .2s}
+.type-cursor{opacity:1;animation:blink .55s step-end infinite}
+.dot-seed{font-size:2rem}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hub-sub{color:#444;font-size:.9rem;margin-top:6px;transition:opacity .5s}
+
+.tab-bar{display:flex;gap:8px;justify-content:center;margin-bottom:16px;transition:opacity .5s}
+.tab{padding:9px 28px;border-radius:100px;border:2px solid #c8a8e8;background:transparent;color:#444;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s}
+.tab.active{background:#3d1a6e;border-color:#3d1a6e;color:#fff}
+.tab:hover:not(.active){border-color:#9c6ec8;color:#000}
+
+.panels-outer{overflow:hidden}
+.panel-track{display:flex;width:200%;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
+.panel-track.show-b{transform:translateX(-50%)}
+.panel{width:50%;min-width:0}
+
+.region-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;transition:opacity .4s;justify-content:center;padding:0 24px}
+.pill{padding:5px 16px;border-radius:100px;border:1.5px solid #c8a8e8;background:transparent;color:#444;font-size:.8rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .15s}
+.pill.active{background:#3d1a6e;border-color:#3d1a6e;color:#fff}
+.pill:hover:not(.active){border-color:#9c6ec8}
+
+/* Progress */
+.progress-card{background:#1a0a2e;border-radius:16px;padding:36px 32px;margin-bottom:18px;text-align:center}
+.progress-label{color:rgba(232,213,245,.9);font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:8px}
+.progress-msg{color:rgba(232,213,245,.5);font-size:.82rem;margin-bottom:20px;font-variant-numeric:tabular-nums}
+.progress-track{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7c3aed,#a78bfa);transition:width .8s ease;width:0%}
+.progress-pct{color:rgba(232,213,245,.4);font-size:.75rem;font-variant-numeric:tabular-nums}
+#progressLog{margin-top:16px;text-align:left;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(167,139,250,.12);padding-top:12px}
+.plog-entry{font-size:.82rem;color:rgba(167,139,250,.8);padding:1px 0;font-family:'DM Sans',sans-serif;line-height:1.45}
+.plog-entry.new{animation:plog-in .25s ease}
+@keyframes plog-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Chart card */
+.chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin-bottom:18px;position:relative}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;padding:0 20px}
+.chart-title{color:#000;font-weight:600;font-size:.9rem}
+.chart-asof{color:rgba(0,0,0,.4);font-size:.75rem}
+.chart-controls{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.chart-btn{padding:5px 14px;border-radius:100px;border:1.5px solid rgba(0,0,0,.15);background:rgba(0,0,0,.03);color:rgba(0,0,0,.55);font-size:.75rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.chart-btn:hover{border-color:rgba(0,0,0,.4);color:#000;background:rgba(0,0,0,.06)}
+.chart-btn.active{border-color:#7c3aed;background:#7c3aed;color:#fff}
+.chart-wrap{position:relative;height:720px;user-select:none}
+#benpomChart{cursor:default}
+
+/* Dot hover tooltip */
+#dotTooltip{position:absolute;z-index:20;pointer-events:none;min-width:280px;max-width:380px;background:#1a0938;border:1px solid rgba(167,139,250,.28);border-radius:16px;padding:20px 24px;box-shadow:0 16px 60px rgba(0,0,0,.7);opacity:0;transform:translateY(8px);transition:opacity .18s ease,transform .18s ease}
+#dotTooltip.visible{opacity:1;transform:translateY(0)}
+#dotTooltip .popup-inner{text-align:center}
+#dotTooltip .popup-event-label{font-size:.65rem;font-weight:600;color:rgba(167,139,250,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+#dotTooltip .popup-teams{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
+#dotTooltip .popup-team-block{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:60px}
+#dotTooltip .popup-logo{width:44px;height:44px;object-fit:contain}
+#dotTooltip .popup-team-name{font-size:.7rem;color:rgba(232,213,245,.6);font-weight:500}
+#dotTooltip .popup-score-block{display:flex;flex-direction:column;align-items:center;gap:3px}
+#dotTooltip .popup-score{font-size:1.9rem;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+#dotTooltip .popup-score.w{color:#4ade80}#dotTooltip .popup-score.l{color:#f87171}
+#dotTooltip .popup-vs-label{font-size:.65rem;color:rgba(232,213,245,.3)}
+#dotTooltip .popup-date{color:rgba(232,213,245,.3);font-size:.68rem;margin-bottom:4px}
+#dotTooltip .popup-delta{font-size:.85rem;font-weight:600;margin-bottom:14px}
+#dotTooltip .popup-delta.pos{color:#4ade80}#dotTooltip .popup-delta.neg{color:#f87171}
+#dotTooltip .popup-maps-table{width:100%;border-collapse:collapse;margin-top:2px}
+#dotTooltip .popup-maps-table th{font-size:.6rem;font-weight:600;color:rgba(167,139,250,.5);text-transform:uppercase;letter-spacing:.07em;padding:0 6px 6px;text-align:center}
+#dotTooltip .popup-maps-table th:first-child{text-align:left}
+#dotTooltip .popup-maps-table th:last-child{text-align:right}
+#dotTooltip .popup-map-score{text-align:center}
+#dotTooltip .popup-maps-table td{padding:5px 6px;font-size:.78rem;color:rgba(232,213,245,.8);border-top:1px solid rgba(255,255,255,.06)}
+#dotTooltip .popup-map-name{font-weight:500;color:#e8d5f5}
+#dotTooltip .popup-map-score{font-variant-numeric:tabular-nums;font-weight:600}
+#dotTooltip .popup-map-score.w{color:#4ade80}#dotTooltip .popup-map-score.l{color:#f87171}
+#dotTooltip .popup-map-diff{text-align:right;font-size:.7rem;color:rgba(232,213,245,.4)}
+
+/* Popup */
+.match-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a0938;border:1px solid rgba(167,139,250,.25);border-radius:20px;padding:32px 36px;z-index:200;min-width:360px;max-width:480px;width:90vw;box-shadow:0 24px 80px rgba(0,0,0,.75)}
+.match-popup.hidden{display:none}
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199;backdrop-filter:blur(2px)}
+.popup-overlay.hidden{display:none}
+.popup-close{position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(232,213,245,.4);font-size:1.5rem;cursor:pointer;line-height:1;transition:color .15s}
+.popup-close:hover{color:#e8d5f5}
+.popup-inner{text-align:center}
+.popup-event-label{font-size:.7rem;font-weight:600;color:rgba(167,139,250,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.popup-teams{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:10px}
+.popup-team-block{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:80px}
+.popup-logo{width:60px;height:60px;object-fit:contain}
+.popup-team-name{font-size:.75rem;color:rgba(232,213,245,.6);font-weight:500}
+.popup-score-block{display:flex;flex-direction:column;align-items:center;gap:4px}
+.popup-score{font-size:2.4rem;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.popup-score.w{color:#4ade80}.popup-score.l{color:#f87171}
+.popup-vs-label{font-size:.7rem;color:rgba(232,213,245,.3)}
+.popup-date{color:rgba(232,213,245,.3);font-size:.72rem;margin-bottom:6px}
+.popup-delta{font-size:.95rem;font-weight:600;margin-bottom:20px}
+.popup-delta.pos{color:#4ade80}.popup-delta.neg{color:#f87171}
+.popup-maps-table{width:100%;border-collapse:collapse;margin-top:4px}
+.popup-maps-table th{font-size:.65rem;font-weight:600;color:rgba(167,139,250,.5);text-transform:uppercase;letter-spacing:.07em;padding:0 8px 8px;text-align:left}
+.popup-maps-table th:last-child{text-align:right}
+.popup-maps-table td{padding:7px 8px;font-size:.82rem;color:rgba(232,213,245,.8);border-top:1px solid rgba(255,255,255,.06)}
+.popup-map-name{font-weight:500;color:#e8d5f5}
+.popup-map-score{font-variant-numeric:tabular-nums;font-weight:600}
+.popup-map-score.w{color:#4ade80}.popup-map-score.l{color:#f87171}
+.popup-map-diff{text-align:right;font-size:.75rem;color:rgba(232,213,245,.4)}
+
+/* Chart + leaderboard full-width layout */
+#chartSection{padding:0 48px}
+.lb-card-wrap{padding:0 24px;max-width:520px;margin:0 auto}
+
+/* Leaderboard */
+.lb-card{background:rgba(255,255,255,.72);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px)}
+.lb-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(61,26,110,.1)}
+.lb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#000}
+.lb-asof{font-size:.7rem;color:#666;text-align:right;max-width:240px}
+.lb-row{display:grid;grid-template-columns:34px 34px 1fr 84px 76px 20px;align-items:center;padding:9px 20px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(61,26,110,.06);gap:8px}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:rgba(61,26,110,.06)}
+.lb-row.selected{background:rgba(61,26,110,.1)}
+.lb-rank{color:#666;font-size:.76rem;font-weight:500;text-align:center}
+.lb-logo img{width:26px;height:26px;object-fit:contain;display:block}
+.lb-name{font-weight:600;font-size:.87rem;color:#000}
+.lb-rating{font-weight:700;font-size:.92rem;text-align:right;font-variant-numeric:tabular-nums}
+.lb-region{font-size:.67rem;font-weight:600;padding:2px 7px;border-radius:100px;text-align:center}
+.lb-region.americas{background:rgba(234,88,12,.12);color:#c2410c}
+.lb-region.emea{background:rgba(22,163,74,.12);color:#15803d}
+.lb-region.pacific{background:rgba(37,99,235,.12);color:#1d4ed8}
+.lb-chevron{color:#aaa;font-size:.6rem;text-align:center;transition:transform .2s}
+.lb-row.selected .lb-chevron{transform:rotate(180deg)}
+
+.lb-detail{border-bottom:1px solid rgba(61,26,110,.07);animation:sd .18s ease}
+@keyframes sd{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
+.lb-detail-inner{padding:16px 24px 20px}
+.lb-sec-label{font-size:.68rem;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.1em;margin:16px 0 8px}
+.lb-sec-label:first-child{margin-top:0}
+.lb-match-card{background:rgba(61,26,110,.05);border-radius:10px;padding:10px 14px;margin-bottom:7px}
+.lb-match-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.lb-mr{font-weight:700;font-size:.82rem;min-width:14px}
+.lb-match-card.win .lb-mr{color:#16a34a}.lb-match-card.loss .lb-mr{color:#dc2626}
+.lb-mlogo{width:22px;height:22px;object-fit:contain;flex-shrink:0}
+.lb-mopp{font-weight:600;font-size:.87rem;flex:1;color:#000}
+.lb-mscore{font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums}
+.lb-match-card.win .lb-mscore{color:#16a34a}.lb-match-card.loss .lb-mscore{color:#dc2626}
+.lb-mdelta{font-weight:600;font-size:.8rem;font-variant-numeric:tabular-nums}
+.lb-match-card.win .lb-mdelta{color:#16a34a}.lb-match-card.loss .lb-mdelta{color:#dc2626}
+.lb-mmeta{display:flex;gap:10px;font-size:.7rem;color:#666;margin-bottom:6px}
+.lb-mmaps{display:flex;flex-wrap:wrap;gap:5px}
+.lb-mmap-chip{font-size:.72rem;padding:3px 8px;border-radius:6px;font-weight:500;font-variant-numeric:tabular-nums}
+.lb-mmap-chip.mw{background:rgba(22,163,74,.1);color:#16a34a}
+.lb-mmap-chip.ml{background:rgba(220,38,38,.1);color:#dc2626}
+.lb-mmap-chip.mn{background:rgba(0,0,0,.06);color:#555}
+.lb-maps-table{width:100%;border-collapse:collapse;margin-top:2px}
+.lb-maps-table th{font-size:.64rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.07em;padding:0 6px 6px;text-align:left}
+.lb-maps-table th:not(:first-child){text-align:right}
+.lb-maps-table td{padding:6px 6px;font-size:.8rem;border-top:1px solid rgba(61,26,110,.06)}
+.lb-mt-map{color:#000;font-weight:500}
+.lb-mt-rat{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.lb-mt-rat.pos{color:#16a34a}.lb-mt-rat.neg{color:#dc2626}
+.lb-mt-wl{text-align:right;color:#666;font-size:.75rem}
+.lb-mt-pct{text-align:right;color:#666;font-size:.74rem}
+.lb-empty{padding:44px;text-align:center;color:#666;font-size:.88rem}
+
+/* Upcoming */
+.upcoming-panel{padding:4px 0 20px}
+.upcoming-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
+.upcoming-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center}
+.no-upcoming{padding:60px;text-align:center;color:#666;font-size:.88rem}
+
+/* Upcoming match cards — vertical list */
+.upc-list{display:flex;flex-direction:column;gap:14px;max-width:680px;margin:0 auto}
+.upc-day-group{display:flex;flex-direction:column;gap:10px}
+.upc-day-label{font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;color:#555;text-transform:uppercase;letter-spacing:.08em;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
+.upc-card{border-radius:14px;padding:13px 16px;backdrop-filter:blur(10px);box-shadow:0 2px 10px rgba(61,26,110,.08);cursor:pointer;user-select:none;transition:box-shadow .15s;border-left:4px solid transparent}
+.upc-card:hover{box-shadow:0 4px 18px rgba(61,26,110,.15)}
+.upc-card.rgn-emea{background:rgba(34,197,94,.08);border-left-color:#16a34a}
+.upc-card.rgn-americas{background:rgba(249,115,22,.08);border-left-color:#ea580c}
+.upc-card.rgn-pacific{background:rgba(59,130,246,.08);border-left-color:#2563eb}
+.upc-header{display:flex;align-items:center;gap:12px}
+.upc-team-a,.upc-team-b{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:60px}
+.upc-logo{width:36px;height:36px;object-fit:contain}
+.upc-org{font-family:'Syne',sans-serif;font-weight:800;font-size:.84rem;color:#000;text-align:center}
+.upc-rtg{font-size:.66rem;color:#555;font-weight:600}
+.upc-center{flex:1;text-align:center;padding:0 4px}
+.upc-date-event{font-size:.65rem;color:#666;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upc-bar-wrap{height:7px;border-radius:4px;overflow:hidden;display:flex;margin-bottom:4px}
+.upc-bar-a{height:100%;background:linear-gradient(90deg,#3d1a6e,#7c3aed);border-radius:4px 0 0 4px;transition:width .3s}
+.upc-bar-b{flex:1;height:100%;background:linear-gradient(90deg,#9c6ec8,#c8b8e8);border-radius:0 4px 4px 0}
+.upc-pcts{display:flex;justify-content:space-between;font-size:.74rem;font-weight:800}
+.upc-pct.fav{color:#000}
+.upc-pct.dog{color:#888}
+.upc-expand-hint{text-align:center;font-size:.6rem;color:#bbb;margin-top:7px;letter-spacing:.04em}
+.upc-card.open .upc-expand-hint{color:#999}
+
+/* Expandable details */
+.upc-details{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.upc-card.open .upc-details{max-height:680px}
+.upc-details-inner{padding-top:12px;border-top:1px solid rgba(0,0,0,.07);margin-top:10px}
+
+/* Map breakdown table */
+.upc-section-lbl{font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:6px}
+.upc-map-table{width:100%;border-collapse:collapse;font-size:.72rem;margin-bottom:12px}
+.upc-map-table th{font-weight:700;color:#888;font-size:.63rem;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px;text-align:center;border-bottom:1px solid rgba(0,0,0,.08)}
+.upc-map-table th:first-child{text-align:left}
+.upc-map-table td{padding:4px 6px;text-align:center;border-bottom:1px solid rgba(0,0,0,.04)}
+.upc-map-table td:first-child{text-align:left;font-weight:600;color:#111}
+.upc-map-td-wp{font-weight:700}
+.upc-map-td-wp.fav{color:#1a7a40}
+.upc-map-td-wp.dog{color:#b03030}
+.upc-map-td-wp.neu{color:#555}
+.upc-map-td-veto{font-size:.65rem}
+
+/* Veto sequences in expanded */
+.upc-veto-seqs{margin-bottom:12px}
+.upc-veto-seq-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.upc-veto-seq-prob{font-size:.62rem;color:#888;font-weight:700;min-width:28px}
+
+/* Recent form */
+.upc-recent-row{display:flex;gap:10px;margin-top:4px}
+.upc-recent-col{flex:1;min-width:0}
+.upc-recent-col-hdr{font-family:'Syne',sans-serif;font-weight:800;font-size:.72rem;color:#111;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upc-recent-match{display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.68rem}
+.upc-recent-match:last-child{border-bottom:none}
+.upc-recent-result{font-weight:800;font-size:.72rem;min-width:14px}
+.upc-recent-result.w{color:#1a7a40}
+.upc-recent-result.l{color:#b03030}
+.upc-recent-opp{font-weight:600;color:#111;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upc-recent-score{color:#555;font-size:.65rem;white-space:nowrap}
+.upc-recent-evt{color:#aaa;font-size:.6rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px}
+
+/* Upcoming veto sequence (shared) */
+.upc-veto-row{display:flex;align-items:center;gap:4px;margin-top:8px;flex-wrap:wrap;font-size:.68rem}
+.upc-veto-step{display:flex;flex-direction:column;align-items:center;gap:2px}
+.upc-veto-map{font-weight:700;color:#000;font-size:.7rem}
+/* Veto step labels (shared with historical predictor) */
+.step-lbl{font-size:.52rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:2px 5px;white-space:nowrap}
+.step-lbl-banA,.step-lbl-banB{background:#fde8ec;color:#b03050}
+.step-lbl-pickA,.step-lbl-pickB{background:#e3f6ea;color:#206040}
+.step-lbl-dec{background:#f0ecf4;color:#7a6e7e}
+.step-arrow{color:#666;font-weight:700;font-size:.9rem;line-height:1}
+
+.hidden{display:none}
+</style>
 </head>
 <body>
-  <div class="top-nav">
-    <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+<div class="top-nav">
+  <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+</div>
+
+<main class="hub-main">
+  <div class="hub-header">
+    <h1 class="hub-title" id="hubTitle" style="opacity:0">&middot;</h1>
+    <p class="hub-sub" id="hubSub" style="opacity:0">BenPom-style opponent-adjusted net ratings &middot; updated daily</p>
   </div>
-  <div class="modern-page">
-    <h1 class="modern-title">Modern VCT Hub</h1>
+
+  <div class="tab-bar" id="tabBar" style="opacity:0">
+    <button class="tab active" data-panel="a">BenPom Ratings</button>
+    <button class="tab" data-panel="b">Upcoming Matches</button>
   </div>
+
+  <div class="region-pills" id="regionPills" style="opacity:0">
+    <button class="pill active" data-region="All">All Regions</button>
+    <button class="pill" data-region="Americas">Americas</button>
+    <button class="pill" data-region="EMEA">EMEA</button>
+    <button class="pill" data-region="Pacific">Pacific</button>
+    <button class="pill" data-region="Top10" id="top10Pill">Top 10 only</button>
+  </div>
+
+  <div class="panels-outer">
+    <div class="panel-track" id="panelTrack">
+
+      <!-- Panel A -->
+      <div class="panel" id="panelA">
+
+        <!-- Progress section (shown while building) -->
+        <div id="progressSection" class="hidden">
+          <div class="progress-card">
+            <div class="progress-label">Verifying VCT Data</div>
+            <div class="progress-msg" id="progressMsg">Initializing&hellip;</div>
+            <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="progress-pct" id="progressPct">0%</div>
+            <div id="progressLog"></div>
+          </div>
+        </div>
+
+        <!-- Chart section (shown when ready) -->
+        <div id="chartSection" class="hidden">
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">BenPom Rating &mdash; 2026 Season</span>
+              <div class="chart-controls">
+                <span class="chart-asof" id="chartAsOf"></span>
+                <button class="chart-btn" id="replayBtn" onclick="replayChart()" title="Replay season animation">&#8635; Replay</button>
+                <button class="chart-btn" id="zoomBtn" onclick="toggleZoom()" title="Zoom to current split">&#x2316; Zoom Split</button>
+                <button class="chart-btn" id="resetZoomBtn" onclick="resetZoom()" title="Reset zoom">&#x2715; Reset</button>
+              </div>
+            </div>
+            <div class="chart-wrap" id="chartWrap">
+              <canvas id="benpomChart"></canvas>
+              <div id="dotTooltip"><div class="popup-inner" id="dotTooltipContent"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="lb-card-wrap">
+          <div class="lb-card hidden" id="lbCard">
+            <div class="lb-header-row">
+              <span class="lb-title">Current Rankings</span>
+              <span class="lb-asof" id="lbAsOf"></span>
+            </div>
+            <div id="lbBody"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel B -->
+      <div class="panel" id="panelB">
+        <div class="upcoming-panel">
+          <div class="upcoming-heading">Upcoming Matches</div>
+          <div class="upcoming-sub">Next 7 days across all regions</div>
+          <div id="upcomingBody"><div class="no-upcoming">Loading&hellip;</div></div>
+        </div>
+      </div>
+
+    </div><!-- panel-track -->
+  </div><!-- panels-outer -->
+</main>
+
+<!-- Popup (outside panels-outer so it isn't clipped) -->
+<div class="popup-overlay hidden" id="popupOverlay" onclick="closePopup()"></div>
+<div class="match-popup hidden" id="matchPopup">
+  <button class="popup-close" onclick="closePopup()">&times;</button>
+  <div class="popup-inner" id="popupContent"></div>
+</div>
+
+<script>
+// ── Utilities ────────────────────────────────────────────────────────────────
+const sleep  = ms => new Promise(r => setTimeout(r, ms));
+const easeOut = t => 1 - Math.pow(1 - t, 2.5);
+
+function showEl(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('hidden');
+  el.style.opacity = '0';
+  el.style.transition = 'opacity 0.4s';
+  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; }));
+}
+function fadeIn(id, dur) {
+  const el = document.getElementById(id);
+  el.style.transition = `opacity ${dur||0.4}s`;
+  el.style.opacity = '1';
+}
+
+// ── Constants ────────────────────────────────────────────────────────────────
+const TEAM_COLORS = {
+  SEN:'#e3001a',G2:'#e8b800',NRG:'#ff6600','100T':'#be0000',
+  C9:'#0d8ac8',EG:'#1565c0',MIBR:'#18a040','KR\\u00dc':'#f9c200',
+  LEV:'#7c3aed',FUR:'#ff4500',LOUD:'#a3e635',ENVY:'#9333ea',
+  TL:'#f59e0b',FNC:'#f97316',NAVI:'#fbbf24',VIT:'#dc2626',
+  BBL:'#db2777',GX:'#ec4899',KC:'#ef4444',TH:'#6d28d9',
+  FUT:'#0d9488',M8:'#be185d',PCF:'#65a30d',ULF:'#0284c7',EF:'#b91c1c',
+  PRX:'#0ea5e9',DRX:'#c53030',T1:'#cc0000',GEN:'#15803d',
+  ZETA:'#7e22ce',RRQ:'#9f1239',TS:'#475569',GE:'#0e7490',
+  NS:'#134e4a',FS:'#ea580c',VL:'#1d4ed8',KRX:'#1e40af',
+  DFM:'#b91c1c',TLN:'#0369a1',
+};
+
+// ── Veto simulation helpers ───────────────────────────────────────────────────
+// Initialized once hubData is loaded (see showChartAndLeaderboard)
+var VETO_HUB   = {teams:{}, snap_pools:{}};
+var ORG_REGIONS_HUB = {};
+var INTL_HUB   = {};
+var SNAP_TEAMS = {};
+var SNAP_BETA  = 0.3237;
+var SNAP_KEY   = 'after_santiago';
+
+var VETO_STEPS_HUB = {
+  bo1:[{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'ban'},{side:'B',action:'ban'}],
+  bo3:[{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'pick'},{side:'B',action:'pick'},{side:'A',action:'ban'},{side:'B',action:'ban'}],
+  bo5:[{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'pick'},{side:'B',action:'pick'},{side:'A',action:'pick'},{side:'B',action:'pick'}],
+};
+var SERIES_THRESH_HUB = {bo1:1, bo3:2, bo5:3};
+var ACTION_CLS = {banA:['step-lbl-banA','rv-act-banA'], banB:['step-lbl-banB','rv-act-banB'], pickA:['step-lbl-pickA','rv-act-pickA'], pickB:['step-lbl-pickB','rv-act-pickB'], dec:['step-lbl-dec','rv-act-dec']};
+
+function getGlobalRatingHUB(org, snapKey, domesticRating) {
+  var cal = INTL_HUB[snapKey] || {};
+  var region = ORG_REGIONS_HUB[org] || '';
+  var regOff = (cal.regional_offsets || {})[region] || 0;
+  var indBonus = (cal.individual_bonuses || {})[org] || 0;
+  return domesticRating + regOff + indBonus;
+}
+function getActivePoolHUB(snap) {
+  var key = '2026_'+snap;
+  var cp = (VETO_HUB.computed_pools||{})[key];
+  if (cp && cp.length >= 7) return cp;
+  return (VETO_HUB.snap_pools||{})[key] || null;
+}
+function getBanProbsHUB(patt, oppTeam, rem) {
+  var scores = {};
+  rem.forEach(function(m){
+    var rate=(patt&&patt.bans&&patt.bans[m]!=null)?patt.bans[m]:0;
+    var oppWin=(oppTeam&&oppTeam.maps&&oppTeam.maps[m])?(oppTeam.maps[m].win_pct||0.5):0.5;
+    scores[m]=(rate+0.02)*(0.75+oppWin);
+  });
+  var tot=rem.reduce(function(s,m){return s+scores[m];},0);
+  if(tot===0) rem.forEach(function(m){scores[m]=1/rem.length;});
+  else rem.forEach(function(m){scores[m]/=tot;});
+  return scores;
+}
+function getPickProbsHUB(patt, rem) {
+  var scores={};
+  rem.forEach(function(m){scores[m]=(patt&&patt.picks&&patt.picks[m]!=null)?(patt.picks[m]+0.02):(1/rem.length);});
+  var tot=rem.reduce(function(s,m){return s+scores[m];},0);
+  if(tot===0) rem.forEach(function(m){scores[m]=1/rem.length;});
+  else rem.forEach(function(m){scores[m]/=tot;});
+  return scores;
+}
+function sampleFromHUB(probs) {
+  var r=Math.random(),cum=0,keys=Object.keys(probs);
+  for(var i=0;i<keys.length;i++){cum+=probs[keys[i]];if(r<=cum) return keys[i];}
+  return keys[keys.length-1];
+}
+function simulateVetoHUB(tA, tB, orgA, orgB, pool, snap, fmt) {
+  var pA=((VETO_HUB.teams||{})['2026_'+snap]||{})[orgA]||null;
+  var pB=((VETO_HUB.teams||{})['2026_'+snap]||{})[orgB]||null;
+  var rem=pool.slice(), fate={};
+  (VETO_STEPS_HUB[fmt]||VETO_STEPS_HUB.bo3).forEach(function(step){
+    var patt=step.side==='A'?pA:pB, oppT=step.side==='A'?tB:tA;
+    var m=step.action==='ban'?sampleFromHUB(getBanProbsHUB(patt,oppT,rem)):sampleFromHUB(getPickProbsHUB(patt,rem));
+    fate[m]=step.action+step.side; rem=rem.filter(function(x){return x!==m;});
+  });
+  if(rem.length) fate[rem[0]]='dec';
+  return fate;
+}
+function topVetoHUB(tA, tB, orgA, orgB, pool, snap, fmt, K) {
+  var pA=((VETO_HUB.teams||{})['2026_'+snap]||{})[orgA]||null;
+  var pB=((VETO_HUB.teams||{})['2026_'+snap]||{})[orgB]||null;
+  K=K||3;
+  var steps=VETO_STEPS_HUB[fmt]||VETO_STEPS_HUB.bo3;
+  var states=[{rem:pool.slice(),seq:[],prob:1.0}];
+  steps.forEach(function(step){
+    var next=[];
+    states.forEach(function(st){
+      var patt=step.side==='A'?pA:pB, oppT=step.side==='A'?tB:tA;
+      var probs=step.action==='ban'?getBanProbsHUB(patt,oppT,st.rem):getPickProbsHUB(patt,st.rem);
+      st.rem.forEach(function(m){
+        var p=probs[m]||0;
+        if(p>0.005) next.push({rem:st.rem.filter(function(x){return x!==m;}),seq:st.seq.concat([{side:step.side,action:step.action,map:m}]),prob:st.prob*p});
+      });
+    });
+    next.sort(function(a,b){return b.prob-a.prob;});
+    states=next.slice(0,K*3);
+  });
+  states.forEach(function(st){if(st.rem.length) st.seq.push({side:'',action:'dec',map:st.rem[0]});});
+  states.sort(function(a,b){return b.prob-a.prob;});
+  return states.slice(0,K);
+}
+function actionLabelHUB(orgA, orgB, key) {
+  if(key==='dec') return 'Decider';
+  var verb=key.indexOf('ban')===0?'Ban':'Pick';
+  var team=key.charAt(key.length-1)==='A'?orgA:orgB;
+  return verb+' '+team;
+}
+
+// ── State ────────────────────────────────────────────────────────────────────
+let hubData      = null;
+let myChart      = null;
+let logos        = {};
+let selectedTeam = null;
+let activeRegion = 'All';
+let expandedOrg  = null;
+let activePanel  = 'a';
+
+// ── Tab switching ────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activePanel = btn.dataset.panel;
+    document.getElementById('panelTrack').classList.toggle('show-b', activePanel === 'b');
+    if (activePanel === 'b' && hubData) renderUpcoming(hubData);
+  });
+});
+
+// ── Region filter ────────────────────────────────────────────────────────────
+document.querySelectorAll('.pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeRegion = btn.dataset.region;
+    selectedTeam = null;
+    expandedOrg  = null;
+    if (hubData) {
+      buildChart(hubData);
+      renderLeaderboard(hubData);
+    }
+  });
+});
+
+// ── Intro animation ──────────────────────────────────────────────────────────
+async function introAnimation() {
+  const title = document.getElementById('hubTitle');
+  const sub   = document.getElementById('hubSub');
+
+  // Phase 1 — dot
+  title.style.opacity = '1';
+  title.innerHTML = '<span class="dot-seed">&middot;</span>';
+  await sleep(380);
+
+  // Phase 2 — typewriter
+  const text = 'VCT Hub 2026';
+  title.textContent = '';
+  let built = '';
+  for (const ch of text) {
+    built += ch;
+    title.innerHTML = built + '<span class="type-cursor">|</span>';
+    await sleep(48 + Math.random() * 38);
+  }
+  for (let i = 0; i < 4; i++) {
+    title.innerHTML = text + (i % 2 === 0 ? '<span class="type-cursor">|</span>' : '');
+    await sleep(210);
+  }
+  title.textContent = text;
+
+  // Phase 3 — fade rest in
+  fadeIn('hubSub', 0.5);
+  await sleep(120);
+  fadeIn('tabBar', 0.5);
+  await sleep(80);
+  // regionPills start invisible; shown later after chart is ready
+}
+
+// ── Data fetch ───────────────────────────────────────────────────────────────
+async function fetchData() {
+  try {
+    const r = await fetch('/mapelo/modern/data');
+    if (!r.ok) return null;
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+// ── Progress bar ─────────────────────────────────────────────────────────────
+function updateProgress(prog) {
+  if (!prog) return;
+  document.getElementById('progressFill').style.width = (prog.pct || 0) + '%';
+  document.getElementById('progressMsg').textContent  = prog.message || 'Checking…';
+  document.getElementById('progressPct').textContent  = (prog.pct || 0) + '%';
+  // Append new log entries
+  const logEl = document.getElementById('progressLog');
+  const seen  = new Set([...logEl.querySelectorAll('.plog-entry')].map(e => e.textContent));
+  (prog.log || []).forEach(line => {
+    if (seen.has(line)) return;
+    const d = document.createElement('div');
+    d.className = 'plog-entry new';
+    d.textContent = line;
+    logEl.appendChild(d);
+    logEl.scrollTop = logEl.scrollHeight;
+  });
+}
+
+async function pollUntilReady() {
+  let retries = 0;
+  while (retries < 400) {
+    await sleep(2000);
+    retries++;
+    const data = await fetchData();
+    if (!data) continue;
+    hubData = data;
+    if (data.progress) updateProgress(data.progress);
+    if (data.status === 'ready') {
+      updateProgress({pct: 100, message: 'All data verified!', log: data.progress?.log || []});
+      await sleep(900);
+      return;
+    }
+  }
+}
+
+// ── Logo preloader ───────────────────────────────────────────────────────────
+async function preloadLogos(teams) {
+  await Promise.all(teams.map(t => new Promise(res => {
+    const img = new Image();
+    img.onload = () => { logos[t.org] = img; res(); };
+    img.onerror = res;
+    img.src = `/static/logos/${t.org}.png`;
+  })));
+}
+
+// ── Axis animation overlay ───────────────────────────────────────────────────
+async function animateAxesOverlay() {
+  const canvas = document.getElementById('benpomChart');
+  const wrap   = document.getElementById('chartWrap');
+  const dpr    = window.devicePixelRatio || 1;
+  const W      = wrap.offsetWidth;
+  const H      = wrap.offsetHeight;
+
+  const ov  = document.createElement('canvas');
+  ov.width  = W * dpr;
+  ov.height = H * dpr;
+  ov.style.cssText = `position:absolute;top:0;left:0;width:${W}px;height:${H}px;pointer-events:none;z-index:5`;
+  wrap.appendChild(ov);
+  const oc = ov.getContext('2d');
+  oc.scale(dpr, dpr);
+
+  const ca = myChart.chartArea;
+  const ox = myChart.scales.x.getPixelForValue(new Date('2026-01-15'));
+  const oy = myChart.scales.y.getPixelForValue(0);
+
+  await new Promise(resolve => {
+    const dur = 1050, start = performance.now();
+    function frame(now) {
+      const p  = Math.min((now - start) / dur, 1);
+      oc.clearRect(0, 0, W, H);
+
+      // Cover chart with dark background (hides Chart.js rendering underneath)
+      oc.fillStyle = '#ffffff';
+      oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+
+      oc.save();
+
+      if (p < 0.12) {
+        // Dot phase
+        const r = easeOut(p / 0.12) * 6;
+        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 14;
+        oc.beginPath(); oc.arc(ox, oy, r, 0, Math.PI * 2);
+        oc.fillStyle = '#a78bfa'; oc.fill();
+      } else {
+        const lp = easeOut((p - 0.12) / 0.88);
+        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10;
+        oc.strokeStyle = 'rgba(167,139,250,.9)'; oc.lineWidth = 1.5;
+
+        // Y-axis (extends up AND down simultaneously)
+        oc.beginPath();
+        oc.moveTo(ox, oy - (oy - ca.top) * lp);
+        oc.lineTo(ox, oy + (ca.bottom - oy) * lp);
+        oc.stroke();
+
+        // Zero line right
+        oc.beginPath();
+        oc.moveTo(ox, oy);
+        oc.lineTo(ox + (ca.right - ox) * lp, oy);
+        oc.stroke();
+
+        // Zero line left (dim)
+        oc.shadowBlur = 0; oc.globalAlpha = .28;
+        oc.beginPath();
+        oc.moveTo(ox, oy);
+        oc.lineTo(ca.left + (ox - ca.left) * (1 - lp * .55), oy);
+        oc.stroke();
+        oc.globalAlpha = 1; oc.shadowBlur = 8;
+
+        // Origin dot
+        oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
+        oc.fillStyle = '#c4b5fd'; oc.fill();
+
+        // Late: hint grid lines
+        if (lp > .78) {
+          const tp = (lp - .78) / .22;
+          oc.shadowBlur = 0; oc.globalAlpha = tp * .15;
+          oc.strokeStyle = 'rgba(167,139,250,1)'; oc.lineWidth = .5;
+          for (const v of [-10, -5, 5, 10]) {
+            const py = myChart.scales.y.getPixelForValue(v);
+            if (py < ca.top || py > ca.bottom) continue;
+            oc.beginPath();
+            oc.moveTo(ca.left, py);
+            oc.lineTo(ca.left + (ca.right - ca.left) * lp, py);
+            oc.stroke();
+          }
+          oc.globalAlpha = 1;
+        }
+      }
+      oc.restore();
+      if (p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // Phase 2: curtain sweeps right, revealing chart lines underneath
+  await new Promise(resolve => {
+    const dur  = 2600;
+    const cw   = ca.right - ca.left;
+    const ch   = ca.bottom - ca.top;
+    let startT = null;
+    function frame(ts) {
+      if (!startT) startT = ts;
+      const raw = Math.min((ts - startT) / dur, 1);
+      const p   = 1 - Math.pow(1 - raw, 3);   // ease-out cubic
+      const rx  = cw * p;
+      oc.clearRect(0, 0, W, H);
+      // dark fill covers what hasn't been revealed yet (right side)
+      if (rx < cw) {
+        oc.fillStyle = '#ffffff';
+        oc.fillRect(ca.left + rx, ca.top, cw - rx + 1, ch);
+      }
+      // glowing edge at the reveal boundary
+      if (rx > 0 && rx < cw) {
+        const grd = oc.createLinearGradient(ca.left + rx - 28, 0, ca.left + rx + 4, 0);
+        grd.addColorStop(0, 'rgba(167,139,250,0)');
+        grd.addColorStop(1, 'rgba(167,139,250,0.3)');
+        oc.fillStyle = grd;
+        oc.fillRect(ca.left + rx - 28, ca.top, 32, ch);
+      }
+      if (raw < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // quick fade out
+  ov.style.transition = 'opacity 0.25s ease';
+  ov.style.opacity = '0';
+  await sleep(250);
+  ov.remove();
+}
+
+// ── Band plugin ──────────────────────────────────────────────────────────────
+function makeBandsPlugin(bands) {
+  const COLS = [
+    'rgba(147,112,219,.08)','rgba(100,149,237,.08)','rgba(128,200,100,.08)',
+    'rgba(255,180,100,.08)','rgba(100,200,220,.08)','rgba(200,120,180,.08)',
+  ];
+  return {
+    id:'eventBands',
+    beforeDraw(chart) {
+      const {ctx, chartArea:{left,top,right,bottom}, scales:{x}} = chart;
+      bands.forEach((band, i) => {
+        const x1 = Math.max(left,  x.getPixelForValue(new Date(band.start)));
+        const x2 = Math.min(right, x.getPixelForValue(new Date(band.end)));
+        if (x2 <= x1) return;
+        ctx.fillStyle = COLS[i % COLS.length];
+        ctx.fillRect(x1, top, x2 - x1, bottom - top);
+        ctx.save();
+        ctx.font = 'bold 10px DM Sans,sans-serif';
+        ctx.fillStyle = 'rgba(60,30,100,.35)';
+        ctx.textAlign = 'center';
+        ctx.fillText(band.label, (x1 + x2) / 2, top + 14);
+        ctx.restore();
+      });
+    },
+  };
+}
+
+// ── Logo-endpoint plugin ─────────────────────────────────────────────────────
+const logoPlugin = {
+  id:'teamLogos',
+  afterDatasetsDraw(chart) {
+    const {ctx, chartArea, scales:{x,y}} = chart;
+    chart.data.datasets.forEach(ds => {
+      if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
+      const last = ds.data[ds.data.length - 1];
+      const px   = x.getPixelForValue(new Date(last.x));
+      const py   = y.getPixelForValue(last.y);
+      if (px < chartArea.left || px > chartArea.right + 30) return;
+      const sz = 20, cx = px + 4 + sz / 2;
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, py, sz / 2 + 2, 0, Math.PI * 2);
+      ctx.fillStyle = ds.borderColor; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, py, sz / 2, 0, Math.PI * 2); ctx.clip();
+      ctx.drawImage(logos[ds.org], cx - sz / 2, py - sz / 2, sz, sz);
+      ctx.restore();
+    });
+  },
+};
+
+// ── Chart build ──────────────────────────────────────────────────────────────
+function buildChart(data) {
+  const checkpoints = data.chart.checkpoints || [];
+  const matchEvents = data.chart.match_events || [];
+  const allTeams    = data.leaderboard.teams  || [];
+
+  const visible = activeRegion === 'All' ? allTeams
+    : activeRegion === 'Top10'           ? allTeams.slice(0, 10)
+    : allTeams.filter(t => t.region === activeRegion);
+  const visOrgs = new Set(visible.map(t => t.org));
+
+  const datasets = [];
+  visible.forEach(team => {
+    const org = team.org;
+    const pts = checkpoints.filter(cp => org in cp.ratings)
+                           .map(cp => ({x: cp.date, y: cp.ratings[org]}));
+    if (!pts.length) return;
+    const color    = TEAM_COLORS[org] || '#888';
+    const isSel    = selectedTeam === org;
+    const isDimmed = selectedTeam !== null && !isSel;
+    datasets.push({
+      label: org, org,
+      data: pts,
+      borderColor: isDimmed ? color + '28' : color,
+      backgroundColor: 'transparent',
+      borderWidth: isSel ? 2.5 : (selectedTeam ? 1 : 1.5),
+      pointRadius: 0, pointHoverRadius: 0,
+      tension: 0.25, _dimmed: isDimmed,
+    });
+  });
+
+  // Match dots: selected team (large) or all teams when zoomed into a split (small)
+  if (selectedTeam && visOrgs.has(selectedTeam)) {
+    const tm = matchEvents.filter(m => m.winner === selectedTeam || m.loser === selectedTeam);
+    const wins = [], losses = [];
+    tm.forEach(m => {
+      const won = m.winner === selectedTeam;
+      const pt  = {x:m.date, y:won?m.winner_after:m.loser_after, _m:m, _won:won};
+      (won ? wins : losses).push(pt);
+    });
+    if (wins.length)   datasets.push({type:'scatter',label:'Win',  org:selectedTeam,data:wins,  backgroundColor:'#4ade80',pointRadius:7,pointHoverRadius:9,borderWidth:0,_dimmed:false});
+    if (losses.length) datasets.push({type:'scatter',label:'Loss', org:selectedTeam,data:losses,backgroundColor:'#f87171',pointRadius:7,pointHoverRadius:9,borderWidth:0,_dimmed:false});
+  } else if (_isZoomed) {
+    const allWins = [], allLosses = [];
+    matchEvents.forEach(m => {
+      if (visOrgs.has(m.winner)) allWins.push({x:m.date, y:m.winner_after, _m:m, _won:true});
+      if (visOrgs.has(m.loser))  allLosses.push({x:m.date, y:m.loser_after,  _m:m, _won:false});
+    });
+    if (allWins.length)   datasets.push({type:'scatter',label:'Win',  org:null,data:allWins,  backgroundColor:'rgba(74,222,128,.7)', pointRadius:5,pointHoverRadius:7,borderWidth:0,_dimmed:false});
+    if (allLosses.length) datasets.push({type:'scatter',label:'Loss', org:null,data:allLosses, backgroundColor:'rgba(248,113,113,.7)',pointRadius:5,pointHoverRadius:7,borderWidth:0,_dimmed:false});
+  }
+
+  const bandsPlugin = makeBandsPlugin(data.event_bands || []);
+
+  if (myChart) myChart.destroy();
+  const ctx = document.getElementById('benpomChart').getContext('2d');
+  myChart = new Chart(ctx, {
+    type: 'line',
+    data: {datasets},
+    options: {
+      animation: false,
+      responsive: true, maintainAspectRatio: false,
+      interaction: {mode:'point', intersect:true},
+      plugins: {
+        legend: {display:false},
+        tooltip: { enabled: false },
+      },
+      scales: {
+        x: {
+          type:'time',
+          min: (_savedZoomMin && _savedZoomMin >= new Date('2026-01-01').getTime()) ? _savedZoomMin : '2026-01-07',
+          max: (_savedZoomMax && _savedZoomMax <= new Date('2026-11-01').getTime()) ? _savedZoomMax : '2026-10-25',
+          time:{unit:'month', displayFormats:{month:'MMM'}},
+          grid:{color:'rgba(0,0,0,.07)'},
+          ticks:{color:'rgba(0,0,0,.45)', font:{size:11}},
+          border:{color:'rgba(0,0,0,.12)'},
+        },
+        y: {
+          grid:{color:'rgba(0,0,0,.07)'},
+          ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, stepSize:0.1, callback:v=>(v>0?'+':'')+v.toFixed(1)},
+          border:{color:'rgba(0,0,0,.12)'},
+        },
+      },
+      layout:{padding:{right:32}},
+    },
+    plugins: [bandsPlugin, logoPlugin],
+  });
+
+}
+
+let _logoHoverOrg   = null;
+let _lastHoveredDot = null;
+
+// ── Canvas listeners (registered once) ──────────────────────────────────────
+function _initCanvasListeners() {
+  const canvas = document.getElementById('benpomChart');
+
+  // ── Hit test logos ────────────────────────────────────────────────────────
+  function _hitTestLogos(mx, my) {
+    if (!myChart || !logos) return null;
+    const {scales: {x, y}} = myChart;
+    const sz = 20, pad = 4;
+    let hit = null;
+    myChart.data.datasets.forEach(ds => {
+      if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
+      const last = ds.data[ds.data.length - 1];
+      const px = x.getPixelForValue(new Date(last.x));
+      const py = y.getPixelForValue(last.y);
+      const cx = px + pad + sz / 2;
+      if (Math.sqrt((mx - cx) ** 2 + (my - py) ** 2) <= sz / 2 + 4) hit = ds.org;
+    });
+    return hit;
+  }
+
+  // ── Hover (dots + logos) ──────────────────────────────────────────────────
+  canvas.addEventListener('mousemove', e => {
+    if (!myChart) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    // Dot hover
+    const els = myChart.getElementsAtEventForMode(e, 'point', {intersect: true}, false);
+    const dotEl = els.find(el => myChart.data.datasets[el.datasetIndex]?.data[el.index]?._m);
+    if (dotEl) {
+      const pt  = myChart.data.datasets[dotEl.datasetIndex].data[dotEl.index];
+      const key = pt._m.date + pt._m.winner + pt._m.loser;
+      if (key !== _lastHoveredDot) {
+        _lastHoveredDot = key;
+        const wr = document.getElementById('chartWrap').getBoundingClientRect();
+        showDotTooltip(pt._m, pt._won, e.clientX - wr.left, e.clientY - wr.top);
+      }
+      canvas.style.cursor = 'pointer';
+      return;
+    }
+    if (_lastHoveredDot) { _lastHoveredDot = null; hideDotTooltip(); }
+
+    // Logo hover
+    const hovered = _hitTestLogos(mx, my);
+    if (hovered) {
+      canvas.style.cursor = 'pointer';
+      if (hovered !== _logoHoverOrg) { _logoHoverOrg = hovered; _applyLogoHover(hovered); }
+    } else {
+      if (_logoHoverOrg) { _logoHoverOrg = null; _applyLogoHover(null); }
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    _lastHoveredDot = null;
+    hideDotTooltip();
+    if (_logoHoverOrg) { _logoHoverOrg = null; _applyLogoHover(null); }
+  });
+
+  // ── Logo click ────────────────────────────────────────────────────────────
+  canvas.addEventListener('click', e => {
+    if (!_logoHoverOrg) return;
+    e.stopPropagation();
+    selectedTeam  = _logoHoverOrg;
+    expandedOrg   = null;
+    _logoHoverOrg = null;
+    buildChart(hubData);
+    renderLeaderboard(hubData);
+  });
+}
+
+function _applyLogoHover(org) {
+  if (!myChart) return;
+  myChart.data.datasets.forEach(ds => {
+    if (ds.type === 'scatter') return;
+    const base = TEAM_COLORS[ds.org] || '#888';
+    if (!org) {
+      // restore to current selectedTeam state
+      const isSel    = ds.org === selectedTeam;
+      const isDimmed = selectedTeam !== null && !isSel;
+      ds.borderColor = isDimmed ? base + '28' : base;
+      ds.borderWidth = isSel ? 2.5 : (selectedTeam ? 1 : 1.5);
+      ds._dimmed = isDimmed;
+    } else {
+      const isHov = ds.org === org;
+      ds.borderColor = isHov ? base : base + '28';
+      ds.borderWidth = isHov ? 2.5 : 1;
+      ds._dimmed = !isHov;
+    }
+  });
+  myChart.update('none');
+}
+
+// Clicking anywhere outside a logo clears the selection
+document.addEventListener('click', () => {
+  if (!selectedTeam || !hubData) return;
+  selectedTeam = null;
+  expandedOrg  = null;
+  buildChart(hubData);
+  renderLeaderboard(hubData);
+});
+
+// ── Keyboard navigation: W/S to cycle teams, X to clear ──────────────────────
+document.addEventListener('keydown', e => {
+  if (!hubData) return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const key = e.key.toLowerCase();
+  if (key !== 'w' && key !== 's' && key !== 'x') return;
+  e.preventDefault();
+
+  if (key === 'x') {
+    selectedTeam = null; expandedOrg = null;
+    buildChart(hubData); renderLeaderboard(hubData);
+    return;
+  }
+
+  const teams = hubData.leaderboard.teams || [];
+  const visible = activeRegion === 'All' ? teams
+    : activeRegion === 'Top10'           ? teams.slice(0, 10)
+    : teams.filter(t => t.region === activeRegion);
+  if (!visible.length) return;
+
+  const idx = selectedTeam ? visible.findIndex(t => t.org === selectedTeam) : -1;
+  let next;
+  if (key === 'w') next = idx <= 0 ? visible[0] : visible[idx - 1];
+  else             next = idx < 0 || idx >= visible.length - 1 ? visible[visible.length - 1] : visible[idx + 1];
+
+  selectedTeam = next.org;
+  expandedOrg  = null;
+  buildChart(hubData);
+  renderLeaderboard(hubData);
+});
+
+// ── as-of label ──────────────────────────────────────────────────────────────
+function setAsOf(data) {
+  const date   = data.as_of_date  || '';
+  const event  = data.as_of_event || '';
+  if (!date) return;
+  const d    = new Date(date + 'T12:00:00');
+  const dStr = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  document.getElementById('chartAsOf').textContent =
+    event ? `Through ${event} · ${dStr}` : `Through ${dStr}`;
+  document.getElementById('lbAsOf').textContent =
+    `Has all 2026 matches through ${dStr}`;
+}
+
+// ── Chart animation: progressive x.max reveal ────────────────────────────────
+let _isReplaying  = false;
+let _isZoomed     = false;
+let _savedZoomMin = null;
+let _savedZoomMax = null;
+
+async function revealChart(duration = 4000) {
+  if (!myChart || !hubData) return;
+  _isReplaying = true;
+  const btn = document.getElementById('replayBtn');
+  if (btn) { btn.textContent = '⏸ Playing…'; btn.disabled = true; }
+
+  _isZoomed = false;
+  _savedZoomMin = null; _savedZoomMax = null;
+  const zBtn = document.getElementById('zoomBtn');
+  if (zBtn) { zBtn.textContent = '⊕ Zoom Split'; zBtn.classList.remove('active'); }
+  myChart.options.scales.x.min = '2026-01-07';
+  myChart.options.scales.x.max = '2026-10-25';
+  myChart.update('none');
+
+  const cps     = hubData.chart.checkpoints || [];
+  const firstMs = cps.length ? new Date(cps[0].date).getTime() : new Date('2026-01-15').getTime();
+  const lastMs  = new Date(hubData.as_of_date || '2026-05-10').getTime();
+
+  // Overlay canvas — sits on top of chart, sweeps a dark curtain left→right
+  const mainCanvas = document.getElementById('benpomChart');
+  const wrap = document.getElementById('chartWrap');
+  const dpr  = window.devicePixelRatio || 1;
+  const ov   = document.createElement('canvas');
+  ov.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;z-index:5;';
+  ov.width  = mainCanvas.offsetWidth  * dpr;
+  ov.height = mainCanvas.offsetHeight * dpr;
+  ov.style.width  = mainCanvas.offsetWidth  + 'px';
+  ov.style.height = mainCanvas.offsetHeight + 'px';
+  wrap.appendChild(ov);
+  const oc = ov.getContext('2d');
+  oc.scale(dpr, dpr);
+
+  const ca = myChart.chartArea;
+
+  await new Promise(resolve => {
+    const startT = performance.now();
+    function frame(ts) {
+      const p      = Math.min((ts - startT) / duration, 1);
+      const ep     = 1 - Math.pow(1 - p, 3);
+      const nowMs  = firstMs + ep * (lastMs - firstMs);
+      const revX   = myChart.scales.x.getPixelForValue(nowMs);
+
+      oc.clearRect(0, 0, ov.offsetWidth, ov.offsetHeight);
+
+      // Dark curtain covers everything to the right of the reveal line
+      if (revX < ca.right) {
+        oc.fillStyle = '#ffffff';
+        oc.fillRect(revX, ca.top, ca.right - revX + 2, ca.bottom - ca.top);
+      }
+
+      // Glowing edge at the reveal boundary
+      if (revX > ca.left && revX < ca.right) {
+        const grd = oc.createLinearGradient(revX - 22, 0, revX + 4, 0);
+        grd.addColorStop(0, 'rgba(167,139,250,0)');
+        grd.addColorStop(1, 'rgba(167,139,250,0.32)');
+        oc.fillStyle = grd;
+        oc.fillRect(revX - 22, ca.top, 26, ca.bottom - ca.top);
+
+        // Small colored dot on each team's line at the reveal position
+        myChart.data.datasets.forEach(ds => {
+          if (ds.type === 'scatter' || ds._dimmed || !ds.data?.length) return;
+          const pts = ds.data;
+          let yVal = null;
+          for (let i = 0; i < pts.length - 1; i++) {
+            const t0 = new Date(pts[i].x).getTime();
+            const t1 = new Date(pts[i+1].x).getTime();
+            if (nowMs >= t0 && nowMs <= t1) {
+              yVal = pts[i].y + (nowMs - t0) / (t1 - t0) * (pts[i+1].y - pts[i].y);
+              break;
+            }
+          }
+          if (yVal === null) {
+            const last = pts[pts.length - 1];
+            if (new Date(last.x).getTime() <= nowMs) yVal = last.y;
+          }
+          if (yVal !== null) {
+            const py = myChart.scales.y.getPixelForValue(yVal);
+            if (py >= ca.top && py <= ca.bottom) {
+              oc.save();
+              oc.shadowBlur = 5; oc.shadowColor = ds.borderColor || '#c4b5fd';
+              oc.beginPath(); oc.arc(revX, py, 3, 0, Math.PI * 2);
+              oc.fillStyle = ds.borderColor || '#c4b5fd'; oc.fill();
+              oc.restore();
+            }
+          }
+        });
+      }
+
+      if (p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+
+  ov.style.transition = 'opacity 0.25s';
+  ov.style.opacity = '0';
+  await sleep(260);
+  ov.remove();
+  _isReplaying = false;
+  if (btn) { btn.innerHTML = '&#8635; Replay'; btn.disabled = false; }
+}
+
+async function replayChart() {
+  if (_isReplaying) return;
+  await revealChart(12000); // 12s replay
+}
+
+async function animateZoom(toMin, toMax, duration) {
+  if (!myChart) return;
+  const fmn = new Date(myChart.options.scales.x.min).getTime();
+  const fmx = new Date(myChart.options.scales.x.max).getTime();
+  const tmn = new Date(toMin).getTime();
+  const tmx = new Date(toMax).getTime();
+  await new Promise(resolve => {
+    const startT = performance.now();
+    function frame(ts) {
+      const p  = Math.min((ts - startT) / duration, 1);
+      const ep = 1 - Math.pow(1 - p, 3);
+      myChart.options.scales.x.min = new Date(fmn + ep * (tmn - fmn));
+      myChart.options.scales.x.max = new Date(fmx + ep * (tmx - fmx));
+      myChart.update('none');
+      if (p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+async function toggleZoom() {
+  if (_isReplaying || !myChart) return;
+  const btn = document.getElementById('zoomBtn');
+  if (_isZoomed) {
+    _isZoomed = false;
+    _savedZoomMin = null; _savedZoomMax = null;
+    buildChart(hubData);
+    await animateZoom('2026-01-07', '2026-10-25', 600);
+    if (btn) { btn.textContent = '⊕ Zoom Split'; btn.classList.remove('active'); }
+  } else {
+    const asOf  = hubData?.as_of_date || '2026-05-10';
+    const bands = hubData?.event_bands || [];
+    let band = bands.find(b => b.start <= asOf && asOf <= b.end);
+    if (!band) band = [...bands].reverse().find(b => b.start <= asOf);
+    if (!band && bands.length) band = bands[bands.length - 1];
+    const zStart = band ? band.start : asOf;
+    const zEnd   = band ? band.end   : asOf;
+    _isZoomed = true;
+    buildChart(hubData);
+    await animateZoom(zStart, zEnd, 600);
+    _savedZoomMin = myChart.scales.x.min;
+    _savedZoomMax = myChart.scales.x.max;
+    if (btn) { btn.textContent = '⊖ Zoom Out'; btn.classList.add('active'); }
+  }
+}
+
+async function resetZoom() {
+  if (!myChart) return;
+  _isZoomed     = false;
+  _savedZoomMin = null; _savedZoomMax = null;
+  buildChart(hubData);
+  await animateZoom('2026-01-07', '2026-10-25', 400);
+  const zBtn = document.getElementById('zoomBtn');
+  if (zBtn) { zBtn.textContent = '⊕ Zoom Split'; zBtn.classList.remove('active'); }
+}
+
+// ── Chart section reveal ─────────────────────────────────────────────────────
+async function showChartAndLeaderboard(data) {
+  // Initialize veto simulation globals from hub data
+  VETO_HUB       = data.veto_model   || {teams:{}, snap_pools:{}};
+  ORG_REGIONS_HUB = data.org_regions || {};
+  INTL_HUB       = data.intl_calib   || {};
+  SNAP_TEAMS     = data.snap_teams   || {};
+  SNAP_BETA      = data.snap_beta    || data.leaderboard.beta || 0.3237;
+  SNAP_KEY       = data.snap_key     || 'after_santiago';
+
+  await preloadLogos(data.leaderboard.teams || []);
+  setAsOf(data);
+
+  showEl('chartSection');
+  await sleep(250);
+
+  buildChart(data);
+  _initCanvasListeners();   // register once after first build
+  await sleep(80);
+  await revealChart(4000);
+
+  // Show leaderboard and pills after reveal completes
+  showEl('lbCard');
+  renderLeaderboard(data);
+  fadeIn('regionPills', 0.4);
+}
+
+// ── Main init ────────────────────────────────────────────────────────────────
+async function init() {
+  const dataP = fetchData();     // start fetch immediately
+  await introAnimation();        // run intro in parallel
+
+  const data = await dataP;
+  if (!data) {
+    document.getElementById('lbBody').innerHTML = '<div class="lb-empty">Could not load data. Please refresh.</div>';
+    showEl('lbCard');
+    return;
+  }
+  hubData = data;
+
+  // Always show real progress — poll until backend says ready
+  showEl('progressSection');
+  if (data.progress) updateProgress(data.progress);
+  await pollUntilReady();
+  document.getElementById('progressSection').classList.add('hidden');
+
+  await showChartAndLeaderboard(hubData);
+}
+
+// ── Leaderboard ──────────────────────────────────────────────────────────────
+function renderLeaderboard(data) {
+  const teams   = data.leaderboard.teams || [];
+  const visible = activeRegion === 'All' ? teams
+    : activeRegion === 'Top10'          ? teams.slice(0, 10)
+    : teams.filter(t => t.region === activeRegion);
+  const body    = document.getElementById('lbBody');
+  body.innerHTML = '';
+
+  if (!visible.length) {
+    body.innerHTML = '<div class="lb-empty">No teams found.</div>';
+    return;
+  }
+
+  visible.forEach(team => {
+    const org   = team.org;
+    const color = TEAM_COLORS[org] || '#888';
+    const rStr  = (team.rating >= 0 ? '+' : '') + team.rating.toFixed(2);
+    const regCls = (team.region || '').toLowerCase();
+    const isSel  = org === selectedTeam;
+    const isExp  = org === expandedOrg;
+
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (isSel ? ' selected' : '');
+    row.innerHTML = `
+      <div class="lb-rank">${team.rank}</div>
+      <div class="lb-logo"><img src="/static/logos/${org}.png" onerror="this.style.display='none'" alt="${org}"></div>
+      <div class="lb-name">${org}</div>
+      <div class="lb-rating" style="color:${color}">${rStr}</div>
+      <div class="lb-region ${regCls}">${team.region || ''}</div>
+      <div class="lb-chevron">&#9660;</div>`;
+    row.onclick = e => { e.stopPropagation(); toggleTeam(org); };
+    body.appendChild(row);
+
+    if (isExp) {
+      const det = document.createElement('div');
+      det.className = 'lb-detail';
+      det.innerHTML = buildDetailHTML(team);
+      body.appendChild(det);
+    }
+  });
+}
+
+const EVENT_LABELS = {
+  '2026_kickoff':  'Kickoff 2026',
+  '2026_santiago': 'Masters Santiago',
+  '2026_stage1':   'Stage 1 2026',
+  '2026_london':   'Masters London',
+  '2026_stage2':   'Stage 2 2026',
+  '2026_champions':'Champions 2026',
+};
+
+function buildDetailHTML(team) {
+  const recent  = (team.recent_matches || []).slice(0, 4);
+  const allMaps = team.all_maps || [];
+
+  // Map result chips for each game in a match
+  const mapChips = (maps, teamWon) => (maps || []).map((mp, idx) => {
+    const isByTeam = teamWon ? (idx % 2 === 0) : (idx % 2 !== 0); // approximate
+    // Use wr/lr: winner rounds vs loser rounds
+    const cls = teamWon ? (mp.wr > mp.lr ? 'mw' : 'ml') : (mp.lr > mp.wr ? 'mw' : 'ml');
+    const scoreStr = teamWon ? `${mp.wr}–${mp.lr}` : `${mp.lr}–${mp.wr}`;
+    return `<span class="lb-mmap-chip ${cls}">${mp.map} ${scoreStr}</span>`;
+  }).join('');
+
+  const recentHtml = recent.map(m => {
+    const d    = (m.delta >= 0 ? '+' : '') + parseFloat(m.delta).toFixed(2);
+    const won  = m.result === 'W';
+    const evt  = EVENT_LABELS[m.event_id] || '';
+    const chips = mapChips(m.maps || [], won);
+    return `<div class="lb-match-card ${won?'win':'loss'}">
+      <div class="lb-match-head">
+        <span class="lb-mr">${m.result}</span>
+        <img class="lb-mlogo" src="/static/logos/${m.opponent}.png" onerror="this.style.display='none'" alt="">
+        <span class="lb-mopp">vs ${m.opponent}</span>
+        <span class="lb-mscore">${m.score}</span>
+        <span class="lb-mdelta">${d}</span>
+      </div>
+      <div class="lb-mmeta">${evt ? `<span>${evt}</span>` : ''}<span>${m.date}</span></div>
+      ${chips ? `<div class="lb-mmaps">${chips}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  const mapsHtml = allMaps.length ? `
+    <table class="lb-maps-table">
+      <thead><tr><th>Map</th><th>Rating</th><th>W–L</th><th>Win%</th></tr></thead>
+      <tbody>${allMaps.map(m => {
+        const r   = (m.rating >= 0 ? '+' : '') + parseFloat(m.rating).toFixed(2);
+        const tot = m.w + m.l;
+        const pct = tot ? Math.round(100 * m.w / tot) + '%' : '—';
+        const cls = m.rating >= 0 ? 'pos' : 'neg';
+        return `<tr>
+          <td class="lb-mt-map">${m.map}</td>
+          <td class="lb-mt-rat ${cls}">${r}</td>
+          <td class="lb-mt-wl">${m.w}–${m.l}</td>
+          <td class="lb-mt-pct">${pct}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>` : '';
+
+  return `<div class="lb-detail-inner">
+    ${recent.length ? `<div class="lb-sec-label">Recent Matches</div>${recentHtml}` : ''}
+    ${mapsHtml ? `<div class="lb-sec-label">Map Breakdown</div>${mapsHtml}` : ''}
+  </div>`;
+}
+
+function toggleTeam(org) {
+  expandedOrg  = expandedOrg  === org ? null : org;
+  selectedTeam = selectedTeam === org ? null : org;
+  if (hubData) {
+    renderLeaderboard(hubData);
+    buildChart(hubData);
+  }
+}
+
+// ── Dot hover tooltip ────────────────────────────────────────────────────────
+let _dotTooltipHideTimer = null;
+
+function _matchTooltipHTML(m, won) {
+  const org  = won ? m.winner : m.loser;
+  const opp  = won ? m.loser  : m.winner;
+  const d    = won ? m.winner_delta : m.loser_delta;
+  const rat  = won ? m.winner_after  : m.loser_after;
+  const dStr = (d >= 0 ? '+' : '') + d.toFixed(2);
+  const evt  = EVENT_LABELS[m.event_id] || m.event_id || '';
+  // Series score always shown as [org score]-[opp score]
+  const rawParts = (m.series_score || '0-0').split('-');
+  const displayScore = won
+    ? m.series_score
+    : `${rawParts[1]}-${rawParts[0]}`;
+
+  const mapsRows = (m.maps || []).map(mp => {
+    const orgRd = won ? mp.wr : mp.lr;
+    const oppRd = won ? mp.lr : mp.wr;
+    const mapWon = orgRd > oppRd;
+    const diff   = orgRd - oppRd;
+    return `<tr>
+      <td class="popup-map-name">${mp.map}</td>
+      <td class="popup-map-score ${mapWon?'w':'l'}">${orgRd}</td>
+      <td class="popup-map-score ${mapWon?'l':'w'}">${oppRd}</td>
+      <td class="popup-map-diff">${diff >= 0 ? '+' : ''}${diff}</td>
+    </tr>`;
+  }).join('');
+  return `
+    ${evt ? `<div class="popup-event-label">${evt}</div>` : ''}
+    <div class="popup-teams">
+      <div class="popup-team-block">
+        <img class="popup-logo" src="/static/logos/${org}.png" onerror="this.style.display='none'" alt="${org}">
+        <span class="popup-team-name">${org}</span>
+      </div>
+      <div class="popup-score-block">
+        <span class="popup-score ${won?'w':'l'}">${displayScore}</span>
+        <span class="popup-vs-label">series</span>
+      </div>
+      <div class="popup-team-block">
+        <img class="popup-logo" src="/static/logos/${opp}.png" onerror="this.style.display='none'" alt="${opp}">
+        <span class="popup-team-name">${opp}</span>
+      </div>
+    </div>
+    <div class="popup-date">${m.date}</div>
+    <div class="popup-delta ${d>=0?'pos':'neg'}">BenPom ${rat.toFixed(2)} &nbsp;(${dStr})</div>
+    ${mapsRows ? `<table class="popup-maps-table">
+      <thead><tr><th>Map</th><th>${org}</th><th>${opp}</th><th>Diff</th></tr></thead>
+      <tbody>${mapsRows}</tbody>
+    </table>` : ''}`;
+}
+
+function showDotTooltip(m, won, dotX, dotY) {
+  const tt = document.getElementById('dotTooltip');
+  document.getElementById('dotTooltipContent').innerHTML = _matchTooltipHTML(m, won);
+  tt.style.visibility = 'hidden';
+  tt.classList.add('visible');
+  const wrap = document.getElementById('chartWrap');
+  const ttW  = tt.offsetWidth  || 300;
+  const ttH  = tt.offsetHeight || 300;
+  const gap  = 20;
+  let left = dotX - ttW / 2;
+  let top  = dotY - ttH - gap;
+  if (top < 4)                             top  = dotY + gap;  // flip below dot
+  if (left < 4)                            left = 4;
+  if (left + ttW > wrap.offsetWidth - 4)   left = wrap.offsetWidth - ttW - 4;
+  tt.style.left       = left + 'px';
+  tt.style.top        = top  + 'px';
+  tt.style.visibility = '';
+}
+
+function hideDotTooltip() {
+  document.getElementById('dotTooltip').classList.remove('visible');
+}
+
+// Legacy click popup (kept for non-hover contexts)
+function showMatchPopup(m, won) {
+  showDotTooltip(m, won, 0, 0);
+}
+function closePopup() { hideDotTooltip(); }
+
+// ── Upcoming ─────────────────────────────────────────────────────────────────
+function renderUpcoming(data) {
+  var upcoming = (data.upcoming || []).slice().sort(function(a,b){
+    return (a.date||'') < (b.date||'') ? -1 : (a.date||'') > (b.date||'') ? 1 : 0;
+  });
+  var body = document.getElementById('upcomingBody');
+  if (!upcoming.length) {
+    body.innerHTML = '<div class="no-upcoming">No upcoming matches found.<br><span style="font-size:.78rem;opacity:.6">Data updates on page load.</span></div>';
+    return;
+  }
+
+  var lbTeams = {};
+  (data.leaderboard.teams || []).forEach(function(t){ lbTeams[t.org] = t; });
+
+  var snapKey = SNAP_KEY;
+  var beta = SNAP_BETA;
+
+  // Upcoming matches always use the live current pool, not the historical snap pool
+  var pool = (VETO_HUB.current_pool && VETO_HUB.current_pool.length >= 7)
+    ? VETO_HUB.current_pool
+    : getActivePoolHUB(snapKey);
+  if (!pool || !pool.length) {
+    var seen = {};
+    Object.values(SNAP_TEAMS).forEach(function(t){ Object.keys(t.maps||{}).forEach(function(m){ seen[m]=1; }); });
+    pool = Object.keys(seen).sort();
+  }
+  if (!pool || !pool.length) {
+    pool = ['Ascent','Bind','Breeze','Fracture','Haven','Lotus','Pearl','Split'];
+  }
+
+  var liveMapStats = VETO_HUB.live_map_stats || {};
+
+  function getTeamObj(org) {
+    var lb = lbTeams[org];
+    var overall = lb ? lb.rating : 0;
+    // Start with snapshot map ratings (if available), then overlay live Stage-1 data
+    var maps = {};
+    var st = SNAP_TEAMS[org];
+    if (st && st.maps) {
+      Object.keys(st.maps).forEach(function(mp){ maps[mp] = Object.assign({}, st.maps[mp]); });
+    } else if (lb) {
+      (lb.all_maps||[]).forEach(function(m){
+        maps[m.map] = {rating:m.rating, w:m.w, l:m.l,
+                       win_pct: m.w/Math.max(1,m.w+m.l)};
+      });
+    }
+    // Overlay live Stage-1 win rates (Bayesian-shrunk, min 2 games)
+    var live = liveMapStats[org];
+    if (live) {
+      Object.keys(live).forEach(function(mp){
+        maps[mp] = Object.assign(maps[mp]||{}, live[mp]);
+      });
+    }
+    if (!Object.keys(maps).length && !overall) return null;
+    return {overall_rating: overall, maps: maps};
+  }
+
+  var nSims = 5000;
+  var vetoSnapKey = '2026_'+snapKey;
+
+  var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific'};
+
+  var cardHtmlArr = upcoming.map(function(m) {
+    var orgA = m.org_a || m.team_a;
+    var orgB = m.org_b || m.team_b;
+    var matchFmt = m.format || 'bo3';
+    var matchThresh = SERIES_THRESH_HUB[matchFmt] || 2;
+    var tA = getTeamObj(orgA), tB = getTeamObj(orgB);
+    var lbA = lbTeams[orgA], lbB = lbTeams[orgB];
+    var ratingA = lbA ? lbA.rating : (tA ? (tA.overall_rating||0) : 0);
+    var ratingB = lbB ? lbB.rating : (tB ? (tB.overall_rating||0) : 0);
+    var region = m.region || (lbA ? lbA.region : '') || '';
+    var rgnCls = REGION_CLS[region] || '';
+
+    var seriesWins=0;
+    var mapWins={}, mapPlays={};
+    pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
+
+    if (tA && tB) {
+      for (var s=0; s<nSims; s++) {
+        var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt);
+        var sw = 0;
+        pool.forEach(function(mp){
+          var fc = fm[mp] || 'banA';
+          if (fc==='pickA'||fc==='pickB'||fc==='dec') {
+            mapPlays[mp]++;
+            var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
+            var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
+            var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
+            if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
+          }
+        });
+        if (sw >= matchThresh) seriesWins++;
+      }
+    }
+
+    var pctA = (m.win_prob_a != null)
+      ? Math.round(m.win_prob_a * 100)
+      : (tA&&tB) ? Math.round(seriesWins/nSims*100)
+                 : Math.round(100/(1+Math.exp(-beta*(ratingA-ratingB))));
+    var pctB = 100-pctA;
+    var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
+    var topSeqs = (tA&&tB&&pool.length) ? topVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt,3) : [];
+
+    // Played maps sorted by frequency
+    var playedMaps = pool.filter(function(mp){ return mapPlays[mp]>0; })
+                        .sort(function(a,b){ return mapPlays[b]-mapPlays[a]; });
+
+    // Build veto sequences section
+    var vetoSeqsHtml = '';
+    if (hasPatt && topSeqs.length) {
+      vetoSeqsHtml = '<div class="upc-section-lbl">Predicted Veto</div><div class="upc-veto-seqs">';
+      topSeqs.forEach(function(sq, si){
+        var seqRow = sq.seq.map(function(step, idx){
+          var key = step.action+step.side;
+          var cls = (ACTION_CLS[key]||ACTION_CLS.dec)[0];
+          var lbl = actionLabelHUB(orgA, orgB, key);
+          return '<div class="upc-veto-step">'+
+            '<span class="step-lbl '+cls+'">'+lbl+'</span>'+
+            '<span class="upc-veto-map">'+step.map+'</span>'+
+          '</div>'+(idx<sq.seq.length-1?'<span class="step-arrow">›</span>':'');
+        }).join('');
+        var prob = sq.prob != null ? Math.round(sq.prob*100)+'%' : '';
+        vetoSeqsHtml += '<div class="upc-veto-seq-row">'+
+          (prob?'<span class="upc-veto-seq-prob">'+prob+'</span>':'')+
+          seqRow+
+        '</div>';
+      });
+      vetoSeqsHtml += '</div>';
+    }
+
+    // Build map breakdown table
+    var mapTableHtml = '';
+    if (playedMaps.length) {
+      var totalSims = nSims;
+      var vetoSeqForMap = {};
+      if (topSeqs.length) {
+        topSeqs[0].seq.forEach(function(step){
+          vetoSeqForMap[step.map] = step.action + step.side;
+        });
+      }
+      mapTableHtml = '<div class="upc-section-lbl">Map Breakdown</div>'+
+        '<table class="upc-map-table">'+
+        '<thead><tr>'+
+          '<th>Map</th>'+
+          '<th>Played</th>'+
+          '<th>'+orgA+'</th>'+
+          '<th>'+orgB+'</th>'+
+          (Object.keys(vetoSeqForMap).length?'<th>Veto</th>':'')+
+        '</tr></thead><tbody>';
+      playedMaps.forEach(function(mp){
+        var wp = mapWins[mp]/mapPlays[mp];
+        var wpPctA = Math.round(wp*100);
+        var wpPctB = 100-wpPctA;
+        var clsA = wp>=0.55?'fav':(wp<=0.45?'dog':'neu');
+        var clsB = (1-wp)>=0.55?'fav':((1-wp)<=0.45?'dog':'neu');
+        var playedPct = Math.round(mapPlays[mp]/totalSims*100);
+        var vetoKey = vetoSeqForMap[mp] || '';
+        var vetoLbl = vetoKey ? actionLabelHUB(orgA, orgB, vetoKey) : '';
+        var vetoCls = vetoKey ? (ACTION_CLS[vetoKey]||ACTION_CLS.dec)[0] : '';
+        mapTableHtml += '<tr>'+
+          '<td><img src="/maps/'+mp.toLowerCase()+'.png" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+mp+'</td>'+
+          '<td style="color:#888;font-size:.65rem">'+playedPct+'%</td>'+
+          '<td class="upc-map-td-wp '+clsA+'">'+wpPctA+'%</td>'+
+          '<td class="upc-map-td-wp '+clsB+'">'+wpPctB+'%</td>'+
+          (Object.keys(vetoSeqForMap).length?'<td class="upc-map-td-veto">'+(vetoLbl?'<span class="step-lbl '+vetoCls+'">'+vetoLbl+'</span>':'—')+'</td>':'')+
+        '</tr>';
+      });
+      mapTableHtml += '</tbody></table>';
+    }
+
+    // Recent form — 3 past matches per team
+    function recentMatchesHtml(org, side) {
+      var lb = lbTeams[org];
+      var recent = lb ? (lb.recent_matches || []) : [];
+      recent = recent.slice(0, 3);
+      if (!recent.length) return '<div style="color:#aaa;font-size:.68rem">No data</div>';
+      return recent.map(function(r){
+        var resultCls = r.result==='W' ? 'w' : 'l';
+        var dateStr = r.date ? new Date(r.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        return '<div class="upc-recent-match">'+
+          '<span class="upc-recent-result '+resultCls+'">'+r.result+'</span>'+
+          '<span class="upc-recent-opp">vs '+r.opponent+'</span>'+
+          '<span class="upc-recent-score">'+r.score+'</span>'+
+          '<span class="upc-recent-evt">'+dateStr+'</span>'+
+        '</div>';
+      }).join('');
+    }
+    var recentHtml = '<div class="upc-section-lbl">Recent Form</div>'+
+      '<div class="upc-recent-row">'+
+        '<div class="upc-recent-col">'+
+          '<div class="upc-recent-col-hdr">'+orgA+'</div>'+
+          recentMatchesHtml(orgA,'a')+
+        '</div>'+
+        '<div class="upc-recent-col">'+
+          '<div class="upc-recent-col-hdr">'+orgB+'</div>'+
+          recentMatchesHtml(orgB,'b')+
+        '</div>'+
+      '</div>';
+
+    var dateLabel = m.date ? new Date(m.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    var rtgA = '<span class="upc-rtg">'+(ratingA>=0?'+':'')+ratingA.toFixed(2)+'</span>';
+    var rtgB = '<span class="upc-rtg">'+(ratingB>=0?'+':'')+ratingB.toFixed(2)+'</span>';
+    var fmtLabel = matchFmt==='bo5'?'Bo5':matchFmt==='bo1'?'Bo1':'Bo3';
+
+    return '<div class="upc-card '+rgnCls+'">'+
+      '<div class="upc-header">'+
+        '<div class="upc-team-a">'+
+          '<img class="upc-logo" src="/static/logos/'+orgA+'.png" onerror="this.style.opacity=\\'0\\'">'+
+          '<span class="upc-org">'+orgA+'</span>'+
+          rtgA+
+        '</div>'+
+        '<div class="upc-center">'+
+          '<div class="upc-date-event">'+dateLabel+(m.event?' · '+m.event:'')+' · '+fmtLabel+'</div>'+
+          '<div class="upc-bar-wrap">'+
+            '<div class="upc-bar-a" style="width:'+pctA+'%"></div>'+
+            '<div class="upc-bar-b" style="width:'+pctB+'%"></div>'+
+          '</div>'+
+          '<div class="upc-pcts">'+
+            '<span class="upc-pct '+(pctA>=50?'fav':'dog')+'">'+pctA+'%</span>'+
+            '<span class="upc-pct '+(pctB>=50?'fav':'dog')+'">'+pctB+'%</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="upc-team-b">'+
+          '<img class="upc-logo" src="/static/logos/'+orgB+'.png" onerror="this.style.opacity=\\'0\\'">'+
+          '<span class="upc-org">'+orgB+'</span>'+
+          rtgB+
+        '</div>'+
+      '</div>'+
+      '<div class="upc-details">'+
+        '<div class="upc-details-inner">'+
+          (vetoSeqsHtml || '')+
+          (mapTableHtml || '')+
+          recentHtml+
+        '</div>'+
+      '</div>'+
+      '<div class="upc-expand-hint">▸ expand</div>'+
+    '</div>';
+  });
+
+  // Group by date and render
+  var groups = [];
+  var curDate = null;
+  upcoming.forEach(function(m, i) {
+    var d = m.date || '';
+    if (d !== curDate) { groups.push({date: d, indices: []}); curDate = d; }
+    groups[groups.length-1].indices.push(i);
+  });
+  var groupedHtml = groups.map(function(g) {
+    var dateLabel = g.date ? new Date(g.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) : '';
+    return '<div class="upc-day-group">'+
+      '<div class="upc-day-label">'+dateLabel+'</div>'+
+      g.indices.map(function(i){ return cardHtmlArr[i]; }).join('')+
+    '</div>';
+  }).join('');
+  body.innerHTML = '<div class="upc-list">'+groupedHtml+'</div>';
+
+  body.querySelectorAll('.upc-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      card.classList.toggle('open');
+      var hint = card.querySelector('.upc-expand-hint');
+      if (hint) hint.textContent = card.classList.contains('open') ? '▾ collapse' : '▸ expand';
+    });
+  });
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+init();
+</script>
 </body>
 </html>
 """
@@ -4454,6 +6670,11 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 @mapelo_bp.route('/modern/')
 def mapelo_modern():
     return MAPELO_MODERN_HTML
+
+@mapelo_bp.route('/modern/data')
+def mapelo_modern_data():
+    data = _mhub_get()
+    return Response(json.dumps(data), mimetype='application/json')
 
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
 def mapelo_map_matches(org, map_name):
