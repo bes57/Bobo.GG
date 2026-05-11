@@ -5293,9 +5293,11 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 
 /* Leaderboard */
 .lb-card{background:rgba(255,255,255,.72);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px)}
-.lb-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(61,26,110,.1)}
-.lb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#000}
-.lb-asof{font-size:.7rem;color:#666;text-align:right;max-width:240px}
+.lb-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid rgba(61,26,110,.1)}
+.lb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#000;text-align:center}
+.lb-asof{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:.7rem;color:#666;text-align:right;max-width:240px}
+@keyframes lbRowSlideIn { from { opacity:0; transform:translateX(-60px); } to { opacity:1; transform:translateX(0); } }
+.lb-row.slide-in { animation:lbRowSlideIn .55s cubic-bezier(.16,1,.3,1) backwards; }
 .lb-col-hdr{display:grid;grid-template-columns:44px 2fr 1fr 1fr 24px;align-items:center;padding:8px 24px;gap:10px;border-bottom:2px solid rgba(61,26,110,.1)}
 .lb-col-hdr span{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#888;text-align:center}
 .lb-row{display:grid;grid-template-columns:44px 2fr 1fr 1fr 24px;align-items:center;padding:13px 24px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(61,26,110,.06);gap:10px}
@@ -6387,32 +6389,50 @@ async function revealChart(duration = 4000, startFromLeft = false) {
           }
         });
 
-        // Re-draw Chart.js's grid lines on top of the curtain so the
-        // axis grid stays visible throughout the reveal animation.
-        // Color/width match Chart.js config (rgba(0,0,0,.07), 1px).
+        // Re-draw the axis grid on top of the curtain so the gridlines
+        // stay visible throughout the reveal animation.  Match Chart.js's
+        // grid config EXACTLY (rgba(0,0,0,.07), 1px) so the lines on the
+        // covered side look identical to the lines on the uncovered side
+        // — any deviation reads as "the right side is bolder than the
+        // left" once the curtain crosses over.
         oc.save();
         oc.strokeStyle = 'rgba(0,0,0,0.07)';
         oc.lineWidth   = 1;
-        // Horizontal grid lines at every Y tick
-        const _yTicks = myChart.scales.y.ticks || [];
-        _yTicks.forEach(_t => {
-          const _py = myChart.scales.y.getPixelForValue(_t.value);
-          if (_py < ca.top - 0.5 || _py > ca.bottom + 0.5) return;
+
+        // Horizontal grid: match the y-axis labels exactly — Chart.js's
+        // autoSkip leaves one tick per integer (with the .5 offset, so
+        // +12.5, +11.5, +10.5 …), not at every 0.5 step.  Drawing at 0.5
+        // gives twice the density of the actual chart and makes the
+        // covered side look denser than the uncovered side.
+        const _yMin = myChart.scales.y.min;
+        const _yMax = myChart.scales.y.max;
+        // First .5-multiple that's >= _yMin.  For _yMin=-12.5 we want -12.5;
+        // for any non-.5 _yMin we round up to the next .5 boundary.
+        let _yStart = Math.ceil(_yMin - 0.5) + 0.5;
+        if (_yStart < _yMin - 1e-9) _yStart += 1;
+        for (let _v = _yStart; _v <= _yMax + 1e-6; _v += 1.0) {
+          const _py = myChart.scales.y.getPixelForValue(_v);
+          if (_py < ca.top - 0.5 || _py > ca.bottom + 0.5) continue;
           oc.beginPath();
           oc.moveTo(revX, _py);
           oc.lineTo(ca.right, _py);
           oc.stroke();
-        });
-        // Vertical grid lines at every X tick that falls inside the curtain
-        const _xTicks = myChart.scales.x.ticks || [];
-        _xTicks.forEach(_t => {
-          const _px = myChart.scales.x.getPixelForValue(_t.value);
-          if (_px < revX - 0.5 || _px > ca.right + 0.5) return;
+        }
+
+        // Vertical grid: one line at each month boundary between
+        // x.min and x.max that falls inside the still-covered area.
+        const _xMin = new Date(myChart.scales.x.min);
+        const _xMax = new Date(myChart.scales.x.max);
+        const _m0   = new Date(_xMin.getFullYear(), _xMin.getMonth(), 1);
+        if (_m0 < _xMin) _m0.setMonth(_m0.getMonth() + 1);
+        for (let _d = new Date(_m0); _d <= _xMax; _d.setMonth(_d.getMonth() + 1)) {
+          const _px = myChart.scales.x.getPixelForValue(_d.getTime());
+          if (_px < revX - 0.5 || _px > ca.right + 0.5) continue;
           oc.beginPath();
           oc.moveTo(_px, ca.top);
           oc.lineTo(_px, ca.bottom);
           oc.stroke();
-        });
+        }
         oc.restore();
       }
 
@@ -6571,7 +6591,7 @@ async function showChartAndLeaderboard(data) {
 
   // Show leaderboard and pills after reveal completes
   showEl('lbCard');
-  renderLeaderboard(data);
+  renderLeaderboard(data, {animate: true});
   fadeIn('regionPills', 0.4);
 }
 
@@ -6614,7 +6634,8 @@ async function init() {
 }
 
 // ── Leaderboard ──────────────────────────────────────────────────────────────
-function renderLeaderboard(data) {
+function renderLeaderboard(data, opts) {
+  const animate = !!(opts && opts.animate);
   const teams   = data.leaderboard.teams || [];
   const visible = activeRegion === 'All' ? teams
     : activeRegion === 'Top10'          ? teams.slice(0, 10)
@@ -6627,7 +6648,7 @@ function renderLeaderboard(data) {
     return;
   }
 
-  visible.forEach(team => {
+  visible.forEach((team, _idx) => {
     const org   = team.org;
     const color = TEAM_COLORS[org] || '#888';
     const rStr  = (team.rating >= 0 ? '+' : '') + team.rating.toFixed(2);
@@ -6636,7 +6657,8 @@ function renderLeaderboard(data) {
     const isExp  = org === expandedOrg;
 
     const row = document.createElement('div');
-    row.className = 'lb-row' + (isSel ? ' selected' : '');
+    row.className = 'lb-row' + (isSel ? ' selected' : '') + (animate ? ' slide-in' : '');
+    if (animate) row.style.animationDelay = (_idx * 55) + 'ms';
     row.innerHTML = `
       <div class="lb-rank">${team.rank}</div>
       <div class="lb-team">

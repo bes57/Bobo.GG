@@ -1,5 +1,25 @@
 [
   {
+    "team_a": "FURIA",
+    "team_b": "LEVIAT\u00c1N",
+    "org_a": "FUR",
+    "org_b": "LEV",
+    "date": "2026-05-14",
+    "region": "Americas",
+    "event": "2026 Stage 1 \u2014 Americas",
+    "format": "bo3"
+  },
+  {
+    "team_a": "G2 Esports",
+    "team_b": "100 Thieves",
+    "org_a": "G2",
+    "org_b": "100T",
+    "date": "2026-05-14",
+    "region": "Americas",
+    "event": "2026 Stage 1 \u2014 Americas",
+    "format": "bo3"
+  },
+  {
     "team_a": "FUT Esports",
     "team_b": "Team Vitality",
     "org_a": "FUT",
