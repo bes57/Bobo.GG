@@ -6008,22 +6008,27 @@ async function fetchData() {
 }
 
 // ── Progress bar ─────────────────────────────────────────────────────────────
+// Persistent across polls — tracks every log line we've EVER rendered, so a
+// line that was trimmed out of the visible 4-slot window doesn't re-appear
+// as "new" on the next poll (which made the log look like it was looping).
+window._mhubSeenLogLines = window._mhubSeenLogLines || new Set();
 function updateProgress(prog) {
   if (!prog) return;
   document.getElementById('progressFill').style.width = (prog.pct || 0) + '%';
   document.getElementById('progressMsg').textContent  = prog.message || 'Checking…';
   document.getElementById('progressPct').textContent  = (prog.pct || 0) + '%';
-  // Append new log entries, keep only last 4 visible
+
   const logEl = document.getElementById('progressLog');
-  const seen  = new Set([...logEl.querySelectorAll('.plog-entry')].map(e => e.textContent));
   (prog.log || []).forEach(line => {
-    if (seen.has(line)) return;
+    if (window._mhubSeenLogLines.has(line)) return;
+    window._mhubSeenLogLines.add(line);
     const d = document.createElement('div');
     d.className = 'plog-entry new';
     d.textContent = line;
     logEl.appendChild(d);
   });
-  // Trim to last 4 entries
+  // Trim DOM to the last 4 entries (visible) — the seen-set keeps the
+  // earlier ones out of the "re-add" path even after they leave the DOM.
   const entries = logEl.querySelectorAll('.plog-entry');
   if (entries.length > 4) {
     for (let i = 0; i < entries.length - 4; i++) entries[i].remove();
