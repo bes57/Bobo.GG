@@ -228,7 +228,7 @@ def _try_strategy(strategy, url, timeout):
         return None, "", f"{type(e).__name__}: {e}"
 
 
-def _fetch(url, *, timeout=15):
+def _fetch(url, *, timeout=15, retries=None, backoff=None):
     """
     GET `url` and return BeautifulSoup or None.
 
@@ -236,7 +236,12 @@ def _fetch(url, *, timeout=15):
     at the first that returns real (non-Cloudflare, 2xx) HTML.  Every attempt's
     outcome is recorded in `_strategy_log` so the progress file shows which
     strategy worked (or that all failed and why).
+
+    `retries` / `backoff` are accepted but ignored — the strategy chain itself
+    is the retry mechanism.  Kept in the signature so existing callers don't
+    raise TypeError.
     """
+    del retries, backoff  # silence linters; intentionally unused
     strategies = []
     if _CFFI_AVAILABLE:
         strategies += ["curl_cffi:chrome131", "curl_cffi:chrome120", "curl_cffi:chrome"]
