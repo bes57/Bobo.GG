@@ -20,12 +20,54 @@ OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "headshots.json")
 
 # All VCT franchised-era events (2023-current), most-recent first.
 # League events list each region separately; international events use {"International": url}.
+#
+# Each entry can optionally include "start"/"end" YYYY-MM-DD strings.  The live-data
+# refresh pipeline (scrapers/RefreshLiveData.py) treats an event as "live" when today
+# is between (start - 7 days) and (end + 3 days), and scrapes completed + upcoming
+# matches for every live event automatically.  To onboard a brand-new event, add one
+# entry below with the correct VLR IDs and dates; no other code changes are needed.
 ALL_EVENTS = [
     # ── 2026 ──────────────────────────────────────────────────────────
+    {
+        "id": "2026_champions",
+        "label": "2026 Champions",
+        "year": 2026,
+        "start": "2026-09-24",
+        "end":   "2026-10-18",
+        "regions": {
+            # Fill VLR URL when the event is posted on VLR. RefreshLiveData
+            # will skip entries whose region URL is empty.
+            "International": "",
+        },
+    },
+    {
+        "id": "2026_stage2",
+        "label": "2026 Stage 2",
+        "year": 2026,
+        "start": "2026-07-15",
+        "end":   "2026-09-06",
+        "regions": {
+            "Americas": "",
+            "EMEA":     "",
+            "Pacific":  "",
+        },
+    },
+    {
+        "id": "2026_masters_london",
+        "label": "2026 Masters London",
+        "year": 2026,
+        "start": "2026-06-05",
+        "end":   "2026-06-21",
+        "regions": {
+            "International": "",
+        },
+    },
     {
         "id": "2026_stage1",
         "label": "2026 Stage 1",
         "year": 2026,
+        "start": "2026-04-01",
+        "end":   "2026-05-25",
         "regions": {
             "EMEA":     "https://www.vlr.gg/event/stats/2863/vct-2026-emea-stage-1",
             "Americas": "https://www.vlr.gg/event/stats/2860/vct-2026-americas-stage-1",
@@ -36,6 +78,8 @@ ALL_EVENTS = [
         "id": "2026_masters_santiago",
         "label": "2026 Masters Santiago",
         "year": 2026,
+        "start": "2026-02-28",
+        "end":   "2026-03-15",
         "regions": {
             "International": "https://www.vlr.gg/event/stats/2760/valorant-masters-santiago-2026",
         },
@@ -44,6 +88,8 @@ ALL_EVENTS = [
         "id": "2026_kickoff",
         "label": "2026 Kickoff",
         "year": 2026,
+        "start": "2026-01-15",
+        "end":   "2026-02-16",
         "regions": {
             "Americas": "https://www.vlr.gg/event/stats/2682/vct-2026-americas-kickoff",
             "EMEA":     "https://www.vlr.gg/event/stats/2684/vct-2026-emea-kickoff",
@@ -196,6 +242,60 @@ ALL_EVENTS = [
         },
     },
 ]
+
+
+def _parse_vlr_stats_url(url):
+    """Extract (vlr_id, slug) from a VLR stats URL — returns (None, None) if blank."""
+    import re as _re
+    if not url:
+        return None, None
+    m = _re.search(r"/event/(?:stats|matches)/(\d+)/([^/?#]+)", url)
+    if not m:
+        return None, None
+    return m.group(1), m.group(2)
+
+
+def live_events_today(today=None, lead_days=7, trail_days=3):
+    """
+    Return events whose date window contains today (with `lead_days` of pre-roll
+    and `trail_days` of post-roll), OR the single most-recent event by end date
+    if nothing is currently within window (so the pipeline always has something
+    to monitor between official splits).
+
+    Used by scrapers/RefreshLiveData.py to drive dynamic scraping.
+    """
+    import datetime as _dt
+    if today is None:
+        today = _dt.date.today()
+    elif isinstance(today, str):
+        today = _dt.date.fromisoformat(today)
+
+    dated = []
+    for ev in ALL_EVENTS:
+        s = ev.get("start"); e = ev.get("end")
+        if not (s and e):
+            continue
+        try:
+            sd = _dt.date.fromisoformat(s)
+            ed = _dt.date.fromisoformat(e)
+        except ValueError:
+            continue
+        dated.append((sd, ed, ev))
+
+    live = [ev for sd, ed, ev in dated
+            if (sd - _dt.timedelta(days=lead_days)) <= today
+            <= (ed + _dt.timedelta(days=trail_days))]
+
+    if live:
+        return live
+
+    # Fallback: most recent past event so upcoming-match scraping still has a
+    # surface to listen on (handy in the gap between splits).
+    past = [(sd, ed, ev) for sd, ed, ev in dated if ed <= today]
+    if past:
+        past.sort(key=lambda t: t[1], reverse=True)
+        return [past[0][2]]
+    return []
 
 
 def scrape_profile_urls(url):

@@ -1,32 +1,12 @@
 [
   {
-    "team_a": "LOUD",
-    "team_b": "LEVIAT\u00c1N",
-    "org_a": "LOUD",
-    "org_b": "LEV",
-    "date": "2026-05-10",
-    "region": "Americas",
-    "event": "Stage 1 \u2014 Americas",
-    "format": "bo3"
-  },
-  {
-    "team_a": "Sentinels",
-    "team_b": "NRG",
-    "org_a": "SEN",
-    "org_b": "NRG",
-    "date": "2026-05-10",
-    "region": "Americas",
-    "event": "Stage 1 \u2014 Americas",
-    "format": "bo3"
-  },
-  {
     "team_a": "FUT Esports",
     "team_b": "Team Vitality",
     "org_a": "FUT",
     "org_b": "VIT",
     "date": "2026-05-15",
     "region": "EMEA",
-    "event": "Stage 1 \u2014 EMEA",
+    "event": "2026 Stage 1 \u2014 EMEA",
     "format": "bo3"
   },
   {
@@ -36,7 +16,7 @@
     "org_b": "EF",
     "date": "2026-05-15",
     "region": "EMEA",
-    "event": "Stage 1 \u2014 EMEA",
+    "event": "2026 Stage 1 \u2014 EMEA",
     "format": "bo3"
   },
   {
@@ -46,7 +26,7 @@
     "org_b": "FS",
     "date": "2026-05-15",
     "region": "Pacific",
-    "event": "Stage 1 \u2014 Pacific",
+    "event": "2026 Stage 1 \u2014 Pacific",
     "format": "bo3"
   },
   {
@@ -56,7 +36,7 @@
     "org_b": "PRX",
     "date": "2026-05-15",
     "region": "Pacific",
-    "event": "Stage 1 \u2014 Pacific",
+    "event": "2026 Stage 1 \u2014 Pacific",
     "format": "bo3"
   }
 ]

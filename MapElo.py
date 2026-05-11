@@ -4420,6 +4420,21 @@ _mhub_cache_lock   = _th.Lock()
 _mhub_build_running = False
 _MHUB_TTL          = 1800  # 30 min
 _MHUB_PROGRESS_FILE = "/tmp/mhub_refresh_progress.json"
+_MHUB_STDERR_FILE   = "/tmp/mhub_refresh_stderr.log"
+
+
+def _live_event_ids_by_date():
+    """Live event CSV ids, most-recent end-date first.  Used for any place that
+    needs to know which event(s) are currently active (live map stats, roster
+    lookup, current pool detection) without hardcoding event ids."""
+    from MoreTestingMaybeFiles import live_events_today as _lt
+    try:
+        evs = _lt()
+    except Exception:
+        return []
+    def _end(ev):
+        return ev.get("end") or ev.get("start") or ""
+    return [ev["id"] for ev in sorted(evs, key=_end, reverse=True)]
 
 _MAPS_DIR       = os.path.join(ROOT, "data", "maps")
 _MATCH_DATES_PATH = os.path.join(ROOT, "data", "match_dates.json")
@@ -4548,19 +4563,32 @@ def _build_computed_pools():
 
 def _build_live_map_stats(beta=0.3237, min_games=2, shrink_prior=4):
     """
-    Build per-team, per-map Stage-1 win rates from the most recent event's
-    match data.  Returns {org: {map: {w, l, win_pct, rating}}} where
-    `rating` is a Massey-scale estimate (logit(blended_win_pct) / beta),
-    shrunk toward 0.5 for small samples.
+    Build per-team, per-map win rates from the most recent live event(s).
+    Returns {org: {map: {w, l, win_pct, rating}}} where `rating` is a
+    Massey-scale estimate (logit(blended_win_pct) / beta), shrunk toward 0.5
+    for small samples.
+
+    Live events are resolved dynamically from ALL_EVENTS via
+    _live_event_ids_by_date(), so when Masters London / Stage 2 / Champions
+    start, this picks them up with no code change.
     """
     import math as _m
-    results_path  = os.path.join(ROOT, "data", "match_results.csv")
-    stage1_path   = os.path.join(ROOT, "data", "maps", "2026_stage1.csv")
-    if not os.path.exists(results_path) or not os.path.exists(stage1_path):
+    results_path = os.path.join(ROOT, "data", "match_results.csv")
+    if not os.path.exists(results_path):
+        return {}
+    live_csv_paths = []
+    for eid in _live_event_ids_by_date():
+        p = os.path.join(ROOT, "data", "maps", f"{eid}.csv")
+        if os.path.exists(p):
+            live_csv_paths.append(p)
+    if not live_csv_paths:
         return {}
     try:
         mr = pd.read_csv(results_path)
-        s1 = pd.read_csv(stage1_path, usecols=lambda c: c in ("MatchID","MapNum","MapName","Org"))
+        s1 = pd.concat([
+            pd.read_csv(p, usecols=lambda c: c in ("MatchID","MapNum","MapName","Org"))
+            for p in live_csv_paths
+        ], ignore_index=True)
         mr_maps = mr[mr["MapNum"].astype(str) != "all"].copy()
         mr_maps["MapNum"] = mr_maps["MapNum"].astype(int)
         s1["MapNum"] = s1["MapNum"].astype(int)
@@ -4711,7 +4739,13 @@ def _mhub_load():
     except Exception:
         pass
     _player_frames = []
-    for _eid in ("2026_stage1", "2026_masters_santiago", "2026_kickoff"):
+    # Roster lookup: walk every live event by recency, then fall back to all
+    # 2026 events on disk so we still get rosters even between splits.
+    _live_ids   = _live_event_ids_by_date()
+    _fallback_2026 = ["2026_stage2", "2026_masters_london",
+                      "2026_stage1", "2026_masters_santiago", "2026_kickoff"]
+    _roster_ids = list(dict.fromkeys(_live_ids + _fallback_2026))
+    for _eid in _roster_ids:
         _ep = os.path.join(ROOT, 'data', 'maps', f'{_eid}.csv')
         if os.path.exists(_ep):
             try:
@@ -4860,9 +4894,15 @@ def _mhub_load():
     veto = get_veto_model()
     computed_pools   = _build_computed_pools()
     live_map_stats   = _build_live_map_stats()
-    # Derive the live current pool — always the most recent event regardless of snap_key
+    # Derive the live current pool — walk live events by recency, then fall back
+    # to the standard 2026 ladder if nothing live has enough data yet.
     _live_pool = None
-    for _eid in ("2026_stage1", "2026_masters_santiago", "2026_kickoff"):
+    _pool_candidates = list(dict.fromkeys(
+        _live_event_ids_by_date() +
+        ["2026_stage2", "2026_masters_london",
+         "2026_stage1", "2026_masters_santiago", "2026_kickoff"]
+    ))
+    for _eid in _pool_candidates:
         _recs = _load_event_map_records([_eid])
         _p = _detect_pool(_recs)
         if len(_p) >= 7:
@@ -4915,8 +4955,31 @@ def _mhub_scrape_progress():
     return {"phase": "init", "pct": 3, "message": "Initializing…"}
 
 
+def _mhub_write_progress_error(message, detail=""):
+    """Write a synthetic 'error' progress record so the UI can surface what broke
+    when the subprocess itself never gets to write its own progress."""
+    try:
+        payload = {
+            "phase":   "error",
+            "pct":     100,
+            "message": message,
+            "log":     [message] + ([detail] if detail else []),
+            "errors":  [detail] if detail else [],
+            "ts":      _time_mod.time(),
+        }
+        with open(_MHUB_PROGRESS_FILE, "w") as f:
+            json.dump(payload, f)
+    except Exception as e:
+        print(f"[mhub] could not write progress error: {e}")
+
+
 def _mhub_trigger_build():
-    """Kick off the full RefreshLiveData pipeline (once; ignores concurrent calls)."""
+    """Kick off the full RefreshLiveData pipeline (once; ignores concurrent calls).
+
+    Uses sys.executable (not the string "python3") so it works on hosts where
+    python3 isn't on PATH (e.g. Render's runtime), captures stdout/stderr into
+    a debug log, and surfaces non-zero exits into the progress file so the UI
+    shows what went wrong instead of stalling on 'building'."""
     global _mhub_build_running
     with _mhub_cache_lock:
         if _mhub_build_running:
@@ -4927,12 +4990,39 @@ def _mhub_trigger_build():
         global _mhub_build_running
         try:
             import subprocess as _sp
-            _sp.run(
-                ["python3", os.path.join(ROOT, "scrapers", "RefreshLiveData.py")],
-                cwd=ROOT,
-            )
+            import sys as _sys
+            script = os.path.join(ROOT, "scrapers", "RefreshLiveData.py")
+            if not os.path.exists(script):
+                _mhub_write_progress_error("RefreshLiveData.py not found",
+                                           f"missing at {script}")
+                return
+            try:
+                with open(_MHUB_STDERR_FILE, "w") as log:
+                    cp = _sp.run(
+                        [_sys.executable, script],
+                        cwd=ROOT,
+                        stdout=log, stderr=_sp.STDOUT,
+                        start_new_session=True,  # detach so worker recycling doesn't kill it
+                        timeout=1800,            # 30-min hard ceiling
+                    )
+                if cp.returncode != 0:
+                    tail = ""
+                    try:
+                        with open(_MHUB_STDERR_FILE) as f:
+                            tail = f.read()[-600:]
+                    except Exception:
+                        pass
+                    _mhub_write_progress_error(
+                        f"RefreshLiveData exited {cp.returncode}", tail)
+            except FileNotFoundError as e:
+                _mhub_write_progress_error("Python interpreter not found",
+                                           f"{_sys.executable}: {e}")
+            except _sp.TimeoutExpired:
+                _mhub_write_progress_error("RefreshLiveData timed out after 30m",
+                                           "consider running scrapers offline and committing data")
         except Exception as e:
             print(f"[mhub] RefreshLiveData failed: {e}")
+            _mhub_write_progress_error("RefreshLiveData crashed in launcher", str(e))
         finally:
             _mhub_build_running = False
             with _mhub_cache_lock:
@@ -7002,6 +7092,36 @@ def mapelo_modern():
 def mapelo_modern_data():
     data = _mhub_get()
     return Response(json.dumps(data), mimetype='application/json')
+
+@mapelo_bp.route('/modern/progress')
+def mapelo_modern_progress():
+    """Surface the live refresh progress + stderr tail so operators can diagnose
+    Render scraping problems without shell access."""
+    payload = {"progress": None, "stderr_tail": ""}
+    try:
+        if os.path.exists(_MHUB_PROGRESS_FILE):
+            with open(_MHUB_PROGRESS_FILE) as f:
+                payload["progress"] = json.load(f)
+    except Exception as e:
+        payload["progress_error"] = str(e)
+    try:
+        if os.path.exists(_MHUB_STDERR_FILE):
+            with open(_MHUB_STDERR_FILE) as f:
+                payload["stderr_tail"] = f.read()[-4000:]
+    except Exception as e:
+        payload["stderr_error"] = str(e)
+    payload["build_running"] = _mhub_build_running
+    return Response(json.dumps(payload, indent=2), mimetype='application/json')
+
+
+@mapelo_bp.route('/modern/refresh')
+def mapelo_modern_refresh():
+    """Force-trigger a refresh.  Returns immediately; poll /modern/progress."""
+    with _mhub_cache_lock:
+        _mhub_cache["ts"] = 0.0
+    _mhub_trigger_build()
+    return Response(json.dumps({"triggered": True}), mimetype='application/json')
+
 
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
 def mapelo_map_matches(org, map_name):
