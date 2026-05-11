@@ -228,7 +228,15 @@ def _try_strategy(strategy, url, timeout):
         return None, "", f"{type(e).__name__}: {e}"
 
 
-def _fetch(url, *, timeout=15, retries=None, backoff=None):
+# Per-process flag — once we've seen Cloudflare block all strategies on a URL,
+# subsequent fetches skip the slow cloudscraper JS-challenge solver (which can
+# burn 20-30s on Render before timing out), going straight to curl_cffi +
+# requests fallback.  This is what turns a 7+ minute hung scrape into a
+# ~30 second fast-fail when prod's datacenter IP is being blocked.
+_cf_globally_blocked = False
+
+
+def _fetch(url, *, timeout=8, retries=None, backoff=None):
     """
     GET `url` and return BeautifulSoup or None.
 
@@ -237,19 +245,29 @@ def _fetch(url, *, timeout=15, retries=None, backoff=None):
     outcome is recorded in `_strategy_log` so the progress file shows which
     strategy worked (or that all failed and why).
 
+    Per-strategy timeout dropped to 8s (was 15s).  On Render's datacenter IP
+    when Cloudflare is actively blocking, a 15s × 5-strategy wall meant each
+    URL hung the script for over a minute before failing.
+
     `retries` / `backoff` are accepted but ignored — the strategy chain itself
     is the retry mechanism.  Kept in the signature so existing callers don't
     raise TypeError.
     """
-    del retries, backoff  # silence linters; intentionally unused
+    del retries, backoff
+    global _cf_globally_blocked
+
     strategies = []
     if _CFFI_AVAILABLE:
         strategies += ["curl_cffi:chrome131", "curl_cffi:chrome120", "curl_cffi:chrome"]
-    if _CS_AVAILABLE:
+    # cloudscraper executes the CF JS challenge and can take 20+s.  Once we've
+    # been globally blocked at least once, skip it entirely — it's not going to
+    # save us and just slows the whole pipeline down.
+    if _CS_AVAILABLE and not _cf_globally_blocked:
         strategies.append("cloudscraper")
     strategies.append("requests")
 
     last_err = None
+    cf_blocked_this_url = True  # flip False if any strategy returns real HTML
     for strat in strategies:
         status, text, err = _try_strategy(strat, url, timeout)
         if err is not None:
@@ -265,8 +283,12 @@ def _fetch(url, *, timeout=15, retries=None, backoff=None):
             last_err = f"{strat} → Cloudflare challenge ({len(text)}B)"
             continue
         # Success.
+        cf_blocked_this_url = False
         _record_strategy(strat, True, status=status, length=len(text))
         return BeautifulSoup(text, "html.parser")
+
+    if cf_blocked_this_url:
+        _cf_globally_blocked = True
 
     if last_err:
         _error_entries.append(f"{last_err} on {url}")
