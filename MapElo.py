@@ -5080,14 +5080,35 @@ def _mhub_trigger_build(force=False):
 
 
 def _mhub_get():
-    """Return cached modern-hub data; short TTL when building for live progress."""
+    """Return cached modern-hub data; short TTL when building for live progress.
+
+    Cache is also invalidated whenever any source file (rating_timeline.json,
+    upcoming_matches.json) has a newer mtime than the cache timestamp — that's
+    how a scrape completed by ONE gunicorn worker becomes visible to all the
+    OTHERS without each needing to re-trigger.  Without this, a worker that
+    cached a 'ready' payload before the scrape completed would keep serving
+    stale data for up to 30 min."""
     now = _time_mod.time()
     with _mhub_cache_lock:
         cached   = _mhub_cache["data"]
+        cache_ts = _mhub_cache["ts"]
+        # Cross-worker invalidation: if any source file was touched after we
+        # last cached, drop the cache and re-read.
+        if cached is not None:
+            try:
+                for p in (_RATING_TIMELINE_PATH,
+                          os.path.join(ROOT, "data", "upcoming_matches.json"),
+                          _MAP_RATINGS_PATH):
+                    if os.path.exists(p) and os.path.getmtime(p) > cache_ts:
+                        cached = None
+                        _mhub_cache["data"] = None
+                        break
+            except OSError:
+                pass
         building = bool(cached and cached.get("status") == "building")
         # 3s TTL while building (live progress), 5s when idle-but-running, else 30min
         ttl = 3 if building else (5 if _mhub_build_running else _MHUB_TTL)
-        if cached is not None and (now - _mhub_cache["ts"]) < ttl:
+        if cached is not None and (now - cache_ts) < ttl:
             return cached
 
     data = _mhub_load()
