@@ -4,4 +4,5 @@ beautifulsoup4
 pandas
 gunicorn
 scipy
-curl_cffi
+curl_cffi>=0.7.0
+cloudscraper

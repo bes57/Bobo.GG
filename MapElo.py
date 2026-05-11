@@ -7171,6 +7171,69 @@ def mapelo_modern_refresh():
     return Response(json.dumps({"triggered": True}), mimetype='application/json')
 
 
+@mapelo_bp.route('/modern/debug-fetch')
+def mapelo_modern_debug_fetch():
+    """
+    Synchronously fetch one VLR URL and return everything we know about the
+    response — status, length, Cloudflare detection, parsed match-item count,
+    and which bypass strategies are available + which succeeded.  Lets us
+    diagnose Cloudflare/Render issues without waiting for a full scrape.
+
+    Usage:  /mapelo/modern/debug-fetch
+           ?url=https://www.vlr.gg/event/matches/2863/vct-2026-emea-stage-1/
+    """
+    from flask import request as _req
+    url = _req.args.get('url',
+                        'https://www.vlr.gg/event/matches/2863/vct-2026-emea-stage-1/')
+    try:
+        # Import lazily so this endpoint stays usable even if scrapers fail
+        sys.path.insert(0, ROOT)
+        from scrapers.RefreshLiveData import (
+            _CFFI_AVAILABLE, _CFFI_VERSION, _curl_cffi_err,
+            _CS_AVAILABLE, _cloudscraper_err,
+            _try_strategy, _looks_like_cloudflare,
+        )
+    except Exception as e:
+        return Response(json.dumps({
+            "error": f"import failed: {type(e).__name__}: {e}"
+        }), mimetype='application/json')
+
+    out = {
+        "url": url,
+        "available": {
+            "curl_cffi": _CFFI_AVAILABLE,
+            "curl_cffi_version": _CFFI_VERSION,
+            "curl_cffi_err": _curl_cffi_err,
+            "cloudscraper": _CS_AVAILABLE,
+            "cloudscraper_err": _cloudscraper_err,
+        },
+        "strategies": [],
+    }
+    strats = []
+    if _CFFI_AVAILABLE:
+        strats += ["curl_cffi:chrome131", "curl_cffi:chrome120", "curl_cffi:chrome"]
+    if _CS_AVAILABLE:
+        strats.append("cloudscraper")
+    strats.append("requests")
+
+    for s in strats:
+        status, text, err = _try_strategy(s, url, 15)
+        entry = {
+            "strategy": s,
+            "status":   status,
+            "len":      len(text) if text else 0,
+            "cloudflare_detected": _looks_like_cloudflare(text),
+            "match_items": text.count("wf-module-item match-item") if text else 0,
+            "err":      err,
+            "head":     (text or "")[:400],
+        }
+        out["strategies"].append(entry)
+        # If we got real HTML, stop — we have what we need.
+        if status and 200 <= status < 300 and not entry["cloudflare_detected"]:
+            break
+    return Response(json.dumps(out, indent=2), mimetype='application/json')
+
+
 @mapelo_bp.route('/map-matches/<org>/<map_name>')
 def mapelo_map_matches(org, map_name):
     from flask import request as _req

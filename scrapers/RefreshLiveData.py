@@ -24,18 +24,57 @@ import os, sys, json, time, re, subprocess, datetime, traceback
 import requests
 from bs4 import BeautifulSoup
 
-# curl_cffi impersonates Chrome's TLS / JA3 fingerprint at the socket level,
-# which is what bypasses Cloudflare's bot-detection on most datacenter IPs.
-# Standard `requests` uses Python's stdlib ssl module — distinguishable JA3 —
-# and gets blocked from Render/Vercel/AWS.  We try curl_cffi first, then fall
-# back to requests so the script still runs in environments where curl_cffi
-# isn't installed (the repo ships it in requirements.txt so this is rare).
+# Cloudflare on datacenter IPs (Render/Vercel/AWS) flags plain `requests`
+# because Python's stdlib ssl has a distinctive JA3 fingerprint.  We try
+# strategies in order of resilience and log which one finally succeeded
+# so the progress file shows what's actually working on each host.
+#
+# Strategy 1: curl_cffi with chrome131 impersonation (most recent JA3,
+#             usually enough for VLR).
+# Strategy 2: curl_cffi with chrome120 (older JA3, sometimes evades when
+#             newer fingerprints are pattern-matched).
+# Strategy 3: cloudscraper — has a built-in solver for Cloudflare's
+#             classic JS challenge, in case curl_cffi gets a v2 prompt.
+# Strategy 4: plain requests — last-resort.
+#
+# Each module is imported in its own try/except so a missing optional
+# dependency never breaks the others.
+_curl_cffi_err = None
+_cloudscraper_err = None
 try:
     from curl_cffi import requests as cffi_requests  # type: ignore
     _CFFI_AVAILABLE = True
-except Exception:
+    try:
+        import curl_cffi as _cc_mod  # type: ignore
+        _CFFI_VERSION = getattr(_cc_mod, "__version__", "?")
+    except Exception:
+        _CFFI_VERSION = "?"
+except Exception as _e:
     cffi_requests = None
     _CFFI_AVAILABLE = False
+    _CFFI_VERSION = "n/a"
+    _curl_cffi_err = f"{type(_e).__name__}: {_e}"
+
+try:
+    import cloudscraper  # type: ignore
+    _CS_AVAILABLE = True
+except Exception as _e:
+    cloudscraper = None
+    _CS_AVAILABLE = False
+    _cloudscraper_err = f"{type(_e).__name__}: {_e}"
+
+_cloudscraper_session = None  # lazy-init
+
+
+def _get_cloudscraper():
+    global _cloudscraper_session
+    if not _CS_AVAILABLE:
+        return None
+    if _cloudscraper_session is None:
+        _cloudscraper_session = cloudscraper.create_scraper(
+            browser={"browser": "chrome", "platform": "darwin", "mobile": False}
+        )
+    return _cloudscraper_session
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
@@ -108,6 +147,13 @@ def _write(phase, pct, message, extra_log=None, error=None):
         _log_entries.extend(extra_log if isinstance(extra_log, list) else [extra_log])
     if error:
         _error_entries.append(error)
+    # Summarize bypass strategy outcomes so the progress file shows which
+    # one actually worked on this host (critical for diagnosing Render).
+    succ_counts = {}
+    fail_counts = {}
+    for a in _strategy_log["attempts"]:
+        bucket = succ_counts if a["ok"] else fail_counts
+        bucket[a["strategy"]] = bucket.get(a["strategy"], 0) + 1
     data = {
         "phase":   phase,
         "pct":     pct,
@@ -115,6 +161,12 @@ def _write(phase, pct, message, extra_log=None, error=None):
         "log":     list(_log_entries[-30:]),
         "errors":  list(_error_entries[-10:]),
         "ts":      time.time(),
+        "fetch":   {
+            "success_by_strategy": succ_counts,
+            "fail_by_strategy":    fail_counts,
+            "first_success":       _strategy_log["first_success"],
+            "total_attempts":      len(_strategy_log["attempts"]),
+        },
     }
     try:
         with open(PROGRESS_FILE, "w") as f:
@@ -131,61 +183,89 @@ def _write(phase, pct, message, extra_log=None, error=None):
 
 # ── HTTP helper ───────────────────────────────────────────────────────────────
 
-def _do_get(url, timeout):
-    """Single GET attempt.  Tries curl_cffi (Chrome TLS impersonation) first,
-    falls back to plain requests if it isn't available or fails to import.
-    Returns a (status_code, text) tuple, raises on transport errors."""
+_strategy_log = {"available": None, "first_success": None, "attempts": []}
+
+
+def _record_strategy(used, success, status=None, length=None, cf=False, err=None):
+    _strategy_log["attempts"].append({
+        "strategy": used, "ok": success,
+        "status": status, "len": length, "cf": cf, "err": err,
+    })
+    if success and _strategy_log["first_success"] is None:
+        _strategy_log["first_success"] = used
+
+
+def _looks_like_cloudflare(text):
+    return bool(text) and any(fp in text for fp in _CLOUDFLARE_FINGERPRINTS) and len(text) < 60000
+
+
+def _try_strategy(strategy, url, timeout):
+    """Returns (status, text, err).  Raises nothing — captures all failures."""
+    try:
+        if strategy == "curl_cffi:chrome131":
+            r = cffi_requests.get(url, headers=HEADERS, timeout=timeout,
+                                  impersonate="chrome131", allow_redirects=True)
+            return r.status_code, r.text or "", None
+        if strategy == "curl_cffi:chrome120":
+            r = cffi_requests.get(url, headers=HEADERS, timeout=timeout,
+                                  impersonate="chrome120", allow_redirects=True)
+            return r.status_code, r.text or "", None
+        if strategy == "curl_cffi:chrome":
+            r = cffi_requests.get(url, headers=HEADERS, timeout=timeout,
+                                  impersonate="chrome", allow_redirects=True)
+            return r.status_code, r.text or "", None
+        if strategy == "cloudscraper":
+            sess = _get_cloudscraper()
+            if sess is None:
+                return None, "", "cloudscraper not available"
+            r = sess.get(url, timeout=timeout)
+            return r.status_code, r.text or "", None
+        if strategy == "requests":
+            r = requests.get(url, headers=HEADERS, timeout=timeout, allow_redirects=True)
+            return r.status_code, r.text or "", None
+        return None, "", f"unknown strategy {strategy}"
+    except Exception as e:
+        return None, "", f"{type(e).__name__}: {e}"
+
+
+def _fetch(url, *, timeout=15):
+    """
+    GET `url` and return BeautifulSoup or None.
+
+    Tries multiple bypass strategies in order of expected resilience, stopping
+    at the first that returns real (non-Cloudflare, 2xx) HTML.  Every attempt's
+    outcome is recorded in `_strategy_log` so the progress file shows which
+    strategy worked (or that all failed and why).
+    """
+    strategies = []
     if _CFFI_AVAILABLE:
-        # impersonate='chrome' picks the latest supported Chrome JA3.
-        r = cffi_requests.get(url, headers=HEADERS, timeout=timeout,
-                              impersonate="chrome", allow_redirects=True)
-        return r.status_code, r.text
-    r = requests.get(url, headers=HEADERS, timeout=timeout)
-    return r.status_code, r.text
+        strategies += ["curl_cffi:chrome131", "curl_cffi:chrome120", "curl_cffi:chrome"]
+    if _CS_AVAILABLE:
+        strategies.append("cloudscraper")
+    strategies.append("requests")
 
-
-def _fetch(url, *, timeout=15, retries=2, backoff=1.2):
-    """
-    GET `url` with bounded retries, return BeautifulSoup or None.  Uses
-    curl_cffi's Chrome-TLS impersonation to bypass Cloudflare bot detection
-    on datacenter IPs (Render/AWS/Vercel); falls back to plain `requests`
-    if curl_cffi isn't installed.  Cloudflare challenge pages are detected
-    and surfaced as errors so the operator can see why a scrape returned
-    zero matches.
-
-    Retries are kept short on purpose — a persistent block should fail fast
-    and surface in the progress file, not stall the whole pipeline.
-    """
     last_err = None
-    cloudflare_seen = False
-    for attempt in range(1, retries + 1):
-        try:
-            status, text = _do_get(url, timeout)
-            if status in (403, 429) or status >= 500:
-                last_err = f"HTTP {status} on {url}"
-                if attempt < retries:
-                    time.sleep(backoff * attempt)
-                continue
-            text = text or ""
-            if any(fp in text for fp in _CLOUDFLARE_FINGERPRINTS) and len(text) < 60000:
-                last_err = f"Cloudflare challenge on {url}"
-                cloudflare_seen = True
-                # Cloudflare won't relent without a new identity.  If we
-                # have curl_cffi we already tried JA3 impersonation, so
-                # fail fast.  If we're on plain requests, one retry buys
-                # nothing either.
-                break
-            return BeautifulSoup(text, "html.parser")
-        except Exception as e:
-            last_err = f"{type(e).__name__}: {e} on {url}"
-            if attempt < retries:
-                time.sleep(backoff * attempt)
+    for strat in strategies:
+        status, text, err = _try_strategy(strat, url, timeout)
+        if err is not None:
+            _record_strategy(strat, False, err=err)
+            last_err = f"{strat} → {err}"
+            continue
+        if status in (403, 429) or (status is not None and status >= 500):
+            _record_strategy(strat, False, status=status, length=len(text))
+            last_err = f"{strat} → HTTP {status}"
+            continue
+        if _looks_like_cloudflare(text):
+            _record_strategy(strat, False, status=status, length=len(text), cf=True)
+            last_err = f"{strat} → Cloudflare challenge ({len(text)}B)"
+            continue
+        # Success.
+        _record_strategy(strat, True, status=status, length=len(text))
+        return BeautifulSoup(text, "html.parser")
+
     if last_err:
-        _error_entries.append(last_err)
-        if cloudflare_seen and not _CFFI_AVAILABLE:
-            _error_entries.append("Hint: install curl_cffi (in requirements.txt) "
-                                  "for Chrome-TLS impersonation that bypasses CF.")
-        print(f"  fetch failed: {last_err}", flush=True)
+        _error_entries.append(f"{last_err} on {url}")
+        print(f"  fetch failed (all strategies): {last_err} for {url}", flush=True)
     return None
 
 
@@ -450,8 +530,18 @@ def main():
     import pandas as pd
 
     today_str = datetime.date.today().isoformat()
+    avail_msg = []
+    if _CFFI_AVAILABLE:
+        avail_msg.append(f"curl_cffi {_CFFI_VERSION}")
+    else:
+        avail_msg.append(f"curl_cffi ✗ ({_curl_cffi_err})")
+    if _CS_AVAILABLE:
+        avail_msg.append("cloudscraper ✓")
+    else:
+        avail_msg.append(f"cloudscraper ✗ ({_cloudscraper_err})")
     _write("checking", 2, f"Checking VCT data — today is {today_str}…",
-           [f"Today: {today_str}"])
+           [f"Today: {today_str}",
+            f"Bypass: {' | '.join(avail_msg)}"])
 
     targets = _resolve_live_targets()
     if not targets:
