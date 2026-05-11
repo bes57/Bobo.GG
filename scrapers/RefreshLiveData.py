@@ -24,6 +24,19 @@ import os, sys, json, time, re, subprocess, datetime, traceback
 import requests
 from bs4 import BeautifulSoup
 
+# curl_cffi impersonates Chrome's TLS / JA3 fingerprint at the socket level,
+# which is what bypasses Cloudflare's bot-detection on most datacenter IPs.
+# Standard `requests` uses Python's stdlib ssl module — distinguishable JA3 —
+# and gets blocked from Render/Vercel/AWS.  We try curl_cffi first, then fall
+# back to requests so the script still runs in environments where curl_cffi
+# isn't installed (the repo ships it in requirements.txt so this is rare).
+try:
+    from curl_cffi import requests as cffi_requests  # type: ignore
+    _CFFI_AVAILABLE = True
+except Exception:
+    cffi_requests = None
+    _CFFI_AVAILABLE = False
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
@@ -118,29 +131,49 @@ def _write(phase, pct, message, extra_log=None, error=None):
 
 # ── HTTP helper ───────────────────────────────────────────────────────────────
 
+def _do_get(url, timeout):
+    """Single GET attempt.  Tries curl_cffi (Chrome TLS impersonation) first,
+    falls back to plain requests if it isn't available or fails to import.
+    Returns a (status_code, text) tuple, raises on transport errors."""
+    if _CFFI_AVAILABLE:
+        # impersonate='chrome' picks the latest supported Chrome JA3.
+        r = cffi_requests.get(url, headers=HEADERS, timeout=timeout,
+                              impersonate="chrome", allow_redirects=True)
+        return r.status_code, r.text
+    r = requests.get(url, headers=HEADERS, timeout=timeout)
+    return r.status_code, r.text
+
+
 def _fetch(url, *, timeout=15, retries=2, backoff=1.2):
     """
-    GET `url` with bounded retries, return BeautifulSoup or None.  Cloudflare
-    challenge pages are detected and surfaced as errors so the operator can see
-    why a scrape returned zero matches.
+    GET `url` with bounded retries, return BeautifulSoup or None.  Uses
+    curl_cffi's Chrome-TLS impersonation to bypass Cloudflare bot detection
+    on datacenter IPs (Render/AWS/Vercel); falls back to plain `requests`
+    if curl_cffi isn't installed.  Cloudflare challenge pages are detected
+    and surfaced as errors so the operator can see why a scrape returned
+    zero matches.
 
-    Retries are kept short on purpose — a persistent block should fail fast and
-    surface in the progress file, not stall the whole pipeline for minutes.
+    Retries are kept short on purpose — a persistent block should fail fast
+    and surface in the progress file, not stall the whole pipeline.
     """
     last_err = None
+    cloudflare_seen = False
     for attempt in range(1, retries + 1):
         try:
-            r = requests.get(url, headers=HEADERS, timeout=timeout)
-            if r.status_code in (403, 429) or r.status_code >= 500:
-                last_err = f"HTTP {r.status_code} on {url}"
+            status, text = _do_get(url, timeout)
+            if status in (403, 429) or status >= 500:
+                last_err = f"HTTP {status} on {url}"
                 if attempt < retries:
                     time.sleep(backoff * attempt)
                 continue
-            text = r.text or ""
+            text = text or ""
             if any(fp in text for fp in _CLOUDFLARE_FINGERPRINTS) and len(text) < 60000:
                 last_err = f"Cloudflare challenge on {url}"
-                # Cloudflare won't relent on retry without a new identity, so
-                # fail fast instead of burning time on doomed re-fetches.
+                cloudflare_seen = True
+                # Cloudflare won't relent without a new identity.  If we
+                # have curl_cffi we already tried JA3 impersonation, so
+                # fail fast.  If we're on plain requests, one retry buys
+                # nothing either.
                 break
             return BeautifulSoup(text, "html.parser")
         except Exception as e:
@@ -149,6 +182,9 @@ def _fetch(url, *, timeout=15, retries=2, backoff=1.2):
                 time.sleep(backoff * attempt)
     if last_err:
         _error_entries.append(last_err)
+        if cloudflare_seen and not _CFFI_AVAILABLE:
+            _error_entries.append("Hint: install curl_cffi (in requirements.txt) "
+                                  "for Chrome-TLS impersonation that bypasses CF.")
         print(f"  fetch failed: {last_err}", flush=True)
     return None
 
