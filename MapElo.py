@@ -4418,7 +4418,9 @@ _MAP_RATINGS_PATH     = os.path.join(ROOT, "data", "map_ratings.json")
 _mhub_cache        = {"data": None, "ts": 0.0}
 _mhub_cache_lock   = _th.Lock()
 _mhub_build_running = False
+_mhub_last_trigger = 0.0
 _MHUB_TTL          = 1800  # 30 min
+_MHUB_TRIGGER_COOLDOWN = 120  # don't spawn a new RefreshLiveData more than once / 2 min per worker
 _MHUB_PROGRESS_FILE = "/tmp/mhub_refresh_progress.json"
 _MHUB_STDERR_FILE   = "/tmp/mhub_refresh_stderr.log"
 
@@ -4673,14 +4675,23 @@ def _mhub_load():
         result["chart"]["match_events"] = match_events
         if checkpoints:
             result["as_of_date"] = checkpoints[-1]["date"]
-            # Always trigger a refresh unless we checked VLR within the last 15 min
+            # Treat the most recent progress record as "fresh" if it landed in a
+            # terminal state (done OR error) within the last 15 min, OR if any
+            # state was written within the last 60 s (an in-flight scrape that
+            # we should NOT re-trigger).  This prevents the
+            # poll → trigger → fast-exit → invalidate → trigger again
+            # spiral that multi-worker gunicorn caused on Render.
             needs_check = True
             try:
                 if os.path.exists(_MHUB_PROGRESS_FILE):
                     with open(_MHUB_PROGRESS_FILE) as _pf:
                         _pd = json.load(_pf)
-                    if _pd.get("phase") == "done" and \
-                       (_time_mod.time() - _pd.get("ts", 0)) < 900:  # 15 min
+                    _phase = _pd.get("phase", "")
+                    _age   = _time_mod.time() - _pd.get("ts", 0)
+                    if _phase in ("done", "error") and _age < 900:
+                        needs_check = False
+                    elif _age < 60:
+                        # in-flight scrape; don't re-trigger but still show progress
                         needs_check = False
             except Exception:
                 pass
@@ -4973,18 +4984,49 @@ def _mhub_write_progress_error(message, detail=""):
         print(f"[mhub] could not write progress error: {e}")
 
 
-def _mhub_trigger_build():
-    """Kick off the full RefreshLiveData pipeline (once; ignores concurrent calls).
+def _mhub_recent_progress_age():
+    """Seconds since the on-disk progress file was last written; None if missing."""
+    try:
+        if os.path.exists(_MHUB_PROGRESS_FILE):
+            with open(_MHUB_PROGRESS_FILE) as f:
+                p = json.load(f)
+            ts = float(p.get("ts", 0) or 0)
+            if ts > 0:
+                return _time_mod.time() - ts
+    except Exception:
+        pass
+    return None
 
-    Uses sys.executable (not the string "python3") so it works on hosts where
-    python3 isn't on PATH (e.g. Render's runtime), captures stdout/stderr into
-    a debug log, and surfaces non-zero exits into the progress file so the UI
-    shows what went wrong instead of stalling on 'building'."""
-    global _mhub_build_running
+
+def _mhub_trigger_build(force=False):
+    """Kick off the full RefreshLiveData pipeline.
+
+    Throttled three ways so multi-worker gunicorn can't spiral:
+      1. In-process `_mhub_build_running` flag (single-worker protection).
+      2. Per-worker 2-min cooldown via `_mhub_last_trigger` (rapid-poll protection).
+      3. Cross-worker check of the on-disk progress file age — if another
+         worker wrote progress within the last 30s, skip.
+
+    Uses sys.executable (not "python3") so it works on hosts where python3
+    isn't on PATH (e.g. Render), captures stdout/stderr into a debug log,
+    and surfaces non-zero exits into the progress file so the UI shows what
+    went wrong instead of stalling on 'building'.
+
+    `force=True` is for the manual /modern/refresh endpoint only."""
+    global _mhub_build_running, _mhub_last_trigger
+    now = _time_mod.time()
     with _mhub_cache_lock:
         if _mhub_build_running:
             return
+        if not force and (now - _mhub_last_trigger) < _MHUB_TRIGGER_COOLDOWN:
+            return
+        if not force:
+            age = _mhub_recent_progress_age()
+            if age is not None and age < 30:
+                # Another worker is actively scraping; let it finish.
+                return
         _mhub_build_running = True
+        _mhub_last_trigger  = now
 
     def _run():
         global _mhub_build_running
@@ -5025,8 +5067,20 @@ def _mhub_trigger_build():
             _mhub_write_progress_error("RefreshLiveData crashed in launcher", str(e))
         finally:
             _mhub_build_running = False
-            with _mhub_cache_lock:
-                _mhub_cache["ts"] = 0.0   # force cache invalidation on next request
+            # Only invalidate the cache when the subprocess actually finished —
+            # if it bailed because another worker held the lock, we shouldn't
+            # invalidate (the OTHER worker is the one doing work and will write
+            # phase=done).  Cache invalidation here used to cause the rapid
+            # re-trigger spiral on Render's multi-worker gunicorn.
+            try:
+                age = _mhub_recent_progress_age()
+                with open(_MHUB_PROGRESS_FILE) as _pf:
+                    _pd = json.load(_pf)
+                if _pd.get("phase") in ("done", "error") and (age or 999) < 60:
+                    with _mhub_cache_lock:
+                        _mhub_cache["ts"] = 0.0
+            except Exception:
+                pass
 
     _th.Thread(target=_run, daemon=True).start()
 
@@ -7116,10 +7170,10 @@ def mapelo_modern_progress():
 
 @mapelo_bp.route('/modern/refresh')
 def mapelo_modern_refresh():
-    """Force-trigger a refresh.  Returns immediately; poll /modern/progress."""
+    """Force-trigger a refresh (bypasses cooldown).  Poll /modern/progress."""
     with _mhub_cache_lock:
         _mhub_cache["ts"] = 0.0
-    _mhub_trigger_build()
+    _mhub_trigger_build(force=True)
     return Response(json.dumps({"triggered": True}), mimetype='application/json')
 
 

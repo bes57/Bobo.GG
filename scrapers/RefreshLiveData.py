@@ -118,33 +118,35 @@ def _write(phase, pct, message, extra_log=None, error=None):
 
 # ── HTTP helper ───────────────────────────────────────────────────────────────
 
-def _fetch(url, *, timeout=20, retries=3, backoff=2.5):
+def _fetch(url, *, timeout=15, retries=2, backoff=1.2):
     """
-    GET `url` with retries, return BeautifulSoup or None.  Cloudflare challenge
-    pages are detected and surfaced as errors so the operator can see why a
-    scrape returned zero matches.
+    GET `url` with bounded retries, return BeautifulSoup or None.  Cloudflare
+    challenge pages are detected and surfaced as errors so the operator can see
+    why a scrape returned zero matches.
+
+    Retries are kept short on purpose — a persistent block should fail fast and
+    surface in the progress file, not stall the whole pipeline for minutes.
     """
     last_err = None
     for attempt in range(1, retries + 1):
         try:
             r = requests.get(url, headers=HEADERS, timeout=timeout)
-            if r.status_code == 403 or r.status_code == 429:
+            if r.status_code in (403, 429) or r.status_code >= 500:
                 last_err = f"HTTP {r.status_code} on {url}"
-                time.sleep(backoff * attempt)
-                continue
-            if r.status_code >= 500:
-                last_err = f"HTTP {r.status_code} on {url}"
-                time.sleep(backoff * attempt)
+                if attempt < retries:
+                    time.sleep(backoff * attempt)
                 continue
             text = r.text or ""
             if any(fp in text for fp in _CLOUDFLARE_FINGERPRINTS) and len(text) < 60000:
                 last_err = f"Cloudflare challenge on {url}"
-                time.sleep(backoff * attempt)
-                continue
+                # Cloudflare won't relent on retry without a new identity, so
+                # fail fast instead of burning time on doomed re-fetches.
+                break
             return BeautifulSoup(text, "html.parser")
         except Exception as e:
             last_err = f"{type(e).__name__}: {e} on {url}"
-            time.sleep(backoff * attempt)
+            if attempt < retries:
+                time.sleep(backoff * attempt)
     if last_err:
         _error_entries.append(last_err)
         print(f"  fetch failed: {last_err}", flush=True)
