@@ -6386,6 +6386,34 @@ async function revealChart(duration = 4000, startFromLeft = false) {
             oc.restore();
           }
         });
+
+        // Re-draw Chart.js's grid lines on top of the curtain so the
+        // axis grid stays visible throughout the reveal animation.
+        // Color/width match Chart.js config (rgba(0,0,0,.07), 1px).
+        oc.save();
+        oc.strokeStyle = 'rgba(0,0,0,0.07)';
+        oc.lineWidth   = 1;
+        // Horizontal grid lines at every Y tick
+        const _yTicks = myChart.scales.y.ticks || [];
+        _yTicks.forEach(_t => {
+          const _py = myChart.scales.y.getPixelForValue(_t.value);
+          if (_py < ca.top - 0.5 || _py > ca.bottom + 0.5) return;
+          oc.beginPath();
+          oc.moveTo(revX, _py);
+          oc.lineTo(ca.right, _py);
+          oc.stroke();
+        });
+        // Vertical grid lines at every X tick that falls inside the curtain
+        const _xTicks = myChart.scales.x.ticks || [];
+        _xTicks.forEach(_t => {
+          const _px = myChart.scales.x.getPixelForValue(_t.value);
+          if (_px < revX - 0.5 || _px > ca.right + 0.5) return;
+          oc.beginPath();
+          oc.moveTo(_px, ca.top);
+          oc.lineTo(_px, ca.bottom);
+          oc.stroke();
+        });
+        oc.restore();
       }
 
       // Glowing edge at the reveal boundary
