@@ -4424,17 +4424,6 @@ _MHUB_TRIGGER_COOLDOWN = 120  # don't spawn a new RefreshLiveData more than once
 _MHUB_PROGRESS_FILE = "/tmp/mhub_refresh_progress.json"
 _MHUB_STDERR_FILE   = "/tmp/mhub_refresh_stderr.log"
 
-# On Render the in-process scrape is unreliable (datacenter IP often fails
-# Cloudflare's bot check, ephemeral filesystem doesn't survive deploys, and
-# the gunicorn multi-worker setup historically caused refresh loops).  The
-# durable refresh path is the GitHub Action at
-# .github/workflows/refresh-live-data.yml which runs every 15 min, commits
-# fresh data back to main, and auto-redeploys.  On Render we just serve
-# whatever data is in the repo and never trigger the in-process subprocess.
-_RENDER = bool(os.environ.get("RENDER") or os.environ.get("RENDER_SERVICE_ID"))
-# Local-dev override: MHUB_DISABLE_INPROCESS=1 to force the Render behavior.
-_MHUB_INPROCESS_DISABLED = _RENDER or os.environ.get("MHUB_DISABLE_INPROCESS") == "1"
-
 
 def _live_event_ids_by_date():
     """Live event CSV ids, most-recent end-date first.  Used for any place that
@@ -4686,31 +4675,26 @@ def _mhub_load():
         result["chart"]["match_events"] = match_events
         if checkpoints:
             result["as_of_date"] = checkpoints[-1]["date"]
-            if _MHUB_INPROCESS_DISABLED:
-                # Render path: never claim "building" — data refresh is the
-                # GitHub Action's job, the page just serves whatever's on disk.
+            # Trigger an in-process scrape if the last refresh isn't fresh.
+            # Terminal states (done/error) inside 15 min, and any state inside
+            # 60 s (in-flight), both count as "do not re-trigger".  This
+            # prevents the multi-worker poll→trigger→fast-exit→invalidate→
+            # trigger spiral seen previously on Render.
+            needs_check = True
+            try:
+                if os.path.exists(_MHUB_PROGRESS_FILE):
+                    with open(_MHUB_PROGRESS_FILE) as _pf:
+                        _pd = json.load(_pf)
+                    _phase = _pd.get("phase", "")
+                    _age   = _time_mod.time() - _pd.get("ts", 0)
+                    if _phase in ("done", "error") and _age < 900:
+                        needs_check = False
+                    elif _age < 60:
+                        needs_check = False
+            except Exception:
                 pass
-            else:
-                # Local-dev path: trigger an in-process scrape if the last
-                # refresh isn't fresh.  Terminal states (done/error) inside
-                # 15 min, and any state inside 60 s (in-flight), both count
-                # as "do not re-trigger".  This prevents the multi-worker
-                # poll→trigger→fast-exit→invalidate→trigger spiral.
-                needs_check = True
-                try:
-                    if os.path.exists(_MHUB_PROGRESS_FILE):
-                        with open(_MHUB_PROGRESS_FILE) as _pf:
-                            _pd = json.load(_pf)
-                        _phase = _pd.get("phase", "")
-                        _age   = _time_mod.time() - _pd.get("ts", 0)
-                        if _phase in ("done", "error") and _age < 900:
-                            needs_check = False
-                        elif _age < 60:
-                            needs_check = False
-                except Exception:
-                    pass
-                if needs_check:
-                    result["status"] = "building"
+            if needs_check:
+                result["status"] = "building"
     else:
         result["status"] = "building"
 
@@ -5013,29 +4997,16 @@ def _mhub_recent_progress_age():
 
 
 def _mhub_trigger_build(force=False):
-    """Kick off the full RefreshLiveData pipeline.
+    """Kick off the full RefreshLiveData pipeline on page load.
 
-    DISABLED on Render (env var RENDER=true) — the in-process scrape is
-    unreliable from Render's datacenter IP and the ephemeral filesystem
-    means writes wouldn't survive deploys anyway.  On Render, the GitHub
-    Action (.github/workflows/refresh-live-data.yml) is the source of truth:
-    it runs every ~15 min, commits fresh data, Render auto-redeploys.
-    Even `force=True` won't override this — it would just stall the user
-    on a fetch that's going to fail.
-
-    Locally, throttled three ways so multi-worker gunicorn can't spiral:
+    Throttled three ways so multi-worker gunicorn / rapid polling can't
+    spiral into a re-spawn loop:
       1. In-process `_mhub_build_running` flag (single-worker protection).
-      2. Per-worker 2-min cooldown via `_mhub_last_trigger`.
-      3. Cross-worker check of the on-disk progress file age.
+      2. Per-worker 2-min cooldown via `_mhub_last_trigger` (rapid-poll).
+      3. Cross-worker check of the on-disk progress file age — if another
+         worker wrote progress within the last 30 s, skip.
 
-    `force=True` bypasses the cooldown but not the Render gate."""
-    if _MHUB_INPROCESS_DISABLED:
-        _mhub_write_progress_error(
-            "In-process scrape disabled in this environment",
-            "Data refresh is handled by .github/workflows/refresh-live-data.yml. "
-            "Trigger manually at https://github.com/bes57/Bobo.GG/actions if you need an immediate update."
-        )
-        return
+    `force=True` is for the manual /modern/refresh endpoint only."""
     global _mhub_build_running, _mhub_last_trigger
     now = _time_mod.time()
     with _mhub_cache_lock:
