@@ -20,7 +20,8 @@ instance runs at a time.
 Exit code is always 0 on graceful failure; errors are surfaced via the progress
 file so the UI can show what went wrong.
 """
-import os, sys, json, time, re, subprocess, datetime, traceback
+import os, sys, json, time, re, subprocess, datetime, traceback, threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import requests
 from bs4 import BeautifulSoup
 
@@ -574,30 +575,37 @@ def main():
            [f"Last checkpoint: {last_date}"])
 
     # ── Step 1: Scan VLR for completed matches across every live event ───────
+    # All region scans are independent HTTP fetches → parallelize across them.
     all_new_urls = []   # list of (url, region, event_csv_id)
     total_completed = 0
-    scan_steps = sum(len(t["regions"]) for t in targets) or 1
-    step_idx = 0
-
+    _scan_jobs = []  # (event_label, region, vlr_id, slug, event_csv_id, existing_set)
     for t in targets:
         existing = _existing_match_ids(t["event_csv_id"])
         _write("checking", 8,
                f"Scanning {t['label']} — {len(existing)} match(es) on disk…",
                [f"[{t['label']}] {len(existing)} match(es) already cached"])
-
         for region, vlr_id, slug in t["regions"]:
-            step_idx += 1
-            pct = 8 + int(step_idx / scan_steps * 20)
-            _write("checking", pct, f"Checking {t['label']} / {region}…")
-            urls = _get_completed_urls(vlr_id, slug)
-            total_completed += len(urls)
-            new = [u for u in urls if _match_id_from_url(u) not in existing]
-            for u in new:
-                all_new_urls.append((u, region, t["event_csv_id"]))
+            _scan_jobs.append((t["label"], region, vlr_id, slug, t["event_csv_id"], existing))
+
+    _scan_lock = threading.Lock()
+    _scan_done = {"n": 0}
+    def _scan_one(job):
+        label, region, vlr_id, slug, ev_csv_id, existing = job
+        urls = _get_completed_urls(vlr_id, slug)
+        new = [u for u in urls if _match_id_from_url(u) not in existing]
+        with _scan_lock:
+            _scan_done["n"] += 1
+            pct = 8 + int(_scan_done["n"] / max(len(_scan_jobs), 1) * 20)
             _write("checking", pct,
-                   f"{t['label']} / {region}: {len(urls)} completed, {len(new)} new",
-                   [f"✓ {t['label']} / {region}: {len(urls)} completed ({len(new)} new)"])
-            time.sleep(0.6)
+                   f"{label} / {region}: {len(urls)} completed, {len(new)} new",
+                   [f"✓ {label} / {region}: {len(urls)} completed ({len(new)} new)"])
+        return (label, region, ev_csv_id, urls, new)
+
+    with ThreadPoolExecutor(max_workers=4) as _ex:
+        for _label, _region, _ev_csv_id, _urls, _new in _ex.map(_scan_one, _scan_jobs):
+            total_completed += len(_urls)
+            for _u in _new:
+                all_new_urls.append((_u, _region, _ev_csv_id))
 
     _write("checking", 30,
            f"Scan complete — {total_completed} completed across {len(targets)} live event(s), "
@@ -605,13 +613,16 @@ def main():
            [f"Total completed across all live events: {total_completed}",
             f"New to scrape: {len(all_new_urls)}"])
 
-    # ── Step 2: Scrape upcoming for every live event (always) ───────────────
-    all_upcoming = []
+    # ── Step 2: Scrape upcoming for every live event (always) — parallel ────
+    _upc_jobs = []
     for t in targets:
         for region, vlr_id, slug in t["regions"]:
-            upc = _scrape_upcoming_for(vlr_id, slug, region, t["label"])
-            all_upcoming.extend(upc)
-            time.sleep(0.4)
+            _upc_jobs.append((vlr_id, slug, region, t["label"]))
+    all_upcoming = []
+    if _upc_jobs:
+        with ThreadPoolExecutor(max_workers=4) as _ex:
+            for _upc in _ex.map(lambda j: _scrape_upcoming_for(*j), _upc_jobs):
+                all_upcoming.extend(_upc)
 
     seen = set()
     deduped = []
@@ -639,20 +650,31 @@ def main():
         print("\nNo new completed matches. Done.", flush=True)
         return
 
-    # ── Step 3: Scrape new matches into the right per-event CSVs ─────────────
+    # ── Step 3: Scrape new matches in parallel ───────────────────────────────
     total_new = len(all_new_urls)
     by_event_maps   = {}   # event_csv_id → [row, ...]
     by_event_series = {}
 
-    for i, (url, region, ev_id) in enumerate(all_new_urls, 1):
-        pct = 36 + int(i / total_new * 32)
-        _write("scraping", pct, f"Scraping match {i}/{total_new}…")
-        mr, sr, display = _scrape_match_page(url, region)
-        by_event_maps.setdefault(ev_id, []).extend(mr)
-        by_event_series.setdefault(ev_id, []).extend(sr)
-        _write("scraping", pct, f"Scraping {i}/{total_new}…",
-               [f"  [{region}] {display}"])
-        time.sleep(0.7)
+    if total_new:
+        _scrape_lock = threading.Lock()
+        _scrape_done = {"n": 0}
+        def _scrape_one(args):
+            url, region, ev_id = args
+            mr, sr, display = _scrape_match_page(url, region)
+            return (ev_id, region, mr, sr, display)
+
+        with ThreadPoolExecutor(max_workers=4) as _ex:
+            _futures = [_ex.submit(_scrape_one, a) for a in all_new_urls]
+            for _fut in as_completed(_futures):
+                _ev_id, _region, _mr, _sr, _display = _fut.result()
+                by_event_maps.setdefault(_ev_id, []).extend(_mr)
+                by_event_series.setdefault(_ev_id, []).extend(_sr)
+                with _scrape_lock:
+                    _scrape_done["n"] += 1
+                    pct = 36 + int(_scrape_done["n"] / total_new * 32)
+                    _write("scraping", pct,
+                           f"Scraping match {_scrape_done['n']}/{total_new}…",
+                           [f"  [{_region}] {_display}"])
 
     # Persist per event
     for ev_id, rows in by_event_maps.items():
@@ -714,17 +736,30 @@ def main():
     to_fetch = [m for m in all_ids if m not in existing_dates]
     print(f"  {len(to_fetch)} new match dates to fetch", flush=True)
 
-    for i, mid in enumerate(to_fetch, 1):
-        d = _scrape_date(mid)
-        if d:
-            existing_dates[mid] = d
-        pct = 75 + int(i / max(len(to_fetch), 1) * 12)
-        _write("scraping_dates", min(pct, 87),
-               f"Fetching dates… ({i}/{len(to_fetch)})")
-        if i % 10 == 0:
-            with open(out_path, "w") as f:
-                json.dump(existing_dates, f)
-        time.sleep(0.45)
+    if to_fetch:
+        _date_lock = threading.Lock()
+        _date_done = {"n": 0}
+        def _date_one(_mid):
+            return (_mid, _scrape_date(_mid))
+
+        with ThreadPoolExecutor(max_workers=4) as _ex:
+            _futures = [_ex.submit(_date_one, m) for m in to_fetch]
+            for _fut in as_completed(_futures):
+                _mid, _d = _fut.result()
+                if _d:
+                    existing_dates[_mid] = _d
+                with _date_lock:
+                    _date_done["n"] += 1
+                    pct = 75 + int(_date_done["n"] / max(len(to_fetch), 1) * 12)
+                    _write("scraping_dates", min(pct, 87),
+                           f"Fetching dates… ({_date_done['n']}/{len(to_fetch)})")
+                    # Save progress every 10 to survive crashes mid-batch
+                    if _date_done["n"] % 10 == 0:
+                        try:
+                            with open(out_path, "w") as f:
+                                json.dump(existing_dates, f)
+                        except Exception:
+                            pass
 
     try:
         with open(out_path, "w") as f:

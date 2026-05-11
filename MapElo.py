@@ -4910,10 +4910,12 @@ def _mhub_load():
 
     result["upcoming"] = upcoming_raw
 
-    # ── Past matches — replay each match with pre-match (morning-of) ratings ──
-    # Uses winner_before / loser_before from match_events (= rating as of the
-    # checkpoint immediately prior to the match). That's the snapshot the model
-    # would have used to project a probability the morning before the match.
+    # ── Past matches — replay each match with 12:01-AM ratings ───────────────
+    # All matches on date X use the SAME rating snapshot: the checkpoint from
+    # the previous match day (= end of day X-1 = start of day X = 12:01 AM
+    # local of day X). This removes a bias where, on days with multiple
+    # matches, the model's projection for a 9 PM match would have already
+    # absorbed the outcomes of the 5 AM matches that ran earlier the same day.
     past_matches = []
     if last_checkpoint_ratings and result["chart"]["match_events"]:
         from datetime import datetime as _dt, timedelta as _td
@@ -4930,6 +4932,24 @@ def _mhub_load():
             _as_of_dt = _dt.utcnow()
         _cutoff = _as_of_dt - _td(days=7)
 
+        # Build a "morning-of" rating lookup keyed by match date.  Checkpoints
+        # are sorted ascending by date; checkpoint(X) represents ratings at
+        # the END of day X.  So for a match on date X, the unbiased pre-match
+        # snapshot is the most recent checkpoint with date < X.
+        _cps_sorted = result["chart"]["checkpoints"]  # already sorted ascending
+        _morning_cache = {}
+        def _morning_ratings_for(date_str):
+            if date_str in _morning_cache:
+                return _morning_cache[date_str]
+            _best = {}
+            for _cp in _cps_sorted:
+                if _cp.get("date", "") < date_str:
+                    _best = _cp.get("ratings", {})
+                else:
+                    break
+            _morning_cache[date_str] = _best
+            return _best
+
         for _me in result["chart"]["match_events"]:
             try:
                 _md = _dt.strptime(_me["date"], "%Y-%m-%d")
@@ -4942,12 +4962,18 @@ def _mhub_load():
             if not _winner or not _loser:
                 continue
 
+            # Unbiased "12:01 AM of match day" ratings — same for every match
+            # on the same date, regardless of earlier-same-day results.
+            _morning = _morning_ratings_for(_me["date"])
+            _r_win  = _morning.get(_winner, _me.get("winner_before", 0.0))
+            _r_lose = _morning.get(_loser,  _me.get("loser_before",  0.0))
+
             _org_a, _org_b = sorted([_winner, _loser])
             if _org_a == _winner:
-                _ra_p = _me.get("winner_before", 0.0); _rb_p = _me.get("loser_before", 0.0)
+                _ra_p, _rb_p  = _r_win, _r_lose
                 _actual_winner = "a"
             else:
-                _ra_p = _me.get("loser_before", 0.0);  _rb_p = _me.get("winner_before", 0.0)
+                _ra_p, _rb_p  = _r_lose, _r_win
                 _actual_winner = "b"
 
             _ss = str(_me.get("series_score", "")).strip()
@@ -5370,17 +5396,18 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 @keyframes plog-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Chart card */
-.chart-hint{font-size:.72rem;color:rgba(0,0,0,.38);text-align:center;padding:6px 0 2px;letter-spacing:.01em}
+.chart-hint{font-size:.72rem;color:rgba(0,0,0,.38);text-align:center;padding:6px 0 18px;letter-spacing:.01em}
 .chart-hint kbd{display:inline-block;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;background:rgba(0,0,0,.07);border-radius:4px;padding:1px 5px;margin:0 1px}
-.chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin-bottom:18px;position:relative}
-.chart-header{display:flex;justify-content:flex-end;align-items:center;margin-bottom:10px;gap:10px;padding:0 20px;position:relative}
-.chart-title{position:absolute;left:50%;transform:translateX(-50%);font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;pointer-events:none}
+.chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin:0 auto 18px;position:relative;max-width:85%}
+.chart-header{display:flex;flex-direction:column;align-items:stretch;margin-bottom:10px;gap:6px;padding:0 20px;position:relative}
+.chart-header-row{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.chart-title{align-self:center;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;pointer-events:none}
 .chart-asof{color:rgba(0,0,0,.4);font-size:.75rem}
 .chart-controls{display:flex;gap:8px;align-items:center;flex-shrink:0}
 .chart-btn{padding:5px 14px;border-radius:100px;border:1.5px solid rgba(0,0,0,.15);background:rgba(0,0,0,.03);color:rgba(0,0,0,.55);font-size:.75rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
 .chart-btn:hover{border-color:rgba(0,0,0,.4);color:#000;background:rgba(0,0,0,.06)}
 .chart-btn.active{border-color:#7c3aed;background:#7c3aed;color:#fff}
-.chart-wrap{position:relative;height:720px;user-select:none}
+.chart-wrap{position:relative;height:650px;user-select:none}
 #benpomChart{cursor:default}
 
 /* Dot hover tooltip */
@@ -5537,13 +5564,20 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .upcoming-sub .fly-char,
 .past-heading .fly-char,
 .past-sub .fly-char{display:inline-block;opacity:0;transform:translateX(60px);transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
+.upcoming-heading.flying .fly-char,
+.upcoming-sub.flying .fly-char,
+.past-heading.flying .fly-char,
+.past-sub.flying .fly-char{will-change:transform,opacity}
 .upcoming-heading.fly-in .fly-char,
 .upcoming-sub.fly-in .fly-char,
 .past-heading.fly-in .fly-char,
 .past-sub.fly-in .fly-char{opacity:1;transform:translateX(0)}
 /* Match cards fly in from right with cascade */
-.upc-list .upc-card{opacity:0;transform:translateX(80px);transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease}
+.upc-list .upc-card{opacity:0;transform:translateX(80px);transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease;will-change:transform,opacity}
 .upc-list.fly-in .upc-card{opacity:1;transform:translateX(0)}
+/* Drop will-change once animation finishes so we don't pay the compositing
+   cost forever (added back by JS for the flight, removed after) */
+.upc-list.anim-done .upc-card{will-change:auto}
 
 /* Recent Matches heading (mirror upcoming-heading) */
 .past-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
@@ -5557,14 +5591,15 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .upc-result-strip .upc-result-upset{background:#dc2626}
 .upc-card .upc-pre-label{font-size:.58rem;color:#888;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-top:3px;margin-bottom:1px}
 
-/* Upcoming match cards — vertical list */
-.upc-list{display:flex;flex-direction:column;gap:14px;max-width:680px;margin:0 auto}
+/* Upcoming + Recent match cards — vertical list. Day groups get plenty
+   of breathing room so each date reads as its own section. */
+.upc-list{display:flex;flex-direction:column;gap:36px;max-width:680px;margin:0 auto}
 .upc-day-group{display:flex;flex-direction:column;gap:10px}
-.upc-day-label{font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;color:#555;text-transform:uppercase;letter-spacing:.08em;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
-/* Recent Matches panel — extra breathing room between date groups */
-#panelC .upc-list{gap:36px}
-#panelC .upc-day-label{margin-top:6px;padding-bottom:8px;font-size:.85rem}
-.upc-card{border-radius:14px;padding:13px 16px;backdrop-filter:blur(10px);box-shadow:0 2px 10px rgba(61,26,110,.08);cursor:pointer;user-select:none;transition:box-shadow .15s;border-left:4px solid transparent}
+.upc-day-label{font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-top:6px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
+/* No backdrop-filter — at 8% bg opacity the blur is invisible but costs
+   a full GPU recompute per card per frame during the cascade animation
+   (FPS would drop to ~15 on the 26-card Recent Matches panel). */
+.upc-card{border-radius:14px;padding:13px 16px;background:rgba(255,255,255,.55);box-shadow:0 2px 10px rgba(61,26,110,.08);cursor:pointer;user-select:none;transition:box-shadow .15s;border-left:4px solid transparent;contain:layout style}
 .upc-card:hover{box-shadow:0 4px 18px rgba(61,26,110,.15)}
 .upc-card.rgn-emea{background:rgba(34,197,94,.08);border-left-color:#16a34a}
 .upc-card.rgn-americas{background:rgba(249,115,22,.08);border-left-color:#ea580c}
@@ -5585,10 +5620,14 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .upc-expand-hint{text-align:center;font-size:.6rem;color:#bbb;margin-top:7px;letter-spacing:.04em}
 .upc-card.open .upc-expand-hint{color:#999}
 
-/* Expandable details */
-.upc-details{max-height:0;overflow:hidden;transition:max-height .45s ease}
-.upc-card.open .upc-details{max-height:680px}
-.upc-details-inner{padding-top:12px;border-top:1px solid rgba(0,0,0,.07);margin-top:10px}
+/* Expandable details — use the grid-template-rows 0fr→1fr trick so the
+   panel animates to its real content height (no max-height overshoot or
+   abrupt finish when content is shorter than the cap). */
+.upc-details{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s cubic-bezier(.22,1,.36,1)}
+.upc-details > .upc-details-inner{overflow:hidden;min-height:0}
+.upc-card.open .upc-details{grid-template-rows:1fr}
+.upc-details-inner{padding-top:0;margin-top:0;border-top:0;transition:padding-top .35s ease,margin-top .35s ease,border-top-color .35s ease}
+.upc-card.open .upc-details-inner{padding-top:12px;margin-top:10px;border-top:1px solid rgba(0,0,0,.07)}
 
 /* Map breakdown table */
 .upc-section-lbl{font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:6px}
@@ -5684,11 +5723,13 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
             <p class="chart-hint"><kbd>W</kbd> up &nbsp;<kbd>S</kbd> down &nbsp;<kbd>X</kbd> clear selection</p>
             <div class="chart-header">
               <span class="chart-title">BenPom Rating &mdash; 2026 Season</span>
-              <div class="chart-controls">
+              <div class="chart-header-row">
                 <span class="chart-asof" id="chartAsOf"></span>
-                <button class="chart-btn" id="replayBtn" onclick="replayChart()" title="Replay season animation">&#8635; Replay</button>
-                <button class="chart-btn" id="zoomBtn" onclick="toggleZoom()" title="Zoom to current split">&#x2316; Zoom Split</button>
-                <button class="chart-btn" id="resetZoomBtn" onclick="resetZoom()" title="Reset zoom">&#x2715; Reset</button>
+                <div class="chart-controls">
+                  <button class="chart-btn" id="replayBtn" onclick="replayChart()" title="Replay season animation">&#8635; Replay</button>
+                  <button class="chart-btn" id="zoomBtn" onclick="toggleZoom()" title="Zoom to current split">&#x2316; Zoom Split</button>
+                  <button class="chart-btn" id="resetZoomBtn" onclick="resetZoom()" title="Reset zoom">&#x2715; Reset</button>
+                </div>
               </div>
             </div>
             <div class="chart-wrap" id="chartWrap">
@@ -5764,16 +5805,18 @@ function fadeIn(id, dur) {
 const TEAM_COLORS = {
   // Pacific
   PRX:'#ED1C7C', T1:'#E2012D', FS:'#FF6A00', GE:'#1E90FF',
-  GEN:'#AA8E4F', NS:'#DC0000', DFM:'#E60012', RRQ:'#C8102E',
-  KRX:'#0B1F4D', TS:'#FFCC00', ZETA:'#FFE500', VL:'#8C8C8C',
+  GEN:'#AA8E4F', NS:'#DC0000', DFM:'#1565C0', RRQ:'#FFA500',
+  KRX:'#0B1F4D', TS:'#FFCC00', ZETA:'#000000', VL:'#8C8C8C',
   // Americas
-  G2:'#000000', '100T':'#E21F26', LEV:'#00D4D4', NRG:'#FFC72C',
-  'KRÜ':'#FFE600', FUR:'#000000', SEN:'#C8102E', MIBR:'#FFD100',
+  G2:'#000000', '100T':'#E21F26', LEV:'#00D4D4', NRG:'#FF6B00',
+  'KRÜ':'#FF1493', FUR:'#000000', SEN:'#C8102E', MIBR:'#000000',
   LOUD:'#00FF7F', C9:'#00B6E8', EG:'#0073CF', ENVY:'#6A0DAD',
   // EMEA
   VIT:'#FFD100', TH:'#FFD700', FNC:'#FF5900', TL:'#002B5C',
-  NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#FF6600',
-  M8:'#39FF14', BBL:'#FF4500', EF:'#D4AF37', PCF:'#87CEEB',
+  NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#4FC3F7',
+  M8:'#39FF14', BBL:'#D4AF37', EF:'#D4AF37', PCF:'#87CEEB',
+  // Team Secret (grey — appears as 'Secret' in older data)
+  Secret:'#808080', SCRT:'#808080', TSEC:'#808080',
   // Legacy / extras kept for older event data
   DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
 };
@@ -6265,15 +6308,11 @@ const logoPlugin = {
 // ── Chart build ──────────────────────────────────────────────────────────────
 var _chartYMin = null, _chartYMax = null;
 function _computeGlobalYRange(data) {
-  var allVals = [];
-  (data.chart.checkpoints || []).forEach(function(cp) {
-    Object.values(cp.ratings || {}).forEach(function(v){ allVals.push(v); });
-  });
-  if (!allVals.length) { _chartYMin = -5; _chartYMax = 5; return; }
-  var peak = Math.max.apply(null, allVals.map(Math.abs));
-  var absMax = Math.ceil(peak * 1.15 * 2) / 2;  // 15% headroom, snapped to nearest 0.5
-  _chartYMin = -absMax;
-  _chartYMax =  absMax;
+  // Y-axis is locked centered at 0, range [-12, +12]. Keeps the visual
+  // scale stable across snapshots regardless of where the league's
+  // current peak rating happens to sit.
+  _chartYMin = -12;
+  _chartYMax =  12;
 }
 
 function buildChart(data, noLines = false) {
@@ -6812,6 +6851,15 @@ async function showChartAndLeaderboard(data) {
   showEl('chartSection');
   const chartCard = document.querySelector('.chart-card');
   if (chartCard) chartCard.classList.add('entering');
+
+  // Auto-scroll FIRST so the user lands on a centered chart before the
+  // reveal animation plays. Skip if the user already scrolled themselves.
+  if (window.scrollY < 40 && chartCard) {
+    const _rect = chartCard.getBoundingClientRect();
+    const _target = window.scrollY + _rect.top + _rect.height / 2 - window.innerHeight / 2;
+    window.scrollTo({top: Math.max(0, _target), behavior: 'smooth'});
+  }
+
   await sleep(2500);
 
   // Rebuild with real lines, then immediately sweep curtain from left
@@ -7640,12 +7688,29 @@ function renderPast(data) {
       mapTableHtml += '</tbody></table>';
     }
 
+    // For past matches, "Recent Form" should reflect what the model knew at
+    // the time — i.e., each team's three matches BEFORE this one — not their
+    // globally most-recent matches today.
     function recentMatchesHtml(org) {
-      var lb = lbTeams[org];
-      var recent = lb ? (lb.recent_matches || []) : [];
-      recent = recent.slice(0, 3);
-      if (!recent.length) return '<div style="color:#aaa;font-size:.68rem">No data</div>';
-      return recent.map(function(r){
+      var cutoff = m.date || '';
+      var evts = (data.chart && data.chart.match_events) ? data.chart.match_events : [];
+      var teamMatches = [];
+      for (var i = evts.length - 1; i >= 0; i--) {
+        var ev = evts[i];
+        if (!ev || !ev.date) continue;
+        if (cutoff && ev.date >= cutoff) continue;   // strictly before this match
+        if (ev.winner !== org && ev.loser !== org) continue;
+        var isWin = (ev.winner === org);
+        teamMatches.push({
+          date:     ev.date,
+          opponent: isWin ? ev.loser : ev.winner,
+          result:   isWin ? 'W' : 'L',
+          score:    ev.series_score || '',
+        });
+        if (teamMatches.length >= 3) break;
+      }
+      if (!teamMatches.length) return '<div style="color:#aaa;font-size:.68rem">No data</div>';
+      return teamMatches.map(function(r){
         var resultCls = r.result==='W' ? 'w' : 'l';
         var dateStr = r.date ? new Date(r.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
         var scoreParts = (r.score||'').split('-');
@@ -7659,7 +7724,7 @@ function renderPast(data) {
         '</div>';
       }).join('');
     }
-    var recentHtml = '<div class="upc-section-lbl">Recent Form</div>'+
+    var recentHtml = '<div class="upc-section-lbl">Recent Form (Before This Match)</div>'+
       '<div class="upc-recent-row">'+
         '<div class="upc-recent-col"><div class="upc-recent-col-hdr">'+orgA+'</div>'+recentMatchesHtml(orgA)+'</div>'+
         '<div class="upc-recent-col"><div class="upc-recent-col-hdr">'+orgB+'</div>'+recentMatchesHtml(orgB)+'</div>'+
@@ -7772,27 +7837,63 @@ function _flyInPanel(panelSel, headingSel, subSel) {
   _splitIntoChars(heading);
   _splitIntoChars(sub);
 
-  if (heading) heading.classList.remove('fly-in');
-  if (sub)     sub.classList.remove('fly-in');
-  if (list)    list.classList.remove('fly-in');
+  // Reset all state — strip transition classes
+  [heading, sub, list].forEach(function(el){
+    if (!el) return;
+    el.classList.remove('fly-in', 'flying', 'anim-done');
+  });
 
   var hChars = heading ? heading.querySelectorAll('.fly-char') : [];
-  hChars.forEach(function(c, i) { c.style.transitionDelay = (i * 35) + 'ms'; });
+  var sChars = sub ? sub.querySelectorAll('.fly-char') : [];
+  var cards  = list ? list.querySelectorAll('.upc-card') : [];
+
+  // Snap every animated element back to its initial state INSTANTLY by
+  // disabling transitions. Without this, on a replay the elements are
+  // still partway through a "go back to start" transition when we
+  // re-trigger, so the animation looks like it skips.
+  function _snapReset(el){ el.style.transition = 'none'; }
+  hChars.forEach(_snapReset);
+  sChars.forEach(_snapReset);
+  cards.forEach(_snapReset);
+  // Force reflow so the no-transition state actually paints before we
+  // restore transitions and re-trigger.
+  void document.body.offsetWidth;
+
+  // Restore transitions + assign per-element stagger delays
+  hChars.forEach(function(c, i) {
+    c.style.transition = '';
+    c.style.transitionDelay = (i * 35) + 'ms';
+  });
   var headingDur = hChars.length * 35 + 450;
 
-  var sChars = sub ? sub.querySelectorAll('.fly-char') : [];
-  sChars.forEach(function(c, i) { c.style.transitionDelay = (headingDur * 0.4 + i * 14) + 'ms'; });
+  sChars.forEach(function(c, i) {
+    c.style.transition = '';
+    c.style.transitionDelay = (headingDur * 0.4 + i * 14) + 'ms';
+  });
   var subDur = headingDur * 0.4 + sChars.length * 14 + 350;
 
-  var cards = list ? list.querySelectorAll('.upc-card') : [];
-  cards.forEach(function(c, i) { c.style.transitionDelay = (subDur * 0.55 + i * 70) + 'ms'; });
+  // Cap the cascade — beyond ~20 cards in flight at once, the GPU starts
+  // dropping frames. Stagger small for the first 12, snap the rest in fast.
+  cards.forEach(function(c, i) {
+    c.style.transition = '';
+    var delay = (subDur * 0.55) + (i < 12 ? i * 50 : 12 * 50 + (i - 12) * 18);
+    c.style.transitionDelay = delay + 'ms';
+  });
+  var totalDur = (subDur * 0.55) + (cards.length < 12 ? cards.length * 50 : 12 * 50 + (cards.length - 12) * 18) + 600;
 
-  void document.body.offsetWidth;
+  // Apply will-change for the flight, then strip it once the animation is done
+  if (heading) heading.classList.add('flying');
+  if (sub)     sub.classList.add('flying');
   requestAnimationFrame(function() {
     if (heading) heading.classList.add('fly-in');
     if (sub)     sub.classList.add('fly-in');
     if (list)    list.classList.add('fly-in');
   });
+  setTimeout(function(){
+    if (heading) heading.classList.remove('flying');
+    if (sub)     sub.classList.remove('flying');
+    if (list)    list.classList.add('anim-done');
+  }, totalDur);
 }
 function triggerUpcomingFlyIn() {
   _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub');
