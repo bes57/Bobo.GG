@@ -7171,6 +7171,118 @@ def mapelo_modern_refresh():
     return Response(json.dumps({"triggered": True}), mimetype='application/json')
 
 
+@mapelo_bp.route('/modern/run-sync')
+def mapelo_modern_run_sync():
+    """
+    Run RefreshLiveData synchronously inside the request, capture EVERYTHING,
+    return it.  No subprocess, no /tmp writes, no race conditions — the only
+    diagnostic that can't be invisibly swallowed.
+
+    Useful for: confirming the scrape itself works on this host, seeing exactly
+    where it bails when it doesn't, and verifying that data files get written
+    (or proving the filesystem is read-only).
+    """
+    import sys as _sys, traceback as _tb, io as _io, time as _time
+    if ROOT not in _sys.path:
+        _sys.path.insert(0, ROOT)
+
+    out = {
+        "started":  _time.time(),
+        "env":      {
+            "RENDER":            os.environ.get("RENDER"),
+            "RENDER_SERVICE_ID": os.environ.get("RENDER_SERVICE_ID"),
+            "cwd":               os.getcwd(),
+            "ROOT":              ROOT,
+            "python":            _sys.executable,
+        },
+        "writable": {},
+        "data_files": {},
+        "scrape_log": None,
+        "after_progress": None,
+        "error": None,
+    }
+
+    # Probe filesystem writability
+    for path in ("/tmp", "/tmp/mhub_test.txt",
+                 os.path.join(ROOT, "data"),
+                 os.path.join(ROOT, "data", "mhub_test.txt")):
+        try:
+            if path.endswith(".txt"):
+                with open(path, "w") as f:
+                    f.write("ok")
+                os.remove(path)
+                out["writable"][path] = "ok"
+            else:
+                out["writable"][path] = ("exists" if os.path.exists(path) else "missing") + \
+                    (" / writable" if os.access(path, os.W_OK) else " / NOT writable")
+        except Exception as e:
+            out["writable"][path] = f"err: {type(e).__name__}: {e}"
+
+    # Snapshot key data files
+    for rel in ("data/rating_timeline.json",
+                "data/maps/2026_stage1.csv",
+                "data/match_results.csv",
+                "data/upcoming_matches.json"):
+        full = os.path.join(ROOT, rel)
+        try:
+            if os.path.exists(full):
+                st = os.stat(full)
+                out["data_files"][rel] = {"size": st.st_size, "mtime": st.st_mtime}
+            else:
+                out["data_files"][rel] = "MISSING"
+        except Exception as e:
+            out["data_files"][rel] = f"err: {e}"
+
+    # Run the scraper in-process and capture stdout
+    buf = _io.StringIO()
+    old_stdout = _sys.stdout
+    try:
+        _sys.stdout = buf
+        from scrapers import RefreshLiveData as _rld
+        # Reset its module-level log so we get a clean slate
+        _rld._log_entries = []
+        _rld._error_entries = []
+        _rld._strategy_log["attempts"] = []
+        _rld._strategy_log["first_success"] = None
+        try:
+            _rld.main()
+        except SystemExit:
+            pass
+    except Exception as e:
+        out["error"] = f"{type(e).__name__}: {e}"
+        out["traceback"] = _tb.format_exc()
+    finally:
+        _sys.stdout = old_stdout
+    out["scrape_log"] = buf.getvalue()[-8000:]
+
+    # Snapshot progress file after
+    try:
+        if os.path.exists(_MHUB_PROGRESS_FILE):
+            with open(_MHUB_PROGRESS_FILE) as f:
+                out["after_progress"] = json.load(f)
+    except Exception as e:
+        out["after_progress"] = f"read err: {e}"
+
+    # Re-snapshot data files to see what changed
+    out["data_files_after"] = {}
+    for rel in ("data/rating_timeline.json",
+                "data/maps/2026_stage1.csv",
+                "data/match_results.csv",
+                "data/upcoming_matches.json"):
+        full = os.path.join(ROOT, rel)
+        try:
+            if os.path.exists(full):
+                st = os.stat(full)
+                out["data_files_after"][rel] = {"size": st.st_size, "mtime": st.st_mtime}
+            else:
+                out["data_files_after"][rel] = "MISSING"
+        except Exception as e:
+            out["data_files_after"][rel] = f"err: {e}"
+
+    out["elapsed"] = _time.time() - out["started"]
+    return Response(json.dumps(out, indent=2, default=str), mimetype='application/json')
+
+
 @mapelo_bp.route('/modern/debug-fetch')
 def mapelo_modern_debug_fetch():
     """
