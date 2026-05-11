@@ -4675,12 +4675,19 @@ def _mhub_load():
         result["chart"]["match_events"] = match_events
         if checkpoints:
             result["as_of_date"] = checkpoints[-1]["date"]
-            # Trigger an in-process scrape if the last refresh isn't fresh.
-            # Terminal states (done/error) inside 15 min, and any state inside
-            # 60 s (in-flight), both count as "do not re-trigger".  This
-            # prevents the multi-worker poll→trigger→fast-exit→invalidate→
-            # trigger spiral seen previously on Render.
-            needs_check = True
+            # Three states to distinguish:
+            #   (a) recent terminal (done/error within 15 min) → data is
+            #       fresh, status=ready, don't re-trigger.
+            #   (b) recent non-terminal (any phase != done/error written in
+            #       the last 60 s) → scrape is IN-FLIGHT, status=building so
+            #       the frontend keeps polling, but don't re-trigger.
+            #   (c) old or missing → status=building AND re-trigger.
+            #
+            # Earlier this collapsed (b) and (a) onto the same path, which
+            # caused the page to render with stale on-disk data while the
+            # scrape was still updating it.
+            needs_trigger = True
+            in_flight     = False
             try:
                 if os.path.exists(_MHUB_PROGRESS_FILE):
                     with open(_MHUB_PROGRESS_FILE) as _pf:
@@ -4688,13 +4695,17 @@ def _mhub_load():
                     _phase = _pd.get("phase", "")
                     _age   = _time_mod.time() - _pd.get("ts", 0)
                     if _phase in ("done", "error") and _age < 900:
-                        needs_check = False
+                        needs_trigger = False
                     elif _age < 60:
-                        needs_check = False
+                        # scrape is actively running — keep frontend polling
+                        # by reporting building, but don't re-trigger.
+                        needs_trigger = False
+                        in_flight     = True
             except Exception:
                 pass
-            if needs_check:
-                result["status"] = "building"
+            if needs_trigger or in_flight:
+                result["status"]      = "building"
+                result["needs_trigger"] = needs_trigger
     else:
         result["status"] = "building"
 
@@ -5113,8 +5124,14 @@ def _mhub_get():
 
     data = _mhub_load()
 
-    if data.get("status") == "building":
+    # Only spawn a subprocess when _mhub_load explicitly asked for one.  An
+    # in-flight scrape from another worker still reports status=building
+    # (so the frontend keeps polling) but needs_trigger=False (so we don't
+    # spam new subprocesses).
+    if data.get("status") == "building" and data.get("needs_trigger", True):
         _mhub_trigger_build()
+    # Strip the internal flag — frontend doesn't need it.
+    data.pop("needs_trigger", None)
 
     # Always attach progress so frontend can show log even on "ready"
     data["progress"] = _mhub_scrape_progress()
