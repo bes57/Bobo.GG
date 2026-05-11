@@ -4910,6 +4910,149 @@ def _mhub_load():
 
     result["upcoming"] = upcoming_raw
 
+    # ── Past matches — replay each match with pre-match (morning-of) ratings ──
+    # Uses winner_before / loser_before from match_events (= rating as of the
+    # checkpoint immediately prior to the match). That's the snapshot the model
+    # would have used to project a probability the morning before the match.
+    past_matches = []
+    if last_checkpoint_ratings and result["chart"]["match_events"]:
+        from datetime import datetime as _dt, timedelta as _td
+        try:
+            from MoreTestingMaybeFiles import ALL_EVENTS as _ALL_EVENTS_PAST
+            _event_label_by_id = {e["id"]: e.get("label", e["id"]) for e in _ALL_EVENTS_PAST}
+        except Exception:
+            _event_label_by_id = {}
+
+        _as_of_str = result.get("as_of_date")
+        try:
+            _as_of_dt = _dt.strptime(_as_of_str, "%Y-%m-%d") if _as_of_str else _dt.utcnow()
+        except Exception:
+            _as_of_dt = _dt.utcnow()
+        _cutoff = _as_of_dt - _td(days=7)
+
+        for _me in result["chart"]["match_events"]:
+            try:
+                _md = _dt.strptime(_me["date"], "%Y-%m-%d")
+            except Exception:
+                continue
+            if _md < _cutoff or _md > _as_of_dt:
+                continue
+            _winner = _me.get("winner", "")
+            _loser  = _me.get("loser", "")
+            if not _winner or not _loser:
+                continue
+
+            _org_a, _org_b = sorted([_winner, _loser])
+            if _org_a == _winner:
+                _ra_p = _me.get("winner_before", 0.0); _rb_p = _me.get("loser_before", 0.0)
+                _actual_winner = "a"
+            else:
+                _ra_p = _me.get("loser_before", 0.0);  _rb_p = _me.get("winner_before", 0.0)
+                _actual_winner = "b"
+
+            _ss = str(_me.get("series_score", "")).strip()
+            _ws, _ls = "0", "0"
+            if "-" in _ss:
+                _ws, _ls = _ss.split("-", 1)
+            try:
+                _first = int(_ws)
+            except Exception:
+                _first = 2
+            _fmt = "bo5" if _first >= 3 else "bo3"
+            # Display score in org_a / org_b order
+            if _org_a == _winner:
+                _disp_score = f"{_ws}-{_ls}"
+            else:
+                _disp_score = f"{_ls}-{_ws}"
+
+            _p_map = float(_expit(_tl_beta * (_ra_p - _rb_p)))
+            _p_series = _series_wp(_p_map, _fmt)
+
+            _region = ORG_REGIONS.get(_winner, ORG_REGIONS.get(_loser, "Unknown"))
+            _evt_label = _event_label_by_id.get(_me.get("event_id", ""), _me.get("event_id", ""))
+
+            past_matches.append({
+                "match_id":    _me.get("match_id"),
+                "org_a":       _org_a,
+                "org_b":       _org_b,
+                "team_a":      _org_a,
+                "team_b":      _org_b,
+                "date":        _me.get("date"),
+                "region":      _region,
+                "event":       _evt_label,
+                "event_id":    _me.get("event_id", ""),
+                "format":      _fmt,
+                "rating_a":    round(_ra_p, 3),
+                "rating_b":    round(_rb_p, 3),
+                "win_prob_a":  round(_p_series, 3),
+                "win_prob_b":  round(1.0 - _p_series, 3),
+                "actual_winner": _actual_winner,
+                "actual_score":  _disp_score,
+                "maps_played":   _me.get("maps", []),
+            })
+
+        past_matches.sort(key=lambda x: x["date"] or "", reverse=True)
+
+    # Per-region pool — Stage 1 runs three regional leagues, each with its own
+    # 7-map pool. Derive each pool from the maps played in past-7-day matches
+    # within that region, capped at 7 maps by play count (drops anything
+    # borderline that snuck in but isn't really in pool).
+    event_pools = {}        # by event_id (combined, kept as fallback)
+    region_pools = {}       # by region (the real per-match pool source)
+    region_event_pools = {} # by f"{event_id}:{region}"
+
+    def _top7(name_counts):
+        items = sorted(name_counts.items(), key=lambda kv: (-kv[1], kv[0]))
+        return [n for n, _c in items[:7]]
+
+    for _eid in sorted(set(m.get("event_id", "") for m in past_matches)):
+        if not _eid:
+            continue
+        _all_counts = {}
+        for _pm in past_matches:
+            if _pm.get("event_id") != _eid:
+                continue
+            for _mp in _pm.get("maps_played", []):
+                _name = (_mp or {}).get("map")
+                if _name:
+                    _all_counts[_name] = _all_counts.get(_name, 0) + 1
+        if _all_counts:
+            event_pools[_eid] = _top7(_all_counts)
+
+    for _rg in sorted(set(m.get("region", "") for m in past_matches)):
+        if not _rg:
+            continue
+        _counts = {}
+        for _pm in past_matches:
+            if _pm.get("region") != _rg:
+                continue
+            for _mp in _pm.get("maps_played", []):
+                _name = (_mp or {}).get("map")
+                if _name:
+                    _counts[_name] = _counts.get(_name, 0) + 1
+        if _counts:
+            region_pools[_rg] = _top7(_counts)
+
+    for _pm in past_matches:
+        _key = f"{_pm.get('event_id','')}:{_pm.get('region','')}"
+        if _key in region_event_pools:
+            continue
+        _counts = {}
+        for _pm2 in past_matches:
+            if _pm2.get("event_id") != _pm.get("event_id") or _pm2.get("region") != _pm.get("region"):
+                continue
+            for _mp in _pm2.get("maps_played", []):
+                _name = (_mp or {}).get("map")
+                if _name:
+                    _counts[_name] = _counts.get(_name, 0) + 1
+        if _counts:
+            region_event_pools[_key] = _top7(_counts)
+
+    result["past_matches"]       = past_matches
+    result["past_event_pools"]   = event_pools
+    result["past_region_pools"]  = region_pools
+    result["past_region_event_pools"] = region_event_pools
+
     # ── Veto simulation data for upcoming predictions ─────────────────────────
     veto = get_veto_model()
     computed_pools   = _build_computed_pools()
@@ -5185,11 +5328,20 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .tab:hover:not(.active){border-color:#9c6ec8;color:#000}
 
 .panels-outer{overflow:hidden}
-.panel-track{display:flex;width:200%;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
-.panel-track.show-b{transform:translateX(-50%)}
-.panel{width:50%;min-width:0}
+.panel-track{display:flex;width:300%;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
+.panel-track.show-b{transform:translateX(-33.3333%)}
+.panel-track.show-c{transform:translateX(-66.6666%)}
+.panel{width:33.3333%;min-width:0}
 
-.region-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;transition:opacity .4s;justify-content:center;padding:0 24px}
+.region-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;transition:opacity .3s,max-height .5s cubic-bezier(.55,.06,.36,.98),margin-bottom .5s cubic-bezier(.55,.06,.36,.98);justify-content:center;padding:0 24px;overflow:hidden;max-height:60px}
+.region-pills.hidden-panel{opacity:0 !important;max-height:0;margin-bottom:0;pointer-events:none;transition:opacity .25s,max-height .45s cubic-bezier(.55,.06,.36,.98) .15s,margin-bottom .45s cubic-bezier(.55,.06,.36,.98) .15s}
+.region-pills .pill{transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s ease,background .15s,border-color .15s,color .15s}
+.region-pills.hidden-panel .pill{transform:translateY(-14px) scale(.85);opacity:0}
+.region-pills.hidden-panel .pill:nth-child(1){transition-delay:0s}
+.region-pills.hidden-panel .pill:nth-child(2){transition-delay:.04s}
+.region-pills.hidden-panel .pill:nth-child(3){transition-delay:.08s}
+.region-pills.hidden-panel .pill:nth-child(4){transition-delay:.12s}
+.region-pills.hidden-panel .pill:nth-child(5){transition-delay:.16s}
 .pill{padding:5px 16px;border-radius:100px;border:1.5px solid #c8a8e8;background:transparent;color:#444;font-size:.8rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .15s}
 .pill.active{background:#3d1a6e;border-color:#3d1a6e;color:#fff}
 .pill:hover:not(.active){border-color:#9c6ec8}
@@ -5380,10 +5532,38 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .upcoming-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center}
 .no-upcoming{padding:60px;text-align:center;color:#666;font-size:.88rem}
 
+/* Letter fly-in animation for Upcoming + Recent Matches heading + sub */
+.upcoming-heading .fly-char,
+.upcoming-sub .fly-char,
+.past-heading .fly-char,
+.past-sub .fly-char{display:inline-block;opacity:0;transform:translateX(60px);transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
+.upcoming-heading.fly-in .fly-char,
+.upcoming-sub.fly-in .fly-char,
+.past-heading.fly-in .fly-char,
+.past-sub.fly-in .fly-char{opacity:1;transform:translateX(0)}
+/* Match cards fly in from right with cascade */
+.upc-list .upc-card{opacity:0;transform:translateX(80px);transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease}
+.upc-list.fly-in .upc-card{opacity:1;transform:translateX(0)}
+
+/* Recent Matches heading (mirror upcoming-heading) */
+.past-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
+.past-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center;max-width:560px;margin-left:auto;margin-right:auto}
+
+/* Result strip on past-match cards */
+.upc-result-strip{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;padding:6px 10px;border-radius:8px;background:rgba(0,0,0,.04);font-size:.74rem;font-weight:700;letter-spacing:.02em}
+.upc-result-strip .upc-result-label{color:#666;font-weight:600;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase}
+.upc-result-strip .upc-result-score{font-variant-numeric:tabular-nums;color:#111;font-size:.86rem}
+.upc-result-strip .upc-result-winner{color:#fff;background:#16a34a;padding:2px 8px;border-radius:100px;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase}
+.upc-result-strip .upc-result-upset{background:#dc2626}
+.upc-card .upc-pre-label{font-size:.58rem;color:#888;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-top:3px;margin-bottom:1px}
+
 /* Upcoming match cards — vertical list */
 .upc-list{display:flex;flex-direction:column;gap:14px;max-width:680px;margin:0 auto}
 .upc-day-group{display:flex;flex-direction:column;gap:10px}
 .upc-day-label{font-family:'Syne',sans-serif;font-weight:800;font-size:.78rem;color:#555;text-transform:uppercase;letter-spacing:.08em;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
+/* Recent Matches panel — extra breathing room between date groups */
+#panelC .upc-list{gap:36px}
+#panelC .upc-day-label{margin-top:6px;padding-bottom:8px;font-size:.85rem}
 .upc-card{border-radius:14px;padding:13px 16px;backdrop-filter:blur(10px);box-shadow:0 2px 10px rgba(61,26,110,.08);cursor:pointer;user-select:none;transition:box-shadow .15s;border-left:4px solid transparent}
 .upc-card:hover{box-shadow:0 4px 18px rgba(61,26,110,.15)}
 .upc-card.rgn-emea{background:rgba(34,197,94,.08);border-left-color:#16a34a}
@@ -5470,6 +5650,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
   <div class="tab-bar" id="tabBar" style="opacity:0">
     <button class="tab active" data-panel="a">BenPom Ratings</button>
     <button class="tab" data-panel="b">Upcoming Matches</button>
+    <button class="tab" data-panel="c">Recent Matches</button>
   </div>
 
   <div class="region-pills" id="regionPills" style="opacity:0">
@@ -5541,6 +5722,15 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
         </div>
       </div>
 
+      <!-- Panel C — Recent Matches -->
+      <div class="panel" id="panelC">
+        <div class="upcoming-panel">
+          <div class="past-heading">Recent Matches</div>
+          <div class="past-sub">Last 7 days &middot; projected probability uses ratings from the morning before each match</div>
+          <div id="pastBody"><div class="no-upcoming">Loading&hellip;</div></div>
+        </div>
+      </div>
+
     </div><!-- panel-track -->
   </div><!-- panels-outer -->
 </main>
@@ -5572,16 +5762,25 @@ function fadeIn(id, dur) {
 
 // ── Constants ────────────────────────────────────────────────────────────────
 const TEAM_COLORS = {
-  SEN:'#e3001a',G2:'#e8b800',NRG:'#ff6600','100T':'#be0000',
-  C9:'#0d8ac8',EG:'#1565c0',MIBR:'#18a040','KR\\u00dc':'#f9c200',
-  LEV:'#7c3aed',FUR:'#ff4500',LOUD:'#a3e635',ENVY:'#9333ea',
-  TL:'#f59e0b',FNC:'#f97316',NAVI:'#fbbf24',VIT:'#dc2626',
-  BBL:'#db2777',GX:'#ec4899',KC:'#ef4444',TH:'#6d28d9',
-  FUT:'#0d9488',M8:'#be185d',PCF:'#65a30d',ULF:'#0284c7',EF:'#b91c1c',
-  PRX:'#0ea5e9',DRX:'#c53030',T1:'#cc0000',GEN:'#15803d',
-  ZETA:'#7e22ce',RRQ:'#9f1239',TS:'#475569',GE:'#0e7490',
-  NS:'#134e4a',FS:'#ea580c',VL:'#1d4ed8',KRX:'#1e40af',
-  DFM:'#b91c1c',TLN:'#0369a1',
+  // Pacific
+  PRX:'#ED1C7C', T1:'#E2012D', FS:'#FF6A00', GE:'#1E90FF',
+  GEN:'#AA8E4F', NS:'#DC0000', DFM:'#E60012', RRQ:'#C8102E',
+  KRX:'#0B1F4D', TS:'#FFCC00', ZETA:'#FFE500', VL:'#8C8C8C',
+  // Americas
+  G2:'#000000', '100T':'#E21F26', LEV:'#00D4D4', NRG:'#FFC72C',
+  'KRÜ':'#FFE600', FUR:'#000000', SEN:'#C8102E', MIBR:'#FFD100',
+  LOUD:'#00FF7F', C9:'#00B6E8', EG:'#0073CF', ENVY:'#6A0DAD',
+  // EMEA
+  VIT:'#FFD100', TH:'#FFD700', FNC:'#FF5900', TL:'#002B5C',
+  NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#FF6600',
+  M8:'#39FF14', BBL:'#FF4500', EF:'#D4AF37', PCF:'#87CEEB',
+  // Legacy / extras kept for older event data
+  DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
+};
+
+// Per-team logo size multipliers — some logos render too large inside the circle
+const LOGO_SCALES = {
+  ZETA: 0.72,
 };
 
 // ── Veto simulation helpers ───────────────────────────────────────────────────
@@ -5696,8 +5895,15 @@ document.querySelectorAll('.tab').forEach(btn => {
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activePanel = btn.dataset.panel;
-    document.getElementById('panelTrack').classList.toggle('show-b', activePanel === 'b');
+    const track = document.getElementById('panelTrack');
+    track.classList.toggle('show-b', activePanel === 'b');
+    track.classList.toggle('show-c', activePanel === 'c');
+    const rp = document.getElementById('regionPills');
+    // Override the inline transition (set by fadeIn) so max-height + margin animate too
+    rp.style.transition = 'opacity .25s ease, max-height .5s cubic-bezier(.55,.06,.36,.98), margin-bottom .5s cubic-bezier(.55,.06,.36,.98)';
+    rp.classList.toggle('hidden-panel', activePanel !== 'a');
     if (activePanel === 'b' && hubData) renderUpcoming(hubData);
+    if (activePanel === 'c' && hubData) renderPast(hubData);
   });
 });
 
@@ -5900,7 +6106,7 @@ async function animateAxesOverlay() {
 
   // Phase 2: curtain sweeps right, revealing chart lines underneath
   await new Promise(resolve => {
-    const dur  = 2600;
+    const dur  = 1700;
     const cw   = ca.right - ca.left;
     const ch   = ca.bottom - ca.top;
     let startT = null;
@@ -5974,12 +6180,32 @@ const logoPlugin = {
       const px   = x.getPixelForValue(new Date(last.x));
       const py   = y.getPixelForValue(last.y);
       if (px < chartArea.left || px > chartArea.right + 30) return;
-      const sz = 20, cx = px + 4 + sz / 2;
+      const _isFocused = (selectedTeam === ds.org) || (_logoHoverOrg === ds.org);
+      const sz = 22;
+
+      if (!_isFocused) {
+        // Default — just a small colored dot, anchored AT the line endpoint
+        ctx.save();
+        ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = ds.borderColor; ctx.fill();
+        ctx.restore();
+        return;
+      }
+
+      // Focused — full logo offset to the right of the line endpoint
+      const cx = px + 4 + sz / 2;
+      const ringR = sz / 2 + 4;
       ctx.save();
-      ctx.beginPath(); ctx.arc(cx, py, sz / 2 + 2, 0, Math.PI * 2);
-      ctx.fillStyle = ds.borderColor; ctx.fill();
+      const grd = ctx.createRadialGradient(cx, py, 0, cx, py, ringR);
+      grd.addColorStop(0, '#ffffff');
+      grd.addColorStop(0.62, '#ffffff');
+      grd.addColorStop(1, ds.borderColor);
+      ctx.beginPath(); ctx.arc(cx, py, ringR, 0, Math.PI * 2);
+      ctx.fillStyle = grd; ctx.fill();
       ctx.beginPath(); ctx.arc(cx, py, sz / 2, 0, Math.PI * 2); ctx.clip();
-      ctx.drawImage(logos[ds.org], cx - sz / 2, py - sz / 2, sz, sz);
+      const _logoScale = (LOGO_SCALES[ds.org] != null) ? LOGO_SCALES[ds.org] : 1;
+      const _drawSz = sz * _logoScale;
+      ctx.drawImage(logos[ds.org], cx - _drawSz / 2, py - _drawSz / 2, _drawSz, _drawSz);
       ctx.restore();
 
       // Mini info card for the selected team
@@ -6159,15 +6385,18 @@ function _initCanvasListeners() {
   function _hitTestLogos(mx, my) {
     if (!myChart || !logos) return null;
     const {scales: {x, y}} = myChart;
-    const sz = 20, pad = 4;
+    // Hit area covers both the small dot (at px,py) and the focused logo (offset to right)
+    const hitR = 9;  // generous radius so dots are easy to grab
     let hit = null;
     myChart.data.datasets.forEach(ds => {
       if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
       const last = ds.data[ds.data.length - 1];
       const px = x.getPixelForValue(new Date(last.x));
       const py = y.getPixelForValue(last.y);
-      const cx = px + pad + sz / 2;
-      if (Math.sqrt((mx - cx) ** 2 + (my - py) ** 2) <= sz / 2 + 4) hit = ds.org;
+      if (Math.sqrt((mx - px) ** 2 + (my - py) ** 2) <= hitR) { hit = ds.org; return; }
+      // Also test the focused logo position so hovering the expanded logo keeps it focused
+      const cxFocused = px + 4 + 11;
+      if (Math.sqrt((mx - cxFocused) ** 2 + (my - py) ** 2) <= 15) hit = ds.org;
     });
     return hit;
   }
@@ -6313,7 +6542,7 @@ let _isZoomed     = false;
 let _savedZoomMin = null;
 let _savedZoomMax = null;
 
-async function revealChart(duration = 4000, startFromLeft = false) {
+async function revealChart(duration = 2500, startFromLeft = false) {
   if (!myChart || !hubData) return;
   _isReplaying = true;
   const btn = document.getElementById('replayBtn');
@@ -6490,7 +6719,7 @@ async function revealChart(duration = 4000, startFromLeft = false) {
 
 async function replayChart() {
   if (_isReplaying) return;
-  await revealChart(6000);
+  await revealChart(3700);
 }
 
 async function animateZoom(toMin, toMax, duration) {
@@ -6587,7 +6816,7 @@ async function showChartAndLeaderboard(data) {
 
   // Rebuild with real lines, then immediately sweep curtain from left
   buildChart(data);
-  await revealChart(7000, true);
+  await revealChart(4400, true);
 
   // Show leaderboard and pills after reveal completes
   showEl('lbCard');
@@ -7211,6 +7440,365 @@ function renderUpcoming(data) {
       if (hint) hint.textContent = card.classList.contains('open') ? '▾ collapse' : '▸ expand';
     });
   });
+
+  triggerUpcomingFlyIn();
+}
+
+// ── Past matches ─────────────────────────────────────────────────────────────
+function renderPast(data) {
+  var past = (data.past_matches || []).slice().sort(function(a,b){
+    return (b.date||'').localeCompare(a.date||'');
+  });
+  var body = document.getElementById('pastBody');
+  if (!past.length) {
+    body.innerHTML = '<div class="no-upcoming">No matches played in the past 7 days.</div>';
+    triggerPastFlyIn();
+    return;
+  }
+
+  // Reuse leaderboard like upcoming, for dropdown veto/map sim
+  var snapKey   = data.snap_key || 'live';
+  var lbTeams = {};
+  ((data.leaderboard||{}).teams || []).forEach(function(t){ lbTeams[t.org] = t; });
+  var beta = (data.leaderboard||{}).beta || 0.3237;
+  var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
+              || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
+  var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
+  var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific'};
+  var nSims = 2000;
+
+  // Per-match pool: each regional league runs its own 7-map pool, so prefer
+  // event+region match, then region, then event-wide fallback.
+  var eventPools       = data.past_event_pools || {};
+  var regionPools      = data.past_region_pools || {};
+  var regionEventPools = data.past_region_event_pools || {};
+  function getMatchPool(m) {
+    var evId   = m.event_id || '';
+    var region = m.region   || '';
+    var p = regionEventPools[evId + ':' + region];
+    if (p && p.length) return p;
+    p = regionPools[region];
+    if (p && p.length) return p;
+    p = eventPools[evId];
+    if (p && p.length) return p;
+    p = (VETO_HUB.computed_pools||{})[evId];
+    if (!p || !p.length) p = (VETO_HUB.snap_pools||{})[evId];
+    if (p && p.length) return p;
+    return livePool;
+  }
+
+  function getTeamObj(org) {
+    var lb = lbTeams[org];
+    var overall = lb ? lb.rating : 0;
+    var maps = {};
+    var st = (typeof SNAP_TEAMS!=='undefined') ? SNAP_TEAMS[org] : null;
+    if (st && st.maps) {
+      Object.keys(st.maps).forEach(function(mp){ maps[mp] = Object.assign({}, st.maps[mp]); });
+    } else if (lb) {
+      (lb.all_maps||[]).forEach(function(mm){
+        maps[mm.map] = {rating:mm.rating, w:mm.w, l:mm.l, win_pct: mm.w/Math.max(1,mm.w+mm.l)};
+      });
+    }
+    var live = liveMapStats[org];
+    if (live) {
+      Object.keys(live).forEach(function(mp){ maps[mp] = Object.assign(maps[mp]||{}, live[mp]); });
+    }
+    if (!Object.keys(maps).length && !overall) return null;
+    return {overall_rating: overall, maps: maps};
+  }
+
+  function buildCard(m) {
+    var orgA = m.org_a || m.team_a;
+    var orgB = m.org_b || m.team_b;
+    var matchFmt = m.format || 'bo3';
+    var matchThresh = SERIES_THRESH_HUB[matchFmt] || 2;
+    var tA = getTeamObj(orgA), tB = getTeamObj(orgB);
+    var ratingA = (m.rating_a != null) ? m.rating_a : 0;
+    var ratingB = (m.rating_b != null) ? m.rating_b : 0;
+    var region = m.region || '';
+    var rgnCls = REGION_CLS[region] || '';
+
+    // Pool comes from the match's event/region, but veto-pattern data is only
+    // stored under snapshot keys like "2026_after_santiago" — fall back to the
+    // live snap key (which IS that snapshot for current matches).
+    var pool = getMatchPool(m);
+    var vetoSnapKey = '2026_' + (data.snap_key || 'live');
+
+    var seriesWins=0;
+    var mapWins={}, mapPlays={};
+    pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
+
+    // Per-map rating: blend overall rating (50%) with the map-specific rating (50%).
+    // The live_map_stats overlay can produce noisy small-sample map ratings (e.g. a 3-0
+    // record yields +2.83, which combined with another team's snap rating explodes
+    // probabilities to >90%). Blending pulls the per-map rating toward the team's
+    // true skill, and the prob is also clamped to a realistic [0.18, 0.82] range.
+    var overallA = (tA && tA.overall_rating != null) ? tA.overall_rating : ratingA;
+    var overallB = (tB && tB.overall_rating != null) ? tB.overall_rating : ratingB;
+    if (tA && tB) {
+      for (var s=0; s<nSims; s++) {
+        var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt);
+        var sw = 0;
+        pool.forEach(function(mp){
+          var fc = fm[mp] || 'banA';
+          if (fc==='pickA'||fc==='pickB'||fc==='dec') {
+            mapPlays[mp]++;
+            var rawA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:overallA;
+            var rawB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:overallB;
+            var dA = 0.5*rawA + 0.5*overallA;
+            var dB = 0.5*rawB + 0.5*overallB;
+            var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
+            var pWin = 1/(1+Math.exp(-beta*(gA-gB)));
+            if (pWin < 0.18) pWin = 0.18;
+            else if (pWin > 0.82) pWin = 0.82;
+            if (Math.random()<pWin) { sw++; mapWins[mp]++; }
+          }
+        });
+        if (sw >= matchThresh) seriesWins++;
+      }
+    }
+
+    // Projected probabilities — use the morning-of value from backend (m.win_prob_*)
+    var pctA = (m.win_prob_a != null) ? (m.win_prob_a*100).toFixed(1)
+             : (100/(1+Math.exp(-beta*(ratingA-ratingB)))).toFixed(1);
+    var pctB = (100 - parseFloat(pctA)).toFixed(1);
+
+    var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
+    var topSeqs = (tA&&tB&&pool.length) ? topVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt,1) : [];
+    var playedMaps = pool.filter(function(mp){ return mapPlays[mp]>0; })
+                        .sort(function(a,b){ return mapPlays[b]-mapPlays[a]; });
+
+    var vetoSeqsHtml = '';
+    if (hasPatt && topSeqs.length) {
+      var sq = topSeqs[0];
+      var seqRow = sq.seq.map(function(step, idx){
+        var key = step.action+step.side;
+        var cls = (ACTION_CLS[key]||ACTION_CLS.dec)[0];
+        var lbl = actionLabelHUB(orgA, orgB, key);
+        return '<div class="upc-veto-step">'+
+          '<span class="step-lbl '+cls+'">'+lbl+'</span>'+
+          '<span class="upc-veto-map">'+step.map+'</span>'+
+        '</div>'+(idx<sq.seq.length-1?'<span class="step-arrow">›</span>':'');
+      }).join('');
+      vetoSeqsHtml = '<div class="upc-section-lbl">Predicted Veto</div>'+
+        '<div class="upc-veto-seqs"><div class="upc-veto-seq-row">'+seqRow+'</div></div>';
+    }
+
+    // Actual maps played — shown alongside model breakdown for past matches
+    var actualMapsHtml = '';
+    if (m.maps_played && m.maps_played.length) {
+      actualMapsHtml = '<div class="upc-section-lbl">Maps Played (Result)</div>'+
+        '<table class="upc-map-table"><thead><tr>'+
+          '<th>Map</th><th>Winner</th><th>Score</th>'+
+        '</tr></thead><tbody>'+
+        m.maps_played.map(function(mp){
+          var winLbl = mp.winner || '';
+          var score  = (mp.wr != null && mp.lr != null) ? (mp.wr+'-'+mp.lr) : '';
+          var winCls = winLbl===orgA ? 'fav' : (winLbl===orgB ? 'dog' : 'neu');
+          return '<tr>'+
+            '<td><img src="/maps/'+(mp.map||'').toLowerCase()+'.png" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+(mp.map||'')+'</td>'+
+            '<td class="upc-map-td-wp '+winCls+'">'+winLbl+'</td>'+
+            '<td style="color:#444;font-size:.7rem">'+score+'</td>'+
+          '</tr>';
+        }).join('')+
+        '</tbody></table>';
+    }
+
+    var mapTableHtml = '';
+    if (playedMaps.length) {
+      var totalSims = nSims;
+      var vetoSeqForMap = {};
+      if (topSeqs.length) {
+        topSeqs[0].seq.forEach(function(step){
+          vetoSeqForMap[step.map] = step.action + step.side;
+        });
+      }
+      mapTableHtml = '<div class="upc-section-lbl">Model&rsquo;s Map Projection</div>'+
+        '<table class="upc-map-table">'+
+        '<thead><tr>'+
+          '<th>Map</th><th>Played</th><th>'+orgA+'</th><th>'+orgB+'</th>'+
+          (Object.keys(vetoSeqForMap).length?'<th>Veto</th>':'')+
+        '</tr></thead><tbody>';
+      playedMaps.forEach(function(mp){
+        var wp = mapWins[mp]/mapPlays[mp];
+        var wpPctA = Math.round(wp*100);
+        var wpPctB = 100-wpPctA;
+        var clsA = wp>=0.55?'fav':(wp<=0.45?'dog':'neu');
+        var clsB = (1-wp)>=0.55?'fav':((1-wp)<=0.45?'dog':'neu');
+        var playedPct = Math.round(mapPlays[mp]/totalSims*100);
+        var vetoKey = vetoSeqForMap[mp] || '';
+        var vetoLbl = vetoKey ? actionLabelHUB(orgA, orgB, vetoKey) : '';
+        var vetoCls = vetoKey ? (ACTION_CLS[vetoKey]||ACTION_CLS.dec)[0] : '';
+        mapTableHtml += '<tr>'+
+          '<td><img src="/maps/'+mp.toLowerCase()+'.png" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+mp+'</td>'+
+          '<td style="color:#888;font-size:.65rem">'+playedPct+'%</td>'+
+          '<td class="upc-map-td-wp '+clsA+'">'+wpPctA+'%</td>'+
+          '<td class="upc-map-td-wp '+clsB+'">'+wpPctB+'%</td>'+
+          (Object.keys(vetoSeqForMap).length?'<td class="upc-map-td-veto">'+(vetoLbl?'<span class="step-lbl '+vetoCls+'">'+vetoLbl+'</span>':'—')+'</td>':'')+
+        '</tr>';
+      });
+      mapTableHtml += '</tbody></table>';
+    }
+
+    function recentMatchesHtml(org) {
+      var lb = lbTeams[org];
+      var recent = lb ? (lb.recent_matches || []) : [];
+      recent = recent.slice(0, 3);
+      if (!recent.length) return '<div style="color:#aaa;font-size:.68rem">No data</div>';
+      return recent.map(function(r){
+        var resultCls = r.result==='W' ? 'w' : 'l';
+        var dateStr = r.date ? new Date(r.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        var scoreParts = (r.score||'').split('-');
+        var displayScore = (r.result==='L' && scoreParts.length===2)
+          ? scoreParts[1]+'-'+scoreParts[0] : r.score;
+        return '<div class="upc-recent-match">'+
+          '<span class="upc-recent-result '+resultCls+'">'+r.result+'</span>'+
+          '<span class="upc-recent-opp">vs '+r.opponent+'</span>'+
+          '<span class="upc-recent-score">'+displayScore+'</span>'+
+          '<span class="upc-recent-evt">'+dateStr+'</span>'+
+        '</div>';
+      }).join('');
+    }
+    var recentHtml = '<div class="upc-section-lbl">Recent Form</div>'+
+      '<div class="upc-recent-row">'+
+        '<div class="upc-recent-col"><div class="upc-recent-col-hdr">'+orgA+'</div>'+recentMatchesHtml(orgA)+'</div>'+
+        '<div class="upc-recent-col"><div class="upc-recent-col-hdr">'+orgB+'</div>'+recentMatchesHtml(orgB)+'</div>'+
+      '</div>';
+
+    var dateLabel = m.date ? new Date(m.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    var rtgA = '<span class="upc-rtg">'+(ratingA>=0?'+':'')+ratingA.toFixed(2)+'</span>';
+    var rtgB = '<span class="upc-rtg">'+(ratingB>=0?'+':'')+ratingB.toFixed(2)+'</span>';
+    var fmtLabel = matchFmt==='bo5'?'Bo5':matchFmt==='bo1'?'Bo1':'Bo3';
+
+    // Result strip — actual winner + score. Upset if the underdog won.
+    var winnerOrg = m.actual_winner === 'a' ? orgA : orgB;
+    var winnerPct = m.actual_winner === 'a' ? parseFloat(pctA) : parseFloat(pctB);
+    var isUpset = winnerPct < 50;
+    var resultHtml = '<div class="upc-result-strip">'+
+      '<span class="upc-result-label">Final</span>'+
+      '<span class="upc-result-score">'+orgA+' '+(m.actual_score||'')+' '+orgB+'</span>'+
+      '<span class="upc-result-winner'+(isUpset?' upc-result-upset':'')+'">'+winnerOrg+(isUpset?' &middot; upset':' wins')+'</span>'+
+    '</div>';
+
+    return '<div class="upc-card '+rgnCls+'">'+
+      '<div class="upc-header">'+
+        '<div class="upc-team-a">'+
+          '<img class="upc-logo" src="/static/logos/'+orgA+'.png" onerror="this.style.opacity=\\'0\\'">'+
+          '<span class="upc-org">'+orgA+'</span>'+rtgA+
+        '</div>'+
+        '<div class="upc-center">'+
+          '<div class="upc-date-event">'+dateLabel+(m.event?' · '+m.event:'')+' · '+fmtLabel+'</div>'+
+          '<div class="upc-pre-label">Pre-match projection</div>'+
+          '<div class="upc-bar-wrap">'+
+            '<div class="upc-bar-a" style="width:'+pctA+'%"></div>'+
+            '<div class="upc-bar-b" style="width:'+pctB+'%"></div>'+
+          '</div>'+
+          '<div class="upc-pcts">'+
+            '<span class="upc-pct '+(pctA>=50?'fav':'dog')+'">'+pctA+'%</span>'+
+            '<span class="upc-pct '+(pctB>=50?'fav':'dog')+'">'+pctB+'%</span>'+
+          '</div>'+
+          resultHtml+
+        '</div>'+
+        '<div class="upc-team-b">'+
+          '<img class="upc-logo" src="/static/logos/'+orgB+'.png" onerror="this.style.opacity=\\'0\\'">'+
+          '<span class="upc-org">'+orgB+'</span>'+rtgB+
+        '</div>'+
+      '</div>'+
+      '<div class="upc-details">'+
+        '<div class="upc-details-inner">'+
+          (actualMapsHtml || '')+
+          (vetoSeqsHtml || '')+
+          (mapTableHtml || '')+
+          recentHtml+
+        '</div>'+
+      '</div>'+
+      '<div class="upc-expand-hint">▸ expand</div>'+
+    '</div>';
+  }
+
+  var cardHtmlArr = past.map(buildCard);
+
+  // Group by date
+  var groups = [];
+  var curDate = null;
+  past.forEach(function(m, i) {
+    if (m.date !== curDate) {
+      curDate = m.date;
+      groups.push({date: m.date, indices: []});
+    }
+    groups[groups.length-1].indices.push(i);
+  });
+  var groupedHtml = groups.map(function(g) {
+    var dateLabel = g.date ? new Date(g.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) : '';
+    return '<div class="upc-day-group">'+
+      '<div class="upc-day-label">'+dateLabel+'</div>'+
+      g.indices.map(function(i){ return cardHtmlArr[i]; }).join('')+
+    '</div>';
+  }).join('');
+
+  body.innerHTML = '<div class="upc-list">'+groupedHtml+'</div>';
+
+  body.querySelectorAll('.upc-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      card.classList.toggle('open');
+      var hint = card.querySelector('.upc-expand-hint');
+      if (hint) hint.textContent = card.classList.contains('open') ? '▾ collapse' : '▸ expand';
+    });
+  });
+
+  triggerPastFlyIn();
+}
+
+// ── Letter-by-letter fly-in for Upcoming Matches panel ───────────────────────
+function _splitIntoChars(el) {
+  if (!el || el.dataset.split === '1') return;
+  var text = el.textContent;
+  el.textContent = '';
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    var span = document.createElement('span');
+    span.className = 'fly-char';
+    span.textContent = ch === ' ' ? ' ' : ch;
+    el.appendChild(span);
+  }
+  el.dataset.split = '1';
+}
+function _flyInPanel(panelSel, headingSel, subSel) {
+  var root    = document.querySelector(panelSel);
+  if (!root) return;
+  var heading = root.querySelector(headingSel);
+  var sub     = root.querySelector(subSel);
+  var list    = root.querySelector('.upc-list');
+  _splitIntoChars(heading);
+  _splitIntoChars(sub);
+
+  if (heading) heading.classList.remove('fly-in');
+  if (sub)     sub.classList.remove('fly-in');
+  if (list)    list.classList.remove('fly-in');
+
+  var hChars = heading ? heading.querySelectorAll('.fly-char') : [];
+  hChars.forEach(function(c, i) { c.style.transitionDelay = (i * 35) + 'ms'; });
+  var headingDur = hChars.length * 35 + 450;
+
+  var sChars = sub ? sub.querySelectorAll('.fly-char') : [];
+  sChars.forEach(function(c, i) { c.style.transitionDelay = (headingDur * 0.4 + i * 14) + 'ms'; });
+  var subDur = headingDur * 0.4 + sChars.length * 14 + 350;
+
+  var cards = list ? list.querySelectorAll('.upc-card') : [];
+  cards.forEach(function(c, i) { c.style.transitionDelay = (subDur * 0.55 + i * 70) + 'ms'; });
+
+  void document.body.offsetWidth;
+  requestAnimationFrame(function() {
+    if (heading) heading.classList.add('fly-in');
+    if (sub)     sub.classList.add('fly-in');
+    if (list)    list.classList.add('fly-in');
+  });
+}
+function triggerUpcomingFlyIn() {
+  _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub');
+}
+function triggerPastFlyIn() {
+  _flyInPanel('#panelC', '.past-heading', '.past-sub');
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
