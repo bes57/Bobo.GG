@@ -7187,7 +7187,9 @@ def mapelo_modern_debug_fetch():
                         'https://www.vlr.gg/event/matches/2863/vct-2026-emea-stage-1/')
     try:
         # Import lazily so this endpoint stays usable even if scrapers fail
-        sys.path.insert(0, ROOT)
+        import sys as _sys
+        if ROOT not in _sys.path:
+            _sys.path.insert(0, ROOT)
         from scrapers.RefreshLiveData import (
             _CFFI_AVAILABLE, _CFFI_VERSION, _curl_cffi_err,
             _CS_AVAILABLE, _cloudscraper_err,
