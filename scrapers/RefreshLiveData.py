@@ -597,7 +597,7 @@ def main():
             _write("checking", pct,
                    f"{t['label']} / {region}: {len(urls)} completed, {len(new)} new",
                    [f"✓ {t['label']} / {region}: {len(urls)} completed ({len(new)} new)"])
-            time.sleep(0.6)
+            time.sleep(0.2)  # was 0.6 — kept sequential (Cloudflare-safe) but shorter
 
     _write("checking", 30,
            f"Scan complete — {total_completed} completed across {len(targets)} live event(s), "
@@ -611,7 +611,7 @@ def main():
         for region, vlr_id, slug in t["regions"]:
             upc = _scrape_upcoming_for(vlr_id, slug, region, t["label"])
             all_upcoming.extend(upc)
-            time.sleep(0.4)
+            time.sleep(0.15)  # was 0.4
 
     seen = set()
     deduped = []
@@ -652,7 +652,7 @@ def main():
         by_event_series.setdefault(ev_id, []).extend(sr)
         _write("scraping", pct, f"Scraping {i}/{total_new}…",
                [f"  [{region}] {display}"])
-        time.sleep(0.7)
+        time.sleep(0.25)  # was 0.7
 
     # Persist per event
     for ev_id, rows in by_event_maps.items():
@@ -724,7 +724,7 @@ def main():
         if i % 10 == 0:
             with open(out_path, "w") as f:
                 json.dump(existing_dates, f)
-        time.sleep(0.45)
+        time.sleep(0.15)  # was 0.45
 
     try:
         with open(out_path, "w") as f:
