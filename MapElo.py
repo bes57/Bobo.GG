@@ -2522,6 +2522,10 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .cf-item.center .cf-card { box-shadow:0 10px 28px #5a2a7a33, 0 0 0 2px #d4b8f4; transform:scale(1.04); }
   .cf-item img { max-width:74px; max-height:74px; object-fit:contain; }
   .cf-item .cf-fallback { font-family:'Syne',sans-serif; font-weight:800; font-size:.85rem; color:var(--ink); text-align:center; }
+  .cf-rtg { font-family:'Syne',sans-serif; font-weight:800; font-size:.72rem; font-variant-numeric:tabular-nums; margin-top:6px; padding:2px 8px; border-radius:99px; background:rgba(0,0,0,.04); letter-spacing:.02em; }
+  .cf-rtg-pos { color:#16a34a; }
+  .cf-rtg-neg { color:#dc2626; }
+  .cf-item.center .cf-rtg { background:rgba(124,58,237,.12); font-size:.78rem; }
   .cf-name { text-align:center; font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:-.02em; color:var(--ink); margin-top:6px; min-height:1.4em; }
   .cf-region { text-align:center; font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:2px; min-height:1em; }
   .cf-arrows { display:flex; justify-content:space-between; padding:0 6px; pointer-events:none; position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); z-index:6; }
@@ -2870,11 +2874,20 @@ function buildCoverflow(side){
   var stage = document.getElementById('cf-'+side);
   var track = stage.querySelector('.cf-track');
   var st = CF[side];
+  var year = side==='a' ? yearA : yearB;
+  var snap = side==='a' ? snapA : snapB;
+  var sd = getSnapData(year, snap);
+  var sdTeams = (sd && sd.teams) || {};
   track.innerHTML = st.teams.map(function(t,i){
+    var teamObj = sdTeams[t] || {};
+    var rating = (teamObj.overall_rating != null) ? teamObj.overall_rating : 0;
+    var rStr = (rating >= 0 ? '+' : '') + rating.toFixed(2);
+    var rCls = rating >= 0 ? 'cf-rtg-pos' : 'cf-rtg-neg';
     return '<div class="cf-item" data-side="'+side+'" data-idx="'+i+'">'+
       '<div class="cf-card">'+
         '<img src="/logos/'+t+'.png" alt="'+t+'" onerror="this.outerHTML=\\'<div class=cf-fallback>'+t+'</div>\\'">'+
       '</div>'+
+      '<div class="cf-rtg '+rCls+'">'+rStr+'</div>'+
     '</div>';
   }).join('');
   track.querySelectorAll('.cf-item').forEach(function(el){
@@ -4446,20 +4459,39 @@ def mapelo_matchup():
             _snaps = ((frontend_data["ratings"].get("2026") or {}).get("snapshots") or {})
             _target = _snaps.get("after_santiago")
             if _target is not None:
-                _existing = set((_target.get("teams") or {}).keys())
-                # Build map-rating template from existing teams: same map list,
-                # but rating defaults to that team's overall (no map advantage).
-                _example_team = next(iter(_target.get("teams", {}).values()), None)
+                _existing_teams = _target.get("teams") or {}
+                # (a) Shift each existing team's ratings by the delta between
+                # their current last-checkpoint rating and their snap overall.
+                # Result: overall_rating = current rating; per-map ratings
+                # preserve relative strengths but are anchored to "now".
+                for _org, _td in list(_existing_teams.items()):
+                    if _org not in _last_ratings:
+                        continue
+                    _cur = float(_last_ratings[_org])
+                    _snap_overall = float(_td.get("overall_rating", _cur))
+                    _delta = _cur - _snap_overall
+                    if abs(_delta) < 1e-6:
+                        continue
+                    _td["overall_rating"] = round(_cur, 4)
+                    for _m, _md in (_td.get("maps") or {}).items():
+                        if "rating" in _md and _md["rating"] is not None:
+                            _md["rating"] = round(float(_md["rating"]) + _delta, 4)
+                # (b) Augment with active 2026 orgs that weren't in the
+                # snapshot at all — use last-checkpoint rating as overall
+                # and neutral map ratings.
+                _example_team = next(iter(_existing_teams.values()), None)
                 _map_keys = list((_example_team or {}).get("maps", {}).keys()) if _example_team else []
+                _existing = set(_existing_teams.keys())
                 for _org in ACTIVE_2026_ORGS:
                     if _org in _existing:
                         continue
                     _r = float(_last_ratings.get(_org, 0.0))
-                    _target.setdefault("teams", {})[_org] = {
+                    _existing_teams[_org] = {
                         "overall_rating": _r,
                         "w": 0, "l": 0,
                         "maps": {_m: {"rating": _r, "w": 0, "l": 0, "win_pct": 0.5} for _m in _map_keys},
                     }
+                _target["teams"] = _existing_teams
         except Exception:
             pass
 
