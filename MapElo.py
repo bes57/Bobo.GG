@@ -2727,9 +2727,27 @@ var VETO = DATA.veto_model || {teams:{}, snap_pools:{}};
 var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
-var yearA = '2023', snapA = 'after_champions';
-var yearB = '2025', snapB = 'after_champions';
+var LOCK_CURRENT = LOCK_CURRENT_FLAG;
+var yearA = LOCK_CURRENT ? '2026' : '2023';
+var snapA = LOCK_CURRENT ? 'after_santiago' : 'after_champions';
+var yearB = LOCK_CURRENT ? '2026' : '2025';
+var snapB = LOCK_CURRENT ? 'after_santiago' : 'after_champions';
 var fmt = 'bo3';
+
+// When embedded as the Modern Hub "Simulator" tab, hide year/snap pickers
+// and the home-button nav — both sides are pinned to the current 2026 snap.
+if (LOCK_CURRENT) {
+  document.addEventListener('DOMContentLoaded', function(){
+    var css = document.createElement('style');
+    css.textContent =
+      '.yr-scrubber, .snap-seg { display: none !important; }' +
+      '.top-nav { display: none !important; }' +
+      '.page > h1, .page > .subtitle { display: none !important; }' +
+      'body { background: transparent !important; }' +
+      'body::before, body::after { display: none !important; }';
+    document.head.appendChild(css);
+  });
+}
 
 function getGlobalRating(org, snapKey, domesticRating) {
   var cal = INTL[snapKey] || {};
@@ -4374,6 +4392,7 @@ def mapelo_home():
 
 @mapelo_bp.route('/matchup/')
 def mapelo_matchup():
+    from flask import request as _req
     full  = get_ratings()
     veto  = get_veto_model()
     intl  = get_intl_calibration()
@@ -4386,7 +4405,67 @@ def mapelo_matchup():
         'intl_params': intl.get('params', {}),
         'org_regions': ORG_REGIONS,
     }
-    return MAPELO_MATCHUP_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
+    lock_current = _req.args.get('lockCurrent') == '1'
+
+    # When embedded in the Modern Hub Simulator tab:
+    #   (1) augment the snapshot's team list to include every 2026 active org
+    #   (2) override the snap_pool to reflect the LIVE current map pool
+    #       (top 7 most-played maps across past-7-days of current event matches)
+    if lock_current:
+        try:
+            from datetime import datetime as _dtnow, timedelta as _tdnow
+            _live_recs = []
+            for _eid in ("2026_stage1", "2026_masters_santiago", "2026_kickoff"):
+                _live_recs.extend(_load_event_map_records([_eid]))
+            # Filter to past 14 days of matches → current rotation
+            _today = _dtnow.utcnow().date()
+            _cutoff = (_today - _tdnow(days=14)).isoformat()
+            _counts = {}
+            for _d, _mid, _maps in _live_recs:
+                if _d < _cutoff:
+                    continue
+                for _m in _maps:
+                    if _m:
+                        _counts[_m] = _counts.get(_m, 0) + 1
+            _ranked = sorted(_counts.items(), key=lambda kv: (-kv[1], kv[0]))
+            _live_pool = [n for n, _c in _ranked[:7]]
+            if _live_pool:
+                frontend_data["veto_model"].setdefault("snap_pools", {})["2026_after_santiago"] = _live_pool
+                frontend_data["veto_model"].setdefault("computed_pools", {})["2026_after_santiago"] = _live_pool
+        except Exception:
+            pass
+        try:
+            tl_path = os.path.join(ROOT, "data", "rating_timeline.json")
+            if os.path.exists(tl_path):
+                with open(tl_path) as _f:
+                    _tl = json.load(_f)
+                _cps = _tl.get("checkpoints", []) or []
+                _last_ratings = _cps[-1].get("ratings", {}) if _cps else {}
+            else:
+                _last_ratings = {}
+            _snaps = ((frontend_data["ratings"].get("2026") or {}).get("snapshots") or {})
+            _target = _snaps.get("after_santiago")
+            if _target is not None:
+                _existing = set((_target.get("teams") or {}).keys())
+                # Build map-rating template from existing teams: same map list,
+                # but rating defaults to that team's overall (no map advantage).
+                _example_team = next(iter(_target.get("teams", {}).values()), None)
+                _map_keys = list((_example_team or {}).get("maps", {}).keys()) if _example_team else []
+                for _org in ACTIVE_2026_ORGS:
+                    if _org in _existing:
+                        continue
+                    _r = float(_last_ratings.get(_org, 0.0))
+                    _target.setdefault("teams", {})[_org] = {
+                        "overall_rating": _r,
+                        "w": 0, "l": 0,
+                        "maps": {_m: {"rating": _r, "w": 0, "l": 0, "win_pct": 0.5} for _m in _map_keys},
+                    }
+        except Exception:
+            pass
+
+    html = MAPELO_MATCHUP_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
+    html = html.replace('LOCK_CURRENT_FLAG', 'true' if lock_current else 'false')
+    return html
 
 @mapelo_bp.route('/pythagorean/')
 def mapelo_pythagorean():
@@ -5354,10 +5433,11 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .tab:hover:not(.active){border-color:#9c6ec8;color:#000}
 
 .panels-outer{overflow:hidden}
-.panel-track{display:flex;width:300%;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
-.panel-track.show-b{transform:translateX(-33.3333%)}
-.panel-track.show-c{transform:translateX(-66.6666%)}
-.panel{width:33.3333%;min-width:0}
+.panel-track{display:flex;width:400%;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
+.panel-track.show-b{transform:translateX(-25%)}
+.panel-track.show-c{transform:translateX(-50%)}
+.panel-track.show-d{transform:translateX(-75%)}
+.panel{width:25%;min-width:0}
 
 .region-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;transition:opacity .3s,max-height .5s cubic-bezier(.55,.06,.36,.98),margin-bottom .5s cubic-bezier(.55,.06,.36,.98);justify-content:center;padding:0 24px;overflow:hidden;max-height:60px}
 .region-pills.hidden-panel{opacity:0 !important;max-height:0;margin-bottom:0;pointer-events:none;transition:opacity .25s,max-height .45s cubic-bezier(.55,.06,.36,.98) .15s,margin-bottom .45s cubic-bezier(.55,.06,.36,.98) .15s}
@@ -5563,15 +5643,21 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .upcoming-heading .fly-char,
 .upcoming-sub .fly-char,
 .past-heading .fly-char,
-.past-sub .fly-char{display:inline-block;opacity:0;transform:translateX(60px);transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
+.past-sub .fly-char,
+.sim-heading .fly-char,
+.sim-sub .fly-char{display:inline-block;opacity:0;transform:translateX(60px);transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
 .upcoming-heading.flying .fly-char,
 .upcoming-sub.flying .fly-char,
 .past-heading.flying .fly-char,
-.past-sub.flying .fly-char{will-change:transform,opacity}
+.past-sub.flying .fly-char,
+.sim-heading.flying .fly-char,
+.sim-sub.flying .fly-char{will-change:transform,opacity}
 .upcoming-heading.fly-in .fly-char,
 .upcoming-sub.fly-in .fly-char,
 .past-heading.fly-in .fly-char,
-.past-sub.fly-in .fly-char{opacity:1;transform:translateX(0)}
+.past-sub.fly-in .fly-char,
+.sim-heading.fly-in .fly-char,
+.sim-sub.fly-in .fly-char{opacity:1;transform:translateX(0)}
 /* Match cards fly in from right with cascade */
 .upc-list .upc-card{opacity:0;transform:translateX(80px);transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease;will-change:transform,opacity}
 .upc-list.fly-in .upc-card{opacity:1;transform:translateX(0)}
@@ -5582,6 +5668,9 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 /* Recent Matches heading (mirror upcoming-heading) */
 .past-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
 .past-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center;max-width:560px;margin-left:auto;margin-right:auto}
+
+/* Simulator panel — full historical-matchup tool via iframe */
+.sim-iframe{width:100%;min-height:2400px;border:0;background:transparent;display:block}
 
 /* Result strip on past-match cards */
 .upc-result-strip{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;padding:6px 10px;border-radius:8px;background:rgba(0,0,0,.04);font-size:.74rem;font-weight:700;letter-spacing:.02em}
@@ -5690,6 +5779,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
     <button class="tab active" data-panel="a">BenPom Ratings</button>
     <button class="tab" data-panel="b">Upcoming Matches</button>
     <button class="tab" data-panel="c">Recent Matches</button>
+    <button class="tab" data-panel="d">Simulator</button>
   </div>
 
   <div class="region-pills" id="regionPills" style="opacity:0">
@@ -5770,6 +5860,12 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
           <div class="past-sub">Last 7 days &middot; projected probability uses ratings from the morning before each match</div>
           <div id="pastBody"><div class="no-upcoming">Loading&hellip;</div></div>
         </div>
+      </div>
+
+      <!-- Panel D — Match Simulator (embeds the full historical matchup tool,
+           with year/snap pickers hidden so both sides are pinned to current) -->
+      <div class="panel" id="panelD">
+        <iframe class="sim-iframe" id="simIframe" src="about:blank" loading="lazy"></iframe>
       </div>
 
     </div><!-- panel-track -->
@@ -5941,12 +6037,14 @@ document.querySelectorAll('.tab').forEach(btn => {
     const track = document.getElementById('panelTrack');
     track.classList.toggle('show-b', activePanel === 'b');
     track.classList.toggle('show-c', activePanel === 'c');
+    track.classList.toggle('show-d', activePanel === 'd');
     const rp = document.getElementById('regionPills');
     // Override the inline transition (set by fadeIn) so max-height + margin animate too
     rp.style.transition = 'opacity .25s ease, max-height .5s cubic-bezier(.55,.06,.36,.98), margin-bottom .5s cubic-bezier(.55,.06,.36,.98)';
     rp.classList.toggle('hidden-panel', activePanel !== 'a');
     if (activePanel === 'b' && hubData) renderUpcoming(hubData);
     if (activePanel === 'c' && hubData) renderPast(hubData);
+    if (activePanel === 'd') renderSimulator();
   });
 });
 
@@ -7277,11 +7375,22 @@ function renderUpcoming(data) {
                        win_pct: m.w/Math.max(1,m.w+m.l)};
       });
     }
-    // Overlay live Stage-1 win rates (Bayesian-shrunk, min 2 games)
+    // Overlay live Stage-1 win rates for veto-heuristic purposes (win_pct/w/l)
+    // but DO NOT replace the rating — small-sample live ratings (e.g. a 3-0
+    // record yielding +2.83) blow out the per-map probability calculation
+    // and the historical matchup algorithm — which we want to match — only
+    // uses the calibrated snapshot rating.
     var live = liveMapStats[org];
     if (live) {
       Object.keys(live).forEach(function(mp){
-        maps[mp] = Object.assign(maps[mp]||{}, live[mp]);
+        var base = maps[mp] || {};
+        var liveData = live[mp] || {};
+        maps[mp] = {
+          rating:  base.rating,                            // preserve snap rating
+          w:       (liveData.w != null) ? liveData.w : base.w,
+          l:       (liveData.l != null) ? liveData.l : base.l,
+          win_pct: (liveData.win_pct != null) ? liveData.win_pct : base.win_pct,
+        };
       });
     }
     if (!Object.keys(maps).length && !overall) return null;
@@ -7552,9 +7661,21 @@ function renderPast(data) {
         maps[mm.map] = {rating:mm.rating, w:mm.w, l:mm.l, win_pct: mm.w/Math.max(1,mm.w+mm.l)};
       });
     }
+    // Overlay live win%/w/l only — preserve the calibrated snap rating so the
+    // per-map sim matches the historical matchup algorithm (no small-sample
+    // rating extremes).
     var live = liveMapStats[org];
     if (live) {
-      Object.keys(live).forEach(function(mp){ maps[mp] = Object.assign(maps[mp]||{}, live[mp]); });
+      Object.keys(live).forEach(function(mp){
+        var base = maps[mp] || {};
+        var ld   = live[mp] || {};
+        maps[mp] = {
+          rating:  base.rating,
+          w:       (ld.w != null) ? ld.w : base.w,
+          l:       (ld.l != null) ? ld.l : base.l,
+          win_pct: (ld.win_pct != null) ? ld.win_pct : base.win_pct,
+        };
+      });
     }
     if (!Object.keys(maps).length && !overall) return null;
     return {overall_rating: overall, maps: maps};
@@ -7581,13 +7702,10 @@ function renderPast(data) {
     var mapWins={}, mapPlays={};
     pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
 
-    // Per-map rating: blend overall rating (50%) with the map-specific rating (50%).
-    // The live_map_stats overlay can produce noisy small-sample map ratings (e.g. a 3-0
-    // record yields +2.83, which combined with another team's snap rating explodes
-    // probabilities to >90%). Blending pulls the per-map rating toward the team's
-    // true skill, and the prob is also clamped to a realistic [0.18, 0.82] range.
-    var overallA = (tA && tA.overall_rating != null) ? tA.overall_rating : ratingA;
-    var overallB = (tB && tB.overall_rating != null) ? tB.overall_rating : ratingB;
+    // Per-map sim mirrors the historical matchup algorithm exactly: raw map
+    // rating → intl global rating → sigmoid with beta.  No blend, no clamp —
+    // the snap rating is well-calibrated and the live overlay is now win%-only
+    // (rating is preserved from snap), so extreme small-sample swings are gone.
     if (tA && tB) {
       for (var s=0; s<nSims; s++) {
         var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt);
@@ -7596,15 +7714,10 @@ function renderPast(data) {
           var fc = fm[mp] || 'banA';
           if (fc==='pickA'||fc==='pickB'||fc==='dec') {
             mapPlays[mp]++;
-            var rawA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:overallA;
-            var rawB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:overallB;
-            var dA = 0.5*rawA + 0.5*overallA;
-            var dB = 0.5*rawB + 0.5*overallB;
+            var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
+            var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
             var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
-            var pWin = 1/(1+Math.exp(-beta*(gA-gB)));
-            if (pWin < 0.18) pWin = 0.18;
-            else if (pWin > 0.82) pWin = 0.82;
-            if (Math.random()<pWin) { sw++; mapWins[mp]++; }
+            if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
           }
         });
         if (sw >= matchThresh) seriesWins++;
@@ -7818,6 +7931,16 @@ function renderPast(data) {
 
   triggerPastFlyIn();
 }
+
+// ── Match Simulator (iframes the historical matchup tool, locked to current) ─
+var _simInitialized = false;
+function renderSimulator() {
+  if (_simInitialized) return;
+  _simInitialized = true;
+  var f = document.getElementById('simIframe');
+  if (f && f.src.indexOf('lockCurrent=1') < 0) f.src = '/mapelo/matchup/?lockCurrent=1';
+}
+function triggerSimFlyIn(){}
 
 // ── Letter-by-letter fly-in for Upcoming Matches panel ───────────────────────
 function _splitIntoChars(el) {
