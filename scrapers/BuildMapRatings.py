@@ -884,11 +884,18 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=N
 
 def main():
     reoptimize = '--reoptimize' in sys.argv
+    # Refresh-mode flag: only rebuild the current-year snapshots and reuse
+    # historical snapshots verbatim from the existing JSON. Historical match
+    # data is immutable, so re-doing 4 years of Monte Carlo each refresh is
+    # pure waste. Cuts wall time from ~120s to ~5-10s on a typical refresh.
+    refresh_mode = '--refresh' in sys.argv
 
     print('=' * 60)
     print('BuildMapRatings — VCT Domestic 2023-2025')
     if reoptimize:
         print('Mode: FULL (--reoptimize: running CV grid search)')
+    elif refresh_mode:
+        print(f'Mode: REFRESH (current-year only, fewer MC sims)')
     else:
         print(f'Mode: FAST (half-life={HALF_LIFE_WEEKS}w, shrink_k={SHRINK_K} — use --reoptimize to re-run CV)')
     print('=' * 60)
@@ -992,8 +999,43 @@ def main():
     # ── Step 4: per-year ratings ─────────────────────────────────────────────────
     print(f'\n{"─"*60}')
     print('Step 4: computing per-year ratings (each snapshot)')
+
+    # Refresh mode: rebuild only the latest year (live data); historical years
+    # come straight from the existing on-disk JSON since their matches are
+    # immutable. Falls back to a full rebuild if the JSON isn't there yet.
+    skip_years = set()
+    existing_ratings = {}
+    if refresh_mode and os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH) as _f:
+                _prev = json.load(_f)
+            existing_ratings = (_prev.get('ratings') or {})
+            _years_sorted = sorted(YEAR_CONFIGS.keys())
+            _current_year = _years_sorted[-1] if _years_sorted else None
+            for _y in YEAR_CONFIGS:
+                if _y != _current_year and _y in existing_ratings:
+                    skip_years.add(_y)
+            if skip_years:
+                print(f'  [refresh] rebuilding {_current_year} only; '
+                      f'reusing snapshots for {sorted(skip_years)}')
+        except Exception:
+            skip_years = set()
+
+    # In refresh mode, also drop MC sims by 5x — precision is more than enough
+    # for the simulator UI, and the cubic-time MC dominates wall time.
+    n_sims_use = 2000 if refresh_mode else MC_N_SIMS
+    if refresh_mode:
+        # Monkey-patch the module constant so build_year_ratings → pb_adjusted_rating
+        # picks up the reduced count without threading a new arg through.
+        import scrapers.BuildMapRatings as _self_mod  # noqa
+        _self_mod.MC_N_SIMS = n_sims_use
+        globals()['MC_N_SIMS'] = n_sims_use
+
     ratings_out = {}
     for year, cfg in YEAR_CONFIGS.items():
+        if year in skip_years:
+            ratings_out[year] = existing_ratings[year]
+            continue
         snaps_out = {}
         for snap_id, snap_cfg in cfg['snapshots'].items():
             snap_games = [g for g in all_games if g['event_id'] in snap_cfg['events']]

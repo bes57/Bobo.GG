@@ -803,15 +803,15 @@ def main():
         _write("building_ratings", 85, "BuildRatingTimeline failed", error=str(e))
 
     # ── Step 7: Rebuild per-map ratings (keeps map_ratings.json fresh) ──────
-    # Snapshots are derived from ALL_EVENTS, so new events appear automatically
-    # the next time this runs. The MC veto sim takes ~30-90s; failure here is
-    # non-fatal (the stale map_ratings.json is still served).
+    # --refresh: only rebuilds the current-year snapshots and reuses
+    # historical ratings from the existing JSON, since historical match data
+    # never changes. Drops MC sims 5x. Cuts this step from ~2 min to ~10 s.
     _write("building_map_ratings", 92, "Rebuilding per-map ratings…",
-           ["Running BenPom map model…"])
+           ["Running BenPom map model (current year only)…"])
     try:
         subprocess.run(
-            [sys.executable, os.path.join(ROOT, "scrapers", "BuildMapRatings.py")],
-            cwd=ROOT, check=True, capture_output=True, timeout=600,
+            [sys.executable, os.path.join(ROOT, "scrapers", "BuildMapRatings.py"), "--refresh"],
+            cwd=ROOT, check=True, capture_output=True, timeout=300,
         )
     except subprocess.CalledProcessError as e:
         _write("building_map_ratings", 92, "BuildMapRatings failed",

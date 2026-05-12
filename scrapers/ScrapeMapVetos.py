@@ -17,6 +17,7 @@ import os
 import re
 import sys
 import time
+import json
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -33,6 +34,10 @@ except Exception:
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "data")
 OUT_PATH = os.path.join(DATA_DIR, "map_vetos.csv")
+# Matches whose VLR page has no veto note (old matches, lobby remakes, etc.)
+# get tombstoned here so we don't re-fetch them on every refresh. Without this
+# every page-load refresh fires off N stale requests at 1s each.
+TOMBSTONE_PATH = os.path.join(DATA_DIR, "map_vetos_missing.json")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -115,14 +120,27 @@ def main():
     all_ids = mr[mr["MapNum"] == "all"]["MatchID"].unique().tolist()
     print(f"Total matches in match_results.csv: {len(all_ids)}")
 
-    # Load already-done IDs
+    # Load already-done IDs (have at least one veto row in the CSV)
     done_ids = set()
     if os.path.exists(OUT_PATH):
         existing = pd.read_csv(OUT_PATH)
         done_ids = set(existing["MatchID"].unique())
         print(f"Already scraped: {len(done_ids)} matches — skipping")
 
-    todo = [m for m in all_ids if m not in done_ids]
+    # Load tombstoned IDs (matches we've fetched but that have no veto note —
+    # mostly old matches with no '.match-header-note'). Without this, every
+    # refresh re-fetches all of them at 1s each.
+    missing_ids = set()
+    if os.path.exists(TOMBSTONE_PATH):
+        try:
+            with open(TOMBSTONE_PATH) as _f:
+                missing_ids = {int(k) for k in (json.load(_f) or {}).keys()}
+            print(f"Tombstoned (no veto on VLR): {len(missing_ids)} matches — skipping")
+        except Exception:
+            missing_ids = set()
+    missing_now = {}  # newly discovered no-veto matches this run
+
+    todo = [m for m in all_ids if m not in done_ids and m not in missing_ids]
     print(f"Remaining: {len(todo)} matches\n")
 
     rows = []
@@ -134,7 +152,8 @@ def main():
             time.sleep(DELAY)
             continue
         if not steps:
-            print("no veto note")
+            print("no veto note — tombstoning")
+            missing_now[str(int(match_id))] = time.strftime("%Y-%m-%d")
         else:
             for s in steps:
                 rows.append({"MatchID": match_id, **s})
@@ -152,6 +171,20 @@ def main():
             print(f"  [saved checkpoint]")
 
         time.sleep(DELAY)
+
+    # Persist tombstones from this run (merge with any pre-existing)
+    if missing_now:
+        try:
+            existing_tomb = {}
+            if os.path.exists(TOMBSTONE_PATH):
+                with open(TOMBSTONE_PATH) as _f:
+                    existing_tomb = json.load(_f) or {}
+            existing_tomb.update(missing_now)
+            with open(TOMBSTONE_PATH, "w") as _f:
+                json.dump(existing_tomb, _f, indent=2)
+            print(f"\nTombstoned {len(missing_now)} new no-veto matches.")
+        except Exception as e:
+            print(f"\n[warn] could not write tombstone file: {e}")
 
     # Final flush
     if rows:
