@@ -153,74 +153,111 @@ def derive_event_pools(veto_df, match_event):
     return match_pools, event_pools
 
 
-def build_snap_profiles(veto_df, match_event, match_pools):
+def _empty_team_counters():
+    return {'n': 0, 'ban_num': {}, 'ban_den': {},
+            'pick_num': {}, 'pick_den': {}}
+
+
+def _apply_match_to_counters(counters, mid_int, match_event, match_pools,
+                             event_to_snaps, grp):
+    """Add one match's contribution to the counters dict (mutated in place).
+    No-op if the match isn't mapped to an event/snap/pool."""
+    event = match_event.get(mid_int)
+    if not event:
+        return False
+    snap_keys = event_to_snaps.get(event)
+    if not snap_keys:
+        return False
+    pool = match_pools.get(mid_int)
+    if not pool:
+        return False
+
+    team_stripped = grp['team'].astype(str).str.strip()
+    teams_in_match = [t for t in team_stripped.unique() if t]
+
+    for org in teams_in_match:
+        sel = team_stripped == org
+        team_bans  = set(grp.loc[sel & (grp['action'] == 'ban'),  'map'].tolist())
+        team_picks = set(grp.loc[sel & (grp['action'] == 'pick'), 'map'].tolist())
+
+        for (year, snap) in snap_keys:
+            key = f'{year}_{snap}'
+            ck = counters.setdefault(key, {}).setdefault(org, _empty_team_counters())
+            ck['n'] += 1
+            for m in pool:
+                ck['ban_den'][m]  = ck['ban_den'].get(m, 0)  + 1
+                ck['pick_den'][m] = ck['pick_den'].get(m, 0) + 1
+                if m in team_bans:
+                    ck['ban_num'][m]  = ck['ban_num'].get(m, 0)  + 1
+                if m in team_picks:
+                    ck['pick_num'][m] = ck['pick_num'].get(m, 0) + 1
+    return True
+
+
+def _profiles_from_counters(counters):
+    """Compile counters → final {snap: {org: {n, bans, picks}}} structure."""
+    profiles = {}
+    for key, by_org in counters.items():
+        profiles[key] = {}
+        for org, ck in by_org.items():
+            if ck['n'] < 3:
+                continue
+            bans, picks = {}, {}
+            all_maps = set(ck['ban_den'].keys()) | set(ck['pick_den'].keys())
+            for m in all_maps:
+                bd  = ck['ban_den'].get(m, 0)
+                pd_ = ck['pick_den'].get(m, 0)
+                if bd > 0:
+                    bans[m]  = round(ck['ban_num'].get(m, 0)  / bd, 4)
+                if pd_ > 0:
+                    picks[m] = round(ck['pick_num'].get(m, 0) / pd_, 4)
+            profiles[key][org] = {'n': ck['n'], 'bans': bans, 'picks': picks}
+    return profiles
+
+
+def build_snap_profiles(veto_df, match_event, match_pools,
+                        prev_counters=None, processed_mids=None):
     """
-    For each (year, snap), compute conditional ban/pick rates per map per team.
-    Only matches from events in SNAP_EVENTS[(year, snap)] are included.
+    Compute per-team ban/pick rates per (year, snap).
+
+    Incremental: if ``prev_counters`` and ``processed_mids`` are provided,
+    only matches whose MatchID is NOT in processed_mids get added — counters
+    for everything previously seen carry over verbatim. First run (no prior
+    state) falls back to a full pass over the veto CSV.
+
+    Returns (profiles, counters, processed_mids_set) so the caller can
+    persist state for the next run.
     """
     clean = veto_df[~veto_df['map'].isin(GARBAGE_MAPS)].copy()
     clean = clean[clean['action'].isin(['ban', 'pick'])]
     clean = clean[clean['team'].notna() & (clean['team'].astype(str).str.strip() != '')]
 
-    # Pre-build event -> list of (year, snap) keys it contributes to
     event_to_snaps = defaultdict(list)
     for (year, snap), events in SNAP_EVENTS.items():
         for e in events:
             event_to_snaps[e].append((year, snap))
 
-    # Accumulators keyed by (year_snap, org, map)
-    ban_num  = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
-    ban_den  = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
-    pick_num = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
-    pick_den = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+    counters = prev_counters if prev_counters is not None else {}
+    processed = set(processed_mids or [])
 
+    n_new = 0
+    n_skipped = 0
     for mid, grp in clean.groupby('MatchID'):
         mid_int = int(mid)
-        event = match_event.get(mid_int)
-        if not event:
+        if mid_int in processed:
+            n_skipped += 1
             continue
-        snap_keys = event_to_snaps.get(event)
-        if not snap_keys:
-            continue
-        pool = match_pools.get(mid_int)
-        if not pool:
-            continue
+        if _apply_match_to_counters(counters, mid_int, match_event, match_pools,
+                                    event_to_snaps, grp):
+            n_new += 1
+        processed.add(mid_int)
 
-        teams_in_match = grp['team'].astype(str).str.strip().unique()
+    if n_skipped:
+        print(f'  [incremental] reused counters for {n_skipped} matches, added {n_new} new')
+    else:
+        print(f'  [full build] processed {n_new} matches')
 
-        for org in teams_in_match:
-            team_actions = grp[grp['team'].astype(str).str.strip() == org]
-            team_bans  = set(team_actions[team_actions['action'] == 'ban']['map'].tolist())
-            team_picks = set(team_actions[team_actions['action'] == 'pick']['map'].tolist())
-
-            for (year, snap) in snap_keys:
-                key = f'{year}_{snap}'
-                for m in pool:
-                    ban_den[key][org][m]  += 1
-                    pick_den[key][org][m] += 1
-                    if m in team_bans:
-                        ban_num[key][org][m] += 1
-                    if m in team_picks:
-                        pick_num[key][org][m] += 1
-
-    profiles = {}
-    for key in ban_den:
-        profiles[key] = {}
-        for org in ban_den[key]:
-            n_matches = max(ban_den[key][org].values()) if ban_den[key][org] else 0
-            if n_matches < 3:
-                continue
-            bans, picks = {}, {}
-            for m in set(list(ban_den[key][org].keys()) + list(pick_den[key][org].keys())):
-                bd  = ban_den[key][org].get(m, 0)
-                pd_ = pick_den[key][org].get(m, 0)
-                if bd > 0:
-                    bans[m]  = round(ban_num[key][org].get(m, 0)  / bd, 4)
-                if pd_ > 0:
-                    picks[m] = round(pick_num[key][org].get(m, 0) / pd_, 4)
-            profiles[key][org] = {'n': n_matches, 'bans': bans, 'picks': picks}
-
-    return profiles
+    return _profiles_from_counters(counters), counters, processed
 
 
 def build_snap_pools(event_pools):
@@ -231,6 +268,32 @@ def build_snap_pools(event_pools):
         if pool:
             snap_pools[f'{year}_{snap}'] = pool
     return snap_pools
+
+
+STATE_PATH = os.path.join(DATA, 'veto_model_state.json')
+
+
+def _load_state():
+    """Load persisted counters + processed-match list. Missing file → fresh."""
+    if not os.path.exists(STATE_PATH):
+        return None, set()
+    try:
+        with open(STATE_PATH) as f:
+            st = json.load(f)
+        return st.get('counters') or {}, set(st.get('processed_mids') or [])
+    except Exception:
+        return None, set()
+
+
+def _save_state(counters, processed_mids):
+    try:
+        with open(STATE_PATH, 'w') as f:
+            json.dump({
+                'counters':       counters,
+                'processed_mids': sorted(processed_mids),
+            }, f, separators=(',', ':'))
+    except Exception as e:
+        print(f'  [warn] could not write state file: {e}')
 
 
 def main():
@@ -247,19 +310,26 @@ def main():
     for event, pool in sorted(event_pools.items()):
         print(f'  {event}: {pool}')
 
+    # Incremental state: only matches whose MatchID isn't in processed_mids
+    # need their counters bumped. Fresh first run = full pass.
+    print('Loading incremental counter state…')
+    prev_counters, processed_mids = _load_state()
+    if prev_counters is None:
+        print('  no prior state — full rebuild')
+    else:
+        print(f'  loaded counters for {sum(len(v) for v in prev_counters.values())} '
+              f'(snap, team) entries; {len(processed_mids)} matches already counted')
+
     print('Building per-snap team ban/pick profiles...')
-    profiles = build_snap_profiles(veto_df, match_event, match_pools)
+    profiles, counters, processed_mids = build_snap_profiles(
+        veto_df, match_event, match_pools,
+        prev_counters=prev_counters, processed_mids=processed_mids,
+    )
     for key in sorted(profiles.keys()):
         print(f'  {key}: {len(profiles[key])} teams')
 
-    # Sample G2 across snaps
-    for key in ['2025_early', '2025_after_stage1', '2025_full']:
-        g2 = profiles.get(key, {}).get('G2')
-        if g2:
-            top_bans  = sorted(g2['bans'].items(),  key=lambda x: -x[1])[:4]
-            top_picks = sorted(g2['picks'].items(), key=lambda x: -x[1])[:3]
-            print(f'  G2 {key} (n={g2["n"]}): bans={top_bans}')
-            print(f'           picks={top_picks}')
+    # Persist counters for the next run
+    _save_state(counters, processed_mids)
 
     snap_pools = build_snap_pools(event_pools)
     print(f'\nSnap pools: {list(snap_pools.keys())}')

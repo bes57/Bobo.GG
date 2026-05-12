@@ -30,14 +30,14 @@
     "optimal_lambda": 0.0866434,
     "optimal_half_life_weeks": 8,
     "shrink_k": 12,
-    "mc_n_sims": 2000,
+    "mc_n_sims": 600,
     "veto_noise_std": 2.0,
     "brier_train": 0.23757,
     "brier_test": 0.25037,
     "logloss_train": 0.66762,
     "logloss_test": 0.69445,
-    "n_train": 1510,
-    "n_test": 1559
+    "n_train": 0,
+    "n_test": 553
   },
   "lambda_grid": [
     {
@@ -26926,7 +26926,7 @@
           "ref_date": "2026-02-16",
           "teams": {
             "NS": {
-              "overall_rating": 4.415,
+              "overall_rating": 4.42,
               "w": 9,
               "l": 3,
               "win_pct": 0.75,
@@ -26971,7 +26971,7 @@
               }
             },
             "G2": {
-              "overall_rating": 3.964,
+              "overall_rating": 3.974,
               "w": 10,
               "l": 3,
               "win_pct": 0.769,
@@ -27022,7 +27022,7 @@
               }
             },
             "T1": {
-              "overall_rating": 3.355,
+              "overall_rating": 3.354,
               "w": 12,
               "l": 4,
               "win_pct": 0.75,
@@ -27073,7 +27073,7 @@
               }
             },
             "NRG": {
-              "overall_rating": 3.219,
+              "overall_rating": 3.232,
               "w": 10,
               "l": 6,
               "win_pct": 0.625,
@@ -27124,7 +27124,7 @@
               }
             },
             "M8": {
-              "overall_rating": 2.814,
+              "overall_rating": 2.811,
               "w": 11,
               "l": 5,
               "win_pct": 0.688,
@@ -27169,7 +27169,7 @@
               }
             },
             "BBL": {
-              "overall_rating": 2.805,
+              "overall_rating": 2.802,
               "w": 9,
               "l": 3,
               "win_pct": 0.75,
@@ -27214,7 +27214,7 @@
               }
             },
             "FUR": {
-              "overall_rating": 2.233,
+              "overall_rating": 2.241,
               "w": 9,
               "l": 4,
               "win_pct": 0.692,
@@ -27259,7 +27259,7 @@
               }
             },
             "MIBR": {
-              "overall_rating": 1.394,
+              "overall_rating": 1.388,
               "w": 8,
               "l": 10,
               "win_pct": 0.444,
@@ -27304,7 +27304,7 @@
               }
             },
             "100T": {
-              "overall_rating": 1.235,
+              "overall_rating": 1.231,
               "w": 11,
               "l": 9,
               "win_pct": 0.55,
@@ -27355,7 +27355,7 @@
               }
             },
             "RRQ": {
-              "overall_rating": 1.196,
+              "overall_rating": 1.192,
               "w": 7,
               "l": 9,
               "win_pct": 0.438,
@@ -27400,7 +27400,7 @@
               }
             },
             "TL": {
-              "overall_rating": 1.176,
+              "overall_rating": 1.187,
               "w": 14,
               "l": 8,
               "win_pct": 0.636,
@@ -27445,7 +27445,7 @@
               }
             },
             "VIT": {
-              "overall_rating": 1.155,
+              "overall_rating": 1.149,
               "w": 7,
               "l": 7,
               "win_pct": 0.5,
@@ -27490,7 +27490,7 @@
               }
             },
             "FNC": {
-              "overall_rating": 1.132,
+              "overall_rating": 1.126,
               "w": 10,
               "l": 10,
               "win_pct": 0.5,
@@ -27535,7 +27535,7 @@
               }
             },
             "GE": {
-              "overall_rating": 1.09,
+              "overall_rating": 1.091,
               "w": 9,
               "l": 7,
               "win_pct": 0.562,
@@ -27586,7 +27586,7 @@
               }
             },
             "PRX": {
-              "overall_rating": 1.048,
+              "overall_rating": 1.04,
               "w": 12,
               "l": 8,
               "win_pct": 0.6,
@@ -27631,7 +27631,7 @@
               }
             },
             "C9": {
-              "overall_rating": 0.177,
+              "overall_rating": 0.175,
               "w": 9,
               "l": 7,
               "win_pct": 0.562,
@@ -27682,7 +27682,7 @@
               }
             },
             "KRX": {
-              "overall_rating": -0.001,
+              "overall_rating": -0.011,
               "w": 8,
               "l": 8,
               "win_pct": 0.5,
@@ -27733,7 +27733,7 @@
               }
             },
             "DFM": {
-              "overall_rating": -0.013,
+              "overall_rating": -0.015,
               "w": 8,
               "l": 8,
               "win_pct": 0.5,
@@ -27784,7 +27784,7 @@
               }
             },
             "GEN": {
-              "overall_rating": -0.143,
+              "overall_rating": -0.145,
               "w": 4,
               "l": 7,
               "win_pct": 0.364,
@@ -27823,7 +27823,7 @@
               }
             },
             "KC": {
-              "overall_rating": -0.223,
+              "overall_rating": -0.229,
               "w": 4,
               "l": 7,
               "win_pct": 0.364,
@@ -27868,7 +27868,7 @@
               }
             },
             "FS": {
-              "overall_rating": -0.393,
+              "overall_rating": -0.381,
               "w": 5,
               "l": 7,
               "win_pct": 0.417,
@@ -27919,7 +27919,7 @@
               }
             },
             "NAVI": {
-              "overall_rating": -0.405,
+              "overall_rating": -0.406,
               "w": 5,
               "l": 7,
               "win_pct": 0.417,
@@ -27958,7 +27958,7 @@
               }
             },
             "EG": {
-              "overall_rating": -0.569,
+              "overall_rating": -0.565,
               "w": 5,
               "l": 6,
               "win_pct": 0.455,
@@ -27997,7 +27997,7 @@
               }
             },
             "GX": {
-              "overall_rating": -0.597,
+              "overall_rating": -0.598,
               "w": 5,
               "l": 7,
               "win_pct": 0.417,
@@ -28042,7 +28042,7 @@
               }
             },
             "TH": {
-              "overall_rating": -0.703,
+              "overall_rating": -0.698,
               "w": 7,
               "l": 7,
               "win_pct": 0.5,
@@ -28087,7 +28087,7 @@
               }
             },
             "SEN": {
-              "overall_rating": -1.132,
+              "overall_rating": -1.127,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -28177,7 +28177,7 @@
               }
             },
             "FUT": {
-              "overall_rating": -1.813,
+              "overall_rating": -1.809,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -28216,7 +28216,7 @@
               }
             },
             "LEV": {
-              "overall_rating": -1.9,
+              "overall_rating": -1.899,
               "w": 5,
               "l": 6,
               "win_pct": 0.455,
@@ -28255,7 +28255,7 @@
               }
             },
             "ULF": {
-              "overall_rating": -2.493,
+              "overall_rating": -2.506,
               "w": 3,
               "l": 6,
               "win_pct": 0.333,
@@ -28306,7 +28306,7 @@
               }
             },
             "VL": {
-              "overall_rating": -2.606,
+              "overall_rating": -2.603,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -28357,7 +28357,7 @@
               }
             },
             "PCF": {
-              "overall_rating": -2.715,
+              "overall_rating": -2.717,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -28396,7 +28396,7 @@
               }
             },
             "ZETA": {
-              "overall_rating": -3.55,
+              "overall_rating": -3.547,
               "w": 3,
               "l": 7,
               "win_pct": 0.3,
@@ -28435,7 +28435,7 @@
               }
             },
             "KR\u00dc": {
-              "overall_rating": -3.632,
+              "overall_rating": -3.631,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -28474,7 +28474,7 @@
               }
             },
             "LOUD": {
-              "overall_rating": -4.113,
+              "overall_rating": -4.114,
               "w": 1,
               "l": 6,
               "win_pct": 0.143,
@@ -28513,7 +28513,7 @@
               }
             },
             "TS": {
-              "overall_rating": -4.237,
+              "overall_rating": -4.242,
               "w": 1,
               "l": 6,
               "win_pct": 0.143,
@@ -28554,7 +28554,7 @@
           "ref_date": "2026-03-15",
           "teams": {
             "NS": {
-              "overall_rating": 6.274,
+              "overall_rating": 6.289,
               "w": 18,
               "l": 4,
               "win_pct": 0.818,
@@ -28599,7 +28599,7 @@
               }
             },
             "G2": {
-              "overall_rating": 4.34,
+              "overall_rating": 4.326,
               "w": 20,
               "l": 9,
               "win_pct": 0.69,
@@ -28650,7 +28650,7 @@
               }
             },
             "PRX": {
-              "overall_rating": 3.472,
+              "overall_rating": 3.473,
               "w": 25,
               "l": 18,
               "win_pct": 0.581,
@@ -28701,7 +28701,7 @@
               }
             },
             "NRG": {
-              "overall_rating": 2.66,
+              "overall_rating": 2.641,
               "w": 20,
               "l": 14,
               "win_pct": 0.588,
@@ -28752,7 +28752,7 @@
               }
             },
             "M8": {
-              "overall_rating": 2.053,
+              "overall_rating": 2.049,
               "w": 16,
               "l": 9,
               "win_pct": 0.64,
@@ -28797,7 +28797,7 @@
               }
             },
             "BBL": {
-              "overall_rating": 1.441,
+              "overall_rating": 1.436,
               "w": 12,
               "l": 8,
               "win_pct": 0.6,
@@ -28842,7 +28842,7 @@
               }
             },
             "T1": {
-              "overall_rating": 1.355,
+              "overall_rating": 1.346,
               "w": 14,
               "l": 8,
               "win_pct": 0.636,
@@ -28893,7 +28893,7 @@
               }
             },
             "RRQ": {
-              "overall_rating": 1.353,
+              "overall_rating": 1.344,
               "w": 7,
               "l": 9,
               "win_pct": 0.438,
@@ -28938,7 +28938,7 @@
               }
             },
             "GE": {
-              "overall_rating": 1.353,
+              "overall_rating": 1.344,
               "w": 9,
               "l": 7,
               "win_pct": 0.562,
@@ -28989,7 +28989,7 @@
               }
             },
             "KRX": {
-              "overall_rating": 1.159,
+              "overall_rating": 1.155,
               "w": 8,
               "l": 8,
               "win_pct": 0.5,
@@ -29040,7 +29040,7 @@
               }
             },
             "DFM": {
-              "overall_rating": 1.065,
+              "overall_rating": 1.062,
               "w": 8,
               "l": 8,
               "win_pct": 0.5,
@@ -29091,7 +29091,7 @@
               }
             },
             "FUR": {
-              "overall_rating": 0.948,
+              "overall_rating": 0.967,
               "w": 11,
               "l": 8,
               "win_pct": 0.579,
@@ -29136,7 +29136,7 @@
               }
             },
             "100T": {
-              "overall_rating": 0.946,
+              "overall_rating": 0.965,
               "w": 11,
               "l": 9,
               "win_pct": 0.55,
@@ -29187,7 +29187,7 @@
               }
             },
             "FS": {
-              "overall_rating": 0.932,
+              "overall_rating": 0.928,
               "w": 5,
               "l": 7,
               "win_pct": 0.417,
@@ -29238,7 +29238,7 @@
               }
             },
             "MIBR": {
-              "overall_rating": 0.85,
+              "overall_rating": 0.867,
               "w": 8,
               "l": 10,
               "win_pct": 0.444,
@@ -29283,7 +29283,7 @@
               }
             },
             "C9": {
-              "overall_rating": 0.26,
+              "overall_rating": 0.254,
               "w": 9,
               "l": 7,
               "win_pct": 0.562,
@@ -29334,7 +29334,7 @@
               }
             },
             "GEN": {
-              "overall_rating": 0.179,
+              "overall_rating": 0.173,
               "w": 4,
               "l": 7,
               "win_pct": 0.364,
@@ -29373,7 +29373,7 @@
               }
             },
             "TL": {
-              "overall_rating": -0.123,
+              "overall_rating": -0.142,
               "w": 16,
               "l": 12,
               "win_pct": 0.571,
@@ -29418,7 +29418,7 @@
               }
             },
             "FNC": {
-              "overall_rating": -0.125,
+              "overall_rating": -0.144,
               "w": 10,
               "l": 10,
               "win_pct": 0.5,
@@ -29463,7 +29463,7 @@
               }
             },
             "VIT": {
-              "overall_rating": -0.197,
+              "overall_rating": -0.205,
               "w": 7,
               "l": 7,
               "win_pct": 0.5,
@@ -29508,7 +29508,7 @@
               }
             },
             "EG": {
-              "overall_rating": -0.623,
+              "overall_rating": -0.625,
               "w": 5,
               "l": 6,
               "win_pct": 0.455,
@@ -29547,7 +29547,7 @@
               }
             },
             "KC": {
-              "overall_rating": -1.05,
+              "overall_rating": -1.058,
               "w": 4,
               "l": 7,
               "win_pct": 0.364,
@@ -29631,7 +29631,7 @@
               }
             },
             "ENVY": {
-              "overall_rating": -1.3,
+              "overall_rating": -1.306,
               "w": 5,
               "l": 8,
               "win_pct": 0.385,
@@ -29676,7 +29676,7 @@
               }
             },
             "SEN": {
-              "overall_rating": -1.432,
+              "overall_rating": -1.43,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -29721,7 +29721,7 @@
               }
             },
             "GX": {
-              "overall_rating": -1.477,
+              "overall_rating": -1.476,
               "w": 5,
               "l": 7,
               "win_pct": 0.417,
@@ -29766,7 +29766,7 @@
               }
             },
             "TH": {
-              "overall_rating": -1.556,
+              "overall_rating": -1.555,
               "w": 7,
               "l": 7,
               "win_pct": 0.5,
@@ -29811,7 +29811,7 @@
               }
             },
             "VL": {
-              "overall_rating": -1.664,
+              "overall_rating": -1.666,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -29862,7 +29862,7 @@
               }
             },
             "LEV": {
-              "overall_rating": -1.904,
+              "overall_rating": -1.9,
               "w": 5,
               "l": 6,
               "win_pct": 0.455,
@@ -29901,7 +29901,7 @@
               }
             },
             "ZETA": {
-              "overall_rating": -2.166,
+              "overall_rating": -2.165,
               "w": 3,
               "l": 7,
               "win_pct": 0.3,
@@ -29940,7 +29940,7 @@
               }
             },
             "FUT": {
-              "overall_rating": -2.537,
+              "overall_rating": -2.541,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -29979,7 +29979,7 @@
               }
             },
             "TS": {
-              "overall_rating": -2.677,
+              "overall_rating": -2.667,
               "w": 1,
               "l": 6,
               "win_pct": 0.143,
@@ -30012,7 +30012,7 @@
               }
             },
             "ULF": {
-              "overall_rating": -3.342,
+              "overall_rating": -3.338,
               "w": 3,
               "l": 6,
               "win_pct": 0.333,
@@ -30063,7 +30063,7 @@
               }
             },
             "PCF": {
-              "overall_rating": -3.519,
+              "overall_rating": -3.517,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -30102,7 +30102,7 @@
               }
             },
             "LOUD": {
-              "overall_rating": -3.944,
+              "overall_rating": -3.947,
               "w": 1,
               "l": 6,
               "win_pct": 0.143,
@@ -30141,7 +30141,7 @@
               }
             },
             "KR\u00dc": {
-              "overall_rating": -3.988,
+              "overall_rating": -3.987,
               "w": 2,
               "l": 6,
               "win_pct": 0.25,
@@ -30188,7 +30188,7 @@
           "ref_date": "2026-05-25",
           "teams": {
             "NS": {
-              "overall_rating": 3.257,
+              "overall_rating": 3.256,
               "w": 26,
               "l": 13,
               "win_pct": 0.667,
@@ -30251,7 +30251,7 @@
               }
             },
             "G2": {
-              "overall_rating": 2.775,
+              "overall_rating": 2.783,
               "w": 27,
               "l": 13,
               "win_pct": 0.675,
@@ -30308,7 +30308,7 @@
               }
             },
             "PRX": {
-              "overall_rating": 2.681,
+              "overall_rating": 2.696,
               "w": 37,
               "l": 24,
               "win_pct": 0.607,
@@ -30377,7 +30377,7 @@
               }
             },
             "GE": {
-              "overall_rating": 2.378,
+              "overall_rating": 2.381,
               "w": 19,
               "l": 13,
               "win_pct": 0.594,
@@ -30440,7 +30440,7 @@
               }
             },
             "FS": {
-              "overall_rating": 2.203,
+              "overall_rating": 2.202,
               "w": 17,
               "l": 11,
               "win_pct": 0.607,
@@ -30503,7 +30503,7 @@
               }
             },
             "VIT": {
-              "overall_rating": 1.663,
+              "overall_rating": 1.673,
               "w": 16,
               "l": 14,
               "win_pct": 0.533,
@@ -30566,7 +30566,7 @@
               }
             },
             "T1": {
-              "overall_rating": 1.509,
+              "overall_rating": 1.495,
               "w": 26,
               "l": 12,
               "win_pct": 0.684,
@@ -30623,7 +30623,7 @@
               }
             },
             "EF": {
-              "overall_rating": 1.457,
+              "overall_rating": 1.461,
               "w": 14,
               "l": 6,
               "win_pct": 0.7,
@@ -30743,7 +30743,7 @@
               }
             },
             "TH": {
-              "overall_rating": 1.397,
+              "overall_rating": 1.396,
               "w": 19,
               "l": 15,
               "win_pct": 0.559,
@@ -30812,7 +30812,7 @@
               }
             },
             "NRG": {
-              "overall_rating": 1.362,
+              "overall_rating": 1.367,
               "w": 24,
               "l": 19,
               "win_pct": 0.558,
@@ -30875,7 +30875,7 @@
               }
             },
             "100T": {
-              "overall_rating": 1.237,
+              "overall_rating": 1.235,
               "w": 18,
               "l": 15,
               "win_pct": 0.545,
@@ -30932,7 +30932,7 @@
               }
             },
             "LEV": {
-              "overall_rating": 0.967,
+              "overall_rating": 0.975,
               "w": 12,
               "l": 11,
               "win_pct": 0.522,
@@ -30983,7 +30983,7 @@
               }
             },
             "FNC": {
-              "overall_rating": 0.932,
+              "overall_rating": 0.938,
               "w": 21,
               "l": 16,
               "win_pct": 0.568,
@@ -31046,7 +31046,7 @@
               }
             },
             "KR\u00dc": {
-              "overall_rating": 0.536,
+              "overall_rating": 0.54,
               "w": 11,
               "l": 9,
               "win_pct": 0.55,
@@ -31097,7 +31097,7 @@
               }
             },
             "FUT": {
-              "overall_rating": 0.439,
+              "overall_rating": 0.433,
               "w": 12,
               "l": 12,
               "win_pct": 0.5,
@@ -31166,7 +31166,7 @@
               }
             },
             "RRQ": {
-              "overall_rating": 0.251,
+              "overall_rating": 0.265,
               "w": 18,
               "l": 19,
               "win_pct": 0.486,
@@ -31235,7 +31235,7 @@
               }
             },
             "FUR": {
-              "overall_rating": 0.111,
+              "overall_rating": 0.123,
               "w": 18,
               "l": 14,
               "win_pct": 0.562,
@@ -31285,8 +31285,71 @@
                 }
               }
             },
+            "M8": {
+              "overall_rating": -0.219,
+              "w": 23,
+              "l": 19,
+              "win_pct": 0.548,
+              "effective_games": 19.5,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.051,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Ascent": {
+                  "rating": -0.592,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 0.774,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Corrode": {
+                  "rating": -0.467,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -0.088,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Haven": {
+                  "rating": -0.524,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": -0.221,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Pearl": {
+                  "rating": 0.389,
+                  "w": 7,
+                  "l": 1,
+                  "win_pct": 0.875
+                },
+                "Split": {
+                  "rating": -1.531,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                }
+              }
+            },
             "TL": {
-              "overall_rating": -0.211,
+              "overall_rating": -0.228,
               "w": 26,
               "l": 19,
               "win_pct": 0.578,
@@ -31354,71 +31417,8 @@
                 }
               }
             },
-            "M8": {
-              "overall_rating": -0.215,
-              "w": 23,
-              "l": 19,
-              "win_pct": 0.548,
-              "effective_games": 19.5,
-              "maps": {
-                "Abyss": {
-                  "rating": 0.051,
-                  "w": 2,
-                  "l": 2,
-                  "win_pct": 0.5
-                },
-                "Ascent": {
-                  "rating": -0.592,
-                  "w": 1,
-                  "l": 1,
-                  "win_pct": 0.5
-                },
-                "Bind": {
-                  "rating": 0.774,
-                  "w": 4,
-                  "l": 2,
-                  "win_pct": 0.667
-                },
-                "Corrode": {
-                  "rating": -0.467,
-                  "w": 0,
-                  "l": 3,
-                  "win_pct": 0.0
-                },
-                "Fracture": {
-                  "rating": -0.088,
-                  "w": 2,
-                  "l": 1,
-                  "win_pct": 0.667
-                },
-                "Haven": {
-                  "rating": -0.524,
-                  "w": 3,
-                  "l": 3,
-                  "win_pct": 0.5
-                },
-                "Lotus": {
-                  "rating": -0.221,
-                  "w": 1,
-                  "l": 3,
-                  "win_pct": 0.25
-                },
-                "Pearl": {
-                  "rating": 0.389,
-                  "w": 7,
-                  "l": 1,
-                  "win_pct": 0.875
-                },
-                "Split": {
-                  "rating": -1.531,
-                  "w": 3,
-                  "l": 3,
-                  "win_pct": 0.5
-                }
-              }
-            },
             "GEN": {
-              "overall_rating": -0.449,
+              "overall_rating": -0.456,
               "w": 8,
               "l": 16,
               "win_pct": 0.333,
@@ -31474,8 +31474,59 @@
                 }
               }
             },
+            "MIBR": {
+              "overall_rating": -0.486,
+              "w": 14,
+              "l": 14,
+              "win_pct": 0.5,
+              "effective_games": 13.28,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.802,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Bind": {
+                  "rating": -0.797,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Breeze": {
+                  "rating": -0.14,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Corrode": {
+                  "rating": -0.652,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Haven": {
+                  "rating": -1.009,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Lotus": {
+                  "rating": -0.177,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": -0.093,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                }
+              }
+            },
             "BBL": {
-              "overall_rating": -0.479,
+              "overall_rating": -0.512,
               "w": 17,
               "l": 17,
               "win_pct": 0.5,
@@ -31537,59 +31588,8 @@
                 }
               }
             },
-            "MIBR": {
-              "overall_rating": -0.489,
-              "w": 14,
-              "l": 14,
-              "win_pct": 0.5,
-              "effective_games": 13.28,
-              "maps": {
-                "Abyss": {
-                  "rating": -0.802,
-                  "w": 1,
-                  "l": 3,
-                  "win_pct": 0.25
-                },
-                "Bind": {
-                  "rating": -0.797,
-                  "w": 2,
-                  "l": 1,
-                  "win_pct": 0.667
-                },
-                "Breeze": {
-                  "rating": -0.14,
-                  "w": 3,
-                  "l": 2,
-                  "win_pct": 0.6
-                },
-                "Corrode": {
-                  "rating": -0.652,
-                  "w": 2,
-                  "l": 1,
-                  "win_pct": 0.667
-                },
-                "Haven": {
-                  "rating": -1.009,
-                  "w": 2,
-                  "l": 4,
-                  "win_pct": 0.333
-                },
-                "Lotus": {
-                  "rating": -0.177,
-                  "w": 1,
-                  "l": 0,
-                  "win_pct": 1.0
-                },
-                "Split": {
-                  "rating": -0.093,
-                  "w": 3,
-                  "l": 3,
-                  "win_pct": 0.5
-                }
-              }
-            },
             "NAVI": {
-              "overall_rating": -0.549,
+              "overall_rating": -0.552,
               "w": 11,
               "l": 14,
               "win_pct": 0.44,
@@ -31646,7 +31646,7 @@
               }
             },
             "DFM": {
-              "overall_rating": -0.586,
+              "overall_rating": -0.587,
               "w": 14,
               "l": 18,
               "win_pct": 0.438,
@@ -31715,7 +31715,7 @@
               }
             },
             "SEN": {
-              "overall_rating": -0.873,
+              "overall_rating": -0.87,
               "w": 7,
               "l": 10,
               "win_pct": 0.412,
@@ -31772,7 +31772,7 @@
               }
             },
             "ENVY": {
-              "overall_rating": -0.937,
+              "overall_rating": -0.939,
               "w": 10,
               "l": 15,
               "win_pct": 0.4,
@@ -31835,7 +31835,7 @@
               }
             },
             "GX": {
-              "overall_rating": -1.113,
+              "overall_rating": -1.108,
               "w": 10,
               "l": 15,
               "win_pct": 0.4,
@@ -31886,7 +31886,7 @@
               }
             },
             "TS": {
-              "overall_rating": -1.294,
+              "overall_rating": -1.293,
               "w": 4,
               "l": 15,
               "win_pct": 0.211,
@@ -31943,7 +31943,7 @@
               }
             },
             "KC": {
-              "overall_rating": -1.618,
+              "overall_rating": -1.611,
               "w": 7,
               "l": 17,
               "win_pct": 0.292,
@@ -32006,7 +32006,7 @@
               }
             },
             "LOUD": {
-              "overall_rating": -1.624,
+              "overall_rating": -1.619,
               "w": 7,
               "l": 13,
               "win_pct": 0.35,
@@ -32057,7 +32057,7 @@
               }
             },
             "C9": {
-              "overall_rating": -2.046,
+              "overall_rating": -2.047,
               "w": 13,
               "l": 15,
               "win_pct": 0.464,
@@ -32114,7 +32114,7 @@
               }
             },
             "ULF": {
-              "overall_rating": -2.126,
+              "overall_rating": -2.121,
               "w": 3,
               "l": 6,
               "win_pct": 0.333,
@@ -32165,7 +32165,7 @@
               }
             },
             "ZETA": {
-              "overall_rating": -2.357,
+              "overall_rating": -2.359,
               "w": 7,
               "l": 16,
               "win_pct": 0.304,
@@ -32228,7 +32228,7 @@
               }
             },
             "EG": {
-              "overall_rating": -2.446,
+              "overall_rating": -2.443,
               "w": 7,
               "l": 16,
               "win_pct": 0.304,
@@ -32285,7 +32285,7 @@
               }
             },
             "VL": {
-              "overall_rating": -2.464,
+              "overall_rating": -2.465,
               "w": 4,
               "l": 16,
               "win_pct": 0.2,

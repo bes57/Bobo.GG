@@ -44,7 +44,8 @@ HEADERS = {
                   "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 
-DELAY = 1.0  # seconds between requests
+DELAY = 0.25  # seconds between requests — matches RefreshLiveData's tuned cadence
+              # (was 1.0s; Cloudflare still happy with sub-second sequential reqs)
 
 
 def _fetch_html(url, timeout=12):

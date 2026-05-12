@@ -263,13 +263,18 @@ def _parse_date(s):
 
 # ── Data loading ───────────────────────────────────────────────────────────────
 
-def load_games():
+def load_games(only_events=None):
     """
-    Load all domestic map-level games and return a list of dicts:
+    Load domestic map-level games and return a list of dicts:
       match_id, event_id, map_name, winner, loser, wr, lr, date, match_rank
     Dates are interpolated from match_id rank within each event.
     match_rank is the global ordinal position across all events (1 = oldest).
+
+    ``only_events``: optional iterable of event_ids — when set, skip all
+    other event CSVs. Used in --refresh mode to avoid parsing 4 years of
+    historical CSVs every page-load refresh.
     """
+    only_set = set(only_events) if only_events else None
     mr = pd.read_csv(os.path.join(DATA_DIR, 'match_results.csv'))
     mr = mr[mr['MapNum'] != 'all'].copy()
     mr['MapNum'] = mr['MapNum'].astype(str)
@@ -278,6 +283,8 @@ def load_games():
     frames = []
     for event in ALL_EVENTS:
         eid = event['id']
+        if only_set is not None and eid not in only_set:
+            continue
         if eid not in EVENT_DATES:
             continue
         path = os.path.join(DATA_DIR, 'maps', f'{eid}.csv')
@@ -540,7 +547,7 @@ def simulate_veto(advantages, pool, noise_std=VETO_NOISE_STD):
 
 
 def pb_adjusted_rating(team_map_rtgs, avg_map_rtgs, all_maps,
-                       n_sims=MC_N_SIMS, noise_std=VETO_NOISE_STD):
+                       n_sims=None, noise_std=VETO_NOISE_STD):
     """
     Pick/ban-adjusted overall rating.
 
@@ -549,7 +556,12 @@ def pb_adjusted_rating(team_map_rtgs, avg_map_rtgs, all_maps,
 
     Same units as Massey ratings (round diff per map game vs average).
     Positive = beats average even after optimal pick/ban by the opponent.
+
+    n_sims defaults to the current MC_N_SIMS module constant — read at call
+    time so refresh-mode monkey-patches in main() take effect.
     """
+    if n_sims is None:
+        n_sims = MC_N_SIMS
     advantages = {m: team_map_rtgs.get(m, 0.0) - avg_map_rtgs.get(m, 0.0)
                   for m in all_maps}
     total = 0.0
@@ -900,50 +912,79 @@ def main():
         print(f'Mode: FAST (half-life={HALF_LIFE_WEEKS}w, shrink_k={SHRINK_K} — use --reoptimize to re-run CV)')
     print('=' * 60)
 
-    print('\nLoading games...')
-    all_games    = load_games()
-    train_games  = [g for g in all_games if g['event_id'] in TRAIN_EVENTS]
-    test_games   = [g for g in all_games if g['event_id'] in TEST_EVENTS]
+    # Detect current year + the events that make it up — used to decide whether
+    # to load the full historical CSV pile or just the current-year subset.
+    _years_sorted_int = sorted(int(y) for y in YEAR_CONFIGS.keys())
+    _current_year_str = str(_years_sorted_int[-1]) if _years_sorted_int else None
+    _current_year_events = set()
+    if _current_year_str:
+        for _snap_cfg in YEAR_CONFIGS[_current_year_str]['snapshots'].values():
+            _current_year_events.update(_snap_cfg.get('events') or [])
 
-    print(f'  total: {len(all_games)} map games')
-    print(f'  train: {len(train_games)}  ({", ".join(TRAIN_EVENTS)})')
-    print(f'  test:  {len(test_games)}   ({", ".join(TEST_EVENTS)})')
+    # Existing JSON — refresh mode reuses its metadata + historical snapshots
+    _existing = {}
+    if os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH) as _f:
+                _existing = json.load(_f)
+        except Exception:
+            _existing = {}
+
+    print('\nLoading games...')
+    if refresh_mode and _existing:
+        # Current-year-only load — historical CSVs aren't needed for the
+        # rebuild (we reuse those snapshots verbatim) or for β calibration
+        # (reused from the existing JSON's metadata).
+        all_games = load_games(only_events=_current_year_events)
+        train_games = []
+        test_games  = all_games
+        print(f'  [refresh] current-year only: {len(all_games)} map games')
+    else:
+        all_games    = load_games()
+        train_games  = [g for g in all_games if g['event_id'] in TRAIN_EVENTS]
+        test_games   = [g for g in all_games if g['event_id'] in TEST_EVENTS]
+        print(f'  total: {len(all_games)} map games')
+        print(f'  train: {len(train_games)}  ({", ".join(TRAIN_EVENTS)})')
+        print(f'  test:  {len(test_games)}   ({", ".join(TEST_EVENTS)})')
+
     all_teams = sorted({g['winner'] for g in all_games} | {g['loser'] for g in all_games})
     print(f'  unique teams: {len(all_teams)}')
 
-    train_ref_date = max(g['date'] for g in train_games)
+    train_ref_date = max((g['date'] for g in train_games), default=datetime.now())
 
     if not reoptimize:
         # ── Fast path: use fixed hyper-parameters ───────────────────────────────
         optimal_lambda = math.log(2) / HALF_LIFE_WEEKS
         best_sk        = SHRINK_K
         best_hl        = HALF_LIFE_WEEKS
-        # Preserve existing lambda_grid so the frontend chart still renders
-        grid       = []
-        sk_results = []
-        if os.path.exists(OUT_PATH):
-            try:
-                with open(OUT_PATH) as _f:
-                    _existing = json.load(_f)
-                grid       = _existing.get('lambda_grid',   [])
-                sk_results = _existing.get('shrink_k_grid', [])
-            except Exception:
-                pass
+        grid       = _existing.get('lambda_grid',   []) if _existing else []
+        sk_results = _existing.get('shrink_k_grid', []) if _existing else []
         print(f'\n  [fast] λ = {optimal_lambda:.7f}  '
               f'half-life = {best_hl} weeks  shrink_k = {best_sk}')
 
-        # ── Step 2: β calibration (cheap) ──────────────────────────────────────
-        print(f'\n{"─"*60}')
-        print('Step 2: β calibration (held-out 2023-2024 → 2025)')
-        rtgs_train = massey_ratings(train_games, optimal_lambda, train_ref_date)
-        beta = fit_beta(train_games, rtgs_train)
-        b_tr = brier_score(train_games, rtgs_train, beta)
-        b_te = brier_score(test_games,  rtgs_train, beta)
-        ll_tr = log_loss(train_games, rtgs_train, beta)
-        ll_te = log_loss(test_games,  rtgs_train, beta)
-        print(f'  β = {beta:.4f}')
-        print(f'  Brier   — train: {b_tr:.5f}  test: {b_te:.5f}  (baseline 0.25)')
-        print(f'  LogLoss — train: {ll_tr:.5f}  test: {ll_te:.5f}  (baseline {math.log(2):.5f})')
+        if refresh_mode and _existing and _existing.get('metadata'):
+            # ── Step 2 (skipped): β reused from existing JSON ──────────────────
+            _meta = _existing['metadata']
+            beta  = float(_meta.get('beta_test') or _meta.get('beta') or 0.32)
+            b_tr  = float(_meta.get('brier_train', 0.0))
+            b_te  = float(_meta.get('brier_test',  0.0))
+            ll_tr = float(_meta.get('logloss_train', 0.0))
+            ll_te = float(_meta.get('logloss_test',  0.0))
+            print(f'\n  [refresh] reusing β = {beta:.4f} from existing metadata '
+                  f'(skipping calibration)')
+        else:
+            # ── Step 2: β calibration (cheap) ──────────────────────────────────
+            print(f'\n{"─"*60}')
+            print('Step 2: β calibration (held-out 2023-2024 → 2025)')
+            rtgs_train = massey_ratings(train_games, optimal_lambda, train_ref_date)
+            beta = fit_beta(train_games, rtgs_train)
+            b_tr = brier_score(train_games, rtgs_train, beta)
+            b_te = brier_score(test_games,  rtgs_train, beta)
+            ll_tr = log_loss(train_games, rtgs_train, beta)
+            ll_te = log_loss(test_games,  rtgs_train, beta)
+            print(f'  β = {beta:.4f}')
+            print(f'  Brier   — train: {b_tr:.5f}  test: {b_te:.5f}  (baseline 0.25)')
+            print(f'  LogLoss — train: {ll_tr:.5f}  test: {ll_te:.5f}  (baseline {math.log(2):.5f})')
 
     else:
         # ── Step 1: CV grid search (for visualization only) ─────────────────────
@@ -1002,34 +1043,24 @@ def main():
 
     # Refresh mode: rebuild only the latest year (live data); historical years
     # come straight from the existing on-disk JSON since their matches are
-    # immutable. Falls back to a full rebuild if the JSON isn't there yet.
+    # immutable.
     skip_years = set()
-    existing_ratings = {}
-    if refresh_mode and os.path.exists(OUT_PATH):
-        try:
-            with open(OUT_PATH) as _f:
-                _prev = json.load(_f)
-            existing_ratings = (_prev.get('ratings') or {})
-            _years_sorted = sorted(YEAR_CONFIGS.keys())
-            _current_year = _years_sorted[-1] if _years_sorted else None
-            for _y in YEAR_CONFIGS:
-                if _y != _current_year and _y in existing_ratings:
-                    skip_years.add(_y)
-            if skip_years:
-                print(f'  [refresh] rebuilding {_current_year} only; '
-                      f'reusing snapshots for {sorted(skip_years)}')
-        except Exception:
-            skip_years = set()
+    existing_ratings = (_existing.get('ratings') or {}) if _existing else {}
+    if refresh_mode and existing_ratings and _current_year_str:
+        for _y in YEAR_CONFIGS:
+            if _y != _current_year_str and _y in existing_ratings:
+                skip_years.add(_y)
+        if skip_years:
+            print(f'  [refresh] rebuilding {_current_year_str} only; '
+                  f'reusing snapshots for {sorted(skip_years)}')
 
-    # In refresh mode, also drop MC sims by 5x — precision is more than enough
-    # for the simulator UI, and the cubic-time MC dominates wall time.
-    n_sims_use = 2000 if refresh_mode else MC_N_SIMS
+    # In refresh mode, drop MC sims hard — precision still well within the
+    # noise floor of the simulator's win-prob output, and the inner-loop sim
+    # dominates wall time. Monkey-patches the module constant so
+    # build_year_ratings → pb_adjusted_rating picks up the reduced count
+    # without threading a new kwarg through.
     if refresh_mode:
-        # Monkey-patch the module constant so build_year_ratings → pb_adjusted_rating
-        # picks up the reduced count without threading a new arg through.
-        import scrapers.BuildMapRatings as _self_mod  # noqa
-        _self_mod.MC_N_SIMS = n_sims_use
-        globals()['MC_N_SIMS'] = n_sims_use
+        globals()['MC_N_SIMS'] = 600
 
     ratings_out = {}
     for year, cfg in YEAR_CONFIGS.items():
