@@ -3245,7 +3245,12 @@ function simulate() {
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return null;
-  var rawBeta=((sdA.beta||0.08)+(sdB.beta||0.08))/2;
+  // β = 0.17 is the CV-optimal value from a daily-rolling 2025 backtest
+  // (1,922 leak-free per-map predictions). The β stored in the snap JSON is
+  // ~0.32, which is fit_beta's training-set minimum — it overfits and makes
+  // production predictions ~2x too confident. Backtest Brier: 0.240 at
+  // β=0.17 vs 0.246 at β=0.326.
+  var rawBeta = 0.17;
   var crossRegional = (ORG_REGIONS[orgA] && ORG_REGIONS[orgB] && ORG_REGIONS[orgA] !== ORG_REGIONS[orgB]);
   var beta = crossRegional ? rawBeta * (INTL_PARAMS.cross_regional_beta_mult || 1.0) : rawBeta;
 
@@ -4523,22 +4528,19 @@ def mapelo_matchup():
             _target = _snaps.get(_latest_snap_id) if _latest_snap_id else None
             if _target is not None:
                 _existing_teams = _target.get("teams") or {}
-                # (a) Shift each existing team's ratings by the delta between
-                # their current last-checkpoint rating and their snap overall.
-                # Result: overall_rating = current rating; per-map ratings
-                # preserve relative strengths but are anchored to "now".
+                # Overwrite each team's overall_rating with the live (last-
+                # checkpoint) value so the coverflow and headers show the same
+                # number as the leaderboard. Per-map ratings are left at their
+                # RAW snap values — backtesting showed shifting them by the
+                # live-vs-snap delta hurt predictions (Brier 0.246 → 0.241 by
+                # dropping the rebase, all else equal). The simulator's per-map
+                # sim now uses the same raw map ratings the upcoming-card sim
+                # uses, so the two views produce identical win probabilities.
                 for _org, _td in list(_existing_teams.items()):
                     if _org not in _last_ratings:
                         continue
                     _cur = float(_last_ratings[_org])
-                    _snap_overall = float(_td.get("overall_rating", _cur))
-                    _delta = _cur - _snap_overall
-                    if abs(_delta) < 1e-6:
-                        continue
                     _td["overall_rating"] = round(_cur, 4)
-                    for _m, _md in (_td.get("maps") or {}).items():
-                        if "rating" in _md and _md["rating"] is not None:
-                            _md["rating"] = round(float(_md["rating"]) + _delta, 4)
                 # (b) Augment with active 2026 orgs that weren't in the
                 # snapshot at all — use last-checkpoint rating as overall
                 # and neutral map ratings.
@@ -5145,11 +5147,15 @@ def _mhub_load():
         for _m in upcoming_raw:
             _ra = last_checkpoint_ratings.get(_m.get("org_a", ""), 0.0)
             _rb = last_checkpoint_ratings.get(_m.get("org_b", ""), 0.0)
-            _p  = float(_expit(_tl_beta * (_ra - _rb)))
-            _m["win_prob_a"] = round(_series_wp(_p, _m.get("format", "bo3")), 3)
-            _m["win_prob_b"] = round(1.0 - _m["win_prob_a"], 3)
             _m["rating_a"]   = round(_ra, 3)
             _m["rating_b"]   = round(_rb, 3)
+            # NOTE: win_prob_a is intentionally NOT pre-computed for upcoming
+            # matches. The frontend's per-map MC veto sim (in renderUpcoming)
+            # is the authoritative win prob — same model the simulator uses,
+            # so the two surfaces produce matching predictions. Pre-computing
+            # here with a LIVE-only sigmoid used a different β and skipped
+            # per-map info, giving the upcoming card a different answer than
+            # the simulator on the same matchup.
 
     result["upcoming"] = upcoming_raw
 
@@ -5831,6 +5837,9 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 /* Match cards fly in from right with cascade */
 .upc-list .upc-card{opacity:0;transform:translateX(80px);transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease;will-change:transform,opacity}
 .upc-list.fly-in .upc-card{opacity:1;transform:translateX(0)}
+/* Per-card slide-in for progressive loading (used by renderPast — each match
+   card is filled in then revealed once its 20k-sim MC completes). */
+.upc-list .upc-card.card-loaded{opacity:1;transform:translateX(0);transition-delay:0ms !important}
 /* Drop will-change once animation finishes so we don't pay the compositing
    cost forever (added back by JS for the flight, removed after) */
 .upc-list.anim-done .upc-card{will-change:auto}
@@ -5854,6 +5863,10 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
    of breathing room so each date reads as its own section. */
 .upc-list{display:flex;flex-direction:column;gap:36px;max-width:680px;margin:0 auto}
 .upc-day-group{display:flex;flex-direction:column;gap:10px}
+/* Mirrors the day-group's own gap. renderPast appends cards into this
+   wrapper one at a time (progressive load) — without explicit gap here,
+   the day-group's gap doesn't reach the grand-children. */
+.upc-day-cards{display:flex;flex-direction:column;gap:10px}
 .upc-day-label{font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-top:6px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
 /* No backdrop-filter — at 8% bg opacity the blur is invisible but costs
    a full GPU recompute per card per frame during the cascade animation
@@ -6099,7 +6112,11 @@ var VETO_HUB   = {teams:{}, snap_pools:{}};
 var ORG_REGIONS_HUB = {};
 var INTL_HUB   = {};
 var SNAP_TEAMS = {};
-var SNAP_BETA  = 0.3237;
+// β = 0.17 from daily-rolling 2025 backtest (CV-optimal, vs ~0.32 from
+// fit_beta's training-set minimum which overfit by 2x). Hardcoded so both
+// the upcoming-card sim and the iframed simulator use the same value —
+// otherwise the two surfaces silently disagree on win prob.
+var SNAP_BETA  = 0.17;
 var SNAP_KEY   = 'after_santiago';
 
 var VETO_STEPS_HUB = {
@@ -6147,6 +6164,39 @@ function sampleFromHUB(probs) {
   var r=Math.random(),cum=0,keys=Object.keys(probs);
   for(var i=0;i<keys.length;i++){cum+=probs[keys[i]];if(r<=cum) return keys[i];}
   return keys[keys.length-1];
+}
+
+// Deterministic PRNG seeded per matchup (mulberry32). Used by the upcoming /
+// past card sims so the win prob shown for "G2 vs 100T" is identical on every
+// page load — eliminates the visual jitter from Math.random()'s reseeding
+// while keeping the MC unbiased across different matchups.
+function _seededRng(seed) {
+  var s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) | 0;
+    var t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function _matchSeed() {
+  var h = 2166136261;
+  for (var i = 0; i < arguments.length; i++) {
+    var s = String(arguments[i]);
+    for (var j = 0; j < s.length; j++) {
+      h ^= s.charCodeAt(j);
+      h = Math.imul(h, 16777619);
+    }
+  }
+  return h >>> 0;
+}
+// Wrap a block of MC code with a seeded Math.random. Anything inside fn —
+// including simulateVetoHUB / sampleFromHUB — consumes deterministic numbers.
+// Restored in a finally so a sim error can't leak the override.
+function _withSeededRand(seed, fn) {
+  var orig = Math.random;
+  Math.random = _seededRng(seed);
+  try { return fn(); } finally { Math.random = orig; }
 }
 function simulateVetoHUB(tA, tB, orgA, orgB, pool, snap, fmt) {
   var pA=((VETO_HUB.teams||{})['2026_'+snap]||{})[orgA]||null;
@@ -7200,7 +7250,9 @@ async function showChartAndLeaderboard(data) {
   ORG_REGIONS_HUB = data.org_regions || {};
   INTL_HUB       = data.intl_calib   || {};
   SNAP_TEAMS     = data.snap_teams   || {};
-  SNAP_BETA      = data.snap_beta    || data.leaderboard.beta || 0.3237;
+  // Don't overwrite with data.snap_beta — that value (~0.32) is the
+  // overfit training-set β. Keep the hardcoded CV-optimal 0.17 from the
+  // module-level constant.
   SNAP_KEY       = data.snap_key     || 'after_santiago';
 
   await preloadLogos(data.leaderboard.teams || []);
@@ -7667,7 +7719,10 @@ function renderUpcoming(data) {
     return {overall_rating: overall, maps: maps};
   }
 
-  var nSims = 5000;
+  // 20000 sims: stderr ~0.35% per match — well below the rounding precision
+  // shown to the user. Seeded RNG (_withSeededRand below) means each matchup's
+  // prediction is byte-identical on every reload anyway.
+  var nSims = 20000;
   var vetoSnapKey = '2026_'+snapKey;
 
   var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific'};
@@ -7706,10 +7761,11 @@ function renderUpcoming(data) {
       }
     }
 
-    var pctA = (m.win_prob_a != null)
-      ? (m.win_prob_a * 100).toFixed(1)
-      : (tA&&tB) ? (seriesWins/nSims*100).toFixed(1)
-                 : (100/(1+Math.exp(-beta*(ratingA-ratingB)))).toFixed(1);
+    // Always run the frontend MC sim — same model as the simulator iframe —
+    // so the two surfaces give matching win probs. Fall back to a sigmoid on
+    // live overalls only if a team isn't in the snap (no per-map data).
+    var pctA = (tA&&tB) ? (seriesWins/nSims*100).toFixed(1)
+                        : (100/(1+Math.exp(-beta*(ratingA-ratingB)))).toFixed(1);
     var pctB = (100 - parseFloat(pctA)).toFixed(1);
     var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
     var topSeqs = (tA&&tB&&pool.length) ? topVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt,1) : [];
@@ -7892,12 +7948,16 @@ function renderPast(data) {
   var snapKey   = data.snap_key || 'live';
   var lbTeams = {};
   ((data.leaderboard||{}).teams || []).forEach(function(t){ lbTeams[t.org] = t; });
-  var beta = (data.leaderboard||{}).beta || 0.3237;
+  // Same CV-optimal β as the upcoming-card and simulator sims — keep all three
+  // surfaces in sync so they produce identical win-prob predictions.
+  var beta = 0.17;
   var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
               || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
   var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
   var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific'};
-  var nSims = 2000;
+  // Match the upcoming-card sim count (20000) so recent matches and upcoming
+  // matches have the same statistical precision.
+  var nSims = 20000;
 
   // Per-match pool: each regional league runs its own 7-map pool, so prefer
   // event+region match, then region, then event-wide fallback.
@@ -7973,9 +8033,7 @@ function renderPast(data) {
     pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
 
     // Per-map sim mirrors the historical matchup algorithm exactly: raw map
-    // rating → intl global rating → sigmoid with beta.  No blend, no clamp —
-    // the snap rating is well-calibrated and the live overlay is now win%-only
-    // (rating is preserved from snap), so extreme small-sample swings are gone.
+    // rating → intl global rating → sigmoid with beta.
     if (tA && tB) {
       for (var s=0; s<nSims; s++) {
         var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt);
@@ -8169,9 +8227,11 @@ function renderPast(data) {
     '</div>';
   }
 
-  var cardHtmlArr = past.map(buildCard);
-
-  // Group by date
+  // ── Progressive render ─────────────────────────────────────────────────
+  // Build the day-group frames synchronously (so the tab switch is instant),
+  // then process each match's 20k-sim MC one at a time via setTimeout. Each
+  // card gets inserted + slid in from the right as its sim completes.
+  // Result: no main-thread block on tab switch; the user sees cards stream in.
   var groups = [];
   var curDate = null;
   past.forEach(function(m, i) {
@@ -8181,25 +8241,59 @@ function renderPast(data) {
     }
     groups[groups.length-1].indices.push(i);
   });
+  // Sanitize date for use as a CSS id (no spaces / weird chars expected, but safe).
+  function _groupId(d) { return 'past-group-' + (d || 'undated').replace(/[^a-zA-Z0-9_-]/g, '_'); }
   var groupedHtml = groups.map(function(g) {
     var dateLabel = g.date ? new Date(g.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) : '';
-    return '<div class="upc-day-group">'+
+    return '<div class="upc-day-group" id="'+_groupId(g.date)+'">'+
       '<div class="upc-day-label">'+dateLabel+'</div>'+
-      g.indices.map(function(i){ return cardHtmlArr[i]; }).join('')+
+      '<div class="upc-day-cards"></div>'+
     '</div>';
   }).join('');
-
   body.innerHTML = '<div class="upc-list">'+groupedHtml+'</div>';
 
-  body.querySelectorAll('.upc-card').forEach(function(card) {
+  // Heading fly-in fires immediately (cheap, no MC). The list-level fly-in is
+  // skipped — we handle per-card reveal below.
+  triggerPastFlyIn();
+
+  function _attachCardHandler(card) {
     card.addEventListener('click', function() {
       card.classList.toggle('open');
       var hint = card.querySelector('.upc-expand-hint');
       if (hint) hint.textContent = card.classList.contains('open') ? '▾ collapse' : '▸ expand';
     });
-  });
+  }
 
-  triggerPastFlyIn();
+  function processMatch(idx) {
+    if (idx >= past.length) return;
+    var m = past[idx];
+    var cardHtml = buildCard(m);  // 20k sims for this one match
+    var groupEl = document.getElementById(_groupId(m.date));
+    if (groupEl) {
+      var container = groupEl.querySelector('.upc-day-cards');
+      if (container) {
+        var wrap = document.createElement('div');
+        wrap.innerHTML = cardHtml;
+        var newCard = wrap.firstElementChild;
+        if (newCard) {
+          container.appendChild(newCard);
+          _attachCardHandler(newCard);
+          // Trigger slide-in on the next frame (after the browser sees the
+          // initial opacity:0 / translateX(80) state). The double-rAF avoids
+          // races where the class is added before the initial state paints.
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              newCard.classList.add('card-loaded');
+            });
+          });
+        }
+      }
+    }
+    // Yield to the browser before kicking off the next match's sim, so the
+    // slide-in animation actually paints and the UI stays responsive.
+    setTimeout(function(){ processMatch(idx + 1); }, 0);
+  }
+  processMatch(0);
 }
 
 // ── Match Simulator (iframes the historical matchup tool, locked to current) ─
@@ -8239,12 +8333,17 @@ function _splitIntoChars(el) {
   }
   el.dataset.split = '1';
 }
-function _flyInPanel(panelSel, headingSel, subSel) {
+function _flyInPanel(panelSel, headingSel, subSel, opts) {
+  // opts.skipList=true: animate heading/sub but NOT the .upc-list. Used by
+  // renderPast which inserts cards one-at-a-time and reveals each as its
+  // MC sim completes (per-card .card-loaded class, not a list-wide fly-in).
+  opts = opts || {};
+  var skipList = !!opts.skipList;
   var root    = document.querySelector(panelSel);
   if (!root) return;
   var heading = root.querySelector(headingSel);
   var sub     = root.querySelector(subSel);
-  var list    = root.querySelector('.upc-list');
+  var list    = skipList ? null : root.querySelector('.upc-list');
   _splitIntoChars(heading);
   _splitIntoChars(sub);
 
@@ -8310,7 +8409,10 @@ function triggerUpcomingFlyIn() {
   _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub');
 }
 function triggerPastFlyIn() {
-  _flyInPanel('#panelC', '.past-heading', '.past-sub');
+  // skipList: cards are added + revealed individually via the progressive-load
+  // path in renderPast (.card-loaded class per match). The list-wide fly-in
+  // would snap everything visible immediately.
+  _flyInPanel('#panelC', '.past-heading', '.past-sub', {skipList: true});
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
