@@ -464,13 +464,22 @@ def get_ratings():
     return _ratings_cache
 
 _veto_cache = None
+_veto_cache_mtime = 0.0
 _VETO_JSON_PATH = os.path.join(ROOT, 'data', 'veto_model.json')
 
 def get_veto_model():
-    global _veto_cache
-    if _veto_cache is None:
+    """Reload when the file's mtime advances — RefreshLiveData rewrites this
+    every refresh, so an in-memory cache would freeze the simulator's veto
+    patterns to whatever was on disk at server start."""
+    global _veto_cache, _veto_cache_mtime
+    try:
+        mtime = os.path.getmtime(_VETO_JSON_PATH)
+    except OSError:
+        mtime = 0.0
+    if _veto_cache is None or mtime > _veto_cache_mtime:
         with open(_VETO_JSON_PATH) as f:
             _veto_cache = json.load(f)
+        _veto_cache_mtime = mtime
     return _veto_cache
 
 _intl_cache = None
@@ -2361,8 +2370,10 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:980px; margin:0 auto; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; text-align:center; }
-  .page-sub { font-size:.83rem; color:var(--soft); margin-bottom:28px; line-height:1.5; text-align:center; }
+  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; text-align:center; min-height:1.2em; line-height:1; transition:opacity .2s; }
+  .type-cursor{opacity:1;animation:blink .55s step-end infinite}
+  .dot-seed{font-size:1.6rem}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
   /* Team selector panels */
   .teams-grid { display:grid; grid-template-columns:1fr 96px 1fr; gap:0; align-items:start; margin-bottom:24px; }
   .team-panel { background:white; border-radius:24px; padding:22px 24px; box-shadow:0 4px 24px #0000000a; }
@@ -2637,8 +2648,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
     <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
   </div>
   <div class="page">
-    <div class="page-title">Matchup Predictor</div>
-    <p class="page-sub">Monte Carlo veto simulation. Each team can be set to a different season and timeframe.</p>
+    <h1 class="page-title" id="matchupTitle" style="opacity:0">&middot;</h1>
 
     <div class="mode-toggle-row">
       <div class="mode-toggle">
@@ -2732,21 +2742,32 @@ var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
 var LOCK_CURRENT = LOCK_CURRENT_FLAG;
-var yearA = LOCK_CURRENT ? '2026' : '2023';
-var snapA = LOCK_CURRENT ? 'after_santiago' : 'after_champions';
-var yearB = LOCK_CURRENT ? '2026' : '2025';
-var snapB = LOCK_CURRENT ? 'after_santiago' : 'after_champions';
+function _latestSnapFor(y){
+  var snaps = ((DATA.ratings||{})[y]||{}).snapshots || {};
+  var keys = Object.keys(snaps);
+  return keys[keys.length-1] || 'after_champions';
+}
+function _latestYear(){
+  var years = Object.keys(DATA.ratings || {}).sort();
+  return years[years.length-1] || '2026';
+}
+var yearA = LOCK_CURRENT ? _latestYear() : '2023';
+var snapA = LOCK_CURRENT ? _latestSnapFor(yearA) : 'after_champions';
+var yearB = LOCK_CURRENT ? _latestYear() : '2025';
+var snapB = LOCK_CURRENT ? _latestSnapFor(yearB) : 'after_champions';
 var fmt = 'bo3';
 
-// When embedded as the Modern Hub "Simulator" tab, hide year/snap pickers
-// and the home-button nav — both sides are pinned to the current 2026 snap.
+// When embedded as the Modern Hub "Simulator" tab, hide year/snap pickers,
+// the home-button nav, and the snapshot label under each team — the modern
+// hub is the live/dynamic view, so no fixed-snapshot text should appear.
 if (LOCK_CURRENT) {
   document.addEventListener('DOMContentLoaded', function(){
     var css = document.createElement('style');
     css.textContent =
       '.yr-scrubber, .snap-seg { display: none !important; }' +
       '.top-nav { display: none !important; }' +
-      '.page > h1, .page > .subtitle { display: none !important; }' +
+      '.page > .subtitle { display: none !important; }' +
+      '.result-ctx { display: none !important; }' +
       'body { background: transparent !important; }' +
       'body::before, body::after { display: none !important; }';
     document.head.appendChild(css);
@@ -2852,8 +2873,16 @@ function populateTeams(side){
   st.teams = teams;
   var newIdx = teams.indexOf(prev);
   if(newIdx<0){
-    if(side==='a') newIdx = 0;
-    else newIdx = teams.length>1 ? 1 : 0;
+    // Modern Hub default: FNC on the left, KRÜ on the right. Falls back to
+    // the first/second alphabetical teams if either isn't in the snapshot.
+    if (LOCK_CURRENT) {
+      var pref = side==='a' ? 'FNC' : 'KRÜ';
+      newIdx = teams.indexOf(pref);
+    }
+    if (newIdx < 0) {
+      if(side==='a') newIdx = 0;
+      else newIdx = teams.length>1 ? 1 : 0;
+    }
   }
   st.idx = Math.max(0, newIdx);
   buildCoverflow(side);
@@ -3745,11 +3774,42 @@ function runMatchup() {
 (function(){
   populateSnapSeg('a'); populateSnapSeg('b');
   populateTeams('a'); populateTeams('b');
-  // Default selection: EG (A) vs NRG (B)
-  var ai = CF.a.teams.indexOf('EG');
-  var bi = CF.b.teams.indexOf('NRG');
-  if(ai >= 0){ CF.a.idx = ai; updateCoverflow('a'); }
-  if(bi >= 0){ CF.b.idx = bi; updateCoverflow('b'); }
+  // Default selection: EG (A) vs NRG (B) on the standalone matchup page.
+  // Modern Hub Simulator (LOCK_CURRENT) keeps the FNC vs KRÜ default set
+  // inside populateTeams — don't override it here.
+  if (!LOCK_CURRENT) {
+    var ai = CF.a.teams.indexOf('EG');
+    var bi = CF.b.teams.indexOf('NRG');
+    if(ai >= 0){ CF.a.idx = ai; updateCoverflow('a'); }
+    if(bi >= 0){ CF.b.idx = bi; updateCoverflow('b'); }
+  }
+})();
+
+// ── Title intro animation (dot → typewriter), mirrors the Modern Hub ─────────
+// Runs in both the standalone page and the iframed Modern Hub Simulator so
+// the simulator tab always opens with a real title instead of a blank slot.
+(function introMatchupTitle(){
+  var title = document.getElementById('matchupTitle');
+  if (!title) return;
+  function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+  (async function(){
+    title.style.opacity = '1';
+    title.innerHTML = '<span class="dot-seed">·</span>';
+    await sleep(380);
+    var text = 'Matchup Predictor';
+    title.textContent = '';
+    var built = '';
+    for (var i = 0; i < text.length; i++) {
+      built += text[i];
+      title.innerHTML = built + '<span class="type-cursor">|</span>';
+      await sleep(48 + Math.random() * 38);
+    }
+    for (var j = 0; j < 4; j++) {
+      title.innerHTML = text + (j % 2 === 0 ? '<span class="type-cursor">|</span>' : '');
+      await sleep(210);
+    }
+    title.textContent = text;
+  })();
 })();
 </script>
 <script>PW_JS</script>
@@ -4422,29 +4482,25 @@ def mapelo_matchup():
 
     # When embedded in the Modern Hub Simulator tab:
     #   (1) augment the snapshot's team list to include every 2026 active org
-    #   (2) override the snap_pool to reflect the LIVE current map pool
-    #       (top 7 most-played maps across past-7-days of current event matches)
+    #   (2) override the snap_pool with the LIVE current pool, derived from the
+    #       most recent VCT match's actual pick/ban sequence — the veto IS the
+    #       pool, by definition. Beats any play-count heuristic.
     if lock_current:
         try:
-            from datetime import datetime as _dtnow, timedelta as _tdnow
-            _live_recs = []
-            for _eid in ("2026_stage1", "2026_masters_santiago", "2026_kickoff"):
-                _live_recs.extend(_load_event_map_records([_eid]))
-            # Filter to past 14 days of matches → current rotation
-            _today = _dtnow.utcnow().date()
-            _cutoff = (_today - _tdnow(days=14)).isoformat()
-            _counts = {}
-            for _d, _mid, _maps in _live_recs:
-                if _d < _cutoff:
-                    continue
-                for _m in _maps:
-                    if _m:
-                        _counts[_m] = _counts.get(_m, 0) + 1
-            _ranked = sorted(_counts.items(), key=lambda kv: (-kv[1], kv[0]))
-            _live_pool = [n for n, _c in _ranked[:7]]
-            if _live_pool:
-                frontend_data["veto_model"].setdefault("snap_pools", {})["2026_after_santiago"] = _live_pool
-                frontend_data["veto_model"].setdefault("computed_pools", {})["2026_after_santiago"] = _live_pool
+            _live_pool = _current_pool_from_latest_veto()
+            if _live_pool and len(_live_pool) >= 7:
+                # Latest 2026 snapshot by ref_date — same rule the frontend uses
+                # to pick which snap to render, so the pool lands where it'll be
+                # read.
+                _2026_snaps = (frontend_data.get("ratings", {}).get("2026") or {}).get("snapshots") or {}
+                if _2026_snaps:
+                    _latest_snap_id = max(
+                        _2026_snaps.items(),
+                        key=lambda kv: (kv[1].get("ref_date") or "", kv[0]),
+                    )[0]
+                    _target_key = f"2026_{_latest_snap_id}"
+                    frontend_data["veto_model"].setdefault("snap_pools", {})[_target_key] = _live_pool
+                    frontend_data["veto_model"].setdefault("computed_pools", {})[_target_key] = _live_pool
         except Exception:
             pass
         try:
@@ -4457,7 +4513,14 @@ def mapelo_matchup():
             else:
                 _last_ratings = {}
             _snaps = ((frontend_data["ratings"].get("2026") or {}).get("snapshots") or {})
-            _target = _snaps.get("after_santiago")
+            # Latest 2026 snapshot by ref_date — same selection rule the
+            # simulator frontend uses, so the live-rating overlay lands on
+            # the same snap the user will be looking at.
+            _latest_snap_id = max(
+                _snaps.items(),
+                key=lambda kv: (kv[1].get("ref_date") or "", kv[0]),
+            )[0] if _snaps else None
+            _target = _snaps.get(_latest_snap_id) if _latest_snap_id else None
             if _target is not None:
                 _existing_teams = _target.get("teams") or {}
                 # (a) Shift each existing team's ratings by the delta between
@@ -4551,13 +4614,57 @@ def _live_event_ids_by_date():
 
 _MAPS_DIR       = os.path.join(ROOT, "data", "maps")
 _MATCH_DATES_PATH = os.path.join(ROOT, "data", "match_dates.json")
+_VETOS_PATH       = os.path.join(ROOT, "data", "map_vetos.csv")
 
-# Snap key → event CSV stems (most representative first) for pool detection
-_SNAP_POOL_EVENTS = {
-    "2026_after_kickoff":    ["2026_kickoff"],
-    "2026_before_santiago":  ["2026_kickoff"],
-    "2026_after_santiago":   ["2026_masters_santiago"],
-    "2026_after_stage1":     ["2026_stage1"],
+
+def _current_pool_from_latest_veto():
+    """Return the 7-map pool from the most recent VCT match with a complete
+    pick/ban sequence. This is the authoritative source: a match's veto IS
+    the active pool, by definition.
+
+    Looks at data/map_vetos.csv (populated by scrapers/ScrapeMapVetos.py),
+    joins to match dates, finds the latest match with ≥7 veto steps, and
+    returns its distinct map names. Returns [] if no usable data."""
+    if not os.path.exists(_VETOS_PATH) or not os.path.exists(_MATCH_DATES_PATH):
+        return []
+    try:
+        with open(_MATCH_DATES_PATH) as f:
+            match_dates = json.load(f)
+        vetos = pd.read_csv(_VETOS_PATH)
+    except Exception:
+        return []
+    if vetos.empty:
+        return []
+    vetos = vetos.copy()
+    vetos["date"] = vetos["MatchID"].astype(str).map(match_dates)
+    vetos = vetos.dropna(subset=["date"])
+    if vetos.empty:
+        return []
+    counts = vetos.groupby("MatchID").size()
+    valid_mids = counts[counts >= 7].index
+    if len(valid_mids) == 0:
+        return []
+    vetos = vetos[vetos["MatchID"].isin(valid_mids)]
+    # Most recent match wins; tie-break on higher MatchID (VLR IDs grow over time)
+    latest = vetos.sort_values(["date", "MatchID"], ascending=False).iloc[0]
+    latest_mid = int(latest["MatchID"])
+    pool_maps = sorted(set(vetos[vetos["MatchID"] == latest_mid]["map"].dropna().tolist()))
+    # Strip stray PICK/BAN/DECIDER/REMAIN suffixes if present (defensive)
+    cleaned = []
+    for m in pool_maps:
+        for sfx in ("PICK", "BAN", "DECIDER", "REMAIN"):
+            if m.endswith(sfx):
+                m = m[:-len(sfx)]
+                break
+        cleaned.append(m)
+    return sorted(set(cleaned))
+
+# Snap key → event CSV stems for pool detection. Historical entries are frozen
+# (those snapshots are fixed); 2026+ entries are auto-derived from
+# BuildMapRatings.YEAR_CONFIGS so adding a new event (Masters London, Stage 2,
+# Champions) in MoreTestingMaybeFiles.py is enough to propagate everywhere —
+# no edits needed here.
+_HISTORICAL_SNAP_POOL_EVENTS = {
     "2025_before_bangkok":   ["2025_kickoff"],
     "2025_after_bangkok":    ["2025_masters_bangkok"],
     "2025_before_toronto":   ["2025_stage1"],
@@ -4571,6 +4678,27 @@ _SNAP_POOL_EVENTS = {
     "2024_before_champions": ["2024_stage2"],
     "2024_after_champions":  ["2024_champions"],
 }
+
+def _build_dynamic_snap_pool_events():
+    """For each dynamically-generated snapshot in BuildMapRatings.YEAR_CONFIGS,
+    map ``<year>_<snap_id>`` to the snapshot's most recent event id. That event
+    is the one whose matches define the pool era for that snap."""
+    out = {}
+    try:
+        from scrapers.BuildMapRatings import YEAR_CONFIGS as _YC
+    except Exception:
+        return out
+    for year, cfg in _YC.items():
+        if int(year) < 2026:
+            continue  # past years are frozen above
+        for snap_id, snap in (cfg.get("snapshots") or {}).items():
+            evs = snap.get("events") or []
+            if evs:
+                out[f"{year}_{snap_id}"] = [evs[-1]]
+    return out
+
+_SNAP_POOL_EVENTS = dict(_HISTORICAL_SNAP_POOL_EVENTS)
+_SNAP_POOL_EVENTS.update(_build_dynamic_snap_pool_events())
 
 def _load_event_map_records(event_ids):
     """
@@ -4820,19 +4948,23 @@ def _mhub_load():
     else:
         result["status"] = "building"
 
-    # ── Leaderboard from map_ratings.json (most recent 2026 snapshot) ─────────
+    # ── Leaderboard from map_ratings.json (latest snapshot of the latest year) ─
+    # No hardcoded snap names: pick the snapshot with the most recent ref_date,
+    # falling back to insertion order if ref_date is missing. As new events get
+    # scraped and BuildMapRatings rebuilds, this auto-promotes to the freshest.
     snap_data = None
     snap_name = None
     if os.path.exists(_MAP_RATINGS_PATH):
         with open(_MAP_RATINGS_PATH) as f:
             mr_json = json.load(f)
-        snaps = mr_json.get("ratings", {}).get("2026", {}).get("snapshots", {})
-        for sn in ("after_stage2", "after_london", "after_stage1",
-                   "after_santiago", "before_santiago", "after_kickoff"):
-            if sn in snaps:
-                snap_data = snaps[sn]
-                snap_name = sn
-                break
+        all_ratings = mr_json.get("ratings", {}) or {}
+        latest_year = max(all_ratings.keys()) if all_ratings else None
+        snaps = (all_ratings.get(latest_year) or {}).get("snapshots", {}) if latest_year else {}
+        if snaps:
+            def _snap_sort_key(item):
+                sid, sdata = item
+                return (sdata.get("ref_date") or "", sid)
+            snap_name, snap_data = max(snaps.items(), key=_snap_sort_key)
 
     # If timeline is available, override overall ratings with last checkpoint
     last_checkpoint_ratings = {}
@@ -5465,11 +5597,17 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .tab:hover:not(.active){border-color:#9c6ec8;color:#000}
 
 .panels-outer{overflow:hidden}
-.panel-track{display:flex;width:400%;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform}
-.panel-track.show-b{transform:translateX(-25%)}
-.panel-track.show-c{transform:translateX(-50%)}
-.panel-track.show-d{transform:translateX(-75%)}
-.panel{width:25%;min-width:0}
+/* Slide curve = ease-out-quint. Snappier finish than the symmetric ease,
+   so the panel "lands" without that mid-slide hesitation that read as
+   a stutter. transform-only animation runs on the compositor. */
+.panel-track{display:flex;width:400%;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.panel-track.show-b{transform:translate3d(-25%,0,0)}
+.panel-track.show-c{transform:translate3d(-50%,0,0)}
+.panel-track.show-d{transform:translate3d(-75%,0,0)}
+/* contain: isolates each panel's layout/paint from its neighbors so the
+   simulator iframe (2400px tall) can't trigger a layout recalc of the
+   sibling panels during the slide. */
+.panel{width:25%;min-width:0;contain:layout paint style}
 
 .region-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;transition:opacity .3s,max-height .5s cubic-bezier(.55,.06,.36,.98),margin-bottom .5s cubic-bezier(.55,.06,.36,.98);justify-content:center;padding:0 24px;overflow:hidden;max-height:60px}
 .region-pills.hidden-panel{opacity:0 !important;max-height:0;margin-bottom:0;pointer-events:none;transition:opacity .25s,max-height .45s cubic-bezier(.55,.06,.36,.98) .15s,margin-bottom .45s cubic-bezier(.55,.06,.36,.98) .15s}
@@ -5804,7 +5942,6 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 <main class="hub-main">
   <div class="hub-header">
     <h1 class="hub-title" id="hubTitle" style="opacity:0">&middot;</h1>
-    <p class="hub-sub" id="hubSub" style="opacity:0">BenPom-style opponent-adjusted net ratings &middot; updated daily</p>
   </div>
 
   <div class="tab-bar" id="tabBar" style="opacity:0">
@@ -5897,7 +6034,9 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
       <!-- Panel D — Match Simulator (embeds the full historical matchup tool,
            with year/snap pickers hidden so both sides are pinned to current) -->
       <div class="panel" id="panelD">
-        <iframe class="sim-iframe" id="simIframe" src="about:blank" loading="lazy"></iframe>
+        <!-- loading="eager" so preloadSimulator() actually fetches the iframe
+             during idle time; lazy would defer until the panel scrolls into view. -->
+        <iframe class="sim-iframe" id="simIframe" src="about:blank" loading="eager"></iframe>
       </div>
 
     </div><!-- panel-track -->
@@ -6076,7 +6215,12 @@ document.querySelectorAll('.tab').forEach(btn => {
     rp.classList.toggle('hidden-panel', activePanel !== 'a');
     if (activePanel === 'b' && hubData) renderUpcoming(hubData);
     if (activePanel === 'c' && hubData) renderPast(hubData);
-    if (activePanel === 'd') renderSimulator();
+    // Sim is normally preloaded on init; if the user clicks before that
+    // happens, defer the iframe-src assignment until after the slide so
+    // the transform animation keeps the main thread to itself.
+    if (activePanel === 'd' && !_simInitialized) {
+      setTimeout(renderSimulator, 560);
+    }
   });
 });
 
@@ -6098,7 +6242,6 @@ document.querySelectorAll('.pill').forEach(btn => {
 // ── Intro animation ──────────────────────────────────────────────────────────
 async function introAnimation() {
   const title = document.getElementById('hubTitle');
-  const sub   = document.getElementById('hubSub');
 
   // Phase 1 — dot
   title.style.opacity = '1';
@@ -6121,8 +6264,6 @@ async function introAnimation() {
   title.textContent = text;
 
   // Phase 3 — fade rest in
-  fadeIn('hubSub', 0.5);
-  await sleep(120);
   fadeIn('tabBar', 0.5);
   await sleep(80);
   // regionPills start invisible; shown later after chart is ready
@@ -6348,6 +6489,48 @@ function makeBandsPlugin(bands) {
 }
 
 // ── Logo-endpoint plugin ─────────────────────────────────────────────────────
+// ── Per-org grow/shrink animation between small dot and full logo ──────────
+// progress 0 = small dot at the data endpoint
+// progress 1 = full logo + halo (offset 15px to the right)
+// Map<org, {progress, target, startProg, startTime}>. The plugin pushes the
+// target each frame based on the current hover/selection state; a single
+// shared RAF loop interpolates progress toward target on each tick.
+const _logoAnimState = new Map();
+let _logoAnimRaf = null;
+// Snappy: 85ms feels instant but still smooth enough to read as motion.
+// ease-out-quart (no ease-in) so the dot starts moving the same frame your
+// cursor lands — no perceptible "wait, then grow" delay.
+const _LOGO_ANIM_MS = 85;
+
+function _tickLogoAnim() {
+  let busy = false;
+  const now = performance.now();
+  _logoAnimState.forEach(st => {
+    if (st.progress === st.target) return;
+    const p = Math.min((now - st.startTime) / _LOGO_ANIM_MS, 1);
+    const ep = 1 - Math.pow(1 - p, 4);  // ease-out-quart: fast start, soft land
+    st.progress = st.startProg + ep * (st.target - st.startProg);
+    if (p < 1) busy = true;
+    else st.progress = st.target;
+  });
+  if (myChart) try { myChart.draw(); } catch (_) {}
+  _logoAnimRaf = busy ? requestAnimationFrame(_tickLogoAnim) : null;
+}
+
+function _setLogoTarget(org, target) {
+  let st = _logoAnimState.get(org);
+  if (!st) {
+    st = {progress: target, target: target, startProg: target, startTime: 0};
+    _logoAnimState.set(org, st);
+    return;
+  }
+  if (st.target === target) return;
+  st.startProg = st.progress;
+  st.target    = target;
+  st.startTime = performance.now();
+  if (!_logoAnimRaf) _logoAnimRaf = requestAnimationFrame(_tickLogoAnim);
+}
+
 const logoPlugin = {
   id:'teamLogos',
   afterDatasetsDraw(chart) {
@@ -6359,33 +6542,46 @@ const logoPlugin = {
       const py   = y.getPixelForValue(last.y);
       if (px < chartArea.left || px > chartArea.right + 30) return;
       const _isFocused = (selectedTeam === ds.org) || (_logoHoverOrg === ds.org);
+      _setLogoTarget(ds.org, _isFocused ? 1 : 0);
+      const prog = (_logoAnimState.get(ds.org) || {progress: _isFocused ? 1 : 0}).progress;
       const sz = 22;
 
-      if (!_isFocused) {
-        // Default — just a small colored dot, anchored AT the line endpoint
+      // Small dot at the endpoint — fades out while the logo grows in.
+      if (prog < 0.999) {
         ctx.save();
+        ctx.globalAlpha = 1 - prog;
         ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2);
         ctx.fillStyle = ds.borderColor; ctx.fill();
         ctx.restore();
-        return;
       }
+      if (prog <= 0.001) return;
 
-      // Focused — full logo offset to the right of the line endpoint
-      const cx = px + 4 + sz / 2;
-      const ringR = sz / 2 + 4;
+      // Halo + logo at the offset position. Scale + fade animate from
+      // dot-center (px) out to the logo's resting position so it visually
+      // grows out of the dot rather than appearing in midair.
+      const cx     = px + 4 + sz / 2;
+      const ringR  = sz / 2 + 4;
+      const drawCx = px + (cx - px) * prog;  // slide from dot to logo position
       ctx.save();
-      const grd = ctx.createRadialGradient(cx, py, 0, cx, py, ringR);
+      ctx.globalAlpha = prog;
+      ctx.translate(drawCx, py);
+      ctx.scale(prog, prog);
+      ctx.translate(-drawCx, -py);
+      const grd = ctx.createRadialGradient(drawCx, py, 0, drawCx, py, ringR);
       grd.addColorStop(0, '#ffffff');
       grd.addColorStop(0.62, '#ffffff');
       grd.addColorStop(1, ds.borderColor);
-      ctx.beginPath(); ctx.arc(cx, py, ringR, 0, Math.PI * 2);
+      ctx.beginPath(); ctx.arc(drawCx, py, ringR, 0, Math.PI * 2);
       ctx.fillStyle = grd; ctx.fill();
-      ctx.beginPath(); ctx.arc(cx, py, sz / 2, 0, Math.PI * 2); ctx.clip();
+      ctx.beginPath(); ctx.arc(drawCx, py, sz / 2, 0, Math.PI * 2); ctx.clip();
       const _logoScale = (LOGO_SCALES[ds.org] != null) ? LOGO_SCALES[ds.org] : 1;
       const _drawSz = sz * _logoScale;
-      ctx.drawImage(logos[ds.org], cx - _drawSz / 2, py - _drawSz / 2, _drawSz, _drawSz);
+      ctx.drawImage(logos[ds.org], drawCx - _drawSz / 2, py - _drawSz / 2, _drawSz, _drawSz);
       ctx.restore();
 
+      // Info card only when fully grown — avoids drawing card while logo is
+      // still scaling in (and prevents jitter as we round position pixels).
+      if (prog < 0.98) return;
       // Mini info card for the selected team
       if (selectedTeam !== ds.org || !hubData) return;
       const team = (hubData.leaderboard.teams || []).find(t => t.org === ds.org);
@@ -6559,18 +6755,31 @@ function _initCanvasListeners() {
   function _hitTestLogos(mx, my) {
     if (!myChart || !logos) return null;
     const {scales: {x, y}} = myChart;
-    // Hit area covers both the small dot (at px,py) and the focused logo (offset to right)
-    const hitR = 9;  // generous radius so dots are easy to grab
+    // Two hit zones, with very different purposes:
+    //   - SMALL_HIT = the unfocused-state hit zone, centered on the actual
+    //     dot. This is the only thing that promotes a team into the focused
+    //     state. Kept tight so cursoring near (but not on) a dot doesn't
+    //     trigger the "snap large" effect.
+    //   - FOCUSED_HIT = the focused-state hit zone, covers the expanded
+    //     logo offset 15px right. Only consulted once a team is already
+    //     focused, so the user can move from the dot into the logo without
+    //     losing the hover state.
+    const SMALL_HIT   = 5;
+    const FOCUSED_HIT = 15;
     let hit = null;
     myChart.data.datasets.forEach(ds => {
       if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
       const last = ds.data[ds.data.length - 1];
       const px = x.getPixelForValue(new Date(last.x));
       const py = y.getPixelForValue(last.y);
-      if (Math.sqrt((mx - px) ** 2 + (my - py) ** 2) <= hitR) { hit = ds.org; return; }
-      // Also test the focused logo position so hovering the expanded logo keeps it focused
-      const cxFocused = px + 4 + 11;
-      if (Math.sqrt((mx - cxFocused) ** 2 + (my - py) ** 2) <= 15) hit = ds.org;
+      // Small-dot test — always available, this is what triggers focus.
+      if (Math.sqrt((mx - px) ** 2 + (my - py) ** 2) <= SMALL_HIT) { hit = ds.org; return; }
+      // Expanded-logo test — only when this team is ALREADY focused.
+      const isFocused = (selectedTeam === ds.org) || (_logoHoverOrg === ds.org);
+      if (isFocused) {
+        const cxFocused = px + 4 + 11;
+        if (Math.sqrt((mx - cxFocused) ** 2 + (my - py) ** 2) <= FOCUSED_HIT) hit = ds.org;
+      }
     });
     return hit;
   }
@@ -6802,18 +7011,27 @@ async function revealChart(duration = 2500, startFromLeft = false) {
         oc.strokeStyle = 'rgba(0,0,0,0.07)';
         oc.lineWidth   = 1;
 
-        // Horizontal grid: match the y-axis labels exactly — Chart.js's
-        // autoSkip leaves one tick per integer (with the .5 offset, so
-        // +12.5, +11.5, +10.5 …), not at every 0.5 step.  Drawing at 0.5
-        // gives twice the density of the actual chart and makes the
-        // covered side look denser than the uncovered side.
+        // Horizontal grid — must hit the SAME pixel rows as Chart.js's own
+        // gridlines on the uncovered side, otherwise the seam at the curtain
+        // edge shows two grids running at half-step offsets. Chart.js draws
+        // a line at every integer y-tick (see the +12.0 / +11.0 / +10.0 axis
+        // labels), so iterate integer values that fall inside the visible y
+        // range. Walk the actual rendered ticks if Chart.js exposes them so
+        // that any future tick-density change (e.g. step=2) stays in sync.
         const _yMin = myChart.scales.y.min;
         const _yMax = myChart.scales.y.max;
-        // First .5-multiple that's >= _yMin.  For _yMin=-12.5 we want -12.5;
-        // for any non-.5 _yMin we round up to the next .5 boundary.
-        let _yStart = Math.ceil(_yMin - 0.5) + 0.5;
-        if (_yStart < _yMin - 1e-9) _yStart += 1;
-        for (let _v = _yStart; _v <= _yMax + 1e-6; _v += 1.0) {
+        const _yTickVals = (myChart.scales.y.ticks || [])
+          .map(t => (typeof t === 'object' ? t.value : t))
+          .filter(v => typeof v === 'number');
+        const _yIter = _yTickVals.length
+          ? _yTickVals
+          : (() => {
+              const out = [];
+              for (let _v = Math.ceil(_yMin); _v <= Math.floor(_yMax) + 1e-6; _v += 1) out.push(_v);
+              return out;
+            })();
+        for (const _v of _yIter) {
+          if (_v < _yMin - 1e-6 || _v > _yMax + 1e-6) continue;
           const _py = myChart.scales.y.getPixelForValue(_v);
           if (_py < ca.top - 0.5 || _py > ca.bottom + 0.5) continue;
           oc.beginPath();
@@ -6822,13 +7040,25 @@ async function revealChart(duration = 2500, startFromLeft = false) {
           oc.stroke();
         }
 
-        // Vertical grid: one line at each month boundary between
-        // x.min and x.max that falls inside the still-covered area.
-        const _xMin = new Date(myChart.scales.x.min);
-        const _xMax = new Date(myChart.scales.x.max);
-        const _m0   = new Date(_xMin.getFullYear(), _xMin.getMonth(), 1);
-        if (_m0 < _xMin) _m0.setMonth(_m0.getMonth() + 1);
-        for (let _d = new Date(_m0); _d <= _xMax; _d.setMonth(_d.getMonth() + 1)) {
+        // Vertical grid: mirror Chart.js's own x-axis ticks so the lines
+        // under the curtain land at the exact same pixels as the lines on
+        // the uncovered side. Falls back to first-of-month if for some
+        // reason the chart doesn't expose ticks yet.
+        const _xTickVals = (myChart.scales.x.ticks || [])
+          .map(t => (typeof t === 'object' ? t.value : t))
+          .filter(v => typeof v === 'number');
+        const _xIter = _xTickVals.length
+          ? _xTickVals.map(v => new Date(v))
+          : (() => {
+              const out = [];
+              const _xMin = new Date(myChart.scales.x.min);
+              const _xMax = new Date(myChart.scales.x.max);
+              const _m0   = new Date(_xMin.getFullYear(), _xMin.getMonth(), 1);
+              if (_m0 < _xMin) _m0.setMonth(_m0.getMonth() + 1);
+              for (let _d = new Date(_m0); _d <= _xMax; _d.setMonth(_d.getMonth() + 1)) out.push(new Date(_d));
+              return out;
+            })();
+        for (const _d of _xIter) {
           const _px = myChart.scales.x.getPixelForValue(_d.getTime());
           if (_px < revX - 0.5 || _px > ca.right + 0.5) continue;
           oc.beginPath();
@@ -7043,6 +7273,11 @@ async function init() {
   if (pOuter) pOuter.style.overflow = '';
 
   await showChartAndLeaderboard(hubData);
+
+  // Warm the simulator iframe in the background once the main view has
+  // settled. Lets the click-to-open animation slide a fully-rendered panel
+  // instead of doing a network fetch + layout pass mid-slide.
+  preloadSimulator();
 }
 
 // ── Leaderboard ──────────────────────────────────────────────────────────────
@@ -7226,9 +7461,12 @@ function _expandMapRow(encOrg, encMap, rowId) {
     innerHtml = `<td colspan="4" class="lb-map-no-games">No recorded games</td>`;
   } else {
     const rows = games.map(me => {
-      const won    = me.winner === org;
-      const opp    = won ? me.loser : me.winner;
       const mInfo  = (me.maps || []).find(m => m.map === map);
+      // W/L reflects the MAP outcome (not the series outcome) — a team can lose
+      // the series but win this specific map. Falls back to series winner only
+      // if per-map info is missing.
+      const won    = mInfo ? (mInfo.winner === org) : (me.winner === org);
+      const opp    = (me.winner === org) ? me.loser : me.winner;
       const orgRd  = mInfo ? (mInfo.winner === org ? mInfo.wr : mInfo.lr) : '?';
       const oppRd  = mInfo ? (mInfo.winner === org ? mInfo.lr : mInfo.wr) : '?';
       const diff   = (typeof orgRd === 'number' && typeof oppRd === 'number') ? orgRd - oppRd : null;
@@ -7965,12 +8203,25 @@ function renderPast(data) {
 }
 
 // ── Match Simulator (iframes the historical matchup tool, locked to current) ─
+// The iframe is preloaded in the background after init() — see preloadSimulator() —
+// so by the time the user clicks the tab, the matchup tool is already rendered
+// and the slide animation has nothing competing for the main thread.
 var _simInitialized = false;
 function renderSimulator() {
   if (_simInitialized) return;
   _simInitialized = true;
   var f = document.getElementById('simIframe');
   if (f && f.src.indexOf('lockCurrent=1') < 0) f.src = '/mapelo/matchup/?lockCurrent=1';
+}
+function preloadSimulator() {
+  // Idle-time preload after main UI is settled. requestIdleCallback gives us
+  // a chunk of free main-thread time; falls back to setTimeout where unsupported.
+  var fire = function(){ renderSimulator(); };
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(fire, {timeout: 3000});
+  } else {
+    setTimeout(fire, 600);
+  }
 }
 function triggerSimFlyIn(){}
 

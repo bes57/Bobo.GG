@@ -754,8 +754,42 @@ def main():
     except Exception as e:
         _write("scraping_dates", 87, "match_dates write failed", error=str(e))
 
+    # ── Step 5b: Catch up map veto sequences ────────────────────────────────
+    # Veto scraper is incremental (skips already-scraped MatchIDs). The veto
+    # data feeds the live map pool detector — we rely on the actual pick/ban
+    # text from VLR rather than play-count heuristics.
+    _write("scraping_vetos", 80, "Fetching map veto sequences…",
+           ["Catching up new match vetos…"])
+    try:
+        subprocess.run(
+            [sys.executable, os.path.join(ROOT, "scrapers", "ScrapeMapVetos.py")],
+            cwd=ROOT, check=True, capture_output=True, timeout=900,
+        )
+    except subprocess.CalledProcessError as e:
+        _write("scraping_vetos", 80, "ScrapeMapVetos failed",
+               error=f"ScrapeMapVetos: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
+    except Exception as e:
+        _write("scraping_vetos", 80, "ScrapeMapVetos failed", error=str(e))
+
+    # ── Step 5c: Rebuild per-team veto patterns ─────────────────────────────
+    # Uses the now-fresh map_vetos.csv to compute ban/pick rates per team for
+    # every active snapshot — including the current one — so the simulator's
+    # "Predicted Veto" section has data for current rosters in current pools.
+    _write("building_veto_model", 83, "Rebuilding veto patterns…",
+           ["Building per-team ban/pick profiles…"])
+    try:
+        subprocess.run(
+            [sys.executable, os.path.join(ROOT, "scrapers", "BuildVetoModel.py")],
+            cwd=ROOT, check=True, capture_output=True, timeout=300,
+        )
+    except subprocess.CalledProcessError as e:
+        _write("building_veto_model", 83, "BuildVetoModel failed",
+               error=f"BuildVetoModel: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
+    except Exception as e:
+        _write("building_veto_model", 83, "BuildVetoModel failed", error=str(e))
+
     # ── Step 6: Rebuild rating timeline ─────────────────────────────────────
-    _write("building_ratings", 90, "Rebuilding BenPom ratings…",
+    _write("building_ratings", 85, "Rebuilding BenPom ratings…",
            ["Running BenPom model…"])
     try:
         subprocess.run(
@@ -763,10 +797,27 @@ def main():
             cwd=ROOT, check=True, capture_output=True, timeout=600,
         )
     except subprocess.CalledProcessError as e:
-        _write("building_ratings", 90, "BuildRatingTimeline failed",
+        _write("building_ratings", 85, "BuildRatingTimeline failed",
                error=f"BuildRatingTimeline: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
     except Exception as e:
-        _write("building_ratings", 90, "BuildRatingTimeline failed", error=str(e))
+        _write("building_ratings", 85, "BuildRatingTimeline failed", error=str(e))
+
+    # ── Step 7: Rebuild per-map ratings (keeps map_ratings.json fresh) ──────
+    # Snapshots are derived from ALL_EVENTS, so new events appear automatically
+    # the next time this runs. The MC veto sim takes ~30-90s; failure here is
+    # non-fatal (the stale map_ratings.json is still served).
+    _write("building_map_ratings", 92, "Rebuilding per-map ratings…",
+           ["Running BenPom map model…"])
+    try:
+        subprocess.run(
+            [sys.executable, os.path.join(ROOT, "scrapers", "BuildMapRatings.py")],
+            cwd=ROOT, check=True, capture_output=True, timeout=600,
+        )
+    except subprocess.CalledProcessError as e:
+        _write("building_map_ratings", 92, "BuildMapRatings failed",
+               error=f"BuildMapRatings: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
+    except Exception as e:
+        _write("building_map_ratings", 92, "BuildMapRatings failed", error=str(e))
 
     try:
         with open(tl_path) as f:

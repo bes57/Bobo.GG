@@ -16,12 +16,21 @@ Output: data/veto_model.json
 Usage: python scrapers/BuildVetoModel.py
 """
 
-import os, json, glob
+import os, sys, json, glob
 import pandas as pd
 from collections import defaultdict, Counter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, 'data')
+
+# Reuse the dynamic 2026+ snapshot definitions from BuildMapRatings so the two
+# rating models always agree on which events make up which snapshot.
+sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, 'scrapers'))
+try:
+    from BuildMapRatings import YEAR_CONFIGS as _MR_YEAR_CONFIGS
+except Exception:
+    _MR_YEAR_CONFIGS = {}
 
 GARBAGE_MAPS = {
     'Map 1 stats are unavailable due to lobby remake.',
@@ -32,17 +41,18 @@ GARBAGE_MAPS = {
     'VOD Unavaliable', 'unknown', 'Unknown',
 }
 
-# Events in chronological order per year (hard year boundaries)
+# Past seasons (2023-2025) are frozen — those snapshots are already validated.
+# 2026+ is derived from BuildMapRatings.YEAR_CONFIGS so any new event added to
+# MoreTestingMaybeFiles.ALL_EVENTS picks up here automatically.
 YEAR_EVENTS = {
     '2023': ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
     '2024': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions'],
     '2025': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto',
              '2025_stage2', '2025_champions'],
-    '2026': ['2026_kickoff', '2026_masters_santiago'],
 }
 
 # Which events to include for each (year, snap) — snapshot-aware profiles
-# "Before X" snaps exclude X and everything after
+# "Before X" snaps exclude X and everything after.  Historical entries frozen.
 SNAP_EVENTS = {
     # 2023
     ('2023', 'after_tokyo'):      ['2023_lock_in', '2023_masters_tokyo'],
@@ -62,9 +72,6 @@ SNAP_EVENTS = {
     ('2025', 'after_toronto'):    ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto'],
     ('2025', 'before_champions'): ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2'],
     ('2025', 'after_champions'):  ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2', '2025_champions'],
-    # 2026
-    ('2026', 'before_santiago'):  ['2026_kickoff'],
-    ('2026', 'after_santiago'):   ['2026_kickoff', '2026_masters_santiago'],
 }
 
 # Snap → representative event (last event in that snap's window) for pool lookup
@@ -84,9 +91,24 @@ SNAP_POOL_EVENT = {
     ('2025', 'after_toronto'):    '2025_masters_toronto',
     ('2025', 'before_champions'): '2025_stage2',
     ('2025', 'after_champions'):  '2025_champions',
-    ('2026', 'before_santiago'):  '2026_kickoff',
-    ('2026', 'after_santiago'):   '2026_masters_santiago',
 }
+
+# Pull 2026+ entries straight from BuildMapRatings.YEAR_CONFIGS (which itself
+# derives from ALL_EVENTS for current/future seasons). This guarantees the
+# veto model and the rating model always agree on which events form which snap.
+for _year, _cfg in _MR_YEAR_CONFIGS.items():
+    if int(_year) < 2026:
+        continue
+    _evs_in_order = []
+    for _snap_id, _snap in (_cfg.get('snapshots') or {}).items():
+        _evs = list(_snap.get('events') or [])
+        SNAP_EVENTS[(_year, _snap_id)] = _evs
+        if _evs:
+            SNAP_POOL_EVENT[(_year, _snap_id)] = _evs[-1]
+            for _e in _evs:
+                if _e not in _evs_in_order:
+                    _evs_in_order.append(_e)
+    YEAR_EVENTS[_year] = _evs_in_order
 
 
 def load_match_event_map():

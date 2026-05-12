@@ -35,13 +35,11 @@ from MoreTestingMaybeFiles import ALL_EVENTS
 DATA_DIR = os.path.join(ROOT, 'data')
 OUT_PATH = os.path.join(DATA_DIR, 'map_ratings.json')
 
-# International events — cross-regional calibrators; never apply recency decay
-INTL_EVENTS = {
-    '2023_lock_in', '2023_masters_tokyo', '2023_champions',
-    '2024_masters_madrid', '2024_masters_shanghai', '2024_champions',
-    '2025_masters_bangkok', '2025_masters_toronto', '2025_champions',
-    '2026_masters_santiago',
-}
+# International events — cross-regional calibrators; never apply recency decay.
+# Derived from ALL_EVENTS: any event whose `regions` dict has an "International"
+# key is treated as international (cross-regional). No hand-maintained list.
+INTL_EVENTS = {e['id'] for e in ALL_EVENTS
+               if 'International' in (e.get('regions') or {})}
 
 # VCT franchised-era regional assignments (org abbreviation → league region)
 TEAM_REGIONS = {
@@ -65,8 +63,12 @@ TEAM_REGIONS = {
 }
 
 # ── Event metadata ─────────────────────────────────────────────────────────────
+# Past seasons are frozen below (these dates pre-date the start/end fields on
+# ALL_EVENTS). Current and future seasons are auto-loaded from ALL_EVENTS at
+# import time — any new event added to MoreTestingMaybeFiles.py with start/end
+# dates picks up here automatically, no edit required.
 
-EVENT_DATES = {
+_HISTORICAL_EVENT_DATES = {
     # 2023
     '2023_lock_in':        ('2023-01-10', '2023-02-12'),
     '2023_league':         ('2023-01-23', '2023-10-01'),
@@ -86,20 +88,19 @@ EVENT_DATES = {
     '2025_masters_toronto': ('2025-06-07', '2025-06-29'),
     '2025_stage2':          ('2025-07-14', '2025-08-24'),
     '2025_champions':       ('2025-08-28', '2025-09-21'),
-    # 2026
-    '2026_kickoff':          ('2026-01-07', '2026-02-09'),
-    '2026_masters_santiago': ('2026-03-26', '2026-04-06'),
 }
 
-TRAIN_EVENTS = [
-    '2023_lock_in', '2023_league', '2023_masters_tokyo', '2023_champions',
-    '2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions',
-]
-TEST_EVENTS = [
-    '2025_kickoff', '2025_masters_bangkok', '2025_stage1',
-    '2025_masters_toronto', '2025_stage2', '2025_champions',
-    '2026_kickoff', '2026_masters_santiago',
-]
+EVENT_DATES = dict(_HISTORICAL_EVENT_DATES)
+for _e in ALL_EVENTS:
+    if _e.get('start') and _e.get('end'):
+        EVENT_DATES[_e['id']] = (_e['start'], _e['end'])
+
+# Chronological train/test split for β calibration. Hold out the most recent
+# ~16 months so β re-fits as the season progresses without manual upkeep.
+_today_str = datetime.now().strftime('%Y-%m-%d')
+_holdout_start = (datetime.now() - timedelta(days=480)).strftime('%Y-%m-%d')
+TRAIN_EVENTS = [eid for eid, (_, end) in EVENT_DATES.items() if end < _holdout_start]
+TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_start]
 
 # Fixed hyper-parameters (CV-validated; same Brier score as optimised values)
 HALF_LIFE_WEEKS   = 8      # calendar-weeks half-life — shorter to punish stale domestic records
@@ -118,7 +119,90 @@ VETO_NOISE_STD    = 2.0  # Gaussian noise on map advantages during veto (round d
 #   after_2nd   = through 2nd international
 #   before_champs = everything before Champions
 #   after_champs  = full year including Champions
-YEAR_CONFIGS = {
+def _short_id(event_id):
+    """Snapshot suffix: strip the year prefix and the 'masters_' marker so the
+    snapshot keys read naturally ('after_santiago' not 'after_2026_masters_santiago')."""
+    s = event_id.split('_', 1)[1] if '_' in event_id else event_id
+    if s.startswith('masters_'):
+        s = s[len('masters_'):]
+    return s
+
+
+def _short_label(label, year):
+    """Drop the leading year from an event label: '2026 Masters Santiago' -> 'Masters Santiago'."""
+    return label.replace(f'{year} ', '', 1)
+
+
+def _build_year_configs():
+    """Dynamically generate snapshot configs from ALL_EVENTS.
+
+    For each year, snapshots are emitted in chronological order:
+      - International events get both ``before_<short>`` (cumulative through
+        the previous event) and ``after_<short>`` (cumulative through this
+        international).
+      - Domestic events accumulate silently UNLESS they are the year's most
+        recent event with data — in that case we emit ``after_<short>`` so
+        the current stage has a snapshot. This is what makes "Live" appear
+        mid-stage without any hardcoded list.
+
+    Events with no corresponding ``data/maps/<id>.csv`` (future events whose
+    data hasn't been scraped yet) are skipped.
+    """
+    by_year = {}
+    for e in ALL_EVENTS:
+        if not e.get('start') or not e.get('end'):
+            continue
+        if not os.path.exists(os.path.join(DATA_DIR, 'maps', f"{e['id']}.csv")):
+            continue
+        by_year.setdefault(str(e['year']), []).append(e)
+
+    configs = {}
+    for year, events in by_year.items():
+        events = sorted(events, key=lambda e: e['start'])
+        if not events:
+            continue
+        snapshots = {}
+        cumulative = []
+        last_event = events[-1]
+        last_is_intl = 'International' in (last_event.get('regions') or {})
+        for e in events:
+            is_intl = 'International' in (e.get('regions') or {})
+            short = _short_id(e['id'])
+            short_label = _short_label(e['label'], e['year'])
+            if is_intl:
+                if cumulative:
+                    snapshots[f'before_{short}'] = {
+                        'events': list(cumulative),
+                        'label':  f'Before {short_label}',
+                    }
+                cumulative.append(e['id'])
+                snapshots[f'after_{short}'] = {
+                    'events': list(cumulative),
+                    'label':  f'After {short_label}',
+                }
+            else:
+                cumulative.append(e['id'])
+        if not last_is_intl:
+            short = _short_id(last_event['id'])
+            short_label = _short_label(last_event['label'], last_event['year'])
+            snapshots[f'after_{short}'] = {
+                'events': list(cumulative),
+                'label':  short_label,
+            }
+        # If the year's latest event is still ongoing (end date hasn't passed),
+        # mark the latest snapshot as "Live". Past, completed years keep their
+        # event-name labels (e.g. "After Champions").
+        if snapshots and last_event['end'] >= _today_str:
+            latest_key = list(snapshots.keys())[-1]
+            snapshots[latest_key] = dict(snapshots[latest_key], label='Live')
+        configs[year] = {'snapshots': snapshots, 'min_games': 5}
+    return configs
+
+
+# Frozen snapshot definitions for past seasons (these pre-date the dynamic
+# generator; preserving them keeps historical kenpom ratings identical to
+# what's already cached and validated).
+_HISTORICAL_YEAR_CONFIGS = {
     '2023': {
         'snapshots': {
             'after_tokyo':      {'events': ['2023_lock_in', '2023_masters_tokyo'],
@@ -164,16 +248,13 @@ YEAR_CONFIGS = {
         },
         'min_games': 5,
     },
-    '2026': {
-        'snapshots': {
-            'before_santiago': {'events': ['2026_kickoff'],
-                                'label': 'Before Masters Santiago'},
-            'after_santiago':  {'events': ['2026_kickoff', '2026_masters_santiago'],
-                                'label': 'After Masters Santiago'},
-        },
-        'min_games': 5,
-    },
 }
+
+YEAR_CONFIGS = dict(_HISTORICAL_YEAR_CONFIGS)
+for _year, _cfg in _build_year_configs().items():
+    # Don't overwrite frozen historical configs; only add years they don't cover.
+    if _year not in YEAR_CONFIGS:
+        YEAR_CONFIGS[_year] = _cfg
 
 
 def _parse_date(s):

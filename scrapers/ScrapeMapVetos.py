@@ -21,6 +21,15 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+# Cloudflare bypass — same chain RefreshLiveData uses. Without curl_cffi's
+# JA3 impersonation, datacenter IPs (Render in particular) get 403'd by
+# Cloudflare every time.
+try:
+    from curl_cffi import requests as cffi_requests  # type: ignore
+    _CFFI_OK = True
+except Exception:
+    _CFFI_OK = False
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "data")
 OUT_PATH = os.path.join(DATA_DIR, "map_vetos.csv")
@@ -31,6 +40,26 @@ HEADERS = {
 }
 
 DELAY = 1.0  # seconds between requests
+
+
+def _fetch_html(url, timeout=12):
+    """Try curl_cffi (multiple Chrome JA3 fingerprints) then fall back to
+    plain requests. Returns response text or None."""
+    if _CFFI_OK:
+        for imp in ("chrome131", "chrome120", "chrome"):
+            try:
+                r = cffi_requests.get(url, headers=HEADERS, timeout=timeout,
+                                      impersonate=imp, allow_redirects=True)
+                if r.status_code == 200 and r.text:
+                    return r.text
+            except Exception:
+                continue
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=timeout, allow_redirects=True)
+        r.raise_for_status()
+        return r.text
+    except Exception:
+        return None
 
 
 def parse_veto_note(text):
@@ -65,14 +94,12 @@ def parse_veto_note(text):
 def scrape_match_veto(match_id):
     """Fetch a VLR match page and return parsed veto steps, or None if unavailable."""
     url = f"https://www.vlr.gg/{match_id}"
-    try:
-        r = requests.get(url, headers=HEADERS, timeout=15)
-        r.raise_for_status()
-    except Exception as e:
-        print(f"  [error] {match_id}: {e}")
+    html = _fetch_html(url)
+    if html is None:
+        print(f"  [error] {match_id}: fetch failed")
         return None
 
-    soup = BeautifulSoup(r.text, "html.parser")
+    soup = BeautifulSoup(html, "html.parser")
     note = soup.select_one(".match-header-note")
     if not note:
         return []  # match exists but has no veto note (e.g. some old matches)
