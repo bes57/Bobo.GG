@@ -72,16 +72,7 @@ ALL_EVENTS = [
             "EMEA":     "https://www.vlr.gg/event/stats/2863/vct-2026-emea-stage-1",
             "Americas": "https://www.vlr.gg/event/stats/2860/vct-2026-americas-stage-1",
             "Pacific":  "https://www.vlr.gg/event/stats/2775/vct-2026-pacific-stage-1",
-        },
-    },
-    {
-        "id": "2026_china_stage1",
-        "label": "2026 China Stage 1",
-        "year": 2026,
-        "start": "2026-03-31",
-        "end":   "2026-05-10",
-        "regions": {
-            "CN": "https://www.vlr.gg/event/stats/2864/vct-2026-china-stage-1",
+            "CN":       "https://www.vlr.gg/event/stats/2864/vct-2026-china-stage-1",
         },
     },
     {

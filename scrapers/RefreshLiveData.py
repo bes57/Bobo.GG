@@ -531,47 +531,15 @@ def _resolve_live_targets():
     Primary source: every event whose declared date window contains today
     (with a small lead/trail) AND has at least one populated region URL.
 
-    VCT CN events (id contains "_china_") that overlap a regional split of
-    the same canonical id are FOLDED IN as an extra "CN" region on the
-    primary regional target, so the UI shows "2026 Stage 1" once (not
-    "Stage 1 + China Stage 1") and the scan/upcoming pipeline runs against
-    one combined target. CN-region match data still routes to its own
-    ``2026_china_stage1.csv`` via the target's ``csv_by_region`` mapping.
-
     Fallback: if no live event has populated URLs yet (e.g. a future split is
     declared but VLR hasn't posted it), use the most-recent past event with
     populated URLs so the pipeline keeps refreshing the last completed split.
     """
-    live = live_events_today()
-
-    primary_by_canon = {}  # canonical event id -> target dict
     targets = []
-    cn_evs = []
-    for ev in live:
-        if "_china_" in ev["id"]:
-            cn_evs.append(ev)
-            continue
+    for ev in live_events_today():
         t = _event_to_target(ev)
         if t:
             targets.append(t)
-            primary_by_canon[ev["id"]] = t
-
-    for ce in cn_evs:
-        canon = ce["id"].replace("_china_", "_")
-        primary = primary_by_canon.get(canon)
-        if primary:
-            for region, url in ce["regions"].items():
-                vlr_id, slug = _parse_vlr_stats_url(url)
-                if vlr_id and slug:
-                    primary["regions"].append((region, vlr_id, slug))
-                    primary.setdefault("csv_by_region", {})[region] = ce["id"]
-        else:
-            # No regional counterpart live (e.g. CN split runs solo) — keep
-            # CN as its own target so it still gets scraped.
-            t = _event_to_target(ce)
-            if t:
-                targets.append(t)
-
     if targets:
         return targets
 
@@ -634,29 +602,20 @@ def main():
     step_idx = 0
 
     for t in targets:
-        # Some regions on this target (e.g. CN folded into a regional split)
-        # route their match data to a different CSV — build an existing-ids
-        # cache per CSV so we don't re-scrape matches already on disk.
-        csv_ids_used = {t["event_csv_id"]}
-        csv_by_region = t.get("csv_by_region", {})
-        csv_ids_used.update(csv_by_region.values())
-        existing_per_csv = {cid: _existing_match_ids(cid) for cid in csv_ids_used}
-        total_existing = sum(len(s) for s in existing_per_csv.values())
+        existing = _existing_match_ids(t["event_csv_id"])
         _write("checking", 8,
-               f"Scanning {t['label']} — {total_existing} match(es) on disk…",
-               [f"[{t['label']}] {total_existing} match(es) already cached"])
+               f"Scanning {t['label']} — {len(existing)} match(es) on disk…",
+               [f"[{t['label']}] {len(existing)} match(es) already cached"])
 
         for region, vlr_id, slug in t["regions"]:
             step_idx += 1
             pct = 8 + int(step_idx / scan_steps * 20)
-            target_csv = csv_by_region.get(region, t["event_csv_id"])
             _write("checking", pct, f"Checking {t['label']} / {region}…")
             urls = _get_completed_urls(vlr_id, slug)
             total_completed += len(urls)
-            existing = existing_per_csv[target_csv]
             new = [u for u in urls if _match_id_from_url(u) not in existing]
             for u in new:
-                all_new_urls.append((u, region, target_csv))
+                all_new_urls.append((u, region, t["event_csv_id"]))
             _write("checking", pct,
                    f"{t['label']} / {region}: {len(urls)} completed, {len(new)} new",
                    [f"✓ {t['label']} / {region}: {len(urls)} completed ({len(new)} new)"])

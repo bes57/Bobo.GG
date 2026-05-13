@@ -595,7 +595,7 @@ _SNAPSHOT_EVENTS = {
     '2026': {
         'before_santiago': ['2026_kickoff', '2026_china_kickoff'],
         'after_santiago':  ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago'],
-        'after_stage1':    ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago', '2026_stage1', '2026_china_stage1'],
+        'after_stage1':    ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago', '2026_stage1'],
     },
 }
 
