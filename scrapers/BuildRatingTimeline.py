@@ -216,7 +216,7 @@ def load_all_games():
 
 # ── Timeline builder ───────────────────────────────────────────────────────────
 
-def build_2026_timeline(all_games):
+def build_2026_timeline(all_games, existing=None):
     """
     Build checkpoint ratings at every match day in 2026, plus per-match deltas.
 
@@ -228,6 +228,12 @@ def build_2026_timeline(all_games):
 
     Checkpoints and match-event deltas come from 2026 results only; prior games
     silently anchor the inter-regional offset without appearing in the output.
+
+    If ``existing`` (the previous rating_timeline.json contents) is given AND the
+    only new match days are strictly after the last existing checkpoint date,
+    only those new days are solved; prior checkpoints are reused verbatim.
+    Massey decay uses ref_date = day, so re-solving an old day with newer games
+    layered in would only produce trivially different ratings — safe to skip.
 
     Returns:
       checkpoints:   [{date, ratings:{org:float}}]
@@ -251,11 +257,38 @@ def build_2026_timeline(all_games):
     match_days = sorted(set(g["date"].date() for g in year_games))
     print(f"  {len(year_games)} map games across {len(match_days)} match days in 2026")
 
+    # Incremental path: reuse old checkpoints + match_events if all changes are
+    # additions *after* the last existing checkpoint date.
     checkpoints  = []
     match_events = []
     prev_ratings = {}
+    start_idx    = 0
 
-    for i, day in enumerate(match_days):
+    if existing and existing.get("checkpoints"):
+        try:
+            last_cp = existing["checkpoints"][-1]
+            last_date = datetime.strptime(last_cp["date"], "%Y-%m-%d").date()
+            new_days = [d for d in match_days if d > last_date]
+            existing_days = {datetime.strptime(c["date"], "%Y-%m-%d").date()
+                             for c in existing["checkpoints"]}
+            old_days_match = all(d in existing_days for d in match_days if d <= last_date)
+            if new_days and old_days_match:
+                checkpoints  = list(existing["checkpoints"])
+                match_events = list(existing.get("match_events", []))
+                prev_ratings = dict(last_cp.get("ratings", {}))
+                start_idx    = match_days.index(new_days[0])
+                print(f"  [incremental] reusing {len(checkpoints)} checkpoints; "
+                      f"solving {len(new_days)} new day(s) from {new_days[0].isoformat()}")
+            elif not new_days and old_days_match and len(match_days) == len(existing_days):
+                print(f"  [incremental] no new match days — reusing all {len(existing['checkpoints'])} checkpoints")
+                return list(existing["checkpoints"]), list(existing.get("match_events", []))
+            else:
+                print(f"  [full rebuild] historical match days changed — solving all {len(match_days)} days")
+        except Exception as e:
+            print(f"  [full rebuild] could not parse existing timeline ({e})")
+
+    for i in range(start_idx, len(match_days)):
+        day = match_days[i]
         day_dt = datetime(day.year, day.month, day.day)
 
         # Solve includes prior + all 2026 games through today
@@ -322,8 +355,16 @@ def main():
     all_games = load_all_games()
     print(f"Loaded {len(all_games)} map games across all events\n")
 
+    existing = None
+    if os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH) as f:
+                existing = json.load(f)
+        except Exception:
+            existing = None
+
     print("Building 2026 rating timeline...")
-    checkpoints, match_events = build_2026_timeline(all_games)
+    checkpoints, match_events = build_2026_timeline(all_games, existing=existing)
 
     out = {
         "year":         2026,

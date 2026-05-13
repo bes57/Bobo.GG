@@ -771,53 +771,45 @@ def main():
     except Exception as e:
         _write("scraping_vetos", 80, "ScrapeMapVetos failed", error=str(e))
 
-    # ── Step 5c: Rebuild per-team veto patterns ─────────────────────────────
+    # ── Steps 5c / 6 / 7: Build veto model + rating timeline + map ratings ──
+    # All three previously ran via subprocess.run, each paying a fresh
+    # Python+pandas+numpy startup (~2-3 s on Render). We now import them and
+    # call main() in-process — saves the cold-start cost on every refresh.
+    _scripts_dir = os.path.join(ROOT, "scrapers")
+    if _scripts_dir not in sys.path:
+        sys.path.insert(0, _scripts_dir)
+
+    def _run_inproc(label, module_name, pct, slug, argv_extra=()):
+        _write(slug, pct, label, [label + "…"])
+        saved_argv = sys.argv[:]
+        sys.argv = [module_name + ".py", *argv_extra]
+        try:
+            mod = __import__(module_name)
+            # If module already imported in a prior run, reload to pick up data changes
+            import importlib
+            importlib.reload(mod)
+            mod.main()
+        except SystemExit:
+            pass
+        except Exception as e:
+            _write(slug, pct, f"{module_name} failed",
+                   error=f"{module_name}: {str(e)[-400:]}")
+        finally:
+            sys.argv = saved_argv
+
     # Uses the now-fresh map_vetos.csv to compute ban/pick rates per team for
     # every active snapshot — including the current one — so the simulator's
     # "Predicted Veto" section has data for current rosters in current pools.
-    _write("building_veto_model", 83, "Rebuilding veto patterns…",
-           ["Building per-team ban/pick profiles…"])
-    try:
-        subprocess.run(
-            [sys.executable, os.path.join(ROOT, "scrapers", "BuildVetoModel.py")],
-            cwd=ROOT, check=True, capture_output=True, timeout=300,
-        )
-    except subprocess.CalledProcessError as e:
-        _write("building_veto_model", 83, "BuildVetoModel failed",
-               error=f"BuildVetoModel: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
-    except Exception as e:
-        _write("building_veto_model", 83, "BuildVetoModel failed", error=str(e))
+    _run_inproc("Rebuilding veto patterns", "BuildVetoModel", 83, "building_veto_model")
 
-    # ── Step 6: Rebuild rating timeline ─────────────────────────────────────
-    _write("building_ratings", 85, "Rebuilding BenPom ratings…",
-           ["Running BenPom model…"])
-    try:
-        subprocess.run(
-            [sys.executable, os.path.join(ROOT, "scrapers", "BuildRatingTimeline.py")],
-            cwd=ROOT, check=True, capture_output=True, timeout=600,
-        )
-    except subprocess.CalledProcessError as e:
-        _write("building_ratings", 85, "BuildRatingTimeline failed",
-               error=f"BuildRatingTimeline: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
-    except Exception as e:
-        _write("building_ratings", 85, "BuildRatingTimeline failed", error=str(e))
+    # BenPom timeline is incremental — re-solves only checkpoints for match
+    # days newer than the last one already in rating_timeline.json.
+    _run_inproc("Rebuilding BenPom ratings", "BuildRatingTimeline", 85, "building_ratings")
 
-    # ── Step 7: Rebuild per-map ratings (keeps map_ratings.json fresh) ──────
     # --refresh: only rebuilds the current-year snapshots and reuses
-    # historical ratings from the existing JSON, since historical match data
-    # never changes. Drops MC sims 5x. Cuts this step from ~2 min to ~10 s.
-    _write("building_map_ratings", 92, "Rebuilding per-map ratings…",
-           ["Running BenPom map model (current year only)…"])
-    try:
-        subprocess.run(
-            [sys.executable, os.path.join(ROOT, "scrapers", "BuildMapRatings.py"), "--refresh"],
-            cwd=ROOT, check=True, capture_output=True, timeout=300,
-        )
-    except subprocess.CalledProcessError as e:
-        _write("building_map_ratings", 92, "BuildMapRatings failed",
-               error=f"BuildMapRatings: {e.stderr.decode('utf-8','ignore')[-400:] if e.stderr else e}")
-    except Exception as e:
-        _write("building_map_ratings", 92, "BuildMapRatings failed", error=str(e))
+    # historical ratings from the existing JSON. Historical data is immutable.
+    _run_inproc("Rebuilding per-map ratings", "BuildMapRatings", 92, "building_map_ratings",
+                argv_extra=("--refresh",))
 
     try:
         with open(tl_path) as f:
