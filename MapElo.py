@@ -1365,7 +1365,7 @@ MAPELO_HOME_HTML = """
     <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
   </div>
   <div class="page">
-    <div class="page-title">Rankings</div>
+    <div class="page-title">Historical Rankings</div>
     <p class="page-sub">Opponent-adjusted round differential ratings for VCT franchised teams, 2023&ndash;2025 domestic events.</p>
 
     <!-- Animated model pipeline -->
@@ -1921,15 +1921,24 @@ function ratingClass(v) {
 
 function renderPeriodFilter() {
   var snaps = getSnaps();
-  var keys  = Object.keys(snaps);
+  // The "Live" snapshot belongs to the Modern Hub, not the historical rankings
+  // page — hide it from the period dropdown here. Any in-progress event keeps
+  // its data accessible via the prior "after_<event>" snapshot.
+  var keys  = Object.keys(snaps).filter(function(k){
+    return (snaps[k].label || '').toLowerCase() !== 'live';
+  });
   var row   = document.getElementById('period-filter-row');
   var sel   = document.getElementById('period-select');
 
   if (keys.length <= 1) { row.style.display = 'none'; return; }
   row.style.display = 'flex';
 
+  // If currentSnap is the now-hidden "Live" snap, fall back to the last
+  // non-live snap so the rest of the page renders sensibly.
+  if (keys.indexOf(currentSnap) < 0) currentSnap = keys[keys.length - 1];
+
   sel.innerHTML = '';
-  Object.keys(snaps).forEach(function(k) {
+  keys.forEach(function(k) {
     var opt = document.createElement('option');
     opt.value = k;
     opt.textContent = snaps[k].label;
@@ -2364,7 +2373,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Matchup Predictor &mdash; BenPom</title>
+<title>Historical Matchup Predictor &mdash; BenPom</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -2846,7 +2855,18 @@ function tickSeq(seq){ seq.forEach(function(s,i){ setTimeout(function(){ tick(s)
 // ── Snapshot segmented control ───────────────────────────────────────────────
 function populateSnapSeg(side){
   var year = side==='a'?yearA:yearB, cur = side==='a'?snapA:snapB;
-  var snaps = getSnapsFor(year), keys = Object.keys(snaps);
+  var snaps = getSnapsFor(year);
+  // Hide the "Live" snapshot from the standalone /mapelo/matchup/ page —
+  // that page is for historical/retrospective matchups. The Modern Hub
+  // simulator (LOCK_CURRENT) is the OPPOSITE — it specifically wants the
+  // Live snap, so we keep all keys there. Without this guard, the simulator
+  // would silently fall back to the oldest snap in the year because its
+  // pre-set snapA="after_stage1" (the Live snap) wouldn't be in the
+  // filtered list.
+  var keys = Object.keys(snaps).filter(function(k){
+    if (LOCK_CURRENT) return true;
+    return (snaps[k].label || '').toLowerCase() !== 'live';
+  });
   var host = document.getElementById('snap-'+side);
   if(!keys.length){ host.innerHTML=''; return; }
   if(keys.indexOf(cur)<0){ cur=keys[0]; if(side==='a') snapA=cur; else snapB=cur; }
@@ -3828,7 +3848,10 @@ function runMatchup() {
     title.style.opacity = '1';
     title.innerHTML = '<span class="dot-seed">·</span>';
     await sleep(380);
-    var text = 'Matchup Predictor';
+    // "Historical" only on the standalone page; the Modern Hub simulator
+    // (LOCK_CURRENT iframe) is for live/current matchups, so the typewriter
+    // there should read "Matchup Predictor" without the prefix.
+    var text = LOCK_CURRENT ? 'Matchup Predictor' : 'Historical Matchup Predictor';
     title.textContent = '';
     var built = '';
     for (var i = 0; i < text.length; i++) {
