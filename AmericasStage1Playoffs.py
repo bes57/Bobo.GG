@@ -491,14 +491,14 @@ PAGE_HTML = """
             <div class="bracket-round">
               <div class="bracket-round-title">Lower Round 1</div>
               <div class="bracket-cell">
+                <div class="slot loser"><img src="/logos/FUR.png" onerror="this.style.display='none'"><span class="name">FURIA</span><span class="score">1</span></div>
                 <div class="slot winner"><img src="/logos/NRG.png" onerror="this.style.display='none'"><span class="name">NRG</span><span class="score">2</span></div>
-                <div class="slot loser"><img src="/logos/100T.png" onerror="this.style.display='none'"><span class="name">100 Thieves</span><span class="score">1</span></div>
-                <div class="bracket-cell-pct">51%</div>
+                <div class="bracket-cell-pct">58%</div>
               </div>
               <div class="bracket-cell">
+                <div class="slot winner"><img src="/logos/100T.png" onerror="this.style.display='none'"><span class="name">100 Thieves</span><span class="score">2</span></div>
                 <div class="slot loser"><img src="/logos/LOUD.png" onerror="this.style.display='none'"><span class="name">LOUD</span><span class="score">0</span></div>
-                <div class="slot winner"><img src="/logos/FUR.png" onerror="this.style.display='none'"><span class="name">FURIA</span><span class="score">2</span></div>
-                <div class="bracket-cell-pct">58%</div>
+                <div class="bracket-cell-pct">66%</div>
               </div>
             </div>
             <div class="bracket-round">
@@ -509,17 +509,17 @@ PAGE_HTML = """
                 <div class="bracket-cell-pct">54%</div>
               </div>
               <div class="bracket-cell">
-                <div class="slot winner"><img src="/logos/FUR.png" onerror="this.style.display='none'"><span class="name">FURIA</span><span class="score">2</span></div>
+                <div class="slot winner"><img src="/logos/100T.png" onerror="this.style.display='none'"><span class="name">100 Thieves</span><span class="score">2</span></div>
                 <div class="slot loser"><img src="/logos/MIBR.png" onerror="this.style.display='none'"><span class="name">MIBR</span><span class="score">1</span></div>
-                <div class="bracket-cell-pct">52%</div>
+                <div class="bracket-cell-pct">61%</div>
               </div>
             </div>
             <div class="bracket-round">
               <div class="bracket-round-title">Lower Round 3</div>
               <div class="bracket-cell">
                 <div class="slot winner"><img src="/logos/NRG.png" onerror="this.style.display='none'"><span class="name">NRG</span><span class="score">2</span></div>
-                <div class="slot loser"><img src="/logos/FUR.png" onerror="this.style.display='none'"><span class="name">FURIA</span><span class="score">1</span></div>
-                <div class="bracket-cell-pct">58%</div>
+                <div class="slot loser"><img src="/logos/100T.png" onerror="this.style.display='none'"><span class="name">100 Thieves</span><span class="score">1</span></div>
+                <div class="bracket-cell-pct">51%</div>
               </div>
             </div>
             <div class="bracket-round">
@@ -558,14 +558,14 @@ PAGE_HTML = """
         <table class="data-table">
           <thead><tr><th>#</th><th>Team</th><th class="num">Win%</th></tr></thead>
           <tbody>
-            <tr><td class="rank">1</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/G2.png"   alt="G2"   onerror="this.style.display='none'">G2</div></td>     <td class="num">29.0%</td></tr>
-            <tr><td class="rank">2</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/KR%C3%9C.png" alt="KR&Uuml;" onerror="this.style.display='none'">KR&Uuml;</div></td><td class="num">19.3%</td></tr>
-            <tr><td class="rank">3</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LEV.png"  alt="LEV"  onerror="this.style.display='none'">LEV</div></td>    <td class="num">14.0%</td></tr>
-            <tr><td class="rank">4</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/100T.png" alt="100T" onerror="this.style.display='none'">100T</div></td>   <td class="num">13.4%</td></tr>
-            <tr><td class="rank">5</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/MIBR.png" alt="MIBR" onerror="this.style.display='none'">MIBR</div></td>   <td class="num">10.8%</td></tr>
-            <tr><td class="rank">6</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/FUR.png"  alt="FUR"  onerror="this.style.display='none'">FUR</div></td>    <td class="num">9.1%</td></tr>
-            <tr><td class="rank">7</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/NRG.png"  alt="NRG"  onerror="this.style.display='none'">NRG</div></td>    <td class="num">3.6%</td></tr>
-            <tr><td class="rank">8</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LOUD.png" alt="LOUD" onerror="this.style.display='none'">LOUD</div></td>   <td class="num">0.7%</td></tr>
+            <tr><td class="rank">1</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/G2.png"   alt="G2"   onerror="this.style.display='none'">G2</div></td>     <td class="num">29.4%</td></tr>
+            <tr><td class="rank">2</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/KR%C3%9C.png" alt="KR&Uuml;" onerror="this.style.display='none'">KR&Uuml;</div></td><td class="num">18.9%</td></tr>
+            <tr><td class="rank">3</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/100T.png" alt="100T" onerror="this.style.display='none'">100T</div></td>   <td class="num">14.1%</td></tr>
+            <tr><td class="rank">4</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LEV.png"  alt="LEV"  onerror="this.style.display='none'">LEV</div></td>    <td class="num">13.2%</td></tr>
+            <tr><td class="rank">5</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/MIBR.png" alt="MIBR" onerror="this.style.display='none'">MIBR</div></td>   <td class="num">10.9%</td></tr>
+            <tr><td class="rank">6</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/FUR.png"  alt="FUR"  onerror="this.style.display='none'">FUR</div></td>    <td class="num">8.8%</td></tr>
+            <tr><td class="rank">7</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/NRG.png"  alt="NRG"  onerror="this.style.display='none'">NRG</div></td>    <td class="num">4.1%</td></tr>
+            <tr><td class="rank">8</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LOUD.png" alt="LOUD" onerror="this.style.display='none'">LOUD</div></td>   <td class="num">0.6%</td></tr>
           </tbody>
         </table>
       </div>
@@ -577,19 +577,19 @@ PAGE_HTML = """
         <table class="data-table">
           <thead><tr><th>#</th><th>Team</th><th class="num">Top-3 %</th></tr></thead>
           <tbody>
-            <tr><td class="rank">1</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/KR%C3%9C.png" alt="KR&Uuml;" onerror="this.style.display='none'">KR&Uuml;</div></td><td class="num">56.3%</td></tr>
-            <tr><td class="rank">2</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/G2.png"   alt="G2"   onerror="this.style.display='none'">G2</div></td>     <td class="num">55.4%</td></tr>
-            <tr><td class="rank">3</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/MIBR.png" alt="MIBR" onerror="this.style.display='none'">MIBR</div></td>   <td class="num">52.2%</td></tr>
-            <tr><td class="rank">4</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LEV.png"  alt="LEV"  onerror="this.style.display='none'">LEV</div></td>    <td class="num">45.3%</td></tr>
-            <tr><td class="rank">5</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/FUR.png"  alt="FUR"  onerror="this.style.display='none'">FUR</div></td>    <td class="num">36.3%</td></tr>
-            <tr><td class="rank">6</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/100T.png" alt="100T" onerror="this.style.display='none'">100T</div></td>   <td class="num">35.0%</td></tr>
-            <tr><td class="rank">7</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/NRG.png"  alt="NRG"  onerror="this.style.display='none'">NRG</div></td>    <td class="num">14.0%</td></tr>
-            <tr><td class="rank">8</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LOUD.png" alt="LOUD" onerror="this.style.display='none'">LOUD</div></td>   <td class="num">5.4%</td></tr>
+            <tr><td class="rank">1</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/G2.png"   alt="G2"   onerror="this.style.display='none'">G2</div></td>     <td class="num">58.1%</td></tr>
+            <tr><td class="rank">2</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/KR%C3%9C.png" alt="KR&Uuml;" onerror="this.style.display='none'">KR&Uuml;</div></td><td class="num">56.4%</td></tr>
+            <tr><td class="rank">3</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/MIBR.png" alt="MIBR" onerror="this.style.display='none'">MIBR</div></td>   <td class="num">50.8%</td></tr>
+            <tr><td class="rank">4</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LEV.png"  alt="LEV"  onerror="this.style.display='none'">LEV</div></td>    <td class="num">42.7%</td></tr>
+            <tr><td class="rank">5</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/100T.png" alt="100T" onerror="this.style.display='none'">100T</div></td>   <td class="num">38.2%</td></tr>
+            <tr><td class="rank">6</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/FUR.png"  alt="FUR"  onerror="this.style.display='none'">FUR</div></td>    <td class="num">34.5%</td></tr>
+            <tr><td class="rank">7</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/NRG.png"  alt="NRG"  onerror="this.style.display='none'">NRG</div></td>    <td class="num">14.9%</td></tr>
+            <tr><td class="rank">8</td><td class="team"><div class="team-cell"><img class="team-logo" src="/logos/LOUD.png" alt="LOUD" onerror="this.style.display='none'">LOUD</div></td>   <td class="num">4.3%</td></tr>
           </tbody>
         </table>
       </div>
 
-      <p>The difference between BenPom predicting NRG to make the Grand Finals and also having the second-worst odds of winning Playoffs highlights the disadvantage of coming in as a 4-seed. BenPom likes NRG in each of its matchups up until G2; the problem is just winning that amount of (borderline) coinflips. On the opposite end of the spectrum, Kr&uuml; is predicted to bomb out of the tournament 0&ndash;2, but has the best odds of qualifying, highlighting the advantage of being a 1-seed.</p>
+      <p>The difference between BenPom predicting NRG to make the Grand Finals and also having the second-worst odds of winning Playoffs highlights the disadvantage of coming in as a 4-seed. BenPom likes NRG in each of its matchups up until G2; the problem is just winning that amount of (borderline) coinflips. On the opposite end of the spectrum, Kr&uuml; is predicted to bomb out of the tournament 0&ndash;2, but has the second-best odds of qualifying, highlighting the advantage of being a 1-seed.</p>
 
       <p>The only surprising thing here is the amount of faith BenPom has in MIBR. Honestly, I don&rsquo;t think it&rsquo;s wrong, I just thought the margin-heavy algorithm would be too dissuaded by MIBR losing to ENVY 1&ndash;13, 3&ndash;13.</p>
 
