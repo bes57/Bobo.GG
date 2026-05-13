@@ -3322,13 +3322,15 @@ function simulate() {
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return null;
   // β = 0.17 is the CV-optimal value from a daily-rolling 2025 backtest
-  // (1,922 leak-free per-map predictions). The β stored in the snap JSON is
-  // ~0.32, which is fit_beta's training-set minimum — it overfits and makes
-  // production predictions ~2x too confident. Backtest Brier: 0.240 at
-  // β=0.17 vs 0.246 at β=0.326.
-  var rawBeta = 0.17;
-  var crossRegional = (ORG_REGIONS[orgA] && ORG_REGIONS[orgB] && ORG_REGIONS[orgA] !== ORG_REGIONS[orgB]);
-  var beta = crossRegional ? rawBeta * (INTL_PARAMS.cross_regional_beta_mult || 1.0) : rawBeta;
+  // (1,922 leak-free per-map predictions) and a 1,490-match post-CN
+  // backtest (BacktestSeriesPredictions.py) on overall_rating. The β
+  // stored in the snap JSON is ~0.32 — fit_beta's training-set minimum,
+  // in the overfit zone (Brier 0.240 at β=0.17 vs 0.246 at β=0.32).
+  // No cross-region dampener: the 1,193-match train set shows monotone
+  // Brier improvement up to xmult ≈ 1.0+, and the 2026 holdout is
+  // statistically tied at xmult = 0.664 vs 1.0. Same β for both same-
+  // and cross-region matchups = raw model output, no manipulation.
+  var beta = 0.17;
 
   var rdA = sdA.ref_date || (yearA + '-01-01');
   var rdB = sdB.ref_date || (yearB + '-01-01');
@@ -5213,26 +5215,16 @@ def _mhub_load():
     else:
         upcoming_raw = []
 
-    # Calibrate beta from timeline match events and compute series win probs
+    # Compute series win probs for past matches using the same CV-optimal β
+    # the upcoming-card sim, simulator iframe, and renderRecent JS sim use.
+    # NLL-fitting β on this timeline used to land near 0.28, which is in the
+    # overfit zone — a daily-rolling 2025 backtest of 1,922 leak-free per-map
+    # predictions showed 0.17 minimizes Brier (0.240 vs 0.246 at 0.28).
+    # Keeping all four prediction surfaces on the same β = same matchup,
+    # same probability, every surface.
     if last_checkpoint_ratings and result["chart"]["match_events"]:
-        import math as _math
-        import numpy as _np
         from scipy.special import expit as _expit
-        from scipy.optimize import minimize_scalar as _msc
-
-        _evts = result["chart"]["match_events"]
-        _diffs, _outs = [], []
-        for _me in _evts:
-            _d = _me.get("winner_before", 0.0) - _me.get("loser_before", 0.0)
-            _diffs.append(_d);  _outs.append(1.0)
-            _diffs.append(-_d); _outs.append(0.0)
-        _da = _np.array(_diffs); _oa = _np.array(_outs)
-
-        def _nll(b):
-            _p = _np.clip(_expit(b * _da), 1e-9, 1-1e-9)
-            return -_np.mean(_oa * _np.log(_p) + (1-_oa) * _np.log(1-_p))
-
-        _tl_beta = float(_msc(_nll, bounds=(0.01, 10.0), method="bounded").x)
+        _tl_beta = 0.17
 
         def _series_wp(p, fmt):
             if fmt == "bo5":
