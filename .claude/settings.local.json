@@ -50,7 +50,24 @@
       "Bash(ffmpeg -version)",
       "Bash(ffmpeg -y -i /tmp/florescent_raw.mp4 -ss 30 -to 39 -c:v libx264 -c:a aac /tmp/seg1.mp4)",
       "Bash(ffmpeg -y -i /tmp/florescent_raw.mp4 -ss 54 -to 63 -c:v libx264 -c:a aac /tmp/seg2.mp4)",
-      "Bash(ffmpeg -y -i /tmp/seg1.mp4 -i /tmp/seg2.mp4 -filter_complex '[0:v][1:v]xfade=transition=fade:duration=0.4:offset=8.6[v];[0:a][1:a]acrossfade=d=0.4[a]' -map '[v]' -map '[a]' /Users/benny_es1/PythonTest/static/florescent_clip.mp4)"
+      "Bash(ffmpeg -y -i /tmp/seg1.mp4 -i /tmp/seg2.mp4 -filter_complex '[0:v][1:v]xfade=transition=fade:duration=0.4:offset=8.6[v];[0:a][1:a]acrossfade=d=0.4[a]' -map '[v]' -map '[a]' /Users/benny_es1/PythonTest/static/florescent_clip.mp4)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Bash(git checkout *)",
+      "Bash(git restore *)",
+      "Bash(git push *)",
+      "Bash(git fetch *)",
+      "Bash(break)",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate,bit_rate -of default=nw=1 less_clip.mp4)",
+      "Bash(ffmpeg -i less_clip.mp4 -vf cropdetect=24:16:0 -f null -)",
+      "Bash(ffmpeg -y -i less_clip.mp4 -vf \"select='eq\\(n,30\\)'\" -vframes 1 /tmp/less_frame.png)",
+      "Bash(ffmpeg -y -update 1 -i less_clip.mp4 -vf \"select='eq\\(n,30\\)'\" -frames:v 1 /tmp/less_frame.png)",
+      "Bash(ffmpeg -y -i less_clip.mp4 -ss 5 -frames:v 1 -update 1 /tmp/less_frame.png)",
+      "Bash(/usr/bin/time -p python3 scrapers/BuildRatingTimeline.py)",
+      "Bash(/usr/bin/time -p python3 scrapers/BuildVetoModel.py)",
+      "Bash(/usr/bin/time -p python3 scrapers/BuildMapRatings.py --refresh)",
+      "Bash(awk -F, 'NR==1; $1==\"CN\" && $3==\"KRX\" {print; exit}' data/2023_masters_tokyo.csv)",
+      "Bash(awk -F, '$1==\"CN\" {print $3}' data/2024_champions.csv data/2025_champions.csv data/2026_masters_santiago.csv)"
     ]
   }
 }

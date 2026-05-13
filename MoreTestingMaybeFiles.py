@@ -75,6 +75,16 @@ ALL_EVENTS = [
         },
     },
     {
+        "id": "2026_china_stage1",
+        "label": "2026 China Stage 1",
+        "year": 2026,
+        "start": "2026-03-31",
+        "end":   "2026-05-10",
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2864/vct-2026-china-stage-1",
+        },
+    },
+    {
         "id": "2026_masters_santiago",
         "label": "2026 Masters Santiago",
         "year": 2026,
@@ -82,6 +92,16 @@ ALL_EVENTS = [
         "end":   "2026-03-15",
         "regions": {
             "International": "https://www.vlr.gg/event/stats/2760/valorant-masters-santiago-2026",
+        },
+    },
+    {
+        "id": "2026_china_kickoff",
+        "label": "2026 China Kickoff",
+        "year": 2026,
+        "start": "2026-01-21",
+        "end":   "2026-02-09",
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2685/vct-2026-china-kickoff",
         },
     },
     {
@@ -116,6 +136,14 @@ ALL_EVENTS = [
         },
     },
     {
+        "id": "2025_china_stage2",
+        "label": "2025 China Stage 2",
+        "year": 2025,
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2499/vct-2025-china-stage-2",
+        },
+    },
+    {
         "id": "2025_masters_toronto",
         "label": "2025 Masters Toronto",
         "year": 2025,
@@ -134,6 +162,14 @@ ALL_EVENTS = [
         },
     },
     {
+        "id": "2025_china_stage1",
+        "label": "2025 China Stage 1",
+        "year": 2025,
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2359/vct-2025-china-stage-1",
+        },
+    },
+    {
         "id": "2025_masters_bangkok",
         "label": "2025 Masters Bangkok",
         "year": 2025,
@@ -149,6 +185,14 @@ ALL_EVENTS = [
             "Americas": "https://www.vlr.gg/event/stats/2274/vct-2025-americas-kickoff",
             "EMEA":     "https://www.vlr.gg/event/stats/2276/vct-2025-emea-kickoff",
             "Pacific":  "https://www.vlr.gg/event/stats/2277/champions-tour-2025-pacific-kickoff",
+        },
+    },
+    {
+        "id": "2025_china_kickoff",
+        "label": "2025 China Kickoff",
+        "year": 2025,
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2275/vct-2025-china-kickoff",
         },
     },
     # ── 2024 ──────────────────────────────────────────────────────────
@@ -171,6 +215,14 @@ ALL_EVENTS = [
         },
     },
     {
+        "id": "2024_china_stage2",
+        "label": "2024 China Stage 2",
+        "year": 2024,
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2096/champions-tour-2024-china-stage-2",
+        },
+    },
+    {
         "id": "2024_stage1",
         "label": "2024 Stage 1",
         "year": 2024,
@@ -178,6 +230,14 @@ ALL_EVENTS = [
             "Americas": "https://www.vlr.gg/event/stats/2004/champions-tour-2024-americas-stage-1",
             "EMEA":     "https://www.vlr.gg/event/stats/1998/champions-tour-2024-emea-stage-1",
             "Pacific":  "https://www.vlr.gg/event/stats/2002/champions-tour-2024-pacific-stage-1",
+        },
+    },
+    {
+        "id": "2024_china_stage1",
+        "label": "2024 China Stage 1",
+        "year": 2024,
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/2006/champions-tour-2024-china-stage-1",
         },
     },
     {
@@ -204,6 +264,14 @@ ALL_EVENTS = [
             "Americas": "https://www.vlr.gg/event/stats/1923/champions-tour-2024-americas-kickoff",
             "EMEA":     "https://www.vlr.gg/event/stats/1925/champions-tour-2024-emea-kickoff",
             "Pacific":  "https://www.vlr.gg/event/stats/1924/champions-tour-2024-pacific-kickoff",
+        },
+    },
+    {
+        "id": "2024_china_kickoff",
+        "label": "2024 China Kickoff",
+        "year": 2024,
+        "regions": {
+            "CN": "https://www.vlr.gg/event/stats/1926/champions-tour-2024-china-kickoff",
         },
     },
     # ── 2023 ──────────────────────────────────────────────────────────

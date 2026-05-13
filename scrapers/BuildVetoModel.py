@@ -46,9 +46,12 @@ GARBAGE_MAPS = {
 # MoreTestingMaybeFiles.ALL_EVENTS picks up here automatically.
 YEAR_EVENTS = {
     '2023': ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
-    '2024': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions'],
-    '2025': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto',
-             '2025_stage2', '2025_champions'],
+    '2024': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid',
+             '2024_stage1', '2024_china_stage1', '2024_masters_shanghai',
+             '2024_stage2', '2024_china_stage2', '2024_champions'],
+    '2025': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok',
+             '2025_stage1', '2025_china_stage1', '2025_masters_toronto',
+             '2025_stage2', '2025_china_stage2', '2025_champions'],
 }
 
 # Which events to include for each (year, snap) — snapshot-aware profiles
@@ -59,19 +62,19 @@ SNAP_EVENTS = {
     ('2023', 'before_champions'): ['2023_lock_in', '2023_masters_tokyo', '2023_league'],
     ('2023', 'after_champions'):  ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
     # 2024
-    ('2024', 'before_madrid'):    ['2024_kickoff'],
-    ('2024', 'after_madrid'):     ['2024_kickoff', '2024_masters_madrid'],
-    ('2024', 'before_shanghai'):  ['2024_kickoff', '2024_masters_madrid', '2024_stage1'],
-    ('2024', 'after_shanghai'):   ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai'],
-    ('2024', 'before_champions'): ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2'],
-    ('2024', 'after_champions'):  ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions'],
+    ('2024', 'before_madrid'):    ['2024_kickoff', '2024_china_kickoff'],
+    ('2024', 'after_madrid'):     ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid'],
+    ('2024', 'before_shanghai'):  ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1'],
+    ('2024', 'after_shanghai'):   ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai'],
+    ('2024', 'before_champions'): ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2'],
+    ('2024', 'after_champions'):  ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2', '2024_champions'],
     # 2025
-    ('2025', 'before_bangkok'):   ['2025_kickoff'],
-    ('2025', 'after_bangkok'):    ['2025_kickoff', '2025_masters_bangkok'],
-    ('2025', 'before_toronto'):   ['2025_kickoff', '2025_masters_bangkok', '2025_stage1'],
-    ('2025', 'after_toronto'):    ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto'],
-    ('2025', 'before_champions'): ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2'],
-    ('2025', 'after_champions'):  ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2', '2025_champions'],
+    ('2025', 'before_bangkok'):   ['2025_kickoff', '2025_china_kickoff'],
+    ('2025', 'after_bangkok'):    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok'],
+    ('2025', 'before_toronto'):   ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1'],
+    ('2025', 'after_toronto'):    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+    ('2025', 'before_champions'): ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2'],
+    ('2025', 'after_champions'):  ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
 }
 
 # Snap → representative event (last event in that snap's window) for pool lookup

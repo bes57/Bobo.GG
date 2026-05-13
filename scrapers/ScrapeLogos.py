@@ -1,6 +1,13 @@
 """
 ScrapeLogos.py — Download team logos from VLR.gg event team pages.
 Saves PNG files to static/logos/{ORG}.png and writes static/logos/logos.json.
+
+KNOWN BREAK (2026-05-13): VLR retired the `/event/teams/{id}/...` URL pattern;
+those return 404. The EVENT_URLS below are kept as historical references but
+this script currently finds 0 orgs end-to-end. For new-org logo fetches use
+the manual flow: scrape `/event/{id}/...` for `/team/{tid}/{slug}` links, then
+fetch each team page's `og:image`. See git history of 2026-05-13 for an
+example of that flow.
 """
 
 import os
@@ -21,7 +28,9 @@ TARGET_ORGS = {
     "FS", "FUR", "FUT", "G2", "GE", "GEN", "GIA", "GOA", "GX", "KC",
     "KRX", "KRÜ", "LEV", "LOUD", "M8", "MIBR", "MKOI", "NAVI", "NRG",
     "NS", "OME", "PCF", "PRX", "RRQ", "SEN", "SPB", "T1", "TE", "TH",
-    "THAi", "TL", "TLN", "TS", "ULF", "VIT", "VL", "WOL", "WOR", "XLG", "ZETA"
+    "THAi", "TL", "TLN", "TS", "ULF", "VIT", "VL", "WOL", "WOR", "XLG", "ZETA",
+    # CN orgs added 2026-05-13 — extra teams that appear in VCT CN events
+    "JDG", "NOVA", "TEC", "TYL", "TYLOO",
 }
 
 # Known aliases: VLR abbreviation -> our abbreviation
@@ -59,6 +68,15 @@ EVENT_URLS = [
     "https://www.vlr.gg/event/teams/2686/vct-2026-americas-stage-1",
     "https://www.vlr.gg/event/teams/2688/vct-2026-emea-stage-1",
     "https://www.vlr.gg/event/teams/2687/vct-2026-pacific-stage-1",
+    # VCT CN — covers all CN-only orgs across 2024-2026
+    "https://www.vlr.gg/event/teams/2864/vct-2026-china-stage-1",
+    "https://www.vlr.gg/event/teams/2685/vct-2026-china-kickoff",
+    "https://www.vlr.gg/event/teams/2499/vct-2025-china-stage-2",
+    "https://www.vlr.gg/event/teams/2359/vct-2025-china-stage-1",
+    "https://www.vlr.gg/event/teams/2275/vct-2025-china-kickoff",
+    "https://www.vlr.gg/event/teams/2096/champions-tour-2024-china-stage-2",
+    "https://www.vlr.gg/event/teams/2006/champions-tour-2024-china-stage-1",
+    "https://www.vlr.gg/event/teams/1926/champions-tour-2024-china-kickoff",
 ]
 
 HEADERS = {
@@ -270,11 +288,22 @@ def main():
             print(f"    -> FAILED")
         time.sleep(0.5)
 
-    # Write logos.json
+    # Merge with existing logos.json — never wipe entries we already have.
+    # (VLR moved /event/teams/{id} → /event/{id} at some point; if every URL 404s,
+    # we don't want to nuke the on-disk dict that other scripts depend on.)
     json_path = os.path.join(LOGOS_DIR, "logos.json")
+    existing = {}
+    if os.path.exists(json_path):
+        try:
+            with open(json_path) as f:
+                existing = json.load(f) or {}
+        except Exception:
+            existing = {}
+    merged = dict(existing)
+    merged.update(logos_map)
     with open(json_path, "w") as f:
-        json.dump(logos_map, f, indent=2, ensure_ascii=False, sort_keys=True)
-    print(f"\nWrote {json_path}")
+        json.dump(merged, f, indent=2, ensure_ascii=False, sort_keys=True)
+    print(f"\nWrote {json_path} ({len(merged)} entries; {len(logos_map)} new/updated)")
 
     print(f"\n=== Summary ===")
     print(f"Downloaded ({len(success)}): {sorted(success)}")

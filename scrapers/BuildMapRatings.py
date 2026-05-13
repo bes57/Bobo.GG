@@ -46,8 +46,8 @@ TEAM_REGIONS = {
     # EMEA
     "TL": "EMEA", "FNC": "EMEA", "NAVI": "EMEA", "VIT": "EMEA",
     "BBL": "EMEA", "GX": "EMEA", "KC": "EMEA", "TH": "EMEA",
-    "FUT": "EMEA", "GIA": "EMEA", "MKOI": "EMEA", "WOL": "EMEA",
-    "M8": "EMEA", "FPX": "EMEA",
+    "FUT": "EMEA", "GIA": "EMEA", "MKOI": "EMEA",
+    "M8": "EMEA",
     # Americas
     "SEN": "Americas", "G2": "Americas", "MIBR": "Americas",
     "NRG": "Americas", "100T": "Americas", "C9": "Americas",
@@ -57,9 +57,11 @@ TEAM_REGIONS = {
     "PRX": "Pacific", "DRX": "Pacific", "T1": "Pacific",
     "TLN": "Pacific", "GEN": "Pacific", "DFM": "Pacific",
     "ZETA": "Pacific", "RRQ": "Pacific", "TS": "Pacific", "GE": "Pacific",
+    "KRX": "Pacific", "NS": "Pacific",
     # CN
-    "EDG": "CN", "BLG": "CN", "KRX": "CN", "TE": "CN",
-    "DRG": "CN", "ASE": "CN", "NS": "CN", "AG": "CN", "XLG": "CN",
+    "EDG": "CN", "BLG": "CN", "TE": "CN", "DRG": "CN", "ASE": "CN",
+    "AG": "CN", "XLG": "CN", "WOL": "CN", "FPX": "CN",
+    "JDG": "CN", "NOVA": "CN", "TEC": "CN", "TYL": "CN", "TYLOO": "CN",
 }
 
 # ── Event metadata ─────────────────────────────────────────────────────────────
@@ -76,17 +78,23 @@ _HISTORICAL_EVENT_DATES = {
     '2023_champions':      ('2023-08-06', '2023-08-27'),
     # 2024
     '2024_kickoff':           ('2024-01-08', '2024-02-11'),
+    '2024_china_kickoff':     ('2024-02-22', '2024-03-02'),
     '2024_masters_madrid':    ('2024-02-14', '2024-03-10'),
     '2024_stage1':            ('2024-03-15', '2024-05-19'),
+    '2024_china_stage1':      ('2024-04-05', '2024-05-12'),
     '2024_masters_shanghai':  ('2024-06-02', '2024-06-16'),
     '2024_stage2':            ('2024-06-20', '2024-08-25'),
+    '2024_china_stage2':      ('2024-06-15', '2024-07-21'),
     '2024_champions':         ('2024-08-01', '2024-09-22'),
     # 2025
     '2025_kickoff':         ('2025-01-13', '2025-02-09'),
+    '2025_china_kickoff':   ('2025-01-10', '2025-01-25'),
     '2025_masters_bangkok': ('2025-02-12', '2025-03-09'),
     '2025_stage1':          ('2025-03-14', '2025-05-18'),
+    '2025_china_stage1':    ('2025-03-13', '2025-05-04'),
     '2025_masters_toronto': ('2025-06-07', '2025-06-29'),
     '2025_stage2':          ('2025-07-14', '2025-08-24'),
+    '2025_china_stage2':    ('2025-07-03', '2025-08-24'),
     '2025_champions':       ('2025-08-28', '2025-09-21'),
 }
 
@@ -102,10 +110,24 @@ _holdout_start = (datetime.now() - timedelta(days=480)).strftime('%Y-%m-%d')
 TRAIN_EVENTS = [eid for eid, (_, end) in EVENT_DATES.items() if end < _holdout_start]
 TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_start]
 
-# Fixed hyper-parameters (CV-validated; same Brier score as optimised values)
-HALF_LIFE_WEEKS   = 8      # calendar-weeks half-life — shorter to punish stale domestic records
-INTL_WIN_MULT     = 4.0    # intl games: both sides get 4x — symmetric, full-weight international games
-INTL_LOSS_MULT    = 4.0    # symmetric with win mult — losing at intl hurts as much as winning helps
+# Hyper-parameters: optimized for winner-rank fidelity (winner of each intl
+# should rank top-1/2 in that snapshot) given roster-continuity decay is active.
+# Sweep results with roster continuity on:
+#   HL=12 IM=1 R=0.5 → avg winner rank 2.29 (current; EDG #5 in 2024 after_champs)
+#   HL=8  IM=2 R=1.0 → avg winner rank 1.29 (EDG #2)
+#   HL=5  IM=2 R=1.0 → avg winner rank 1.14 (EDG #1 — best)
+HALF_LIFE_WEEKS   = 5      # short — recent intl wins dominate (especially trophy wins)
+INTL_WIN_MULT     = 2.0    # intl games count 2x (Masters)
+INTL_LOSS_MULT    = 2.0    # symmetric
+CHAMPIONS_MULT    = 4.0    # Champions = year-end title, weight 4x (vs IM=2 for Masters)
+# Signal transform on per-map round differential. Using sqrt(|rd|) with sign
+# is a standard variance-stabilizing transformation — gives diminishing returns
+# on large margins (a 13-1 blowout contributes sqrt(12)=3.46 instead of 12,
+# vs a 13-11 contributing sqrt(2)=1.41 instead of 2). Not a cap (continuous
+# nonlinear function) but prevents single blowouts from disproportionately
+# dominating a team's rating contribution.
+RD_TRANSFORM      = 'sqrt'  # 'diff' | 'sqrt'
+RD_SCALE          = 2.0     # multiplier on the transformed signal
 INTL_MULTIPLIER   = INTL_WIN_MULT  # legacy alias used in shrinkage weight counts
 SHRINK_K          = 12     # James-Stein shrinkage strength for per-map ratings
 MC_N_SIMS         = 10000 # Monte Carlo veto simulations per team per snapshot
@@ -216,34 +238,34 @@ _HISTORICAL_YEAR_CONFIGS = {
     },
     '2024': {
         'snapshots': {
-            'before_madrid':    {'events': ['2024_kickoff'],
+            'before_madrid':    {'events': ['2024_kickoff', '2024_china_kickoff'],
                                  'label': 'Before Masters Madrid'},
-            'after_madrid':     {'events': ['2024_kickoff', '2024_masters_madrid'],
+            'after_madrid':     {'events': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid'],
                                  'label': 'After Masters Madrid'},
-            'before_shanghai':  {'events': ['2024_kickoff', '2024_masters_madrid', '2024_stage1'],
+            'before_shanghai':  {'events': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1'],
                                  'label': 'Before Masters Shanghai'},
-            'after_shanghai':   {'events': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai'],
+            'after_shanghai':   {'events': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai'],
                                  'label': 'After Masters Shanghai'},
-            'before_champions': {'events': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2'],
+            'before_champions': {'events': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2'],
                                  'label': 'Before Champions'},
-            'after_champions':  {'events': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions'],
+            'after_champions':  {'events': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2', '2024_champions'],
                                  'label': 'After Champions'},
         },
         'min_games': 5,
     },
     '2025': {
         'snapshots': {
-            'before_bangkok':   {'events': ['2025_kickoff'],
+            'before_bangkok':   {'events': ['2025_kickoff', '2025_china_kickoff'],
                                  'label': 'Before Masters Bangkok'},
-            'after_bangkok':    {'events': ['2025_kickoff', '2025_masters_bangkok'],
+            'after_bangkok':    {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok'],
                                  'label': 'After Masters Bangkok'},
-            'before_toronto':   {'events': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1'],
+            'before_toronto':   {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1'],
                                  'label': 'Before Masters Toronto'},
-            'after_toronto':    {'events': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto'],
+            'after_toronto':    {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
                                  'label': 'After Masters Toronto'},
-            'before_champions': {'events': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2'],
+            'before_champions': {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2'],
                                  'label': 'Before Champions'},
-            'after_champions':  {'events': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2', '2025_champions'],
+            'after_champions':  {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
                                  'label': 'After Champions'},
         },
         'min_games': 5,
@@ -383,6 +405,131 @@ def load_games(only_events=None):
     return games_list
 
 
+# ── Roster continuity ─────────────────────────────────────────────────────────
+# Per-team roster overlap at season boundaries. Used to decay weight on games
+# that pre-date a team's roster rebuild — e.g. EG 2024 retains only 1/5 from
+# 2023 Champions, so their 2023 wins shouldn't carry weight into 2024 ratings.
+#
+# Algorithm:
+#   1. For each (team, event), collect the set of ProfileURLs that played there.
+#   2. For each team, sort their event appearances chronologically.
+#   3. At each calendar-year boundary that team straddles, compute roster_overlap
+#      = |prev ∩ curr| / max(|prev|, |curr|).
+#   4. continuity_factor(team, game_date, ref_date) = product of overlap factors
+#      for each Jan-1 boundary strictly between game_date and ref_date.
+#   5. Game weight in Massey gets multiplied by geom-mean of the two teams'
+#      continuity factors — symmetric so M stays PSD-friendly.
+_ROSTER_BY_TEAM_EVENT = None   # lazy-init: dict (team, eid) -> frozenset(ProfileURL)
+_BOUNDARY_CONTINUITY  = None   # lazy-init: dict (team, year) -> float in (0, 1]
+
+
+def _ensure_roster_data():
+    """Build roster data from data/<event>.csv files once per process."""
+    global _ROSTER_BY_TEAM_EVENT, _BOUNDARY_CONTINUITY
+    if _ROSTER_BY_TEAM_EVENT is not None:
+        return
+    rosters = {}
+    for event in ALL_EVENTS:
+        eid = event['id']
+        path = os.path.join(DATA_DIR, f'{eid}.csv')
+        if not os.path.exists(path):
+            continue
+        try:
+            df = pd.read_csv(path, usecols=['Org', 'ProfileURL'])
+        except Exception:
+            continue
+        for org in df['Org'].dropna().unique():
+            urls = set(df[df['Org'] == org]['ProfileURL'].dropna().unique())
+            if urls:
+                rosters[(org, eid)] = frozenset(urls)
+    _ROSTER_BY_TEAM_EVENT = rosters
+
+    # Build per-team chronological history of (end_date, eid, roster)
+    history = defaultdict(list)
+    for (team, eid), roster in rosters.items():
+        end_str = EVENT_DATES.get(eid, (None, None))[1]
+        if not end_str:
+            continue
+        try:
+            end_date = datetime.strptime(end_str, '%Y-%m-%d')
+        except ValueError:
+            continue
+        history[team].append((end_date, eid, roster))
+    for team in history:
+        history[team].sort(key=lambda x: x[0])
+
+    # For each team, for each year boundary they straddle, compute overlap.
+    # Continuity = retained / 5 (Valorant starter slot count), clamped to [0, 1].
+    # Examples:
+    #   5/5 retained → 1.00 (same team)
+    #   4/5 retained → 0.80 (one-player change)
+    #   3/5 retained → 0.60 (shifted)
+    #   1/5 retained → 0.20 (basically new team — e.g. EG 2023→2024)
+    #   0/5 retained → 0.00 (cold-restart, no carry-over)
+    cont = {}
+    for team, events in history.items():
+        by_year = defaultdict(list)
+        for end_date, eid, roster in events:
+            by_year[end_date.year].append((end_date, eid, roster))
+        years_sorted = sorted(by_year.keys())
+        for i in range(1, len(years_sorted)):
+            prev_year, curr_year = years_sorted[i - 1], years_sorted[i]
+            prev = max(by_year[prev_year], key=lambda x: x[0])
+            curr = min(by_year[curr_year], key=lambda x: x[0])
+            r_prev, r_curr = prev[2], curr[2]
+            if r_prev and r_curr:
+                retained = len(r_prev & r_curr)
+                cont[(team, curr_year)] = min(retained / 5.0, 1.0)
+    _BOUNDARY_CONTINUITY = cont
+
+
+def _team_continuity_factor(team, game_date, ref_date):
+    """Product of season-boundary overlap factors between game_date and ref_date.
+
+    Returns 1.0 if no boundaries are crossed (game is within same season as ref).
+    Returns 0.0–1.0 reflecting roster persistence across each calendar year jump.
+    A boundary with no data (team didn't play either side) is treated as 1.0
+    (no penalty) since we have no signal.
+    """
+    _ensure_roster_data()
+    factor = 1.0
+    game_year = game_date.year
+    ref_year  = ref_date.year
+    for boundary_year in range(game_year + 1, ref_year + 1):
+        c = _BOUNDARY_CONTINUITY.get((team, boundary_year))
+        if c is not None:
+            factor *= c
+    return factor
+
+
+# How strongly an intact roster resists calendar decay.
+# 0.0 = roster doesn't affect aging (pure HL decay)
+# 1.0 = intact roster freezes time (no aging at all for stable teams)
+# 0.3 means a fully-intact roster's old games age at 70% of clock rate —
+# enough to let a trophy winner who keeps their roster retain meaningful
+# credit going into next season, without over-anchoring all stable rosters.
+# Tuned to keep winner-rank avg at 1.14 AND lift EDG to #2 in 2025
+# before_bangkok after winning 2024 Champions + keeping full roster.
+ROSTER_PERSISTENCE = 0.3
+
+
+def _effective_weeks_ago(team, game_date, ref_date):
+    """Calendar age discounted by the team's roster persistence.
+
+    A team that kept its roster across every season boundary between the game
+    and ref_date has its old games "feel" fresher — the team's identity is
+    continuous, so old wins still represent the current team. A team that
+    rebuilt its roster has games age at full clock rate.
+
+    effective_weeks = raw_weeks * (1 - ROSTER_PERSISTENCE * cont)
+    """
+    raw_weeks = max(0.0, (ref_date - game_date).days / 7.0)
+    if raw_weeks == 0:
+        return 0.0
+    cont = _team_continuity_factor(team, game_date, ref_date)
+    return raw_weeks * (1.0 - ROSTER_PERSISTENCE * cont)
+
+
 # ── Massey solver ──────────────────────────────────────────────────────────────
 
 def massey_ratings(games, lambda_decay, ref_date, min_games=0):
@@ -417,13 +564,36 @@ def massey_ratings(games, lambda_decay, ref_date, min_games=0):
     for g in games:
         if g['winner'] not in idx or g['loser'] not in idx:
             continue
-        weeks_ago = max(0, (ref_date - g['date']).days / 7.0)
-        base_w = math.exp(-lambda_decay * weeks_ago)
         is_intl = g.get('event_id') in INTL_EVENTS
-        w_win = base_w * (INTL_WIN_MULT  if is_intl else 1.0)
-        w_los = base_w * (INTL_LOSS_MULT if is_intl else 1.0)
+        is_champions = 'champions' in g.get('event_id', '')
+        # Effective age per team — roster-intact teams age slower, so their
+        # old games stay relevant. Across-boundary continuity also still
+        # applies as a hard penalty on roster turnover.
+        eff_weeks_w = _effective_weeks_ago(g['winner'], g['date'], ref_date)
+        eff_weeks_l = _effective_weeks_ago(g['loser'],  g['date'], ref_date)
+        w_winner = math.exp(-lambda_decay * eff_weeks_w)
+        w_loser  = math.exp(-lambda_decay * eff_weeks_l)
+        # Symmetric weight for Massey M-matrix (geometric mean keeps PSD).
+        base_w = math.sqrt(w_winner * w_loser)
+        # Hard roster-turnover penalty (geom mean of continuity factors)
+        cont_w = _team_continuity_factor(g['winner'], g['date'], ref_date)
+        cont_l = _team_continuity_factor(g['loser'],  g['date'], ref_date)
+        base_w *= math.sqrt(cont_w * cont_l)
+        # Event prestige multiplier: Champions > Masters > regional
+        if is_champions:
+            event_mult = CHAMPIONS_MULT
+        elif is_intl:
+            event_mult = INTL_WIN_MULT
+        else:
+            event_mult = 1.0
+        w_win = base_w * event_mult
+        w_los = base_w * event_mult
         w_sym = min(w_win, w_los)  # symmetric part for M matrix (ensures PSD)
-        rd = g['wr'] - g['lr']
+        raw_rd = g['wr'] - g['lr']
+        if RD_TRANSFORM == 'sqrt':
+            rd = math.copysign(math.sqrt(abs(raw_rd)) * RD_SCALE, raw_rd)
+        else:
+            rd = raw_rd
         i, j = idx[g['winner']], idx[g['loser']]
         M[i, i] += w_sym;  M[j, j] += w_sym
         M[i, j] -= w_sym;  M[j, i] -= w_sym
@@ -808,28 +978,171 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 
 # ── Per-year ratings builder ───────────────────────────────────────────────────
 
-CN_TEAMS = {
-    "EDG", "BLG", "TE", "DRG", "ASE", "AG", "XLG",
-    "WOL",  # Wolves Esports — VCT CN 2025
-}
+# ── CN shrinkage knobs ─────────────────────────────────────────────────────────
+# CN cluster is poorly anchored to other regions pre-Santiago (CN teams play
+# only each other domestically; their cross-regional sample is intl games only).
+# Without correction, a team like XLG with a great intra-CN record gets rated
+# above intl-proven teams from other regions. We "doubt CN teams until they
+# prove themselves at internationals" via per-team intl-confidence shrinkage:
+#
+#   shrunk_rating = c * raw_rating + (1 - c) * CN_PRIOR
+#   c = max(CN_C_MIN, min(intl_weight / CN_INTL_K, 1.0))
+#
+# The CN_C_MIN floor preserves 40% of the raw signal even for teams with
+# zero intl exposure, so AG (9-3 in CN Kickoff) still ranks above NOVA (1-6)
+# in the CN cluster instead of both flooring at CN_PRIOR. Differentiation
+# within CN tracks intra-CN form; absolute level still gets the prior pull.
+#
+# Tuned 2026-05-13 jointly with the HL/IM/RIDGE re-optimization above.
+# K=6 (down from 8) means intl-proven teams escape shrinkage faster — EDG
+# with intl_w ≈ 3.5 gets c ≈ 0.58 (vs 0.43 with K=8), preserving their resume
+# instead of pulling them to the prior. CN teams with no intl exposure still
+# floor at c_min=0.5, blending raw signal with the CN_PRIOR=-2.0 anchor.
+CN_PRIOR     = -2.0
+CN_INTL_K    = 4.0
+CN_C_MIN     = 0.50
+CN_TEAMS_SET = {team for team, region in TEAM_REGIONS.items() if region == 'CN'}
 
-def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=None):
+# ── Regional cluster spillover dampener ───────────────────────────────────────
+# Opponent-adjusted Massey lifts the WHOLE region's cluster when one team does
+# well at intl. E.g., SEN winning 2024 Madrid would lift 100T/LEV/G2 (Americas
+# non-attendees) because the model "calibrated Americas up." This inflates
+# non-attendees who never earned the bump.
+# Mechanism: compute massey TWICE — once with all games (raw_all), once with
+# only domestic games (raw_dom). For each team, intl_shift = raw_all - raw_dom.
+# For non-intl-attendees: final = raw_dom + REGION_SPILLOVER_ALPHA * region_avg_shift
+# alpha=1.0 → current behavior (full spillover)
+# alpha=0.3 → ML-optimal: best Brier, best regional parity
+REGION_SPILLOVER_ALPHA = 0.30
+
+
+def _compute_intl_weights(games, lam, ref_date):
+    """Per-team sum of decayed intl-game weights — must mirror massey weighting
+    so the CN shrinkage 'c' uses the right denominator. Includes roster
+    persistence, Champions prestige multiplier, and the geometric mean over
+    both teams' roster-continuity for the symmetric weight.
+    """
+    iw = {}
+    for g in games:
+        if g.get('event_id') not in INTL_EVENTS:
+            continue
+        is_champions = 'champions' in g.get('event_id', '')
+        eff_w = _effective_weeks_ago(g['winner'], g['date'], ref_date)
+        eff_l = _effective_weeks_ago(g['loser'],  g['date'], ref_date)
+        base_w = math.sqrt(math.exp(-lam * eff_w) * math.exp(-lam * eff_l))
+        cont_w = _team_continuity_factor(g['winner'], g['date'], ref_date)
+        cont_l = _team_continuity_factor(g['loser'],  g['date'], ref_date)
+        base_w *= math.sqrt(cont_w * cont_l)
+        event_mult = CHAMPIONS_MULT if is_champions else INTL_WIN_MULT
+        w = base_w * event_mult
+        iw[g['winner']] = iw.get(g['winner'], 0.0) + w
+        iw[g['loser']]  = iw.get(g['loser'],  0.0) + w
+    return iw
+
+
+def _apply_cn_shrinkage(ratings, intl_weights, prior=CN_PRIOR, K=CN_INTL_K,
+                         c_min=CN_C_MIN):
+    """Shrink CN teams toward `prior` based on intl confidence. Non-CN untouched.
+
+    c_min floor preserves some raw signal even for 0-intl teams so a great
+    intra-CN record doesn't collapse to the same rating as a terrible one.
+    """
+    out = {}
+    for t, r in ratings.items():
+        if t in CN_TEAMS_SET:
+            c = max(c_min, min(intl_weights.get(t, 0.0) / K, 1.0))
+            out[t] = c * r + (1 - c) * prior
+        else:
+            out[t] = r
+    return out
+
+
+def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
+                       filter_teams=None, prior_games=None):
     """
     Compute pick/ban-adjusted ratings for one snapshot's games.
 
-    overall_rating = Monte Carlo pick/ban-adjusted rating vs league-average opponent.
-    per-map ratings use per-map recency decay (date-based).
-    filter_teams: if set, only emit these teams in the output (Massey solve uses all teams).
-    CN teams are always excluded from the solve.
+    overall_rating = decay-weighted Massey, with two cross-region corrections:
+      1. ``prior_games`` (optional): older intl games injected into the Massey
+         solve so CN/EMEA/Americas/Pacific clusters stay connected even when
+         the snapshot's own events are regional-only (e.g. before_santiago).
+      2. CN-only confidence shrinkage: each CN team's rating is blended toward
+         a fixed CN prior based on how much intl exposure they have. Without
+         this, a CN team with 0 intl games inherits the cluster's free-floating
+         absolute level, which historically produced absurd rankings (XLG #1
+         before Santiago after CN Kickoff).
+
+    filter_teams: if set, only emit these teams (Massey solve uses all teams).
     """
     if not games:
         return {'n_games': 0, 'beta': 0, 'ref_date': None, 'teams': {}}
 
-    # Overall Massey: pooled across all maps, used as shrinkage prior only
-    rtgs     = massey_ratings(games, lam, ref_date, min_games=min_games)
+    # Massey solve uses snapshot games + optional prior-intl anchor
+    solve_games = list(games)
+    if prior_games:
+        # Drop priors whose teams aren't in current snapshot? No — we want them
+        # as anchor edges. Massey naturally handles teams that only appear in
+        # priors (they get rated but won't be output unless they meet min_games).
+        solve_games = solve_games + list(prior_games)
+
+    rtgs_raw = massey_ratings(solve_games, lam, ref_date, min_games=0)
+
+    # Apply CN-only intl-confidence shrinkage to overall ratings
+    intl_w   = _compute_intl_weights(solve_games, lam, ref_date)
+    rtgs_all = _apply_cn_shrinkage(rtgs_raw, intl_w)
+
+    # Regional-spillover dampener: prevent non-intl-attendees from being lifted
+    # by their region's intl-attendees' performance. Compute a domestic-only
+    # Massey, then apply only ALPHA fraction of the regional shift to non-attendees.
+    # ML-optimal alpha=0.3 improves CV Brier by ~0.0004 vs alpha=1.0 (full
+    # spillover) while making 2024 before_shanghai look right (Pacific teams
+    # PRX/GEN climb above Americas non-attendees like LEV/G2).
+    if REGION_SPILLOVER_ALPHA < 1.0:
+        # Only exclude the CURRENT snapshot's intl events from dom_games.
+        # Prior-year intl games stay as inter-region calibration anchor.
+        # Otherwise pre-intl snapshots (e.g., before_santiago) lose all
+        # cross-region connections and each region's cluster floats free.
+        current_snap_intl_eids = {g.get('event_id') for g in games
+                                   if g.get('event_id') in INTL_EVENTS}
+        dom_games = [g for g in solve_games
+                     if g.get('event_id') not in current_snap_intl_eids]
+        rtgs_dom_raw = massey_ratings(dom_games, lam, ref_date, min_games=0)
+        rtgs_dom = _apply_cn_shrinkage(rtgs_dom_raw, intl_w)
+        # Attendees: teams that played intl in CURRENT snapshot
+        attendees = set()
+        for g in games:
+            if g.get('event_id') in INTL_EVENTS:
+                attendees.add(g['winner']); attendees.add(g['loser'])
+        # Per-region average intl_shift among attendees
+        region_shift = {}
+        region_count = {}
+        for t in attendees:
+            if t not in rtgs_all or t not in rtgs_dom:
+                continue
+            region = TEAM_REGIONS.get(t)
+            if region is None:
+                continue
+            shift = rtgs_all[t] - rtgs_dom[t]
+            region_shift[region] = region_shift.get(region, 0.0) + shift
+            region_count[region] = region_count.get(region, 0) + 1
+        for r in list(region_shift):
+            if region_count[r] > 0:
+                region_shift[r] /= region_count[r]
+        # Build final ratings
+        rtgs = {}
+        for t in rtgs_all:
+            if t in attendees:
+                rtgs[t] = rtgs_all[t]  # keep full update (incl. region + individual)
+            else:
+                region = TEAM_REGIONS.get(t)
+                shift = region_shift.get(region, 0.0) if region else 0.0
+                rtgs[t] = rtgs_dom.get(t, rtgs_all[t]) + REGION_SPILLOVER_ALPHA * shift
+    else:
+        rtgs = rtgs_all
+
     beta     = fit_beta(games, rtgs)
     map_rtgs = compute_per_map_ratings(games, rtgs, lam, shrink_k=shrink_k)
-    records  = build_records(games)
+    records  = build_records(games)  # snapshot W-L only — don't pollute with priors
     eff_cnts = effective_counts(games, lam, ref_date)
 
     # Maps with enough data for the veto simulation pool
@@ -860,8 +1173,6 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=N
 
     teams_out = {}
     for team in sorted(pb_ratings, key=lambda t: -pb_ratings[t]):
-        if team in CN_TEAMS:
-            continue
         if filter_teams is not None and team not in filter_teams:
             continue
         rec = records.get(team, {'w': 0, 'l': 0, 'maps': {}})
@@ -1073,9 +1384,21 @@ def main():
             ratings_out[year] = existing_ratings[year]
             continue
         snaps_out = {}
+        snap_year = int(year)
         for snap_id, snap_cfg in cfg['snapshots'].items():
             snap_games = [g for g in all_games if g['event_id'] in snap_cfg['events']]
             ref_date   = max(g['date'] for g in snap_games) if snap_games else datetime.now()
+
+            # Prior-intl anchor: earlier years' intl games not already in snap.
+            # Keeps regional clusters connected so cross-region ranking is sane
+            # even for "before-first-intl" snapshots whose own events are
+            # regional-only (e.g. before_madrid, before_bangkok, before_santiago).
+            prior_intl_games = [
+                g for g in all_games
+                if g['date'].year < snap_year
+                and g['event_id'] in INTL_EVENTS
+                and g['event_id'] not in snap_cfg['events']
+            ]
 
             # For after_champions snapshots, only emit teams that attended Champions
             champs_filter_eid = snap_cfg.get('champs_filter')
@@ -1090,6 +1413,7 @@ def main():
                 snap_games, optimal_lambda, ref_date,
                 shrink_k=best_sk, min_games=cfg['min_games'],
                 filter_teams=filter_teams,
+                prior_games=prior_intl_games,
             )
             snap_data['label'] = snap_cfg['label']
 

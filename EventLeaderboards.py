@@ -47,6 +47,10 @@ def _ensure_headshots_loaded():
 def get_events_by_year():
     by_year = {}
     for e in ALL_EVENTS:
+        # CN-only events feed BenPom (team ratings) but are hidden from the
+        # event-leaderboard dropdown — user wants CN scoped to team stats, not players.
+        if list(e["regions"].keys()) == ["CN"]:
+            continue
         by_year.setdefault(e["year"], []).append(e)
     return sorted(by_year.items(), reverse=True)
 
@@ -184,8 +188,8 @@ ORG_REGIONS = {
     # EMEA
     "TL":   "EMEA",  "FNC":  "EMEA",  "NAVI": "EMEA",  "VIT":  "EMEA",
     "BBL":  "EMEA",  "GX":   "EMEA",  "KC":   "EMEA",  "TH":   "EMEA",
-    "FUT":  "EMEA",  "GIA":  "EMEA",  "MKOI": "EMEA",  "WOL":  "EMEA",
-    "M8":   "EMEA",  "FPX":  "EMEA",
+    "FUT":  "EMEA",  "GIA":  "EMEA",  "MKOI": "EMEA",
+    "M8":   "EMEA",
     # Americas
     "SEN":  "Americas",  "G2":   "Americas",  "MIBR": "Americas",
     "NRG":  "Americas",  "100T": "Americas",  "C9":   "Americas",
@@ -195,11 +199,12 @@ ORG_REGIONS = {
     "PRX":  "Pacific",  "DRX":  "Pacific",  "T1":   "Pacific",
     "TLN":  "Pacific",  "GEN":  "Pacific",  "DFM":  "Pacific",
     "ZETA": "Pacific",  "RRQ":  "Pacific",  "TS":   "Pacific",
-    "GE":   "Pacific",
+    "GE":   "Pacific",  "KRX":  "Pacific",  "NS":   "Pacific",
     # CN
-    "EDG":  "CN",  "BLG":  "CN",  "KRX":  "CN",  "TE":  "CN",
-    "DRG":  "CN",  "ASE":  "CN",  "NS":   "CN",  "AG":  "CN",
-    "XLG":  "CN",
+    "EDG":  "CN",  "BLG":  "CN",  "TE":   "CN",  "DRG":  "CN",
+    "ASE":  "CN",  "AG":   "CN",  "XLG":  "CN",  "WOL":  "CN",
+    "FPX":  "CN",  "JDG":  "CN",  "NOVA": "CN",  "TEC":  "CN",
+    "TYL":  "CN",  "TYLOO":"CN",
 }
 
 # ── Player best-match lookup ──────────────────────────────────────────────────

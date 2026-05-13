@@ -26,8 +26,8 @@ HEADERS = {
 ORG_REGIONS = {
     "TL":"EMEA","FNC":"EMEA","NAVI":"EMEA","VIT":"EMEA",
     "BBL":"EMEA","GX":"EMEA","KC":"EMEA","TH":"EMEA",
-    "FUT":"EMEA","GIA":"EMEA","MKOI":"EMEA","WOL":"EMEA",
-    "M8":"EMEA","FPX":"EMEA",
+    "FUT":"EMEA","GIA":"EMEA","MKOI":"EMEA",
+    "M8":"EMEA",
     "SEN":"Americas","G2":"Americas","MIBR":"Americas",
     "NRG":"Americas","100T":"Americas","C9":"Americas",
     "EG":"Americas","KRÜ":"Americas","LEV":"Americas",
@@ -35,8 +35,10 @@ ORG_REGIONS = {
     "PRX":"Pacific","DRX":"Pacific","T1":"Pacific",
     "TLN":"Pacific","GEN":"Pacific","DFM":"Pacific",
     "ZETA":"Pacific","RRQ":"Pacific","TS":"Pacific","GE":"Pacific",
-    "EDG":"CN","BLG":"CN","KRX":"CN","TE":"CN",
-    "DRG":"CN","ASE":"CN","NS":"CN","AG":"CN","XLG":"CN",
+    "KRX":"Pacific","NS":"Pacific",
+    "EDG":"CN","BLG":"CN","TE":"CN","DRG":"CN","ASE":"CN",
+    "AG":"CN","XLG":"CN","WOL":"CN","FPX":"CN",
+    "JDG":"CN","NOVA":"CN","TEC":"CN","TYL":"CN","TYLOO":"CN",
 }
 
 os.makedirs(DATA_DIR, exist_ok=True)

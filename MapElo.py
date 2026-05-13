@@ -122,15 +122,33 @@ def _compute_pyth_data():
     # Chronological list of regional events per year
     regional_chron = [e for e in reversed(ALL_EVENTS) if 'International' not in e['regions']]
 
+    # Canonical split id: CN events fold into their regional counterpart so
+    # the page shows ONE "Kickoff" / "Stage 1" / "Stage 2" filter per year
+    # that combines EMEA + Americas + Pacific + CN teams. We don't want CN
+    # to appear as its own filter — it's part of the same competitive split.
+    def canonical_split_id(eid):
+        return eid.replace('_china_', '_')
+
     events_by_year = {}
+    seen_per_year = {}
     for e in regional_chron:
         y = str(e['year'])
+        canon = canonical_split_id(e['id'])
         if y not in events_by_year:
             events_by_year[y] = []
-        short_label = e['label'].split(' ', 1)[1] if ' ' in e['label'] else e['label']
-        events_by_year[y].append({'id': e['id'], 'label': short_label})
+            seen_per_year[y] = set()
+        if canon in seen_per_year[y]:
+            continue  # already listed via the regional counterpart
+        seen_per_year[y].add(canon)
+        # Use the regional (non-CN) event for the label; if only CN exists for
+        # this split (shouldn't happen but be safe), strip "China " from the label
+        canon_event = next((ev for ev in regional_chron if ev['id'] == canon), e)
+        short_label = canon_event['label'].split(' ', 1)[1] if ' ' in canon_event['label'] else canon_event['label']
+        short_label = short_label.replace('China ', '')
+        events_by_year[y].append({'id': canon, 'label': short_label})
 
-    # Load all map frames tagged with event_id
+    # Load all map frames — tag each with both the original event_id AND the
+    # canonical split_id, so we can later filter by canonical split.
     mr = pd.read_csv(os.path.join(ROOT, 'data/match_results.csv'))
     mr = mr[mr['MapNum'] != 'all'].copy()
     mr['MapNum'] = mr['MapNum'].astype(str)
@@ -143,7 +161,7 @@ def _compute_pyth_data():
             continue
         df = pd.read_csv(path)
         df['year']     = e['year']
-        df['event_id'] = e['id']
+        df['event_id'] = canonical_split_id(e['id'])  # canonical: CN folds in
         df['MapNum']   = df['MapNum'].astype(str)
         df['MapName'] = df['MapName'].str.replace('PICK', '', regex=False).str.strip()
         map_frames.append(df[['MatchID', 'MapNum', 'Org', 'MapName', 'year', 'event_id']])
@@ -244,12 +262,12 @@ def _compute_pyth_data():
     INTL_EVENT_DATES = {
         '2023_lock_in':          ('LOCK//IN São Paulo', '2023'),
         '2023_masters_tokyo':    ('Masters Tokyo',      '2023'),
-        '2023_champions':        ('Champions 2023',     '2023'),
+        '2023_champions':        ('Champions',          '2023'),
         '2024_masters_madrid':   ('Masters Madrid',     '2024'),
-        '2024_champions':        ('Champions 2024',     '2024'),
+        '2024_champions':        ('Champions',          '2024'),
         '2025_masters_bangkok':  ('Masters Bangkok',    '2025'),
         '2025_masters_toronto':  ('Masters Toronto',    '2025'),
-        '2025_champions':        ('Champions 2025',     '2025'),
+        '2025_champions':        ('Champions',          '2025'),
         '2026_masters_santiago': ('Masters Santiago',   '2026'),
     }
     # International events that fall between regional events, keyed by year
@@ -267,10 +285,21 @@ def _compute_pyth_data():
     data = {}
     years = sorted(rdf['year'].unique())
 
+    from datetime import date as _date
+    today_str = _date.today().isoformat()
+
     for year in years:
         y = str(year)
         year_rows = rdf[rdf['year'] == year]
-        year_data = _build_team_stats(year_rows, k, pdf)
+
+        # Year aggregate ("All" period) excludes ongoing/uncompleted splits —
+        # e.g. for 2026 mid-Stage 1, this folds in Kickoff only, not Stage 1.
+        completed_ev_ids = [
+            e['id'] for e in events_by_year.get(y, [])
+            if EVENT_DATES.get(e['id']) and EVENT_DATES[e['id']][1] < today_str
+        ]
+        year_agg_rows = year_rows[year_rows['event_id'].isin(completed_ev_ids)]
+        year_data = _build_team_stats(year_agg_rows, k, pdf)
         for r in year_data:
             r['year'] = int(year)
         data[y] = year_data
@@ -297,8 +326,6 @@ def _compute_pyth_data():
                 data[ev_ids[i] + '+'] = on_data
 
     # All-time: only include years that are fully completed (last event end date < today)
-    from datetime import date as _date
-    today_str = _date.today().isoformat()
     def year_is_complete(y_int):
         y = str(y_int)
         ev_ids = [e['id'] for e in events_by_year.get(y, [])]
@@ -492,7 +519,10 @@ def get_intl_calibration():
             _intl_cache = json.load(f)
     return _intl_cache
 
-# Active 2026 VCT league teams (36 total, 12 per region)
+# Active 2026 VCT league teams (48 total, 12 per region — EMEA + Americas + Pacific + CN).
+# Used as a display filter for the Modern Hub leaderboard. CN added 2026-05-13 —
+# user wants them visible in BenPom rankings (still excluded from upcoming/recent
+# matches by separate logic since those pages don't follow CN league play).
 ACTIVE_2026_ORGS = {
     # EMEA
     "TL", "FNC", "NAVI", "VIT", "BBL", "GX", "KC", "TH", "FUT", "M8", "EF", "PCF",
@@ -500,6 +530,8 @@ ACTIVE_2026_ORGS = {
     "SEN", "G2", "MIBR", "NRG", "100T", "C9", "EG", "KRÜ", "LEV", "FUR", "LOUD", "ENVY",
     # Pacific
     "PRX", "T1", "GEN", "DFM", "ZETA", "RRQ", "TS", "GE", "NS", "FS", "VL", "KRX",
+    # CN
+    "AG", "BLG", "DRG", "EDG", "FPX", "JDG", "NOVA", "TE", "TEC", "TYL", "WOL", "XLG",
 }
 
 # Static region lookup — includes historical teams for match data context
@@ -507,7 +539,7 @@ ORG_REGIONS = {
     "TL":   "EMEA",  "FNC":  "EMEA",  "NAVI": "EMEA",  "VIT":  "EMEA",
     "BBL":  "EMEA",  "GX":   "EMEA",  "KC":   "EMEA",  "TH":   "EMEA",
     "FUT":  "EMEA",  "GIA":  "EMEA",  "MKOI": "EMEA",  "WOL":  "EMEA",
-    "M8":   "EMEA",  "FPX":  "EMEA",  "BME":  "EMEA",
+    "M8":   "EMEA",
     "PCF":  "EMEA",  "ULF":  "EMEA",  "EF":   "EMEA",
     "SEN":  "Americas",  "G2":   "Americas",  "MIBR": "Americas",
     "NRG":  "Americas",  "100T": "Americas",  "C9":   "Americas",
@@ -519,6 +551,12 @@ ORG_REGIONS = {
     "ZETA": "Pacific",  "RRQ":  "Pacific",  "TS":   "Pacific",
     "GE":   "Pacific",  "NS":   "Pacific",
     "FS":   "Pacific",  "VL":   "Pacific",  "KRX":  "Pacific",
+    "BME":  "Pacific",
+    # CN
+    "EDG":  "CN",  "BLG":  "CN",  "TE":   "CN",  "DRG":  "CN",
+    "ASE":  "CN",  "AG":   "CN",  "XLG":  "CN",  "WOL":  "CN",
+    "FPX":  "CN",  "JDG":  "CN",  "NOVA": "CN",  "TEC":  "CN",
+    "TYL":  "CN",  "TYLOO":"CN",
 }
 
 def get_pyth_data():
@@ -539,30 +577,31 @@ _SNAPSHOT_EVENTS = {
         'after_champions':  ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
     },
     '2024': {
-        'before_madrid':    ['2024_kickoff'],
-        'after_madrid':     ['2024_kickoff', '2024_masters_madrid'],
-        'before_shanghai':  ['2024_kickoff', '2024_masters_madrid', '2024_stage1'],
-        'after_shanghai':   ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai'],
-        'before_champions': ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2'],
-        'after_champions':  ['2024_kickoff', '2024_masters_madrid', '2024_stage1', '2024_masters_shanghai', '2024_stage2', '2024_champions'],
+        'before_madrid':    ['2024_kickoff', '2024_china_kickoff'],
+        'after_madrid':     ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid'],
+        'before_shanghai':  ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1'],
+        'after_shanghai':   ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai'],
+        'before_champions': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2'],
+        'after_champions':  ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2', '2024_champions'],
     },
     '2025': {
-        'before_bangkok':   ['2025_kickoff'],
-        'after_bangkok':    ['2025_kickoff', '2025_masters_bangkok'],
-        'before_toronto':   ['2025_kickoff', '2025_masters_bangkok', '2025_stage1'],
-        'after_toronto':    ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto'],
-        'before_champions': ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2'],
-        'after_champions':  ['2025_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_masters_toronto', '2025_stage2', '2025_champions'],
+        'before_bangkok':   ['2025_kickoff', '2025_china_kickoff'],
+        'after_bangkok':    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok'],
+        'before_toronto':   ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1'],
+        'after_toronto':    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+        'before_champions': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2'],
+        'after_champions':  ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
     },
     '2026': {
-        'before_santiago': ['2026_kickoff'],
-        'after_santiago':  ['2026_kickoff', '2026_masters_santiago'],
+        'before_santiago': ['2026_kickoff', '2026_china_kickoff'],
+        'after_santiago':  ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago'],
+        'after_stage1':    ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago', '2026_stage1', '2026_china_stage1'],
     },
 }
 
 _map_name_index   = None
 _headshots_cache  = None
-_TEAM_INFO_VER    = 2   # bump this to bust _team_info_cache across all keys
+_TEAM_INFO_VER    = 3   # bump this to bust _team_info_cache across all keys
 _team_info_cache  = {}
 
 def _get_headshots():
@@ -1224,6 +1263,7 @@ MAPELO_HOME_HTML = """
   .pg-region-bubble.r-emea { background:linear-gradient(135deg,#ebe5ff,#d8ccf8); color:#5a2a9a; }
   .pg-region-bubble.r-am   { background:linear-gradient(135deg,#e5f5e5,#c8edd8); color:#2a6a4a; }
   .pg-region-bubble.r-pac  { background:linear-gradient(135deg,#e5f0ff,#c8daf8); color:#2a4a9a; }
+  .pg-region-bubble.r-cn   { background:linear-gradient(135deg,#fce7f3,#fbcfe8); color:#9d174d; }
   .pg-region-bubble.show { transform:scale(1.08); box-shadow:0 4px 14px #9a4ab440; }
   .pg-intl-arrow { font-size:.9rem; color:#c8b8e0; margin-bottom:15px; }
   /* Formula assembly (Stage 7) */
@@ -1382,7 +1422,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n0">1</div>
           <div class="pipe-content">
             <div class="pipe-title">Round Differential</div>
-            <div class="pipe-desc">Every map is scored by round margin. Therefore, a 13&ndash;2 win carries far more signal than a 13&ndash;11 win.</div>
+            <div class="pipe-desc">Every map is scored by round margin. A 13&ndash;2 win carries far more signal than a 13&ndash;11 win, but big margins are <strong>sqrt-compressed</strong> &mdash; blowouts give diminishing returns rather than scaling linearly.</div>
             <div class="pipe-graphic">
               <div class="pg-scorebar">
                 <div class="pg-score-row">
@@ -1408,7 +1448,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n1">2</div>
           <div class="pipe-content">
             <div class="pipe-title">Massey Rating System</div>
-            <div class="pipe-desc">A linear algebra solve finds the rating vector that best explains all observed round differentials simultaneously. One solve per map. Mean-zero constraint.</div>
+            <div class="pipe-desc">A linear algebra solve finds the rating vector that best explains all observed round differentials simultaneously. One solve per map. Mean-zero constraint. <strong>International maps carry higher weight</strong> (Masters &times;2, Champions &times;4), and each historical game is further reweighted by <strong>roster continuity</strong> &mdash; how much of each team&rsquo;s current starting five played in that match.</div>
             <div class="pipe-graphic">
               <div style="padding:4px 0 2px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
                 <svg width="134" height="62" style="display:block;flex-shrink:0;overflow:visible">
@@ -1518,7 +1558,7 @@ MAPELO_HOME_HTML = """
           <div class="pipe-num pipe-n5">6</div>
           <div class="pipe-content">
             <div class="pipe-title">International Calibration</div>
-            <div class="pipe-desc">All Masters &amp; Champions maps from 2023&ndash;2025 are included as time-decayed prior anchors. Older games naturally carry less weight via the same exp(&minus;&lambda;t) decay, stabilizing inter-regional offsets so the first cross-region matches in 2026 produce incremental updates rather than wild swings.</div>
+            <div class="pipe-desc">All Masters, Champions, and VCT CN maps from 2023&ndash;2026 are included as time-decayed prior anchors. Older games carry less weight via the same exp(&minus;&lambda;t) decay, stabilizing inter-regional offsets. <strong>CN teams get intl-confidence shrinkage</strong>: teams with deep international r&eacute;sum&eacute;s (EDG, XLG) keep their raw signal; teams with no intl exposure are pulled toward a CN-baseline prior. A <strong>regional spillover dampener</strong> also prevents one team&rsquo;s intl run from inflating their entire league&rsquo;s non-attendees.</div>
             <div class="pipe-graphic">
               <div class="pg-regions" id="pg5-regions">
                 <div class="pg-region">
@@ -1535,8 +1575,13 @@ MAPELO_HOME_HTML = """
                   <div class="pg-region-bubble r-pac" id="pg5-pac">+&delta;</div>
                   <div class="pg-region-name">Pacific</div>
                 </div>
+                <div class="pg-intl-arrow">&#8596;</div>
+                <div class="pg-region">
+                  <div class="pg-region-bubble r-cn" id="pg5-cn">&minus;&delta;</div>
+                  <div class="pg-region-name">China</div>
+                </div>
               </div>
-              <div class="pg-note">2023&ndash;2025 intl priors &rarr; calibrated inter-regional offsets without artificial inflation</div>
+              <div class="pg-note">2023&ndash;2026 intl priors &rarr; calibrated inter-regional offsets + CN shrinkage for unproven teams</div>
             </div>
           </div>
         </div>
@@ -1789,7 +1834,7 @@ function _animateVeto() {
 }
 
 function _animateRegions() {
-  ['pg5-emea','pg5-am','pg5-pac'].forEach(function(id, i) {
+  ['pg5-emea','pg5-am','pg5-pac','pg5-cn'].forEach(function(id, i) {
     setTimeout(function() { var el=document.getElementById(id); if(el) el.classList.add('show'); }, 200 + i*300);
   });
 }
@@ -1865,7 +1910,7 @@ function replayPipeline() {
   _resetMasseyMatrix();
   var dc=document.getElementById('pg2-canvas'); if(dc){ var ctx=dc.getContext('2d'); ctx.clearRect(0,0,dc.width,dc.height); }
   document.querySelectorAll('#pg4-veto .pg-map-chip').forEach(function(c){ c.className='pg-map-chip'; });
-  ['pg5-emea','pg5-am','pg5-pac'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
+  ['pg5-emea','pg5-am','pg5-pac','pg5-cn'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
   ['pg6-p0','pg6-p1','pg6-p2','pg6-p3','pg6-p4'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
   _pipeActive=-1;
   _runPipeStep(0, _pipelineDone);
@@ -5799,6 +5844,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .lb-region.americas{background:rgba(234,88,12,.12);color:#c2410c}
 .lb-region.emea{background:rgba(22,163,74,.12);color:#15803d}
 .lb-region.pacific{background:rgba(37,99,235,.12);color:#1d4ed8}
+.lb-region.cn{background:rgba(219,39,119,.12);color:#be185d}
 .lb-chevron{color:#bbb;font-size:.62rem;text-align:center;transition:transform .2s}
 .lb-row.selected .lb-chevron{transform:rotate(180deg)}
 
@@ -5927,6 +5973,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .upc-card.rgn-emea{background:rgba(34,197,94,.08);border-left-color:#16a34a}
 .upc-card.rgn-americas{background:rgba(249,115,22,.08);border-left-color:#ea580c}
 .upc-card.rgn-pacific{background:rgba(59,130,246,.08);border-left-color:#2563eb}
+.upc-card.rgn-cn{background:rgba(219,39,119,.08);border-left-color:#db2777}
 .upc-header{display:flex;align-items:center;gap:12px}
 .upc-team-a,.upc-team-b{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:60px}
 .upc-logo{width:36px;height:36px;object-fit:contain}
@@ -6020,6 +6067,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
     <button class="pill" data-region="Americas">Americas</button>
     <button class="pill" data-region="EMEA">EMEA</button>
     <button class="pill" data-region="Pacific">Pacific</button>
+    <button class="pill" data-region="CN">China</button>
     <button class="pill" data-region="Top10" id="top10Pill">Top 10 Globally</button>
   </div>
 
@@ -6146,6 +6194,11 @@ const TEAM_COLORS = {
   VIT:'#FFD100', TH:'#FFD700', FNC:'#FF5900', TL:'#002B5C',
   NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#4FC3F7',
   M8:'#39FF14', BBL:'#D4AF37', EF:'#D4AF37', PCF:'#87CEEB',
+  // CN (provisional brand colors — confirm with user)
+  EDG:'#E60012', BLG:'#FB7299', TE:'#00B0FF', DRG:'#FFD600',
+  ASE:'#FF6F00', AG:'#FF8800', XLG:'#1A1A1A', WOL:'#F5C400',
+  FPX:'#E60012', JDG:'#00C853', NOVA:'#7B1FA2', TEC:'#1565C0',
+  TYL:'#D32F2F', TYLOO:'#D32F2F',
   // Team Secret (grey — appears as 'Secret' in older data)
   Secret:'#808080', SCRT:'#808080', TSEC:'#808080',
   // Legacy / extras kept for older event data
@@ -7780,7 +7833,7 @@ function renderUpcoming(data) {
   var nSims = 20000;
   var vetoSnapKey = '2026_'+snapKey;
 
-  var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific'};
+  var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific','CN':'rgn-cn'};
 
   var cardHtmlArr = upcoming.map(function(m) {
     var orgA = m.org_a || m.team_a;
@@ -8009,7 +8062,7 @@ function renderPast(data) {
   var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
               || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
   var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
-  var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific'};
+  var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific','CN':'rgn-cn'};
   // Match the upcoming-card sim count (20000) so recent matches and upcoming
   // matches have the same statistical precision.
   var nSims = 20000;

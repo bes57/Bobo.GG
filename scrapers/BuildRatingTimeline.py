@@ -20,22 +20,44 @@ from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "scrapers"))
 from MoreTestingMaybeFiles import ALL_EVENTS
+
+# Re-use shared model constants + the massey solver + CN shrinkage from
+# BuildMapRatings so the Modern Hub timeline and the historical snapshots
+# are computed by *exactly* the same math (sqrt rd-transform, Champions
+# prestige multiplier, roster-continuity decay, roster-persistence).
+from BuildMapRatings import (
+    massey_ratings,
+    _compute_intl_weights,
+    INTL_EVENTS,
+    HALF_LIFE_WEEKS,
+    INTL_WIN_MULT  as _BMR_INTL_MULT,
+    CN_PRIOR,
+    CN_INTL_K,
+    CN_C_MIN,
+    CN_TEAMS_SET,
+)
 
 DATA_DIR = os.path.join(ROOT, "data")
 OUT_PATH  = os.path.join(DATA_DIR, "rating_timeline.json")
 
-# ── Model constants (match BuildMapRatings.py) ─────────────────────────────────
-LAMBDA_DECAY  = math.log(2) / 5.0   # 5-week half-life — short recency window so recent results dominate
-CN_TEAMS      = {"EDG","BLG","TE","DRG","ASE","AG","XLG"}  # actual CN teams — NS/KRX are Pacific
-INTL_EVENTS   = {
-    "2023_lock_in", "2023_masters_tokyo", "2023_champions",
-    "2024_masters_madrid", "2024_masters_shanghai", "2024_champions",
-    "2025_masters_bangkok", "2025_masters_toronto", "2025_champions",
-    "2026_masters_santiago",
-}
-INTL_MULT = 1.0       # intl games same weight as domestic (best symmetric calibration)
+LAMBDA_DECAY  = math.log(2) / HALF_LIFE_WEEKS  # share half-life
+INTL_MULT     = _BMR_INTL_MULT                 # share intl multiplier (for legacy intl_weights helper)
 MIN_GAMES     = 5     # min games for a team to appear in the timeline
+
+
+def _apply_cn_shrinkage(ratings, intl_weights, prior=CN_PRIOR, K=CN_INTL_K,
+                         c_min=CN_C_MIN):
+    """Identical formula to BuildMapRatings._apply_cn_shrinkage."""
+    out = {}
+    for t, r in ratings.items():
+        if t in CN_TEAMS_SET:
+            c = max(c_min, min(intl_weights.get(t, 0.0) / K, 1.0))
+            out[t] = c * r + (1 - c) * prior
+        else:
+            out[t] = r
+    return out
 
 EVENT_DATES = {
     "2023_lock_in":          ("2023-01-10", "2023-02-12"),
@@ -43,79 +65,36 @@ EVENT_DATES = {
     "2023_masters_tokyo":    ("2023-06-11", "2023-06-25"),
     "2023_champions":        ("2023-08-06", "2023-08-27"),
     "2024_kickoff":          ("2024-01-08", "2024-02-11"),
+    "2024_china_kickoff":    ("2024-02-22", "2024-03-02"),
     "2024_masters_madrid":   ("2024-02-14", "2024-03-10"),
     "2024_stage1":           ("2024-03-15", "2024-05-19"),
+    "2024_china_stage1":     ("2024-04-05", "2024-05-12"),
     "2024_masters_shanghai": ("2024-06-02", "2024-06-16"),
     "2024_stage2":           ("2024-06-20", "2024-08-25"),
+    "2024_china_stage2":     ("2024-06-15", "2024-07-21"),
     "2024_champions":        ("2024-08-01", "2024-09-22"),
     "2025_kickoff":          ("2025-01-13", "2025-02-09"),
+    "2025_china_kickoff":    ("2025-01-10", "2025-01-25"),
     "2025_masters_bangkok":  ("2025-02-12", "2025-03-09"),
     "2025_stage1":           ("2025-03-14", "2025-05-18"),
+    "2025_china_stage1":     ("2025-03-13", "2025-05-04"),
     "2025_masters_toronto":  ("2025-06-07", "2025-06-29"),
     "2025_stage2":           ("2025-07-14", "2025-08-24"),
+    "2025_china_stage2":     ("2025-07-03", "2025-08-24"),
     "2025_champions":        ("2025-08-28", "2025-09-21"),
     "2026_kickoff":          ("2026-01-15", "2026-02-16"),
+    "2026_china_kickoff":    ("2026-01-21", "2026-02-09"),
     "2026_masters_santiago": ("2026-02-28", "2026-03-15"),
+    "2026_china_stage1":     ("2026-03-31", "2026-05-10"),
     "2026_stage1":           ("2026-04-01", "2026-05-25"),
 }
 
 
 # ── Massey solver ──────────────────────────────────────────────────────────────
-
-def massey_ratings(games, lambda_decay, ref_date, min_games=0):
-    """
-    Opponent-adjusted Massey rating with exponential recency decay.
-    ref_date: datetime object (used as "now" for decay computation).
-    games: list of dicts with keys: winner, loser, wr, lr, date (datetime), event_id.
-    Returns {team: float} (mean-zero).
-    """
-    if not games:
-        return {}
-
-    teams = sorted({g["winner"] for g in games} | {g["loser"] for g in games})
-
-    if min_games > 0:
-        counts = defaultdict(int)
-        for g in games:
-            counts[g["winner"]] += 1
-            counts[g["loser"]]  += 1
-        teams = [t for t in teams if counts[t] >= min_games]
-        games = [g for g in games if g["winner"] in teams and g["loser"] in teams]
-        if not games:
-            return {}
-
-    n   = len(teams)
-    idx = {t: i for i, t in enumerate(teams)}
-    M   = np.zeros((n, n))
-    p   = np.zeros(n)
-
-    for g in games:
-        if g["winner"] not in idx or g["loser"] not in idx:
-            continue
-        g_date = g["date"] if isinstance(g["date"], datetime) else datetime.strptime(g["date"], "%Y-%m-%d")
-        weeks_ago = max(0.0, (ref_date - g_date).days / 7.0)
-        w = math.exp(-lambda_decay * weeks_ago)
-        if g.get("event_id") in INTL_EVENTS:
-            w *= INTL_MULT
-        rd = g["wr"] - g["lr"]
-        i, j = idx[g["winner"]], idx[g["loser"]]
-        M[i, i] += w;  M[j, j] += w
-        M[i, j] -= w;  M[j, i] -= w
-        p[i] += w * rd;  p[j] -= w * rd
-
-    # Mean-zero anchor on last row
-    M[-1, :] = 1.0
-    p[-1]    = 0.0
-    # Ridge: prevent near-singular matrix
-    for i in range(n - 1):
-        M[i, i] += 1e-4
-
-    try:
-        r = np.linalg.solve(M, p)
-    except np.linalg.LinAlgError:
-        r, *_ = np.linalg.lstsq(M, p, rcond=None)
-
-    return {t: float(r[idx[t]]) for t in teams}
+# `massey_ratings` is imported from BuildMapRatings.py so the live timeline
+# uses identical math (sqrt-rd transform, Champions multiplier, roster
+# continuity, roster persistence) as the historical snapshots. No local
+# duplication needed — one source of truth.
 
 
 # ── Data loading ───────────────────────────────────────────────────────────────
@@ -295,13 +274,18 @@ def build_2026_timeline(all_games, existing=None):
         solve_games  = prior_games + [g for g in year_games if g["date"].date() <= day]
         ratings_before = prev_ratings
 
-        ratings_after = massey_ratings(solve_games, LAMBDA_DECAY, day_dt, MIN_GAMES)
+        ratings_after_raw = massey_ratings(solve_games, LAMBDA_DECAY, day_dt, MIN_GAMES)
+        # CN-only intl-confidence shrinkage: CN teams with weak intl exposure
+        # get pulled toward CN_PRIOR until they prove themselves at internationals.
+        # _compute_intl_weights from BuildMapRatings mirrors massey's exact
+        # weighting (roster, Champions mult, sqrt rd) so c uses the right input.
+        intl_w        = _compute_intl_weights(solve_games, LAMBDA_DECAY, day_dt)
+        ratings_after = _apply_cn_shrinkage(ratings_after_raw, intl_w)
         prev_ratings  = ratings_after
 
         checkpoints.append({
             "date":    day.isoformat(),
-            "ratings": {k: round(v, 4) for k, v in ratings_after.items()
-                        if k not in CN_TEAMS},
+            "ratings": {k: round(v, 4) for k, v in ratings_after.items()},
         })
 
         # Match events use only today's 2026 games

@@ -29,6 +29,9 @@ STAT_COLS = {
 MATCH_UNSUPPORTED_STATS = set()
 
 INTERNATIONAL_IDS = {e["id"] for e in ALL_EVENTS if list(e["regions"].keys()) == ["International"]}
+# CN-only events feed BenPom (team ratings) but their player stats are hidden
+# from this page — user wants CN integration scoped to ratings, not leaderboards.
+CN_ONLY_IDS = {e["id"] for e in ALL_EVENTS if list(e["regions"].keys()) == ["CN"]}
 YEAR_MAP  = {e["id"]: e["year"]  for e in ALL_EVENTS}
 LABEL_MAP = {e["id"]: e["label"] for e in ALL_EVENTS}
 
@@ -65,6 +68,8 @@ def _read_event_csvs(subdir=None):
 
     frames = []
     for event in ALL_EVENTS:
+        if event["id"] in CN_ONLY_IDS:
+            continue
         csv_path = os.path.join(folder, f"{event['id']}.csv")
         if not os.path.exists(csv_path):
             continue
