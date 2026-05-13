@@ -26,6 +26,10 @@ PAGE_HTML = """
     --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e;
   }
   * { box-sizing:border-box; margin:0; padding:0; }
+  /* Smooth-scroll all in-page anchor jumps (e.g. clicking the right-side
+     Sections TOC). Honors the user's reduced-motion preference. */
+  html { scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
   body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
   body::before {
     content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
@@ -51,7 +55,10 @@ PAGE_HTML = """
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  .toc { position:fixed; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:240px; }
+  /* position:absolute (not fixed) so the TOC sits at the top-right of the
+     page and scrolls away as the reader moves down — only visible at the
+     start of the article. */
+  .toc { position:absolute; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:240px; }
   .toc-title { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
@@ -593,7 +600,7 @@ PAGE_HTML = """
 
       <p>The only surprising thing here is the amount of faith BenPom has in MIBR. Honestly, I don&rsquo;t think it&rsquo;s wrong, I just thought the margin-heavy algorithm would be too dissuaded by MIBR losing to ENVY 1&ndash;13, 3&ndash;13.</p>
 
-      <div class="section-bubble-wrap"><span class="section-bubble" id="my-predictions"><span class="section-bubble-text">My Predictions</span></span></div>
+      <div class="section-bubble-wrap section-bubble-tight"><span class="section-bubble" id="my-predictions"><span class="section-bubble-text">My Predictions</span></span></div>
 
       <div class="bracket-wrap">
         <div class="bracket-label">My Pick&rsquo;em</div>
@@ -691,6 +698,31 @@ PAGE_HTML = """
         </div><!-- /bracket-gf-col -->
        </div><!-- /bracket-body -->
       </div>
+
+      <p>Sparing you from unnecessary amounts of analysis, I&rsquo;ll just explain my Kr&uuml; pick. As I&rsquo;ve established, G2 faltered against good teams in Split 1, and no BenPom score would make me able to look past that. In general, their domestic form has been middling, both in Kickoff and Split 1, so I&rsquo;d pass on them. Plus it&rsquo;d be boring to pick the favorites. As for the remaining contenders, the pack between 2 and 5 is extremely close. So, I looked for these little +/&minus;&rsquo;s within that pack.</p>
+
+      <ul>
+        <li>Leviat&aacute;n are inexperienced, losing their best map, and coming off of two losses. They&rsquo;re the easiest to write off. Having watched their games, I would&rsquo;ve probably picked them two weeks ago, but in recent matches it&rsquo;s been a bit of Neon and friends.</li>
+        <li>100 Thieves are also losing their best map, but being unable to close out close games is what makes me start to doubt them. At the end of the day, 100 Thieves, well, 100-Thieves-ness makes me the most nervous (hence my having them go 0&ndash;2). Picking 100 Thieves to go to an international is like picking the Bills to win the Super Bowl. You know they&rsquo;re not gonna do it.</li>
+      </ul>
+
+      <p>That leaves NRG and Kr&uuml;. When it comes to the playoffs, experience matters, and Saadhak/Less might be the best combo of experience in IGLing/shooting that you could ask for. Seriously, those two have been the most impressive duo of Split 1 by <em>far</em> (other contenders are Trent/Babybay and Erde/Luk&nbsp;xo). NRG are, as a whole, more experienced, but have had worse results than Kr&uuml; &mdash; this includes getting stomped by Kr&uuml; in Week 2. NRG&rsquo;s BenPom score is bolstered by this expectation that they&rsquo;ll be able to come back into form, which I&rsquo;m increasingly doubtful of after they barely beat Sentinels in a do-or-die match. The opposite is true for Kr&uuml;, whose BenPom score is dragged down by the performance their substitute roster put up in Kickoff. If you filtered Kr&uuml;&rsquo;s BenPom score to just include matches they&rsquo;ve played with their full roster, it would look like:</p>
+
+      <div class="stat-callout">
+        <div class="stat-callout-team">
+          <img src="/logos/KR%C3%9C.png" alt="KR&Uuml;" onerror="this.style.display='none'">KR&Uuml;
+        </div>
+        <div class="stat-callout-label">BenPom Rating (Split 1 only)</div>
+        <div class="stat-callout-rating">+1.36</div>
+      </div>
+
+      <p>That still places Kr&uuml; at 5th, but it&rsquo;s a better rating.</p>
+
+      <p>People forget how historically great Saadhak is as an IGL, and if he&rsquo;s shooting hard enough to be the 6th-highest-rated player in Americas, it&rsquo;s hard to pass on that in a playoff environment. People have also forgotten that Less has top 5 mechanics in VCT, as he&rsquo;s the 2nd-highest-rated player in Americas now, hitting clips like this:</p>
+
+      <video src="/static/less_clip.mp4" controls playsinline style="width:100%;height:auto;border-radius:10px;display:block;margin:16px 0 32px;background:#000;"></video>
+
+      <p>This roster is the only one to go 4&ndash;1 (or better) in Split 1, and gave me no reason to doubt them coming into Playoffs. I believe Saadhak&rsquo;s IGLing and Less&rsquo;s consistent mechanical brilliance will bolster Dante and Silentzz in their first VCT playoffs. They&rsquo;re a hungry team with a lot to prove, which can&rsquo;t be said of NRG or G2. Their team dynamics, narrative, and pure performances are better than the rest. According to BenPom, I have an 81% chance of being wrong, but I like my odds.</p>
     </div>
   </div>
 </div>
