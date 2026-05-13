@@ -652,7 +652,7 @@ PAGE_HTML = """
   .byline { font-size:.82rem; color:var(--soft); font-weight:300; margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid #e8e0ec; }
   .cover { width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px; }
   .cover img { width:100%; height:auto; display:block; }
-  .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; }
+  .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
   .content h2 { font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content a { color:var(--ink); font-weight:400; }

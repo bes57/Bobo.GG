@@ -3,6 +3,7 @@ from flask import Flask, render_template_string, send_from_directory
 from EventLeaderboards import vct_bp
 from AllTimeHighs import highs_bp
 from IdentifyingOverUnderPerformers import article_overunder_bp
+from AmericasStage1Playoffs import article_americas_stage1_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 
@@ -10,6 +11,7 @@ app = Flask(__name__)
 app.register_blueprint(vct_bp, url_prefix="/vct")
 app.register_blueprint(highs_bp, url_prefix="/highs")
 app.register_blueprint(article_overunder_bp, url_prefix="/articles/over-underperformers")
+app.register_blueprint(article_americas_stage1_bp, url_prefix="/articles/americas-stage1-playoffs-preview")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 
@@ -68,6 +70,7 @@ HOME_HTML = """
   .nav-card-title { font-family:'Syne',sans-serif; font-size:.92rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; overflow-wrap:anywhere; }
   .nav-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
   .nav-card-arrow { margin-top:auto; padding-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
+  .nav-card-date { margin-top:10px; font-size:.7rem; color:var(--soft); font-weight:500; letter-spacing:.04em; text-transform:uppercase; }
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   .ai-disclosure { margin-top:10px; margin-bottom:4px; }
   .ai-disclosure summary { list-style:none; cursor:pointer; font-size:.82rem; font-weight:600; color:#111; user-select:none; display:inline-flex; align-items:center; gap:5px; }
@@ -114,10 +117,18 @@ HOME_HTML = """
       <div class="section-title">Research / Opinion Articles <span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
+        <a class="nav-card" href="/articles/americas-stage1-playoffs-preview/">
+          <img class="nav-card-cover" src="/loudlev26.jpg" alt="LOUD vs Leviatán">
+          <div class="nav-card-title">Americas Stage 1 Playoffs Preview</div>
+          <div class="nav-card-desc">A quick discussion after a wild Split 1: LOUD's resurgence, Leviatan's Bind, the ubiquitous question of 100 Thieves, and BenPom's final say.</div>
+          <div class="nav-card-date">May 12, 2026</div>
+          <div class="nav-card-arrow">Read &rarr;</div>
+        </a>
         <a class="nav-card" href="/articles/over-underperformers/">
           <img class="nav-card-cover" src="/patmen.jpg" alt="Patmen">
           <div class="nav-card-title">Overperforming in VCT: who's doing it?</div>
           <div class="nav-card-desc">Using VCT stats to surface players who are outperforming (or underperforming) their team.</div>
+          <div class="nav-card-date">May 4, 2026</div>
           <div class="nav-card-arrow">Read &rarr;</div>
         </a>
       </div>
@@ -202,6 +213,14 @@ def logo():
 @app.route("/patmen.jpg")
 def patmen():
     return send_from_directory(os.path.dirname(__file__), "Patmen.jpg", mimetype="image/jpeg")
+
+@app.route("/loudlev26.jpg")
+def loudlev26():
+    return send_from_directory(os.path.dirname(__file__), "LoudLev26.jpg", mimetype="image/jpeg")
+
+@app.route("/krustage1.png")
+def krustage1():
+    return send_from_directory(os.path.dirname(__file__), "KruStage1.png", mimetype="image/png")
 
 @app.route("/mapelo.png")
 def mapelo_img():
