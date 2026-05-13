@@ -810,6 +810,7 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 
 CN_TEAMS = {
     "EDG", "BLG", "TE", "DRG", "ASE", "AG", "XLG",
+    "WOL",  # Wolves Esports — VCT CN 2025
 }
 
 def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=None):
@@ -840,18 +841,22 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games, filter_teams=N
         vals = list(map_rtgs[m].values())
         avg_map_rtgs[m] = float(np.mean(vals)) if vals else 0.0
 
-    # Compute pick/ban-adjusted rating for each qualifying team
+    # Headline overall_rating = raw decay-weighted Massey — same number the
+    # live BenPom rating (rating_timeline.json) uses, so the historical
+    # rankings page agrees with the modern hub & simulator on what an
+    # "overall rating" means. The earlier Monte Carlo pick/ban adjustment
+    # (pb_adjusted_rating) sometimes produced large deviations from a
+    # team's actual record (e.g. TLN 27-27 rated +2.58) which read as a
+    # bug to users even though the math was internally consistent. The
+    # per-map ratings stored below are still shrunken toward this same
+    # rtgs anchor (see compute_per_map_ratings), so the whole stack is
+    # self-consistent.
     pb_ratings = {}
     for team in rtgs:
         rec = records.get(team, {'w': 0, 'l': 0, 'maps': {}})
         if rec['w'] + rec['l'] < min_games:
             continue
-        team_map_rtgs = {m: map_rtgs[m].get(team, rtgs.get(team, 0.0))
-                         for m in active_maps}
-        if len(active_maps) >= 3:
-            pb_ratings[team] = pb_adjusted_rating(team_map_rtgs, avg_map_rtgs, active_maps)
-        else:
-            pb_ratings[team] = rtgs.get(team, 0.0)
+        pb_ratings[team] = rtgs.get(team, 0.0)
 
     teams_out = {}
     for team in sorted(pb_ratings, key=lambda t: -pb_ratings[t]):

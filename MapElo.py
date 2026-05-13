@@ -2979,7 +2979,18 @@ function clearResult(){
   var sg = document.querySelector('.side-grid');
   if(sg){
     var r = sg.getBoundingClientRect();
-    if(r.top < -20 || r.top > window.innerHeight - 200){
+    var iframeOff = false;
+    if (window !== window.top) {
+      try {
+        var fr = window.frameElement;
+        if (fr) {
+          var pr = fr.getBoundingClientRect();
+          var pw = window.parent.innerWidth, ph = window.parent.innerHeight;
+          if (pr.right <= 0 || pr.left >= pw || pr.bottom <= 0 || pr.top >= ph) iframeOff = true;
+        }
+      } catch(e) {}
+    }
+    if(!iframeOff && (r.top < -20 || r.top > window.innerHeight - 200)){
       try { sg.scrollIntoView({behavior:'smooth', block:'start'}); } catch(e){ sg.scrollIntoView(); }
     }
   }
@@ -3461,6 +3472,22 @@ function renderDramatic(R){
 
 function rvScroll(el, block){
   if(!el) return;
+  // When iframed into the Modern Hub (LOCK_CURRENT), the simulator's reveal
+  // animation keeps firing even after the user has switched to another tab.
+  // scrollIntoView bubbles through ancestor scroll containers, including the
+  // parent window — so a still-running sim would yank the parent page back
+  // to the simulator panel every few hundred ms. Bail out if our iframe is
+  // currently off-screen in the parent's viewport.
+  if (window !== window.top) {
+    try {
+      var fr = window.frameElement;
+      if (fr) {
+        var r = fr.getBoundingClientRect();
+        var pw = window.parent.innerWidth, ph = window.parent.innerHeight;
+        if (r.right <= 0 || r.left >= pw || r.bottom <= 0 || r.top >= ph) return;
+      }
+    } catch(e) { /* cross-origin parent — fall through */ }
+  }
   try { el.scrollIntoView({behavior:'smooth', block: block || 'center'}); }
   catch(e){ el.scrollIntoView(); }
 }
@@ -5568,6 +5595,7 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Modern VCT Hub — Bobo.GG</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
@@ -7304,6 +7332,10 @@ async function init() {
 
   // Always show real progress — poll until backend says ready
   showEl('progressSection');
+  // Scroll to the top so the user sees the progress bar / "Loading…" state
+  // as soon as the backend says it's building. Without this, if the user
+  // already scrolled while waiting, the progress card animates in offscreen.
+  window.scrollTo({top: 0, behavior: 'smooth'});
   if (data.progress) updateProgress(data.progress);
   await pollUntilReady();
 

@@ -221,7 +221,7 @@ PAGE_HTML = """
     <div class="content">
       <p id="intro">Looking ahead into Americas Stage 1 Playoffs, BenPom says that G2 are the no.&nbsp;1 team to beat, which makes sense as the perennial powerhouse of Americas. Yawn. After that it&rsquo;s&hellip; 100 Thieves? And then Leviat&aacute;n? Also, LOUD are in the Playoffs? Suddenly, things look a lot more interesting! This split, we have one of the most interesting fields in domestic history, with narratives galore. Let&rsquo;s discuss and make some predictions!</p>
 
-      <div class="section-bubble-wrap"><span class="section-bubble" id="teams-to-watch"><span class="section-bubble-text">Teams To Watch</span></span></div>
+      <div class="section-bubble-wrap section-bubble-tight"><span class="section-bubble" id="teams-to-watch"><span class="section-bubble-text">Teams To Watch</span></span></div>
 
       <div class="team-heading">
         <img src="/logos/LOUD.png" alt="LOUD" onerror="this.style.display='none'">
@@ -378,7 +378,7 @@ PAGE_HTML = """
 
       <p>In a bracket where there are slim strength margins between 2nd and 5th, every small detraction can have big implications &mdash; especially when only the top 3 teams qualify. For Cryo&rsquo;s sake, maybe this 100 Thieves team can live up to their rating and qualify for their first international since Masters Shanghai in 2024.</p>
 
-      <div class="section-bubble-wrap"><span class="section-bubble" id="shorter-team-thoughts"><span class="section-bubble-text">Shorter Team Thoughts</span></span></div>
+      <div class="section-bubble-wrap section-bubble-tight"><span class="section-bubble" id="shorter-team-thoughts"><span class="section-bubble-text">Shorter Team Thoughts</span></span></div>
 
       <div class="team-heading">
         <img src="/logos/G2.png" alt="G2" onerror="this.style.display='none'">
@@ -699,7 +699,7 @@ PAGE_HTML = """
        </div><!-- /bracket-body -->
       </div>
 
-      <p>Sparing you from unnecessary amounts of analysis, I&rsquo;ll just explain my Kr&uuml; pick. As I&rsquo;ve established, G2 faltered against good teams in Split 1, and no BenPom score would make me able to look past that. In general, their domestic form has been middling, both in Kickoff and Split 1, so I&rsquo;d pass on them. Plus it&rsquo;d be boring to pick the favorites. As for the remaining contenders, the pack between 2 and 5 is extremely close. So, I looked for these little +/&minus;&rsquo;s within that pack.</p>
+      <p>I&rsquo;ll explain my Kr&uuml; pick. As I&rsquo;ve established, G2 faltered against good teams in Split 1, and no BenPom score would make me able to look past that. In general, their domestic form has been middling, both in Kickoff and Split 1, so I&rsquo;d pass on them. Plus it&rsquo;d be boring to pick the favorites. As for the remaining contenders, the pack between 2 and 5 is extremely close. So, I looked for these little +/&minus;&rsquo;s within them.</p>
 
       <ul>
         <li>Leviat&aacute;n are inexperienced, losing their best map, and coming off of two losses. They&rsquo;re the easiest to write off. Having watched their games, I would&rsquo;ve probably picked them two weeks ago, but in recent matches it&rsquo;s been a bit of Neon and friends.</li>
@@ -718,7 +718,7 @@ PAGE_HTML = """
 
       <p>That still places Kr&uuml; at 5th, but it&rsquo;s a better rating.</p>
 
-      <p>People forget how historically great Saadhak is as an IGL, and if he&rsquo;s shooting hard enough to be the 6th-highest-rated player in Americas, it&rsquo;s hard to pass on that in a playoff environment. People have also forgotten that Less has top 5 mechanics in VCT, as he&rsquo;s the 2nd-highest-rated player in Americas now, hitting clips like this:</p>
+      <p>People forget how historically great Saadhak is as an IGL, and if he&rsquo;s shooting hard enough to be the 6th-highest-rated player in Americas, it&rsquo;s hard to pass on that in a playoff environment. People have also forgotten that Less has top-5 mechanics in VCT, as he&rsquo;s the 2nd-highest-rated player in Americas now, hitting clips like this:</p>
 
       <video src="/static/less_clip.mp4" controls playsinline style="width:100%;height:auto;border-radius:10px;display:block;margin:16px 0 32px;background:#000;"></video>
 
