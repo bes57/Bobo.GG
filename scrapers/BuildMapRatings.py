@@ -116,11 +116,12 @@ TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_
 #   HL=12 IM=1 R=0.5 → avg winner rank 2.29 (current; EDG #5 in 2024 after_champs)
 #   HL=8  IM=2 R=1.0 → avg winner rank 1.29 (EDG #2)
 #   HL=5  IM=2 R=1.0 → avg winner rank 1.14 (EDG #1 — best)
-HALF_LIFE_WEEKS   = 3.5    # ECE-optimal — BacktestRatingParams sweep (2026-05-14)
-                            # found this minimizes Test ECE (0.0552 vs 0.0682 at
-                            # HL=5, 19% calibration improvement) at small Brier
-                            # cost (+0.0007). Calibration is what matters for
-                            # Kalshi: when model says 70%, team actually wins 70%.
+HALF_LIFE_WEEKS   = 5.0    # Pareto-optimal config from 1080-point 5D joint
+                            # sweep (BacktestParetoSearch.py, 2026-05-14):
+                            # HL=5 + ROST=0.3 + RD_SCALE=1.5 strictly dominates
+                            # the previous HL=3.5 config on Brier, LogLoss,
+                            # ECE, AND |err|σ simultaneously, while demoting
+                            # 100T to #2 after Shanghai (GEN correctly #1).
 # Brier-optimal config (BacktestRatingParams3.py): joint sweep on 1,491
 # historical series found this minimizes 2026 holdout Brier (0.241 → 0.237,
 # -1.8%) and |err|σ (0.133 → 0.129). EDG drops to #3 after 2024 Champions
@@ -136,7 +137,12 @@ CHAMPIONS_MULT    = 2.0    # was 4.0 — Champions still special but less inflat
 # nonlinear function) but prevents single blowouts from disproportionately
 # dominating a team's rating contribution.
 RD_TRANSFORM      = 'sqrt'  # 'diff' | 'sqrt'
-RD_SCALE          = 2.0     # multiplier on the transformed signal
+RD_SCALE          = 1.5     # Pareto-optimal multiplier on the sqrt-transformed
+                             # round-diff signal. 1.5 was found by the 1080-point
+                             # joint sweep to dominate 2.0 on ALL prediction
+                             # metrics simultaneously when combined with HL=5
+                             # and ROST=0.3. Compresses rating distribution =
+                             # less overconfident predictions = better LogLoss.
 INTL_MULTIPLIER   = INTL_WIN_MULT  # legacy alias used in shrinkage weight counts
 SHRINK_K          = 12     # James-Stein shrinkage strength for per-map ratings
 MC_N_SIMS         = 10000 # Monte Carlo veto simulations per team per snapshot
@@ -519,7 +525,9 @@ def _team_continuity_factor(team, game_date, ref_date):
 # credit going into next season, without over-anchoring all stable rosters.
 # Tuned to keep winner-rank avg at 1.14 AND lift EDG to #2 in 2025
 # before_bangkok after winning 2024 Champions + keeping full roster.
-ROSTER_PERSISTENCE = 0.7   # was 0.3 — BRIER-optimal config (BacktestRatingParams3.py)
+ROSTER_PERSISTENCE = 0.3   # Pareto-optimal: combined with HL=5 + RD_SCALE=1.5
+                            # (BacktestParetoSearch.py 2026-05-14). One-at-a-time
+                            # sweeps preferred ROST=0.7 but interactions matter.
 
 
 def _effective_weeks_ago(team, game_date, ref_date):
