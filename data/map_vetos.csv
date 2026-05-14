@@ -10322,3 +10322,10 @@ MatchID,step,team,action,map
 659487,5,DRG,pick,Haven
 659487,6,XLG,pick,Split
 659487,7,,remains,Pearl
+645503,1,NRG,ban,Bind
+645503,2,SEN,ban,Pearl
+645503,3,NRG,pick,Fracture
+645503,4,SEN,pick,Breeze
+645503,5,NRG,ban,Split
+645503,6,SEN,ban,Haven
+645503,7,,remains,Lotus

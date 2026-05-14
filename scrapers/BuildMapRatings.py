@@ -117,9 +117,14 @@ TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_
 #   HL=8  IM=2 R=1.0 → avg winner rank 1.29 (EDG #2)
 #   HL=5  IM=2 R=1.0 → avg winner rank 1.14 (EDG #1 — best)
 HALF_LIFE_WEEKS   = 5      # short — recent intl wins dominate (especially trophy wins)
-INTL_WIN_MULT     = 2.0    # intl games count 2x (Masters)
-INTL_LOSS_MULT    = 2.0    # symmetric
-CHAMPIONS_MULT    = 4.0    # Champions = year-end title, weight 4x (vs IM=2 for Masters)
+# Brier-optimal config (BacktestRatingParams3.py): joint sweep on 1,491
+# historical series found this minimizes 2026 holdout Brier (0.241 → 0.237,
+# -1.8%) and |err|σ (0.133 → 0.129). EDG drops to #3 after 2024 Champions
+# under this config — accepted trade-off because the model is for Kalshi
+# probability bets, not trophy-winner rank visuals.
+INTL_WIN_MULT     = 1.0    # was 2.0 — no intl boost (over-weighted a few high-leverage tournaments)
+INTL_LOSS_MULT    = 1.0    # symmetric with INTL_WIN_MULT
+CHAMPIONS_MULT    = 2.0    # was 4.0 — Champions still special but less inflated
 # Signal transform on per-map round differential. Using sqrt(|rd|) with sign
 # is a standard variance-stabilizing transformation — gives diminishing returns
 # on large margins (a 13-1 blowout contributes sqrt(12)=3.46 instead of 12,
@@ -510,7 +515,7 @@ def _team_continuity_factor(team, game_date, ref_date):
 # credit going into next season, without over-anchoring all stable rosters.
 # Tuned to keep winner-rank avg at 1.14 AND lift EDG to #2 in 2025
 # before_bangkok after winning 2024 Champions + keeping full roster.
-ROSTER_PERSISTENCE = 0.3
+ROSTER_PERSISTENCE = 0.7   # was 0.3 — BRIER-optimal config (BacktestRatingParams3.py)
 
 
 def _effective_weeks_ago(team, game_date, ref_date):
