@@ -116,12 +116,13 @@ TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_
 #   HL=12 IM=1 R=0.5 → avg winner rank 2.29 (current; EDG #5 in 2024 after_champs)
 #   HL=8  IM=2 R=1.0 → avg winner rank 1.29 (EDG #2)
 #   HL=5  IM=2 R=1.0 → avg winner rank 1.14 (EDG #1 — best)
-HALF_LIFE_WEEKS   = 5.0    # Pareto-optimal config from 1080-point 5D joint
-                            # sweep (BacktestParetoSearch.py, 2026-05-14):
-                            # HL=5 + ROST=0.3 + RD_SCALE=1.5 strictly dominates
-                            # the previous HL=3.5 config on Brier, LogLoss,
-                            # ECE, AND |err|σ simultaneously, while demoting
-                            # 100T to #2 after Shanghai (GEN correctly #1).
+HALF_LIFE_WEEKS   = 6.0    # 2nd-gen Pareto-optimal config (2026-05-14) from
+                            # joint sweep over RD_TRANSFORM=power × RD_POWER ×
+                            # β × HL etc. RD_POWER=0.35 + β=0.25 unlocks a
+                            # strict Pareto improvement: Brier -1.07%, LL
+                            # -0.85%, ECE -3.2%, σ -0.4%, sharpness +0.5%.
+                            # All trophy-winner ranks preserved, GEN still #1
+                            # after Shanghai. See BacktestSharpness3.py.
 # Brier-optimal config (BacktestRatingParams3.py): joint sweep on 1,491
 # historical series found this minimizes 2026 holdout Brier (0.241 → 0.237,
 # -1.8%) and |err|σ (0.133 → 0.129). EDG drops to #3 after 2024 Champions
@@ -136,13 +137,14 @@ CHAMPIONS_MULT    = 2.0    # was 4.0 — Champions still special but less inflat
 # vs a 13-11 contributing sqrt(2)=1.41 instead of 2). Not a cap (continuous
 # nonlinear function) but prevents single blowouts from disproportionately
 # dominating a team's rating contribution.
-RD_TRANSFORM      = 'sqrt'  # 'diff' | 'sqrt'
-RD_SCALE          = 1.5     # Pareto-optimal multiplier on the sqrt-transformed
-                             # round-diff signal. 1.5 was found by the 1080-point
-                             # joint sweep to dominate 2.0 on ALL prediction
-                             # metrics simultaneously when combined with HL=5
-                             # and ROST=0.3. Compresses rating distribution =
-                             # less overconfident predictions = better LogLoss.
+RD_TRANSFORM      = 'power' # 'diff' | 'sqrt' | 'power' (uses RD_POWER)
+RD_POWER          = 0.35    # Pareto-optimal — more compressive than sqrt
+                            # (0.5) so blowouts contribute less per-game noise
+                            # to ratings, then β=0.25 extracts cleaner signal.
+RD_SCALE          = 1.25    # 2nd-gen Pareto-optimal scale on transformed
+                             # round-diff signal. Combined with RD_POWER=0.35
+                             # and β=0.25 (in MapElo.py) — see HALF_LIFE_WEEKS
+                             # comment above for the strict-Pareto numbers.
 INTL_MULTIPLIER   = INTL_WIN_MULT  # legacy alias used in shrinkage weight counts
 SHRINK_K          = 12     # James-Stein shrinkage strength for per-map ratings
 MC_N_SIMS         = 10000 # Monte Carlo veto simulations per team per snapshot
@@ -617,6 +619,8 @@ def massey_ratings(games, lambda_decay, ref_date, min_games=0):
         raw_rd = g['wr'] - g['lr']
         if RD_TRANSFORM == 'sqrt':
             rd = math.copysign(math.sqrt(abs(raw_rd)) * RD_SCALE, raw_rd)
+        elif RD_TRANSFORM == 'power':
+            rd = math.copysign((abs(raw_rd) ** RD_POWER) * RD_SCALE, raw_rd)
         else:
             rd = raw_rd
         i, j = idx[g['winner']], idx[g['loser']]

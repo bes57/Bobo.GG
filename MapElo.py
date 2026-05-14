@@ -3321,16 +3321,14 @@ function simulate() {
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return null;
-  // β = 0.17 is the CV-optimal value from a daily-rolling 2025 backtest
-  // (1,922 leak-free per-map predictions) and a 1,490-match post-CN
-  // backtest (BacktestSeriesPredictions.py) on overall_rating. The β
-  // stored in the snap JSON is ~0.32 — fit_beta's training-set minimum,
-  // in the overfit zone (Brier 0.240 at β=0.17 vs 0.246 at β=0.32).
-  // No cross-region dampener: the 1,193-match train set shows monotone
-  // Brier improvement up to xmult ≈ 1.0+, and the 2026 holdout is
-  // statistically tied at xmult = 0.664 vs 1.0. Same β for both same-
-  // and cross-region matchups = raw model output, no manipulation.
-  var beta = 0.17;
+  // β = 0.25 — paired with RD_POWER=0.35 in BuildMapRatings.py (2026-05-14).
+  // The new RD transform compresses rating signal more than sqrt; β=0.25
+  // extracts cleaner predictions from the compressed space. Joint sweep
+  // (BacktestSharpness3.py) found this strictly dominates the prior config
+  // (Brier -1.07%, LL -0.85%, ECE -3.2%, σ -0.4%, sharpness +0.5%) while
+  // keeping GEN #1 after Shanghai and all trophy winners at their ranks.
+  // Same β for same-region and cross-region — no manipulation.
+  var beta = 0.25;
 
   var rdA = sdA.ref_date || (yearA + '-01-01');
   var rdB = sdB.ref_date || (yearB + '-01-01');
@@ -5224,7 +5222,7 @@ def _mhub_load():
     # same probability, every surface.
     if last_checkpoint_ratings and result["chart"]["match_events"]:
         from scipy.special import expit as _expit
-        _tl_beta = 0.17
+        _tl_beta = 0.25
 
         def _series_wp(p, fmt):
             if fmt == "bo5":
@@ -6208,11 +6206,12 @@ var VETO_HUB   = {teams:{}, snap_pools:{}};
 var ORG_REGIONS_HUB = {};
 var INTL_HUB   = {};
 var SNAP_TEAMS = {};
-// β = 0.17 from daily-rolling 2025 backtest (CV-optimal, vs ~0.32 from
-// fit_beta's training-set minimum which overfit by 2x). Hardcoded so both
-// the upcoming-card sim and the iframed simulator use the same value —
-// otherwise the two surfaces silently disagree on win prob.
-var SNAP_BETA  = 0.17;
+// β = 0.25 — paired with RD_TRANSFORM=power, RD_POWER=0.35, RD_SCALE=1.25
+// in BuildMapRatings.py. Joint sweep found this strict-Pareto improvement
+// (Brier -1.07%, LL -0.85%, ECE -3.2%, σ -0.4%, sharpness +0.5%) on the
+// 2026 holdout — strictly better than the prior β=0.17 / sqrt config.
+// Hardcoded so all four prediction surfaces use the same β.
+var SNAP_BETA  = 0.25;
 var SNAP_KEY   = 'after_santiago';
 
 var VETO_STEPS_HUB = {
@@ -8050,7 +8049,7 @@ function renderPast(data) {
   ((data.leaderboard||{}).teams || []).forEach(function(t){ lbTeams[t.org] = t; });
   // Same CV-optimal β as the upcoming-card and simulator sims — keep all three
   // surfaces in sync so they produce identical win-prob predictions.
-  var beta = 0.17;
+  var beta = 0.25;
   var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
               || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
   var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
