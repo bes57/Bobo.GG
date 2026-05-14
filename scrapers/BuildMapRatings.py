@@ -116,7 +116,11 @@ TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_
 #   HL=12 IM=1 R=0.5 → avg winner rank 2.29 (current; EDG #5 in 2024 after_champs)
 #   HL=8  IM=2 R=1.0 → avg winner rank 1.29 (EDG #2)
 #   HL=5  IM=2 R=1.0 → avg winner rank 1.14 (EDG #1 — best)
-HALF_LIFE_WEEKS   = 5      # short — recent intl wins dominate (especially trophy wins)
+HALF_LIFE_WEEKS   = 3.5    # ECE-optimal — BacktestRatingParams sweep (2026-05-14)
+                            # found this minimizes Test ECE (0.0552 vs 0.0682 at
+                            # HL=5, 19% calibration improvement) at small Brier
+                            # cost (+0.0007). Calibration is what matters for
+                            # Kalshi: when model says 70%, team actually wins 70%.
 # Brier-optimal config (BacktestRatingParams3.py): joint sweep on 1,491
 # historical series found this minimizes 2026 holdout Brier (0.241 → 0.237,
 # -1.8%) and |err|σ (0.133 → 0.129). EDG drops to #3 after 2024 Champions
@@ -584,15 +588,23 @@ def massey_ratings(games, lambda_decay, ref_date, min_games=0):
         cont_w = _team_continuity_factor(g['winner'], g['date'], ref_date)
         cont_l = _team_continuity_factor(g['loser'],  g['date'], ref_date)
         base_w *= math.sqrt(cont_w * cont_l)
-        # Event prestige multiplier: Champions > Masters > regional
+        # Event prestige multiplier: Champions > Masters > regional.
+        # Win/loss asymmetry on intl events: INTL_LOSS_MULT > INTL_WIN_MULT
+        # means intl losses count more than intl wins. This penalizes
+        # "showed up and got rolled" relative to dominant domestic teams
+        # who didn't attend — i.e. fixes the 100T-Shanghai problem where
+        # going 2-2 at Masters doesn't dent their pre-event Americas rating.
         if is_champions:
-            event_mult = CHAMPIONS_MULT
+            win_mult = CHAMPIONS_MULT
+            los_mult = CHAMPIONS_MULT
         elif is_intl:
-            event_mult = INTL_WIN_MULT
+            win_mult = INTL_WIN_MULT
+            los_mult = INTL_LOSS_MULT
         else:
-            event_mult = 1.0
-        w_win = base_w * event_mult
-        w_los = base_w * event_mult
+            win_mult = 1.0
+            los_mult = 1.0
+        w_win = base_w * win_mult
+        w_los = base_w * los_mult
         w_sym = min(w_win, w_los)  # symmetric part for M matrix (ensures PSD)
         raw_rd = g['wr'] - g['lr']
         if RD_TRANSFORM == 'sqrt':
