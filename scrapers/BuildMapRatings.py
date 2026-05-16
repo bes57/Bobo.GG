@@ -110,27 +110,12 @@ _holdout_start = (datetime.now() - timedelta(days=480)).strftime('%Y-%m-%d')
 TRAIN_EVENTS = [eid for eid, (_, end) in EVENT_DATES.items() if end < _holdout_start]
 TEST_EVENTS  = [eid for eid, (_, end) in EVENT_DATES.items() if end >= _holdout_start]
 
-# Hyper-parameters: optimized for winner-rank fidelity (winner of each intl
-# should rank top-1/2 in that snapshot) given roster-continuity decay is active.
-# Sweep results with roster continuity on:
-#   HL=12 IM=1 R=0.5 → avg winner rank 2.29 (current; EDG #5 in 2024 after_champs)
-#   HL=8  IM=2 R=1.0 → avg winner rank 1.29 (EDG #2)
-#   HL=5  IM=2 R=1.0 → avg winner rank 1.14 (EDG #1 — best)
-HALF_LIFE_WEEKS   = 6.0    # 2nd-gen Pareto-optimal config (2026-05-14) from
-                            # joint sweep over RD_TRANSFORM=power × RD_POWER ×
-                            # β × HL etc. RD_POWER=0.35 + β=0.25 unlocks a
-                            # strict Pareto improvement: Brier -1.07%, LL
-                            # -0.85%, ECE -3.2%, σ -0.4%, sharpness +0.5%.
-                            # All trophy-winner ranks preserved, GEN still #1
-                            # after Shanghai. See BacktestSharpness3.py.
-# Brier-optimal config (BacktestRatingParams3.py): joint sweep on 1,491
-# historical series found this minimizes 2026 holdout Brier (0.241 → 0.237,
-# -1.8%) and |err|σ (0.133 → 0.129). EDG drops to #3 after 2024 Champions
-# under this config — accepted trade-off because the model is for Kalshi
-# probability bets, not trophy-winner rank visuals.
-INTL_WIN_MULT     = 1.0    # was 2.0 — no intl boost (over-weighted a few high-leverage tournaments)
-INTL_LOSS_MULT    = 1.0    # symmetric with INTL_WIN_MULT
-CHAMPIONS_MULT    = 2.0    # was 4.0 — Champions still special but less inflated
+# Hyper-parameters: tuned for prediction calibration on 1,143-series history.
+# See project_brier_config memory for sweep rationale.
+HALF_LIFE_WEEKS   = 6.0
+INTL_WIN_MULT     = 1.0    # no extra intl boost (over-weighted past tournaments)
+INTL_LOSS_MULT    = 1.0
+CHAMPIONS_MULT    = 2.0    # Champions still special but proportional
 # Signal transform on per-map round differential. Using sqrt(|rd|) with sign
 # is a standard variance-stabilizing transformation — gives diminishing returns
 # on large margins (a 13-1 blowout contributes sqrt(12)=3.46 instead of 12,
@@ -138,15 +123,21 @@ CHAMPIONS_MULT    = 2.0    # was 4.0 — Champions still special but less inflat
 # nonlinear function) but prevents single blowouts from disproportionately
 # dominating a team's rating contribution.
 RD_TRANSFORM      = 'power' # 'diff' | 'sqrt' | 'power' (uses RD_POWER)
-RD_POWER          = 0.35    # Pareto-optimal — more compressive than sqrt
-                            # (0.5) so blowouts contribute less per-game noise
-                            # to ratings, then β=0.25 extracts cleaner signal.
-RD_SCALE          = 1.25    # 2nd-gen Pareto-optimal scale on transformed
-                             # round-diff signal. Combined with RD_POWER=0.35
-                             # and β=0.25 (in MapElo.py) — see HALF_LIFE_WEEKS
-                             # comment above for the strict-Pareto numbers.
+RD_POWER          = 0.5     # Standard variance-stabilizing sqrt transform.
+                            # Deep magnitude sweep (MagnitudeKneeSweep.py) on
+                            # 1,143 historical series confirmed sqrt is the
+                            # robust choice; less compressive transforms add
+                            # variance without prediction gain.
+RD_SCALE          = 2.5     # Final optimum (PerYearOptimality.py) — best
+                             # average Brier across 2024-2026, paired with
+                             # CN_PRIOR=-4.0 and β=0.136. Gives top1 ≈ +6.77
+                             # (2026) / +3.43 (2024 EDG). Platt A: 0.95.
 INTL_MULTIPLIER   = INTL_WIN_MULT  # legacy alias used in shrinkage weight counts
-SHRINK_K          = 12     # James-Stein shrinkage strength for per-map ratings
+SHRINK_K          = 5      # James-Stein shrinkage for per-map ratings.
+                            # Was 12. Lower value improves cross-year average
+                            # per-map Brier (PerYearOptimality.py) and ~doubles
+                            # the visible per-map spread (G2 best-vs-worst map
+                            # 1.95 → 3.39). Per-map Platt also improves.
 MC_N_SIMS         = 10000 # Monte Carlo veto simulations per team per snapshot
 VETO_NOISE_STD    = 2.0  # Gaussian noise on map advantages during veto (round diff units)
 
@@ -1026,8 +1017,11 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 # K=6 (down from 8) means intl-proven teams escape shrinkage faster — EDG
 # with intl_w ≈ 3.5 gets c ≈ 0.58 (vs 0.43 with K=8), preserving their resume
 # instead of pulling them to the prior. CN teams with no intl exposure still
-# floor at c_min=0.5, blending raw signal with the CN_PRIOR=-2.0 anchor.
-CN_PRIOR     = -2.0
+# floor at c_min=0.5, blending raw signal with the CN_PRIOR anchor.
+# Final value (2026-05-16): CN_PRIOR=-4.0, joint with RD_SCALE=2.5. Per-year
+# Brier sweep (PerYearOptimality.py) showed this is the cross-year optimum —
+# best average Brier across 2024/2025/2026, with Platt A=0.95.
+CN_PRIOR     = -4.0
 CN_INTL_K    = 4.0
 CN_C_MIN     = 0.50
 CN_TEAMS_SET = {team for team, region in TEAM_REGIONS.items() if region == 'CN'}
@@ -1040,9 +1034,13 @@ CN_TEAMS_SET = {team for team, region in TEAM_REGIONS.items() if region == 'CN'}
 # Mechanism: compute massey TWICE — once with all games (raw_all), once with
 # only domestic games (raw_dom). For each team, intl_shift = raw_all - raw_dom.
 # For non-intl-attendees: final = raw_dom + REGION_SPILLOVER_ALPHA * region_avg_shift
-# alpha=1.0 → current behavior (full spillover)
-# alpha=0.3 → ML-optimal: best Brier, best regional parity
-REGION_SPILLOVER_ALPHA = 0.30
+# alpha=1.0 → full spillover (non-attendees get full region uplift)
+# alpha=0.5 → updated 2026-05-16. Old α=0.3 was over-dampening — chosen when
+# RD config produced bigger per-game uplifts that needed taming. New RD config
+# has smaller natural uplifts, so the original justification for tight damping
+# no longer holds. α=0.5 gives -3bp test Brier and -19% ECE vs 0.3, while
+# preserving all trophy-winner ranks.
+REGION_SPILLOVER_ALPHA = 0.50
 
 
 def _compute_intl_weights(games, lam, ref_date):

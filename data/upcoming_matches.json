@@ -1,62 +1,52 @@
 [
   {
     "team_a": "FURIA",
-    "team_b": "LEVIAT\u00c1N",
+    "team_b": "NRG",
     "org_a": "FUR",
-    "org_b": "LEV",
-    "date": "2026-05-14",
+    "org_b": "NRG",
+    "date": "2026-05-16",
     "region": "Americas",
     "event": "2026 Stage 1 \u2014 Americas",
     "format": "bo3"
   },
   {
-    "team_a": "G2 Esports",
-    "team_b": "100 Thieves",
-    "org_a": "G2",
-    "org_b": "100T",
-    "date": "2026-05-14",
+    "team_a": "100 Thieves",
+    "team_b": "LOUD",
+    "org_a": "100T",
+    "org_b": "LOUD",
+    "date": "2026-05-16",
     "region": "Americas",
     "event": "2026 Stage 1 \u2014 Americas",
     "format": "bo3"
   },
   {
-    "team_a": "FUT Esports",
-    "team_b": "Team Vitality",
-    "org_a": "FUT",
-    "org_b": "VIT",
-    "date": "2026-05-15",
+    "team_a": "Team Vitality",
+    "team_b": "Team Heretics",
+    "org_a": "VIT",
+    "org_b": "TH",
+    "date": "2026-05-17",
     "region": "EMEA",
     "event": "2026 Stage 1 \u2014 EMEA",
     "format": "bo3"
   },
   {
-    "team_a": "Team Heretics",
-    "team_b": "Eternal Fire",
-    "org_a": "TH",
-    "org_b": "EF",
-    "date": "2026-05-15",
-    "region": "EMEA",
-    "event": "2026 Stage 1 \u2014 EMEA",
-    "format": "bo3"
-  },
-  {
-    "team_a": "Global Esports",
-    "team_b": "FULL SENSE",
-    "org_a": "GE",
-    "org_b": "FS",
-    "date": "2026-05-15",
-    "region": "Pacific",
-    "event": "2026 Stage 1 \u2014 Pacific",
-    "format": "bo3"
-  },
-  {
-    "team_a": "T1",
+    "team_a": "FULL SENSE",
     "team_b": "Paper Rex",
-    "org_a": "T1",
+    "org_a": "FS",
     "org_b": "PRX",
-    "date": "2026-05-15",
+    "date": "2026-05-17",
     "region": "Pacific",
     "event": "2026 Stage 1 \u2014 Pacific",
+    "format": "bo3"
+  },
+  {
+    "team_a": "LEVIAT\u00c1N",
+    "team_b": "G2 Esports",
+    "org_a": "LEV",
+    "org_b": "G2",
+    "date": "2026-05-22",
+    "region": "Americas",
+    "event": "2026 Stage 1 \u2014 Americas",
     "format": "bo3"
   }
 ]

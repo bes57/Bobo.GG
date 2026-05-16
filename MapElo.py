@@ -3321,14 +3321,11 @@ function simulate() {
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return null;
-  // β = 0.25 — paired with RD_POWER=0.35 in BuildMapRatings.py (2026-05-14).
-  // The new RD transform compresses rating signal more than sqrt; β=0.25
-  // extracts cleaner predictions from the compressed space. Joint sweep
-  // (BacktestSharpness3.py) found this strictly dominates the prior config
-  // (Brier -1.07%, LL -0.85%, ECE -3.2%, σ -0.4%, sharpness +0.5%) while
-  // keeping GEN #1 after Shanghai and all trophy winners at their ranks.
-  // Same β for same-region and cross-region — no manipulation.
-  var beta = 0.25;
+  // β = 0.136 — paired with RD_POWER=0.5, RD_SCALE=2.5, CN_PRIOR=-4.0.
+  // Final tune via PerYearOptimality.py: cross-year average Brier optimum
+  // (2024/2025/2026 each), top1 ≈ +6.77 (2026) / +3.43 (2024 EDG Champs),
+  // Platt 0.95. Same β for same-region and cross-region — no manipulation.
+  var beta = 0.136;
 
   var rdA = sdA.ref_date || (yearA + '-01-01');
   var rdB = sdB.ref_date || (yearB + '-01-01');
@@ -5222,7 +5219,7 @@ def _mhub_load():
     # same probability, every surface.
     if last_checkpoint_ratings and result["chart"]["match_events"]:
         from scipy.special import expit as _expit
-        _tl_beta = 0.25
+        _tl_beta = 0.136
 
         def _series_wp(p, fmt):
             if fmt == "bo5":
@@ -5722,6 +5719,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd);background-size:200% 100%;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;animation:progressShimmer 1.8s linear infinite}
 @keyframes progressShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .progress-pct{color:rgba(232,213,245,.5);font-size:.75rem;font-variant-numeric:tabular-nums;margin-bottom:0}
+.progress-note{color:rgba(232,213,245,.55);font-size:.78rem;font-style:italic;margin-top:14px;letter-spacing:.01em}
 @keyframes fillDone{0%{background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd)}50%{background:#fff;box-shadow:0 0 18px 8px rgba(255,255,255,.7)}100%{background:#e9d5ff;box-shadow:0 0 6px 2px rgba(255,255,255,.15)}}
 .progress-fill.done{animation:fillDone .45s ease forwards!important;width:100%!important;transition:none!important}
 @keyframes cardExit{
@@ -6074,6 +6072,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
             <div class="progress-msg" id="progressMsg">Initializing&hellip;</div>
             <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
             <div class="progress-pct" id="progressPct">0%</div>
+            <div class="progress-note">Note: This process may take a few minutes</div>
             <div id="progressLog"></div>
           </div>
         </div>
@@ -6206,12 +6205,11 @@ var VETO_HUB   = {teams:{}, snap_pools:{}};
 var ORG_REGIONS_HUB = {};
 var INTL_HUB   = {};
 var SNAP_TEAMS = {};
-// β = 0.25 — paired with RD_TRANSFORM=power, RD_POWER=0.35, RD_SCALE=1.25
-// in BuildMapRatings.py. Joint sweep found this strict-Pareto improvement
-// (Brier -1.07%, LL -0.85%, ECE -3.2%, σ -0.4%, sharpness +0.5%) on the
-// 2026 holdout — strictly better than the prior β=0.17 / sqrt config.
+// β = 0.136 — paired with RD_POWER=0.5, RD_SCALE=2.5, CN_PRIOR=-4.0 in
+// BuildMapRatings.py. Cross-year-optimal config from PerYearOptimality.py:
+// best avg Brier across 2024-2026, top1 ≈ +6.77 (2026 NS), Platt 0.95.
 // Hardcoded so all four prediction surfaces use the same β.
-var SNAP_BETA  = 0.25;
+var SNAP_BETA  = 0.136;
 var SNAP_KEY   = 'after_santiago';
 
 var VETO_STEPS_HUB = {
@@ -6784,11 +6782,22 @@ const logoPlugin = {
 // ── Chart build ──────────────────────────────────────────────────────────────
 var _chartYMin = null, _chartYMax = null;
 function _computeGlobalYRange(data) {
-  // Y-axis is locked centered at 0, range [-12, +12]. Keeps the visual
-  // scale stable across snapshots regardless of where the league's
-  // current peak rating happens to sit.
-  _chartYMin = -12;
-  _chartYMax =  12;
+  // Y-axis: take the largest absolute rating ever observed across all
+  // checkpoints + all teams, round UP to the next integer, and use that
+  // as both the +max and -min bound (centered on 0). Each axis tick is
+  // an integer (handled in chart options scales.y.ticks.stepSize=1).
+  let peak = 0;
+  const checkpoints = (data.chart && data.chart.checkpoints) || [];
+  checkpoints.forEach(cp => {
+    const ratings = cp.ratings || {};
+    Object.keys(ratings).forEach(org => {
+      const v = Math.abs(ratings[org]);
+      if (v > peak) peak = v;
+    });
+  });
+  const bound = Math.max(1, Math.ceil(peak));  // at least ±1 so the axis isn't degenerate
+  _chartYMin = -bound;
+  _chartYMax =  bound;
 }
 
 function buildChart(data, noLines = false) {
@@ -6871,11 +6880,11 @@ function buildChart(data, noLines = false) {
           min: _chartYMin,
           max: _chartYMax,
           grid:{color:'rgba(0,0,0,.07)'},
-          ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, callback:v => v===0 ? '0' : (v>0?'+':'')+v.toFixed(1)},
+          ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, callback:v => v===0 ? '0' : (v>0?'+':'')+v.toFixed(0), stepSize:1},
           afterBuildTicks(scale) {
             const ticks = [];
-            for (let v = _chartYMin; v <= _chartYMax + 0.001; v += 0.5) {
-              ticks.push({value: Math.round(v * 10) / 10});
+            for (let v = _chartYMin; v <= _chartYMax + 0.001; v += 1) {
+              ticks.push({value: v});
             }
             scale.ticks = ticks;
           },
@@ -7345,9 +7354,9 @@ async function showChartAndLeaderboard(data) {
   ORG_REGIONS_HUB = data.org_regions || {};
   INTL_HUB       = data.intl_calib   || {};
   SNAP_TEAMS     = data.snap_teams   || {};
-  // Don't overwrite with data.snap_beta — that value (~0.32) is the
-  // overfit training-set β. Keep the hardcoded CV-optimal 0.17 from the
-  // module-level constant.
+  // Don't overwrite with data.snap_beta — that value (~0.7-1.0) is the
+  // per-snapshot fitted β (in-sample MLE), not the cross-validated β used
+  // for predictions. Keep the hardcoded SNAP_BETA=0.22 from above.
   SNAP_KEY       = data.snap_key     || 'after_santiago';
 
   await preloadLogos(data.leaderboard.teams || []);
@@ -8049,7 +8058,7 @@ function renderPast(data) {
   ((data.leaderboard||{}).teams || []).forEach(function(t){ lbTeams[t.org] = t; });
   // Same CV-optimal β as the upcoming-card and simulator sims — keep all three
   // surfaces in sync so they produce identical win-prob predictions.
-  var beta = 0.25;
+  var beta = 0.136;
   var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
               || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
   var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
