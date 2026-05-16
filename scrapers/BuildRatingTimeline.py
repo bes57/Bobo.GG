@@ -30,12 +30,14 @@ from MoreTestingMaybeFiles import ALL_EVENTS
 from BuildMapRatings import (
     massey_ratings,
     _compute_intl_weights,
+    _compute_indirect_intl_w,
     INTL_EVENTS,
     HALF_LIFE_WEEKS,
     INTL_WIN_MULT  as _BMR_INTL_MULT,
     CN_PRIOR,
     CN_INTL_K,
     CN_C_MIN,
+    CN_INDIRECT_WEIGHT,
     CN_TEAMS_SET,
 )
 
@@ -47,13 +49,20 @@ INTL_MULT     = _BMR_INTL_MULT                 # share intl multiplier (for lega
 MIN_GAMES     = 5     # min games for a team to appear in the timeline
 
 
-def _apply_cn_shrinkage(ratings, intl_weights, prior=CN_PRIOR, K=CN_INTL_K,
-                         c_min=CN_C_MIN):
-    """Identical formula to BuildMapRatings._apply_cn_shrinkage."""
+def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=None,
+                         prior=CN_PRIOR, K=CN_INTL_K, c_min=CN_C_MIN,
+                         indirect_weight=CN_INDIRECT_WEIGHT):
+    """Identical formula to BuildMapRatings._apply_cn_shrinkage —
+    uses direct + indirect intl evidence, no floor."""
+    if games is not None and lam is not None and ref_date is not None:
+        indirect = _compute_indirect_intl_w(games, intl_weights, lam, ref_date)
+    else:
+        indirect = {}
     out = {}
     for t, r in ratings.items():
         if t in CN_TEAMS_SET:
-            c = max(c_min, min(intl_weights.get(t, 0.0) / K, 1.0))
+            evidence = intl_weights.get(t, 0.0) + indirect_weight * indirect.get(t, 0.0)
+            c = max(c_min, min(evidence / K, 1.0))
             out[t] = c * r + (1 - c) * prior
         else:
             out[t] = r
@@ -279,7 +288,8 @@ def build_2026_timeline(all_games, existing=None):
         # _compute_intl_weights from BuildMapRatings mirrors massey's exact
         # weighting (roster, Champions mult, sqrt rd) so c uses the right input.
         intl_w        = _compute_intl_weights(solve_games, LAMBDA_DECAY, day_dt)
-        ratings_after = _apply_cn_shrinkage(ratings_after_raw, intl_w)
+        ratings_after = _apply_cn_shrinkage(ratings_after_raw, intl_w,
+                                              solve_games, LAMBDA_DECAY, day_dt)
         prev_ratings  = ratings_after
 
         checkpoints.append({

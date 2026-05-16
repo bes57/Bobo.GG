@@ -1021,9 +1021,20 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 # Final value (2026-05-16): CN_PRIOR=-4.0, joint with RD_SCALE=2.5. Per-year
 # Brier sweep (PerYearOptimality.py) showed this is the cross-year optimum —
 # best average Brier across 2024/2025/2026, with Platt A=0.95.
-CN_PRIOR     = -4.0
-CN_INTL_K    = 4.0
-CN_C_MIN     = 0.50
+#
+# 2026-05-16 v7: replaced c_min=0.5 floor with INDIRECT intl evidence.
+# When an untested CN team plays tested CN teams a lot (e.g. BLG plays EDG
+# multiple times), they accumulate "implicit calibration credit". Formula:
+#   evidence = direct_intl_w + CN_INDIRECT_WEIGHT * indirect_intl_w
+#     where indirect_intl_w = sum over CN-vs-CN games of (decay * opp_direct_intl_w)
+#   c = min(evidence / K, 1.0)   ← NO FLOOR
+# Per-year Brier sweep (CNIndirectOptimize.py) found iw=0.7 minimizes full
+# Brier (+1.1bp vs deployed floor-version). BLG/DRG/TYL rise into the -0.5
+# to -1.0 range; NOVA/WOL stay correctly deeply negative.
+CN_PRIOR             = -4.0
+CN_INTL_K            = 2.0
+CN_C_MIN             = 0.0    # NO FLOOR — Bayesian evidence accumulation
+CN_INDIRECT_WEIGHT   = 0.7    # Weight for indirect (intra-CN-via-tested) evidence
 CN_TEAMS_SET = {team for team, region in TEAM_REGIONS.items() if region == 'CN'}
 
 # ── Regional cluster spillover dampener ───────────────────────────────────────
@@ -1067,17 +1078,47 @@ def _compute_intl_weights(games, lam, ref_date):
     return iw
 
 
-def _apply_cn_shrinkage(ratings, intl_weights, prior=CN_PRIOR, K=CN_INTL_K,
-                         c_min=CN_C_MIN):
-    """Shrink CN teams toward `prior` based on intl confidence. Non-CN untouched.
+def _compute_indirect_intl_w(games, intl_weights, lam, ref_date):
+    """For each CN team t, sum over CN-vs-CN games of (decay * opp_direct_intl_w).
 
-    c_min floor preserves some raw signal even for 0-intl teams so a great
-    intra-CN record doesn't collapse to the same rating as a terrible one.
+    This is the 'indirect intl evidence': how much an untested CN team has
+    been calibrated by playing intl-tested CN teams. Tested teams get small
+    indirect (their opponents are mostly untested CN with intl_w ≈ 0).
     """
+    indirect = {}
+    for g in games:
+        if g.get('event_id') in INTL_EVENTS:
+            continue  # direct intl already counted in intl_weights
+        a, b = g['winner'], g['loser']
+        if a not in CN_TEAMS_SET or b not in CN_TEAMS_SET:
+            continue  # only CN-vs-CN games contribute indirect evidence
+        eff_a = _effective_weeks_ago(a, g['date'], ref_date)
+        eff_b = _effective_weeks_ago(b, g['date'], ref_date)
+        decay = math.sqrt(math.exp(-lam * eff_a) * math.exp(-lam * eff_b))
+        indirect[a] = indirect.get(a, 0.0) + decay * intl_weights.get(b, 0.0)
+        indirect[b] = indirect.get(b, 0.0) + decay * intl_weights.get(a, 0.0)
+    return indirect
+
+
+def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=None,
+                         prior=CN_PRIOR, K=CN_INTL_K, c_min=CN_C_MIN,
+                         indirect_weight=CN_INDIRECT_WEIGHT):
+    """Shrink CN teams toward `prior` based on direct + indirect intl evidence.
+
+    No hardcoded floor. Tested teams (direct >= K) saturate to c=1.0 and are
+    fully trusted. Untested teams who play tested CN teams accumulate indirect
+    calibration credit. Truly isolated teams (no direct, no indirect) approach
+    c=0 and are fully pulled to CN_PRIOR.
+    """
+    if games is not None and lam is not None and ref_date is not None:
+        indirect = _compute_indirect_intl_w(games, intl_weights, lam, ref_date)
+    else:
+        indirect = {}
     out = {}
     for t, r in ratings.items():
         if t in CN_TEAMS_SET:
-            c = max(c_min, min(intl_weights.get(t, 0.0) / K, 1.0))
+            evidence = intl_weights.get(t, 0.0) + indirect_weight * indirect.get(t, 0.0)
+            c = max(c_min, min(evidence / K, 1.0))
             out[t] = c * r + (1 - c) * prior
         else:
             out[t] = r
@@ -1115,8 +1156,9 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
     rtgs_raw = massey_ratings(solve_games, lam, ref_date, min_games=0)
 
     # Apply CN-only intl-confidence shrinkage to overall ratings
+    # (passes games/lam/ref_date so indirect intl evidence can be computed)
     intl_w   = _compute_intl_weights(solve_games, lam, ref_date)
-    rtgs_all = _apply_cn_shrinkage(rtgs_raw, intl_w)
+    rtgs_all = _apply_cn_shrinkage(rtgs_raw, intl_w, solve_games, lam, ref_date)
 
     # Regional-spillover dampener: prevent non-intl-attendees from being lifted
     # by their region's intl-attendees' performance. Compute a domestic-only
@@ -1134,7 +1176,7 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
         dom_games = [g for g in solve_games
                      if g.get('event_id') not in current_snap_intl_eids]
         rtgs_dom_raw = massey_ratings(dom_games, lam, ref_date, min_games=0)
-        rtgs_dom = _apply_cn_shrinkage(rtgs_dom_raw, intl_w)
+        rtgs_dom = _apply_cn_shrinkage(rtgs_dom_raw, intl_w, dom_games, lam, ref_date)
         # Attendees: teams that played intl in CURRENT snapshot
         attendees = set()
         for g in games:

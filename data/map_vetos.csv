@@ -10392,3 +10392,10 @@ MatchID,step,team,action,map
 666499,5,GE,pick,Ascent
 666499,6,PRX,pick,Split
 666499,7,,remains,Breeze
+660392,1,FUT,ban,Fracture
+660392,2,TH,ban,Pearl
+660392,3,FUT,pick,Haven
+660392,4,TH,pick,Lotus
+660392,5,FUT,pick,Ascent
+660392,6,TH,pick,Breeze
+660392,7,,remains,Split
