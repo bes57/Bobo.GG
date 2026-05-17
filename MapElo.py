@@ -5852,7 +5852,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .lb-mscore{font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums}
 .lb-match-card.win .lb-mscore{color:#16a34a}.lb-match-card.loss .lb-mscore{color:#dc2626}
 .lb-mdelta{font-weight:600;font-size:.8rem;font-variant-numeric:tabular-nums}
-.lb-match-card.win .lb-mdelta{color:#16a34a}.lb-match-card.loss .lb-mdelta{color:#dc2626}
+.lb-mdelta.pos{color:#16a34a}.lb-mdelta.neg{color:#dc2626}
 .lb-mmeta{display:flex;gap:10px;font-size:.7rem;color:#666;margin-bottom:6px}
 .lb-mmaps{display:flex;flex-wrap:wrap;gap:5px}
 .lb-mmap-chip{font-size:.72rem;padding:3px 8px;border-radius:6px;font-weight:500;font-variant-numeric:tabular-nums}
@@ -7557,7 +7557,7 @@ function buildDetailHTML(team) {
         <img class="lb-mlogo" src="/static/logos/${m.opponent}.png" onerror="this.style.display='none'" alt="">
         <span class="lb-mopp">vs ${m.opponent}</span>
         <span class="lb-mscore">${displayScore}</span>
-        <span class="lb-mdelta">${d}</span>
+        <span class="lb-mdelta ${m.delta >= 0 ? 'pos' : 'neg'}">${d}</span>
       </div>
       <div class="lb-mmeta">${evt ? `<span>${evt}</span>` : ''}<span>${m.date}</span></div>
       ${chips ? `<div class="lb-mmaps">${chips}</div>` : ''}
