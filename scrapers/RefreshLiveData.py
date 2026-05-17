@@ -334,11 +334,65 @@ def _existing_match_ids(event_csv_id):
 
 
 def _scrape_match_page(url, region_tag):
-    """Returns (map_rows, series_rows, match_name_str)."""
-    soup = _fetch(url)
-    if soup is None:
-        return [], [], "? (fetch failed)"
+    """Returns (map_rows, series_rows, match_name_str).
 
+    Auto-retries with backoff if the first fetch parses 0 stat rows from a
+    valid-looking page. We've observed VLR occasionally serving a match page
+    where `.match-header` is populated (so display works) but the
+    `div.vm-stats-game` blocks are either missing or empty — likely a
+    transient window right after the match flips to "completed" but before
+    the per-map stat tables are published. Silently returning ([], [], …)
+    in that case means the match never lands in the CSV and the user can't
+    tell from the progress log that anything went wrong. So: retry up to
+    twice with 5s/10s sleeps, and on the final failure dump the raw HTML
+    to /tmp/scrape_empty_<mid>.html for forensic inspection.
+    """
+    return _scrape_match_page_with_retry(url, region_tag)
+
+
+def _scrape_match_page_with_retry(url, region_tag, max_attempts=3):
+    attempt_results = []
+    last_soup_text = None
+    for attempt in range(1, max_attempts + 1):
+        soup = _fetch(url)
+        if soup is None:
+            attempt_results.append(f"attempt {attempt}: fetch failed")
+            if attempt < max_attempts:
+                time.sleep(5 * attempt)
+                continue
+            return [], [], "? (fetch failed)"
+
+        map_rows, series_rows, display = _parse_match_html(soup, url, region_tag)
+        last_soup_text = str(soup)
+        if map_rows or series_rows:
+            return map_rows, series_rows, display
+        attempt_results.append(
+            f"attempt {attempt}: 0 rows from valid HTML "
+            f"(size={len(last_soup_text)}, display={display!r})"
+        )
+        if attempt < max_attempts:
+            time.sleep(5 * attempt)
+
+    # All attempts produced 0 rows. Dump HTML + log so we can see what VLR
+    # actually served. The pipeline already retries this URL next refresh
+    # (CSV-missing match → flagged "new" again).
+    try:
+        mid = _match_id_from_url(url) or "unknown"
+        dump_path = f"/tmp/scrape_empty_{mid}.html"
+        with open(dump_path, "w") as fh:
+            fh.write(last_soup_text or "")
+        _error_entries.append(
+            f"0-row scrape after {max_attempts} attempts on {url}; "
+            f"HTML dumped to {dump_path}. Attempts: {attempt_results}"
+        )
+        print(f"  EMPTY SCRAPE: {url} — HTML dumped to {dump_path}", flush=True)
+    except Exception as _e:
+        _error_entries.append(f"0-row scrape on {url}, also failed to dump HTML: {_e}")
+    return [], [], display
+
+
+def _parse_match_html(soup, url, region_tag):
+    """Pure parsing — no fetch, no retry. Split out so retry can call it."""
     fmt_el  = soup.select_one(".match-header-vs-note")
     fmt_raw = fmt_el.get_text(strip=True).lower() if fmt_el else ""
     series_fmt = "bo5" if ("bo5" in fmt_raw or "best of 5" in fmt_raw) else (
@@ -665,6 +719,12 @@ def main():
     total_new = len(all_new_urls)
     by_event_maps   = {}   # event_csv_id → [row, ...]
     by_event_series = {}
+    # VLR sometimes marks a match "completed" before the per-map stats tables
+    # have populated. _scrape_match_page returns ([], [], display) in that
+    # case and the match silently never lands in the CSV — so the next refresh
+    # picks it up as "new" again. Track empties explicitly so they show up in
+    # the progress log instead of being conflated with successful scrapes.
+    empty_scrapes = []
 
     for i, (url, region, ev_id) in enumerate(all_new_urls, 1):
         pct = 36 + int(i / total_new * 32)
@@ -672,9 +732,23 @@ def main():
         mr, sr, display = _scrape_match_page(url, region)
         by_event_maps.setdefault(ev_id, []).extend(mr)
         by_event_series.setdefault(ev_id, []).extend(sr)
+        empty = not mr and not sr
+        if empty:
+            empty_scrapes.append((url, region, display))
+        suffix = "  ⚠ no stats yet — will retry next refresh" if empty else ""
         _write("scraping", pct, f"Scraping {i}/{total_new}…",
-               [f"  [{region}] {display}"])
+               [f"  [{region}] {display}{suffix}"])
         time.sleep(0.25)  # was 0.7
+
+    if empty_scrapes:
+        lines = [f"⚠ {len(empty_scrapes)} match(es) returned no stats (VLR hadn't published "
+                 f"per-map data yet) — these will retry on the next refresh:"]
+        for url, region, disp in empty_scrapes:
+            lines.append(f"  [{region}] {disp}  ({url})")
+        _write("scraping", 68,
+               f"{len(all_new_urls) - len(empty_scrapes)}/{len(all_new_urls)} scraped, "
+               f"{len(empty_scrapes)} pending stats",
+               lines)
 
     # Persist per event
     for ev_id, rows in by_event_maps.items():

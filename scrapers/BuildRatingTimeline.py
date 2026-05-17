@@ -255,20 +255,58 @@ def build_2026_timeline(all_games, existing=None):
         try:
             last_cp = existing["checkpoints"][-1]
             last_date = datetime.strptime(last_cp["date"], "%Y-%m-%d").date()
-            new_days = [d for d in match_days if d > last_date]
             existing_days = {datetime.strptime(c["date"], "%Y-%m-%d").date()
                              for c in existing["checkpoints"]}
+            existing_match_ids = {me["match_id"] for me in (existing.get("match_events") or [])}
+
+            # Find earliest date with EITHER a new match day OR a new match ID
+            # back-dated into an existing day. The latter happens when the
+            # scraper picks up a match today (mtime=now) that was actually
+            # played yesterday — without this check we'd reuse yesterday's
+            # match_events list as-is, missing the new entries even though
+            # the ratings re-solve picks up the games via prior_ratings flow.
+            earliest_dirty = None
+            for g in year_games:
+                gd = g["date"].date()
+                gid = g["match_id"]
+                if gd > last_date:
+                    if earliest_dirty is None or gd < earliest_dirty:
+                        earliest_dirty = gd
+                elif gid not in existing_match_ids:
+                    # Back-dated new match in an existing day — rebuild from there
+                    if earliest_dirty is None or gd < earliest_dirty:
+                        earliest_dirty = gd
+
             old_days_match = all(d in existing_days for d in match_days if d <= last_date)
-            if new_days and old_days_match:
-                checkpoints  = list(existing["checkpoints"])
-                match_events = list(existing.get("match_events", []))
-                prev_ratings = dict(last_cp.get("ratings", {}))
-                start_idx    = match_days.index(new_days[0])
+
+            if earliest_dirty is not None and old_days_match:
+                # Trim existing checkpoints / match_events to BEFORE earliest_dirty
+                kept_cps = [c for c in existing["checkpoints"]
+                            if datetime.strptime(c["date"], "%Y-%m-%d").date() < earliest_dirty]
+                kept_me  = [me for me in (existing.get("match_events") or [])
+                            if datetime.strptime(me["date"], "%Y-%m-%d").date() < earliest_dirty]
+                checkpoints  = list(kept_cps)
+                match_events = list(kept_me)
+                prev_ratings = dict(kept_cps[-1]["ratings"]) if kept_cps else {}
+                start_idx    = match_days.index(earliest_dirty)
+                resolve_days = len(match_days) - start_idx
+                back_dated_new = sum(
+                    1 for g in year_games
+                    if g["date"].date() <= last_date and g["match_id"] not in existing_match_ids
+                )
+                tag = "back-dated " if back_dated_new else ""
                 print(f"  [incremental] reusing {len(checkpoints)} checkpoints; "
-                      f"solving {len(new_days)} new day(s) from {new_days[0].isoformat()}")
-            elif not new_days and old_days_match and len(match_days) == len(existing_days):
-                print(f"  [incremental] no new match days — reusing all {len(existing['checkpoints'])} checkpoints")
-                return list(existing["checkpoints"]), list(existing.get("match_events", []))
+                      f"resolving {resolve_days} day(s) from {earliest_dirty.isoformat()} "
+                      f"({back_dated_new} {tag}new match(es))")
+            elif earliest_dirty is None and old_days_match and len(match_days) == len(existing_days):
+                # Truly idempotent: same days, same match IDs. Reuse fully.
+                # But also verify match-event coverage in case existing had bugs.
+                missing_in_existing = {g["match_id"] for g in year_games} - existing_match_ids
+                if not missing_in_existing:
+                    print(f"  [incremental] no new match days or IDs — reusing all {len(existing['checkpoints'])} checkpoints")
+                    return list(existing["checkpoints"]), list(existing.get("match_events", []))
+                # Fall through to full rebuild
+                print(f"  [full rebuild] {len(missing_in_existing)} match_id(s) missing from existing events")
             else:
                 print(f"  [full rebuild] historical match days changed — solving all {len(match_days)} days")
         except Exception as e:
