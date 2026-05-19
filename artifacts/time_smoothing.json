@@ -1,0 +1,45 @@
+{
+  "configs": {
+    "i_neither": {
+      "brier": 0.2328000815458712,
+      "platt_b": 0.7587814111168201,
+      "n": 1439
+    },
+    "ii_ensemble_only": {
+      "brier": 0.23248554701688862,
+      "platt_b": 0.854661324719256,
+      "n": 1439
+    },
+    "iii_roster_only": {
+      "brier": 0.23066798182013623,
+      "platt_b": 0.9222572463857946,
+      "n": 1440
+    },
+    "iv_both": {
+      "brier": 0.23105399717329275,
+      "platt_b": 0.9780686761170949,
+      "n": 1440
+    }
+  },
+  "best_single": "iii_roster_only",
+  "iv_vs_max_single_p": 0.2604485017866274,
+  "iv_vs_max_single_mean_diff": -0.0013969786375180547,
+  "iv_better_than_best_single": true,
+  "interpretation": "redundant",
+  "recommended_config": "iii_roster_only",
+  "config_vs_baseline_i": {
+    "ii_vs_i_mean_diff": -0.0016585724581513574,
+    "ii_vs_i_p": 0.20698032129009558,
+    "iii_vs_i_mean_diff": -0.001993367534793775,
+    "iii_vs_i_p": 0.0014845263966556388,
+    "iv_vs_i_mean_diff": -0.00339034617231183,
+    "iv_vs_i_p": 0.021210986581750246
+  },
+  "note": "Code semantic: effective_weeks = raw_weeks*(1-ROSTER_PERSISTENCE*cont). Higher value = more time-freezing = more smoothing. 'No roster smoothing' configs (i, ii) use RP=0.0. 'Roster smoothing' configs (iii, iv) use the repo default RP=0.3. Ensembling: arithmetic average of pre-match rating with team's rating at most-recent checkpoint <= D-14 and <= D-28 days. Missing snapshots fall back.",
+  "elapsed_sec": 0.2330331802368164,
+  "prob_space_ensemble": {
+    "iv_both_prob_avg_brier": 0.21460364764301876,
+    "ii_ens_only_prob_avg_brier": 0.21507157660321488,
+    "note": "Probability-space average of series probs from snapshots at D, D-14, D-28. Outs vector here is all-1s (winner perspective), so directly comparable across the same match set but not to other configs (different perspective)."
+  }
+}
