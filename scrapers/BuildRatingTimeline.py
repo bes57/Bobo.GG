@@ -42,7 +42,14 @@ from BuildMapRatings import (
 )
 
 DATA_DIR = os.path.join(ROOT, "data")
-OUT_PATH  = os.path.join(DATA_DIR, "rating_timeline.json")
+OUT_PATH  = os.path.join(DATA_DIR, "rating_timeline.json")  # 2026 (live; used by Modern Hub)
+
+def out_path_for_year(year):
+    """Historical years write to rating_timeline_<year>.json. 2026 is live and
+    keeps the bare filename so the Modern Hub doesn't need to change."""
+    if year == 2026:
+        return OUT_PATH
+    return os.path.join(DATA_DIR, f"rating_timeline_{year}.json")
 
 LAMBDA_DECAY  = math.log(2) / HALF_LIFE_WEEKS  # share half-life
 INTL_MULT     = _BMR_INTL_MULT                 # share intl multiplier (for legacy intl_weights helper)
@@ -68,29 +75,31 @@ def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=No
             out[t] = r
     return out
 
+# Keep these dates in sync with BuildMapRatings._HISTORICAL_EVENT_DATES —
+# they're the real first/last match days per event (from match_dates.json).
 EVENT_DATES = {
-    "2023_lock_in":          ("2023-01-10", "2023-02-12"),
-    "2023_league":           ("2023-01-23", "2023-10-01"),
-    "2023_masters_tokyo":    ("2023-06-11", "2023-06-25"),
-    "2023_champions":        ("2023-08-06", "2023-08-27"),
-    "2024_kickoff":          ("2024-01-08", "2024-02-11"),
+    "2023_lock_in":          ("2023-02-13", "2023-03-04"),
+    "2023_league":           ("2023-03-25", "2023-05-28"),
+    "2023_masters_tokyo":    ("2023-06-10", "2023-06-25"),
+    "2023_champions":        ("2023-08-06", "2023-08-26"),
+    "2024_kickoff":          ("2024-02-16", "2024-03-03"),
     "2024_china_kickoff":    ("2024-02-22", "2024-03-02"),
-    "2024_masters_madrid":   ("2024-02-14", "2024-03-10"),
-    "2024_stage1":           ("2024-03-15", "2024-05-19"),
+    "2024_masters_madrid":   ("2024-03-14", "2024-03-24"),
+    "2024_stage1":           ("2024-04-03", "2024-05-12"),
     "2024_china_stage1":     ("2024-04-05", "2024-05-12"),
-    "2024_masters_shanghai": ("2024-06-02", "2024-06-16"),
-    "2024_stage2":           ("2024-06-20", "2024-08-25"),
-    "2024_china_stage2":     ("2024-06-15", "2024-07-21"),
-    "2024_champions":        ("2024-08-01", "2024-09-22"),
-    "2025_kickoff":          ("2025-01-13", "2025-02-09"),
-    "2025_china_kickoff":    ("2025-01-10", "2025-01-25"),
-    "2025_masters_bangkok":  ("2025-02-12", "2025-03-09"),
-    "2025_stage1":           ("2025-03-14", "2025-05-18"),
+    "2024_masters_shanghai": ("2024-05-23", "2024-06-09"),
+    "2024_stage2":           ("2024-06-15", "2024-07-21"),
+    "2024_china_stage2":     ("2024-06-15", "2024-07-20"),
+    "2024_champions":        ("2024-08-01", "2024-08-25"),
+    "2025_kickoff":          ("2025-01-15", "2025-02-09"),
+    "2025_china_kickoff":    ("2025-01-11", "2025-01-25"),
+    "2025_masters_bangkok":  ("2025-02-20", "2025-03-02"),
+    "2025_stage1":           ("2025-03-21", "2025-05-18"),
     "2025_china_stage1":     ("2025-03-13", "2025-05-04"),
-    "2025_masters_toronto":  ("2025-06-07", "2025-06-29"),
-    "2025_stage2":           ("2025-07-14", "2025-08-24"),
+    "2025_masters_toronto":  ("2025-06-07", "2025-06-22"),
+    "2025_stage2":           ("2025-07-15", "2025-08-31"),
     "2025_china_stage2":     ("2025-07-03", "2025-08-24"),
-    "2025_champions":        ("2025-08-28", "2025-09-21"),
+    "2025_champions":        ("2025-09-12", "2025-10-05"),
     "2026_kickoff":          ("2026-01-15", "2026-02-16"),
     "2026_china_kickoff":    ("2026-01-21", "2026-02-09"),
     "2026_masters_santiago": ("2026-02-28", "2026-03-15"),
@@ -204,16 +213,20 @@ def load_all_games():
 # ── Timeline builder ───────────────────────────────────────────────────────────
 
 def build_2026_timeline(all_games, existing=None):
+    return build_year_timeline(all_games, 2026, existing=existing)
+
+
+def build_year_timeline(all_games, year, existing=None):
     """
-    Build checkpoint ratings at every match day in 2026, plus per-match deltas.
+    Build checkpoint ratings at every match day in ``year``, plus per-match deltas.
 
     Uses previous years' international games as a decayed prior so that the
     three regional clusters (Americas/EMEA/Pacific) are always connected before
-    Masters Santiago begins.  Without this, the first 1-2 cross-regional games
-    at Santiago create a "component fusion" shock that produces wild spikes.
+    the first international begins.  Without this, the first 1-2 cross-regional
+    games create a "component fusion" shock that produces wild spikes.
     With the prior, those games are incremental updates to an existing calibration.
 
-    Checkpoints and match-event deltas come from 2026 results only; prior games
+    Checkpoints and match-event deltas come from ``year`` results only; prior games
     silently anchor the inter-regional offset without appearing in the output.
 
     If ``existing`` (the previous rating_timeline.json contents) is given AND the
@@ -228,21 +241,21 @@ def build_2026_timeline(all_games, existing=None):
                        winner_before, winner_after, winner_delta,
                        loser_before,  loser_after,  loser_delta}]
     """
-    year_games  = [g for g in all_games if g["date"].year == 2026]
+    year_games  = [g for g in all_games if g["date"].year == year]
     # Prior: all previous-year international games.  They decay naturally via the
-    # same LAMBDA_DECAY (5-week half-life).  By March 2026, 2025 Champions games
-    # (~27 weeks old) carry ~2% weight each — enough to keep clusters connected
-    # without distorting current-season ratings.
+    # same LAMBDA_DECAY (5-week half-life).  Older intl games still carry
+    # 1-5% weight — enough to keep clusters connected without distorting
+    # current-season ratings.
     prior_games = [g for g in all_games
-                   if g["date"].year < 2026 and g.get("event_id") in INTL_EVENTS]
-    print(f"  Prior anchor: {len(prior_games)} international map games from 2023-2025")
+                   if g["date"].year < year and g.get("event_id") in INTL_EVENTS]
+    print(f"  Prior anchor: {len(prior_games)} international map games from prior years")
 
     if not year_games:
-        print("  No 2026 games found — timeline will be empty.")
+        print(f"  No {year} games found — timeline will be empty.")
         return [], []
 
     match_days = sorted(set(g["date"].date() for g in year_games))
-    print(f"  {len(year_games)} map games across {len(match_days)} match days in 2026")
+    print(f"  {len(year_games)} map games across {len(match_days)} match days in {year}")
 
     # Incremental path: reuse old checkpoints + match_events if all changes are
     # additions *after* the last existing checkpoint date.
@@ -386,30 +399,40 @@ def main():
     all_games = load_all_games()
     print(f"Loaded {len(all_games)} map games across all events\n")
 
-    existing = None
-    if os.path.exists(OUT_PATH):
-        try:
-            with open(OUT_PATH) as f:
-                existing = json.load(f)
-        except Exception:
-            existing = None
+    # Historical (2023/2024/2025) get full rebuilds — those years are static
+    # so incremental skip would have no benefit and one-time cost is cheap.
+    # 2026 keeps incremental (reusing prior checkpoints) because new live
+    # matches arrive frequently and full rebuild would be ~30s.
+    target_years = [2023, 2024, 2025, 2026]
+    if len(sys.argv) > 1 and sys.argv[1] == "--live":
+        target_years = [2026]
 
-    print("Building 2026 rating timeline...")
-    checkpoints, match_events = build_2026_timeline(all_games, existing=existing)
+    for year in target_years:
+        out_path = out_path_for_year(year)
+        existing = None
+        # Only 2026 uses incremental rebuild via the existing file.
+        if year == 2026 and os.path.exists(out_path):
+            try:
+                with open(out_path) as f:
+                    existing = json.load(f)
+            except Exception:
+                existing = None
 
-    out = {
-        "year":         2026,
-        "lambda_decay": round(LAMBDA_DECAY, 6),
-        "checkpoints":  checkpoints,
-        "match_events": match_events,
-        "generated":    datetime.now().strftime("%Y-%m-%d"),
-    }
+        print(f"Building {year} rating timeline...")
+        checkpoints, match_events = build_year_timeline(all_games, year, existing=existing)
 
-    with open(OUT_PATH, "w") as f:
-        json.dump(out, f, separators=(",", ":"))  # compact for smaller file
+        out = {
+            "year":         year,
+            "lambda_decay": round(LAMBDA_DECAY, 6),
+            "checkpoints":  checkpoints,
+            "match_events": match_events,
+            "generated":    datetime.now().strftime("%Y-%m-%d"),
+        }
 
-    print(f"\nSaved {len(checkpoints)} checkpoints and {len(match_events)} match events.")
-    print(f"Output: {OUT_PATH}")
+        with open(out_path, "w") as f:
+            json.dump(out, f, separators=(",", ":"))  # compact for smaller file
+
+        print(f"  Saved {len(checkpoints)} checkpoints and {len(match_events)} match events to {os.path.basename(out_path)}\n")
 
 
 if __name__ == "__main__":

@@ -483,11 +483,20 @@ _PYTH_JSON_PATH = os.path.join(ROOT, 'data', 'pyth_data.json')
 _ratings_cache = None
 _RATINGS_JSON_PATH = os.path.join(ROOT, 'data', 'map_ratings.json')
 
+_ratings_cache_mtime = 0.0
+
 def get_ratings():
-    global _ratings_cache
-    if _ratings_cache is None:
+    """Reload when map_ratings.json mtime advances so server rebuilds (or
+    a local re-run of BuildMapRatings.py) get picked up without restart."""
+    global _ratings_cache, _ratings_cache_mtime
+    try:
+        mtime = os.path.getmtime(_RATINGS_JSON_PATH)
+    except OSError:
+        mtime = 0.0
+    if _ratings_cache is None or mtime > _ratings_cache_mtime:
         with open(_RATINGS_JSON_PATH) as f:
             _ratings_cache = json.load(f)
+        _ratings_cache_mtime = mtime
     return _ratings_cache
 
 _veto_cache = None
@@ -545,13 +554,14 @@ ORG_REGIONS = {
     "NRG":  "Americas",  "100T": "Americas",  "C9":   "Americas",
     "EG":   "Americas",  "KRÜ":  "Americas",  "LEV":  "Americas",
     "FUR":  "Americas",  "LOUD": "Americas",  "2G":   "Americas",
-    "APK":  "Americas",  "ENVY": "Americas",
+    "ENVY": "Americas",
+    "APK":  "EMEA",      # Apeks — EMEA partner (2023→2025)
     "PRX":  "Pacific",  "DRX":  "Pacific",  "T1":   "Pacific",
     "TLN":  "Pacific",  "GEN":  "Pacific",  "DFM":  "Pacific",
     "ZETA": "Pacific",  "RRQ":  "Pacific",  "TS":   "Pacific",
     "GE":   "Pacific",  "NS":   "Pacific",
     "FS":   "Pacific",  "VL":   "Pacific",  "KRX":  "Pacific",
-    "BME":  "Pacific",
+    "BLD":  "Pacific",  "BME":  "Pacific",  # Bleed (2024 = BLD, 2025 = BME)
     # CN
     "EDG":  "CN",  "BLG":  "CN",  "TE":   "CN",  "DRG":  "CN",
     "ASE":  "CN",  "AG":   "CN",  "XLG":  "CN",  "WOL":  "CN",
@@ -571,10 +581,17 @@ def get_pyth_data():
 
 
 _SNAPSHOT_EVENTS = {
+    # NOTE: this dict controls only the "Recent Matches" + roster lookup in
+    # the team-expand panel. The Massey solver uses _HISTORICAL_YEAR_CONFIGS
+    # in BuildMapRatings — that one stays at the prod-era (lock_in + tokyo)
+    # for after_tokyo to preserve FNC #1 etc. Here we include 2023_league so
+    # FURIA/100T/SEN see their league play in "Recent Matches" instead of
+    # only their LOCK//IN appearance.
     '2023': {
-        'after_tokyo':      ['2023_lock_in', '2023_masters_tokyo'],
-        'before_champions': ['2023_lock_in', '2023_masters_tokyo', '2023_league'],
-        'after_champions':  ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
+        'before_tokyo':     ['2023_lock_in'],
+        'after_tokyo':      ['2023_lock_in', '2023_league', '2023_masters_tokyo'],
+        'before_champions': ['2023_lock_in', '2023_league', '2023_masters_tokyo'],
+        'after_champions':  ['2023_lock_in', '2023_league', '2023_masters_tokyo', '2023_champions'],
     },
     '2024': {
         'before_madrid':    ['2024_kickoff', '2024_china_kickoff'],
@@ -601,7 +618,7 @@ _SNAPSHOT_EVENTS = {
 
 _map_name_index   = None
 _headshots_cache  = None
-_TEAM_INFO_VER    = 3   # bump this to bust _team_info_cache across all keys
+_TEAM_INFO_VER    = 6   # bump this to bust _team_info_cache across all keys
 _team_info_cache  = {}
 
 def _get_headshots():
@@ -1019,6 +1036,9 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   .hub-card-wide:hover .hub-card-wide-bg { transform:scale(1.10); }
   .hub-card-wide::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, #0e0a1422 0%, #0e0a1488 70%, #0e0a14bb 100%), radial-gradient(ellipse 60% 40% at 50% 60%, #00000044 0%, transparent 70%); z-index:-1; pointer-events:none; }
   .hub-card-wide-title { position:relative; font-family:'Syne',sans-serif; font-size:clamp(1.8rem, 4vw, 2.6rem); font-weight:800; letter-spacing:-.02em; line-height:1; text-shadow:0 4px 22px #0e0a14cc; background:linear-gradient(135deg,#fff 0%,#ffd9b3 100%); -webkit-background-clip:text; background-clip:text; color:transparent; padding:0 24px; text-align:center; }
+  .hub-card-wide--projection { background:linear-gradient(135deg,#3a1764 0%,#7c3aed 60%,#b06bff 100%); }
+  .hub-card-wide--projection::after { background:linear-gradient(180deg, #0e0a1422 0%, #0e0a1455 70%, #0e0a1488 100%) !important; }
+  .hub-card-wide--projection .hub-card-wide-title { background:linear-gradient(135deg,#fff 0%,#e7d6ff 100%); -webkit-background-clip:text; background-clip:text; }
   .hub-logo-strip { width:100vw; position:relative; left:50%; transform:translateX(-50%); display:flex; justify-content:space-evenly; align-items:center; flex-wrap:nowrap; padding:14px 24px; margin-bottom:20px; opacity:.85; }
   .hub-logo-strip img { height:28px; width:28px; object-fit:contain; flex-shrink:0; filter:grayscale(.4); transition:filter .2s, transform .2s; cursor:pointer; user-select:none; }
   .hub-logo-strip img:hover { filter:none; transform:scale(1.18); }
@@ -1075,6 +1095,11 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
       <a class="hub-card-wide" href="/mapelo/modern/">
         <div class="hub-card-wide-bg"></div>
         <div class="hub-card-wide-title">Modern VCT Hub</div>
+      </a>
+    </div>
+    <div class="hub-cards-wide">
+      <a class="hub-card-wide hub-card-wide--projection" href="/mapelo/projection-test/">
+        <div class="hub-card-wide-title">Projection Test Lab</div>
       </a>
     </div>
   </div>
@@ -1190,15 +1215,16 @@ MAPELO_HOME_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <style>
   SHARED_CSS
-  .page { position:relative; z-index:1; padding:32px; max-width:900px; margin:0 auto; width:100%; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; }
-  .page-sub  { font-size:.83rem; color:var(--soft); margin-bottom:22px; line-height:1.5; }
+  .page { position:relative; z-index:1; padding:32px; max-width:1440px; margin:0 auto; width:100%; }
+  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; text-align:center; }
+  .page-sub  { font-size:.83rem; color:var(--soft); margin-bottom:22px; line-height:1.5; text-align:center; max-width:780px; margin-left:auto; margin-right:auto; }
   /* Model explanation + animated pipeline */
   .model-card { background:white; border-radius:24px; padding:24px 28px; box-shadow:0 4px 24px #0000000a; margin-bottom:20px; }
   .model-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0; }
@@ -1396,6 +1422,178 @@ MAPELO_HOME_HTML = """
   .intl-chip-ind-neu { background:#f0ecf8; color:var(--soft); }
   .intl-chip-total { background:var(--ink); color:white; }
   .intl-chip-arrow { color:var(--soft); font-size:.8rem; }
+
+  /* ── Year scrubber (matchup-predictor style) ────────────────────────── */
+  .ranks-controls { background:white; border-radius:24px; padding:18px 22px 22px; box-shadow:0 4px 24px #0000000a; margin:0 auto 18px; max-width:780px; }
+  .ranks-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .ranks-row + .ranks-row { margin-top:14px; }
+  .ranks-row-label { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); flex-basis:100%; text-align:center; margin-bottom:6px; }
+  .yr-scrubber { position:relative; padding:0 12px 22px; user-select:none; flex:0 1 560px; min-width:240px; max-width:560px; }
+  .yr-track { position:relative; height:4px; border-radius:99px; background:linear-gradient(90deg,#f4b8c1,#d4b8f4,#b8d8f4,#b8e8d4); margin:14px 0 4px; cursor:pointer; }
+  .yr-tick { position:absolute; top:50%; width:8px; height:8px; border-radius:50%; background:white; border:2px solid #d4b8f4; transform:translate(-50%,-50%); transition:transform .15s; cursor:pointer; }
+  .yr-tick.active { background:var(--ink); border-color:var(--ink); transform:translate(-50%,-50%) scale(1.4); }
+  .yr-tick:hover { transform:translate(-50%,-50%) scale(1.3); }
+  .yr-knob { position:absolute; top:50%; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); transform:translate(-50%,-50%); box-shadow:0 4px 12px #5a2a7a55, 0 0 0 4px white; transition:left .35s cubic-bezier(.5,1.6,.4,1); pointer-events:none; }
+  .yr-labels { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
+  .yr-labels span { cursor:pointer; padding:2px 4px; transition:color .15s; }
+  .yr-labels span.active { color:var(--ink); }
+  .yr-labels span:hover { color:var(--ink); }
+  .period-seg { display:flex; gap:6px; flex-wrap:wrap; flex:0 1 auto; justify-content:center; }
+  .period-seg-btn { background:#faf6fc; border:1.5px solid transparent; padding:6px 14px; border-radius:99px; font-family:'DM Sans',sans-serif; font-size:.78rem; font-weight:500; color:var(--soft); cursor:pointer; transition:all .15s; white-space:nowrap; }
+  .period-seg-btn:hover { color:var(--ink); border-color:#e0d0ec; }
+  .period-seg-btn.active { background:var(--ink); color:white; border-color:var(--ink); }
+
+  /* ── Modern-Hub-style chart card ────────────────────────────────────── */
+  .chart-card { background:#fff; border-radius:16px; padding:14px 0 10px; margin:0 auto 18px; position:relative; box-shadow:0 4px 24px #0000000a; max-width:1180px; }
+  .chart-header { display:flex; flex-direction:column; align-items:stretch; margin-bottom:10px; gap:6px; padding:0 24px; position:relative; }
+  .chart-header-row { display:flex; justify-content:flex-end; align-items:center; gap:10px; }
+  .ranks-chart-title { align-self:center; font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; letter-spacing:-.02em; background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; white-space:nowrap; pointer-events:none; }
+  .chart-asof { color:rgba(0,0,0,.4); font-size:.75rem; }
+  .chart-hint { font-size:.7rem; color:rgba(0,0,0,.4); padding:0 0 8px; letter-spacing:.01em; text-align:center; }
+  .chart-controls { display:flex; gap:8px; align-items:center; flex-shrink:0; }
+  .chart-btn { padding:5px 14px; border-radius:100px; border:1.5px solid rgba(0,0,0,.15); background:rgba(0,0,0,.03); color:rgba(0,0,0,.55); font-size:.75rem; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:all .2s; white-space:nowrap; }
+  .chart-btn:hover { border-color:rgba(0,0,0,.4); color:#000; background:rgba(0,0,0,.06); }
+  .chart-wrap { position:relative; height:650px; user-select:none; padding:0 18px; }
+  #benpomChart { cursor:default; }
+
+  /* Dot hover tooltip (purple ink popup, matches Modern Hub) */
+  #dotTooltip { position:absolute; z-index:20; pointer-events:none; min-width:240px; max-width:340px; background:#1a0938; border:1px solid rgba(167,139,250,.28); border-radius:14px; padding:16px 20px; box-shadow:0 16px 60px rgba(0,0,0,.7); opacity:0; transform:translateY(8px); transition:opacity .18s ease, transform .18s ease; }
+  #dotTooltip.visible { opacity:1; transform:translateY(0); }
+  #dotTooltip .popup-inner { text-align:center; }
+  #dotTooltip .popup-event-label { font-size:.62rem; font-weight:600; color:rgba(167,139,250,.5); text-transform:uppercase; letter-spacing:.08em; margin-bottom:8px; }
+  #dotTooltip .popup-teams { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:6px; }
+  #dotTooltip .popup-team-block { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:54px; }
+  #dotTooltip .popup-logo { width:38px; height:38px; object-fit:contain; }
+  #dotTooltip .popup-team-name { font-size:.66rem; color:rgba(232,213,245,.6); font-weight:500; }
+  #dotTooltip .popup-score-block { display:flex; flex-direction:column; align-items:center; gap:2px; }
+  #dotTooltip .popup-score { font-size:1.7rem; font-weight:800; font-family:'Syne',sans-serif; line-height:1; }
+  #dotTooltip .popup-score.w { color:#4ade80; } #dotTooltip .popup-score.l { color:#f87171; }
+  #dotTooltip .popup-vs-label { font-size:.6rem; color:rgba(232,213,245,.3); }
+  #dotTooltip .popup-date { color:rgba(232,213,245,.3); font-size:.65rem; margin-bottom:3px; }
+  #dotTooltip .popup-delta { font-size:.8rem; font-weight:600; margin-bottom:10px; }
+  #dotTooltip .popup-delta.pos { color:#4ade80; } #dotTooltip .popup-delta.neg { color:#f87171; }
+  #dotTooltip .popup-maps-table { width:100%; border-collapse:collapse; margin-top:2px; }
+  #dotTooltip .popup-maps-table th { font-size:.56rem; font-weight:600; color:rgba(167,139,250,.5); text-transform:uppercase; letter-spacing:.07em; padding:0 6px 5px; text-align:center; }
+  #dotTooltip .popup-maps-table th:first-child { text-align:left; }
+  #dotTooltip .popup-maps-table th:last-child { text-align:right; }
+  #dotTooltip .popup-maps-table td { padding:4px 6px; font-size:.74rem; color:rgba(232,213,245,.8); border-top:1px solid rgba(255,255,255,.06); }
+  #dotTooltip .popup-map-name { font-weight:500; color:#e8d5f5; }
+  #dotTooltip .popup-map-score { text-align:center; font-variant-numeric:tabular-nums; font-weight:600; }
+  #dotTooltip .popup-map-score.w { color:#4ade80; } #dotTooltip .popup-map-score.l { color:#f87171; }
+  #dotTooltip .popup-map-diff { text-align:right; font-size:.65rem; color:rgba(232,213,245,.4); }
+
+  /* ── Modern-Hub-style WHITE leaderboard ───────────────────────────────── */
+  .lb-card { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px #0000000a; margin:0 auto 24px; max-width:780px; }
+  .lb-header-row { padding:14px 20px; display:flex; align-items:center; justify-content:center; position:relative; border-bottom:1px solid rgba(61,26,110,.1); }
+  .lb-title { font-family:'Syne',sans-serif; font-weight:700; font-size:.95rem; color:#000; text-align:center; }
+  .lb-asof { position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:.7rem; color:#666; text-align:right; max-width:240px; }
+  @keyframes lbRowSlideIn { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
+  .lb-row.slide-in { animation:lbRowSlideIn .5s cubic-bezier(.16,1,.3,1) backwards; }
+  .lb-col-hdr { display:grid; grid-template-columns:44px 2fr 1fr 1fr 24px; align-items:center; padding:8px 24px; gap:10px; border-bottom:2px solid rgba(61,26,110,.1); }
+  .lb-col-hdr span { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#888; text-align:center; }
+  .lb-col-hdr span.sortable { cursor:pointer; user-select:none; transition:color .15s; }
+  .lb-col-hdr span.sortable:hover { color:#3d1a6e; }
+  .lb-col-hdr span.sort-asc::after  { content:' ▲'; font-size:.55rem; margin-left:1px; }
+  .lb-col-hdr span.sort-desc::after { content:' ▼'; font-size:.55rem; margin-left:1px; }
+  .lb-col-hdr span.sortable.sort-asc, .lb-col-hdr span.sortable.sort-desc { color:#3d1a6e; }
+  .lb-row { display:grid; grid-template-columns:44px 2fr 1fr 1fr 24px; align-items:center; padding:13px 24px; cursor:pointer; transition:background .15s; border-bottom:1px solid rgba(61,26,110,.06); gap:10px; }
+  .lb-row:last-child { border-bottom:none; }
+  .lb-row:hover { background:rgba(61,26,110,.05); }
+  .lb-row.selected { background:rgba(61,26,110,.08); }
+  .lb-rank { color:#aaa; font-size:.78rem; font-weight:600; text-align:center; }
+  .lb-team { display:flex; align-items:center; justify-content:center; gap:10px; }
+  .lb-team img { width:30px; height:30px; object-fit:contain; flex-shrink:0; }
+  .lb-name { font-weight:700; font-size:.92rem; color:#111; }
+  .lb-rating { font-weight:700; font-size:1rem; text-align:center; justify-self:center; font-variant-numeric:tabular-nums; color:#111; }
+  .lb-rating.pos { color:#16a34a; }
+  .lb-rating.neg { color:#dc2626; }
+  .lb-region { font-size:.68rem; font-weight:700; padding:3px 10px; border-radius:100px; text-align:center; justify-self:center; }
+  .lb-region.americas { background:rgba(234,88,12,.12); color:#c2410c; }
+  .lb-region.emea { background:rgba(22,163,74,.12); color:#15803d; }
+  .lb-region.pacific { background:rgba(37,99,235,.12); color:#1d4ed8; }
+  .lb-region.cn { background:rgba(219,39,119,.12); color:#be185d; }
+  .lb-region.unknown { background:rgba(0,0,0,.06); color:#666; }
+  .lb-chevron { color:#bbb; font-size:.62rem; text-align:center; transition:transform .2s; }
+  .lb-row.selected .lb-chevron { transform:rotate(180deg); }
+  .lb-detail { border-bottom:1px solid rgba(61,26,110,.07); animation:sd .18s ease; }
+  @keyframes sd { from { opacity:0; transform:translateY(-3px); } to { opacity:1; transform:none; } }
+  @keyframes su { from { opacity:1; max-height:800px; } to { opacity:0; max-height:0; } }
+  .lb-detail.closing { animation:su .22s ease forwards; pointer-events:none; overflow:hidden; }
+  .lb-detail-inner { padding:18px 24px 22px; background:#faf7fd; }
+  .lb-sec-label { font-size:.68rem; font-weight:700; color:#555; text-transform:uppercase; letter-spacing:.1em; margin:18px 0 10px; }
+  .lb-sec-label:first-child { margin-top:0; }
+  .lb-player-row { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-bottom:4px; }
+  .lb-player-card { display:flex; flex-direction:column; align-items:center; gap:6px; width:72px; }
+  .lb-player-hs { width:64px; height:64px; border-radius:50%; object-fit:cover; object-position:top; background:#f0ecf4; flex-shrink:0; }
+  .lb-player-hs-empty { background:#e8e4f0; }
+  .lb-player-name { font-size:.7rem; font-weight:600; text-align:center; color:#333; line-height:1.2; word-break:break-word; }
+  .lb-maps-table { width:100%; border-collapse:collapse; margin-top:2px; }
+  .lb-maps-table th { font-size:.64rem; font-weight:700; color:#666; text-transform:uppercase; letter-spacing:.07em; padding:0 6px 6px; text-align:left; }
+  .lb-maps-table th:not(:first-child) { text-align:right; }
+  .lb-maps-table td { padding:6px 6px; font-size:.8rem; border-top:1px solid rgba(61,26,110,.06); }
+  .lb-mt-map { color:#000; font-weight:500; }
+  .lb-mt-rat { text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+  .lb-mt-rat.pos { color:#16a34a; } .lb-mt-rat.neg { color:#dc2626; }
+  .lb-mt-wl { text-align:right; color:#666; font-size:.75rem; }
+  .lb-mt-pct { text-align:right; color:#666; font-size:.74rem; }
+  /* Click-to-expand per-map game history (mirrors Modern Hub) */
+  .lb-map-row-click { cursor:pointer; }
+  .lb-map-row-click:hover td { background:rgba(61,26,110,.04); }
+  .lb-map-chevron { display:inline-block; font-size:.55rem; color:#bbb; transition:transform .2s; margin-left:3px; vertical-align:middle; }
+  .lb-map-row-click.open .lb-map-chevron { transform:rotate(180deg); }
+  .lb-map-games-tr > td { padding:0 !important; }
+  .lb-map-games-wrap { padding:2px 0 6px 4px; animation:sd .15s ease; overflow:hidden; }
+  .lb-map-games-wrap.closing { animation:su .2s ease forwards; }
+  .lb-map-games-tbl { width:100%; border-collapse:collapse; }
+  .lb-mg-inner { display:flex; align-items:center; gap:7px; padding:4px 8px; }
+  .lb-mg-result { font-weight:700; font-size:.76rem; min-width:11px; }
+  .lb-map-game-row.win  .lb-mg-result { color:#16a34a; }
+  .lb-map-game-row.loss .lb-mg-result { color:#dc2626; }
+  .lb-mg-logo { width:16px; height:16px; object-fit:contain; flex-shrink:0; }
+  .lb-mg-opp { font-size:.78rem; font-weight:600; flex:1; color:#111; }
+  .lb-mg-score { font-size:.78rem; font-weight:700; font-variant-numeric:tabular-nums; }
+  .lb-map-game-row.win  .lb-mg-score { color:#16a34a; }
+  .lb-map-game-row.loss .lb-mg-score { color:#dc2626; }
+  .lb-mg-diff { font-size:.72rem; font-weight:600; font-variant-numeric:tabular-nums; min-width:28px; text-align:right; }
+  .lb-mg-diff.pos { color:#16a34a; }
+  .lb-mg-diff.neg { color:#dc2626; }
+  .lb-mg-meta { font-size:.67rem; color:#888; white-space:nowrap; }
+  .lb-map-no-games { padding:6px 10px; color:#888; font-size:.73rem; font-style:italic; }
+  .lb-match-card { background:#fff; border-radius:10px; padding:10px 14px; margin-bottom:7px; border:1px solid rgba(61,26,110,.08); }
+  .lb-match-head { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .lb-mr { font-weight:700; font-size:.82rem; min-width:14px; }
+  .lb-match-card.win .lb-mr { color:#16a34a; } .lb-match-card.loss .lb-mr { color:#dc2626; }
+  .lb-mlogo { width:22px; height:22px; object-fit:contain; flex-shrink:0; }
+  .lb-mopp { font-weight:600; font-size:.87rem; flex:1; color:#000; }
+  .lb-mscore { font-weight:700; font-size:.9rem; font-variant-numeric:tabular-nums; }
+  .lb-match-card.win .lb-mscore { color:#16a34a; } .lb-match-card.loss .lb-mscore { color:#dc2626; }
+  .lb-mmeta { display:flex; gap:10px; font-size:.7rem; color:#666; margin-bottom:6px; }
+  .lb-mmaps { display:flex; flex-wrap:wrap; gap:5px; }
+  .lb-mmap-chip { font-size:.72rem; padding:3px 8px; border-radius:6px; font-weight:500; font-variant-numeric:tabular-nums; }
+  .lb-mmap-chip.mw { background:rgba(22,163,74,.1); color:#16a34a; }
+  .lb-mmap-chip.ml { background:rgba(220,38,38,.1); color:#dc2626; }
+  .lb-empty { padding:30px 8px; text-align:center; color:#888; font-size:.82rem; font-style:italic; }
+  .lb-loading-spinner { padding:20px; text-align:center; color:#888; font-size:.78rem; }
+
+  /* ── "Hide chart" toggle ────────────────────────────────────────────── */
+  .no-graph-row { display:flex; justify-content:center; }
+  .no-graph-toggle { display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:.78rem; font-weight:500; color:var(--soft); user-select:none; transition:color .15s; }
+  .no-graph-toggle:hover { color:var(--ink); }
+  .no-graph-toggle input { -webkit-appearance:none; appearance:none; width:34px; height:18px; border-radius:99px; background:#e9e0f0; position:relative; outline:none; cursor:pointer; transition:background .2s; }
+  .no-graph-toggle input::after { content:''; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:white; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .25s cubic-bezier(.4,1.5,.5,1); }
+  .no-graph-toggle input:checked { background:var(--ink); }
+  .no-graph-toggle input:checked::after { transform:translateX(16px); }
+  /* Chart-card collapse: animate every dimension that affects vertical
+     space so the leaderboard slides up smoothly when the chart is hidden. */
+  .chart-card { overflow:hidden; transition:max-height .45s cubic-bezier(.5,.0,.3,1), opacity .25s ease, margin-bottom .45s cubic-bezier(.5,.0,.3,1), padding-top .45s, padding-bottom .45s; max-height:900px; }
+  .chart-card.hidden { max-height:0; opacity:0; margin-bottom:0; padding-top:0; padding-bottom:0; pointer-events:none; }
+
+  @media (max-width: 720px) {
+    .chart-wrap { height:380px; padding:0 6px; }
+    .lb-col-hdr, .lb-row { grid-template-columns:36px 1.6fr 1fr 0.8fr 18px; padding:11px 12px; }
+    .lb-team img { width:24px; height:24px; }
+    .lb-name { font-size:.85rem; }
+  }
 </style>
 </head>
 <body>
@@ -1406,268 +1604,82 @@ MAPELO_HOME_HTML = """
   </div>
   <div class="page">
     <div class="page-title">Historical Rankings</div>
-    <p class="page-sub">Opponent-adjusted round differential ratings for VCT franchised teams, 2023&ndash;2025 domestic events.</p>
+    <p class="page-sub">Opponent-adjusted round differential ratings for VCT franchised teams. Pick a year and period to see the leaderboard and animated rating timeline up to that point.</p>
 
-    <!-- Animated model pipeline -->
-    <div class="model-card">
-      <div class="model-card-header">
-        <span class="model-card-title">How the model works</span>
-        <button class="model-card-toggle" id="model-toggle" onclick="toggleModel()"><i class="toggle-arrow">&#9654;</i> show</button>
-      </div>
-      <div class="model-collapsible" id="model-collapsible">
-      <div class="pipeline-wrap" id="pipeline-wrap">
 
-        <!-- Stage 1: Round Differential -->
-        <div class="pipe-stage" id="ps0" data-idx="0" onclick="focusPipe(0)">
-          <div class="pipe-num pipe-n0">1</div>
-          <div class="pipe-content">
-            <div class="pipe-title">Round Differential</div>
-            <div class="pipe-desc">Every map is scored by round margin. A 13&ndash;2 win carries far more signal than a 13&ndash;11 win, but big margins are <strong>sqrt-compressed</strong> &mdash; blowouts give diminishing returns rather than scaling linearly.</div>
-            <div class="pipe-graphic">
-              <div class="pg-scorebar">
-                <div class="pg-score-row">
-                  <div class="pg-score-label">13&ndash;2</div>
-                  <div class="pg-bar-track"><div class="pg-bar-fill pg-bar-big" id="pg0-b1"></div></div>
-                  <div class="pg-score-diff pg-score-diff-big">+11</div>
-                </div>
-                <div class="pg-score-row">
-                  <div class="pg-score-label">13&ndash;11</div>
-                  <div class="pg-bar-track"><div class="pg-bar-fill pg-bar-small" id="pg0-b2"></div></div>
-                  <div class="pg-score-diff pg-score-diff-small">+2</div>
-                </div>
-              </div>
-              <div class="pg-note">bigger margin &rarr; larger weight in the Massey solve</div>
-            </div>
+    <!-- Year scrubber + Period segments -->
+    <div class="ranks-controls">
+      <div class="ranks-row">
+        <div class="yr-scrubber" id="yr-scrubber">
+          <div class="yr-track" id="yr-track">
+            <div class="yr-tick" data-year="2023" style="left:0%"></div>
+            <div class="yr-tick" data-year="2024" style="left:33.33%"></div>
+            <div class="yr-tick active" data-year="2025" style="left:66.66%"></div>
+            <div class="yr-tick" data-year="2026" style="left:100%"></div>
+            <div class="yr-knob" id="yr-knob" style="left:66.66%"></div>
           </div>
-        </div>
-
-        <div class="pipe-connector" id="pc0"><div class="pipe-particle" id="pp0a"></div><div class="pipe-particle pipe-particle-b" id="pp0b"></div></div>
-
-        <!-- Stage 2: Massey System -->
-        <div class="pipe-stage" id="ps1" data-idx="1" onclick="focusPipe(1)">
-          <div class="pipe-num pipe-n1">2</div>
-          <div class="pipe-content">
-            <div class="pipe-title">Massey Rating System</div>
-            <div class="pipe-desc">A linear algebra solve finds the rating vector that best explains all observed round differentials simultaneously. One solve per map. Mean-zero constraint. <strong>International maps carry higher weight</strong> (Masters &times;2, Champions &times;4), and each historical game is further reweighted by <strong>roster continuity</strong> &mdash; how much of each team&rsquo;s current starting five played in that match.</div>
-            <div class="pipe-graphic">
-              <div style="padding:4px 0 2px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
-                <svg width="134" height="62" style="display:block;flex-shrink:0;overflow:visible">
-                  <rect x="0" y="2" width="58" height="54" rx="6" fill="#ede8f8" id="pg1-m" style="opacity:0;transition:opacity .35s"/>
-                  <text x="4"  y="16" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m1" style="opacity:0;transition:opacity .35s"> 1  0 -1  0</text>
-                  <text x="4"  y="27" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m2" style="opacity:0;transition:opacity .35s">-1  1  0  0</text>
-                  <text x="4"  y="38" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m3" style="opacity:0;transition:opacity .35s"> 0 -1  1  0</text>
-                  <text x="4"  y="49" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m4" style="opacity:0;transition:opacity .35s"> 0  0 -1  1</text>
-                  <text x="22" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-ml" style="opacity:0;transition:opacity .35s">M</text>
-                  <text x="65" y="36" font-size="18" font-family="sans-serif" fill="#c8b8e0" id="pg1-dot" style="opacity:0;transition:opacity .35s">&middot;</text>
-                  <rect x="74" y="6"  width="16" height="50" rx="4" fill="#e8e0f8" id="pg1-rv" style="opacity:0;transition:opacity .35s"/>
-                  <text x="77" y="20" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r1" style="opacity:0;transition:opacity .35s">r&#8321;</text>
-                  <text x="77" y="32" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r2" style="opacity:0;transition:opacity .35s">r&#8322;</text>
-                  <text x="77" y="44" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r3" style="opacity:0;transition:opacity .35s">r&#8323;</text>
-                  <text x="76" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-rl" style="opacity:0;transition:opacity .35s">r</text>
-                  <text x="96" y="36" font-size="14" font-family="sans-serif" fill="#c8b8e0" id="pg1-eq" style="opacity:0;transition:opacity .35s">=</text>
-                  <rect x="109" y="6" width="16" height="50" rx="4" fill="#dff0e8" id="pg1-pv" style="opacity:0;transition:opacity .35s"/>
-                  <text x="111" y="20" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p1" style="opacity:0;transition:opacity .35s">+8</text>
-                  <text x="111" y="32" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p2" style="opacity:0;transition:opacity .35s">-3</text>
-                  <text x="111" y="44" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p3" style="opacity:0;transition:opacity .35s">+5</text>
-                  <text x="110" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-pl" style="opacity:0;transition:opacity .35s">p</text>
-                </svg>
-                <div style="font-size:.68rem;color:var(--soft);line-height:1.8;padding-top:4px">
-                  <strong style="color:var(--ink)">M</strong> = matchup matrix<br>
-                  <strong style="color:var(--ink)">r</strong> = ratings (unknown)<br>
-                  <strong style="color:var(--ink)">p</strong> = round differentials
-                </div>
-              </div>
-            </div>
+          <div class="yr-labels">
+            <span data-year="2023">2023</span>
+            <span data-year="2024">2024</span>
+            <span class="active" data-year="2025">2025</span>
+            <span data-year="2026">2026</span>
           </div>
-        </div>
-
-        <div class="pipe-connector" id="pc1"><div class="pipe-particle" id="pp1a"></div><div class="pipe-particle pipe-particle-b" id="pp1b"></div></div>
-
-        <!-- Stage 3: Recency Decay -->
-        <div class="pipe-stage" id="ps2" data-idx="2" onclick="focusPipe(2)">
-          <div class="pipe-num pipe-n2">3</div>
-          <div class="pipe-content">
-            <div class="pipe-title">Recency Decay</div>
-            <div class="pipe-desc">Game weights follow <code>exp(&minus;&lambda;&thinsp;&times;&thinsp;weeks&thinsp;ago)</code>. Half-life = 5 weeks.</div>
-            <div class="pipe-graphic">
-              <div class="pg-decay-wrap"><canvas class="pg-decay-canvas" id="pg2-canvas"></canvas></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pipe-connector" id="pc2"><div class="pipe-particle" id="pp2a"></div><div class="pipe-particle pipe-particle-b" id="pp2b"></div></div>
-
-        <!-- Stage 4: James-Stein Shrinkage -->
-        <div class="pipe-stage" id="ps3" data-idx="3" onclick="focusPipe(3)">
-          <div class="pipe-num pipe-n3">4</div>
-          <div class="pipe-content">
-            <div class="pipe-title">James&ndash;Stein Shrinkage</div>
-            <div class="pipe-desc">Per-map ratings with smaller sample sizes are blended toward the team&rsquo;s overall rating.</div>
-            <div class="pipe-graphic">
-              <div style="padding:4px 0 2px;display:flex;gap:10px;flex-wrap:wrap">
-                <div style="background:#f8f4fc;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
-                  <strong style="font-family:'Syne',sans-serif;color:var(--ink)">2 games</strong><br>
-                  <span style="color:var(--soft)">&alpha; &asymp; 0.14<br>heavy pull &rarr; overall</span>
-                </div>
-                <div style="background:#f0f8f4;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
-                  <strong style="font-family:'Syne',sans-serif;color:var(--ink)">20 games</strong><br>
-                  <span style="color:var(--soft)">&alpha; &asymp; 0.63<br>mostly raw map signal</span>
-                </div>
-              </div>
-              <div class="pg-note"><span id="pg3-alpha-formula"></span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pipe-connector" id="pc3"><div class="pipe-particle" id="pp3a"></div><div class="pipe-particle pipe-particle-b" id="pp3b"></div></div>
-
-        <!-- Stage 5: Monte Carlo Veto -->
-        <div class="pipe-stage" id="ps4" data-idx="4" onclick="focusPipe(4)">
-          <div class="pipe-num pipe-n4">5</div>
-          <div class="pipe-content">
-            <div class="pipe-title">Monte Carlo Veto Simulation</div>
-            <div class="pipe-desc">Each team runs through 10,000 simulated BO3 vetoes against league-average opponents using historical ban/pick patterns. Expected round-diff across the surviving maps becomes the headline rating. Thus, a great ban target is worth as much as a great map.</div>
-            <div class="pipe-graphic">
-              <div style="display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap">
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#5a2a7a;padding:2px 7px;background:linear-gradient(135deg,#f0e8ff,#e0d0f8);border-radius:5px;box-shadow:0 0 0 1px #c8a0e8">float</span>
-              </div>
-              <div class="pg-veto" id="pg4-veto">
-                <div class="pg-map-chip">Abyss</div>
-                <div class="pg-map-chip">Ascent</div>
-                <div class="pg-map-chip">Bind</div>
-                <div class="pg-map-chip">Haven</div>
-                <div class="pg-map-chip">Lotus</div>
-                <div class="pg-map-chip">Pearl</div>
-                <div class="pg-map-chip">Split</div>
-              </div>
-              <div class="pg-note">10,000 simulated sequences &rarr; expected round diff across picked maps</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pipe-connector" id="pc4"><div class="pipe-particle" id="pp4a"></div><div class="pipe-particle pipe-particle-b" id="pp4b"></div></div>
-
-        <!-- Stage 6: International Calibration -->
-        <div class="pipe-stage" id="ps5" data-idx="5" onclick="focusPipe(5)">
-          <div class="pipe-num pipe-n5">6</div>
-          <div class="pipe-content">
-            <div class="pipe-title">International Calibration</div>
-            <div class="pipe-desc">All Masters, Champions, and VCT CN maps from 2023&ndash;2026 are included as time-decayed prior anchors. Older games carry less weight via the same exp(&minus;&lambda;t) decay, stabilizing inter-regional offsets. <strong>CN teams get intl-confidence shrinkage</strong>: teams with deep international r&eacute;sum&eacute;s (EDG, XLG) keep their raw signal; teams with no intl exposure are pulled toward a CN-baseline prior. A <strong>regional spillover dampener</strong> also prevents one team&rsquo;s intl run from inflating their entire league&rsquo;s non-attendees.</div>
-            <div class="pipe-graphic">
-              <div class="pg-regions" id="pg5-regions">
-                <div class="pg-region">
-                  <div class="pg-region-bubble r-emea" id="pg5-emea">+&delta;</div>
-                  <div class="pg-region-name">EMEA</div>
-                </div>
-                <div class="pg-intl-arrow">&#8596;</div>
-                <div class="pg-region">
-                  <div class="pg-region-bubble r-am" id="pg5-am">&minus;&delta;</div>
-                  <div class="pg-region-name">Americas</div>
-                </div>
-                <div class="pg-intl-arrow">&#8596;</div>
-                <div class="pg-region">
-                  <div class="pg-region-bubble r-pac" id="pg5-pac">+&delta;</div>
-                  <div class="pg-region-name">Pacific</div>
-                </div>
-                <div class="pg-intl-arrow">&#8596;</div>
-                <div class="pg-region">
-                  <div class="pg-region-bubble r-cn" id="pg5-cn">&minus;&delta;</div>
-                  <div class="pg-region-name">China</div>
-                </div>
-              </div>
-              <div class="pg-note">2023&ndash;2026 intl priors &rarr; calibrated inter-regional offsets + CN shrinkage for unproven teams</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="pipe-connector" id="pc5"><div class="pipe-particle" id="pp5a"></div><div class="pipe-particle pipe-particle-b" id="pp5b"></div></div>
-
-        <!-- Stage 7: Global Rating -->
-        <div class="pipe-stage" id="ps6" data-idx="6" onclick="focusPipe(6)">
-          <div class="pipe-num pipe-n6">&#10003;</div>
-          <div class="pipe-content">
-            <div class="pipe-title">Global Rating &amp; Win Probability</div>
-            <div class="pipe-desc">The final rating combines domestic league results with inter-regional calibration from decayed international priors into a single globally-comparable number.</div>
-            <div class="pipe-graphic">
-              <div class="pg-formula" id="pg6-formula">
-                <div class="pg-formula-part pg-formula-dom"  id="pg6-p0">domestic</div>
-                <div class="pg-formula-part pg-formula-op"   id="pg6-p1">+</div>
-                <div class="pg-formula-part pg-formula-intl" id="pg6-p2">intl priors</div>
-                <div class="pg-formula-part pg-formula-op"   id="pg6-p3">=</div>
-                <div class="pg-formula-part pg-formula-global" id="pg6-p4">global rating</div>
-              </div>
-              <div class="pg-note">win probability: 10,000 veto sims using global ratings on both sides</div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px">
-        <button class="pipe-replay-btn" id="pipe-replay-btn" onclick="replayPipeline()">&#9654; Replay</button>
-        <button class="model-card-toggle" id="model-details-toggle" onclick="toggleModelDetails()" style="font-size:.6rem"><i class="toggle-arrow" id="details-arrow">&#9654;</i> details</button>
-      </div>
-      <div class="model-collapsible" id="model-details-collapsible">
-        <div class="chart-section" id="lambda-chart-section" style="margin-top:8px;">
-          <div class="chart-title">Decay optimization &mdash; CV Brier score vs. half-life</div>
-          <div class="chart-wrap"><canvas id="lambda-chart"></canvas></div>
-        </div>
-        <div class="model-stats">
-          <div class="stat-pill"><span class="stat-pill-label">Half-life</span><span class="stat-pill-value" id="stat-hl">&mdash;</span></div>
-          <div class="stat-pill"><span class="stat-pill-label">Brier (held-out 2025)</span><span class="stat-pill-value good" id="stat-brier">&mdash;</span></div>
-          <div class="stat-pill"><span class="stat-pill-label">Baseline</span><span class="stat-pill-value">0.2500</span></div>
-          <div class="stat-pill"><span class="stat-pill-label">Train maps</span><span class="stat-pill-value" id="stat-train">&mdash;</span></div>
-          <div class="stat-pill"><span class="stat-pill-label">Test maps</span><span class="stat-pill-value" id="stat-test">&mdash;</span></div>
-          <div class="stat-pill"><span class="stat-pill-label">Veto sims/team</span><span class="stat-pill-value" id="stat-sims">&mdash;</span></div>
         </div>
       </div>
+      <div class="ranks-row">
+        <span class="ranks-row-label">Period</span>
+        <div class="period-seg" id="period-seg"></div>
+      </div>
+      <div class="ranks-row">
+        <span class="ranks-row-label">Region</span>
+        <div class="period-seg" id="region-pills">
+          <button class="period-seg-btn active" data-region="All">All Regions</button>
+          <button class="period-seg-btn" data-region="Americas">Americas</button>
+          <button class="period-seg-btn" data-region="EMEA">EMEA</button>
+          <button class="period-seg-btn" data-region="Pacific">Pacific</button>
+          <button class="period-seg-btn" data-region="CN">China</button>
+          <button class="period-seg-btn" data-region="Top10">Top 10 Globally</button>
+        </div>
+      </div>
+      <div class="ranks-row no-graph-row">
+        <label class="no-graph-toggle">
+          <input type="checkbox" id="no-graph-cb">
+          <span>Hide graph</span>
+        </label>
       </div>
     </div>
 
-    <!-- Year / Period / Map filters -->
-    <div class="filter-row">
-      <span class="filter-label">Year</span>
-      <button class="tab-btn year-btn active" data-year="2026">2026</button>
-      <button class="tab-btn year-btn" data-year="2025">2025</button>
-      <button class="tab-btn year-btn" data-year="2024">2024</button>
-      <button class="tab-btn year-btn" data-year="2023">2023</button>
-    </div>
-    <div class="filter-row" id="period-filter-row" style="display:none">
-      <span class="filter-label">Period</span>
-      <select id="period-select" class="period-select"></select>
-    </div>
-    <div class="filter-row-maps" id="map-filter-row">
-      <span class="filter-label">Map</span>
-    </div>
-
-    <div class="card">
-      <div class="table-wrap">
-        <table id="ratings-table">
-          <thead>
-            <tr>
-              <th data-col="rank" style="cursor:default">#</th>
-              <th data-col="org" style="cursor:default">Team</th>
-              <th id="rating-th" data-col="overall_rating">Rating</th>
-              <th data-col="w" style="cursor:default">W&ndash;L</th>
-              <th data-col="win_pct">Win%</th>
-            </tr>
-          </thead>
-          <tbody id="ratings-body"></tbody>
-        </table>
+    <!-- Animated chart -->
+    <div class="chart-card" id="chart-card">
+      <div class="chart-header">
+        <span class="ranks-chart-title" id="chart-title">BenPom Rating &mdash; 2025 Season</span>
+        <div class="chart-header-row">
+          <span class="chart-asof" id="chart-asof"></span>
+          <button class="chart-btn" id="replay-btn" onclick="replayChart()" title="Replay season animation">&#8635; Replay</button>
+        </div>
+        <p class="chart-hint">Hover a line to focus &middot; click a logo to lock the team &middot; press <kbd style="background:rgba(0,0,0,.07);border-radius:4px;padding:1px 5px;font-weight:700">W</kbd>/<kbd style="background:rgba(0,0,0,.07);border-radius:4px;padding:1px 5px;font-weight:700">S</kbd> to cycle &middot; <kbd style="background:rgba(0,0,0,.07);border-radius:4px;padding:1px 5px;font-weight:700">X</kbd> to clear</p>
+      </div>
+      <div class="chart-wrap" id="chart-wrap">
+        <canvas id="benpomChart"></canvas>
+        <div id="dotTooltip"><div class="popup-inner" id="dotTooltipContent"></div></div>
       </div>
     </div>
-  </div>
-</div>
 
-<div id="team-modal" class="modal-backdrop" style="display:none" onclick="if(event.target===this)closeModal()">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-    <div id="modal-content"></div>
+    <!-- White leaderboard with click-to-expand -->
+    <div class="lb-card">
+      <div class="lb-header-row">
+        <span class="lb-title" id="lb-title">Rankings</span>
+        <span class="lb-asof" id="lb-asof"></span>
+      </div>
+      <div class="lb-col-hdr" id="lb-col-hdr">
+        <span class="sortable" data-sort="rank">#</span>
+        <span>Team</span>
+        <span class="sortable" data-sort="rating">Rating</span>
+        <span>Region</span>
+        <span></span>
+      </div>
+      <div id="lb-body"><div class="lb-loading-spinner">Loading rankings&hellip;</div></div>
+    </div>
   </div>
 </div>
 
@@ -1676,12 +1688,10 @@ var DATA = RATINGS_JSON;
 var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
-var currentYear     = '2026';
-var currentSnap     = (function(){ var keys=Object.keys((DATA.ratings['2026']||{}).snapshots||{}); return keys.indexOf('after_champions')>=0?'after_champions':keys[keys.length-1]||'after_champions'; })();
-var currentMap      = null;
-var currentModalOrg = '';
-var sortCol = 'overall_rating';
-var sortDir = -1;
+// Compat shims for getSnaps/getSnap (only used by harmless leftover helpers).
+// New code reads STATE.year / STATE.snap instead.
+var currentYear = '2025';
+var currentSnap = 'after_champions';
 
 function getGlobalRating(org, snapKey, domesticRating) {
   var cal = INTL[snapKey] || {};
@@ -1916,414 +1926,1261 @@ function replayPipeline() {
   _runPipeStep(0, _pipelineDone);
 }
 
-// ── Data accessors ──────────────────────────────────────────────────────────
+// ── Data accessors (used by old modal/team-extra; harmless leftovers) ─────
 
 function getSnaps() {
   var yr = DATA.ratings[currentYear];
   return (yr && yr.snapshots) ? yr.snapshots : {};
 }
-
 function getSnap() {
   var snaps = getSnaps();
-  return snaps[currentSnap] || snaps['after_champions'] || snaps['before_champions'] || snaps[Object.keys(snaps)[Object.keys(snaps).length-1]] || {};
+  return snaps[currentSnap] || snaps[Object.keys(snaps)[Object.keys(snaps).length-1]] || {};
 }
-
-function getTeams() {
-  var snap = getSnap();
-  if (!snap.teams) return [];
-  return Object.entries(snap.teams).map(function(e) {
-    return Object.assign({org: e[0]}, e[1]);
-  });
-}
-
-function getMaps() {
-  var seen = {};
-  getTeams().forEach(function(t) {
-    Object.keys(t.maps || {}).forEach(function(m) { seen[m] = true; });
-  });
-  return Object.keys(seen).sort();
-}
-
-function getVal(t, col) {
-  if (currentMap && t.maps && t.maps[currentMap]) {
-    var md = t.maps[currentMap];
-    if (col === 'overall_rating') return md.rating;
-    if (col === 'win_pct')        return md.win_pct;
-  }
-  if (col === 'overall_rating' && !currentMap) {
-    return t.overall_rating;
-  }
-  return t[col];
-}
-
 function ratingClass(v) {
   if (v > 0.05) return 'rating-pos';
   if (v < -0.05) return 'rating-neg';
   return 'rating-neu';
 }
 
-// ── Filter renderers ────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────────────────────
+// Historical Rankings: state + chart + leaderboard (Modern-Hub-style)
+// ────────────────────────────────────────────────────────────────────────────
+var STATE = {
+  year: '2025',
+  snap: 'after_champions',
+  data: null,                         // payload from /mapelo/rankings/data
+  cache: {},                          // (year|snap) -> payload
+  selectedTeam: null,                 // chart focus
+  hoveredOrg: null,
+  expandedOrg: null,
+  teamInfoCache: {},                  // (year|snap|org) -> {roster, recent_matches}
+  sortCol: 'rating',                  // 'rank' | 'rating' — clickable column headers
+  sortDir: -1,                        // -1 desc (default for rating), 1 asc
+  activeRegion: 'All',                // 'All' | 'Americas' | 'EMEA' | 'Pacific' | 'CN' | 'Top10'
+};
 
-function renderPeriodFilter() {
-  var snaps = getSnaps();
-  // The "Live" snapshot belongs to the Modern Hub, not the historical rankings
-  // page — hide it from the period dropdown here. Any in-progress event keeps
-  // its data accessible via the prior "after_<event>" snapshot.
-  var keys  = Object.keys(snaps).filter(function(k){
-    return (snaps[k].label || '').toLowerCase() !== 'live';
+// Returns the subset of teams that the current region pill says to show.
+// "All" passes everything; "Top10" returns the highest-rated 10 across all
+// regions (sorted by team.rating desc, same field the leaderboard and chart
+// endpoint use); a region key filters to teams from that region only.
+function _visibleTeamsForRegion(allTeams) {
+  if (STATE.activeRegion === 'All')   return allTeams;
+  if (STATE.activeRegion === 'Top10') {
+    return allTeams.slice().sort(function(a, b) { return b.rating - a.rating; }).slice(0, 10);
+  }
+  return allTeams.filter(function(t) { return t.region === STATE.activeRegion; });
+}
+var myChart = null;
+var logos = {};
+var YEARS_LIST = ['2023', '2024', '2025', '2026'];
+
+var TEAM_COLORS = {
+  PRX:'#ED1C7C', T1:'#E2012D', FS:'#FF6A00', GE:'#1E90FF',
+  GEN:'#AA8E4F', NS:'#DC0000', DFM:'#1565C0', RRQ:'#FFA500',
+  KRX:'#0B1F4D', TS:'#FFCC00', ZETA:'#000000', VL:'#8C8C8C',
+  G2:'#000000', '100T':'#E21F26', LEV:'#00D4D4', NRG:'#FF6B00',
+  'KRÜ':'#FF1493', FUR:'#000000', SEN:'#C8102E', MIBR:'#000000',
+  LOUD:'#00FF7F', C9:'#00B6E8', EG:'#0073CF', ENVY:'#6A0DAD',
+  VIT:'#FFD100', TH:'#FFD700', FNC:'#FF5900', TL:'#002B5C',
+  NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#4FC3F7',
+  M8:'#39FF14', BBL:'#D4AF37', EF:'#D4AF37', PCF:'#87CEEB',
+  EDG:'#E60012', BLG:'#FB7299', TE:'#00B0FF', DRG:'#FFD600',
+  ASE:'#FF6F00', AG:'#FF8800', XLG:'#1A1A1A', WOL:'#F5C400',
+  FPX:'#E60012', JDG:'#00C853', NOVA:'#7B1FA2', TEC:'#1565C0',
+  TYL:'#D32F2F', TYLOO:'#D32F2F',
+  DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
+  MKOI:'#7C3AED', KOI:'#7C3AED', GIA:'#FFFFFF',
+};
+var LOGO_SCALES = { ZETA: 0.72 };
+
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+// ── Data fetch + cache ──────────────────────────────────────────────────────
+async function fetchRankingsData(year, snap) {
+  var key = year + '|' + (snap || '');
+  if (STATE.cache[key]) return STATE.cache[key];
+  var qs = 'year=' + encodeURIComponent(year);
+  if (snap) qs += '&snap=' + encodeURIComponent(snap);
+  var resp = await fetch('/mapelo/rankings/data?' + qs);
+  var data = await resp.json();
+  STATE.cache[key] = data;
+  return data;
+}
+
+async function preloadLogos(teams) {
+  await Promise.all((teams || []).map(function(t) {
+    return new Promise(function(res) {
+      var org = t.org;
+      if (logos[org]) return res();
+      var img = new Image();
+      img.onload  = function() { logos[org] = img; res(); };
+      img.onerror = res;
+      img.src = '/static/logos/' + org + '.png';
+    });
+  }));
+}
+
+// ── Year scrubber ───────────────────────────────────────────────────────────
+function setYearLocal(year) {
+  STATE.year = year;
+  var sc = document.getElementById('yr-scrubber');
+  sc.querySelectorAll('.yr-tick').forEach(function(t) { t.classList.toggle('active', t.dataset.year === year); });
+  sc.querySelectorAll('.yr-labels span').forEach(function(s) { s.classList.toggle('active', s.dataset.year === year); });
+  var pct = (YEARS_LIST.indexOf(year) / (YEARS_LIST.length - 1)) * 100;
+  document.getElementById('yr-knob').style.left = pct + '%';
+}
+
+function _initYearScrubber() {
+  var sc = document.getElementById('yr-scrubber');
+  var track = document.getElementById('yr-track');
+  function knobYearFromX(clientX) {
+    var r = track.getBoundingClientRect();
+    var ratio = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    var idx = Math.round(ratio * (YEARS_LIST.length - 1));
+    return YEARS_LIST[idx];
+  }
+  sc.querySelectorAll('.yr-tick, .yr-labels span').forEach(function(el) {
+    el.addEventListener('click', function() { onYearChange(el.dataset.year); });
   });
-  var row   = document.getElementById('period-filter-row');
-  var sel   = document.getElementById('period-select');
+  var dragging = false;
+  track.addEventListener('mousedown', function(e) {
+    dragging = true;
+    onYearChange(knobYearFromX(e.clientX));
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    var y = knobYearFromX(e.clientX);
+    if (y !== STATE.year) onYearChange(y);
+  });
+  document.addEventListener('mouseup', function() { dragging = false; });
+  track.addEventListener('touchstart', function(e) {
+    var t = e.touches[0]; dragging = true;
+    onYearChange(knobYearFromX(t.clientX));
+  }, {passive: true});
+  document.addEventListener('touchmove', function(e) {
+    if (!dragging) return;
+    var t = e.touches[0]; var y = knobYearFromX(t.clientX);
+    if (y !== STATE.year) onYearChange(y);
+  }, {passive: true});
+  document.addEventListener('touchend', function() { dragging = false; });
+}
 
-  if (keys.length <= 1) { row.style.display = 'none'; return; }
-  row.style.display = 'flex';
+async function onYearChange(year) {
+  if (year === STATE.year) return;
+  setYearLocal(year);
+  // Pick a sensible default snap for that year: last (most recent) non-Live snap.
+  // We don't know it yet — let the backend resolve by passing snap=''.
+  await loadAndRender(year, null);
+}
 
-  // If currentSnap is the now-hidden "Live" snap, fall back to the last
-  // non-live snap so the rest of the page renders sensibly.
-  if (keys.indexOf(currentSnap) < 0) currentSnap = keys[keys.length - 1];
+async function onSnapChange(snap) {
+  if (snap === STATE.snap) return;
+  await loadAndRender(STATE.year, snap);
+}
 
-  sel.innerHTML = '';
-  keys.forEach(function(k) {
-    var opt = document.createElement('option');
-    opt.value = k;
-    opt.textContent = snaps[k].label;
-    opt.selected = (currentSnap === k);
-    sel.appendChild(opt);
+// ── Period (snap) segmented buttons ─────────────────────────────────────────
+function renderPeriodSeg() {
+  var seg = document.getElementById('period-seg');
+  if (!STATE.data) { seg.innerHTML = ''; return; }
+  var opts = STATE.data.snap_options || [];
+  seg.innerHTML = '';
+  opts.forEach(function(opt) {
+    var b = document.createElement('button');
+    b.className = 'period-seg-btn' + (opt.id === STATE.snap ? ' active' : '');
+    b.textContent = opt.label;
+    b.dataset.snap = opt.id;
+    b.addEventListener('click', function() { onSnapChange(opt.id); });
+    seg.appendChild(b);
   });
 }
 
-document.getElementById('period-select').addEventListener('change', function() {
-  if (currentSnap === this.value) return;
-  currentSnap = this.value;
-  currentMap  = null;
-  sortCol = 'overall_rating'; sortDir = -1;
-  renderPeriodFilter();
-  renderMapFilter();
-  renderTable();
-});
+// ── Load + render orchestration ─────────────────────────────────────────────
+var _lastAnimationGen = 0;
+async function loadAndRender(year, snap) {
+  // Save scroll position so the page doesn't jump when we swap the
+  // leaderboard out for a short loading spinner. Without this, blanking the
+  // (~2000px) team list to a small loading message shortens the document
+  // height, the browser clamps scrollY to the new max, and the view appears
+  // to "scroll up". We restore the same scrollY synchronously after
+  // re-rendering content of comparable height.
+  var prevScrollY = window.scrollY;
+  document.getElementById('lb-body').innerHTML = '<div class="lb-loading-spinner">Loading rankings&hellip;</div>';
+  var data = await fetchRankingsData(year, snap);
+  STATE.year = String(data.year);
+  STATE.snap = data.snap;
+  STATE.data = data;
+  STATE.selectedTeam = null;
+  STATE.expandedOrg = null;
+  // Reflect year on the scrubber (in case backend resolved a different snap)
+  setYearLocal(STATE.year);
+  document.getElementById('chart-title').textContent = 'BenPom Rating — ' + STATE.year + ' Season';
+  document.getElementById('chart-asof').textContent = data.ref_date ? ('Through ' + data.ref_date) : '';
+  document.getElementById('lb-title').textContent = data.snap_label || 'Rankings';
+  document.getElementById('lb-asof').textContent = data.ref_date ? ('As of ' + data.ref_date) : '';
+  renderPeriodSeg();
+  await preloadLogos((data.leaderboard && data.leaderboard.teams) || []);
+  _computeGlobalYRange(data);
+  buildChart(data, true);  // initial paint with no lines (axes + bands only)
+  renderLeaderboard(data);
+  // Leaderboard is back at full height — pin scrollY to where the user was.
+  window.scrollTo(0, prevScrollY);
+  var gen = ++_lastAnimationGen;
+  // animateAxesOverlay handles the rebuild-with-lines between phase 1 and
+  // phase 2 so the curtain sweep actually reveals visible lines left→right.
+  await animateAxesOverlay(data, function() {
+    if (gen !== _lastAnimationGen) return false;
+    buildChart(data, false);
+    return true;
+  });
+}
 
-function renderMapFilter() {
-  var maps = getMaps();
-  var row  = document.getElementById('map-filter-row');
-  row.querySelectorAll('.map-btn').forEach(function(b) { b.remove(); });
+// ── Chart ────────────────────────────────────────────────────────────────────
+var _chartYMin = null, _chartYMax = null;
+function _computeGlobalYRange(data) {
+  var peak = 1;
+  ((data.chart && data.chart.checkpoints) || []).forEach(function(cp) {
+    Object.keys(cp.ratings || {}).forEach(function(o) {
+      var v = Math.abs(cp.ratings[o]);
+      if (v > peak) peak = v;
+    });
+  });
+  var bound = Math.max(1, Math.ceil(peak));
+  _chartYMin = -bound; _chartYMax = bound;
+}
 
-  function addBtn(label, mapVal) {
-    var btn = document.createElement('button');
-    btn.className = 'tab-btn map-btn' + (currentMap === mapVal ? ' active' : '');
-    btn.textContent = label;
-    row.appendChild(btn);
-    btn.addEventListener('click', function() {
-      if (currentMap === mapVal) return;
-      currentMap = mapVal;
-      sortCol = 'overall_rating'; sortDir = -1;
-      renderMapFilter();
-      renderTable();
+function _xAxisBoundsFor(data) {
+  // The x-axis ALWAYS spans the full VCT season regardless of which period
+  // is selected — only the chart lines (data series) get trimmed at ref_date.
+  // Extra padding on both ends so logos + their hover popups at the right
+  // edge (and the first match dot on the left) don't get clipped.
+  var yr = String(data.year || new Date().getFullYear());
+  return { min: yr + '-01-01', max: yr + '-11-20' };
+}
+
+function makeBandsPlugin(bands) {
+  var COLS = [
+    'rgba(147,112,219,.08)','rgba(100,149,237,.08)','rgba(128,200,100,.08)',
+    'rgba(255,180,100,.08)','rgba(100,200,220,.08)','rgba(200,120,180,.08)',
+  ];
+  return {
+    id: 'eventBands',
+    beforeDraw: function(chart) {
+      var ctx = chart.ctx, ca = chart.chartArea, x = chart.scales.x;
+      (bands || []).forEach(function(band, i) {
+        var x1 = Math.max(ca.left,  x.getPixelForValue(new Date(band.start)));
+        var x2 = Math.min(ca.right, x.getPixelForValue(new Date(band.end)));
+        if (x2 <= x1) return;
+        ctx.fillStyle = COLS[i % COLS.length];
+        ctx.fillRect(x1, ca.top, x2 - x1, ca.bottom - ca.top);
+        ctx.save();
+        ctx.font = 'bold 10px DM Sans,sans-serif';
+        ctx.fillStyle = 'rgba(60,30,100,.35)';
+        ctx.textAlign = 'center';
+        ctx.fillText(band.label, (x1 + x2) / 2, ca.top + 14);
+        ctx.restore();
+      });
+    },
+  };
+}
+
+// ── Logo grow/shrink animation + endpoint cards ─────────────────────────────
+var _logoAnimState = new Map();
+var _logoAnimRaf = null;
+var _LOGO_ANIM_MS = 95;
+function _tickLogoAnim() {
+  var busy = false;
+  var now = performance.now();
+  _logoAnimState.forEach(function(st) {
+    if (st.progress === st.target) return;
+    var p = Math.min((now - st.startTime) / _LOGO_ANIM_MS, 1);
+    var ep = 1 - Math.pow(1 - p, 4);
+    st.progress = st.startProg + ep * (st.target - st.startProg);
+    if (p < 1) busy = true;
+    else st.progress = st.target;
+  });
+  if (myChart) try { myChart.draw(); } catch (_) {}
+  _logoAnimRaf = busy ? requestAnimationFrame(_tickLogoAnim) : null;
+}
+function _setLogoTarget(org, target) {
+  var st = _logoAnimState.get(org);
+  if (!st) {
+    st = { progress: target, target: target, startProg: target, startTime: 0 };
+    _logoAnimState.set(org, st);
+    return;
+  }
+  if (st.target === target) return;
+  st.startProg = st.progress;
+  st.target    = target;
+  st.startTime = performance.now();
+  if (!_logoAnimRaf) _logoAnimRaf = requestAnimationFrame(_tickLogoAnim);
+}
+
+var logoPlugin = {
+  id: 'teamLogos',
+  afterDatasetsDraw: function(chart) {
+    var ctx = chart.ctx, ca = chart.chartArea;
+    var xs = chart.scales.x, ys = chart.scales.y;
+    chart.data.datasets.forEach(function(ds) {
+      if (!ds.data || !ds.data.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed || ds._noLogo) return;
+      var last = ds.data[ds.data.length - 1];
+      var px = xs.getPixelForValue(new Date(last.x));
+      var py = ys.getPixelForValue(last.y);
+      if (px < ca.left || px > ca.right + 30) return;
+      var isFocused = (STATE.selectedTeam === ds.org) || (STATE.hoveredOrg === ds.org);
+      _setLogoTarget(ds.org, isFocused ? 1 : 0);
+      var st = _logoAnimState.get(ds.org) || { progress: isFocused ? 1 : 0 };
+      var prog = st.progress;
+      var sz = 22;
+      // Dot fades out as logo grows in
+      if (prog < 0.999) {
+        ctx.save();
+        ctx.globalAlpha = 1 - prog;
+        ctx.beginPath(); ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = ds.borderColor; ctx.fill();
+        ctx.restore();
+      }
+      if (prog <= 0.001) return;
+      var cx = px + 4 + sz / 2;
+      var ringR = sz / 2 + 4;
+      var drawCx = px + (cx - px) * prog;
+      ctx.save();
+      ctx.globalAlpha = prog;
+      ctx.translate(drawCx, py);
+      ctx.scale(prog, prog);
+      ctx.translate(-drawCx, -py);
+      var grd = ctx.createRadialGradient(drawCx, py, 0, drawCx, py, ringR);
+      grd.addColorStop(0, '#ffffff');
+      grd.addColorStop(0.62, '#ffffff');
+      grd.addColorStop(1, ds.borderColor);
+      ctx.beginPath(); ctx.arc(drawCx, py, ringR, 0, Math.PI * 2);
+      ctx.fillStyle = grd; ctx.fill();
+      ctx.beginPath(); ctx.arc(drawCx, py, sz / 2, 0, Math.PI * 2); ctx.clip();
+      var ls = (LOGO_SCALES[ds.org] != null) ? LOGO_SCALES[ds.org] : 1;
+      var dsz = sz * ls;
+      ctx.drawImage(logos[ds.org], drawCx - dsz / 2, py - dsz / 2, dsz, dsz);
+      ctx.restore();
+      // Info card only when fully expanded + this is the selected team
+      if (prog < 0.98) return;
+      if (STATE.selectedTeam !== ds.org || !STATE.data) return;
+      var team = (STATE.data.leaderboard.teams || []).find(function(t) { return t.org === ds.org; });
+      if (!team) return;
+      // One rating system — popup, line endpoint, leaderboard all use
+      // team.rating from the snapshot. The buildChart override above
+      // already pinned the line's last y to this same value.
+      var rStr = (team.rating >= 0 ? '+' : '') + team.rating.toFixed(2);
+      var wlStr = team.w + 'W – ' + team.l + 'L';
+      // Find current event band for label
+      var bands = STATE.data.event_bands || [];
+      var asOf = STATE.data.ref_date || '';
+      var curBand = bands.find(function(b) { return b.start <= asOf && asOf <= b.end; })
+                 || [].concat(bands).reverse().find(function(b) { return b.start <= asOf; });
+      var evLabel = curBand ? curBand.label : '';
+      var cardX = cx + sz / 2 + 8;
+      var cardW = 96, cardH = 52, cardR = 8;
+      var cardY = py - cardH / 2;
+      ctx.save();
+      ctx.shadowBlur = 10; ctx.shadowColor = 'rgba(0,0,0,.14)';
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
+      ctx.fillStyle = 'rgba(255,255,255,.97)'; ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardR);
+      ctx.strokeStyle = ds.borderColor + '55'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, 4, [cardR, cardR, 0, 0]);
+      ctx.fillStyle = ds.borderColor; ctx.fill();
+      ctx.font = 'bold 14px "DM Sans",sans-serif';
+      ctx.fillStyle = ds.borderColor; ctx.textAlign = 'center';
+      ctx.fillText(rStr, cardX + cardW / 2, cardY + 22);
+      ctx.font = '10.5px "DM Sans",sans-serif';
+      ctx.fillStyle = '#555';
+      ctx.fillText(wlStr, cardX + cardW / 2, cardY + 36);
+      if (evLabel) {
+        ctx.font = '9px "DM Sans",sans-serif';
+        ctx.fillStyle = '#999';
+        ctx.fillText(evLabel.slice(0, 14), cardX + cardW / 2, cardY + 48);
+      }
+      ctx.restore();
+    });
+  },
+};
+
+function buildChart(data, noLines) {
+  if (typeof noLines === 'undefined') noLines = false;
+  var checkpoints = (data.chart && data.chart.checkpoints) || [];
+  var matchEvents = (data.chart && data.chart.match_events) || [];
+  var allTeams    = (data.leaderboard && data.leaderboard.teams) || [];
+
+  var visibleTeams = _visibleTeamsForRegion(allTeams);
+  var visibleOrgs  = new Set(visibleTeams.map(function(t) { return t.org; }));
+
+  var datasets = [];
+  visibleTeams.forEach(function(team) {
+    var org = team.org;
+    var pts = checkpoints.filter(function(cp) { return org in cp.ratings; })
+                         .map(function(cp) { return { x: cp.date, y: cp.ratings[org] }; });
+    if (!pts.length) return;
+    // ONE rating system: snap the line's last y to team.rating so the
+    // endpoint, logo position, popup card, and leaderboard ALL show the
+    // same number. With the qualification cap removed in BuildMapRatings,
+    // the residual gap is small (~0.1-0.2) and only comes from the
+    // snapshot's ref_date decay weighting. Override (don't append) so we
+    // don't create a backwards bend.
+    if (typeof team.rating === 'number') {
+      pts[pts.length - 1].y = team.rating;
+    }
+    var color    = TEAM_COLORS[org] || '#888';
+    var isSel    = STATE.selectedTeam === org;
+    var isDimmed = STATE.selectedTeam !== null && !isSel;
+    datasets.push({
+      label: org, org: org,
+      data: pts,
+      borderColor: noLines ? 'transparent' : (isDimmed ? color + '28' : color),
+      backgroundColor: 'transparent',
+      borderWidth: noLines ? 0 : (isSel ? 2.5 : (STATE.selectedTeam ? 1 : 1.5)),
+      pointRadius: 0, pointHoverRadius: 0,
+      tension: 0.25, _dimmed: isDimmed, _noLogo: noLines,
+    });
+  });
+
+  // Match dots: selected team only (and only when that team is in the
+  // current region filter — otherwise the dots float without their line).
+  if (STATE.selectedTeam && visibleOrgs.has(STATE.selectedTeam)) {
+    var tm = matchEvents.filter(function(m) {
+      return m.winner === STATE.selectedTeam || m.loser === STATE.selectedTeam;
+    });
+    var wins = [], losses = [];
+    tm.forEach(function(m) {
+      var won = m.winner === STATE.selectedTeam;
+      var pt = { x: m.date, y: won ? m.winner_after : m.loser_after, _m: m, _won: won };
+      (won ? wins : losses).push(pt);
+    });
+    if (wins.length)
+      datasets.push({ type:'scatter', label:'Win',  org:STATE.selectedTeam, data:wins,  backgroundColor:'#4ade80', pointRadius:7, pointHoverRadius:9, borderWidth:0, _dimmed:false });
+    if (losses.length)
+      datasets.push({ type:'scatter', label:'Loss', org:STATE.selectedTeam, data:losses, backgroundColor:'#f87171', pointRadius:7, pointHoverRadius:9, borderWidth:0, _dimmed:false });
+  }
+
+  var bandsPlugin = makeBandsPlugin(data.event_bands || []);
+  if (myChart) myChart.destroy();
+  var bounds = _xAxisBoundsFor(data);
+  var ctx = document.getElementById('benpomChart').getContext('2d');
+  myChart = new Chart(ctx, {
+    type: 'line',
+    data: { datasets: datasets },
+    options: {
+      animation: false,
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'point', intersect:true },
+      plugins: {
+        legend: { display:false },
+        tooltip: { enabled: false },
+      },
+      scales: {
+        x: {
+          type:'time',
+          min: bounds.min, max: bounds.max,
+          time:{ unit:'month', displayFormats:{ month:'MMM' } },
+          grid:{ color:'rgba(0,0,0,.07)' },
+          ticks:{ color:'rgba(0,0,0,.45)', font:{size:11} },
+          border:{ color:'rgba(0,0,0,.12)' },
+        },
+        y: {
+          min: _chartYMin, max: _chartYMax,
+          grid:{ color:'rgba(0,0,0,.07)' },
+          ticks:{ color:'rgba(0,0,0,.45)', font:{size:11},
+                  callback: function(v) { return v===0 ? '0' : (v>0?'+':'') + v.toFixed(0); },
+                  stepSize:1 },
+          afterBuildTicks: function(scale) {
+            var ticks = [];
+            for (var v = _chartYMin; v <= _chartYMax + 0.001; v += 1) ticks.push({ value: v });
+            scale.ticks = ticks;
+          },
+          border:{ color:'rgba(0,0,0,.12)' },
+        },
+      },
+      layout:{ padding:{ right: 32 } },
+    },
+    plugins: [bandsPlugin, logoPlugin],
+  });
+}
+
+// ── Reveal animation: axis unfold → curtain sweep ───────────────────────────
+// Phase 1: a glowing dot pops at the origin and the axis lines extend out
+//   along x and y. Pure overlay drawing — the chart underneath stays hidden
+//   behind a white cover the whole time. Decorative.
+// Phase 2: the white cover retreats right→ to reveal the chart's team lines,
+//   left-to-right, matching the Modern VCT Hub's `revealChart`.
+// `rebuildWithLines` is called between the two phases so that phase 2 sweeps
+// over a chart that HAS visible lines — without that rebuild, phase 2 would
+// reveal nothing and lines would pop in only after the curtain finished.
+async function animateAxesOverlay(data, rebuildWithLines) {
+  if (!myChart) return;
+  // Let Chart.js finish its first layout/update before measuring scales —
+  // otherwise getPixelForValue can return NaN for the very first paint and
+  // the overlay starts in the wrong place.
+  await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
+  if (!myChart) return;
+  var wrap = document.getElementById('chart-wrap');
+  var dpr  = window.devicePixelRatio || 1;
+  var W = wrap.offsetWidth;
+  var H = wrap.offsetHeight;
+  var ov = document.createElement('canvas');
+  ov.width = W * dpr; ov.height = H * dpr;
+  ov.style.cssText = 'position:absolute;top:0;left:0;width:'+W+'px;height:'+H+'px;pointer-events:none;z-index:5';
+  wrap.appendChild(ov);
+  var oc = ov.getContext('2d');
+  oc.scale(dpr, dpr);
+  var ca = myChart.chartArea;
+  var bounds = _xAxisBoundsFor(data || STATE.data);
+  var ox = myChart.scales.x.getPixelForValue(new Date(bounds.min));
+  var oy = myChart.scales.y.getPixelForValue(0);
+
+  // Phase 1: glowing-dot pop → axes extend out from origin
+  await new Promise(function(resolve) {
+    var dur = 950, start = performance.now();
+    function frame(now) {
+      var p = Math.min((now - start) / dur, 1);
+      oc.clearRect(0, 0, W, H);
+      oc.fillStyle = '#fff';
+      oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+      oc.save();
+      if (p < 0.12) {
+        var r = easeOut(p / 0.12) * 6;
+        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 14;
+        oc.beginPath(); oc.arc(ox, oy, r, 0, Math.PI * 2);
+        oc.fillStyle = '#a78bfa'; oc.fill();
+      } else {
+        var lp = easeOut((p - 0.12) / 0.88);
+        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10;
+        oc.strokeStyle = 'rgba(167,139,250,.9)'; oc.lineWidth = 1.5;
+        oc.beginPath();
+        oc.moveTo(ox, oy - (oy - ca.top) * lp);
+        oc.lineTo(ox, oy + (ca.bottom - oy) * lp);
+        oc.stroke();
+        oc.beginPath();
+        oc.moveTo(ox, oy);
+        oc.lineTo(ox + (ca.right - ox) * lp, oy);
+        oc.stroke();
+        oc.shadowBlur = 0; oc.globalAlpha = .28;
+        oc.beginPath();
+        oc.moveTo(ox, oy);
+        oc.lineTo(ca.left + (ox - ca.left) * (1 - lp * .55), oy);
+        oc.stroke();
+        oc.globalAlpha = 1; oc.shadowBlur = 8;
+        oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
+        oc.fillStyle = '#c4b5fd'; oc.fill();
+      }
+      oc.restore();
+      if (p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // Phase 1.5: fade the purple axis decorations out smoothly instead of
+  // blipping them away on the first frame of phase 2. White cover stays
+  // solid so the chart underneath remains hidden — only the strokes fade.
+  await new Promise(function(resolve) {
+    var dur = 280, start = performance.now();
+    function frame(now) {
+      var p = Math.min((now - start) / dur, 1);
+      var a = 1 - p;
+      oc.clearRect(0, 0, W, H);
+      oc.fillStyle = '#fff';
+      oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+      oc.save();
+      oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10 * a;
+      oc.strokeStyle = 'rgba(167,139,250,' + (0.9 * a).toFixed(3) + ')';
+      oc.lineWidth = 1.5;
+      oc.beginPath(); oc.moveTo(ox, ca.top);    oc.lineTo(ox, ca.bottom); oc.stroke();
+      oc.beginPath(); oc.moveTo(ox, oy);        oc.lineTo(ca.right, oy);  oc.stroke();
+      oc.shadowBlur = 0; oc.globalAlpha = 0.28 * a;
+      oc.beginPath(); oc.moveTo(ox, oy);
+      oc.lineTo(ca.left + (ox - ca.left) * 0.45, oy);
+      oc.stroke();
+      oc.globalAlpha = a; oc.shadowBlur = 8 * a;
+      oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
+      oc.fillStyle = 'rgba(196,181,253,' + a.toFixed(3) + ')'; oc.fill();
+      oc.restore();
+      if (p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // Rebuild chart with VISIBLE lines underneath the white cover that the
+  // last fade-out frame still has on the overlay — phase 2's curtain retreat
+  // will then reveal them left→right.
+  if (typeof rebuildWithLines === 'function') {
+    var keepGoing = rebuildWithLines();
+    if (keepGoing === false) { ov.remove(); return; }
+    if (!myChart) { ov.remove(); return; }
+    ca = myChart.chartArea;
+  }
+  // Curtain sweeps right revealing the chart underneath. Bands stay HIDDEN
+  // under the solid white curtain — they only appear as the reveal line
+  // crosses each band's left edge (per user spec: "shaded bars appear as the
+  // purple line goes over them, not before").
+  await new Promise(function(resolve) {
+    var dur = 2200;
+    var cw = ca.right - ca.left;
+    var ch = ca.bottom - ca.top;
+    var startT = null;
+    function frame(ts) {
+      if (!startT) startT = ts;
+      var raw = Math.min((ts - startT) / dur, 1);
+      var p = 1 - Math.pow(1 - raw, 3);
+      var revX = ca.left + cw * p;
+      oc.clearRect(0, 0, W, H);
+      if (revX < ca.right) {
+        oc.fillStyle = '#fff';
+        oc.fillRect(revX, ca.top, ca.right - revX + 1, ch);
+      }
+      if (revX > ca.left) {
+        var grd = oc.createLinearGradient(revX - 28, 0, revX + 4, 0);
+        grd.addColorStop(0, 'rgba(167,139,250,0)');
+        grd.addColorStop(1, 'rgba(167,139,250,0.32)');
+        oc.fillStyle = grd;
+        oc.fillRect(revX - 28, ca.top, 32, ch);
+      }
+      if (raw < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // Phase 3: hold the purple sweep line at the right edge and fade its alpha
+  // out per-frame. The previous overall-overlay opacity fade only ever ran on
+  // an empty overlay (the gradient strip popped off when revX hit ca.right),
+  // so the purple line looked abrupt. This draws the strip every frame with a
+  // shrinking alpha multiplier so it dissolves where it landed.
+  await new Promise(function(resolve) {
+    var dur = 360, start = performance.now();
+    var revX = ca.right;
+    var ch   = ca.bottom - ca.top;
+    function frame(now) {
+      var p = Math.min((now - start) / dur, 1);
+      var a = 1 - easeOut(p);
+      oc.clearRect(0, 0, W, H);
+      var grd = oc.createLinearGradient(revX - 28, 0, revX + 4, 0);
+      grd.addColorStop(0, 'rgba(167,139,250,0)');
+      grd.addColorStop(1, 'rgba(167,139,250,' + (0.32 * a).toFixed(3) + ')');
+      oc.fillStyle = grd;
+      oc.fillRect(revX - 28, ca.top, 32, ch);
+      if (p < 1) requestAnimationFrame(frame);
+      else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+  ov.remove();
+}
+
+// ── Chart canvas listeners ──────────────────────────────────────────────────
+function _hitTestLogos(mx, my) {
+  if (!myChart) return null;
+  var xs = myChart.scales.x, ys = myChart.scales.y;
+  var SMALL_HIT = 5, FOCUSED_HIT = 15;
+  var hit = null;
+  myChart.data.datasets.forEach(function(ds) {
+    if (!ds.data || !ds.data.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
+    var last = ds.data[ds.data.length - 1];
+    var px = xs.getPixelForValue(new Date(last.x));
+    var py = ys.getPixelForValue(last.y);
+    if (Math.sqrt((mx - px) ** 2 + (my - py) ** 2) <= SMALL_HIT) { hit = ds.org; return; }
+    var focused = (STATE.selectedTeam === ds.org) || (STATE.hoveredOrg === ds.org);
+    if (focused) {
+      var cx = px + 4 + 11;
+      if (Math.sqrt((mx - cx) ** 2 + (my - py) ** 2) <= FOCUSED_HIT) hit = ds.org;
+    }
+  });
+  return hit;
+}
+
+function _applyLogoHover(org) {
+  if (!myChart) return;
+  myChart.data.datasets.forEach(function(ds) {
+    if (ds.type === 'scatter' || !ds.org) return;
+    var base = TEAM_COLORS[ds.org] || '#888';
+    if (!org) {
+      var isSel = ds.org === STATE.selectedTeam;
+      var isDim = STATE.selectedTeam !== null && !isSel;
+      ds.borderColor = isDim ? base + '28' : base;
+      ds.borderWidth = isSel ? 2.5 : (STATE.selectedTeam ? 1 : 1.5);
+      ds._dimmed = isDim;
+    } else {
+      var isHover = ds.org === org;
+      ds.borderColor = isHover ? base : base + '28';
+      ds.borderWidth = isHover ? 2.5 : 1;
+      ds._dimmed = !isHover;
+    }
+  });
+  myChart.draw();
+}
+
+var _lastHoveredDot = null;
+function _initCanvasListeners() {
+  var canvas = document.getElementById('benpomChart');
+  canvas.addEventListener('mousemove', function(e) {
+    if (!myChart) return;
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var els = myChart.getElementsAtEventForMode(e, 'point', {intersect: true}, false);
+    var dotEl = els.find(function(el) {
+      var ds = myChart.data.datasets[el.datasetIndex];
+      return ds && ds.data && ds.data[el.index] && ds.data[el.index]._m;
+    });
+    if (dotEl) {
+      var pt = myChart.data.datasets[dotEl.datasetIndex].data[dotEl.index];
+      var key = pt._m.date + pt._m.winner + pt._m.loser;
+      if (key !== _lastHoveredDot) {
+        _lastHoveredDot = key;
+        var wr = document.getElementById('chart-wrap').getBoundingClientRect();
+        showDotTooltip(pt._m, pt._won, e.clientX - wr.left, e.clientY - wr.top);
+      }
+      canvas.style.cursor = 'pointer';
+      return;
+    }
+    if (_lastHoveredDot) { _lastHoveredDot = null; hideDotTooltip(); }
+    var hovered = _hitTestLogos(mx, my);
+    if (hovered) {
+      canvas.style.cursor = 'pointer';
+      if (hovered !== STATE.hoveredOrg) { STATE.hoveredOrg = hovered; _applyLogoHover(hovered); }
+    } else {
+      if (STATE.hoveredOrg) { STATE.hoveredOrg = null; _applyLogoHover(null); }
+      canvas.style.cursor = 'default';
+    }
+  });
+  canvas.addEventListener('mouseleave', function() {
+    _lastHoveredDot = null;
+    hideDotTooltip();
+    if (STATE.hoveredOrg) { STATE.hoveredOrg = null; _applyLogoHover(null); }
+  });
+  canvas.addEventListener('click', function(e) {
+    if (!STATE.hoveredOrg) return;
+    e.stopPropagation();
+    STATE.selectedTeam = STATE.hoveredOrg;
+    STATE.hoveredOrg = null;
+    buildChart(STATE.data);
+    renderLeaderboard(STATE.data);
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (e.key === 'x' || e.key === 'X') {
+      if (STATE.selectedTeam) {
+        STATE.selectedTeam = null;
+        buildChart(STATE.data);
+        renderLeaderboard(STATE.data);
+      }
+    }
+  });
+}
+
+// ── Dot tooltip ─────────────────────────────────────────────────────────────
+function showDotTooltip(m, won, mouseX, mouseY) {
+  var tip = document.getElementById('dotTooltip');
+  var tc  = document.getElementById('dotTooltipContent');
+  var teamA = m.winner, teamB = m.loser;
+  var scoreParts = (m.series_score || '').split('-');
+  var wScore = scoreParts[0] || '?'; var lScore = scoreParts[1] || '?';
+  var mapsRows = (m.maps || []).map(function(mp) {
+    var winnerOrg = mp.winner || (mp.wr > mp.lr ? teamA : teamB);
+    var wOnLeft = winnerOrg === teamA;
+    var leftScore  = wOnLeft ? mp.wr : mp.lr;
+    var rightScore = wOnLeft ? mp.lr : mp.wr;
+    var diff = mp.wr - mp.lr;
+    return '<tr><td class="popup-map-name">' + (mp.map || '') + '</td>'
+      + '<td class="popup-map-score ' + (wOnLeft ? 'w' : 'l') + '">' + leftScore + '</td>'
+      + '<td class="popup-map-score ' + (wOnLeft ? 'l' : 'w') + '">' + rightScore + '</td>'
+      + '<td class="popup-map-diff">' + (diff > 0 ? '+' : '') + diff + '</td></tr>';
+  }).join('');
+  var dateStr = m.date;
+  // Color + sign by the delta's actual sign, not by whether the focused team
+  // won the series. A team can win the series but lose rating (a 2-1 over a
+  // much weaker opponent on weak maps) or vice versa — in that case we still
+  // keep the dot green (it's a W) but the rating row should read "-0.29" in
+  // red, not "+-0.29" in green.
+  var delta    = won ? (m.winner_delta || 0) : (m.loser_delta || 0);
+  var deltaCls = delta > 0.005 ? 'pos' : (delta < -0.005 ? 'neg' : '');
+  var deltaStr = (delta >= 0 ? '+' : '') + delta.toFixed(2);
+  tc.innerHTML =
+    '<div class="popup-event-label">' + (m.event_id ? m.event_id.replace(/_/g, ' ') : '') + '</div>' +
+    '<div class="popup-teams">' +
+      '<div class="popup-team-block"><img class="popup-logo" src="/static/logos/' + teamA + '.png" onerror="this.style.visibility=&quot;hidden&quot;"><div class="popup-team-name">' + teamA + '</div></div>' +
+      '<div class="popup-score-block"><div class="popup-score w">' + wScore + '</div></div>' +
+      '<div class="popup-vs-label">–</div>' +
+      '<div class="popup-score-block"><div class="popup-score l">' + lScore + '</div></div>' +
+      '<div class="popup-team-block"><img class="popup-logo" src="/static/logos/' + teamB + '.png" onerror="this.style.visibility=&quot;hidden&quot;"><div class="popup-team-name">' + teamB + '</div></div>' +
+    '</div>' +
+    '<div class="popup-date">' + dateStr + '</div>' +
+    '<div class="popup-delta ' + deltaCls + '">' + deltaStr + ' rating</div>' +
+    (mapsRows ? '<table class="popup-maps-table"><thead><tr><th>Map</th><th>' + teamA + '</th><th>' + teamB + '</th><th></th></tr></thead><tbody>' + mapsRows + '</tbody></table>' : '');
+  // Position to the right by default, but flip to the left of the cursor
+  // when the popup would overflow the chart-wrap on the right edge — keeps
+  // the match-detail card fully visible for dots near the end of the season
+  // (e.g. NRG's Champions wins sitting against the right axis).
+  var wrap = document.getElementById('chart-wrap');
+  var wrapW = wrap ? wrap.clientWidth : 99999;
+  // Make sure the browser has the popup's real dimensions; toggling
+  // .visible to measure first avoids stale offsetWidth from a prior render.
+  tip.classList.add('visible');
+  tip.style.left = '0px';
+  tip.style.top  = '0px';
+  var pw = tip.offsetWidth  || 320;
+  var ph = tip.offsetHeight || 220;
+  var leftRight = mouseX + 18;
+  var leftLeft  = mouseX - 18 - pw;
+  // Prefer the right side; flip left only if right side would clip and
+  // left side has room.
+  var left = (leftRight + pw <= wrapW - 4 || leftLeft < 4) ? leftRight : leftLeft;
+  var top  = Math.max(4, Math.min(mouseY - 12, (wrap ? wrap.clientHeight : 99999) - ph - 4));
+  tip.style.left = left + 'px';
+  tip.style.top  = top  + 'px';
+}
+function hideDotTooltip() {
+  document.getElementById('dotTooltip').classList.remove('visible');
+}
+
+// ── Leaderboard ─────────────────────────────────────────────────────────────
+function _regionClass(r) {
+  r = (r || '').toLowerCase();
+  if (r === 'americas') return 'americas';
+  if (r === 'emea')     return 'emea';
+  if (r === 'pacific')  return 'pacific';
+  if (r === 'cn')       return 'cn';
+  return 'unknown';
+}
+
+function renderLeaderboard(data, opts) {
+  var animate = !opts || opts.animate !== false;   // default true (back-compat)
+  var body = document.getElementById('lb-body');
+  var teamsRaw = (data.leaderboard && data.leaderboard.teams) || [];
+  if (!teamsRaw.length) {
+    body.innerHTML = '<div class="lb-empty">No teams in this period.</div>';
+    return;
+  }
+  // Apply region filter pill: shows only teams in the active region (or top
+  // 10 globally / all). Same filter the chart uses, so leaderboard rows and
+  // chart lines stay in lock-step.
+  var teams = _visibleTeamsForRegion(teamsRaw).slice();
+  if (!teams.length) {
+    body.innerHTML = '<div class="lb-empty">No teams match this filter.</div>';
+    return;
+  }
+  // Sort by the active column. With the qualification cap disabled in
+  // BuildMapRatings, team.rating IS the natural Massey rating that the
+  // chart line endpoints converge to — one rating system, no divergence.
+  var col = STATE.sortCol, dir = STATE.sortDir;
+  teams.sort(function(a, b) {
+    var av = col === 'rank' ? a.rank : a.rating;
+    var bv = col === 'rank' ? b.rank : b.rating;
+    return dir * (av - bv);
+  });
+  // Update header indicator classes (sort-asc / sort-desc on active column).
+  var hdr = document.getElementById('lb-col-hdr');
+  if (hdr) {
+    hdr.querySelectorAll('span.sortable').forEach(function(s) {
+      s.classList.remove('sort-asc', 'sort-desc');
+      if (s.dataset.sort === col) {
+        s.classList.add(dir === -1 ? 'sort-desc' : 'sort-asc');
+      }
     });
   }
-
-  addBtn('All', null);
-  maps.forEach(function(m) { addBtn(m, m); });
-}
-
-// ── Table renderer ──────────────────────────────────────────────────────────
-
-function renderTable() {
-  var teams = getTeams();
-
-  if (currentMap) {
-    teams = teams.filter(function(t) { return t.maps && t.maps[currentMap]; });
-  }
-
-  teams.sort(function(a, b) {
-    var av = getVal(a, sortCol), bv = getVal(b, sortCol);
-    if (av == null) av = 0;
-    if (bv == null) bv = 0;
-    return sortDir * (av - bv);
-  });
-
-  var snapKey = currentYear + '_' + currentSnap;
   var html = '';
   teams.forEach(function(t, i) {
-    var rating  = currentMap ? t.maps[currentMap].rating   : t.overall_rating;
-    var w       = currentMap ? t.maps[currentMap].w        : t.w;
-    var l       = currentMap ? t.maps[currentMap].l        : t.l;
-    var winPct  = currentMap ? t.maps[currentMap].win_pct  : t.win_pct;
-    var sign = rating >= 0 ? '+' : '';
-    var cls  = ratingClass(rating);
-    // International adjustment badge
-    var bd = getIntlBreakdown(t.org, snapKey);
-    var intlBadge = '';
-    if(!currentMap && Math.abs(bd.total) > 0.005) {
-      var badgeCls = bd.total > 0 ? 'intl-badge-pos' : 'intl-badge-neg';
-      intlBadge = '<span class="intl-badge '+badgeCls+'">'+(bd.total>0?'+':'')+bd.total.toFixed(2)+'</span>';
-    }
-    html += '<tr data-org="' + t.org + '" onclick="openModal(this.dataset.org)">' +
-      '<td class="rank-cell">' + (i + 1) + '</td>' +
-      '<td><div class="org-cell">' +
-        '<img src="/logos/' + t.org + '.png" class="team-logo" onerror="this.hidden=true">' +
-        '<span class="org-name">' + t.org + '</span>' +
-      '</div></td>' +
-      '<td class="' + cls + '">' + sign + rating.toFixed(2) + intlBadge + '</td>' +
-      '<td class="wl-cell">' + w + '&ndash;' + l + '</td>' +
-      '<td class="pct-cell">' + (winPct * 100).toFixed(1) + '%</td>' +
-      '</tr>';
+    var rcls = _regionClass(t.region);
+    var ratingCls = t.rating > 0.05 ? 'pos' : (t.rating < -0.05 ? 'neg' : '');
+    var sign = t.rating >= 0 ? '+' : '';
+    var sel  = STATE.selectedTeam === t.org;
+    html += '<div class="lb-row' + (animate ? ' slide-in' : '') + (sel ? ' selected' : '') + '" '
+         +  'data-org="' + t.org + '" '
+         +  (animate ? 'style="animation-delay:' + Math.min(i * 18, 700) + 'ms"' : '') + '>'
+         +  '<span class="lb-rank">' + t.rank + '</span>'
+         +  '<div class="lb-team">'
+         +    '<img src="/static/logos/' + t.org + '.png" onerror="this.style.visibility=&quot;hidden&quot;">'
+         +    '<span class="lb-name">' + t.org + '</span>'
+         +  '</div>'
+         +  '<span class="lb-rating ' + ratingCls + '">' + sign + t.rating.toFixed(2) + '</span>'
+         +  '<span class="lb-region ' + rcls + '">' + (t.region || '?') + '</span>'
+         +  '<span class="lb-chevron">&#9660;</span>'
+         + '</div>';
   });
-  document.getElementById('ratings-body').innerHTML = html;
-
-  document.getElementById('rating-th').textContent = currentMap || 'Rating';
-
-  document.querySelectorAll('#ratings-table thead th[data-col]').forEach(function(th) {
-    th.classList.remove('sorted-asc', 'sorted-desc');
-    if (th.dataset.col === sortCol && th.style.cursor !== 'default') {
-      th.classList.add(sortDir === -1 ? 'sorted-desc' : 'sorted-asc');
-    }
+  body.innerHTML = html;
+  body.querySelectorAll('.lb-row').forEach(function(row) {
+    row.addEventListener('click', function() { toggleExpand(row.dataset.org); });
   });
+  // Re-open the previously expanded team if still in the list
+  if (STATE.expandedOrg && teams.some(function(t) { return t.org === STATE.expandedOrg; })) {
+    var row = body.querySelector('.lb-row[data-org="' + STATE.expandedOrg + '"]');
+    if (row) _openExpand(row, STATE.expandedOrg);
+  }
 }
 
-// ── Modal ───────────────────────────────────────────────────────────────────
+function toggleExpand(org) {
+  var body = document.getElementById('lb-body');
+  var row  = body.querySelector('.lb-row[data-org="' + org + '"]');
+  if (!row) return;
+  var existing = row.nextElementSibling;
+  if (existing && existing.classList.contains('lb-detail')) {
+    existing.classList.add('closing');
+    row.classList.remove('selected');
+    STATE.expandedOrg = null;
+    // Also unselect the chart focus when collapsing
+    STATE.selectedTeam = null;
+    buildChart(STATE.data);
+    setTimeout(function() { if (existing.parentNode) existing.parentNode.removeChild(existing); }, 220);
+    return;
+  }
+  // Close any other open expansion
+  body.querySelectorAll('.lb-detail').forEach(function(d) {
+    d.classList.add('closing');
+    setTimeout(function() { if (d.parentNode) d.parentNode.removeChild(d); }, 220);
+  });
+  body.querySelectorAll('.lb-row.selected').forEach(function(r) { r.classList.remove('selected'); });
+  _openExpand(row, org);
+}
 
-// ── Monte Carlo pick/ban simulation ────────────────────────────────────────
+async function _openExpand(row, org) {
+  row.classList.add('selected');
+  STATE.expandedOrg = org;
+  STATE.selectedTeam = org;
+  buildChart(STATE.data);
+  var det = document.createElement('div');
+  det.className = 'lb-detail';
+  det.dataset.org = org;
+  det.innerHTML = '<div class="lb-detail-inner"><div class="lb-loading-spinner">Loading roster + matches&hellip;</div></div>';
+  row.parentNode.insertBefore(det, row.nextSibling);
 
-function renderTeamExtra(org, data) {
-  var el = document.getElementById('team-extra');
-  if (!el) return;
-  var html = '';
-
-  if (data.roster && data.roster.length) {
-    html += '<div class="team-section">' +
-      '<div class="team-section-title">Roster</div>' +
-      '<div class="roster-list">' +
-      data.roster.map(function(p) {
-        var name = p.name || p;
-        var hs = p.headshot || '';
-        var img = hs
-          ? '<img class="roster-headshot" src="' + hs + '" alt="' + name + '" onerror="this.style.visibility=\\'hidden\\'">'
-          : '<div class="roster-headshot" style="background:#e8e4f0;"></div>';
-        return '<div class="roster-player">' + img + '<span class="roster-player-name">' + name + '</span></div>';
-      }).join('') +
-      '</div></div>';
+  // Pull team-info (roster + recent matches) for this snap
+  var year = STATE.year, snap = STATE.snap;
+  var cacheKey = year + '|' + snap + '|' + org;
+  var info = STATE.teamInfoCache[cacheKey];
+  if (!info) {
+    try {
+      var r = await fetch('/mapelo/team-info/' + encodeURIComponent(org)
+                       + '?year=' + encodeURIComponent(year)
+                       + '&snap=' + encodeURIComponent(snap));
+      info = await r.json();
+    } catch (_) {
+      info = { roster: [], recent_matches: [] };
+    }
+    STATE.teamInfoCache[cacheKey] = info;
   }
 
-  if (data.recent_matches && data.recent_matches.length) {
-    html += '<div class="team-section"><div class="team-section-title">Recent Matches</div>';
-    data.recent_matches.forEach(function(m) {
-      var badgeCls = m.series_result === 'W' ? 'rw' : 'rl';
-      var sub = m.event_label + (m.match_name ? ' — ' + m.match_name : '');
-      var chips = (m.maps || []).map(function(mp) {
-        var cc = mp.result === 'W' ? 'map-chip-w' : 'map-chip-l';
-        return '<span class="map-chip ' + cc + '">' + (mp.map_name || '?') + ' ' + mp.score + '</span>';
-      }).join('');
-      html += '<div class="recent-match">' +
-        '<div class="recent-match-header">' +
-          '<span class="recent-match-opp">' + m.opponent + '</span>' +
-          '<span class="result-badge ' + badgeCls + '">' + m.series_result + ' ' + m.series_score + '</span>' +
-        '</div>' +
-        '<div class="recent-match-sub">' + sub + '</div>' +
-        '<div class="recent-match-maps">' + chips + '</div>' +
-      '</div>';
+  // Re-find the detail div in case the user opened/closed something else
+  var detLive = row.parentNode.querySelector('.lb-detail[data-org="' + org + '"]');
+  if (!detLive) return;
+  detLive.querySelector('.lb-detail-inner').innerHTML = _renderTeamExtra(org, info);
+}
+
+function _renderTeamExtra(org, info) {
+  // Match Modern Hub's expand panel exactly: Players → Recent Matches → Map
+  // Breakdown, with the player row centered and map column left-aligned.
+  var team = (STATE.data.leaderboard.teams || []).find(function(t) { return t.org === org; });
+  var html = '';
+
+  // 1. Players
+  var roster = info.roster || [];
+  if (roster.length) {
+    html += '<div class="lb-sec-label">Players</div>';
+    html += '<div class="lb-player-row">';
+    roster.forEach(function(p) {
+      var hs = p.headshot || '';
+      var img = hs
+        ? '<img class="lb-player-hs" src="' + hs + '" alt="' + p.name + '" onerror="this.style.visibility=&quot;hidden&quot;">'
+        : '<div class="lb-player-hs lb-player-hs-empty"></div>';
+      html += '<div class="lb-player-card">' + img + '<span class="lb-player-name">' + (p.name || '?') + '</span></div>';
     });
     html += '</div>';
   }
 
-  el.innerHTML = html;
+  // 2. Recent Matches
+  var rms = (info.recent_matches || []).slice(0, 4);
+  if (rms.length) {
+    html += '<div class="lb-sec-label">Recent Matches</div>';
+    rms.forEach(function(m) {
+      var winCls = m.series_result === 'W' ? 'win' : 'loss';
+      var chipsHtml = (m.maps || []).map(function(mp) {
+        var cc = mp.result === 'W' ? 'mw' : 'ml';
+        return '<span class="lb-mmap-chip ' + cc + '">' + (mp.map_name || '?') + ' ' + mp.score + '</span>';
+      }).join('');
+      var sub = (m.event_label || '') + (m.match_name ? ' &middot; ' + m.match_name : '');
+      html += '<div class="lb-match-card ' + winCls + '">'
+           +    '<div class="lb-match-head">'
+           +      '<span class="lb-mr">' + (m.series_result || '?') + '</span>'
+           +      '<img class="lb-mlogo" src="/static/logos/' + m.opponent + '.png" onerror="this.style.visibility=&quot;hidden&quot;">'
+           +      '<span class="lb-mopp">vs ' + m.opponent + '</span>'
+           +      '<span class="lb-mscore">' + (m.series_score || '') + '</span>'
+           +    '</div>'
+           +    '<div class="lb-mmeta">' + sub + '</div>'
+           +    (chipsHtml ? '<div class="lb-mmaps">' + chipsHtml + '</div>' : '')
+           +  '</div>';
+    });
+  }
+
+  // 3. Map Breakdown — rows are clickable to reveal per-map game history
+  if (team && team.all_maps && team.all_maps.length) {
+    html += '<div class="lb-sec-label">Map Breakdown</div>';
+    html += '<table class="lb-maps-table"><thead><tr><th>Map</th><th>Rating</th><th>W–L</th><th>Win%</th></tr></thead><tbody>';
+    team.all_maps.forEach(function(m) {
+      var total = m.w + m.l;
+      var pct = total ? (100 * m.w / total) : 0;
+      var sign = m.rating >= 0 ? '+' : '';
+      var cls  = m.rating > 0.05 ? 'pos' : (m.rating < -0.05 ? 'neg' : '');
+      var sid  = 'mdr_' + org.replace(/[^a-z0-9]/gi, '_') + '_' + m.map.replace(/[^a-z0-9]/gi, '_');
+      var eOrg = encodeURIComponent(org);
+      var eMap = encodeURIComponent(m.map);
+      html += '<tr id="' + sid + '" class="lb-map-row-click" onclick="_expandMapRow(\\'' + eOrg + '\\',\\'' + eMap + '\\',\\'' + sid + '\\')">'
+           +  '<td class="lb-mt-map">' + m.map + '<span class="lb-map-chevron">▾</span></td>'
+           +  '<td class="lb-mt-rat ' + cls + '">' + sign + m.rating.toFixed(2) + '</td>'
+           +  '<td class="lb-mt-wl">' + m.w + '–' + m.l + '</td>'
+           +  '<td class="lb-mt-pct">' + pct.toFixed(0) + '%</td>'
+           +  '</tr>';
+    });
+    html += '</tbody></table>';
+  }
+
+  if (!roster.length && !rms.length && !(team && team.all_maps && team.all_maps.length)) {
+    html += '<div class="lb-empty">No roster or recent matches available for this snapshot.</div>';
+  }
+
+  return html;
 }
 
-function toggleMapHistory(row) {
-  var histRow = row.nextElementSibling;
-  if (!histRow || !histRow.classList.contains('map-history-row')) return;
-  var body = histRow.querySelector('.map-history-body');
-  var isOpen = row.classList.contains('open');
+// Pretty labels for the match-history rows (mirrors Modern Hub's dict).
+var _EVENT_LABELS = {
+  '2026_kickoff':           'Kickoff 2026',
+  '2026_masters_santiago':  'Masters Santiago',
+  '2026_stage1':            'Stage 1 2026',
+  '2026_masters_london':    'Masters London',
+  '2026_stage2':            'Stage 2 2026',
+  '2026_champions':         'Champions 2026',
+  '2025_kickoff':           'Kickoff 2025',
+  '2025_masters_bangkok':   'Masters Bangkok',
+  '2025_stage1':            'Stage 1 2025',
+  '2025_masters_toronto':   'Masters Toronto',
+  '2025_stage2':            'Stage 2 2025',
+  '2025_champions':         'Champions 2025',
+  '2024_kickoff':           'Kickoff 2024',
+  '2024_masters_madrid':    'Masters Madrid',
+  '2024_stage1':            'Stage 1 2024',
+  '2024_masters_shanghai':  'Masters Shanghai',
+  '2024_stage2':            'Stage 2 2024',
+  '2024_champions':         'Champions 2024',
+  '2023_lock_in':           'LOCK//IN 2023',
+  '2023_masters_tokyo':     'Masters Tokyo',
+  '2023_league':            'League 2023',
+  '2023_champions':         'Champions 2023',
+};
 
-  // Close any other open rows first
-  document.querySelectorAll('.map-row.open').forEach(function(r) {
-    if (r !== row) {
-      r.classList.remove('open');
-      var b = r.nextElementSibling && r.nextElementSibling.querySelector('.map-history-body');
-      if (b) b.style.maxHeight = '0';
+// Click handler for a single Map Breakdown row — toggles a child row that
+// lists every game the team has played on this map in chronological order
+// (most recent first). Reads from STATE.data.chart.match_events, which is
+// already trimmed to the snapshot's ref_date in /rankings/data.
+function _expandMapRow(encOrg, encMap, rowId) {
+  var org   = decodeURIComponent(encOrg);
+  var map   = decodeURIComponent(encMap);
+  var detId = rowId + '_d';
+  var tr    = document.getElementById(rowId);
+  if (!tr) return;
+  var existing = document.getElementById(detId);
+  if (existing) {
+    tr.classList.remove('open');
+    var wrap = existing.querySelector('.lb-map-games-wrap');
+    if (wrap) {
+      wrap.classList.add('closing');
+      setTimeout(function() { if (existing.parentNode) existing.remove(); }, 200);
+    } else {
+      existing.remove();
     }
-  });
+    return;
+  }
+  tr.classList.add('open');
 
-  if (isOpen) {
-    row.classList.remove('open');
-    body.style.maxHeight = '0';
+  var events = (STATE.data && STATE.data.chart && STATE.data.chart.match_events) || [];
+  var games  = events.filter(function(me) {
+    if (me.winner !== org && me.loser !== org) return false;
+    return (me.maps || []).some(function(mp) { return mp.map === map; });
+  }).sort(function(a, b) { return (b.match_id || 0) - (a.match_id || 0); });
+
+  var innerHtml;
+  if (!games.length) {
+    innerHtml = '<td colspan="4" class="lb-map-no-games">No recorded games</td>';
   } else {
-    row.classList.add('open');
-    var mapName = row.dataset.map;
-    if (body.dataset.loaded) {
-      body.style.maxHeight = body.scrollHeight + 'px';
+    var rows = games.map(function(me) {
+      var mInfo = (me.maps || []).find(function(mp) { return mp.map === map; });
+      // W/L follows the MAP outcome, not the series outcome — a team can lose
+      // the series but win this specific map.
+      var won   = mInfo ? (mInfo.winner === org) : (me.winner === org);
+      var opp   = (me.winner === org) ? me.loser : me.winner;
+      var orgRd = mInfo ? (mInfo.winner === org ? mInfo.wr : mInfo.lr) : '?';
+      var oppRd = mInfo ? (mInfo.winner === org ? mInfo.lr : mInfo.wr) : '?';
+      var diff  = (typeof orgRd === 'number' && typeof oppRd === 'number') ? orgRd - oppRd : null;
+      var diffStr = diff !== null ? (diff >= 0 ? '+' : '') + diff : '';
+      var diffCls = diff !== null ? (diff >= 0 ? 'pos' : 'neg') : '';
+      var evt   = _EVENT_LABELS[me.event_id] || '';
+      return '<tr class="lb-map-game-row ' + (won ? 'win' : 'loss') + '">'
+           +   '<td colspan="4"><div class="lb-mg-inner">'
+           +     '<span class="lb-mg-result">' + (won ? 'W' : 'L') + '</span>'
+           +     '<img class="lb-mg-logo" src="/static/logos/' + opp + '.png" onerror="this.style.display=&quot;none&quot;" alt="">'
+           +     '<span class="lb-mg-opp">' + opp + '</span>'
+           +     '<span class="lb-mg-score">' + orgRd + '–' + oppRd + '</span>'
+           +     '<span class="lb-mg-diff ' + diffCls + '">' + diffStr + '</span>'
+           +     '<span class="lb-mg-meta">' + me.date + (evt ? ' · ' + evt : '') + '</span>'
+           +   '</div></td>'
+           + '</tr>';
+    }).join('');
+    innerHtml = '<td colspan="4"><div class="lb-map-games-wrap">'
+              +   '<table class="lb-map-games-tbl">' + rows + '</table>'
+              + '</div></td>';
+  }
+  var gamesTr = document.createElement('tr');
+  gamesTr.id = detId;
+  gamesTr.className = 'lb-map-games-tr';
+  gamesTr.innerHTML = innerHtml;
+  tr.parentNode.insertBefore(gamesTr, tr.nextSibling);
+}
+
+function replayChart() {
+  if (!STATE.data) return;
+  buildChart(STATE.data, true);
+  var gen = ++_lastAnimationGen;
+  animateAxesOverlay(STATE.data, function() {
+    if (gen !== _lastAnimationGen) return false;
+    buildChart(STATE.data, false);
+    return true;
+  });
+}
+
+// W/S to cycle the team highlight up/down the leaderboard, X to clear —
+// same affordance as Modern VCT Hub. Sorts the visible team list with the
+// same sort the user has applied so W/S walk through the leaderboard rows
+// in the order they're actually rendered.
+function _initLeaderboardKeys() {
+  document.addEventListener('keydown', function(e) {
+    if (!STATE.data) return;
+    var tn = e.target && e.target.tagName;
+    if (tn === 'INPUT' || tn === 'TEXTAREA') return;
+    var k = (e.key || '').toLowerCase();
+    if (k !== 'w' && k !== 's' && k !== 'x') return;
+    e.preventDefault();
+    if (k === 'x') {
+      STATE.selectedTeam = null;
+      STATE.expandedOrg  = null;
+      buildChart(STATE.data);
+      renderLeaderboard(STATE.data, {animate: false});
       return;
     }
-    body.innerHTML = '<div class="mh-inner" style="color:var(--soft);font-size:.8rem;">Loading…</div>';
-    body.style.maxHeight = '48px';
-    fetch('/mapelo/map-matches/' + encodeURIComponent(currentModalOrg) + '/' + encodeURIComponent(mapName) +
-          '?year=' + encodeURIComponent(currentYear) + '&snap=' + encodeURIComponent(currentSnap))
-      .then(function(r) { return r.json(); })
-      .then(function(data) { renderMapHistoryInline(mapName, data, body); })
-      .catch(function() { body.style.maxHeight = '0'; row.classList.remove('open'); });
-  }
+    var allTeams = (STATE.data.leaderboard && STATE.data.leaderboard.teams) || [];
+    if (!allTeams.length) return;
+    // Cycle through the same filtered set the leaderboard / chart are
+    // showing (region pill respected), sorted by team.rating desc.
+    var teams = _visibleTeamsForRegion(allTeams).slice()
+                  .sort(function(a, b) { return b.rating - a.rating; });
+    if (!teams.length) return;
+    var idx = STATE.selectedTeam
+      ? teams.findIndex(function(t) { return t.org === STATE.selectedTeam; })
+      : -1;
+    var next;
+    if (k === 'w') next = idx <= 0 ? teams[0] : teams[idx - 1];
+    else           next = idx < 0 || idx >= teams.length - 1 ? teams[teams.length - 1] : teams[idx + 1];
+    STATE.selectedTeam = next.org;
+    STATE.expandedOrg  = null;
+    buildChart(STATE.data);
+    renderLeaderboard(STATE.data, {animate: false});
+    // Intentionally NOT calling scrollIntoView — Modern Hub doesn't force-
+    // scroll the page on W/S either, and yanking the viewport mid-keypress
+    // feels jarring when the user already has the chart in frame.
+  });
 }
 
-function renderMapHistoryInline(mapName, data, body) {
-  var teams = (getSnap().teams || {});
-  var rows = (data.matches || []).map(function(m) {
-    var oppTeam = teams[m.opponent];
-    var oppRating = '&mdash;';
-    if (oppTeam && oppTeam.maps && oppTeam.maps[mapName]) {
-      var r = oppTeam.maps[mapName].rating;
-      oppRating = '<span class="' + ratingClass(r) + '">' + (r >= 0 ? '+' : '') + r.toFixed(2) + '</span>';
-    }
-    var rdSign = m.round_diff > 0 ? '+' : '';
-    var rdCls  = m.round_diff > 0 ? 'rating-pos' : (m.round_diff < 0 ? 'rating-neg' : '');
-    var badgeCls = m.result === 'W' ? 'rw' : 'rl';
-    var label = m.event_label + (m.match_name ? ' &mdash; ' + m.match_name : '');
-    return '<tr>' +
-      '<td class="mh-label">' + label + '</td>' +
-      '<td><span class="mh-opp"><img class="mh-opp-logo" src="/logos/' + m.opponent + '.png" onerror="this.hidden=true">' + m.opponent + '</span></td>' +
-      '<td>' + oppRating + '</td>' +
-      '<td><span class="result-badge ' + badgeCls + '">' + m.result + ' ' + m.score + '</span></td>' +
-      '<td class="' + rdCls + '">' + rdSign + m.round_diff + '</td>' +
-    '</tr>';
-  }).join('');
-  var tbody = rows || '<tr><td colspan="5" style="color:var(--soft);padding:10px 8px;">No matches found.</td></tr>';
-  body.innerHTML =
-    '<div class="mh-inner">' +
-      '<table class="mh-table">' +
-        '<thead><tr><th>Match</th><th>Opponent</th><th>Opp. rating</th><th>Result</th><th>Rd diff</th></tr></thead>' +
-        '<tbody>' + tbody + '</tbody>' +
-      '</table>' +
-    '</div>';
-  body.dataset.loaded = '1';
-  body.style.maxHeight = body.scrollHeight + 'px';
-}
-
-function openModal(org) {
-  currentModalOrg = org;
-  var snap = getSnap();
-  if (!snap.teams || !snap.teams[org]) return;
-  var t    = snap.teams[org];
-  var sign = t.overall_rating >= 0 ? '+' : '';
-
-  var maps = Object.entries(t.maps || {}).sort(function(a, b) { return b[1].rating - a[1].rating; });
-  var mapRows = maps.map(function(e) {
-    var mn = e[0], md = e[1];
-    var s = md.rating >= 0 ? '+' : '';
-    var cls = ratingClass(md.rating);
-    return '<tr class="map-row" data-map="' + mn + '" onclick="toggleMapHistory(this)">' +
-      '<td><span class="map-row-arrow">&#9654;</span>' + mn + '</td>' +
-      '<td class="' + cls + '">' + s + md.rating.toFixed(2) + '</td>' +
-      '<td>' + md.w + '&ndash;' + md.l + '</td>' +
-      '<td>' + (md.win_pct * 100).toFixed(1) + '%</td>' +
-    '</tr>' +
-    '<tr class="map-history-row"><td colspan="4"><div class="map-history-body"></div></td></tr>';
-  }).join('');
-
-  var snap_label = (getSnaps()[currentSnap] || {}).label || '';
-  var logoHtml = '<img src="/logos/' + org + '.png" class="modal-logo" onerror="this.hidden=true">';
-
-  var teams = Object.keys(snap.teams || {}).filter(function(o){ return o !== org; }).sort();
-  var opponentOpts = teams.map(function(o) {
-    return '<option value="' + o + '">' + o + '</option>';
-  }).join('');
-
-  // International rating breakdown
-  var snapKey = currentYear + '_' + currentSnap;
-  var bd = getIntlBreakdown(org, snapKey);
-  var globalRating = t.overall_rating + bd.total;
-  var intlRowHtml = '';
-  if(bd.region) {
-    var regCls = bd.regOff > 0.005 ? 'intl-chip-reg-pos' : bd.regOff < -0.005 ? 'intl-chip-reg-neg' : 'intl-chip-reg-neu';
-    var indCls = bd.indBonus > 0.005 ? 'intl-chip-ind-pos' : bd.indBonus < -0.005 ? 'intl-chip-ind-neg' : 'intl-chip-ind-neu';
-    intlRowHtml = '<div class="intl-row">' +
-      '<span class="intl-row-label">Intl rating</span>' +
-      '<span class="intl-chip intl-chip-dom">'+(t.overall_rating>=0?'+':'')+t.overall_rating.toFixed(2)+' domestic</span>' +
-      '<span class="intl-chip-arrow">+</span>' +
-      '<span class="intl-chip '+regCls+'">'+(bd.regOff>=0?'+':'')+bd.regOff.toFixed(2)+' '+bd.region+'</span>' +
-      '<span class="intl-chip-arrow">+</span>' +
-      '<span class="intl-chip '+indCls+'">'+(bd.indBonus>=0?'+':'')+bd.indBonus.toFixed(2)+' indiv.</span>' +
-      '<span class="intl-chip-arrow">=</span>' +
-      '<span class="intl-chip intl-chip-total">'+(globalRating>=0?'+':'')+globalRating.toFixed(2)+' global</span>' +
-    '</div>';
-  }
-
-  document.getElementById('modal-content').innerHTML =
-    '<div class="modal-header">' + logoHtml + org + '</div>' +
-    '<div class="modal-sub">' + currentYear +
-      (snap_label ? ' &mdash; ' + snap_label : '') +
-      ' &mdash; ' + t.w + '&ndash;' + t.l +
-      ' (' + (t.win_pct * 100).toFixed(1) + '% win rate)</div>' +
-    '<table class="map-table">' +
-      '<thead><tr><th>Map</th><th>Rating</th><th>W&ndash;L</th><th>Win%</th></tr></thead>' +
-      '<tbody>' + mapRows +
-        '<tr class="overall-row">' +
-          '<td>Overall (Pick/Ban)</td>' +
-          '<td class="' + ratingClass(t.overall_rating) + '">' + sign + t.overall_rating.toFixed(2) + '</td>' +
-          '<td>' + t.w + '&ndash;' + t.l + '</td>' +
-          '<td>' + (t.win_pct * 100).toFixed(1) + '%</td>' +
-        '</tr>' +
-      '</tbody>' +
-    '</table>' +
-    intlRowHtml +
-    '<div id="team-extra"><div class="team-extra-loading">Loading roster &amp; recent matches…</div></div>';
-
-  document.getElementById('team-modal').style.display = 'flex';
-
-  fetch('/mapelo/team-info/' + encodeURIComponent(org) + '?year=' + encodeURIComponent(currentYear) + '&snap=' + encodeURIComponent(currentSnap))
-    .then(function(r) { return r.json(); })
-    .then(function(data) { renderTeamExtra(org, data); })
-    .catch(function() {
-      var el = document.getElementById('team-extra');
-      if (el) el.innerHTML = '';
+function _initLeaderboardSort() {
+  var hdr = document.getElementById('lb-col-hdr');
+  if (!hdr) return;
+  hdr.querySelectorAll('span.sortable').forEach(function(s) {
+    s.addEventListener('click', function() {
+      var col = s.dataset.sort;
+      if (STATE.sortCol === col) {
+        STATE.sortDir = -STATE.sortDir;  // toggle direction on same column
+      } else {
+        STATE.sortCol = col;
+        // Rank defaults to ascending (1, 2, 3...), rating defaults to
+        // descending (best first) — matches the user's mental model.
+        STATE.sortDir = (col === 'rank') ? 1 : -1;
+      }
+      if (STATE.data) renderLeaderboard(STATE.data);
     });
+  });
 }
-
-function closeModal() { document.getElementById('team-modal').style.display = 'none'; }
-document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
-
-// ── Sort on header click ────────────────────────────────────────────────────
-
-document.querySelectorAll('#ratings-table thead th[data-col]').forEach(function(th) {
-  if (th.style.cursor === 'default') return;
-  th.addEventListener('click', function() {
-    var col = th.dataset.col;
-    if (sortCol === col) { sortDir *= -1; }
-    else { sortCol = col; sortDir = -1; }
-    renderTable();
-  });
-});
-
-// ── Year tabs ───────────────────────────────────────────────────────────────
-
-document.querySelectorAll('.year-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    if (currentYear === btn.dataset.year) return;
-    currentYear = btn.dataset.year;
-    var snapsForYear = Object.keys((DATA.ratings[currentYear]||{}).snapshots||{});
-    currentSnap = snapsForYear.indexOf('after_champions')>=0 ? 'after_champions'
-                : snapsForYear[snapsForYear.length-1] || 'after_champions';
-    currentMap  = null;
-    sortCol = 'overall_rating'; sortDir = -1;
-    document.querySelectorAll('.year-btn').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    renderPeriodFilter();
-    renderMapFilter();
-    renderTable();
-  });
-});
 
 // ── Init ────────────────────────────────────────────────────────────────────
+function _initHideChartToggle() {
+  var cb = document.getElementById('no-graph-cb');
+  var card = document.getElementById('chart-card');
+  if (!cb || !card) return;
+  cb.addEventListener('change', function() {
+    card.classList.toggle('hidden', cb.checked);
+  });
+}
 
+function _initRegionPills() {
+  var bar = document.getElementById('region-pills');
+  if (!bar) return;
+  var buttons = bar.querySelectorAll('button[data-region]');
+  buttons.forEach(function(p) {
+    p.addEventListener('click', function() {
+      var region = p.dataset.region;
+      if (region === STATE.activeRegion) return;
+      STATE.activeRegion = region;
+      buttons.forEach(function(other) {
+        other.classList.toggle('active', other === p);
+      });
+      if (STATE.data) {
+        buildChart(STATE.data);
+        renderLeaderboard(STATE.data);
+      }
+    });
+  });
+}
+
+function initRankings() {
+  _initYearScrubber();
+  _initCanvasListeners();
+  _initLeaderboardSort();
+  _initLeaderboardKeys();
+  _initHideChartToggle();
+  _initRegionPills();
+  setYearLocal('2025');
+  loadAndRender('2025', 'after_champions');
+}
+
+// ── Page bootstrap (stats pills, lambda chart, KaTeX, kicks off rankings) ──
 (function() {
-  var meta = DATA.metadata;
+  var meta = DATA.metadata || {};
   var hl   = meta.optimal_half_life_weeks;
-  document.getElementById('stat-hl').textContent    = hl + ' weeks';
-  document.getElementById('stat-brier').textContent = meta.brier_test ? meta.brier_test.toFixed(4) : '--';
-  document.getElementById('stat-train').textContent = meta.n_train || '--';
-  document.getElementById('stat-test').textContent  = meta.n_test  || '--';
-  document.getElementById('stat-sims').textContent  = meta.mc_n_sims ? meta.mc_n_sims.toLocaleString() : '--';
+  // The model-card was removed from this page, so all of these stat-pill
+  // nodes may be absent. Guard every lookup — without this the very first
+  // `.textContent` access throws TypeError and aborts the bootstrap before
+  // initRankings() runs, leaving the chart blank.
+  function _set(id, v) { var n = document.getElementById(id); if (n) n.textContent = v; }
+  _set('stat-hl',    hl + ' weeks');
+  _set('stat-brier', meta.brier_test ? meta.brier_test.toFixed(4) : '--');
+  _set('stat-train', meta.n_train || '--');
+  _set('stat-test',  meta.n_test  || '--');
+  _set('stat-sims',  meta.mc_n_sims ? meta.mc_n_sims.toLocaleString() : '--');
 
+  // Lambda chart belonged to the removed model-card pipeline. If the canvas
+  // is no longer in the DOM, skip the whole block — Chart() would crash on a
+  // null context.
   var grid   = DATA.lambda_grid || [];
-  if (!grid.length) {
-    document.getElementById('lambda-chart-section').style.display = 'none';
+  var lambdaCanvas = document.getElementById('lambda-chart');
+  if (!grid.length || !lambdaCanvas) {
+    var lcs = document.getElementById('lambda-chart-section');
+    if (lcs) lcs.style.display = 'none';
   } else {
   var labels = grid.map(function(r) { return r.half_life_weeks; });
   var briers = grid.map(function(r) { return r.brier_cv; });
@@ -2331,7 +3188,7 @@ document.querySelectorAll('.year-btn').forEach(function(btn) {
   var optIdx = 0, minDist = Infinity;
   labels.forEach(function(hl, i) { var d = Math.abs(hl - targetHl); if (d < minDist) { minDist = d; optIdx = i; } });
 
-  new Chart(document.getElementById('lambda-chart').getContext('2d'), {
+  new Chart(lambdaCanvas.getContext('2d'), {
     type: 'line',
     data: {
       labels: labels,
@@ -2390,9 +3247,8 @@ document.querySelectorAll('.year-btn').forEach(function(btn) {
   });
   } // end if grid.length
 
-  renderPeriodFilter();
-  renderMapFilter();
-  renderTable();
+  // Kick off the new chart + leaderboard + year/period controls.
+  initRankings();
 
   // Render the shrinkage formula in LaTeX (KaTeX is loaded with `defer`).
   function renderAlphaFormula(){
@@ -3321,11 +4177,13 @@ function simulate() {
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return null;
-  // β = 0.136 — paired with RD_POWER=0.5, RD_SCALE=2.5, CN_PRIOR=-4.0.
-  // Final tune via PerYearOptimality.py: cross-year average Brier optimum
-  // (2024/2025/2026 each), top1 ≈ +6.77 (2026) / +3.43 (2024 EDG Champs),
-  // Platt 0.95. Same β for same-region and cross-region — no manipulation.
-  var beta = 0.136;
+  // β = 0.140 — refit on current data (2024 → 2026 stage 1) by series MLE.
+  // Paired with RD_POWER=0.5, RD_SCALE=2.5, CN_PRIOR=-4.0. Together with
+  // the intl-experience offset (+0.22) and CN-as-dog floor (+0.47, both at
+  // intl events only — see AnalyzeProjectionCalibration.py), pool series
+  // Brier = 0.2306, Platt b = 0.993. Historical matchup predictor uses raw
+  // β only — context-specific offsets fire on Modern Hub upcoming/recent.
+  var beta = 0.140;
 
   var rdA = sdA.ref_date || (yearA + '-01-01');
   var rdB = sdB.ref_date || (yearB + '-01-01');
@@ -4560,6 +5418,266 @@ def mapelo_home():
     }
     return MAPELO_HOME_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
 
+
+# Per-year timeline cache: invalidates on file mtime change so a rebuild
+# while the server is up gets picked up without restart.
+_year_timeline_cache = {}  # year_int -> (mtime, json_dict)
+
+
+def _load_year_timeline(year):
+    year = int(year)
+    fname = "rating_timeline.json" if year == 2026 else f"rating_timeline_{year}.json"
+    path = os.path.join(ROOT, "data", fname)
+    if not os.path.exists(path):
+        return {"checkpoints": [], "match_events": []}
+    try:
+        mtime = os.path.getmtime(path)
+    except OSError:
+        mtime = 0.0
+    cached = _year_timeline_cache.get(year)
+    if cached and cached[0] == mtime:
+        return cached[1]
+    with open(path) as f:
+        data = json.load(f)
+    _year_timeline_cache[year] = (mtime, data)
+    return data
+
+
+# Per-event (first_match_date, last_match_date) computed from real VLR-scraped
+# match dates. Cached across requests because the underlying data files only
+# change on a refresh. The model dates in _HISTORICAL_EVENT_DATES stay frozen
+# at the v7 interpolated windows (preserves rankings); these REAL spans are
+# only used for the chart's shaded bands so the ribbons sit where the matches
+# actually happened (e.g. 2025 Champions = Sep 12 → Oct 5, not Aug 28 → Sep 21).
+_real_event_spans_cache = None
+_real_event_spans_cache_mtime = 0.0
+
+def _get_real_event_spans():
+    global _real_event_spans_cache, _real_event_spans_cache_mtime
+    md_path = os.path.join(ROOT, 'data', 'match_dates.json')
+    try:
+        mtime = os.path.getmtime(md_path)
+    except OSError:
+        mtime = 0.0
+    if _real_event_spans_cache is not None and mtime == _real_event_spans_cache_mtime:
+        return _real_event_spans_cache
+
+    spans = {}
+    try:
+        with open(md_path) as f:
+            match_dates = json.load(f)
+    except Exception:
+        match_dates = {}
+
+    if match_dates:
+        from MoreTestingMaybeFiles import ALL_EVENTS
+        for e in ALL_EVENTS:
+            eid = e.get('id')
+            if not eid:
+                continue
+            maps_csv = os.path.join(ROOT, 'data', 'maps', f'{eid}.csv')
+            if not os.path.exists(maps_csv):
+                continue
+            try:
+                # Just need MatchID; pandas overhead is fine, this is cached.
+                mids = pd.read_csv(maps_csv, usecols=['MatchID'])['MatchID']
+                ids_iter = (str(int(m)) for m in mids.unique() if not pd.isna(m))
+                event_match_dates = [match_dates[mid] for mid in ids_iter if mid in match_dates]
+                if event_match_dates:
+                    spans[eid] = (min(event_match_dates), max(event_match_dates))
+            except Exception:
+                continue
+
+    _real_event_spans_cache = spans
+    _real_event_spans_cache_mtime = mtime
+    return spans
+
+
+def _event_bands_for_year(year):
+    """Compute Modern Hub-style event ribbons for the given year.
+
+    Band start/end come from the REAL first/last match dates per event (via
+    `_get_real_event_spans`), so the shaded ribbon under each event sits
+    exactly where its matches were played. Falls back to ALL_EVENTS.start/end
+    (set for 2026+) and then to _HISTORICAL_EVENT_DATES when no real match
+    data exists for an event.
+    """
+    from MoreTestingMaybeFiles import ALL_EVENTS
+    try:
+        from scrapers.BuildMapRatings import _HISTORICAL_EVENT_DATES as _HIST_DATES
+    except Exception:
+        _HIST_DATES = {}
+    real_spans = _get_real_event_spans()
+    year_int = int(year)
+    bands = []
+    for e in ALL_EVENTS:
+        if e.get('year') != year_int:
+            continue
+        regions = e.get('regions') or {}
+        # Skip CN-only splits — their ribbon would overlap and clutter.
+        if list(regions.keys()) == ['CN']:
+            continue
+        start, end = (None, None)
+        if e['id'] in real_spans:
+            start, end = real_spans[e['id']]
+        elif e.get('start') and e.get('end'):
+            start, end = e['start'], e['end']
+        elif e['id'] in _HIST_DATES:
+            start, end = _HIST_DATES[e['id']]
+        if not start or not end:
+            continue
+        label = e['label'].replace(f"{year_int} ", "", 1)
+        bands.append({
+            "id":    e['id'],
+            "label": label,
+            "start": start,
+            "end":   end,
+        })
+    bands.sort(key=lambda b: b['start'])
+    # Defensive overlap trim: if a later band starts before the previous one
+    # ends, shorten the previous band so they don't visually overlap. With
+    # real match dates this should almost never fire — VCT events don't run
+    # concurrently — but it's cheap insurance against any future schedule
+    # quirk (e.g. China stage running over a regional one).
+    for i in range(1, len(bands)):
+        if bands[i]['start'] < bands[i - 1]['end']:
+            bands[i - 1]['end'] = bands[i]['start']
+    return bands
+
+
+@mapelo_bp.route('/rankings/data')
+def mapelo_rankings_data():
+    """Per-(year, snap) payload for the historical rankings page.
+
+    Returns a Modern-Hub-shaped JSON with chart timeline trimmed to the snap's
+    ref date, plus leaderboard teams sorted by rating with rosters and recent
+    matches embedded for click-to-expand. Frontend caches each (year, snap)
+    locally so flipping snaps inside the same year is instant after the first
+    fetch.
+    """
+    from flask import request as _req
+    year = str(_req.args.get('year', '2026'))
+    snap = str(_req.args.get('snap', ''))
+
+    full = get_ratings()
+    year_ratings = (full.get('ratings') or {}).get(year, {})
+    snapshots = year_ratings.get('snapshots', {}) or {}
+
+    # "Live" snaps cover ongoing (unfinished) events — Modern Hub owns those,
+    # the historical rankings page should only show completed periods. Build a
+    # filtered dict for both default-snap resolution and snap_options output.
+    def _is_live(v): return (v.get('label') or '').lower() == 'live'
+    completed = {k: v for k, v in snapshots.items() if not _is_live(v)}
+
+    if snap not in completed:
+        pool = list(completed.items())
+        if pool:
+            # Stable max on ref_date with insertion-order tiebreak: YEAR_CONFIGS
+            # lists snaps chronologically, so when two snaps share a ref_date
+            # (e.g. 2023 before_champions / after_tokyo both land on Jun 25
+            # because no events run between Tokyo and Champions), we want the
+            # later one in the dict to win.
+            best_idx, _ = max(enumerate(pool), key=lambda kv: (kv[1][1].get('ref_date') or '', kv[0]))
+            snap = pool[best_idx][0]
+        else:
+            return Response(json.dumps({
+                "error": "no_snapshots", "year": year, "snap": snap,
+            }), mimetype='application/json')
+
+    snap_data = snapshots[snap]
+    ref_date  = snap_data.get('ref_date') or ''
+    teams_raw = snap_data.get('teams', {}) or {}
+
+    # The Massey solver's `ref_date` is computed off the model's interpolated
+    # event windows (_HISTORICAL_EVENT_DATES), which can lag the real match
+    # dates by a couple of weeks — e.g. 2025 Champions interpolates max=Sep
+    # 21 but the real final ran Oct 5. Trimming the timeline by `ref_date`
+    # would chop those last games off the chart. Instead, use the real-date
+    # cutoff: the latest match_event date whose event_id belongs to this
+    # snap's display event list (so NRG's grand-final wins still show up as
+    # dots on the line). Falls back to ref_date if no events match.
+    tl = _load_year_timeline(year)
+    all_match_events = tl.get('match_events') or []
+    snap_event_set = set(_SNAPSHOT_EVENTS.get(str(year), {}).get(snap, []))
+    if snap_event_set:
+        in_snap_dates = [me.get('date', '') for me in all_match_events
+                         if me.get('event_id') in snap_event_set]
+        cutoff_date = max(in_snap_dates) if in_snap_dates else ref_date
+    else:
+        cutoff_date = ref_date
+    if cutoff_date < ref_date:
+        cutoff_date = ref_date
+    checkpoints  = [cp for cp in (tl.get('checkpoints') or [])
+                    if cp.get('date', '') <= cutoff_date]
+    match_events = [me for me in all_match_events
+                    if me.get('date', '') <= cutoff_date]
+
+    leaderboard = []
+    for org, td in teams_raw.items():
+        rating = td.get('overall_rating', 0.0)
+        region = ORG_REGIONS.get(org, 'Unknown')
+        all_maps_sorted = sorted(
+            (td.get('maps') or {}).items(),
+            key=lambda kv: -kv[1].get('rating', 0.0),
+        )
+        all_maps = [
+            {"map": m, "rating": round(v.get('rating', 0.0), 2),
+             "w": v.get('w', 0), "l": v.get('l', 0),
+             "win_pct": v.get('win_pct', 0.0)}
+            for m, v in all_maps_sorted
+        ]
+        eligible = [(m, v) for m, v in all_maps_sorted if v.get('w', 0) + v.get('l', 0) >= 3]
+        best_maps  = [{"map": m, "rating": round(v.get('rating', 0.0), 2),
+                       "w": v.get('w', 0), "l": v.get('l', 0)}
+                      for m, v in eligible[:3]]
+        worst_maps = [{"map": m, "rating": round(v.get('rating', 0.0), 2),
+                       "w": v.get('w', 0), "l": v.get('l', 0)}
+                      for m, v in sorted(eligible, key=lambda kv: kv[1].get('rating', 0.0))[:3]]
+        leaderboard.append({
+            "org":    org,
+            "region": region,
+            "rating": round(float(rating), 4),
+            "w":      td.get('w', 0),
+            "l":      td.get('l', 0),
+            "win_pct": td.get('win_pct', 0.0),
+            "all_maps":   all_maps,
+            "best_maps":  best_maps,
+            "worst_maps": worst_maps,
+        })
+    leaderboard.sort(key=lambda t: -t['rating'])
+    for i, t in enumerate(leaderboard):
+        t['rank'] = i + 1
+
+    def _readable_snap_label(snap_id, raw_label):
+        # The build mangles the latest in-progress snap's label to "Live" for
+        # the Modern Hub. On the historical rankings page we'd rather show the
+        # natural label so the period segments don't read "Before Madrid / Live".
+        if (raw_label or '').lower() != 'live':
+            return raw_label or snap_id
+        parts = snap_id.split('_', 1)
+        prefix = parts[0].capitalize() if parts else snap_id
+        short  = parts[1].replace('_', ' ').title() if len(parts) > 1 else ''
+        if short.lower().startswith('masters'):
+            short = 'Masters' + short[7:]
+        short = re.sub(r'([A-Za-z])(\d)', r'\1 \2', short)  # "Stage1" -> "Stage 1"
+        return f"{prefix} {short}".strip()
+
+    out = {
+        "year":         int(year),
+        "snap":         snap,
+        "snap_label":   _readable_snap_label(snap, snap_data.get('label')),
+        "ref_date":     ref_date,
+        "snap_options": [
+            {"id": k, "label": _readable_snap_label(k, v.get('label')),
+             "ref_date": v.get('ref_date', '')}
+            for k, v in completed.items()
+        ],
+        "event_bands":  _event_bands_for_year(year),
+        "chart":        {"checkpoints": checkpoints, "match_events": match_events},
+        "leaderboard":  {"teams": leaderboard, "as_of_date": ref_date, "snapshot": snap},
+    }
+    return Response(json.dumps(out), mimetype='application/json')
+
 @mapelo_bp.route('/matchup/')
 def mapelo_matchup():
     from flask import request as _req
@@ -5219,18 +6337,31 @@ def _mhub_load():
     # same probability, every surface.
     if last_checkpoint_ratings and result["chart"]["match_events"]:
         from scipy.special import expit as _expit
-        _tl_beta = 0.136
+        _tl_beta = 0.140
 
         def _series_wp(p, fmt):
             if fmt == "bo5":
                 return p**3 * (1 + 3*(1-p) + 6*(1-p)**2)
             return p**2 * (3 - 2*p)  # bo3
 
+        # Tag upcoming matches with the canonical intl event_id by label
+        # substring, so the frontend can apply the intl_exp/CN-dog logit
+        # shifts on Masters London / Champions cards once they appear.
+        _UPC_INTL_LABEL_TO_ID = [
+            ("santiago", "2026_masters_santiago"),
+            ("london",   "2026_masters_london"),
+            ("champions","2026_champions"),
+        ]
         for _m in upcoming_raw:
             _ra = last_checkpoint_ratings.get(_m.get("org_a", ""), 0.0)
             _rb = last_checkpoint_ratings.get(_m.get("org_b", ""), 0.0)
             _m["rating_a"]   = round(_ra, 3)
             _m["rating_b"]   = round(_rb, 3)
+            _lbl = (_m.get("event") or "").lower()
+            for _needle, _eid in _UPC_INTL_LABEL_TO_ID:
+                if _needle in _lbl:
+                    _m["event_id"] = _eid
+                    break
             # NOTE: win_prob_a is intentionally NOT pre-computed for upcoming
             # matches. The frontend's per-map MC veto sim (in renderUpcoming)
             # is the authoritative win prob — same model the simulator uses,
@@ -5240,6 +6371,27 @@ def _mhub_load():
             # the simulator on the same matchup.
 
     result["upcoming"] = upcoming_raw
+
+    # ── Per-org intl-attendance lookup ───────────────────────────────────────
+    # Build {org: earliest_date} for every org that played at least one map at
+    # a 2026 international (Masters Santiago is the only one to date). The
+    # frontend uses this to compute intl_exp_diff for upcoming/recent matches
+    # at intl events: a team has "intl experience" if it attended a 2026 intl
+    # whose date < the candidate match's date.
+    _INTL_EVENT_IDS_2026 = {
+        "2026_masters_santiago", "2026_masters_london", "2026_champions",
+    }
+    intl_attendance_2026 = {}
+    for _me in result["chart"]["match_events"]:
+        if _me.get("event_id") not in _INTL_EVENT_IDS_2026:
+            continue
+        _d = _me.get("date") or ""
+        for _org in (_me.get("winner"), _me.get("loser")):
+            if not _org:
+                continue
+            if _org not in intl_attendance_2026 or _d < intl_attendance_2026[_org]:
+                intl_attendance_2026[_org] = _d
+    result["intl_attendance_2026"] = intl_attendance_2026
 
     # ── Past matches — replay each match with 12:01-AM ratings ───────────────
     # All matches on date X use the SAME rating snapshot: the checkpoint from
@@ -5324,6 +6476,34 @@ def _mhub_load():
 
             _p_map = float(_expit(_tl_beta * (_ra_p - _rb_p)))
             _p_series = _series_wp(_p_map, _fmt)
+
+            # Apply intl_exp_diff (+0.22) and CN-dog (+0.47) logit shifts at
+            # internationals — same offsets the frontend bakes onto upcoming
+            # cards (see applyIntlOffsetsToA in MapElo.py JS). No-op for
+            # domestic matches; signed onto team A's series prob.
+            _eid_pm = _me.get("event_id", "")
+            if _eid_pm in _INTL_EVENT_IDS_2026:
+                _reg_a = ORG_REGIONS.get(_org_a)
+                _reg_b = ORG_REGIONS.get(_org_b)
+                _a_is_fav = _p_series >= 0.5
+                _fav_org, _dog_org = (_org_a, _org_b) if _a_is_fav else (_org_b, _org_a)
+                _fav_reg, _dog_reg = (_reg_a, _reg_b) if _a_is_fav else (_reg_b, _reg_a)
+                _delta = 0.0
+                _md_str = _me.get("date", "")
+                _fav_d = intl_attendance_2026.get(_fav_org)
+                _dog_d = intl_attendance_2026.get(_dog_org)
+                _fav_exp = 1 if (_fav_d and _fav_d < _md_str) else 0
+                _dog_exp = 1 if (_dog_d and _dog_d < _md_str) else 0
+                _delta += 0.22 * (_fav_exp - _dog_exp)
+                if _dog_reg == "CN" and _fav_reg != "CN":
+                    _delta += 0.47
+                if _delta:
+                    _p_fav = _p_series if _a_is_fav else (1.0 - _p_series)
+                    _p_fav = max(min(_p_fav, 1 - 1e-9), 1e-9)
+                    import math as _math
+                    _logit = _math.log(_p_fav / (1 - _p_fav)) + _delta
+                    _p_fav_new = 1.0 / (1.0 + _math.exp(-_logit))
+                    _p_series = _p_fav_new if _a_is_fav else (1.0 - _p_fav_new)
 
             _region = ORG_REGIONS.get(_winner, ORG_REGIONS.get(_loser, "Unknown"))
             _evt_label = _event_label_by_id.get(_me.get("event_id", ""), _me.get("event_id", ""))
@@ -5811,7 +6991,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .lb-card-wrap{padding:0 24px;max-width:780px;margin:0 auto}
 
 /* Leaderboard */
-.lb-card{background:rgba(255,255,255,.72);border-radius:16px;overflow:hidden;backdrop-filter:blur(10px)}
+.lb-card{background:#fff;border-radius:16px;overflow:hidden}
 .lb-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid rgba(61,26,110,.1)}
 .lb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#000;text-align:center}
 .lb-asof{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:.7rem;color:#666;text-align:right;max-width:240px}
@@ -6205,12 +7385,79 @@ var VETO_HUB   = {teams:{}, snap_pools:{}};
 var ORG_REGIONS_HUB = {};
 var INTL_HUB   = {};
 var SNAP_TEAMS = {};
-// β = 0.136 — paired with RD_POWER=0.5, RD_SCALE=2.5, CN_PRIOR=-4.0 in
-// BuildMapRatings.py. Cross-year-optimal config from PerYearOptimality.py:
-// best avg Brier across 2024-2026, top1 ≈ +6.77 (2026 NS), Platt 0.95.
-// Hardcoded so all four prediction surfaces use the same β.
-var SNAP_BETA  = 0.136;
+// {org: earliest_intl_date_2026} — populated from data.intl_attendance_2026.
+// Used by _intlAttendedBefore(date)(org) to compute intl_exp_diff at intl
+// events for upcoming/recent matches.
+var INTL_ATTENDANCE_2026 = {};
+// β = 0.140 — re-fit on current data (2024 → 2026 stage 1) via series MLE.
+// Combined with intl_exp_diff×0.22 and cn_dog_offset×0.47 (both applied only
+// at intl events, see applyIntlOffsetsHUB below), pool series Brier = 0.2306,
+// Platt b = 0.993. Hardcoded so all prediction surfaces share the same β.
+var SNAP_BETA  = 0.140;
 var SNAP_KEY   = 'after_santiago';
+
+// Internationals that the intl-experience offset and CN-as-dog floor key off.
+// Match the set in scrapers/AnalyzeProjectionCalibration.py:INTL_EVENTS.
+var INTL_EVENTS_HUB = {
+  '2024_masters_madrid':1, '2024_masters_shanghai':1, '2024_champions':1,
+  '2025_masters_bangkok':1, '2025_masters_toronto':1, '2025_champions':1,
+  '2026_masters_santiago':1, '2026_masters_london':1, '2026_champions':1,
+};
+var INTL_EXP_BONUS = 0.22;   // logit shift when fav has 2025/2026 intl exp and dog doesn't
+var CN_DOG_OFFSET  = 0.47;   // logit shift when dog is CN at an intl match
+
+// Shift a series probability in logit space by `delta`, then return the new
+// probability. Used by all prediction surfaces below — keeps the band-aid
+// math consistent with scrapers/AnalyzeProjectionCalibration.py.
+function shiftSeriesProb(p, delta) {
+  if (!delta) return p;
+  var ps = Math.max(Math.min(p, 1 - 1e-9), 1e-9);
+  return 1.0 / (1.0 + Math.exp(-(Math.log(ps / (1 - ps)) + delta)));
+}
+
+// Compute the optimized logit shift for a single series prediction, given
+// the match's event_id, the favorite/underdog orgs, and a function that says
+// whether a given org has played any intl event this calendar year STRICTLY
+// before the match date (or, for upcoming matches, before "now"). Returns
+// the total logit delta to apply to the bo3/bo5 closed-form series prob.
+function intlAndCnLogitDelta(eventId, favOrg, dogOrg, attendedFn) {
+  if (!INTL_EVENTS_HUB[eventId]) return 0;   // domestic — no offsets fire
+  var delta = 0;
+  if (attendedFn) {
+    var favExp = attendedFn(favOrg) ? 1 : 0;
+    var dogExp = attendedFn(dogOrg) ? 1 : 0;
+    delta += INTL_EXP_BONUS * (favExp - dogExp);
+  }
+  var favReg = (ORG_REGIONS_HUB || {})[favOrg];
+  var dogReg = (ORG_REGIONS_HUB || {})[dogOrg];
+  if (dogReg === 'CN' && favReg !== 'CN') delta += CN_DOG_OFFSET;
+  return delta;
+}
+
+// Curried "did this org play any 2026 intl event strictly before `beforeDate`?"
+function _intlAttendedBefore(beforeDate) {
+  return function(org) {
+    var d = INTL_ATTENDANCE_2026[org];
+    return !!(d && (!beforeDate || d < beforeDate));
+  };
+}
+
+// Given a *team-A perspective* series prob and the matchup metadata, apply
+// the optimized logit offsets and return the shifted prob for team A.
+// Picks favorite/dog from pA vs pB, asks intlAndCnLogitDelta for the favorite-
+// perspective delta, then signs it onto team A's prob.
+function applyIntlOffsetsToA(pA, eventId, orgA, orgB, matchDate) {
+  if (!INTL_EVENTS_HUB[eventId]) return pA;
+  var attendedFn = _intlAttendedBefore(matchDate);
+  var aIsFav = pA >= 0.5;
+  var favOrg = aIsFav ? orgA : orgB;
+  var dogOrg = aIsFav ? orgB : orgA;
+  var delta  = intlAndCnLogitDelta(eventId, favOrg, dogOrg, attendedFn);
+  if (!delta) return pA;
+  var pFav = aIsFav ? pA : (1 - pA);
+  var pFavNew = shiftSeriesProb(pFav, delta);
+  return aIsFav ? pFavNew : (1 - pFavNew);
+}
 
 var VETO_STEPS_HUB = {
   bo1:[{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'ban'},{side:'B',action:'ban'}],
@@ -7354,6 +8601,7 @@ async function showChartAndLeaderboard(data) {
   ORG_REGIONS_HUB = data.org_regions || {};
   INTL_HUB       = data.intl_calib   || {};
   SNAP_TEAMS     = data.snap_teams   || {};
+  INTL_ATTENDANCE_2026 = data.intl_attendance_2026 || {};
   // Don't overwrite with data.snap_beta — that value (~0.7-1.0) is the
   // per-snapshot fitted β (in-sample MLE), not the cross-validated β used
   // for predictions. Keep the hardcoded SNAP_BETA=0.22 from above.
@@ -7872,9 +9120,13 @@ function renderUpcoming(data) {
     // Always run the frontend MC sim — same model as the simulator iframe —
     // so the two surfaces give matching win probs. Fall back to a sigmoid on
     // live overalls only if a team isn't in the snap (no per-map data).
-    var pctA = (tA&&tB) ? (seriesWins/nSims*100).toFixed(1)
-                        : (100/(1+Math.exp(-beta*(ratingA-ratingB)))).toFixed(1);
-    var pctB = (100 - parseFloat(pctA)).toFixed(1);
+    var pAraw = (tA&&tB) ? (seriesWins/nSims)
+                         : (1/(1+Math.exp(-beta*(ratingA-ratingB))));
+    // At intl events: layer intl_exp_diff (+0.22) and CN-dog (+0.47) logit
+    // shifts on top of the rating-driven prob. No-op for domestic matches.
+    var pA = applyIntlOffsetsToA(pAraw, m.event_id || '', orgA, orgB, m.date || '');
+    var pctA = (pA*100).toFixed(1);
+    var pctB = ((1-pA)*100).toFixed(1);
     var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
     var topSeqs = (tA&&tB&&pool.length) ? topVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt,1) : [];
 
@@ -8056,9 +9308,9 @@ function renderPast(data) {
   var snapKey   = data.snap_key || 'live';
   var lbTeams = {};
   ((data.leaderboard||{}).teams || []).forEach(function(t){ lbTeams[t.org] = t; });
-  // Same CV-optimal β as the upcoming-card and simulator sims — keep all three
+  // Same MLE-fit β as the upcoming-card and simulator sims — keep all three
   // surfaces in sync so they produce identical win-prob predictions.
-  var beta = 0.136;
+  var beta = 0.140;
   var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
               || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
   var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
@@ -8753,3 +10005,493 @@ def mapelo_map_matches(org, map_name):
     snap = _req.args.get('snap', 'after_champions')
     data = _get_map_matches(org, map_name, year, snap)
     return Response(json.dumps(data), mimetype='application/json')
+
+
+# ─── Projection Test Lab ────────────────────────────────────────────────────
+# Static one-pager that renders the calibration analysis produced by
+# scrapers/AnalyzeProjectionCalibration.py.  Reads data/projection_calibration.json
+# at request time so re-running the analysis is picked up without a restart.
+
+MAPELO_PROJECTION_TEST_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projection Test Lab &mdash; Bobo.GG</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  SHARED_CSS
+  .ptl-page { max-width:1040px; margin:0 auto; padding:8px 24px 80px; position:relative; z-index:1; }
+  .ptl-title { font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3rem); font-weight:800; letter-spacing:-.02em; margin:8px 0 4px; }
+  .ptl-sub { color:var(--soft); font-size:.95rem; margin-bottom:18px; line-height:1.6; max-width:760px; }
+  .ptl-headline-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:18px 0 28px; }
+  .ptl-stat { background:white; border-radius:14px; padding:16px 18px; box-shadow:0 2px 12px #00000010; border:1px solid #00000008; }
+  .ptl-stat-label { font-family:'Syne',sans-serif; font-size:.62rem; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); font-weight:800; }
+  .ptl-stat-val { font-size:1.6rem; font-weight:700; color:#241a2a; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .ptl-stat-sub { font-size:.78rem; color:var(--soft); margin-top:2px; }
+  .ptl-section { background:white; border-radius:18px; padding:24px 26px 22px; margin:22px 0; box-shadow:0 4px 22px #00000010; border:1px solid #00000008; }
+  .ptl-section h2 { font-family:'Syne',sans-serif; font-size:1.3rem; letter-spacing:-.01em; margin-bottom:6px; }
+  .ptl-section .ptl-eyebrow { font-family:'Syne',sans-serif; font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:#7c3aed; font-weight:800; margin-bottom:6px; }
+  .ptl-section p { color:#3a2e44; font-size:.94rem; line-height:1.65; margin:8px 0; }
+  .ptl-section p.ptl-finding { background:#f4eefe; border-left:3px solid #7c3aed; padding:10px 14px; border-radius:6px; font-size:.94rem; }
+  .ptl-section p.ptl-caveat { background:#fff4e8; border-left:3px solid #f6a821; padding:10px 14px; border-radius:6px; font-size:.9rem; }
+  .ptl-section img { width:100%; height:auto; border-radius:12px; margin:10px 0 4px; background:#fafafa; }
+  table.ptl-tbl { width:100%; border-collapse:collapse; margin:10px 0 4px; font-size:.85rem; font-variant-numeric:tabular-nums; }
+  table.ptl-tbl th, table.ptl-tbl td { padding:6px 10px; text-align:right; border-bottom:1px solid #00000010; }
+  table.ptl-tbl th:first-child, table.ptl-tbl td:first-child { text-align:left; }
+  table.ptl-tbl thead th { background:#f6f1fb; font-family:'Syne',sans-serif; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:#5a2a7a; }
+  .ptl-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width: 820px) { .ptl-grid2 { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="content-wrap">
+  <div class="top-nav">
+    <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
+    <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+  </div>
+  <div class="ptl-page">
+    <div class="ptl-eyebrow" style="color:#7c3aed; font-family:'Syne',sans-serif; font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; font-weight:800;">__EYEBROW__</div>
+    <h1 class="ptl-title">__PAGE_TITLE__</h1>
+    <p class="ptl-sub">
+      A deep look at how well BenPom&rsquo;s pre-match win probabilities match
+      what actually happened in VCT matches from <b>2024 onward</b>. Every
+      pre-match rating in <code>winner_before</code> / <code>loser_before</code>
+      is fed through <code>p = sigmoid(&beta; &middot; (winner_before &minus;
+      loser_before))</code> with <b>&beta; = __BETA__</b>__BETA_NOTE__.
+      Matches where both teams had equal ratings (i.e. brand-new rosters with
+      no model opinion) are excluded. 2023 is excluded entirely.
+    </p>
+
+    <div class="ptl-headline-grid">
+      <div class="ptl-stat"><div class="ptl-stat-label">Series Brier</div><div class="ptl-stat-val">__SERIES_BRIER__</div><div class="ptl-stat-sub">vs 0.5-baseline __SERIES_BASE__&nbsp;&middot;&nbsp;n=__N_SER__</div></div>
+      <div class="ptl-stat"><div class="ptl-stat-label">Map Brier</div><div class="ptl-stat-val">__MAP_BRIER__</div><div class="ptl-stat-sub">vs 0.5-baseline __MAP_BASE__&nbsp;&middot;&nbsp;n=__N_MAP__</div></div>
+      <div class="ptl-stat"><div class="ptl-stat-label">Platt b (series)</div><div class="ptl-stat-val">__PLATT_B__</div><div class="ptl-stat-sub">__PLATT_INTERP__</div></div>
+      <div class="ptl-stat"><div class="ptl-stat-label">Intl vs Domestic</div><div class="ptl-stat-val">__INTL_DELTA__</div><div class="ptl-stat-sub">series Brier gap (intl &minus; domestic)</div></div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q1 &mdash; Overall calibration</div>
+      <h2>Does the model deliver the win-rates it promises?</h2>
+      <p>
+        For each decile of predicted probability (.50&ndash;.55, .55&ndash;.60,
+        &hellip;, .95&ndash;1.00), we plot the model&rsquo;s mean prediction
+        in that bin against the observed favorite win-rate. Red dashed line is
+        perfect calibration. Gray band is the Wilson 95% CI on observed
+        win-rate; when sample sizes are small, the band is wide and the
+        observed point can wobble.
+      </p>
+      <div class="ptl-grid2">
+        <div>
+          <img src="/static/__CHART_DIR__/01_calibration_map.png" alt="Map calibration">
+        </div>
+        <div>
+          <img src="/static/__CHART_DIR__/01_calibration_series.png" alt="Series calibration">
+        </div>
+      </div>
+      <p class="ptl-finding"><b>Headline:</b> Series Brier <b>__SERIES_BRIER__</b>
+      (vs 0.5-baseline __SERIES_BASE__). Map Brier <b>__MAP_BRIER__</b>. Both
+      sit clearly below the 50/50 baseline, so the model is doing real work.
+      The calibration curves track the y=x reference well across the populated
+      bins.</p>
+    </div>
+
+    <!-- Q2 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q2 &mdash; Are favorites under-priced?</div>
+      <h2>Platt scaling + high-confidence buckets</h2>
+      <p>
+        Fit <code>logit(p_actual) = a + b &middot; logit(p_model)</code>. If
+        <b>b &gt; 1</b>, the model is <b>under-confident</b> &mdash; it
+        squashes its real beliefs toward 50/50 and favorites win more often
+        than it says. If <b>b &lt; 1</b>, it is <b>over-confident</b>.
+      </p>
+      <table class="ptl-tbl">
+        <thead><tr><th>Level</th><th>a (intercept)</th><th>b (slope)</th><th>n</th><th>Interpretation</th></tr></thead>
+        <tbody>__PLATT_ROWS__</tbody>
+      </table>
+      <img src="/static/__CHART_DIR__/02_undervaluation.png" alt="Undervaluation residual vs threshold">
+      <p>
+        Above: for every threshold t &isin; {.60, .65, .70, .75, .80, .85, .90},
+        we take all favorites priced at or above t and plot the residual
+        (observed win-rate &minus; mean predicted). Positive bars mean the
+        model is too modest about its high-confidence calls.
+      </p>
+      <table class="ptl-tbl">
+        <thead><tr><th>Threshold</th><th>n (series)</th><th>Mean predicted</th><th>Observed</th><th>Residual</th><th>95% CI</th></tr></thead>
+        <tbody>__Q2_ROWS__</tbody>
+      </table>
+      <p class="ptl-finding">__Q2_FINDING__</p>
+      <p class="ptl-caveat">__Q2_CAVEAT__</p>
+    </div>
+
+    <!-- Q3 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q3 &mdash; International vs domestic</div>
+      <h2>Are intl matches harder to predict?</h2>
+      <p>
+        Domestic = regional events (kickoff, stage 1/2) including all CN
+        events. International = Masters Madrid, Shanghai, Bangkok, Toronto,
+        Santiago and Champions 2024/2025.
+      </p>
+      <div class="ptl-grid2">
+        <div><img src="/static/__CHART_DIR__/03_intl_vs_dom_map.png" alt="Intl vs dom map calibration"></div>
+        <div><img src="/static/__CHART_DIR__/03_intl_vs_dom_series.png" alt="Intl vs dom series calibration"></div>
+      </div>
+      <table class="ptl-tbl">
+        <thead><tr><th>Bucket</th><th>n series</th><th>Series Brier</th><th>n maps</th><th>Map Brier</th><th>Mean pred (ser)</th><th>Fav win-rate (ser)</th></tr></thead>
+        <tbody>__Q3_ROWS__</tbody>
+      </table>
+      <p class="ptl-finding">__Q3_FINDING__</p>
+    </div>
+
+    <!-- Q4 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q4 &mdash; First intl vs last intl of a season</div>
+      <h2>Does the model learn its intl footing as the year goes on?</h2>
+      <p>
+        Brier per intl event, in chronological season order. The hypothesis is
+        that the model is at its worst right after the off-season roster
+        churn and improves through the year as it sees more cross-region
+        evidence. (At least within a season &mdash; Madrid 2024 &rarr;
+        Shanghai 2024 &rarr; Champions 2024, etc.)
+      </p>
+      <img src="/static/__CHART_DIR__/04_intl_brier_by_event.png" alt="Brier per intl event">
+      <table class="ptl-tbl">
+        <thead><tr><th>Event</th><th>n series</th><th>Series Brier</th><th>Map Brier</th><th>Mean pred</th><th>Fav win-rate</th></tr></thead>
+        <tbody>__Q4_ROWS__</tbody>
+      </table>
+      <p class="ptl-finding">__Q4_FINDING__</p>
+    </div>
+
+    <!-- Q5 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q5 &mdash; Matchup buckets</div>
+      <h2>Are cross-region matchups mis-priced?</h2>
+      <p>
+        Bucket every international series by region pairing (favorite&rsquo;s
+        region vs underdog&rsquo;s region) and plot the residual
+        (<code>observed &minus; mean predicted</code>) with Wilson CI.
+      </p>
+      <img src="/static/__CHART_DIR__/05_region_buckets.png" alt="Region buckets residual">
+      <table class="ptl-tbl">
+        <thead><tr><th>Bucket</th><th>n</th><th>Mean pred</th><th>Fav win-rate</th><th>Residual</th><th>95% CI</th></tr></thead>
+        <tbody>__Q5_ROWS__</tbody>
+      </table>
+      <table class="ptl-tbl">
+        <thead><tr><th>Cross-region only</th><th>n</th><th>Mean pred</th><th>Observed</th><th>Residual</th><th>Brier</th></tr></thead>
+        <tbody>__Q5_CROSS_ROWS__</tbody>
+      </table>
+      <p class="ptl-finding">__Q5_FINDING__</p>
+    </div>
+
+    <!-- Q6 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q6 &mdash; Random-chance caveat</div>
+      <h2>How much of this is just noise?</h2>
+      <p>
+        Wilson 95% CI half-widths per decile, plotted against bin size on a
+        log scale. The far-right deciles (.75+) carry tiny samples on the map
+        side, so any apparent under-/over-pricing there is statistically
+        flimsy. The CI band on every earlier chart on this page captures
+        this.
+      </p>
+      <img src="/static/__CHART_DIR__/06_sample_size_landscape.png" alt="Sample-size landscape">
+      <p class="ptl-caveat">
+        Practically: at the very high end of confidence (predicted &ge; .80
+        series, &ge; .75 map) we have only a handful of matches. Don&rsquo;t
+        over-interpret a 100% bin with n=2.
+      </p>
+    </div>
+
+    <!-- Q7 -->
+    <div class="ptl-section">
+      <div class="ptl-eyebrow">Q7 &mdash; Free-form findings</div>
+      <h2>Where does the rating gap break down? Who keeps surprising us?</h2>
+      <p>
+        First, raw rating-gap vs map outcome &mdash; we should see the
+        observed line track or beat the predicted line as the gap grows.
+      </p>
+      <img src="/static/__CHART_DIR__/07_abs_delta.png" alt="Abs delta vs accuracy">
+      <p>
+        Second, Brier by season. The model has gotten <i>marginally</i>
+        better, mostly because favorite win-rate has crept up faster than the
+        mean predicted has.
+      </p>
+      <img src="/static/__CHART_DIR__/07_seasonal_brier.png" alt="Seasonal Brier">
+      <table class="ptl-tbl">
+        <thead><tr><th>Season</th><th>n series</th><th>Series Brier</th><th>Fav win-rate</th><th>Mean pred</th><th>n maps</th><th>Map Brier</th></tr></thead>
+        <tbody>__Q7_SEASON_ROWS__</tbody>
+      </table>
+      <p>
+        Third, which teams systematically over-/under-perform their BenPom
+        favorite prob? Filter to teams that were favorite in at least 8
+        series.
+      </p>
+      <img src="/static/__CHART_DIR__/07_team_residuals.png" alt="Team residuals">
+      <p>Biggest series-level model misses (favorite lost despite being heavily favored):</p>
+      <table class="ptl-tbl">
+        <thead><tr><th>Date</th><th>Event</th><th>Favorite</th><th>Underdog</th><th>Result</th><th>P(fav)</th><th>|&Delta;|</th></tr></thead>
+        <tbody>__Q7_MISS_ROWS__</tbody>
+      </table>
+      <p class="ptl-finding">__Q7_FINDING__</p>
+    </div>
+
+    <p class="ptl-sub" style="margin-top:32px;">
+      Source data: <code>data/rating_timeline_2024.json</code>,
+      <code>_2025.json</code>, <code>rating_timeline.json</code>.<br>
+      Analysis script: <code>scrapers/AnalyzeProjectionCalibration.py</code>.<br>
+      Findings dump: <code>data/projection_calibration.json</code>.
+    </p>
+  </div>
+</div>
+</body>
+</html>
+""".replace('SHARED_CSS', SHARED_CSS)
+
+
+def _fmt(v, digits=4):
+    if v is None:
+        return "&mdash;"
+    try:
+        return f"{float(v):.{digits}f}"
+    except Exception:
+        return str(v)
+
+
+def _platt_interp(b):
+    if b is None:
+        return "&mdash;"
+    if b > 1.05:
+        return "Under-confident: model squashes toward 50/50."
+    if b < 0.95:
+        return "Over-confident: model is too extreme."
+    return "Well-calibrated slope (~1.0)."
+
+
+def _render_projection_test(json_suffix="", chart_dir="projection_test", beta_label="0.140",
+                            beta_note=" plus an <b>intl-experience offset</b> (+0.22 logit when "
+                                      "the favorite has 2025/2026 intl experience and the underdog "
+                                      "doesn't, symmetric in reverse) plus a <b>CN-as-dog floor "
+                                      "of +0.47 logit</b> on every CN-vs-non-CN intl match where "
+                                      "CN is the underdog. The CN floor is calibrated against "
+                                      "de-vigged Vegas lines from 53 CN-intl matches scraped from "
+                                      "VLR.gg — Vegas systematically prices the non-CN favorite "
+                                      "~10 pp higher than BenPom alone, n=38 with a tight CI",
+                            eyebrow="Calibration Analysis &middot; Optimized Model",
+                            page_title="Projection Test Lab"):
+    """Read the JSON findings, slot them into the static template."""
+    path = os.path.join(ROOT, "data", f"projection_calibration{json_suffix}.json")
+    if not os.path.exists(path):
+        return (f"Calibration JSON not found at <code>{path}</code>. Run "
+                "<code>python3 scrapers/AnalyzeProjectionCalibration.py</code>"
+                f"{(' --beta ' + beta_label + ' --suffix ' + json_suffix) if json_suffix else ''}"
+                " first.", 200)
+    with open(path) as f:
+        d = json.load(f)
+
+    meta = d["meta"]
+    n_ser = meta["n_series"]
+    n_map = meta["n_maps"]
+    q1 = d["q1_overall_calibration"]
+    map_brier = q1["map"]["brier"]
+    map_base  = q1["map"]["brier_baseline_0.5"]
+    ser_brier = q1["series"]["brier"]
+    ser_base  = q1["series"]["brier_baseline_0.5"]
+
+    q2 = d["q2_favorite_undervaluation"]
+    platt_map = q2["platt_map"]
+    platt_ser = q2["platt_series"]
+
+    q3 = d["q3_intl_vs_domestic"]
+    intl_ser_brier = q3["series"]["intl"]["brier"]
+    dom_ser_brier  = q3["series"]["domestic"]["brier"]
+    intl_delta = (intl_ser_brier - dom_ser_brier) if (intl_ser_brier is not None and dom_ser_brier is not None) else None
+
+    # Platt rows
+    platt_rows = ""
+    for lvl, p in (("Map", platt_map), ("Series", platt_ser)):
+        platt_rows += (f"<tr><td>{lvl}</td>"
+                       f"<td>{_fmt(p.get('a'), 4)}</td>"
+                       f"<td>{_fmt(p.get('b'), 4)}</td>"
+                       f"<td>{p.get('n', 0)}</td>"
+                       f"<td>{_platt_interp(p.get('b'))}</td></tr>")
+
+    # Q2 rows (series)
+    q2_rows = ""
+    for r in q2["series_high_conf"]:
+        if r["n"] == 0:
+            continue
+        ci = f"[{_fmt(r['ci_lo'], 3)}, {_fmt(r['ci_hi'], 3)}]"
+        q2_rows += (f"<tr><td>&ge; {r['t']:.2f}</td>"
+                    f"<td>{r['n']}</td>"
+                    f"<td>{_fmt(r['mean_pred'], 3)}</td>"
+                    f"<td>{_fmt(r['win_rate'], 3)}</td>"
+                    f"<td>{_fmt(r['delta'], 3)}</td>"
+                    f"<td>{ci}</td></tr>")
+
+    # Q2 finding: pull the .70 row (sweet spot of n and signal)
+    q2_finding = ""
+    q2_caveat  = "Above .80 series probability, sample sizes are tiny &mdash; treat those rows as suggestive only."
+    r70 = next((r for r in q2["series_high_conf"] if abs(r["t"] - 0.70) < 1e-6 and r["n"] > 0), None)
+    if r70 is not None:
+        sign = "above" if r70["delta"] >= 0 else "below"
+        q2_finding = (f"At &ge; .70 series probability the model predicts "
+                      f"{r70['mean_pred']*100:.1f}% but favorites actually win "
+                      f"{r70['win_rate']*100:.1f}% &mdash; "
+                      f"{abs(r70['delta'])*100:.1f}pp {sign} the prediction "
+                      f"(n={r70['n']}, 95% CI {r70['ci_lo']:.2f}&ndash;{r70['ci_hi']:.2f}). "
+                      f"Combined with Platt slope b={_fmt(platt_ser.get('b'), 3)} at the series level, "
+                      f"the model is <b>mildly under-confident</b> at the high end. "
+                      f"It is real, but small &mdash; not the 60&rarr;80 jump you might hope.")
+
+    # Q3 rows
+    q3_rows = ""
+    for bucket in ("intl", "domestic"):
+        ser = q3["series"][bucket]
+        mp  = q3["map"][bucket]
+        q3_rows += (f"<tr><td>{'International' if bucket=='intl' else 'Domestic'}</td>"
+                    f"<td>{ser['n']}</td>"
+                    f"<td>{_fmt(ser['brier'])}</td>"
+                    f"<td>{mp['n']}</td>"
+                    f"<td>{_fmt(mp['brier'])}</td>"
+                    f"<td>{_fmt(ser['mean_pred'], 3)}</td>"
+                    f"<td>{_fmt(ser['fav_winrate'], 3)}</td></tr>")
+    q3_finding = ""
+    if intl_ser_brier is not None and dom_ser_brier is not None:
+        diff = intl_ser_brier - dom_ser_brier
+        sign = "harder" if diff > 0 else "easier"
+        q3_finding = (f"International series are {sign} to predict by "
+                      f"<b>{abs(diff):.4f}</b> Brier (intl {intl_ser_brier:.4f} "
+                      f"vs domestic {dom_ser_brier:.4f}). Same direction at "
+                      f"the map level. Mean predicted probability is similar in both, "
+                      f"so it isn&rsquo;t that the model is wildly more cautious at intl events; "
+                      f"it&rsquo;s that the right answer is just harder to know.")
+
+    # Q4 rows
+    q4_rows = ""
+    INTL_ORDER_HARD = [
+        "2024_masters_madrid", "2024_masters_shanghai", "2024_champions",
+        "2025_masters_bangkok", "2025_masters_toronto", "2025_champions",
+        "2026_masters_santiago",
+    ]
+    per_event = d["q4_intl_event_chronology"]["per_event"]
+    for ev in INTL_ORDER_HARD:
+        e = per_event.get(ev, {})
+        q4_rows += (f"<tr><td>{e.get('label', ev)} ({ev.split('_')[0]})</td>"
+                    f"<td>{e.get('n_series', 0)}</td>"
+                    f"<td>{_fmt(e.get('brier_series'))}</td>"
+                    f"<td>{_fmt(e.get('brier_map'))}</td>"
+                    f"<td>{_fmt(e.get('mean_pred_series'), 3)}</td>"
+                    f"<td>{_fmt(e.get('fav_winrate_series'), 3)}</td></tr>")
+    q4_finding = (
+        "No clean &lsquo;learn-as-the-season-goes&rsquo; pattern. In 2024 the "
+        "model nailed Shanghai (Brier ~0.22) but actually regressed at "
+        "Champions. In 2025 it gradually improved through the year. The "
+        "best-predicted intl event in the entire window is still 2024 Masters "
+        "Shanghai &mdash; the year&rsquo;s middle event, not the last."
+    )
+
+    # Q5 rows
+    q5_rows = ""
+    for b in d["q5_region_buckets"]["by_region_pairing"]:
+        if b["n"] < 4:
+            continue
+        ci = f"[{_fmt(b['ci_lo'], 3)}, {_fmt(b['ci_hi'], 3)}]"
+        q5_rows += (f"<tr><td>{b['bucket']}</td>"
+                    f"<td>{b['n']}</td>"
+                    f"<td>{_fmt(b['mean_pred'], 3)}</td>"
+                    f"<td>{_fmt(b['fav_winrate'], 3)}</td>"
+                    f"<td>{_fmt(b['residual'], 3)}</td>"
+                    f"<td>{ci}</td></tr>")
+    q5_cross_rows = ""
+    for k, v in d["q5_region_buckets"]["cross_region_event"].items():
+        q5_cross_rows += (f"<tr><td>{v.get('label', k)}</td>"
+                          f"<td>{v.get('n', 0)}</td>"
+                          f"<td>{_fmt(v.get('mean_pred'), 3)}</td>"
+                          f"<td>{_fmt(v.get('fav_winrate'), 3)}</td>"
+                          f"<td>{_fmt(v.get('residual'), 3)}</td>"
+                          f"<td>{_fmt(v.get('brier'))}</td></tr>")
+    q5_finding = (
+        "Masters cross-region series: favorites beat the model&rsquo;s "
+        "prediction by ~+0.07. Champions cross-region series: favorites "
+        "<b>under-perform</b> by ~&minus;0.06. Plausible reading: by Champions "
+        "the regional pecking order is locked in and the upsets that do happen "
+        "(reverse-sweeps, dark-horse runs) hit harder. Per-bucket sample sizes "
+        "are small though, so the wide CI bars on the chart are doing a lot of "
+        "honest work."
+    )
+
+    # Q7 rows
+    q7_season_rows = ""
+    for season in (2024, 2025, 2026):
+        s = d["q7_freeform"]["per_season"].get(str(season)) \
+            or d["q7_freeform"]["per_season"].get(season)
+        if not s:
+            continue
+        q7_season_rows += (f"<tr><td>{season}</td>"
+                           f"<td>{s.get('n_series', 0)}</td>"
+                           f"<td>{_fmt(s.get('brier_series'))}</td>"
+                           f"<td>{_fmt(s.get('fav_winrate_series'), 3)}</td>"
+                           f"<td>{_fmt(s.get('mean_pred_series'), 3)}</td>"
+                           f"<td>{s.get('n_maps', 0)}</td>"
+                           f"<td>{_fmt(s.get('brier_map'))}</td></tr>")
+    q7_miss_rows = ""
+    for r in d["q7_freeform"]["biggest_misses_series"][:8]:
+        q7_miss_rows += (f"<tr><td>{r['date']}</td>"
+                         f"<td>{r['event_id']}</td>"
+                         f"<td>{r['fav']}</td>"
+                         f"<td>{r['dog']}</td>"
+                         f"<td>{r['winner']} {r['series_score']}</td>"
+                         f"<td>{_fmt(r['p_fav'], 3)}</td>"
+                         f"<td>{_fmt(r['abs_delta'], 2)}</td></tr>")
+    q7_finding = (
+        "Raw rating-gap actually translates to win-rate cleanly: the observed "
+        "line tracks the predicted line out to gap ~3, and at gaps of 4&ndash;6 "
+        "favorites still win at roughly the rate the sigmoid says. The biggest "
+        "misses are the usual suspects &mdash; reverse-sweep darlings and "
+        "&lsquo;name brand has stopped caring&rsquo; runs. Most over-priced as "
+        "favorite: see the left panel of the team chart &mdash; the model "
+        "tends to overrate teams whose prior ratings haven&rsquo;t caught up "
+        "with a roster change."
+    )
+
+    html = MAPELO_PROJECTION_TEST_HTML
+    html = html.replace("__SERIES_BRIER__", _fmt(ser_brier))
+    html = html.replace("__SERIES_BASE__",  _fmt(ser_base))
+    html = html.replace("__MAP_BRIER__",    _fmt(map_brier))
+    html = html.replace("__MAP_BASE__",     _fmt(map_base))
+    html = html.replace("__N_SER__",        str(n_ser))
+    html = html.replace("__N_MAP__",        str(n_map))
+    html = html.replace("__PLATT_B__",      _fmt(platt_ser.get("b"), 3))
+    html = html.replace("__PLATT_INTERP__", _platt_interp(platt_ser.get("b")))
+    html = html.replace("__INTL_DELTA__",   (f"+{intl_delta:.4f}" if (intl_delta is not None and intl_delta >= 0) else _fmt(intl_delta)))
+    html = html.replace("__PLATT_ROWS__",   platt_rows)
+    html = html.replace("__Q2_ROWS__",      q2_rows)
+    html = html.replace("__Q2_FINDING__",   q2_finding or "&mdash;")
+    html = html.replace("__Q2_CAVEAT__",    q2_caveat)
+    html = html.replace("__Q3_ROWS__",      q3_rows)
+    html = html.replace("__Q3_FINDING__",   q3_finding or "&mdash;")
+    html = html.replace("__Q4_ROWS__",      q4_rows)
+    html = html.replace("__Q4_FINDING__",   q4_finding)
+    html = html.replace("__Q5_ROWS__",      q5_rows)
+    html = html.replace("__Q5_CROSS_ROWS__", q5_cross_rows)
+    html = html.replace("__Q5_FINDING__",   q5_finding)
+    html = html.replace("__Q7_SEASON_ROWS__", q7_season_rows)
+    html = html.replace("__Q7_MISS_ROWS__",  q7_miss_rows)
+    html = html.replace("__Q7_FINDING__",    q7_finding)
+    html = html.replace("__CHART_DIR__",     chart_dir)
+    html = html.replace("__BETA__",          beta_label)
+    html = html.replace("__BETA_NOTE__",     beta_note)
+    html = html.replace("__EYEBROW__",       eyebrow)
+    html = html.replace("__PAGE_TITLE__",    page_title)
+    return html, 200
+
+
+
+@mapelo_bp.route('/projection-test/')
+def mapelo_projection_test():
+    body, status = _render_projection_test()
+    return Response(body, status=status, mimetype='text/html')

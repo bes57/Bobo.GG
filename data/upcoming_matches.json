@@ -1,39 +1,19 @@
 [
   {
-    "team_a": "100 Thieves",
-    "team_b": "LOUD",
-    "org_a": "100T",
-    "org_b": "LOUD",
-    "date": "2026-05-16",
+    "team_a": "LEVIAT\u00c1N",
+    "team_b": "G2 Esports",
+    "org_a": "LEV",
+    "org_b": "G2",
+    "date": "2026-05-22",
     "region": "Americas",
     "event": "2026 Stage 1 \u2014 Americas",
     "format": "bo3"
   },
   {
-    "team_a": "Team Vitality",
-    "team_b": "Team Heretics",
-    "org_a": "VIT",
-    "org_b": "TH",
-    "date": "2026-05-17",
-    "region": "EMEA",
-    "event": "2026 Stage 1 \u2014 EMEA",
-    "format": "bo3"
-  },
-  {
-    "team_a": "FULL SENSE",
-    "team_b": "Paper Rex",
-    "org_a": "FS",
-    "org_b": "PRX",
-    "date": "2026-05-17",
-    "region": "Pacific",
-    "event": "2026 Stage 1 \u2014 Pacific",
-    "format": "bo3"
-  },
-  {
-    "team_a": "LEVIAT\u00c1N",
-    "team_b": "G2 Esports",
-    "org_a": "LEV",
-    "org_b": "G2",
+    "team_a": "NRG",
+    "team_b": "100 Thieves",
+    "org_a": "NRG",
+    "org_b": "100T",
     "date": "2026-05-22",
     "region": "Americas",
     "event": "2026 Stage 1 \u2014 Americas",

@@ -48,16 +48,23 @@ TEAM_REGIONS = {
     "BBL": "EMEA", "GX": "EMEA", "KC": "EMEA", "TH": "EMEA",
     "FUT": "EMEA", "GIA": "EMEA", "MKOI": "EMEA",
     "M8": "EMEA",
+    "EF": "EMEA", "PCF": "EMEA", "ULF": "EMEA",   # 2026 EMEA additions
+    "APK": "EMEA",                                  # Apeks — EMEA partner (2023→2025)
     # Americas
     "SEN": "Americas", "G2": "Americas", "MIBR": "Americas",
     "NRG": "Americas", "100T": "Americas", "C9": "Americas",
     "EG": "Americas", "KRÜ": "Americas", "LEV": "Americas",
     "FUR": "Americas", "LOUD": "Americas",
+    "2G": "Americas",                               # 2025 Americas Ascension addition
+    "ENVY": "Americas",                             # 2026 Americas addition
     # Pacific
     "PRX": "Pacific", "DRX": "Pacific", "T1": "Pacific",
     "TLN": "Pacific", "GEN": "Pacific", "DFM": "Pacific",
     "ZETA": "Pacific", "RRQ": "Pacific", "TS": "Pacific", "GE": "Pacific",
     "KRX": "Pacific", "NS": "Pacific",
+    "BLD": "Pacific",                               # Bleed Esports — 2024 abbreviation
+    "BME": "Pacific",                               # Bleed Esports — 2025 abbreviation
+    "FS": "Pacific", "VL": "Pacific",               # 2026 Pacific additions
     # CN
     "EDG": "CN", "BLG": "CN", "TE": "CN", "DRG": "CN", "ASE": "CN",
     "AG": "CN", "XLG": "CN", "WOL": "CN", "FPX": "CN",
@@ -70,6 +77,12 @@ TEAM_REGIONS = {
 # import time — any new event added to MoreTestingMaybeFiles.py with start/end
 # dates picks up here automatically, no edit required.
 
+# Event windows used for date interpolation in load_games — i.e. these drive
+# the per-game decay weights that the Massey solver uses. Keep these matching
+# the v7 prod values so historical rankings stay in lockstep with what was
+# pushed last; the historical-rankings page uses a separate display dict for
+# the band ribbons (see MapElo.py _BAND_DATE_OVERRIDES) so we don't have to
+# sacrifice band accuracy to keep model output stable.
 _HISTORICAL_EVENT_DATES = {
     # 2023
     '2023_lock_in':        ('2023-01-10', '2023-02-12'),
@@ -225,7 +238,7 @@ def _build_year_configs():
         if snapshots and last_event['end'] >= _today_str:
             latest_key = list(snapshots.keys())[-1]
             snapshots[latest_key] = dict(snapshots[latest_key], label='Live')
-        configs[year] = {'snapshots': snapshots, 'min_games': 5}
+        configs[year] = {'snapshots': snapshots, 'min_games': 1}
     return configs
 
 
@@ -235,6 +248,8 @@ def _build_year_configs():
 _HISTORICAL_YEAR_CONFIGS = {
     '2023': {
         'snapshots': {
+            'before_tokyo':     {'events': ['2023_lock_in'],
+                                 'label': 'Before Masters Tokyo'},
             'after_tokyo':      {'events': ['2023_lock_in', '2023_masters_tokyo'],
                                  'label': 'After Masters Tokyo'},
             'before_champions': {'events': ['2023_lock_in', '2023_masters_tokyo', '2023_league'],
@@ -242,7 +257,7 @@ _HISTORICAL_YEAR_CONFIGS = {
             'after_champions':  {'events': ['2023_lock_in', '2023_masters_tokyo', '2023_league', '2023_champions'],
                                  'label': 'After Champions'},
         },
-        'min_games': 5,
+        'min_games': 1,
     },
     '2024': {
         'snapshots': {
@@ -259,7 +274,7 @@ _HISTORICAL_YEAR_CONFIGS = {
             'after_champions':  {'events': ['2024_kickoff', '2024_china_kickoff', '2024_masters_madrid', '2024_stage1', '2024_china_stage1', '2024_masters_shanghai', '2024_stage2', '2024_china_stage2', '2024_champions'],
                                  'label': 'After Champions'},
         },
-        'min_games': 5,
+        'min_games': 1,
     },
     '2025': {
         'snapshots': {
@@ -276,7 +291,7 @@ _HISTORICAL_YEAR_CONFIGS = {
             'after_champions':  {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
                                  'label': 'After Champions'},
         },
-        'min_games': 5,
+        'min_games': 1,
     },
 }
 
@@ -1032,9 +1047,18 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 # Brier (+1.1bp vs deployed floor-version). BLG/DRG/TYL rise into the -0.5
 # to -1.0 range; NOVA/WOL stay correctly deeply negative.
 CN_PRIOR             = -4.0
-CN_INTL_K            = 2.0
+CN_INTL_K            = 20.0  # raised 8→20 so intl-untested CN teams get
+                              # real shrinkage. At K=8 with indirect=0.7,
+                              # every CN team saturated to c=1.0 — 2024
+                              # JDG (no intl) ended up above BLG (0-2 at
+                              # Champs but beat JDG twice in CN). Higher K
+                              # only shrinks teams whose evidence is
+                              # actually thin; tested teams stay at c=1.0.
 CN_C_MIN             = 0.0    # NO FLOOR — Bayesian evidence accumulation
-CN_INDIRECT_WEIGHT   = 0.7    # Weight for indirect (intra-CN-via-tested) evidence
+CN_INDIRECT_WEIGHT   = 0.3    # Weight for indirect (intra-CN-via-tested) evidence.
+                              # Lowered 0.7→0.3 alongside K=20 so a team like
+                              # JDG ("I played BLG who played intl") doesn't
+                              # earn enough credit to dodge the CN_PRIOR pull.
 CN_TEAMS_SET = {team for team, region in TEAM_REGIONS.items() if region == 'CN'}
 
 # ── Regional cluster spillover dampener ───────────────────────────────────────
@@ -1197,11 +1221,19 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
         for r in list(region_shift):
             if region_count[r] > 0:
                 region_shift[r] /= region_count[r]
-        # Build final ratings
+        # Build final ratings.
+        # CN teams always use rtgs_all — CN shrinkage already calibrates via
+        # direct + indirect intl evidence, so a non-attendee CN team like JDG
+        # inherits its CN-attendee neighbors' intl drag through the indirect
+        # path. Letting the regional-spillover dampener fire for CN double-
+        # discounts the drag: e.g. 2024 after_champions had JDG (0 intl)
+        # ranked 14 spots above BLG (0-2 at Champions, beat JDG twice in CN)
+        # because JDG only ate 50% of CN's intl drag while BLG ate 100%.
         rtgs = {}
         for t in rtgs_all:
-            if t in attendees:
-                rtgs[t] = rtgs_all[t]  # keep full update (incl. region + individual)
+            is_cn = TEAM_REGIONS.get(t) == 'CN'
+            if t in attendees or is_cn:
+                rtgs[t] = rtgs_all[t]  # full update — calibration already inside
             else:
                 region = TEAM_REGIONS.get(t)
                 shift = region_shift.get(region, 0.0) if region else 0.0
@@ -1237,6 +1269,10 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
     for team in rtgs:
         rec = records.get(team, {'w': 0, 'l': 0, 'maps': {}})
         if rec['w'] + rec['l'] < min_games:
+            continue
+        # Drop showmatch / one-off / non-franchised orgs (BNY, SPB, ALP, EMEA, WOR, …)
+        # so they don't slip into the leaderboard at min_games=1.
+        if team not in TEAM_REGIONS:
             continue
         pb_ratings[team] = rtgs.get(team, 0.0)
 
@@ -1486,13 +1522,15 @@ def main():
             )
             snap_data['label'] = snap_cfg['label']
 
-            # Qualification cap: only for snapshots ending with a completed international
+            # Qualification cap DISABLED — we want ONE rating system, the raw
+            # opponent-adjusted Massey value. Compressing non-qualifiers
+            # below the lowest Champions attendee produced snapshot ratings
+            # 3-5 pts below the natural value (100T 2023, MIBR 2023, etc.),
+            # which then collided with the timeline-driven chart and made it
+            # look like the team had a cliff-drop at year-end. With the cap
+            # off, snapshot ratings ≈ timeline endpoint values.
             last_event = snap_cfg['events'][-1] if snap_cfg['events'] else None
             n_capped = 0
-            if last_event and last_event in INTL_EVENTS:
-                snap_data['teams'], n_capped = apply_qualification_cap(
-                    snap_data['teams'], last_event, all_games
-                )
 
             snaps_out[snap_id] = snap_data
             n_filtered = len(filter_teams) if filter_teams else '—'
