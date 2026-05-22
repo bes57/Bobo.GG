@@ -80,6 +80,13 @@ HOME_HTML = """
   .ai-disclosure-body { margin-top:6px; font-size:.82rem; font-weight:500; color:#111; white-space:nowrap; line-height:1.5; overflow:hidden; height:0; opacity:0; transition:height .24s ease, opacity .24s ease; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
+  .benpom-hero { display:block; width:100%; max-width:440px; height:235px; margin:24px 0 24px; border-radius:22px; overflow:hidden; position:relative; text-decoration:none; box-shadow:0 6px 24px #0000001a; transition:transform .2s,box-shadow .2s; }
+  .benpom-hero:hover { transform:translateY(-5px); box-shadow:0 16px 38px #00000026; }
+  .benpom-hero-img { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; transition:transform .35s ease; }
+  .benpom-hero:hover .benpom-hero-img { transform:scale(1.06); }
+  .benpom-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#1a0f2455 0%,#1a0f24d0 100%); z-index:1; }
+  .benpom-hero-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
+  .benpom-hero-title { font-family:'Syne',sans-serif; font-size:clamp(1.9rem,5vw,2.6rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
 </style>
 </head>
 <body>
@@ -90,29 +97,13 @@ HOME_HTML = """
     <summary>AI Disclosure</summary>
     <div class="ai-disclosure-body">All narrative, text, mathematical equations, and ideas are my own creation. AI was/is only used for writing code.</div>
   </details>
-  <div class="sections">
-    <div class="section">
-      <div class="section-title">Statistics and Databases<span class="section-chevron">▾</span></div>
-      <div class="cards-wrap"><div class="cards-inner">
-      <div class="cards">
-        <a class="nav-card" href="/mapelo/pythagorean/">
-          <div class="nav-card-title">VCT's Pythagorean Rating</div>
-          <div class="nav-card-desc">A pythagorean win% model hand-tuned for VCT, ranking teams by how dominant they've been beyond just their win-loss record.</div>
-          <div class="nav-card-arrow">Explore &rarr;</div>
-        </a>
-        <a class="nav-card" href="/vct/">
-          <div class="nav-card-title">Event Leaderboards</div>
-          <div class="nav-card-desc">Sift through leaderboards by events, highlighting indivdual performances and percentiles.</div>
-          <div class="nav-card-arrow">Explore &rarr;</div>
-        </a>
-        <a class="nav-card" href="/highs/">
-          <div class="nav-card-title">All-Time Highs<br>(and Lows)</div>
-          <div class="nav-card-desc">The best and worst individual performances across all VCT franchised events.</div>
-          <div class="nav-card-arrow">Explore &rarr;</div>
-        </a>
-      </div>
-      </div></div>
+  <a class="benpom-hero" href="/mapelo/">
+    <div class="benpom-hero-img" style="background-image:url(/edgchamps.jpg)"></div>
+    <div class="benpom-hero-content">
+      <div class="benpom-hero-title">BenPom</div>
     </div>
+  </a>
+  <div class="sections">
     <div class="section">
       <div class="section-title">Research / Opinion Articles <span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
@@ -135,13 +126,22 @@ HOME_HTML = """
       </div></div>
     </div>
     <div class="section">
-      <div class="section-title">Projects <span class="section-chevron">▾</span></div>
+      <div class="section-title">Statistics and Databases<span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
-        <a class="nav-card" href="/mapelo/">
-          <div style="width:calc(100% + 48px);margin:-32px -24px 20px;height:140px;overflow:hidden;border-radius:24px 24px 0 0;"><img src="/mapelo.png" alt="Map Elo" style="width:100%;height:100%;object-fit:cover;object-position:center top;display:block;transform:scale(1.08) translateY(-4px);transform-origin:center top;"></div>
-          <div class="nav-card-title">BenPom</div>
-          <div class="nav-card-desc">Calculating VCT team's relative map strength as well as probabilistic previews of matchups.</div>
+        <a class="nav-card" href="/mapelo/pythagorean/">
+          <div class="nav-card-title">VCT's Pythagorean Rating</div>
+          <div class="nav-card-desc">A pythagorean win% model hand-tuned for VCT, ranking teams by how dominant they've been beyond just their win-loss record.</div>
+          <div class="nav-card-arrow">Explore &rarr;</div>
+        </a>
+        <a class="nav-card" href="/vct/">
+          <div class="nav-card-title">Event Leaderboards</div>
+          <div class="nav-card-desc">Sift through leaderboards by events, highlighting indivdual performances and percentiles.</div>
+          <div class="nav-card-arrow">Explore &rarr;</div>
+        </a>
+        <a class="nav-card" href="/highs/">
+          <div class="nav-card-title">All-Time Highs<br>(and Lows)</div>
+          <div class="nav-card-desc">The best and worst individual performances across all VCT franchised events.</div>
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>
       </div>
@@ -225,6 +225,10 @@ def krustage1():
 @app.route("/mapelo.png")
 def mapelo_img():
     return send_from_directory(os.path.dirname(__file__), "MapElo.png", mimetype="image/png")
+
+@app.route("/edgchamps.jpg")
+def edgchamps_img():
+    return send_from_directory(os.path.dirname(__file__), "EDGCHamps.jpg", mimetype="image/jpeg")
 
 @app.route("/maps/<filename>")
 def map_img(filename):
