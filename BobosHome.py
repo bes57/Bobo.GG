@@ -84,8 +84,8 @@ HOME_HTML = """
   .page { animation:fadeUp .6s ease both; }
   .benpom-hero { display:flex; flex-direction:column; width:100%; max-width:440px; margin:24px 0 24px; border-radius:22px; overflow:hidden; background:white; text-decoration:none; box-shadow:0 6px 24px #0000001a; transition:transform .2s,box-shadow .2s; }
   .benpom-hero:hover { transform:translateY(-5px); box-shadow:0 16px 38px #00000026; }
-  .benpom-hero-banner { position:relative; height:235px; overflow:hidden; }
-  .benpom-hero-img { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; transition:transform .35s ease; }
+  .benpom-hero-banner { position:relative; height:235px; overflow:hidden; background:#1a0f24; }
+  .benpom-hero-img { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; opacity:0; transition:transform .35s ease, opacity 1.2s ease; }
   .benpom-hero:hover .benpom-hero-img { transform:scale(1.06); }
   .benpom-hero-banner::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#1a0f2455 0%,#1a0f24d0 100%); z-index:1; }
   .benpom-hero-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
@@ -104,7 +104,7 @@ HOME_HTML = """
   </details>
   <a class="benpom-hero" href="/mapelo/">
     <div class="benpom-hero-banner">
-      <div class="benpom-hero-img" style="background-image:url(/edgchamps.jpg)"></div>
+      <div class="benpom-hero-img"></div>
       <div class="benpom-hero-content">
         <div class="benpom-hero-title">BenPom</div>
       </div>
@@ -223,6 +223,19 @@ document.querySelectorAll('.section-title').forEach(function(title) {
     this.closest('.section').classList.toggle('collapsed');
   });
 });
+(function(){
+  var heroImg = document.querySelector('.benpom-hero-img');
+  if (!heroImg) return;
+  var src = '/static/MastersShanghaiFinal.jpg';
+  var img = new Image();
+  img.onload = function() {
+    heroImg.style.backgroundImage = 'url(' + src + ')';
+    requestAnimationFrame(function() { requestAnimationFrame(function() {
+      heroImg.style.opacity = '1';
+    }); });
+  };
+  img.src = src;
+})();
 </script>
 </body>
 </html>
