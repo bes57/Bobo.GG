@@ -25,7 +25,7 @@ HOME_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --rose:#f4b8c1; --peach:#f9cba7; --mint:#b8e8d4;
@@ -90,8 +90,8 @@ HOME_HTML = """
   .benpom-hero-banner::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#1a0f2455 0%,#1a0f24d0 100%); z-index:1; }
   .benpom-hero-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
   .benpom-hero-title { font-family:'Syne',sans-serif; font-size:clamp(1.9rem,5vw,2.6rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
-  .benpom-hero-desc { padding:18px 24px 20px; text-align:center; }
-  .benpom-hero-desc-body { font-family:'Syne',sans-serif; font-weight:800; font-size:.92rem; color:var(--ink); line-height:1.4; letter-spacing:-.01em; }
+  .benpom-hero-desc { padding:18px 24px 20px; text-align:center; text-wrap:balance; }
+  .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-weight:800; font-size:1rem; color:var(--ink); line-height:1.4; letter-spacing:-.01em; }
 </style>
 </head>
 <body>
