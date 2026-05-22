@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template_string, send_from_directory
+from flask_compress import Compress
 from EventLeaderboards import vct_bp
 from AllTimeHighs import highs_bp
 from IdentifyingOverUnderPerformers import article_overunder_bp
@@ -8,6 +9,7 @@ from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 
 app = Flask(__name__)
+Compress(app)
 app.register_blueprint(vct_bp, url_prefix="/vct")
 app.register_blueprint(highs_bp, url_prefix="/highs")
 app.register_blueprint(article_overunder_bp, url_prefix="/articles/over-underperformers")

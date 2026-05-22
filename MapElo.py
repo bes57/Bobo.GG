@@ -4148,7 +4148,7 @@ function fateLabel(orgA, orgB, key){
 var RANK_LABELS = ['#1 Most likely','#2','#3'];
 var MAP_IMG_OVERRIDES = {}; // map names match files in /static/maps/ (lowercase). For odd casing, fall back gracefully.
 
-function mapImg(name){ return '/maps/' + (name||'').toLowerCase() + '.png'; }
+function mapImg(name){ return '/maps/' + (name||'').toLowerCase() + '.jpg'; }
 function logoImg(org){ return '/logos/' + org + '.png'; }
 function logoTag(org, cls){
   cls = cls || '';
@@ -5338,7 +5338,7 @@ function openTeamModal(org, year, split) {
     var rdCls = ms.rd >= 0 ? 'map-rd-pos' : 'map-rd-neg';
     var rdStr = (ms.rd >= 0 ? '+' : '') + ms.rd;
     return '<div class="map-card">' +
-      '<img class="map-card-img" src="/maps/' + ms.map.toLowerCase() + '.png" onerror="this.style.display=&apos;none&apos;">' +
+      '<img class="map-card-img" src="/maps/' + ms.map.toLowerCase() + '.jpg" onerror="this.style.display=&apos;none&apos;">' +
       '<div class="map-card-body">' +
         '<div class="map-card-label">' + label + '</div>' +
         '<div class="map-card-name">' + ms.map + '</div>' +
@@ -9173,7 +9173,7 @@ function renderUpcoming(data) {
         var vetoLbl = vetoKey ? actionLabelHUB(orgA, orgB, vetoKey) : '';
         var vetoCls = vetoKey ? (ACTION_CLS[vetoKey]||ACTION_CLS.dec)[0] : '';
         mapTableHtml += '<tr>'+
-          '<td><img src="/maps/'+mp.toLowerCase()+'.png" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+mp+'</td>'+
+          '<td><img src="/maps/'+mp.toLowerCase()+'.jpg" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+mp+'</td>'+
           '<td style="color:#888;font-size:.65rem">'+playedPct+'%</td>'+
           '<td class="upc-map-td-wp '+clsA+'">'+wpPctA+'%</td>'+
           '<td class="upc-map-td-wp '+clsB+'">'+wpPctB+'%</td>'+
@@ -9442,7 +9442,7 @@ function renderPast(data) {
           var score  = (mp.wr != null && mp.lr != null) ? (mp.wr+'-'+mp.lr) : '';
           var winCls = winLbl===orgA ? 'fav' : (winLbl===orgB ? 'dog' : 'neu');
           return '<tr>'+
-            '<td><img src="/maps/'+(mp.map||'').toLowerCase()+'.png" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+(mp.map||'')+'</td>'+
+            '<td><img src="/maps/'+(mp.map||'').toLowerCase()+'.jpg" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+(mp.map||'')+'</td>'+
             '<td class="upc-map-td-wp '+winCls+'">'+winLbl+'</td>'+
             '<td style="color:#444;font-size:.7rem">'+score+'</td>'+
           '</tr>';
@@ -9476,7 +9476,7 @@ function renderPast(data) {
         var vetoLbl = vetoKey ? actionLabelHUB(orgA, orgB, vetoKey) : '';
         var vetoCls = vetoKey ? (ACTION_CLS[vetoKey]||ACTION_CLS.dec)[0] : '';
         mapTableHtml += '<tr>'+
-          '<td><img src="/maps/'+mp.toLowerCase()+'.png" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+mp+'</td>'+
+          '<td><img src="/maps/'+mp.toLowerCase()+'.jpg" style="width:20px;height:14px;object-fit:cover;border-radius:2px;vertical-align:middle;margin-right:5px" onerror="this.style.display=\\'none\\'">'+mp+'</td>'+
           '<td style="color:#888;font-size:.65rem">'+playedPct+'%</td>'+
           '<td class="upc-map-td-wp '+clsA+'">'+wpPctA+'%</td>'+
           '<td class="upc-map-td-wp '+clsB+'">'+wpPctB+'%</td>'+
