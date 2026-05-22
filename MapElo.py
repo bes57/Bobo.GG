@@ -1012,10 +1012,10 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   /* No overscroll on the hub — both top and bottom rubber-band disabled. */
   html { background:#e8d5f5; overscroll-behavior:none; }
   body { background:#e8d5f5 !important; overscroll-behavior:none; }
-  #content-wrap { width:100%; opacity:0; transition:opacity .55s ease, filter .4s ease; }
-  #content-wrap.ready { opacity:1; }
-  #hub-loader { position:fixed; inset:0; z-index:99999; background:#0e0a14; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease; }
+  #content-wrap { width:100%; }
+  #hub-loader { position:fixed; inset:0; z-index:99999; background:#0e0a14; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease; animation:hubLoaderFailsafe 1ms linear 8s forwards; }
   #hub-loader.done { opacity:0; pointer-events:none; }
+  @keyframes hubLoaderFailsafe { to { opacity:0; visibility:hidden; pointer-events:none; } }
   #hub-loader .hub-spinner { width:40px; height:40px; border-radius:50%; border:3px solid #ffffff1f; border-top-color:#d4b8f4; animation:hubSpin .8s linear infinite; }
   @keyframes hubSpin { to { transform:rotate(360deg); } }
   /* Hub stays calm — kill BOTH SHARED_CSS body backdrops so nothing tints
@@ -1204,29 +1204,17 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <script>
 (function(){
   var loader = document.getElementById('hub-loader');
-  var content = document.getElementById('content-wrap');
-  if (!loader || !content) return;
-  var urls = ['/static/MastersShanghaiFinal.jpg', '/static/Champs25Arena.jpg'];
-  document.querySelectorAll('#hub-logo-strip img').forEach(function(im){
-    var s = im.getAttribute('src');
-    if (s) urls.push(s);
-  });
-  var total = urls.length, done = 0, revealed = false;
-  function reveal(){
-    if (revealed) return;
-    revealed = true;
-    content.classList.add('ready');
+  if (!loader) return;
+  var hidden = false;
+  function hide(){
+    if (hidden) return;
+    hidden = true;
     loader.classList.add('done');
     setTimeout(function(){ loader.style.display = 'none'; }, 550);
   }
-  function tick(){ if (++done >= total) reveal(); }
-  urls.forEach(function(u){
-    var im = new Image();
-    im.onload = tick;
-    im.onerror = tick;
-    im.src = u;
-  });
-  setTimeout(reveal, 4500);
+  if (document.readyState === 'complete') hide();
+  else window.addEventListener('load', hide);
+  setTimeout(hide, 3000);
 })();
 </script>
 </body>

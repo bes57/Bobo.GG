@@ -227,14 +227,20 @@ document.querySelectorAll('.section-title').forEach(function(title) {
   var heroImg = document.querySelector('.benpom-hero-img');
   if (!heroImg) return;
   var src = '/static/MastersShanghaiFinal.jpg';
-  var img = new Image();
-  img.onload = function() {
+  var shown = false;
+  function show() {
+    if (shown) return;
+    shown = true;
     heroImg.style.backgroundImage = 'url(' + src + ')';
     requestAnimationFrame(function() { requestAnimationFrame(function() {
       heroImg.style.opacity = '1';
     }); });
-  };
+  }
+  var img = new Image();
+  img.onload = show;
+  img.onerror = show;
   img.src = src;
+  setTimeout(show, 3000);
 })();
 </script>
 </body>
@@ -245,7 +251,7 @@ STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 
 @app.route("/static/<path:filename>")
 def static_files(filename):
-    return send_from_directory(STATIC_DIR, filename)
+    return send_from_directory(STATIC_DIR, filename, max_age=31536000)
 
 @app.route("/favicon.svg")
 def favicon():
