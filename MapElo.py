@@ -2142,18 +2142,17 @@ async function loadAndRender(year, snap) {
   renderPeriodSeg();
   await preloadLogos((data.leaderboard && data.leaderboard.teams) || []);
   _computeGlobalYRange(data);
-  buildChart(data, true);  // initial paint with no lines (axes + bands only)
+  // Build the chart with its real, VISIBLE lines straight away. The reveal
+  // animation is a cosmetic white cover laid on top — it never has to make
+  // the chart appear, so if it's ever interrupted the finished chart is
+  // already correct underneath. (Previously the chart was built invisible
+  // and only the animation revealed it, so any hiccup left it blank.)
+  buildChart(data, false);
   renderLeaderboard(data);
   // Leaderboard is back at full height — pin scrollY to where the user was.
   if (!isFirst) window.scrollTo(0, prevScrollY);
   var gen = ++_lastAnimationGen;
-  // animateAxesOverlay handles the rebuild-with-lines between phase 1 and
-  // phase 2 so the curtain sweep actually reveals visible lines left→right.
-  await animateAxesOverlay(data, function() {
-    if (gen !== _lastAnimationGen) return false;
-    buildChart(data, false);
-    return true;
-  });
+  await animateAxesOverlay(data, gen);
 }
 
 // ── Chart ────────────────────────────────────────────────────────────────────
@@ -2429,174 +2428,180 @@ function buildChart(data, noLines) {
 }
 
 // ── Reveal animation: axis unfold → curtain sweep ───────────────────────────
-// Phase 1: a glowing dot pops at the origin and the axis lines extend out
-//   along x and y. Pure overlay drawing — the chart underneath stays hidden
-//   behind a white cover the whole time. Decorative.
-// Phase 2: the white cover retreats right→ to reveal the chart's team lines,
-//   left-to-right, matching the Modern VCT Hub's `revealChart`.
-// `rebuildWithLines` is called between the two phases so that phase 2 sweeps
-// over a chart that HAS visible lines — without that rebuild, phase 2 would
-// reveal nothing and lines would pop in only after the curtain finished.
-async function animateAxesOverlay(data, rebuildWithLines) {
-  if (!myChart) return;
-  // Let Chart.js finish its first layout/update before measuring scales —
-  // otherwise getPixelForValue can return NaN for the very first paint and
-  // the overlay starts in the wrong place.
-  await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
+// A purely cosmetic white cover laid OVER the chart. The chart underneath is
+// already built with its real lines (see loadAndRender), so this animation
+// only ever hides-then-reveals — it can never be the reason the chart is
+// blank. The cover is created and every phase runs inside a try/finally, so
+// the cover is ALWAYS taken back off, even if a phase returns early.
+// Phase 1: a glowing dot pops at the origin and the axis lines extend out.
+// Phase 2: the white cover retreats right→ to reveal the team lines L→R.
+async function animateAxesOverlay(data, gen) {
   if (!myChart) return;
   var wrap = document.getElementById('chart-wrap');
-  var dpr  = window.devicePixelRatio || 1;
-  var W = wrap.offsetWidth;
-  var H = wrap.offsetHeight;
+  if (!wrap) return;
+  var dpr = window.devicePixelRatio || 1;
+  var W = wrap.offsetWidth, H = wrap.offsetHeight;
   var ov = document.createElement('canvas');
   ov.width = W * dpr; ov.height = H * dpr;
   ov.style.cssText = 'position:absolute;top:0;left:0;width:'+W+'px;height:'+H+'px;pointer-events:none;z-index:5';
-  wrap.appendChild(ov);
   var oc = ov.getContext('2d');
-  oc.scale(dpr, dpr);
-  var ca = myChart.chartArea;
-  var bounds = _xAxisBoundsFor(data || STATE.data);
-  var ox = myChart.scales.x.getPixelForValue(new Date(bounds.min));
-  var oy = myChart.scales.y.getPixelForValue(0);
+  try {
+    // Append + paint the cover white in the SAME synchronous turn as the
+    // buildChart() that ran just before — the browser never gets to show a
+    // frame of the finished chart before the reveal starts.
+    wrap.appendChild(ov);
+    oc.scale(dpr, dpr);
+    oc.fillStyle = '#fff';
+    oc.fillRect(0, 0, W, H);
+    // Let Chart.js finish its first layout/update before measuring scales —
+    // otherwise getPixelForValue can return NaN for the very first paint.
+    await new Promise(function(r) { requestAnimationFrame(function() { requestAnimationFrame(r); }); });
+    // A newer render superseded us, or the chart is gone — bail out. The
+    // finally strips the cover so the current chart shows through.
+    if (gen !== _lastAnimationGen || !myChart) return;
+    var ca = myChart.chartArea;
+    var bounds = _xAxisBoundsFor(data || STATE.data);
+    var ox = myChart.scales.x.getPixelForValue(new Date(bounds.min));
+    var oy = myChart.scales.y.getPixelForValue(0);
+    // If the chart hasn't produced a finite layout yet, skip the cosmetic
+    // reveal entirely (a non-finite coord would make createLinearGradient
+    // throw mid-frame). The finally below strips the cover and the chart —
+    // already drawn with its real lines — simply appears without the sweep.
+    if (!ca || ![ca.left, ca.right, ca.top, ca.bottom, ox, oy].every(isFinite)) return;
 
-  // Phase 1: glowing-dot pop → axes extend out from origin
-  await new Promise(function(resolve) {
-    var dur = 950, start = performance.now();
-    function frame(now) {
-      var p = Math.min((now - start) / dur, 1);
-      oc.clearRect(0, 0, W, H);
-      oc.fillStyle = '#fff';
-      oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
-      oc.save();
-      if (p < 0.12) {
-        var r = easeOut(p / 0.12) * 6;
-        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 14;
-        oc.beginPath(); oc.arc(ox, oy, r, 0, Math.PI * 2);
-        oc.fillStyle = '#a78bfa'; oc.fill();
-      } else {
-        var lp = easeOut((p - 0.12) / 0.88);
-        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10;
-        oc.strokeStyle = 'rgba(167,139,250,.9)'; oc.lineWidth = 1.5;
-        oc.beginPath();
-        oc.moveTo(ox, oy - (oy - ca.top) * lp);
-        oc.lineTo(ox, oy + (ca.bottom - oy) * lp);
-        oc.stroke();
-        oc.beginPath();
-        oc.moveTo(ox, oy);
-        oc.lineTo(ox + (ca.right - ox) * lp, oy);
-        oc.stroke();
-        oc.shadowBlur = 0; oc.globalAlpha = .28;
-        oc.beginPath();
-        oc.moveTo(ox, oy);
-        oc.lineTo(ca.left + (ox - ca.left) * (1 - lp * .55), oy);
-        oc.stroke();
-        oc.globalAlpha = 1; oc.shadowBlur = 8;
-        oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
-        oc.fillStyle = '#c4b5fd'; oc.fill();
-      }
-      oc.restore();
-      if (p < 1) requestAnimationFrame(frame);
-      else resolve();
-    }
-    requestAnimationFrame(frame);
-  });
-
-  // Phase 1.5: fade the purple axis decorations out smoothly instead of
-  // blipping them away on the first frame of phase 2. White cover stays
-  // solid so the chart underneath remains hidden — only the strokes fade.
-  await new Promise(function(resolve) {
-    var dur = 280, start = performance.now();
-    function frame(now) {
-      var p = Math.min((now - start) / dur, 1);
-      var a = 1 - p;
-      oc.clearRect(0, 0, W, H);
-      oc.fillStyle = '#fff';
-      oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
-      oc.save();
-      oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10 * a;
-      oc.strokeStyle = 'rgba(167,139,250,' + (0.9 * a).toFixed(3) + ')';
-      oc.lineWidth = 1.5;
-      oc.beginPath(); oc.moveTo(ox, ca.top);    oc.lineTo(ox, ca.bottom); oc.stroke();
-      oc.beginPath(); oc.moveTo(ox, oy);        oc.lineTo(ca.right, oy);  oc.stroke();
-      oc.shadowBlur = 0; oc.globalAlpha = 0.28 * a;
-      oc.beginPath(); oc.moveTo(ox, oy);
-      oc.lineTo(ca.left + (ox - ca.left) * 0.45, oy);
-      oc.stroke();
-      oc.globalAlpha = a; oc.shadowBlur = 8 * a;
-      oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
-      oc.fillStyle = 'rgba(196,181,253,' + a.toFixed(3) + ')'; oc.fill();
-      oc.restore();
-      if (p < 1) requestAnimationFrame(frame);
-      else resolve();
-    }
-    requestAnimationFrame(frame);
-  });
-
-  // Rebuild chart with VISIBLE lines underneath the white cover that the
-  // last fade-out frame still has on the overlay — phase 2's curtain retreat
-  // will then reveal them left→right.
-  if (typeof rebuildWithLines === 'function') {
-    var keepGoing = rebuildWithLines();
-    if (keepGoing === false) { ov.remove(); return; }
-    if (!myChart) { ov.remove(); return; }
-    ca = myChart.chartArea;
-  }
-  // Curtain sweeps right revealing the chart underneath. Bands stay HIDDEN
-  // under the solid white curtain — they only appear as the reveal line
-  // crosses each band's left edge (per user spec: "shaded bars appear as the
-  // purple line goes over them, not before").
-  await new Promise(function(resolve) {
-    var dur = 2200;
-    var cw = ca.right - ca.left;
-    var ch = ca.bottom - ca.top;
-    var startT = null;
-    function frame(ts) {
-      if (!startT) startT = ts;
-      var raw = Math.min((ts - startT) / dur, 1);
-      var p = 1 - Math.pow(1 - raw, 3);
-      var revX = ca.left + cw * p;
-      oc.clearRect(0, 0, W, H);
-      if (revX < ca.right) {
+    // Phase 1: glowing-dot pop → axes extend out from origin
+    await new Promise(function(resolve) {
+      var dur = 950, start = performance.now();
+      function frame(now) {
+        var p = Math.min((now - start) / dur, 1);
+        oc.clearRect(0, 0, W, H);
         oc.fillStyle = '#fff';
-        oc.fillRect(revX, ca.top, ca.right - revX + 1, ch);
+        oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+        oc.save();
+        if (p < 0.12) {
+          var r = easeOut(p / 0.12) * 6;
+          oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 14;
+          oc.beginPath(); oc.arc(ox, oy, r, 0, Math.PI * 2);
+          oc.fillStyle = '#a78bfa'; oc.fill();
+        } else {
+          var lp = easeOut((p - 0.12) / 0.88);
+          oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10;
+          oc.strokeStyle = 'rgba(167,139,250,.9)'; oc.lineWidth = 1.5;
+          oc.beginPath();
+          oc.moveTo(ox, oy - (oy - ca.top) * lp);
+          oc.lineTo(ox, oy + (ca.bottom - oy) * lp);
+          oc.stroke();
+          oc.beginPath();
+          oc.moveTo(ox, oy);
+          oc.lineTo(ox + (ca.right - ox) * lp, oy);
+          oc.stroke();
+          oc.shadowBlur = 0; oc.globalAlpha = .28;
+          oc.beginPath();
+          oc.moveTo(ox, oy);
+          oc.lineTo(ca.left + (ox - ca.left) * (1 - lp * .55), oy);
+          oc.stroke();
+          oc.globalAlpha = 1; oc.shadowBlur = 8;
+          oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
+          oc.fillStyle = '#c4b5fd'; oc.fill();
+        }
+        oc.restore();
+        if (p < 1) requestAnimationFrame(frame);
+        else resolve();
       }
-      if (revX > ca.left) {
+      requestAnimationFrame(frame);
+    });
+    if (gen !== _lastAnimationGen) return;
+
+    // Phase 1.5: fade the purple axis decorations out smoothly instead of
+    // blipping them away on the first frame of phase 2. White cover stays
+    // solid so the chart underneath remains hidden — only the strokes fade.
+    await new Promise(function(resolve) {
+      var dur = 280, start = performance.now();
+      function frame(now) {
+        var p = Math.min((now - start) / dur, 1);
+        var a = 1 - p;
+        oc.clearRect(0, 0, W, H);
+        oc.fillStyle = '#fff';
+        oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+        oc.save();
+        oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10 * a;
+        oc.strokeStyle = 'rgba(167,139,250,' + (0.9 * a).toFixed(3) + ')';
+        oc.lineWidth = 1.5;
+        oc.beginPath(); oc.moveTo(ox, ca.top);    oc.lineTo(ox, ca.bottom); oc.stroke();
+        oc.beginPath(); oc.moveTo(ox, oy);        oc.lineTo(ca.right, oy);  oc.stroke();
+        oc.shadowBlur = 0; oc.globalAlpha = 0.28 * a;
+        oc.beginPath(); oc.moveTo(ox, oy);
+        oc.lineTo(ca.left + (ox - ca.left) * 0.45, oy);
+        oc.stroke();
+        oc.globalAlpha = a; oc.shadowBlur = 8 * a;
+        oc.beginPath(); oc.arc(ox, oy, 3.5, 0, Math.PI * 2);
+        oc.fillStyle = 'rgba(196,181,253,' + a.toFixed(3) + ')'; oc.fill();
+        oc.restore();
+        if (p < 1) requestAnimationFrame(frame);
+        else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+    if (gen !== _lastAnimationGen) return;
+
+    // Phase 2: curtain sweeps right revealing the chart underneath. Bands
+    // stay HIDDEN under the solid white curtain — they only appear as the
+    // reveal line crosses each band's left edge (per user spec: "shaded
+    // bars appear as the purple line goes over them, not before").
+    await new Promise(function(resolve) {
+      var dur = 2200;
+      var cw = ca.right - ca.left;
+      var ch = ca.bottom - ca.top;
+      var startT = null;
+      function frame(ts) {
+        if (!startT) startT = ts;
+        var raw = Math.min((ts - startT) / dur, 1);
+        var p = 1 - Math.pow(1 - raw, 3);
+        var revX = ca.left + cw * p;
+        oc.clearRect(0, 0, W, H);
+        if (revX < ca.right) {
+          oc.fillStyle = '#fff';
+          oc.fillRect(revX, ca.top, ca.right - revX + 1, ch);
+        }
+        if (revX > ca.left) {
+          var grd = oc.createLinearGradient(revX - 28, 0, revX + 4, 0);
+          grd.addColorStop(0, 'rgba(167,139,250,0)');
+          grd.addColorStop(1, 'rgba(167,139,250,0.32)');
+          oc.fillStyle = grd;
+          oc.fillRect(revX - 28, ca.top, 32, ch);
+        }
+        if (raw < 1) requestAnimationFrame(frame);
+        else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+    if (gen !== _lastAnimationGen) return;
+
+    // Phase 3: hold the purple sweep line at the right edge and fade its
+    // alpha out per-frame so it dissolves where it landed.
+    await new Promise(function(resolve) {
+      var dur = 360, start = performance.now();
+      var revX = ca.right;
+      var ch   = ca.bottom - ca.top;
+      function frame(now) {
+        var p = Math.min((now - start) / dur, 1);
+        var a = 1 - easeOut(p);
+        oc.clearRect(0, 0, W, H);
         var grd = oc.createLinearGradient(revX - 28, 0, revX + 4, 0);
         grd.addColorStop(0, 'rgba(167,139,250,0)');
-        grd.addColorStop(1, 'rgba(167,139,250,0.32)');
+        grd.addColorStop(1, 'rgba(167,139,250,' + (0.32 * a).toFixed(3) + ')');
         oc.fillStyle = grd;
         oc.fillRect(revX - 28, ca.top, 32, ch);
+        if (p < 1) requestAnimationFrame(frame);
+        else resolve();
       }
-      if (raw < 1) requestAnimationFrame(frame);
-      else resolve();
-    }
-    requestAnimationFrame(frame);
-  });
-
-  // Phase 3: hold the purple sweep line at the right edge and fade its alpha
-  // out per-frame. The previous overall-overlay opacity fade only ever ran on
-  // an empty overlay (the gradient strip popped off when revX hit ca.right),
-  // so the purple line looked abrupt. This draws the strip every frame with a
-  // shrinking alpha multiplier so it dissolves where it landed.
-  await new Promise(function(resolve) {
-    var dur = 360, start = performance.now();
-    var revX = ca.right;
-    var ch   = ca.bottom - ca.top;
-    function frame(now) {
-      var p = Math.min((now - start) / dur, 1);
-      var a = 1 - easeOut(p);
-      oc.clearRect(0, 0, W, H);
-      var grd = oc.createLinearGradient(revX - 28, 0, revX + 4, 0);
-      grd.addColorStop(0, 'rgba(167,139,250,0)');
-      grd.addColorStop(1, 'rgba(167,139,250,' + (0.32 * a).toFixed(3) + ')');
-      oc.fillStyle = grd;
-      oc.fillRect(revX - 28, ca.top, 32, ch);
-      if (p < 1) requestAnimationFrame(frame);
-      else resolve();
-    }
-    requestAnimationFrame(frame);
-  });
-  ov.remove();
+      requestAnimationFrame(frame);
+    });
+  } finally {
+    // The cover is cosmetic — whatever happened above, take it back off so
+    // the (already-correct) chart underneath is visible.
+    ov.remove();
+  }
 }
 
 // ── Chart canvas listeners ──────────────────────────────────────────────────
@@ -3067,13 +3072,9 @@ function _expandMapRow(encOrg, encMap, rowId) {
 
 function replayChart() {
   if (!STATE.data) return;
-  buildChart(STATE.data, true);
+  buildChart(STATE.data, false);  // real lines from the start; overlay is cosmetic
   var gen = ++_lastAnimationGen;
-  animateAxesOverlay(STATE.data, function() {
-    if (gen !== _lastAnimationGen) return false;
-    buildChart(STATE.data, false);
-    return true;
-  });
+  animateAxesOverlay(STATE.data, gen);
 }
 
 // W/S to cycle the team highlight up/down the leaderboard, X to clear —
