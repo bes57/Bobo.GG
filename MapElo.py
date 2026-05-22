@@ -2112,7 +2112,13 @@ function renderPeriodSeg() {
 
 // ── Load + render orchestration ─────────────────────────────────────────────
 var _lastAnimationGen = 0;
+var _rankingsFirstRender = true;
 async function loadAndRender(year, snap) {
+  // On the very first render (initial page load) do NOT force-scroll —
+  // restoring scroll yanks the viewport down to the graph. Only restore on
+  // later re-renders (year/snap changes), where it prevents a layout jump.
+  var isFirst = _rankingsFirstRender;
+  _rankingsFirstRender = false;
   // Save scroll position so the page doesn't jump when we swap the
   // leaderboard out for a short loading spinner. Without this, blanking the
   // (~2000px) team list to a small loading message shortens the document
@@ -2139,7 +2145,7 @@ async function loadAndRender(year, snap) {
   buildChart(data, true);  // initial paint with no lines (axes + bands only)
   renderLeaderboard(data);
   // Leaderboard is back at full height — pin scrollY to where the user was.
-  window.scrollTo(0, prevScrollY);
+  if (!isFirst) window.scrollTo(0, prevScrollY);
   var gen = ++_lastAnimationGen;
   // animateAxesOverlay handles the rebuild-with-lines between phase 1 and
   // phase 2 so the curtain sweep actually reveals visible lines left→right.
