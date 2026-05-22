@@ -56,7 +56,7 @@ HOME_HTML = """
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
   h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:700; letter-spacing:-2px; line-height:1; }
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
-  .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; }
+  .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; transition:opacity .28s ease, transform .28s ease; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:20px; width:100%; max-width:900px; }
   .section-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--ink); margin-bottom:28px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:10px; user-select:none; letter-spacing:-0.5px; }
   .section-chevron { font-size:1rem; color:var(--soft); transition:transform .25s ease; display:inline-block; }
@@ -80,13 +80,16 @@ HOME_HTML = """
   .ai-disclosure-body { margin-top:6px; font-size:.82rem; font-weight:500; color:#111; white-space:nowrap; line-height:1.5; overflow:hidden; height:0; opacity:0; transition:height .24s ease, opacity .24s ease; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
-  .benpom-hero { display:block; width:100%; max-width:440px; height:235px; margin:24px 0 24px; border-radius:22px; overflow:hidden; position:relative; text-decoration:none; box-shadow:0 6px 24px #0000001a; transition:transform .2s,box-shadow .2s; }
+  .benpom-hero { display:flex; flex-direction:column; width:100%; max-width:440px; margin:24px 0 24px; border-radius:22px; overflow:hidden; background:white; text-decoration:none; box-shadow:0 6px 24px #0000001a; transition:transform .2s,box-shadow .2s; }
   .benpom-hero:hover { transform:translateY(-5px); box-shadow:0 16px 38px #00000026; }
+  .benpom-hero-banner { position:relative; height:235px; overflow:hidden; }
   .benpom-hero-img { position:absolute; inset:0; background-size:cover; background-position:center; z-index:0; transition:transform .35s ease; }
   .benpom-hero:hover .benpom-hero-img { transform:scale(1.06); }
-  .benpom-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#1a0f2455 0%,#1a0f24d0 100%); z-index:1; }
+  .benpom-hero-banner::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#1a0f2455 0%,#1a0f24d0 100%); z-index:1; }
   .benpom-hero-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
   .benpom-hero-title { font-family:'Syne',sans-serif; font-size:clamp(1.9rem,5vw,2.6rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
+  .benpom-hero-desc { padding:18px 24px 20px; text-align:center; }
+  .benpom-hero-desc-body { font-family:'Syne',sans-serif; font-weight:800; font-size:.92rem; color:var(--ink); line-height:1.4; letter-spacing:-.01em; }
 </style>
 </head>
 <body>
@@ -98,9 +101,14 @@ HOME_HTML = """
     <div class="ai-disclosure-body">All narrative, text, mathematical equations, and ideas are my own creation. AI was/is only used for writing code.</div>
   </details>
   <a class="benpom-hero" href="/mapelo/">
-    <div class="benpom-hero-img" style="background-image:url(/edgchamps.jpg)"></div>
-    <div class="benpom-hero-content">
-      <div class="benpom-hero-title">BenPom</div>
+    <div class="benpom-hero-banner">
+      <div class="benpom-hero-img" style="background-image:url(/edgchamps.jpg)"></div>
+      <div class="benpom-hero-content">
+        <div class="benpom-hero-title">BenPom</div>
+      </div>
+    </div>
+    <div class="benpom-hero-desc">
+      <span class="benpom-hero-desc-body">A statistical rating system for VCT teams, both past and present.</span>
     </div>
   </a>
   <div class="sections">
@@ -151,8 +159,30 @@ HOME_HTML = """
 </div>
 <footer>Data sourced from VLR.gg</footer>
 <script>
+var EGG_TEXT = "Uxie is N0te's dada";
+var ORIG_TAGLINE = null;
+var eggTimer = null;
+function swapTagline(newText) {
+  var el = document.getElementById('tagline');
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(-8px)';
+  setTimeout(function() {
+    el.textContent = newText;
+    el.style.transform = 'translateY(8px)';
+    el.offsetHeight;
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }, 280);
+}
 function easterEgg() {
-  document.getElementById('tagline').textContent = "Uxie is N0te's dada";
+  var el = document.getElementById('tagline');
+  if (ORIG_TAGLINE === null) ORIG_TAGLINE = el.textContent;
+  if (eggTimer) clearTimeout(eggTimer);
+  swapTagline(EGG_TEXT);
+  eggTimer = setTimeout(function() {
+    swapTagline(ORIG_TAGLINE);
+    eggTimer = null;
+  }, 5000);
 }
 (function(){
   var details = document.querySelector('.ai-disclosure');
