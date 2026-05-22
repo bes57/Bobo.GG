@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bobogg",
+      "runtimeExecutable": "/Users/benny_es1/PythonTest/.venv/bin/python",
+      "runtimeArgs": ["BobosHome.py"],
+      "port": 5001
+    }
+  ]
+}

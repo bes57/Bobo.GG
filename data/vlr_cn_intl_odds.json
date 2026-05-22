@@ -1,0 +1,1341 @@
+{
+  "generated": "2026-05-19T01:48:28Z",
+  "config": {
+    "beta": 0.154,
+    "intl_bonus": 0.22,
+    "cn_debut_boost": 0.0,
+    "overround_assumption": 1.05
+  },
+  "n_targets": 58,
+  "n_scraped": 58,
+  "n_with_odds": 53,
+  "n_failed": 0,
+  "failed_match_ids": [],
+  "no_odds_match_ids": [
+    312767,
+    348061,
+    348464,
+    378675,
+    378831
+  ],
+  "matches": [
+    {
+      "match_id": 312765,
+      "date": "2024-03-14",
+      "event_id": "2024_masters_madrid",
+      "winner": "KC",
+      "loser": "FPX",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "KC",
+      "dog_org": "FPX",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "KC",
+          "decimal_odds": 1.13,
+          "implied_prob": 0.885
+        }
+      },
+      "p_fav_book_devigged": 0.8429,
+      "p_fav_benpom": 0.672,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 312767,
+      "date": "2024-03-15",
+      "event_id": "2024_masters_madrid",
+      "winner": "EDG",
+      "loser": "PRX",
+      "winner_region": "CN",
+      "loser_region": "Pacific",
+      "fav_org": "PRX",
+      "dog_org": "EDG",
+      "bookmakers": {},
+      "p_fav_book_devigged": null,
+      "p_fav_benpom": 0.5525,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 312797,
+      "date": "2024-03-16",
+      "event_id": "2024_masters_madrid",
+      "winner": "GEN",
+      "loser": "EDG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "GEN",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "GEN",
+          "decimal_odds": 1.52,
+          "implied_prob": 0.6579
+        }
+      },
+      "p_fav_book_devigged": 0.6266,
+      "p_fav_benpom": 0.5438,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 312800,
+      "date": "2024-03-17",
+      "event_id": "2024_masters_madrid",
+      "winner": "LOUD",
+      "loser": "FPX",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "LOUD",
+      "dog_org": "FPX",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "LOUD",
+          "decimal_odds": 1.15,
+          "implied_prob": 0.8696
+        }
+      },
+      "p_fav_book_devigged": 0.8282,
+      "p_fav_benpom": 0.6625,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 312803,
+      "date": "2024-03-18",
+      "event_id": "2024_masters_madrid",
+      "winner": "LOUD",
+      "loser": "EDG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "LOUD",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "LOUD",
+          "decimal_odds": 1.78,
+          "implied_prob": 0.5618
+        }
+      },
+      "p_fav_book_devigged": 0.535,
+      "p_fav_benpom": 0.549,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 348061,
+      "date": "2024-05-23",
+      "event_id": "2024_masters_shanghai",
+      "winner": "FPX",
+      "loser": "FUT",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "FUT",
+      "dog_org": "FPX",
+      "bookmakers": {},
+      "p_fav_book_devigged": null,
+      "p_fav_benpom": 0.4885,
+      "intl_exp_diff_sign": -1
+    },
+    {
+      "match_id": 348059,
+      "date": "2024-05-24",
+      "event_id": "2024_masters_shanghai",
+      "winner": "TH",
+      "loser": "DRG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "TH",
+      "dog_org": "DRG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "TH",
+          "decimal_odds": 1.08,
+          "implied_prob": 0.9259
+        }
+      },
+      "p_fav_book_devigged": 0.8818,
+      "p_fav_benpom": 0.7394,
+      "intl_exp_diff_sign": 1
+    },
+    {
+      "match_id": 348458,
+      "date": "2024-05-25",
+      "event_id": "2024_masters_shanghai",
+      "winner": "GEN",
+      "loser": "FPX",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "GEN",
+      "dog_org": "FPX",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "GEN",
+          "decimal_odds": 1.2,
+          "implied_prob": 0.8333
+        }
+      },
+      "p_fav_book_devigged": 0.7936,
+      "p_fav_benpom": 0.5862,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 348460,
+      "date": "2024-05-26",
+      "event_id": "2024_masters_shanghai",
+      "winner": "FUT",
+      "loser": "DRG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "FUT",
+      "dog_org": "DRG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "FUT",
+          "decimal_odds": 1.03,
+          "implied_prob": 0.9709
+        }
+      },
+      "p_fav_book_devigged": 0.9247,
+      "p_fav_benpom": 0.6869,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 348462,
+      "date": "2024-05-27",
+      "event_id": "2024_masters_shanghai",
+      "winner": "TH",
+      "loser": "FPX",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "TH",
+      "dog_org": "FPX",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "TH",
+          "decimal_odds": 1.48,
+          "implied_prob": 0.6757
+        }
+      },
+      "p_fav_book_devigged": 0.6435,
+      "p_fav_benpom": 0.5363,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 348464,
+      "date": "2024-05-31",
+      "event_id": "2024_masters_shanghai",
+      "winner": "TH",
+      "loser": "EDG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "TH",
+      "dog_org": "EDG",
+      "bookmakers": {},
+      "p_fav_book_devigged": null,
+      "p_fav_benpom": 0.5593,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 348467,
+      "date": "2024-06-01",
+      "event_id": "2024_masters_shanghai",
+      "winner": "PRX",
+      "loser": "EDG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "PRX",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "PRX",
+          "decimal_odds": 1.25,
+          "implied_prob": 0.8
+        }
+      },
+      "p_fav_book_devigged": 0.7619,
+      "p_fav_benpom": 0.6294,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378663,
+      "date": "2024-08-01",
+      "event_id": "2024_champions",
+      "winner": "TH",
+      "loser": "FPX",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "TH",
+      "dog_org": "FPX",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "TH",
+          "decimal_odds": 1.25,
+          "implied_prob": 0.8
+        }
+      },
+      "p_fav_book_devigged": 0.7619,
+      "p_fav_benpom": 0.6553,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378656,
+      "date": "2024-08-02",
+      "event_id": "2024_champions",
+      "winner": "FNC",
+      "loser": "BLG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "FNC",
+      "dog_org": "BLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "FNC",
+          "decimal_odds": 1.03,
+          "implied_prob": 0.9709
+        }
+      },
+      "p_fav_book_devigged": 0.9247,
+      "p_fav_benpom": 0.7311,
+      "intl_exp_diff_sign": 1
+    },
+    {
+      "match_id": 378669,
+      "date": "2024-08-03",
+      "event_id": "2024_champions",
+      "winner": "TE",
+      "loser": "VIT",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "VIT",
+      "dog_org": "TE",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "TE",
+          "decimal_odds": 4.0,
+          "implied_prob": 0.25
+        }
+      },
+      "p_fav_book_devigged": 0.7619,
+      "p_fav_benpom": 0.6129,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378673,
+      "date": "2024-08-04",
+      "event_id": "2024_champions",
+      "winner": "EDG",
+      "loser": "FUT",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "FUT",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 1.9,
+          "implied_prob": 0.5263
+        }
+      },
+      "p_fav_book_devigged": 0.4988,
+      "p_fav_benpom": 0.516,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378670,
+      "date": "2024-08-07",
+      "event_id": "2024_champions",
+      "winner": "TE",
+      "loser": "LEV",
+      "winner_region": "CN",
+      "loser_region": "Americas",
+      "fav_org": "LEV",
+      "dog_org": "TE",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "TE",
+          "decimal_odds": 4.4,
+          "implied_prob": 0.2273
+        }
+      },
+      "p_fav_book_devigged": 0.7835,
+      "p_fav_benpom": 0.6568,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378675,
+      "date": "2024-08-07",
+      "event_id": "2024_champions",
+      "winner": "G2",
+      "loser": "EDG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "EDG",
+      "bookmakers": {},
+      "p_fav_book_devigged": null,
+      "p_fav_benpom": 0.5737,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378659,
+      "date": "2024-08-08",
+      "event_id": "2024_champions",
+      "winner": "KR\u00dc",
+      "loser": "BLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "KR\u00dc",
+      "dog_org": "BLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "KR\u00dc",
+          "decimal_odds": 1.38,
+          "implied_prob": 0.7246
+        }
+      },
+      "p_fav_book_devigged": 0.6901,
+      "p_fav_benpom": 0.5496,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378665,
+      "date": "2024-08-08",
+      "event_id": "2024_champions",
+      "winner": "SEN",
+      "loser": "FPX",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "FPX",
+      "dog_org": "SEN",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "SEN",
+          "decimal_odds": 1.65,
+          "implied_prob": 0.6061
+        }
+      },
+      "p_fav_book_devigged": 0.4228,
+      "p_fav_benpom": 0.5241,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378677,
+      "date": "2024-08-11",
+      "event_id": "2024_champions",
+      "winner": "EDG",
+      "loser": "PRX",
+      "winner_region": "CN",
+      "loser_region": "Pacific",
+      "fav_org": "PRX",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 2.05,
+          "implied_prob": 0.4878
+        }
+      },
+      "p_fav_book_devigged": 0.5354,
+      "p_fav_benpom": 0.5386,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378831,
+      "date": "2024-08-16",
+      "event_id": "2024_champions",
+      "winner": "KRX",
+      "loser": "TE",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "KRX",
+      "dog_org": "TE",
+      "bookmakers": {},
+      "p_fav_book_devigged": null,
+      "p_fav_benpom": 0.5628,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378826,
+      "date": "2024-08-17",
+      "event_id": "2024_champions",
+      "winner": "EDG",
+      "loser": "SEN",
+      "winner_region": "CN",
+      "loser_region": "Americas",
+      "fav_org": "SEN",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 2.5,
+          "implied_prob": 0.4
+        }
+      },
+      "p_fav_book_devigged": 0.619,
+      "p_fav_benpom": 0.5769,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378828,
+      "date": "2024-08-23",
+      "event_id": "2024_champions",
+      "winner": "EDG",
+      "loser": "LEV",
+      "winner_region": "CN",
+      "loser_region": "Americas",
+      "fav_org": "LEV",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 2.5,
+          "implied_prob": 0.4
+        }
+      },
+      "p_fav_book_devigged": 0.619,
+      "p_fav_benpom": 0.5462,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 378829,
+      "date": "2024-08-25",
+      "event_id": "2024_champions",
+      "winner": "EDG",
+      "loser": "TH",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "TH",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 2.5,
+          "implied_prob": 0.4
+        }
+      },
+      "p_fav_book_devigged": 0.619,
+      "p_fav_benpom": 0.5214,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 448598,
+      "date": "2025-02-20",
+      "event_id": "2025_masters_bangkok",
+      "winner": "EDG",
+      "loser": "TL",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "EDG",
+      "dog_org": "TL",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 1.55,
+          "implied_prob": 0.6452
+        },
+        "Rainbet": {
+          "team": "EDG",
+          "decimal_odds": 1.58,
+          "implied_prob": 0.6329
+        }
+      },
+      "p_fav_book_devigged": 0.6145,
+      "p_fav_benpom": 0.524,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 448597,
+      "date": "2025-02-21",
+      "event_id": "2025_masters_bangkok",
+      "winner": "G2",
+      "loser": "TE",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "TE",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "G2",
+          "decimal_odds": 1.2,
+          "implied_prob": 0.8333
+        }
+      },
+      "p_fav_book_devigged": 0.7936,
+      "p_fav_benpom": 0.5094,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 449001,
+      "date": "2025-02-22",
+      "event_id": "2025_masters_bangkok",
+      "winner": "EDG",
+      "loser": "G2",
+      "winner_region": "CN",
+      "loser_region": "Americas",
+      "fav_org": "G2",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "EDG",
+          "decimal_odds": 2.3,
+          "implied_prob": 0.4348
+        }
+      },
+      "p_fav_book_devigged": 0.5859,
+      "p_fav_benpom": 0.5617,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 449002,
+      "date": "2025-02-23",
+      "event_id": "2025_masters_bangkok",
+      "winner": "T1",
+      "loser": "TE",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "TE",
+      "dog_org": "T1",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "T1",
+          "decimal_odds": 1.45,
+          "implied_prob": 0.6897
+        },
+        "Rainbet": {
+          "team": "T1",
+          "decimal_odds": 1.48,
+          "implied_prob": 0.6757
+        }
+      },
+      "p_fav_book_devigged": 0.3431,
+      "p_fav_benpom": 0.5217,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 449008,
+      "date": "2025-02-27",
+      "event_id": "2025_masters_bangkok",
+      "winner": "EDG",
+      "loser": "T1",
+      "winner_region": "CN",
+      "loser_region": "Pacific",
+      "fav_org": "EDG",
+      "dog_org": "T1",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "EDG",
+          "decimal_odds": 1.5,
+          "implied_prob": 0.6667
+        },
+        "Rainbet": {
+          "team": "EDG",
+          "decimal_odds": 1.5,
+          "implied_prob": 0.6667
+        }
+      },
+      "p_fav_book_devigged": 0.635,
+      "p_fav_benpom": 0.5285,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 449010,
+      "date": "2025-02-28",
+      "event_id": "2025_masters_bangkok",
+      "winner": "G2",
+      "loser": "EDG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "G2",
+          "decimal_odds": 1.8,
+          "implied_prob": 0.5556
+        }
+      },
+      "p_fav_book_devigged": 0.5291,
+      "p_fav_benpom": 0.5379,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 449013,
+      "date": "2025-03-01",
+      "event_id": "2025_masters_bangkok",
+      "winner": "T1",
+      "loser": "EDG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "EDG",
+      "dog_org": "T1",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "T1",
+          "decimal_odds": 2.1,
+          "implied_prob": 0.4762
+        },
+        "Rainbet": {
+          "team": "T1",
+          "decimal_odds": 2.15,
+          "implied_prob": 0.4651
+        }
+      },
+      "p_fav_book_devigged": 0.5465,
+      "p_fav_benpom": 0.5009,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 490307,
+      "date": "2025-06-07",
+      "event_id": "2025_masters_toronto",
+      "winner": "BLG",
+      "loser": "TL",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "BLG",
+      "dog_org": "TL",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "BLG",
+          "decimal_odds": 1.85,
+          "implied_prob": 0.5405
+        },
+        "Rainbet": {
+          "team": "BLG",
+          "decimal_odds": 1.87,
+          "implied_prob": 0.5348
+        }
+      },
+      "p_fav_book_devigged": 0.5148,
+      "p_fav_benpom": 0.4685,
+      "intl_exp_diff_sign": -1
+    },
+    {
+      "match_id": 490308,
+      "date": "2025-06-08",
+      "event_id": "2025_masters_toronto",
+      "winner": "SEN",
+      "loser": "WOL",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "SEN",
+      "dog_org": "WOL",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "SEN",
+          "decimal_odds": 1.13,
+          "implied_prob": 0.885
+        },
+        "Rainbet": {
+          "team": "SEN",
+          "decimal_odds": 1.15,
+          "implied_prob": 0.8696
+        }
+      },
+      "p_fav_book_devigged": 0.8429,
+      "p_fav_benpom": 0.6628,
+      "intl_exp_diff_sign": 1
+    },
+    {
+      "match_id": 490311,
+      "date": "2025-06-09",
+      "event_id": "2025_masters_toronto",
+      "winner": "SEN",
+      "loser": "BLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "SEN",
+      "dog_org": "BLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "SEN",
+          "decimal_odds": 1.3,
+          "implied_prob": 0.7692
+        },
+        "Rainbet": {
+          "team": "SEN",
+          "decimal_odds": 1.27,
+          "implied_prob": 0.7874
+        }
+      },
+      "p_fav_book_devigged": 0.7326,
+      "p_fav_benpom": 0.5327,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 490312,
+      "date": "2025-06-10",
+      "event_id": "2025_masters_toronto",
+      "winner": "WOL",
+      "loser": "TH",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "TH",
+      "dog_org": "WOL",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "WOL",
+          "decimal_odds": 4.8,
+          "implied_prob": 0.2083
+        }
+      },
+      "p_fav_book_devigged": 0.8016,
+      "p_fav_benpom": 0.6025,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 498621,
+      "date": "2025-06-13",
+      "event_id": "2025_masters_toronto",
+      "winner": "SEN",
+      "loser": "XLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "XLG",
+      "dog_org": "SEN",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "SEN",
+          "decimal_odds": 1.5,
+          "implied_prob": 0.6667
+        },
+        "Rainbet": {
+          "team": "SEN",
+          "decimal_odds": 1.45,
+          "implied_prob": 0.6897
+        }
+      },
+      "p_fav_book_devigged": 0.365,
+      "p_fav_benpom": 0.48,
+      "intl_exp_diff_sign": -1
+    },
+    {
+      "match_id": 498623,
+      "date": "2025-06-14",
+      "event_id": "2025_masters_toronto",
+      "winner": "WOL",
+      "loser": "RRQ",
+      "winner_region": "CN",
+      "loser_region": "Pacific",
+      "fav_org": "RRQ",
+      "dog_org": "WOL",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "WOL",
+          "decimal_odds": 2.5,
+          "implied_prob": 0.4
+        },
+        "Rainbet": {
+          "team": "WOL",
+          "decimal_odds": 2.54,
+          "implied_prob": 0.3937
+        }
+      },
+      "p_fav_book_devigged": 0.619,
+      "p_fav_benpom": 0.5985,
+      "intl_exp_diff_sign": -1
+    },
+    {
+      "match_id": 498629,
+      "date": "2025-06-15",
+      "event_id": "2025_masters_toronto",
+      "winner": "G2",
+      "loser": "XLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "XLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "G2",
+          "decimal_odds": 4.4,
+          "implied_prob": 0.2273
+        },
+        "Rainbet": {
+          "team": "G2",
+          "decimal_odds": 4.2,
+          "implied_prob": 0.2381
+        }
+      },
+      "p_fav_book_devigged": 0.2165,
+      "p_fav_benpom": 0.5331,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 498626,
+      "date": "2025-06-16",
+      "event_id": "2025_masters_toronto",
+      "winner": "WOL",
+      "loser": "GEN",
+      "winner_region": "CN",
+      "loser_region": "Pacific",
+      "fav_org": "GEN",
+      "dog_org": "WOL",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "WOL",
+          "decimal_odds": 4.0,
+          "implied_prob": 0.25
+        },
+        "Rainbet": {
+          "team": "WOL",
+          "decimal_odds": 3.85,
+          "implied_prob": 0.2597
+        }
+      },
+      "p_fav_book_devigged": 0.7619,
+      "p_fav_benpom": 0.6722,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 498627,
+      "date": "2025-06-20",
+      "event_id": "2025_masters_toronto",
+      "winner": "PRX",
+      "loser": "WOL",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "PRX",
+      "dog_org": "WOL",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "PRX",
+          "decimal_odds": 1.45,
+          "implied_prob": 0.6897
+        },
+        "Rainbet": {
+          "team": "PRX",
+          "decimal_odds": 1.39,
+          "implied_prob": 0.7194
+        }
+      },
+      "p_fav_book_devigged": 0.6569,
+      "p_fav_benpom": 0.586,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 498634,
+      "date": "2025-06-21",
+      "event_id": "2025_masters_toronto",
+      "winner": "FNC",
+      "loser": "WOL",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "FNC",
+      "dog_org": "WOL",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "FNC",
+          "decimal_odds": 1.31,
+          "implied_prob": 0.7634
+        }
+      },
+      "p_fav_book_devigged": 0.727,
+      "p_fav_benpom": 0.6155,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542195,
+      "date": "2025-09-12",
+      "event_id": "2025_champions",
+      "winner": "PRX",
+      "loser": "XLG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "PRX",
+      "dog_org": "XLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "PRX",
+          "decimal_odds": 1.12,
+          "implied_prob": 0.8929
+        },
+        "Rainbet": {
+          "team": "PRX",
+          "decimal_odds": 1.12,
+          "implied_prob": 0.8929
+        }
+      },
+      "p_fav_book_devigged": 0.8504,
+      "p_fav_benpom": 0.6386,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542207,
+      "date": "2025-09-13",
+      "event_id": "2025_champions",
+      "winner": "NRG",
+      "loser": "EDG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "NRG",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "NRG",
+          "decimal_odds": 1.52,
+          "implied_prob": 0.6579
+        },
+        "Rainbet": {
+          "team": "NRG",
+          "decimal_odds": 1.55,
+          "implied_prob": 0.6452
+        }
+      },
+      "p_fav_book_devigged": 0.6266,
+      "p_fav_benpom": 0.4607,
+      "intl_exp_diff_sign": -1
+    },
+    {
+      "match_id": 542212,
+      "date": "2025-09-14",
+      "event_id": "2025_champions",
+      "winner": "T1",
+      "loser": "DRG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "T1",
+      "dog_org": "DRG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "T1",
+          "decimal_odds": 1.5,
+          "implied_prob": 0.6667
+        },
+        "Rainbet": {
+          "team": "T1",
+          "decimal_odds": 1.48,
+          "implied_prob": 0.6757
+        }
+      },
+      "p_fav_book_devigged": 0.635,
+      "p_fav_benpom": 0.6852,
+      "intl_exp_diff_sign": 1
+    },
+    {
+      "match_id": 542200,
+      "date": "2025-09-15",
+      "event_id": "2025_champions",
+      "winner": "MIBR",
+      "loser": "BLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "BLG",
+      "dog_org": "MIBR",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "MIBR",
+          "decimal_odds": 2.35,
+          "implied_prob": 0.4255
+        },
+        "Rainbet": {
+          "team": "MIBR",
+          "decimal_odds": 2.34,
+          "implied_prob": 0.4274
+        }
+      },
+      "p_fav_book_devigged": 0.5948,
+      "p_fav_benpom": 0.6329,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542198,
+      "date": "2025-09-19",
+      "event_id": "2025_champions",
+      "winner": "XLG",
+      "loser": "SEN",
+      "winner_region": "CN",
+      "loser_region": "Americas",
+      "fav_org": "SEN",
+      "dog_org": "XLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "XLG",
+          "decimal_odds": 3.8,
+          "implied_prob": 0.2632
+        },
+        "Rainbet": {
+          "team": "XLG",
+          "decimal_odds": 3.8,
+          "implied_prob": 0.2632
+        }
+      },
+      "p_fav_book_devigged": 0.7493,
+      "p_fav_benpom": 0.6152,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542209,
+      "date": "2025-09-19",
+      "event_id": "2025_champions",
+      "winner": "TL",
+      "loser": "EDG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "TL",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "TL",
+          "decimal_odds": 1.43,
+          "implied_prob": 0.6993
+        }
+      },
+      "p_fav_book_devigged": 0.666,
+      "p_fav_benpom": 0.6719,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542203,
+      "date": "2025-09-20",
+      "event_id": "2025_champions",
+      "winner": "RRQ",
+      "loser": "BLG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "RRQ",
+      "dog_org": "BLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "RRQ",
+          "decimal_odds": 1.58,
+          "implied_prob": 0.6329
+        },
+        "Rainbet": {
+          "team": "RRQ",
+          "decimal_odds": 1.65,
+          "implied_prob": 0.6061
+        }
+      },
+      "p_fav_book_devigged": 0.6028,
+      "p_fav_benpom": 0.58,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542214,
+      "date": "2025-09-20",
+      "event_id": "2025_champions",
+      "winner": "G2",
+      "loser": "DRG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "DRG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "G2",
+          "decimal_odds": 1.13,
+          "implied_prob": 0.885
+        },
+        "Rainbet": {
+          "team": "G2",
+          "decimal_odds": 1.12,
+          "implied_prob": 0.8929
+        }
+      },
+      "p_fav_book_devigged": 0.8429,
+      "p_fav_benpom": 0.6885,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 542199,
+      "date": "2025-09-21",
+      "event_id": "2025_champions",
+      "winner": "GX",
+      "loser": "XLG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "GX",
+      "dog_org": "XLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "GX",
+          "decimal_odds": 1.5,
+          "implied_prob": 0.6667
+        },
+        "Rainbet": {
+          "team": "GX",
+          "decimal_odds": 1.5,
+          "implied_prob": 0.6667
+        }
+      },
+      "p_fav_book_devigged": 0.635,
+      "p_fav_benpom": 0.6036,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 625788,
+      "date": "2026-02-28",
+      "event_id": "2026_masters_santiago",
+      "winner": "M8",
+      "loser": "EDG",
+      "winner_region": "EMEA",
+      "loser_region": "CN",
+      "fav_org": "M8",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "M8",
+          "decimal_odds": 1.55,
+          "implied_prob": 0.6452
+        },
+        "Rainbet": {
+          "team": "M8",
+          "decimal_odds": 1.66,
+          "implied_prob": 0.6024
+        }
+      },
+      "p_fav_book_devigged": 0.6145,
+      "p_fav_benpom": 0.6718,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 625791,
+      "date": "2026-02-28",
+      "event_id": "2026_masters_santiago",
+      "winner": "NRG",
+      "loser": "XLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "NRG",
+      "dog_org": "XLG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "NRG",
+          "decimal_odds": 1.35,
+          "implied_prob": 0.7407
+        },
+        "Rainbet": {
+          "team": "NRG",
+          "decimal_odds": 1.35,
+          "implied_prob": 0.7407
+        }
+      },
+      "p_fav_book_devigged": 0.7054,
+      "p_fav_benpom": 0.5677,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 626532,
+      "date": "2026-03-03",
+      "event_id": "2026_masters_santiago",
+      "winner": "T1",
+      "loser": "EDG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "T1",
+      "dog_org": "EDG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "T1",
+          "decimal_odds": 1.39,
+          "implied_prob": 0.7194
+        },
+        "Rainbet": {
+          "team": "T1",
+          "decimal_odds": 1.39,
+          "implied_prob": 0.7194
+        }
+      },
+      "p_fav_book_devigged": 0.6851,
+      "p_fav_benpom": 0.6731,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 626533,
+      "date": "2026-03-03",
+      "event_id": "2026_masters_santiago",
+      "winner": "G2",
+      "loser": "XLG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "XLG",
+      "bookmakers": {
+        "Rainbet": {
+          "team": "G2",
+          "decimal_odds": 1.23,
+          "implied_prob": 0.813
+        }
+      },
+      "p_fav_book_devigged": 0.7743,
+      "p_fav_benpom": 0.6023,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 626538,
+      "date": "2026-03-07",
+      "event_id": "2026_masters_santiago",
+      "winner": "G2",
+      "loser": "AG",
+      "winner_region": "Americas",
+      "loser_region": "CN",
+      "fav_org": "G2",
+      "dog_org": "AG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "G2",
+          "decimal_odds": 1.21,
+          "implied_prob": 0.8264
+        },
+        "Rainbet": {
+          "team": "G2",
+          "decimal_odds": 1.17,
+          "implied_prob": 0.8547
+        }
+      },
+      "p_fav_book_devigged": 0.787,
+      "p_fav_benpom": 0.7438,
+      "intl_exp_diff_sign": 1
+    },
+    {
+      "match_id": 626545,
+      "date": "2026-03-08",
+      "event_id": "2026_masters_santiago",
+      "winner": "AG",
+      "loser": "M8",
+      "winner_region": "CN",
+      "loser_region": "EMEA",
+      "fav_org": "M8",
+      "dog_org": "AG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "AG",
+          "decimal_odds": 4.99,
+          "implied_prob": 0.2004
+        },
+        "Rainbet": {
+          "team": "AG",
+          "decimal_odds": 5.4,
+          "implied_prob": 0.1852
+        }
+      },
+      "p_fav_book_devigged": 0.8091,
+      "p_fav_benpom": 0.7151,
+      "intl_exp_diff_sign": 0
+    },
+    {
+      "match_id": 626547,
+      "date": "2026-03-10",
+      "event_id": "2026_masters_santiago",
+      "winner": "PRX",
+      "loser": "AG",
+      "winner_region": "Pacific",
+      "loser_region": "CN",
+      "fav_org": "PRX",
+      "dog_org": "AG",
+      "bookmakers": {
+        "Thunderpick": {
+          "team": "PRX",
+          "decimal_odds": 1.22,
+          "implied_prob": 0.8197
+        },
+        "Rainbet": {
+          "team": "PRX",
+          "decimal_odds": 1.15,
+          "implied_prob": 0.8696
+        }
+      },
+      "p_fav_book_devigged": 0.7807,
+      "p_fav_benpom": 0.6151,
+      "intl_exp_diff_sign": 0
+    }
+  ]
+}

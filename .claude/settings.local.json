@@ -67,7 +67,9 @@
       "Bash(/usr/bin/time -p python3 scrapers/BuildVetoModel.py)",
       "Bash(/usr/bin/time -p python3 scrapers/BuildMapRatings.py --refresh)",
       "Bash(awk -F, 'NR==1; $1==\"CN\" && $3==\"KRX\" {print; exit}' data/2023_masters_tokyo.csv)",
-      "Bash(awk -F, '$1==\"CN\" {print $3}' data/2024_champions.csv data/2025_champions.csv data/2026_masters_santiago.csv)"
+      "Bash(awk -F, '$1==\"CN\" {print $3}' data/2024_champions.csv data/2025_champions.csv data/2026_masters_santiago.csv)",
+      "Bash(xargs -r kill)",
+      "Bash(FLASK_APP=BobosHome.py python3 -m flask run --port 5050)"
     ]
   }
 }

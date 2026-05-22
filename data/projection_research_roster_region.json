@@ -1,0 +1,157 @@
+{
+  "n_series": 1217,
+  "baseline_brier": 0.23354020866956013,
+  "beta_used": 0.154,
+  "alpha_bonferroni": 0.01,
+  "n_features_tested": 5,
+  "features": [
+    {
+      "name": "roster_change_diff",
+      "coef": -0.029796092991718568,
+      "se": 0.10005370421433339,
+      "p_value": 0.765855052625853,
+      "ci": [
+        -0.22590135325181201,
+        0.16630916726837489
+      ],
+      "brier_with_feature": 0.2287306654826173,
+      "brier_improvement": 7.565448442797829e-06,
+      "lr_p": 0.7658769793769582,
+      "n_used": 1036,
+      "significant_bonferroni": false,
+      "baseline_brier_on_subset": 0.2287382309310601
+    },
+    {
+      "name": "roster_intl_overlap_diff",
+      "coef": 0.11600061309996493,
+      "se": 0.07441394104786275,
+      "p_value": 0.11903048353365198,
+      "ci": [
+        -0.029850711353846066,
+        0.2618519375537759
+      ],
+      "brier_with_feature": 0.24303114150689248,
+      "brier_improvement": 0.0014549360242168685,
+      "lr_p": 0.1163310859249761,
+      "n_used": 410,
+      "significant_bonferroni": false,
+      "baseline_brier_on_subset": 0.24448607753110935
+    },
+    {
+      "name": "region_intl_6mo_diff",
+      "coef": -0.5802091167805155,
+      "se": 0.634646477556929,
+      "p_value": 0.3605990931850487,
+      "ci": [
+        -1.8241162127920965,
+        0.6636979792310655
+      ],
+      "brier_with_feature": 0.2294516421604501,
+      "brier_improvement": 0.00017932351458210816,
+      "lr_p": 0.36009614274358237,
+      "n_used": 1147,
+      "significant_bonferroni": false,
+      "baseline_brier_on_subset": 0.22963096567503222
+    },
+    {
+      "name": "same_region_flag",
+      "coef": -0.045597749436212164,
+      "se": 0.1720485396652149,
+      "p_value": 0.7909875827124111,
+      "ci": [
+        -0.38281288718003337,
+        0.2916173883076091
+      ],
+      "brier_with_feature": 0.23127633422351568,
+      "brier_improvement": 6.943992765739981e-06,
+      "lr_p": 0.7907910081815818,
+      "n_used": 1217,
+      "significant_bonferroni": false,
+      "baseline_brier_on_subset": 0.23128327821628142
+    },
+    {
+      "name": "region_intl_ytd_diff",
+      "coef": -0.9529668072271489,
+      "se": 0.6344640194096864,
+      "p_value": 0.13309635575736545,
+      "ci": [
+        -2.1965162852701345,
+        0.29058267081583655
+      ],
+      "brier_with_feature": 0.2252408405933721,
+      "brier_improvement": 0.0005547876264097584,
+      "lr_p": 0.12779021188347872,
+      "n_used": 954,
+      "significant_bonferroni": false,
+      "baseline_brier_on_subset": 0.22579562821978186
+    }
+  ],
+  "joint_model": {
+    "n_used": 325,
+    "features_retained": [],
+    "joint_brier": 0.24166671873105594,
+    "joint_brier_improvement": 0.0039052482850125414,
+    "baseline_brier_on_subset": 0.24557196701606848,
+    "lr_p": 0.361824922779424,
+    "per_feature": [
+      {
+        "name": "roster_change_diff",
+        "coef": 0.17450088095080013,
+        "se": 0.19305760625421797,
+        "p_value": 0.3660591127432107,
+        "ci": [
+          -0.20389202730746708,
+          0.5528937892090673
+        ],
+        "significant_bonferroni": false
+      },
+      {
+        "name": "roster_intl_overlap_diff",
+        "coef": 0.19456220031690033,
+        "se": 0.0987727661069096,
+        "p_value": 0.048861754356720244,
+        "ci": [
+          0.0009675787473575059,
+          0.3881568218864432
+        ],
+        "significant_bonferroni": false
+      },
+      {
+        "name": "region_intl_6mo_diff",
+        "coef": 1.6621886432061501,
+        "se": 2.6108601187334908,
+        "p_value": 0.5243567046306084,
+        "ci": [
+          -3.455097189511492,
+          6.779474475923792
+        ],
+        "significant_bonferroni": false
+      },
+      {
+        "name": "same_region_flag",
+        "coef": -0.2500935119358109,
+        "se": 0.25648055452598717,
+        "p_value": 0.32951196741596966,
+        "ci": [
+          -0.7527953988067457,
+          0.25260837493512395
+        ],
+        "significant_bonferroni": false
+      },
+      {
+        "name": "region_intl_ytd_diff",
+        "coef": -2.0849829037601233,
+        "se": 2.446825599809033,
+        "p_value": 0.39414888206765086,
+        "ci": [
+          -6.880761079385827,
+          2.7107952718655812
+        ],
+        "significant_bonferroni": false
+      }
+    ]
+  },
+  "headline": "Best feature: roster_intl_overlap_diff (\u0394 Brier +0.00145, p=0.1190); joint \u0394 Brier +0.00391; verdict: no signal",
+  "verdict": "no signal",
+  "generated": "2026-05-18T23:39:18.982947Z"
+}
