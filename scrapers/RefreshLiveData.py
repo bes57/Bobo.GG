@@ -549,6 +549,12 @@ def _scrape_upcoming_for(vlr_id, slug, region, event_label):
             fmt = "bo5" if ("bo5" in fmt_raw or "best of 5" in fmt_raw) else (
                   "bo1" if ("bo1" in fmt_raw or "best of 1" in fmt_raw) else "bo3")
 
+            # Round / stage label (e.g. "Playoffs: Grand Final"). Captured so
+            # downstream code can detect grand finals and apply the bo5_gf
+            # veto (upper-bracket team gets both bans + first pick).
+            stage_el  = a.select_one(".match-item-event")
+            stage_raw = stage_el.get_text(" ", strip=True) if stage_el else ""
+
             out.append({
                 "team_a": team_a, "team_b": team_b,
                 "org_a":  VLR_NAME_TO_ORG.get(team_a, team_a),
@@ -557,6 +563,7 @@ def _scrape_upcoming_for(vlr_id, slug, region, event_label):
                 "region": region,
                 "event":  f"{event_label} — {region}" if region != "International" else event_label,
                 "format": fmt,
+                "match_name": stage_raw,
             })
     return out
 

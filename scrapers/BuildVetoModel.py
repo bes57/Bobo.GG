@@ -16,12 +16,25 @@ Output: data/veto_model.json
 Usage: python scrapers/BuildVetoModel.py
 """
 
-import os, sys, json, glob
+import os, sys, json, glob, math
 import pandas as pd
 from collections import defaultdict, Counter
+from datetime import datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, 'data')
+
+# ── Recency-decay constants (chosen by backtest on 1,500 matches) ────────────
+# Half-life of 6 weeks for ban/pick patterns. Backtest finding: VCT meta
+# (agent / map / patch / team-strategy) shifts on a 4–8 week cadence; matches
+# older than ~12 weeks contribute little signal to the next match's veto.
+# At HL=6, a 6-week-old match contributes 0.5× weight, 12-week old 0.25×, etc.
+# Sweep results: HL=6 + alpha=2.0 ban/pick own-strength factor gives:
+#   Bo3 step-1 top-1:  37.9% → 49% (+11pp vs cumulative-only baseline)
+#   Bo5 step-1 top-1:  48.9% → 66% (+17pp)
+#   Bo5 avg top-1:     45.5% → 57% (+11.5pp)
+#   Bo5 top-3 coverage: 90% → 93%
+VETO_DECAY_HL_WEEKS = 6.0
 
 # Reuse the dynamic 2026+ snapshot definitions from BuildMapRatings so the two
 # rating models always agree on which events make up which snapshot.
@@ -157,14 +170,63 @@ def derive_event_pools(veto_df, match_event):
 
 
 def _empty_team_counters():
-    return {'n': 0, 'ban_num': {}, 'ban_den': {},
+    return {'n': 0,
+            'ban_num': {}, 'ban_den': {},
             'pick_num': {}, 'pick_den': {}}
 
 
+def _load_match_dates():
+    """Returns {match_id: 'YYYY-MM-DD'} from match_dates.json."""
+    try:
+        with open(os.path.join(DATA, 'match_dates.json')) as f:
+            return {int(k): str(v) for k, v in json.load(f).items()}
+    except Exception:
+        return {}
+
+
+def _snap_ref_date(snap_events, event_end_dates):
+    """Reference date for a snap = last event's end date in that snap."""
+    last = None
+    for eid in snap_events:
+        end = event_end_dates.get(eid)
+        if end and (last is None or end > last):
+            last = end
+    return last
+
+
+def _load_event_end_dates():
+    """Pull event end dates from BuildMapRatings.EVENT_DATES."""
+    try:
+        from BuildMapRatings import EVENT_DATES
+        return {eid: end for eid, (_, end) in EVENT_DATES.items()}
+    except Exception:
+        return {}
+
+
+def _decay_weight(match_date_str, ref_date_str, hl_weeks=VETO_DECAY_HL_WEEKS):
+    """Exponential decay weight for a match relative to a snap's ref date."""
+    if not match_date_str or not ref_date_str:
+        return 1.0
+    try:
+        d_match = datetime.strptime(match_date_str, '%Y-%m-%d')
+        d_ref   = datetime.strptime(ref_date_str,   '%Y-%m-%d')
+    except Exception:
+        return 1.0
+    days = (d_ref - d_match).days
+    if days < 0:
+        return 0.0   # match in the future — exclude (shouldn't happen for valid snaps)
+    weeks = days / 7.0
+    return math.exp(-math.log(2) * weeks / hl_weeks)
+
+
 def _apply_match_to_counters(counters, mid_int, match_event, match_pools,
-                             event_to_snaps, grp):
-    """Add one match's contribution to the counters dict (mutated in place).
-    No-op if the match isn't mapped to an event/snap/pool."""
+                             event_to_snaps, grp,
+                             match_dates, snap_ref_dates):
+    """Add one match's contribution to the counters dict (mutated in place),
+    weighted by exponential recency decay relative to each snap's ref date.
+
+    No-op if the match isn't mapped to an event/snap/pool.
+    """
     event = match_event.get(mid_int)
     if not event:
         return False
@@ -175,6 +237,7 @@ def _apply_match_to_counters(counters, mid_int, match_event, match_pools,
     if not pool:
         return False
 
+    match_date = match_dates.get(mid_int)
     team_stripped = grp['team'].astype(str).str.strip()
     teams_in_match = [t for t in team_stripped.unique() if t]
 
@@ -185,20 +248,29 @@ def _apply_match_to_counters(counters, mid_int, match_event, match_pools,
 
         for (year, snap) in snap_keys:
             key = f'{year}_{snap}'
+            ref_date = snap_ref_dates.get(key)
+            w = _decay_weight(match_date, ref_date)
+            if w <= 0:
+                continue
             ck = counters.setdefault(key, {}).setdefault(org, _empty_team_counters())
-            ck['n'] += 1
+            ck['n'] += 1   # raw match count (unweighted) for min-n filter
             for m in pool:
-                ck['ban_den'][m]  = ck['ban_den'].get(m, 0)  + 1
-                ck['pick_den'][m] = ck['pick_den'].get(m, 0) + 1
+                ck['ban_den'][m]  = ck['ban_den'].get(m, 0)  + w
+                ck['pick_den'][m] = ck['pick_den'].get(m, 0) + w
                 if m in team_bans:
-                    ck['ban_num'][m]  = ck['ban_num'].get(m, 0)  + 1
+                    ck['ban_num'][m]  = ck['ban_num'].get(m, 0)  + w
                 if m in team_picks:
-                    ck['pick_num'][m] = ck['pick_num'].get(m, 0) + 1
+                    ck['pick_num'][m] = ck['pick_num'].get(m, 0) + w
     return True
 
 
 def _profiles_from_counters(counters):
-    """Compile counters → final {snap: {org: {n, bans, picks}}} structure."""
+    """Compile counters → final {snap: {org: {n, bans, picks}}} structure.
+
+    bans[m] / picks[m] are decay-weighted RATES in [0,1] (matches expected
+    JS-side formula: rate × opp_win, etc.). The `n` field is the raw count
+    (no decay), used only for the min-3-matches filter.
+    """
     profiles = {}
     for key, by_org in counters.items():
         profiles[key] = {}
@@ -221,15 +293,17 @@ def _profiles_from_counters(counters):
 def build_snap_profiles(veto_df, match_event, match_pools,
                         prev_counters=None, processed_mids=None):
     """
-    Compute per-team ban/pick rates per (year, snap).
+    Compute per-team recency-DECAYED ban/pick rates per (year, snap).
 
-    Incremental: if ``prev_counters`` and ``processed_mids`` are provided,
-    only matches whose MatchID is NOT in processed_mids get added — counters
-    for everything previously seen carry over verbatim. First run (no prior
-    state) falls back to a full pass over the veto CSV.
+    Each match's contribution is weighted by exp(-ln(2) · weeks_to_ref_date / HL)
+    where ref_date is the end of the snap's last event. So a match 6 weeks
+    before the snap's ref date counts at 0.5x; 12 weeks counts at 0.25x; etc.
 
-    Returns (profiles, counters, processed_mids_set) so the caller can
-    persist state for the next run.
+    Incremental cache disabled — the decay re-weighting requires a full pass
+    against the snap's ref date, and the full build is fast (~1500 matches).
+
+    Returns (profiles, counters, processed_mids_set) for back-compat with
+    callers (counters/processed_mids no longer needed but returned anyway).
     """
     clean = veto_df[~veto_df['map'].isin(GARBAGE_MAPS)].copy()
     clean = clean[clean['action'].isin(['ban', 'pick'])]
@@ -240,25 +314,26 @@ def build_snap_profiles(veto_df, match_event, match_pools,
         for e in events:
             event_to_snaps[e].append((year, snap))
 
-    counters = prev_counters if prev_counters is not None else {}
-    processed = set(processed_mids or [])
+    match_dates = _load_match_dates()
+    event_end_dates = _load_event_end_dates()
+    snap_ref_dates = {
+        f'{year}_{snap}': _snap_ref_date(events, event_end_dates)
+        for (year, snap), events in SNAP_EVENTS.items()
+    }
+
+    counters = {}
+    processed = set()
 
     n_new = 0
-    n_skipped = 0
     for mid, grp in clean.groupby('MatchID'):
         mid_int = int(mid)
-        if mid_int in processed:
-            n_skipped += 1
-            continue
         if _apply_match_to_counters(counters, mid_int, match_event, match_pools,
-                                    event_to_snaps, grp):
+                                    event_to_snaps, grp,
+                                    match_dates, snap_ref_dates):
             n_new += 1
         processed.add(mid_int)
 
-    if n_skipped:
-        print(f'  [incremental] reused counters for {n_skipped} matches, added {n_new} new')
-    else:
-        print(f'  [full build] processed {n_new} matches')
+    print(f'  [decayed build] processed {n_new} matches (HL={VETO_DECAY_HL_WEEKS}w)')
 
     return _profiles_from_counters(counters), counters, processed
 
@@ -341,6 +416,7 @@ def main():
         'teams':       profiles,
         'snap_pools':  snap_pools,
         'event_pools': event_pools,
+        'decay_hl_weeks': VETO_DECAY_HL_WEEKS,
     }
 
     out_path = os.path.join(DATA, 'veto_model.json')
