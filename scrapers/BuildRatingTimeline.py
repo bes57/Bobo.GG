@@ -31,6 +31,8 @@ from BuildMapRatings import (
     massey_ratings,
     _compute_intl_weights,
     _compute_indirect_intl_w,
+    _compute_cn_personal_anchors,
+    _compute_long_intl_weights,
     INTL_EVENTS,
     HALF_LIFE_WEEKS,
     INTL_WIN_MULT  as _BMR_INTL_MULT,
@@ -38,6 +40,8 @@ from BuildMapRatings import (
     CN_INTL_K,
     CN_C_MIN,
     CN_INDIRECT_WEIGHT,
+    CN_ANCHOR_BLEND_K,
+    CN_ANCHOR_K,
     CN_TEAMS_SET,
 )
 
@@ -57,20 +61,41 @@ MIN_GAMES     = 5     # min games for a team to appear in the timeline
 
 
 def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=None,
-                         prior=CN_PRIOR, K=CN_INTL_K, c_min=CN_C_MIN,
-                         indirect_weight=CN_INDIRECT_WEIGHT):
-    """Identical formula to BuildMapRatings._apply_cn_shrinkage —
-    uses direct + indirect intl evidence, no floor."""
-    if games is not None and lam is not None and ref_date is not None:
-        indirect = _compute_indirect_intl_w(games, intl_weights, lam, ref_date)
+                         prior=CN_PRIOR, K=CN_ANCHOR_K, c_min=0.0,
+                         indirect_weight=0.0,
+                         anchor_blend_k=CN_ANCHOR_K,
+                         personal_anchors=None):
+    """v9 — cluster offset + asymmetric personal-anchor pull. Mirrors
+    BuildMapRatings._apply_cn_shrinkage."""
+    if games is not None and ref_date is not None:
+        if personal_anchors is None:
+            personal_anchors = _compute_cn_personal_anchors(games, ref_date)
+        long_intl_w = _compute_long_intl_weights(games, ref_date)
     else:
-        indirect = {}
+        long_intl_w = {}
+        if personal_anchors is None:
+            personal_anchors = {}
+
+    tested_cn = [t for t in CN_TEAMS_SET
+                 if t in personal_anchors and t in ratings]
+    if len(tested_cn) >= 2:
+        raw_mean    = sum(ratings[t]          for t in tested_cn) / len(tested_cn)
+        anchor_mean = sum(personal_anchors[t] for t in tested_cn) / len(tested_cn)
+        cluster_offset = anchor_mean - raw_mean
+    else:
+        all_cn = [t for t in CN_TEAMS_SET if t in ratings]
+        if all_cn:
+            raw_mean = sum(ratings[t] for t in all_cn) / len(all_cn)
+            cluster_offset = prior - raw_mean
+        else:
+            cluster_offset = 0.0
+
     out = {}
     for t, r in ratings.items():
         if t in CN_TEAMS_SET:
-            evidence = intl_weights.get(t, 0.0) + indirect_weight * indirect.get(t, 0.0)
-            c = max(c_min, min(evidence / K, 1.0))
-            out[t] = c * r + (1 - c) * prior
+            long_iw = long_intl_w.get(t, 0.0)
+            offset_strength = anchor_blend_k / (long_iw + anchor_blend_k)
+            out[t] = r + offset_strength * cluster_offset
         else:
             out[t] = r
     return out

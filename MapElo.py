@@ -2004,6 +2004,7 @@ var TEAM_COLORS = {
   TYL:'#D32F2F', TYLOO:'#D32F2F',
   DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
   MKOI:'#7C3AED', KOI:'#7C3AED', GIA:'#FFFFFF',
+  '2G':'#00C853', BME:'#FFC107', BOOM:'#FFC107', APK:'#FF6F00',
 };
 var LOGO_SCALES = { ZETA: 0.72 };
 
@@ -3157,6 +3158,12 @@ function _initRegionPills() {
       var region = p.dataset.region;
       if (region === STATE.activeRegion) return;
       STATE.activeRegion = region;
+      // Changing region scope should clear any locked/hovered team so the
+      // chart and leaderboard reset to the new filter cleanly (mirrors the
+      // Modern Hub region-pill behavior).
+      STATE.selectedTeam = null;
+      STATE.hoveredOrg   = null;
+      STATE.expandedOrg  = null;
       buttons.forEach(function(other) {
         other.classList.toggle('active', other === p);
       });
@@ -5522,6 +5529,11 @@ def _event_bands_for_year(year):
     exactly where its matches were played. Falls back to ALL_EVENTS.start/end
     (set for 2026+) and then to _HISTORICAL_EVENT_DATES when no real match
     data exists for an event.
+
+    CN counterparts (e.g. `2025_china_stage2`) are merged into the franchise
+    parent's band by date-union — CN splits typically start 1-2 weeks earlier
+    than the franchise event, and without the union, CN matches drawn as dots
+    on the chart fall outside the colored ribbon for that period.
     """
     from MoreTestingMaybeFiles import ALL_EVENTS
     try:
@@ -5530,23 +5542,44 @@ def _event_bands_for_year(year):
         _HIST_DATES = {}
     real_spans = _get_real_event_spans()
     year_int = int(year)
+
+    def _span_for(e):
+        eid = e['id']
+        if eid in real_spans:
+            return real_spans[eid]
+        if e.get('start') and e.get('end'):
+            return e['start'], e['end']
+        if eid in _HIST_DATES:
+            return _HIST_DATES[eid]
+        return None, None
+
+    # First pass: collect CN-only event date ranges keyed by their franchise
+    # parent id (eg. "2025_china_stage2" -> parent "2025_stage2").
+    cn_spans_by_parent = {}
+    for e in ALL_EVENTS:
+        if e.get('year') != year_int:
+            continue
+        if list((e.get('regions') or {}).keys()) != ['CN']:
+            continue
+        parent_id = e['id'].replace('_china_', '_')
+        s, x = _span_for(e)
+        if s and x:
+            cn_spans_by_parent[parent_id] = (s, x)
+
+    # Second pass: build franchise bands, unioning with their CN counterpart.
     bands = []
     for e in ALL_EVENTS:
         if e.get('year') != year_int:
             continue
-        regions = e.get('regions') or {}
-        # Skip CN-only splits — their ribbon would overlap and clutter.
-        if list(regions.keys()) == ['CN']:
+        if list((e.get('regions') or {}).keys()) == ['CN']:
             continue
-        start, end = (None, None)
-        if e['id'] in real_spans:
-            start, end = real_spans[e['id']]
-        elif e.get('start') and e.get('end'):
-            start, end = e['start'], e['end']
-        elif e['id'] in _HIST_DATES:
-            start, end = _HIST_DATES[e['id']]
+        start, end = _span_for(e)
         if not start or not end:
             continue
+        cn = cn_spans_by_parent.get(e['id'])
+        if cn:
+            start = min(start, cn[0])
+            end   = max(end,   cn[1])
         label = e['label'].replace(f"{year_int} ", "", 1)
         bands.append({
             "id":    e['id'],
@@ -7393,6 +7426,7 @@ const TEAM_COLORS = {
   Secret:'#808080', SCRT:'#808080', TSEC:'#808080',
   // Legacy / extras kept for older event data
   DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
+  '2G':'#00C853', BME:'#FFC107', BOOM:'#FFC107', APK:'#FF6F00',
 };
 
 // Per-team logo size multipliers — some logos render too large inside the circle

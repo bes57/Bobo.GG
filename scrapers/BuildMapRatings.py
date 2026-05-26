@@ -1046,20 +1046,52 @@ def apply_qualification_cap(teams_out, intl_event_id, all_games, epsilon=0.001):
 # Per-year Brier sweep (CNIndirectOptimize.py) found iw=0.7 minimizes full
 # Brier (+1.1bp vs deployed floor-version). BLG/DRG/TYL rise into the -0.5
 # to -1.0 range; NOVA/WOL stay correctly deeply negative.
-CN_PRIOR             = -4.0
-CN_INTL_K            = 20.0  # raised 8→20 so intl-untested CN teams get
-                              # real shrinkage. At K=8 with indirect=0.7,
-                              # every CN team saturated to c=1.0 — 2024
-                              # JDG (no intl) ended up above BLG (0-2 at
-                              # Champs but beat JDG twice in CN). Higher K
-                              # only shrinks teams whose evidence is
-                              # actually thin; tested teams stay at c=1.0.
-CN_C_MIN             = 0.0    # NO FLOOR — Bayesian evidence accumulation
-CN_INDIRECT_WEIGHT   = 0.3    # Weight for indirect (intra-CN-via-tested) evidence.
-                              # Lowered 0.7→0.3 alongside K=20 so a team like
-                              # JDG ("I played BLG who played intl") doesn't
-                              # earn enough credit to dodge the CN_PRIOR pull.
+# ── CN calibration (v9, 2026-05-26) ───────────────────────────────────────────
+# Replaces the per-team shrinkage-toward-prior with TWO mechanisms working
+# together to calibrate CN ratings without punishing domestic performance:
+#
+#   1. CLUSTER OFFSET: every CN team's raw is shifted by a single offset
+#      computed as mean(tested_CN_anchors) - mean(tested_CN_raws). This
+#      calibrates the whole CN cluster against the intl-derived level.
+#      Untested CN teams ride this offset (no individual shrinkage).
+#
+#   2. ASYMMETRIC ANCHOR PULL: for tested CN teams, the personal intl-only
+#      Massey rating ONLY pulls the team UP — never down. If a team's
+#      personal anchor is above their (shifted) raw, blend them toward the
+#      anchor (preserves Bangkok-style proofs through domestic drift). If
+#      the anchor is below raw, leave raw alone (one bad event doesn't
+#      override sustained domestic dominance).
+#
+# Why the change vs v8 personal-anchor formula:
+#   * v8 worked for EDG (good anchor + Stage 1 drift): anchor=+1.9 pulled
+#     EDG up when raw drifted to +1.5 mid-Stage 1.
+#   * v8 FAILED for XLG (no anchor pre-Toronto): cluster prior=-4 dragged
+#     them down despite domestic dominance; domestic wins couldn't move
+#     shrunk because the (1-c)·(-4) term dominated.
+#   * v8 ALSO FAILED for XLG (bad anchor post-Toronto): personal_anchor=-4
+#     after 0-6 at Toronto created a permanent drag through Stage 2.
+#     Each domestic win raised raw but the c-decay (short HL) increased
+#     anchor's influence faster than raw improved → trajectory bled DOWN
+#     despite continued winning.
+#
+# v9 cluster offset handles untested teams (XLG pre-Toronto), and the
+# asymmetric anchor handles bad-anchor teams (XLG post-Toronto). The two
+# together remove both classes of unjustified drag.
+CN_PRIOR              = -4.0   # only used as FALLBACK when zero CN teams
+                                # have any intl evidence (e.g. 2024 pre-Madrid)
+CN_ANCHOR_HL_WEEKS    = 52.0   # half-life for anchor's intl-only Massey
+CN_ANCHOR_K           = 6.0    # Bayesian shrinkage scale: anchor_strength
+                                # = long_iw / (long_iw + K). Naturally lives in
+                                # [0, 1) — no hardcoded floor or ceiling. At
+                                # long_iw=K, anchor and raw contribute equally;
+                                # high evidence saturates anchor_strength toward
+                                # 1 smoothly.
 CN_TEAMS_SET = {team for team, region in TEAM_REGIONS.items() if region == 'CN'}
+# Legacy aliases kept for back-compat with callers; not used internally by v9.
+CN_INTL_K            = CN_ANCHOR_K
+CN_C_MIN             = 0.0
+CN_INDIRECT_WEIGHT   = 0.0
+CN_ANCHOR_BLEND_K    = CN_ANCHOR_K
 
 # ── Regional cluster spillover dampener ───────────────────────────────────────
 # Opponent-adjusted Massey lifts the WHOLE region's cluster when one team does
@@ -1124,26 +1156,120 @@ def _compute_indirect_intl_w(games, intl_weights, lam, ref_date):
     return indirect
 
 
-def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=None,
-                         prior=CN_PRIOR, K=CN_INTL_K, c_min=CN_C_MIN,
-                         indirect_weight=CN_INDIRECT_WEIGHT):
-    """Shrink CN teams toward `prior` based on direct + indirect intl evidence.
+def _compute_cn_personal_anchors(games, ref_date,
+                                  anchor_hl_weeks=CN_ANCHOR_HL_WEEKS):
+    """Per-team intl-only Massey rating used as the personalized shrinkage
+    destination. Long half-life so intl results carry forward through domestic
+    play instead of being "forgotten" on the 6-week clock.
 
-    No hardcoded floor. Tested teams (direct >= K) saturate to c=1.0 and are
-    fully trusted. Untested teams who play tested CN teams accumulate indirect
-    calibration credit. Truly isolated teams (no direct, no indirect) approach
-    c=0 and are fully pulled to CN_PRIOR.
+    Returns dict team->rating for every team with any intl-game presence.
+    CN teams missing from the result (no intl exposure) fall back to CN_PRIOR
+    at the application site.
     """
-    if games is not None and lam is not None and ref_date is not None:
-        indirect = _compute_indirect_intl_w(games, intl_weights, lam, ref_date)
+    intl_games = [g for g in games if g.get('event_id') in INTL_EVENTS]
+    if not intl_games:
+        return {}
+    lam_long = math.log(2) / anchor_hl_weeks
+    return massey_ratings(intl_games, lam_long, ref_date, min_games=0)
+
+
+def _compute_long_intl_weights(games, ref_date, anchor_hl_weeks=CN_ANCHOR_HL_WEEKS):
+    """Long-half-life version of _compute_intl_weights. Used for the anchor
+    BLEND factor — we want a team's confidence in their personal anchor to
+    decay slowly, not on the 6-week game-recency clock. Otherwise the anchor
+    blends back toward CN_PRIOR a few months after a Masters appearance.
+    """
+    lam_long = math.log(2) / anchor_hl_weeks
+    iw = {}
+    for g in games:
+        if g.get('event_id') not in INTL_EVENTS:
+            continue
+        is_champions = 'champions' in g.get('event_id', '')
+        eff_w = _effective_weeks_ago(g['winner'], g['date'], ref_date)
+        eff_l = _effective_weeks_ago(g['loser'],  g['date'], ref_date)
+        base_w = math.sqrt(math.exp(-lam_long * eff_w) * math.exp(-lam_long * eff_l))
+        cont_w = _team_continuity_factor(g['winner'], g['date'], ref_date)
+        cont_l = _team_continuity_factor(g['loser'],  g['date'], ref_date)
+        base_w *= math.sqrt(cont_w * cont_l)
+        event_mult = CHAMPIONS_MULT if is_champions else INTL_WIN_MULT
+        w = base_w * event_mult
+        iw[g['winner']] = iw.get(g['winner'], 0.0) + w
+        iw[g['loser']]  = iw.get(g['loser'],  0.0) + w
+    return iw
+
+
+def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=None,
+                         prior=CN_PRIOR, K=CN_ANCHOR_K, c_min=0.0,
+                         indirect_weight=0.0,
+                         anchor_blend_k=CN_ANCHOR_K,
+                         personal_anchors=None):
+    """CN calibration v9 — cluster offset + asymmetric personal-anchor pull.
+
+    Step 1: compute the cluster offset
+       offset = mean(tested_CN_anchors) - mean(tested_CN_raws)
+       (apples-to-apples: same teams' anchors vs raws)
+    Step 2: shift every CN team's raw by the offset
+       shifted = raw + offset
+       This calibrates the entire CN cluster's level against the world via
+       the intl-tested subset, without touching individual teams' relative
+       positions within the cluster.
+    Step 3: asymmetric anchor pull for tested teams
+       if personal_anchor[t] > shifted[t]:
+           blend toward the anchor (preserves good intl proofs through
+           domestic drift, e.g. EDG holding Bangkok value through Stage 1).
+       else:
+           leave shifted unchanged (one bad intl event doesn't override
+           sustained domestic record — XLG winning Stage 2 isn't dragged
+           by their 0-6 Toronto anchor).
+
+    Fallback: if zero CN teams have intl evidence yet (e.g. 2024 pre-Madrid),
+    offset = CN_PRIOR - mean(all_CN_raws), anchoring the floating cluster
+    to the hard prior. This is what prevents the historical "XLG #1 before
+    Santiago" failure mode.
+    """
+    if games is not None and ref_date is not None:
+        if personal_anchors is None:
+            personal_anchors = _compute_cn_personal_anchors(games, ref_date)
+        long_intl_w = _compute_long_intl_weights(games, ref_date)
     else:
-        indirect = {}
+        long_intl_w = {}
+        if personal_anchors is None:
+            personal_anchors = {}
+
+    # Step 1: cluster offset
+    tested_cn = [t for t in CN_TEAMS_SET
+                 if t in personal_anchors and t in ratings]
+    if len(tested_cn) >= 2:
+        raw_mean    = sum(ratings[t]          for t in tested_cn) / len(tested_cn)
+        anchor_mean = sum(personal_anchors[t] for t in tested_cn) / len(tested_cn)
+        cluster_offset = anchor_mean - raw_mean
+    else:
+        # Fallback: no tested CN cluster yet → anchor cluster mean to CN_PRIOR
+        all_cn = [t for t in CN_TEAMS_SET if t in ratings]
+        if all_cn:
+            raw_mean = sum(ratings[t] for t in all_cn) / len(all_cn)
+            cluster_offset = prior - raw_mean
+        else:
+            cluster_offset = 0.0
+
     out = {}
     for t, r in ratings.items():
         if t in CN_TEAMS_SET:
-            evidence = intl_weights.get(t, 0.0) + indirect_weight * indirect.get(t, 0.0)
-            c = max(c_min, min(evidence / K, 1.0))
-            out[t] = c * r + (1 - c) * prior
+            # v10 — pure cluster-offset calibration, NO anchor pull.
+            # The offset says "CN cluster runs X below the world by intl evidence";
+            # untested teams get the full shift, tested teams shed it smoothly as
+            # their own intl edges directly calibrate them in the global Massey
+            # solve. Within the cluster, each team's relative position comes
+            # entirely from their match results — wins move them up, losses down,
+            # nothing static.
+            #
+            #   offset_strength = K / (long_iw + K)
+            #
+            # Lives in (0, 1] naturally. No clamps, no anchors. Just regional
+            # calibration that fades with direct intl evidence.
+            long_iw = long_intl_w.get(t, 0.0)
+            offset_strength = anchor_blend_k / (long_iw + anchor_blend_k)
+            out[t] = r + offset_strength * cluster_offset
         else:
             out[t] = r
     return out
