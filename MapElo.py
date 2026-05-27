@@ -5111,7 +5111,7 @@ MAPELO_PYTH_HTML = """
 var PYTH = PYTH_JSON;
 
 document.addEventListener('DOMContentLoaded', function() {
-  katex.render('\\\\text{Win\\\\%} \\\\approx \\\\dfrac{RS^{1.83}}{RS^{1.83} + RA^{1.83}}',
+  katex.render('\\\\text{Pyth\\\\%} \\\\approx \\\\dfrac{RS^{1.83}}{RS^{1.83} + RA^{1.83}}',
     document.getElementById('baseball-formula'),
     { throwOnError: false, displayMode: true });
   katex.render('\\\\text{Pyth\\\\%} \\\\approx \\\\dfrac{RW^k}{RW^k + RL^k}',

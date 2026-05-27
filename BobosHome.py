@@ -141,7 +141,7 @@ HOME_HTML = """
       <div class="cards">
         <a class="nav-card" href="/mapelo/pythagorean/">
           <div class="nav-card-title">VCT's Pythagorean Rating</div>
-          <div class="nav-card-desc">A pythagorean win% model hand-tuned for VCT, ranking teams by how dominant they've been beyond just their win-loss record.</div>
+          <div class="nav-card-desc">A pythagorean win% model hand-tuned for VCT, ranking teams by how dominant they've been and their true domestic strength levels.</div>
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>
         <a class="nav-card" href="/vct/">
