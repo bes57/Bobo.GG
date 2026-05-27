@@ -1771,6 +1771,13 @@ const modelParams = {{ model_json | safe }};
 const residualsData = {{ residuals_json | safe }};
 (function() {
   if (!residualsData) return;
+  // Small team logo next to org name. Uses /logos/{ORG}.png; URL-encoded
+  // for orgs with diacritics (e.g. KRÜ). Hides if file missing.
+  window.logoFor = function(org) {
+    if (!org) return '';
+    return '<img src="/logos/' + encodeURIComponent(org) +
+      '.png" alt="" style="height:13px;width:13px;vertical-align:middle;margin-right:4px;object-fit:contain;" onerror="this.style.display=\\'none\\'">';
+  };
   function buildResTable(bodyId, rows) {
     var tbody = document.getElementById(bodyId);
     rows.forEach(function(row) {
@@ -1783,7 +1790,7 @@ const residualsData = {{ residuals_json | safe }};
       var tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="td-img">' + imgHtml + '</td>' +
-        '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + row.org + ' &middot; ' + row.event + '</span></td>' +
+        '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
         '<td>' + row.rating.toFixed(2) + '</td>' +
         '<td>' + row.expected.toFixed(2) + '</td>' +
         '<td class="' + resClass + '">' + resSign + row.residual.toFixed(3) + '</td>' +
@@ -1811,7 +1818,7 @@ const alltimeNoBaiters = {{ alltime_nobaiters_json | safe }};
     var tr = document.createElement('tr');
     tr.innerHTML =
       '<td class="td-img">' + imgHtml + '</td>' +
-      '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + row.org + ' &middot; ' + row.event + '</span></td>' +
+      '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
       '<td>' + row.rating.toFixed(2) + '</td>' +
       '<td>' + row.expected.toFixed(2) + '</td>' +
       '<td class="' + resClass + '">' + resSign + row.residual.toFixed(3) + '</td>' +
@@ -1842,7 +1849,7 @@ const oxyPtdChart    = {{ oxy_ptd_chart_json  | safe }};
       tr.innerHTML =
         '<td class="td-img">' + imgHtml + '</td>' +
         '<td>' + row.player + '</td>' +
-        '<td>' + row.org + '</td>' +
+        '<td>' + window.logoFor(row.org) + row.org + '</td>' +
         '<td>' + (row[thirdCol] || '') + '</td>' +
         '<td>' + row.rating.toFixed(2) + '</td>' +
         '<td>' + (row.ptd * 100).toFixed(1) + '%</td>';
@@ -1976,7 +1983,7 @@ const oxyPtdChart    = {{ oxy_ptd_chart_json  | safe }};
       var tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="td-img">' + imgHtml + '</td>' +
-        '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + row.org + ' &middot; ' + row.event + '</span></td>' +
+        '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
         '<td>' + row.rating.toFixed(2) + '</td>' +
         '<td>' + row.expected.toFixed(2) + '</td>' +
         '<td class="' + resClass + '">' + resSign + row.residual.toFixed(3) + '</td>' +
