@@ -205,9 +205,9 @@ PAGE_HTML = """
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
   .page { position:relative; z-index:1; padding:32px 32px 60px; max-width:1100px; margin:0 auto; }
-  header { margin-bottom:32px; }
-  header h1 { font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:700; letter-spacing:-1px; }
-  header p { color:var(--soft); font-size:.88rem; margin-top:8px; font-weight:300; }
+  header { margin-bottom:32px; text-align:center; }
+  header h1 { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; text-align:center; }
+  header p { color:var(--soft); font-size:.88rem; margin-top:8px; font-weight:300; text-align:center; }
   .filters { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:32px; align-items:flex-start; }
   .filter-group { display:flex; flex-direction:column; gap:4px; }
   .filter-label { font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); }

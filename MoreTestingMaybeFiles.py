@@ -16,7 +16,7 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "headshots.json")
+OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "data", "headshots.json")
 
 # All VCT franchised-era events (2023-current), most-recent first.
 # League events list each region separately; international events use {"International": url}.

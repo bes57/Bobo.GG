@@ -17,7 +17,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from MoreTestingMaybeFiles import ALL_EVENTS
 
-LIVE_EVENT_ID = "2026_stage1"
+LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25; next live event
 DATA_DIR = os.path.join(ROOT, "data")
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"

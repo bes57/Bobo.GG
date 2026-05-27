@@ -57,7 +57,12 @@ def out_path_for_year(year):
 
 LAMBDA_DECAY  = math.log(2) / HALF_LIFE_WEEKS  # share half-life
 INTL_MULT     = _BMR_INTL_MULT                 # share intl multiplier (for legacy intl_weights helper)
-MIN_GAMES     = 5     # min games for a team to appear in the timeline
+MIN_GAMES     = 1     # any played game produces a rating — was 5, which left
+                       # new-roster teams sitting at 0 for their first 4 games
+                       # despite those games carrying real signal. Lowering to
+                       # 1 lets the Massey solve emit a (noisy but data-driven)
+                       # rating from game 1; established teams (≥3 games) are
+                       # unaffected since their solve was already saturated.
 
 
 def _apply_cn_shrinkage(ratings, intl_weights, games=None, lam=None, ref_date=None,

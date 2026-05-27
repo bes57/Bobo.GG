@@ -28,7 +28,7 @@ HEADERS = {
 DATA_DIR   = os.path.join(ROOT, "data")
 MAPS_DIR   = os.path.join(DATA_DIR, "maps")
 SERIES_DIR = os.path.join(DATA_DIR, "series")
-LIVE_EVENT_ID = "2026_stage1"
+LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25
 
 os.makedirs(MAPS_DIR,   exist_ok=True)
 os.makedirs(SERIES_DIR, exist_ok=True)

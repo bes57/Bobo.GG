@@ -1130,11 +1130,6 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   html { background:#e8d5f5; overscroll-behavior:none; }
   body { background:#e8d5f5 !important; overscroll-behavior:none; }
   #content-wrap { width:100%; }
-  #hub-loader { position:fixed; inset:0; z-index:99999; background:#0e0a14; display:flex; align-items:center; justify-content:center; transition:opacity .5s ease; animation:hubLoaderFailsafe 1ms linear 8s forwards; }
-  #hub-loader.done { opacity:0; pointer-events:none; }
-  @keyframes hubLoaderFailsafe { to { opacity:0; visibility:hidden; pointer-events:none; } }
-  #hub-loader .hub-spinner { width:40px; height:40px; border-radius:50%; border:3px solid #ffffff1f; border-top-color:#d4b8f4; animation:hubSpin .8s linear infinite; }
-  @keyframes hubSpin { to { transform:rotate(360deg); } }
   /* Hub stays calm — kill BOTH SHARED_CSS body backdrops so nothing tints
      the area below the hero and breaks the gradient blend. */
   body::before, body::after { display:none !important; }
@@ -1183,7 +1178,6 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 </style>
 </head>
 <body>
-<div id="hub-loader"><div class="hub-spinner"></div></div>
 <div id="content-wrap">
   <section class="hub-hero">
     <div class="hub-hero-img"></div>
@@ -1318,22 +1312,6 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   </script>
 </div>
 <script>PW_JS</script>
-<script>
-(function(){
-  var loader = document.getElementById('hub-loader');
-  if (!loader) return;
-  var hidden = false;
-  function hide(){
-    if (hidden) return;
-    hidden = true;
-    loader.classList.add('done');
-    setTimeout(function(){ loader.style.display = 'none'; }, 550);
-  }
-  if (document.readyState === 'complete') hide();
-  else window.addEventListener('load', hide);
-  setTimeout(hide, 3000);
-})();
-</script>
 </body>
 </html>
 """.replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS)
@@ -3948,10 +3926,10 @@ function populateTeams(side){
   st.teams = teams;
   var newIdx = teams.indexOf(prev);
   if(newIdx<0){
-    // Modern Hub default: FNC on the left, KRÜ on the right. Falls back to
+    // Modern Hub default: FNC on the left, PRX on the right. Falls back to
     // the first/second alphabetical teams if either isn't in the snapshot.
     if (LOCK_CURRENT) {
-      var pref = side==='a' ? 'FNC' : 'KRÜ';
+      var pref = side==='a' ? 'FNC' : 'PRX';
       newIdx = teams.indexOf(pref);
     }
     if (newIdx < 0) {
@@ -4892,15 +4870,11 @@ function runMatchup() {
 (function(){
   populateSnapSeg('a'); populateSnapSeg('b');
   populateTeams('a'); populateTeams('b');
-  // Default selection: EG (A) vs NRG (B) on the standalone matchup page.
-  // Modern Hub Simulator (LOCK_CURRENT) keeps the FNC vs KRÜ default set
-  // inside populateTeams — don't override it here.
-  if (!LOCK_CURRENT) {
-    var ai = CF.a.teams.indexOf('EG');
-    var bi = CF.b.teams.indexOf('NRG');
-    if(ai >= 0){ CF.a.idx = ai; updateCoverflow('a'); }
-    if(bi >= 0){ CF.b.idx = bi; updateCoverflow('b'); }
-  }
+  // Default selection: FNC (A) vs PRX (B).
+  var ai = CF.a.teams.indexOf('FNC');
+  var bi = CF.b.teams.indexOf('PRX');
+  if(ai >= 0){ CF.a.idx = ai; updateCoverflow('a'); }
+  if(bi >= 0){ CF.b.idx = bi; updateCoverflow('b'); }
 })();
 
 // ── Title intro animation (dot → typewriter), mirrors the Modern Hub ─────────
@@ -4953,7 +4927,7 @@ MAPELO_PYTH_HTML = """
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:1000px; margin:0 auto; width:100%; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.5rem); font-weight:700; letter-spacing:-1px; margin-bottom:28px; }
+  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; text-align:center; }
   .card { background:white; border-radius:24px; padding:28px 32px; box-shadow:0 4px 24px #0000000a; }
   .card-header { display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap; }
   .exponent-badge { font-size:.75rem; font-weight:500; background:#f4edb8; color:#6a5a1a; padding:3px 10px; border-radius:99px; }

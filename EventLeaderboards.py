@@ -26,7 +26,7 @@ STAT_LABELS = {
     "FKPR":   "First Kills Per Round",
 }
 
-LIVE_EVENT_ID = "2026_stage1"
+LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25; now reads from data/2026_stage1.csv like other past events
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 _event_cache = {}       # event_id -> DataFrame
@@ -340,14 +340,14 @@ MAIN_HTML = """
   .home-logo:hover { opacity:1; }
   header { text-align:center; margin-bottom:16px; animation:fadeDown .7s ease both; }
   header h1 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); }
-  .event-title { text-align:center; font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3.4rem); font-weight:700; letter-spacing:-1px; margin-bottom:20px; animation:fadeDown .7s .03s ease both; }
+  .event-title { text-align:center; font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:20px; animation:fadeDown .7s .03s ease both; }
   .event-selector-wrap { text-align:center; margin-bottom:24px; animation:fadeDown .7s .05s ease both; }
   .event-wrap { display:inline-block; position:relative; }
   .event-select { -webkit-appearance:none; appearance:none; padding:9px 38px 9px 20px; border-radius:99px; border:2px solid #f0ecf4; background:white; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; color:var(--ink); cursor:pointer; box-shadow:0 2px 8px #0001; outline:none; transition:border-color .2s; min-width:220px; }
   .event-select:focus { border-color:var(--lavender); }
   .chevron { position:absolute; right:14px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--soft); font-size:.75rem; }
   .region-filter { display:flex; justify-content:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; animation:fadeDown .7s .1s ease both; }
-  .rounds-wrap { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:36px; flex-wrap:wrap; animation:fadeDown .7s .15s ease both; }
+  .rounds-wrap { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; margin-bottom:36px; flex-wrap:wrap; animation:fadeDown .7s .15s ease both; }
   .rounds-label { font-size:.83rem; color:var(--soft); font-weight:500; }
   .rounds-val { font-family:'Syne',sans-serif; font-weight:700; color:var(--ink); min-width:40px; display:inline-block; }
   input[type=range].rounds-slider { -webkit-appearance:none; width:180px; height:4px; border-radius:99px; background:#f0ecf4; outline:none; cursor:pointer; vertical-align:middle; }
@@ -422,7 +422,7 @@ MAIN_HTML = """
   </header>
   <div class="event-title">{{ event.label }}</div>
 
-  <div style="text-align:center;margin-bottom:10px;line-height:1.7;">
+  <div style="text-align:center;margin-bottom:28px;line-height:1.7;">
     <span style="font-size:.72rem;color:var(--soft);font-style:italic;">Quick Notes:</span><br>
     <span style="font-size:.72rem;color:var(--soft);font-style:italic;">- 2024 Masters Shanghai has been omitted due to missing data from CN servers</span><br>
     <span style="font-size:.72rem;color:var(--soft);font-style:italic;">- 2023 Regular Season only has aggregate &ldquo;League&rdquo; data instead of being partitioned into Split 1 and Split 2</span>
@@ -454,8 +454,8 @@ MAIN_HTML = """
   {% endif %}
 
   <div class="rounds-wrap">
-    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">Any</span></span>
-    <input type="range" class="rounds-slider" id="rounds-slider" min="0" max="300" step="10" value="0" oninput="updateMinRounds(this.value)">
+    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
+    <input type="range" class="rounds-slider" id="rounds-slider" min="0" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
 
   <div class="grid" id="grid"></div>
@@ -485,7 +485,7 @@ const EVENT_ID = {{ event_id | tojson }};
 const STATS = Object.keys(STAT_LABELS);
 const PILL_CLASSES = ['pill-0','pill-1','pill-2','pill-3','pill-4','pill-5'];
 let currentRegion = 'All';
-let minRounds = 0;
+let minRounds = 50;
 
 function rankClass(i) { return i===0?'r1':i===1?'r2':i===2?'r3':''; }
 
@@ -926,8 +926,8 @@ RANKING_HTML = """
     <input class="search-input" id="search" type="text" placeholder="Search player name..." oninput="applyFilters()" autocomplete="off">
   </div>
   <div class="rounds-wrap">
-    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">Any</span></span>
-    <input type="range" class="rounds-slider" id="rounds-slider" min="0" max="300" step="10" value="0" oninput="updateMinRounds(this.value)">
+    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
+    <input type="range" class="rounds-slider" id="rounds-slider" min="0" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
   <div class="table-wrap">
     <table>
@@ -1005,7 +1005,7 @@ function rankShowInitials(img) {
 }
 
 let activeRegion = '{{ active_region }}';
-let minRounds = 0;
+let minRounds = 50;
 
 function filterRegion(region, btn) {
   activeRegion = region;
@@ -1240,7 +1240,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
 def index():
     _ensure_headshots_loaded()
 
-    default_id = "2026_masters_santiago"
+    default_id = "2026_stage1"
     event_id = request.args.get("event", default_id)
     event = next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
 
@@ -1265,7 +1265,7 @@ def ranking(stat):
     if stat not in STAT_LABELS:
         return "Unknown stat", 404
 
-    default_id = "2026_masters_santiago"
+    default_id = "2026_stage1"
     event_id = request.args.get("event", default_id)
     event = next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
     active_region = request.args.get("region", "All")
