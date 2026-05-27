@@ -97,13 +97,18 @@ PAGE_HTML = """
   .inline-figure img { max-width:100%; border-radius:14px; box-shadow:0 6px 24px #0000000f; display:inline-block; }
   .inline-figure-cap { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-top:8px; }
   .expand-card { background:white; border-radius:14px; padding:0; box-shadow:0 4px 24px #0000000a; margin:8px 0 32px; overflow:hidden; }
-  .expand-card summary { list-style:none; cursor:pointer; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; user-select:none; }
-  .expand-card summary::-webkit-details-marker { display:none; }
-  .expand-card summary::after { content:'▾'; font-size:.85rem; color:var(--soft); transition:transform .2s; }
-  .expand-card[open] summary::after { transform:rotate(180deg); }
+  .expand-card-summary { width:100%; border:0; background:transparent; font:inherit; color:inherit; cursor:pointer; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; user-select:none; text-align:left; }
+  .expand-card-chevron { font-size:.85rem; color:var(--soft); transition:transform .25s cubic-bezier(.4,0,.2,1); }
+  .expand-card.open .expand-card-chevron { transform:rotate(180deg); }
   .expand-card-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
   .expand-card-headline { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
-  .expand-card-body { padding:0 22px 16px; border-top:1px solid #f5eff8; }
+  /* CSS-grid expand trick: grid-template-rows transitions from 0fr → 1fr
+     smoothly. The inner body sets overflow:hidden so content clips during
+     the animation. Modern browsers (Chrome 118+, Firefox 117+, Safari 17+). */
+  .expand-card-wrap { display:grid; grid-template-rows:0fr; transition:grid-template-rows .32s cubic-bezier(.4,0,.2,1); }
+  .expand-card.open .expand-card-wrap { grid-template-rows:1fr; }
+  .expand-card-body { overflow:hidden; padding:0 22px; border-top:1px solid transparent; transition:padding .32s cubic-bezier(.4,0,.2,1), border-top-color .32s; }
+  .expand-card.open .expand-card-body { padding:0 22px 16px; border-top-color:#f5eff8; }
   .expand-card-body table { width:100%; border-collapse:collapse; font-size:.9rem; margin-top:8px; }
   .expand-card-body td { padding:8px 4px; border-bottom:1px solid #f5eff8; }
   .expand-card-body tr:last-child td { border-bottom:none; }
@@ -357,22 +362,25 @@ PAGE_HTML = """
 
       <p>Similarly to LOUD, they&rsquo;re another team with deserving players who seem to be catching momentum at the right time, against the right opponents (re: Kr&uuml;). Do I buy it? Honestly, not really. A highly variable 100 Thieves team seems like something to be wary of, especially when they&rsquo;re losing their best map (that 9-round win against Kr&uuml; was on Bind). Additionally, look at their record in Split&nbsp;1 when the game is decided by 3 or fewer rounds:</p>
 
-      <details class="expand-card">
-        <summary>
+      <div class="expand-card" id="card-100t-close">
+        <button class="expand-card-summary" type="button" aria-expanded="false" onclick="toggleExpand('card-100t-close', this)">
           <span>
             <span class="expand-card-label">100T in close maps (&le;3 rounds) &mdash; Stage 1</span><br>
             <span class="expand-card-headline">0&ndash;4 record</span>
           </span>
-        </summary>
-        <div class="expand-card-body">
-          <table>
-            <tr><td>vs SEN</td><td>Haven</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>Apr 19</td></tr>
-            <tr><td>vs SEN</td><td>Split</td><td class="L">L 17&ndash;19</td><td>(&Delta; &minus;2)</td><td>Apr 19</td></tr>
-            <tr><td>vs NRG</td><td>Lotus</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>Apr 25</td></tr>
-            <tr><td>vs Kr&uuml;</td><td>Haven</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>May 2</td></tr>
-          </table>
+          <span class="expand-card-chevron">▾</span>
+        </button>
+        <div class="expand-card-wrap">
+          <div class="expand-card-body">
+            <table>
+              <tr><td>vs SEN</td><td>Haven</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>Apr 19</td></tr>
+              <tr><td>vs SEN</td><td>Split</td><td class="L">L 17&ndash;19</td><td>(&Delta; &minus;2)</td><td>Apr 19</td></tr>
+              <tr><td>vs NRG</td><td>Lotus</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>Apr 25</td></tr>
+              <tr><td>vs Kr&uuml;</td><td>Haven</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>May 2</td></tr>
+            </table>
+          </div>
         </div>
-      </details>
+      </div>
 
       <p>That&rsquo;s not a good sign where they&rsquo;re gonna have to play close games against good teams.</p>
 
@@ -748,6 +756,15 @@ PAGE_HTML = """
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 })();
+
+// Animated expand toggle for .expand-card. The CSS grid-template-rows
+// transition does the height animation; this just toggles the class.
+function toggleExpand(id, btn) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  var open = card.classList.toggle('open');
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
 </script>
 </body>
 </html>
