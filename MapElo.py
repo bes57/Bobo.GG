@@ -1099,6 +1099,16 @@ SHARED_CSS = """
   #content-wrap.blurred { filter:blur(12px); pointer-events:none; user-select:none; }
 """
 
+# Site-wide footer used at the bottom of every Bobo.GG page. Inline styles
+# so it renders consistently across files that import + don't import
+# SHARED_CSS. The Ko-fi tip line sits below the data-source attribution.
+SHARED_FOOTER = """
+<footer style="text-align:center;padding:24px 16px 28px;color:#7a6e7e;font-size:.75rem;font-weight:300;line-height:1.55;font-family:'DM Sans',sans-serif;">
+  Data sourced from VLR.gg
+  <div style="margin-top:8px;">Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:#7a6e7e;text-decoration:underline;">ko-fi.com/bobovct</a></div>
+</footer>
+"""
+
 MAPELO_HUB_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1312,9 +1322,10 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   </script>
 </div>
 <script>PW_JS</script>
+SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS)
+""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 MAPELO_HOME_HTML = """
 <!DOCTYPE html>
@@ -3388,9 +3399,10 @@ function initRankings() {
 })();
 </script>
 <script>PW_JS</script>
+SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS)
+""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -4908,9 +4920,10 @@ function runMatchup() {
 })();
 </script>
 <script>PW_JS</script>
+SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS)
+""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 MAPELO_PYTH_HTML = """
 <!DOCTYPE html>
@@ -5534,9 +5547,10 @@ function openTeamModal(org, year, split) {
 
 showAllTime(false);
 </script>
+SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS)
+""".replace('SHARED_CSS', SHARED_CSS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 
 @mapelo_bp.route('/')
@@ -10069,9 +10083,10 @@ function triggerPastFlyIn() {
 // ── Boot ─────────────────────────────────────────────────────────────────────
 init();
 </script>
+SHARED_FOOTER
 </body>
 </html>
-"""
+""".replace('SHARED_FOOTER', SHARED_FOOTER)
 
 @mapelo_bp.route('/modern/')
 def mapelo_modern():

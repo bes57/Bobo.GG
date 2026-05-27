@@ -1114,7 +1114,10 @@ PAGE_HTML = """
     <div id="rPopupPtdRow" style="display:none;">PTD <span id="rPopupPtd"></span></div>
   </div>
 </div>
-<footer>Data sourced from VLR.gg</footer>
+<footer>
+  Data sourced from VLR.gg
+  <div style="margin-top:8px;">Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">ko-fi.com/bobovct</a></div>
+</footer>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>

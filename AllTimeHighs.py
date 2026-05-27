@@ -398,6 +398,10 @@ function fetchResults() {
 
 fetchResults();
 </script>
+<footer style="text-align:center;padding:24px 16px 28px;color:#7a6e7e;font-size:.75rem;font-weight:300;line-height:1.55;font-family:'DM Sans',sans-serif;">
+  Data sourced from VLR.gg
+  <div style="margin-top:8px;">Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:#7a6e7e;text-decoration:underline;">ko-fi.com/bobovct</a></div>
+</footer>
 </body>
 </html>
 """

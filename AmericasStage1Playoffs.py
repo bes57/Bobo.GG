@@ -726,7 +726,10 @@ PAGE_HTML = """
     </div>
   </div>
 </div>
-<footer>Data sourced from VLR.gg</footer>
+<footer>
+  Data sourced from VLR.gg
+  <div style="margin-top:8px;">Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">ko-fi.com/bobovct</a></div>
+</footer>
 <script>
 (function() {
   var tocLinks = document.querySelectorAll('.toc a');

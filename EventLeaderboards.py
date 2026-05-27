@@ -459,7 +459,10 @@ MAIN_HTML = """
   </div>
 
   <div class="grid" id="grid"></div>
-  <footer>Data sourced from VLR.gg &mdash; stats load on first visit to each event</footer>
+  <footer>
+    Data sourced from VLR.gg &mdash; stats load on first visit to each event
+    <div style="margin-top:8px;">Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">ko-fi.com/bobovct</a></div>
+  </footer>
 </div>
 
 <div class="modal-backdrop" id="modal-backdrop" style="display:none" onclick="closeModal(event)">
