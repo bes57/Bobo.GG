@@ -9402,21 +9402,26 @@ function renderUpcoming(data) {
     pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
 
     if (tA && tB) {
-      for (var s=0; s<nSims; s++) {
-        var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt);
-        var sw = 0;
-        pool.forEach(function(mp){
-          var fc = fm[mp] || 'banA';
-          if (fc==='pickA'||fc==='pickB'||fc==='dec') {
-            mapPlays[mp]++;
-            var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
-            var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
-            var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
-            if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
-          }
-        });
-        if (sw >= matchThresh) seriesWins++;
-      }
+      // Seed the MC per matchup so the win prob shown for this pairing is
+      // identical on every page load (no jitter), while distinct matchups
+      // still get independent draws.
+      _withSeededRand(_matchSeed(orgA, orgB, matchFmt, m.date || ''), function(){
+        for (var s=0; s<nSims; s++) {
+          var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt);
+          var sw = 0;
+          pool.forEach(function(mp){
+            var fc = fm[mp] || 'banA';
+            if (fc==='pickA'||fc==='pickB'||fc==='dec') {
+              mapPlays[mp]++;
+              var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
+              var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
+              var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
+              if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
+            }
+          });
+          if (sw >= matchThresh) seriesWins++;
+        }
+      });
     }
 
     // Always run the frontend MC sim — same model as the simulator iframe —
@@ -9697,21 +9702,25 @@ function renderPast(data) {
     // Per-map sim mirrors the historical matchup algorithm exactly: raw map
     // rating → intl global rating → sigmoid with beta.
     if (tA && tB) {
-      for (var s=0; s<nSims; s++) {
-        var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt);
-        var sw = 0;
-        pool.forEach(function(mp){
-          var fc = fm[mp] || 'banA';
-          if (fc==='pickA'||fc==='pickB'||fc==='dec') {
-            mapPlays[mp]++;
-            var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
-            var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
-            var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
-            if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
-          }
-        });
-        if (sw >= matchThresh) seriesWins++;
-      }
+      // Seed per matchup (incl. match_id + date) so the map projection for a
+      // past match is stable across page visits instead of re-rolling each time.
+      _withSeededRand(_matchSeed(orgA, orgB, matchFmt, m.date || '', m.match_id || ''), function(){
+        for (var s=0; s<nSims; s++) {
+          var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt);
+          var sw = 0;
+          pool.forEach(function(mp){
+            var fc = fm[mp] || 'banA';
+            if (fc==='pickA'||fc==='pickB'||fc==='dec') {
+              mapPlays[mp]++;
+              var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
+              var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
+              var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
+              if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
+            }
+          });
+          if (sw >= matchThresh) seriesWins++;
+        }
+      });
     }
 
     // Projected probabilities — use the morning-of value from backend
