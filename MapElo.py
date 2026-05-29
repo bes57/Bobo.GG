@@ -6667,7 +6667,7 @@ def _mhub_load():
             _as_of_dt = _dt.strptime(_as_of_str, "%Y-%m-%d") if _as_of_str else _dt.utcnow()
         except Exception:
             _as_of_dt = _dt.utcnow()
-        _cutoff = _as_of_dt - _td(days=7)
+        _cutoff = _as_of_dt - _td(days=14)
 
         # Build a "morning-of" rating lookup keyed by match date.  Checkpoints
         # are sorted ascending by date; checkpoint(X) represents ratings at
@@ -7587,7 +7587,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
       <div class="panel" id="panelB">
         <div class="upcoming-panel">
           <div class="upcoming-heading">Upcoming Matches</div>
-          <div class="upcoming-sub">Next 7 days across all regions</div>
+          <div class="upcoming-sub">Next 2 weeks across all regions</div>
           <div id="upcomingBody"><div class="no-upcoming">Loading&hellip;</div></div>
         </div>
       </div>
@@ -7596,7 +7596,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
       <div class="panel" id="panelC">
         <div class="upcoming-panel">
           <div class="past-heading">Recent Matches</div>
-          <div class="past-sub">Last 7 days &middot; projected probability uses ratings from the morning before each match</div>
+          <div class="past-sub">Last 2 weeks &middot; projected probability uses ratings from the morning before each match</div>
           <div id="pastBody"><div class="no-upcoming">Loading&hellip;</div></div>
         </div>
       </div>
@@ -9601,7 +9601,7 @@ function renderPast(data) {
   });
   var body = document.getElementById('pastBody');
   if (!past.length) {
-    body.innerHTML = '<div class="no-upcoming">No matches played in the past 7 days.</div>';
+    body.innerHTML = '<div class="no-upcoming">No matches played in the past 2 weeks.</div>';
     triggerPastFlyIn();
     return;
   }

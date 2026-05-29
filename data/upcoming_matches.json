@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "team_a": "Xi Lai Gaming",
+    "team_b": "NRG",
+    "org_a": "XLG",
+    "org_b": "NRG",
+    "date": "2026-06-06",
+    "region": "International",
+    "event": "2026 Masters London",
+    "format": "bo3",
+    "match_name": "Round 1 Swiss Stage"
+  },
+  {
+    "team_a": "Team Vitality",
+    "team_b": "Dragon Ranger Gaming",
+    "org_a": "VIT",
+    "org_b": "DRG",
+    "date": "2026-06-06",
+    "region": "International",
+    "event": "2026 Masters London",
+    "format": "bo3",
+    "match_name": "Round 1 Swiss Stage"
+  },
+  {
+    "team_a": "FULL SENSE",
+    "team_b": "FUT Esports",
+    "org_a": "FS",
+    "org_b": "FUT",
+    "date": "2026-06-07",
+    "region": "International",
+    "event": "2026 Masters London",
+    "format": "bo3",
+    "match_name": "Round 1 Swiss Stage"
+  },
+  {
+    "team_a": "LEVIAT\u00c1N",
+    "team_b": "Global Esports",
+    "org_a": "LEV",
+    "org_b": "GE",
+    "date": "2026-06-07",
+    "region": "International",
+    "event": "2026 Masters London",
+    "format": "bo3",
+    "match_name": "Round 1 Swiss Stage"
+  }
+]

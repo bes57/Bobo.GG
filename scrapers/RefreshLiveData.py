@@ -7,12 +7,15 @@ MoreTestingMaybeFiles.live_events_today():
   1. Discover every event whose date window contains today (with a small lead/trail).
   2. For each region of each live event, scan VLR for completed matches and scrape
      new ones into data/maps/{event_id}.csv and data/series/{event_id}.csv.
-  3. Scrape upcoming (un-played) matches for the next 7 days from every live event.
+  3. Scrape upcoming (un-played) matches for the next 14 days from every live event.
   4. Rebuild match_results.csv, fetch any new match dates, and rebuild the BenPom
      rating timeline.
 
 Future-proofing: to onboard a new VCT event, add one entry to ALL_EVENTS with
-start/end dates and the VLR stats URLs.  No other code change is required.
+start/end dates and its region KEYS.  The VLR stats URLs may be left blank —
+when the event goes live they are auto-discovered from VLR's /vct-{year} season
+page (see _resolve_event_url).  Supplying an explicit URL still works and skips
+discovery.  No other code change is required.
 
 Writes live progress to /tmp/mhub_refresh_progress.json.  PID-locked so only one
 instance runs at a time.
@@ -113,6 +116,7 @@ HEADERS = {
 # (operator can backfill VLR_NAME_TO_ORG as new teams appear).
 VLR_NAME_TO_ORG = {
     '100 Thieves': '100T', 'BBL Esports': 'BBL', 'Cloud9': 'C9',
+    'Dragon Ranger Gaming': 'DRG', 'Xi Lai Gaming': 'XLG',
     'DetonatioN FocusMe': 'DFM', 'ENVY': 'ENVY', 'Eternal Fire': 'EF',
     'Evil Geniuses': 'EG', 'FNATIC': 'FNC', 'FULL SENSE': 'FS',
     'FURIA': 'FUR', 'FUT Esports': 'FUT', 'G2 Esports': 'G2',
@@ -486,11 +490,11 @@ def _scrape_date(mid):
 # ── Upcoming match scraper ────────────────────────────────────────────────────
 
 def _scrape_upcoming_for(vlr_id, slug, region, event_label):
-    """Return upcoming-match dicts for one (event, region) within the next 7 days."""
+    """Return upcoming-match dicts for one (event, region) within the next 14 days."""
     from datetime import datetime as _dt
     from bs4 import NavigableString
     today = datetime.date.today()
-    cutoff = today + datetime.timedelta(days=7)
+    cutoff = today + datetime.timedelta(days=14)
 
     url = f"https://www.vlr.gg/event/matches/{vlr_id}/{slug}/"
     soup = _fetch(url, retries=2)
@@ -568,12 +572,97 @@ def _scrape_upcoming_for(vlr_id, slug, region, event_label):
     return out
 
 
+# ── VLR event-URL auto-discovery ────────────────────────────────────────────────
+# Future-proofing: an ALL_EVENTS entry only needs id/label/year/start/end and its
+# region KEYS — the region URLs may be left blank.  When such an event goes live,
+# we resolve the missing VLR stats URLs from VLR's season page (/vct-{year}) by
+# matching the slug on region + stage (domestic) or label tokens (international).
+# Events that already carry an explicit URL are untouched (no extra fetches).
+
+_season_cache = {}  # year -> [(vlr_id, slug, name_text), ...]
+
+# Region key → token that appears in VLR domestic-event slugs (vct-{yr}-{tok}-…).
+_REGION_SLUG_TOKEN = {
+    "EMEA": "emea", "Americas": "americas", "Pacific": "pacific", "CN": "china",
+}
+
+
+def _vlr_season_events(year):
+    """Return [(vlr_id, slug, name_text), …] from VLR's /vct-{year} page (cached)."""
+    if year in _season_cache:
+        return _season_cache[year]
+    out = []
+    soup = _fetch(f"https://www.vlr.gg/vct-{year}")
+    if soup is not None:
+        seen = set()
+        for a in soup.find_all("a", href=True):
+            m = re.match(r"^/event/(\d+)/([^/?#]+)", a["href"])
+            if not m:
+                continue
+            key = (m.group(1), m.group(2))
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append((m.group(1), m.group(2),
+                        re.sub(r"\s+", " ", a.get_text(" ", strip=True))))
+    _season_cache[year] = out
+    return out
+
+
+def _resolve_event_url(ev, region):
+    """Auto-discover a VLR stats URL for (event, region) from the season page.
+    Returns a stats URL string or None.  Lets future events onboard with no
+    manual URL entry."""
+    try:
+        year = int(ev.get("year") or str(ev.get("start", ""))[:4])
+    except (TypeError, ValueError):
+        return None
+    cands = _vlr_season_events(year)
+    if not cands:
+        return None
+
+    eid   = (ev.get("id") or "").lower()
+    label = (ev.get("label") or "").lower()
+
+    if "kickoff" in eid:   stage_tokens = ("kickoff",)
+    elif "stage2" in eid:  stage_tokens = ("stage-2", "stage2")
+    elif "stage1" in eid:  stage_tokens = ("stage-1", "stage1")
+    else:                  stage_tokens = ()
+
+    def slug_ok(slug):
+        s = slug.lower()
+        if region in _REGION_SLUG_TOKEN:          # domestic / regional
+            if _REGION_SLUG_TOKEN[region] not in s:
+                return False
+            return any(t in s for t in stage_tokens)
+        # international — match the distinguishing label tokens against the slug
+        if "champions" in label:
+            return "champions" in s
+        if "masters" in label:
+            extras = [w for w in re.split(r"[^a-z0-9]+", label)
+                      if w and w not in ("masters", str(year))]
+            return "masters" in s and any(t in s for t in extras)
+        toks = [w for w in re.split(r"[^a-z0-9]+", label) if len(w) > 2]
+        return bool(toks) and all(t in s for t in toks)
+
+    for vlr_id, slug, _txt in cands:
+        if slug_ok(slug):
+            return f"https://www.vlr.gg/event/stats/{vlr_id}/{slug}"
+    return None
+
+
 # ── Main pipeline ──────────────────────────────────────────────────────────────
 
 def _event_to_target(ev):
     regions = []
     for region, url in ev["regions"].items():
         vlr_id, slug = _parse_vlr_stats_url(url)
+        if not (vlr_id and slug):
+            # Blank placeholder — auto-discover from VLR so future events
+            # onboard without anyone hand-entering URLs.
+            resolved = _resolve_event_url(ev, region)
+            if resolved:
+                vlr_id, slug = _parse_vlr_stats_url(resolved)
         if vlr_id and slug:
             regions.append((region, vlr_id, slug))
     if not regions:
@@ -634,8 +723,8 @@ def main():
     targets = _resolve_live_targets()
     if not targets:
         _write("done", 100, "No live VCT events configured for today.",
-               ["No event in ALL_EVENTS matched today's date window with a populated VLR URL.",
-                "To onboard a new event, add an entry with start/end + region URLs to MoreTestingMaybeFiles.ALL_EVENTS."])
+               ["No event in ALL_EVENTS matched today's date window (URLs auto-resolve from VLR's season page when blank).",
+                "To onboard a new event, add an entry with start/end + region keys to MoreTestingMaybeFiles.ALL_EVENTS."])
         print("\nNo live events. Done.", flush=True)
         return
 
@@ -709,7 +798,7 @@ def main():
         with open(out_upc, "w") as f:
             json.dump(deduped, f, indent=2)
         _write("checking", 34,
-               f"Upcoming matches: {len(deduped)} in next 7 days",
+               f"Upcoming matches: {len(deduped)} in next 14 days",
                [f"Upcoming saved: {len(deduped)} match(es)"])
     except Exception as e:
         _write("checking", 34, "Upcoming write failed",

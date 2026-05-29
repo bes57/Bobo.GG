@@ -50,6 +50,7 @@ ALL_EVENTS = [
             "Americas": "",
             "EMEA":     "",
             "Pacific":  "",
+            "CN":       "",
         },
     },
     {
@@ -59,7 +60,7 @@ ALL_EVENTS = [
         "start": "2026-06-05",
         "end":   "2026-06-21",
         "regions": {
-            "International": "",
+            "International": "https://www.vlr.gg/event/stats/2765/valorant-masters-london-2026",
         },
     },
     {
