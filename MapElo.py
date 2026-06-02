@@ -1203,7 +1203,13 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   </section>
   <div class="hub-page">
     <div class="hub-logo-strip" id="hub-logo-strip"></div>
-    <div class="hub-cards">
+    <div class="hub-cards-wide">
+      <a class="hub-card-wide" href="/mapelo/modern/">
+        <div class="hub-card-wide-bg"></div>
+        <div class="hub-card-wide-title">Modern VCT Hub</div>
+      </a>
+    </div>
+    <div class="hub-cards" style="margin-top:18px;">
       <a class="hub-card" href="/mapelo/rankings/">
         <div class="hub-card-title hub-card-title--sm">Historical Rankings</div>
         <div class="hub-card-desc">Per-map Massey ratings with decay, James&ndash;Stein shrinkage, and pick/ban-adjusted overall scores.</div>
@@ -1215,10 +1221,9 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
         <div class="hub-card-arrow">Explore &rarr;</div>
       </a>
     </div>
-    <div class="hub-cards-wide">
-      <a class="hub-card-wide" href="/mapelo/modern/">
-        <div class="hub-card-wide-bg"></div>
-        <div class="hub-card-wide-title">Modern VCT Hub</div>
+    <div class="hub-cards-wide" style="margin-top:18px;">
+      <a class="hub-card hub-card-howbp" href="/mapelo/how-it-works/" style="max-width:660px;width:100%;text-align:center;justify-content:center;align-items:center;display:flex;">
+        <div class="hub-card-title hub-card-title--sm" style="margin:0;font-size:1.05rem;">How does BenPom work?</div>
       </a>
     </div>
   </div>
@@ -1347,6 +1352,34 @@ MAPELO_HOME_HTML = """
   .page-sub  { font-size:.83rem; color:var(--soft); margin-bottom:22px; line-height:1.5; text-align:center; max-width:780px; margin-left:auto; margin-right:auto; }
   /* Model explanation + animated pipeline */
   .model-card { background:white; border-radius:24px; padding:24px 28px; box-shadow:0 4px 24px #0000000a; margin-bottom:20px; }
+  /* Page-mode visibility. Same template serves /mapelo/rankings/ (default,
+     model-card hidden) and /mapelo/how-it-works/ (model-card visible, ranks
+     UI hidden). The body class is set by Flask before sending. */
+  .howitworks-only { display: none; }
+  body.page-howitworks .howitworks-only { display: block; }
+  /* Show model-card prominently on the how-it-works page — already open
+     by default (no need for the "show" toggle) and pinned at the top. */
+  body.page-howitworks .model-card-toggle#model-toggle { display: none; }
+  body.page-howitworks .model-collapsible { max-height: 9999px !important; opacity: 1 !important; overflow: visible !important; }
+  /* No subtitle on the how-it-works page — kill the empty paragraph's margin. */
+  body.page-howitworks #pageSub { display: none; }
+  /* Hide the "How does BenPom work?" link in the top nav when you're
+     already on that page — no point linking to yourself. */
+  body.page-howitworks .top-nav a[href="/mapelo/how-it-works/"] { display: none; }
+  body.page-howitworks .ranks-controls,
+  body.page-howitworks .filter-row,
+  body.page-howitworks .filter-row-maps,
+  body.page-howitworks .card,
+  body.page-howitworks .ranks-info-button,
+  body.page-howitworks #ranks-chart,
+  body.page-howitworks #chart-card,
+  body.page-howitworks .chart-card,
+  body.page-howitworks .chart-section,
+  body.page-howitworks .lb-card,
+  body.page-howitworks .lb-card-wrap,
+  body.page-howitworks #lbCard,
+  body.page-howitworks .table-wrap,
+  body.page-howitworks #team-modal { display: none !important; }
   .model-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0; }
   .model-card-title { font-family:'Syne',sans-serif; font-size:.85rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--soft); }
   .model-card-toggle { background:none; border:none; cursor:pointer; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#9a7ab4; display:flex; align-items:center; gap:6px; padding:0; }
@@ -1401,6 +1434,16 @@ MAPELO_HOME_HTML = """
   .pg-map-chip.picked { background:linear-gradient(135deg,#a060d0,#7040a0); color:white; box-shadow:0 2px 8px #9a4ab455; transform:scale(1.06); }
   .pg-map-chip.float  { background:linear-gradient(135deg,#f0e8ff,#e0d0f8); color:#5a2a7a; box-shadow:0 0 0 1.5px #c8a0e8; }
   .pg-map-chip.dimmed { opacity:.3; }
+  /* Roster continuity (Stage 6) */
+  .pg-roster { display:flex; flex-direction:column; gap:8px; padding:4px 0 2px; }
+  .pg-roster-team { display:grid; grid-template-columns:auto 1fr auto auto; gap:10px; align-items:center; padding:8px 12px; background:#f8f4fc; border-radius:10px; opacity:0; transform:translateX(-12px); transition:opacity .45s ease, transform .45s ease; }
+  .pg-roster-team.show { opacity:1; transform:translateX(0); }
+  .pg-roster-stars { font-size:.85rem; color:#9a4ab4; letter-spacing:1px; white-space:nowrap; }
+  .pg-roster-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; color:var(--soft); }
+  .pg-roster-arrow { font-size:.8rem; color:#c8b8e0; }
+  .pg-roster-pct { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; padding:3px 9px; border-radius:6px; }
+  .pg-roster-pct-hi { background:linear-gradient(135deg,#9a4ab4,#5a2a7a); color:white; box-shadow:0 2px 8px #9a4ab433; }
+  .pg-roster-pct-lo { background:#f0ecf8; color:#9a7ab4; }
   /* Region offsets (Stage 6) */
   .pg-regions { display:flex; gap:10px; padding:6px 6px 2px 6px; align-items:center; flex-wrap:wrap; }
   .pg-region { display:flex; flex-direction:column; align-items:center; gap:4px; width:66px; }
@@ -1721,14 +1764,203 @@ MAPELO_HOME_HTML = """
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
     <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+    <a class="back-link" href="/mapelo/how-it-works/" style="margin-left:auto;">How does BenPom work?</a>
   </div>
   <div class="page">
-    <div class="page-title">Historical Rankings</div>
-    <p class="page-sub">Opponent-adjusted round differential ratings for VCT franchised teams. Pick a year and period to see the leaderboard and animated rating timeline up to that point.</p>
+    <div class="page-title" id="pageTitle">PAGE_TITLE_TEXT</div>
+    <p class="page-sub" id="pageSub">PAGE_SUB_TEXT</p>
 
+    <!-- "How BenPom works" pipeline animation. Hidden on the rankings page,
+         shown on the /mapelo/how-it-works/ route (body class .page-howitworks). -->
+    <div class="model-card howitworks-only" id="howitworks-card">
+      <div class="model-card-header">
+        <span class="model-card-title">How the model works</span>
+        <button class="model-card-toggle" id="model-toggle" onclick="toggleModel()"><i class="toggle-arrow">&#9654;</i> show</button>
+      </div>
+      <div class="model-collapsible" id="model-collapsible">
+      <div class="pipeline-wrap" id="pipeline-wrap">
+
+        <!-- Stage 1: Roster Continuity (mainly relevant at start of a season) -->
+        <div class="pipe-stage" id="ps0" data-idx="0" onclick="focusPipe(0)">
+          <div class="pipe-num pipe-n0">1</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Roster Continuity</div>
+            <div class="pipe-desc">A team that keeps its 5 players carries last year&rsquo;s rating forward as a prior anchor, instead of resetting to zero. Roster turnover penalizes the carry-over: each player swap pulls the prior closer toward 0. Mainly relevant at the start of each season.</div>
+            <div class="pipe-graphic">
+              <div class="pg-roster" id="pg5-roster">
+                <div class="pg-roster-team" id="pg5-keep">
+                  <div class="pg-roster-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                  <div class="pg-roster-label">5 / 5 returning</div>
+                  <div class="pg-roster-arrow">&rarr;</div>
+                  <div class="pg-roster-pct pg-roster-pct-hi">strong carry-over</div>
+                </div>
+                <div class="pg-roster-team" id="pg5-swap">
+                  <div class="pg-roster-stars">&#9733;&#9733;<span style="color:#d8d0e0">&#9733;&#9733;&#9733;</span></div>
+                  <div class="pg-roster-label">2 / 5 returning</div>
+                  <div class="pg-roster-arrow">&rarr;</div>
+                  <div class="pg-roster-pct pg-roster-pct-lo">near-reset</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipe-connector" id="pc0"><div class="pipe-particle" id="pp0a"></div><div class="pipe-particle pipe-particle-b" id="pp0b"></div></div>
+
+        <!-- Stage 2: Round Differential -->
+        <div class="pipe-stage" id="ps1" data-idx="1" onclick="focusPipe(1)">
+          <div class="pipe-num pipe-n1">2</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Round Differential</div>
+            <div class="pipe-desc">For every map a team plays in VCT, the model records the final round score against the opposing team. For instance, a 13&ndash;2 win carries far more signal than a 13&ndash;11 win.</div>
+            <div class="pipe-graphic">
+              <div class="pg-scorebar">
+                <div class="pg-score-row">
+                  <div class="pg-score-label">13&ndash;2</div>
+                  <div class="pg-bar-track"><div class="pg-bar-fill pg-bar-big" id="pg0-b1"></div></div>
+                  <div class="pg-score-diff pg-score-diff-big">+11</div>
+                </div>
+                <div class="pg-score-row">
+                  <div class="pg-score-label">13&ndash;11</div>
+                  <div class="pg-bar-track"><div class="pg-bar-fill pg-bar-small" id="pg0-b2"></div></div>
+                  <div class="pg-score-diff pg-score-diff-small">+2</div>
+                </div>
+              </div>
+              <div class="pg-note">bigger margin &rarr; larger weight in the Massey solve</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipe-connector" id="pc1"><div class="pipe-particle" id="pp1a"></div><div class="pipe-particle pipe-particle-b" id="pp1b"></div></div>
+
+        <!-- Stage 3: Massey System -->
+        <div class="pipe-stage" id="ps2" data-idx="2" onclick="focusPipe(2)">
+          <div class="pipe-num pipe-n1">2</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Massey Rating System</div>
+            <div class="pipe-desc">A linear algebra solve finds the rating vector that best explains all observed round differentials simultaneously.</div>
+            <div class="pipe-graphic">
+              <div style="padding:4px 0 2px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+                <svg width="134" height="62" style="display:block;flex-shrink:0;overflow:visible">
+                  <rect x="0" y="2" width="58" height="54" rx="6" fill="#ede8f8" id="pg1-m" style="opacity:0;transition:opacity .35s"/>
+                  <text x="4"  y="16" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m1" style="opacity:0;transition:opacity .35s"> 1  0 -1  0</text>
+                  <text x="4"  y="27" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m2" style="opacity:0;transition:opacity .35s">-1  1  0  0</text>
+                  <text x="4"  y="38" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m3" style="opacity:0;transition:opacity .35s"> 0 -1  1  0</text>
+                  <text x="4"  y="49" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m4" style="opacity:0;transition:opacity .35s"> 0  0 -1  1</text>
+                  <text x="22" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-ml" style="opacity:0;transition:opacity .35s">M</text>
+                  <text x="65" y="36" font-size="18" font-family="sans-serif" fill="#c8b8e0" id="pg1-dot" style="opacity:0;transition:opacity .35s">&middot;</text>
+                  <rect x="74" y="6"  width="16" height="50" rx="4" fill="#e8e0f8" id="pg1-rv" style="opacity:0;transition:opacity .35s"/>
+                  <text x="77" y="20" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r1" style="opacity:0;transition:opacity .35s">r&#8321;</text>
+                  <text x="77" y="32" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r2" style="opacity:0;transition:opacity .35s">r&#8322;</text>
+                  <text x="77" y="44" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r3" style="opacity:0;transition:opacity .35s">r&#8323;</text>
+                  <text x="76" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-rl" style="opacity:0;transition:opacity .35s">r</text>
+                  <text x="96" y="36" font-size="14" font-family="sans-serif" fill="#c8b8e0" id="pg1-eq" style="opacity:0;transition:opacity .35s">=</text>
+                  <rect x="109" y="6" width="16" height="50" rx="4" fill="#dff0e8" id="pg1-pv" style="opacity:0;transition:opacity .35s"/>
+                  <text x="111" y="20" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p1" style="opacity:0;transition:opacity .35s">+8</text>
+                  <text x="111" y="32" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p2" style="opacity:0;transition:opacity .35s">-3</text>
+                  <text x="111" y="44" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p3" style="opacity:0;transition:opacity .35s">+5</text>
+                  <text x="110" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-pl" style="opacity:0;transition:opacity .35s">p</text>
+                </svg>
+                <div style="font-size:.68rem;color:var(--soft);line-height:1.8;padding-top:4px">
+                  <strong style="color:var(--ink)">M</strong> = matchup matrix<br>
+                  <strong style="color:var(--ink)">r</strong> = ratings (unknown)<br>
+                  <strong style="color:var(--ink)">p</strong> = round differentials
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipe-connector" id="pc2"><div class="pipe-particle" id="pp2a"></div><div class="pipe-particle pipe-particle-b" id="pp2b"></div></div>
+
+        <!-- Stage 4: Recency Decay -->
+        <div class="pipe-stage" id="ps3" data-idx="3" onclick="focusPipe(3)">
+          <div class="pipe-num pipe-n3">4</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Recency Decay</div>
+            <div class="pipe-desc">Game weights follow <code>exp(&minus;&lambda;&thinsp;&times;&thinsp;weeks&thinsp;ago)</code>. Half-life = 5 weeks.</div>
+            <div class="pipe-graphic">
+              <div class="pg-decay-wrap"><canvas class="pg-decay-canvas" id="pg2-canvas"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipe-connector" id="pc3"><div class="pipe-particle" id="pp3a"></div><div class="pipe-particle pipe-particle-b" id="pp3b"></div></div>
+
+        <!-- Stage 5: James-Stein Shrinkage -->
+        <div class="pipe-stage" id="ps4" data-idx="4" onclick="focusPipe(4)">
+          <div class="pipe-num pipe-n4">5</div>
+          <div class="pipe-content">
+            <div class="pipe-title">James&ndash;Stein Shrinkage</div>
+            <div class="pipe-desc">Per-map ratings with smaller sample sizes are blended toward the team&rsquo;s overall rating.</div>
+            <div class="pipe-graphic">
+              <div style="padding:4px 0 2px;display:flex;gap:10px;flex-wrap:wrap">
+                <div style="background:#f8f4fc;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
+                  <strong style="font-family:'Syne',sans-serif;color:var(--ink)">2 games</strong><br>
+                  <span style="color:var(--soft)">&alpha; &asymp; 0.14<br>heavy pull &rarr; overall</span>
+                </div>
+                <div style="background:#f0f8f4;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
+                  <strong style="font-family:'Syne',sans-serif;color:var(--ink)">20 games</strong><br>
+                  <span style="color:var(--soft)">&alpha; &asymp; 0.63<br>mostly raw map signal</span>
+                </div>
+              </div>
+              <div class="pg-note"><span id="pg3-alpha-formula"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipe-connector" id="pc4"><div class="pipe-particle" id="pp4a"></div><div class="pipe-particle pipe-particle-b" id="pp4b"></div></div>
+
+        <!-- Stage 6: Monte Carlo Veto -->
+        <div class="pipe-stage" id="ps5" data-idx="5" onclick="focusPipe(5)">
+          <div class="pipe-num pipe-n5">6</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Monte Carlo Veto Simulation</div>
+            <div class="pipe-desc">Each team runs through 10,000 simulated BO3 vetoes against league-average opponents using historical ban/pick patterns. Expected round-diff across the surviving maps becomes the headline rating. Thus, a great ban target is worth as much as a great map.</div>
+            <div class="pipe-graphic">
+              <div style="display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap">
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#5a2a7a;padding:2px 7px;background:linear-gradient(135deg,#f0e8ff,#e0d0f8);border-radius:5px;box-shadow:0 0 0 1px #c8a0e8">float</span>
+              </div>
+              <div class="pg-veto" id="pg4-veto">
+                <div class="pg-map-chip">Abyss</div>
+                <div class="pg-map-chip">Ascent</div>
+                <div class="pg-map-chip">Bind</div>
+                <div class="pg-map-chip">Haven</div>
+                <div class="pg-map-chip">Lotus</div>
+                <div class="pg-map-chip">Pearl</div>
+                <div class="pg-map-chip">Split</div>
+              </div>
+              <div class="pg-note">10,000 simulated sequences &rarr; expected round diff across picked maps</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipe-connector" id="pc5"><div class="pipe-particle" id="pp5a"></div><div class="pipe-particle pipe-particle-b" id="pp5b"></div></div>
+
+        <!-- Stage 7 (final): Putting it all together -->
+        <div class="pipe-stage" id="ps6" data-idx="6" onclick="focusPipe(6)">
+          <div class="pipe-num pipe-n6">&#10003;</div>
+          <div class="pipe-content">
+            <div class="pipe-title">Putting it all together</div>
+            <div class="pipe-desc">Each team&rsquo;s rating is the expected round differential they&rsquo;d post against a league-average opponent across 10,000 simulated vetoes &mdash; raw map strength times how well their pool survives ban/pick.</div>
+          </div>
+        </div>
+
+      </div>
+      <div style="display:flex;justify-content:center;align-items:center;margin-top:32px;">
+        <button class="pipe-replay-btn" id="pipe-replay-btn" onclick="replayPipeline()">&#9654; Replay</button>
+      </div>
+      </div>
+    </div>
 
     <!-- Year scrubber + Period segments -->
-    <div class="ranks-controls">
+    <div class="ranks-controls rankings-only">
       <div class="ranks-row">
         <div class="yr-scrubber" id="yr-scrubber">
           <div class="yr-track" id="yr-track">
@@ -1829,6 +2061,19 @@ function getIntlBreakdown(org, snapKey) {
 }
 
 var _pipelineStarted = false;
+
+// On the /mapelo/how-it-works/ page, auto-open the model + auto-cycle the
+// pipeline animation. The rankings page leaves the model-card hidden and
+// is unaffected.
+document.addEventListener('DOMContentLoaded', function(){
+  if (document.body.classList.contains('page-howitworks')) {
+    var c = document.getElementById('model-collapsible');
+    if (c) c.classList.add('open');
+    _pipelineStarted = true;
+    setTimeout(function(){ _runPipeStep(0, _pipelineDone); }, 400);
+  }
+});
+
 function toggleModel() {
   var c = document.getElementById('model-collapsible');
   var btn = document.getElementById('model-toggle');
@@ -1977,6 +2222,14 @@ function _animateFormula() {
   });
 }
 
+function _animateRoster() {
+  var ids = ['pg5-keep', 'pg5-swap'];
+  ids.forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
+  ids.forEach(function(id, i){
+    setTimeout(function(){ var el=document.getElementById(id); if(el) el.classList.add('show'); }, 220 + i*420);
+  });
+}
+
 function focusPipe(idx) {
   for(var i=0;i<PIPE_N;i++) {
     var s=document.getElementById('ps'+i);
@@ -1989,13 +2242,15 @@ function focusPipe(idx) {
     if (pc) { if(i < idx) pc.classList.add('lit'); else pc.classList.remove('lit'); }
   }
   _pipeActive = idx;
-  // Trigger graphics per stage
-  if (idx === 0) _animateScoreBars();
-  if (idx === 1) _animateMasseyMatrix();
-  if (idx === 2) requestAnimationFrame(_drawDecayCanvas);
-  if (idx === 4) _animateVeto();
-  if (idx === 5) _animateRegions();
-  if (idx === 6) _animateFormula();
+  // Trigger graphics per stage (new order: roster first)
+  if (idx === 0) _animateRoster();
+  if (idx === 1) _animateScoreBars();
+  if (idx === 2) _animateMasseyMatrix();
+  if (idx === 3) requestAnimationFrame(_drawDecayCanvas);
+  // idx === 4 (James-Stein) has no graphic animation — the alpha formula
+  //   is rendered once at boot via KaTeX in the renderAlphaFormula path.
+  if (idx === 5) _animateVeto();
+  // idx === 6 (Putting it all together) is the static summary — no graphic.
 }
 
 function _runPipeStep(idx, done) {
@@ -2040,8 +2295,7 @@ function replayPipeline() {
   _resetMasseyMatrix();
   var dc=document.getElementById('pg2-canvas'); if(dc){ var ctx=dc.getContext('2d'); ctx.clearRect(0,0,dc.width,dc.height); }
   document.querySelectorAll('#pg4-veto .pg-map-chip').forEach(function(c){ c.className='pg-map-chip'; });
-  ['pg5-emea','pg5-am','pg5-pac','pg5-cn'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
-  ['pg6-p0','pg6-p1','pg6-p2','pg6-p3','pg6-p4'].forEach(function(id){ var el=document.getElementById(id); if(el) el.classList.remove('show'); });
+  // (No graphics on the removed Stages 6/7 to reset anymore.)
   _pipeActive=-1;
   _runPipeStep(0, _pipelineDone);
 }
@@ -3534,7 +3788,25 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .mode-btn:not(.active):hover { color:var(--ink); }
 
   /* === SIDE PANEL (replaces team-panel) === */
-  .side-grid { display:grid; grid-template-columns:1fr 80px 1fr; gap:0; align-items:stretch; margin-bottom:36px; }
+  .side-grid { display:grid; grid-template-columns:1fr 80px 1fr; gap:0; align-items:stretch; margin-bottom:36px; opacity:1; transition:opacity .4s ease; }
+  /* While a reveal animation is playing we lock the team-selector inputs so
+     the user can't half-swap a team mid-simulation. Pointer events fully off,
+     and a slight fade telegraphs the locked state. The .cf-arrow rule below
+     ALSO has to set pointer-events:none because the base .cf-arrow style
+     uses `pointer-events:all` to punch back through the .cf-arrows container
+     (which is pointer-events:none so the gradient overlay click-throughs);
+     without overriding here the arrow buttons would stay clickable through
+     the side-grid lock. */
+  body.simming .side-grid { pointer-events:none; opacity:.55; }
+  body.simming .cf-arrow  { pointer-events:none !important; }
+  /* Don't tease "clickable" when the team selectors are locked. The base
+     .cf-stage has cursor:grab and .cf-item has cursor:pointer; both
+     misleadingly read as "interactive" during a sim even though
+     pointer-events:none and the shiftCoverflow guard make them inert. */
+  body.simming .cf-stage,
+  body.simming .cf-stage:active,
+  body.simming .cf-item,
+  body.simming .cf-arrow { cursor:default !important; }
   .side-panel { background:white; border-radius:24px; padding:18px 16px 22px; box-shadow:0 4px 24px #0000000a; display:flex; flex-direction:column; align-items:stretch; }
   .side-label { font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; text-align:center; }
 
@@ -3691,6 +3963,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
     <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+    <a class="back-link" href="/mapelo/how-it-works/" style="margin-left:auto;">How does BenPom work?</a>
   </div>
   <div class="page">
     <h1 class="page-title" id="matchupTitle" style="opacity:0">&middot;</h1>
@@ -3807,16 +4080,76 @@ var fmt = 'bo3';
 // the home-button nav, and the snapshot label under each team — the modern
 // hub is the live/dynamic view, so no fixed-snapshot text should appear.
 if (LOCK_CURRENT) {
+  // Bulletproof: any time anything tries to move this iframe's own scroll
+  // (programmatic scrollIntoView from mid-sim, leftover scrollTop from a
+  // briefly-overflowing body before the postMessage resize landed, browser
+  // restoring scroll on back/forward — anything), snap it back to 0
+  // immediately. The iframe is sized to its content via postMessage so
+  // there's never anything legitimately scrollable here. Registered at
+  // script-parse time (before DOMContentLoaded) so it catches scrolls that
+  // happen during initial layout too.
+  window.addEventListener('scroll', function(){
+    if (window.scrollY !== 0 || window.scrollX !== 0) window.scrollTo(0, 0);
+  }, {passive:true});
+
   document.addEventListener('DOMContentLoaded', function(){
+    // Immediate reset in case the page loaded with non-zero scroll.
+    try { window.scrollTo(0, 0); } catch(e){}
     var css = document.createElement('style');
     css.textContent =
       '.yr-scrubber, .snap-seg { display: none !important; }' +
       '.top-nav { display: none !important; }' +
       '.page > .subtitle { display: none !important; }' +
       '.result-ctx { display: none !important; }' +
+      'footer { display: none !important; }' +
+      // Prevent the iframe's OWN window from scrolling. Parent sizes the
+      // iframe to body height via postMessage, so there's never anything
+      // legitimately scrollable. Without overflow:hidden here, mid-sim
+      // content growth can briefly push body taller than the iframe before
+      // the resize message lands, the iframe's window scrolls by a few
+      // dozen px to keep up, and that scroll position sticks — hiding the
+      // top of body (page-title, mode-toggle, side-label text) forever.
+      'html, body { height: auto !important; min-height: 0 !important; overflow: hidden !important; }' +
       'body { background: transparent !important; }' +
       'body::before, body::after { display: none !important; }';
     document.head.appendChild(css);
+
+    // Post our content height to the parent so it can shrink the iframe to
+    // fit. Without this the iframe stays at its CSS min-height (2400px) and
+    // leaves a giant blank gap below the simulator results.
+    // CAREFUL: documentElement.scrollHeight (and body.scrollHeight) inside
+    // an iframe are bounded BELOW by the iframe's own viewport height, so
+    // they create a feedback loop: iframe is Npx, body fills to Npx, we
+    // report Npx, parent re-sets iframe to Npx, nothing shrinks. The body's
+    // getBoundingClientRect().height is the actual laid-out box and is NOT
+    // bounded by viewport, so it shrinks when our min-height:0 override kicks
+    // in and the flex-column body collapses to its real content.
+    var _lastH = 0;
+    function _postHeight(){
+      var b = document.body;
+      if (!b) return;
+      var r = b.getBoundingClientRect();
+      var h = Math.ceil(r.height);
+      if (h && Math.abs(h - _lastH) > 2) {
+        _lastH = h;
+        try { window.parent.postMessage({type:'simHeight', height:h}, '*'); } catch(e){}
+      }
+    }
+    // Run after layout flushes so the injected min-height:0 has actually
+    // taken effect before we measure.
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      try { window.scrollTo(0, 0); } catch(e){}
+      _postHeight();
+    }); });
+    if (window.ResizeObserver) {
+      new ResizeObserver(_postHeight).observe(document.body);
+    } else {
+      setInterval(_postHeight, 400);
+    }
+    window.addEventListener('load', function(){
+      try { window.scrollTo(0, 0); } catch(e){}
+      _postHeight();
+    });
   });
 }
 
@@ -3986,6 +4319,9 @@ function buildCoverflow(side){
   }).join('');
   track.querySelectorAll('.cf-item').forEach(function(el){
     el.addEventListener('click', function(){
+      // Lock team selection while a reveal animation is playing. This click
+      // path bypasses shiftCoverflow, so the guard there doesn't cover it.
+      if (document.body.classList.contains('simming')) return;
       var idx = parseInt(el.dataset.idx,10);
       if(idx === CF[side].idx) return;
       CF[side].idx = idx;
@@ -4025,6 +4361,11 @@ function updateCoverflow(side){
 }
 
 function shiftCoverflow(side, delta){
+  // Hard guard so wheel/drag/arrow/search-suggest paths can't change the
+  // selected team while a reveal animation is playing. CSS pointer-events
+  // should block most of these, but wheel events on `pointer-events:none`
+  // elements don't reliably bubble — better to lock the function itself.
+  if (document.body.classList.contains('simming')) return;
   var st = CF[side];
   if(!st.teams.length) return;
   var n = st.teams.length;
@@ -4176,6 +4517,8 @@ document.querySelectorAll('.cf-stage').forEach(function(s){
 });
 document.addEventListener('keydown', function(e){
   if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  // Team selector is locked while a reveal animation is running.
+  if(document.body.classList.contains('simming')) return;
   if(e.key==='ArrowLeft'){ shiftCoverflow(lastSide,-1); e.preventDefault(); }
   else if(e.key==='ArrowRight'){ shiftCoverflow(lastSide,1); e.preventDefault(); }
 });
@@ -4501,14 +4844,20 @@ function renderStraight(R){
 }
 
 // ── Dramatic reveal ──────────────────────────────────────────────────────────
+// revealAbort = "stop showing any more steps" (used post-clinch + on hard exit).
+// _ffMode    = "fast-forward — keep playing every step but with 0ms delays so
+//               the user sees the fully revealed state immediately". Set by the
+//               Skip button so users skip TO the final state, not OVER it.
 var revealAbort = false;
+var _ffMode = false;
 
 function wait(ms){ return new Promise(function(res){ setTimeout(res, ms); }); }
 function abortable(ms){
   return new Promise(function(res){
+    if(revealAbort || _ffMode) return res();
     var t0=Date.now();
     (function step(){
-      if(revealAbort) return res();
+      if(revealAbort || _ffMode) return res();
       if(Date.now()-t0 >= ms) return res();
       setTimeout(step, Math.min(50, ms-(Date.now()-t0)));
     })();
@@ -4530,7 +4879,27 @@ function rvSeqFor(R){
 
 function renderDramatic(R){
   revealAbort = false;
+  _ffMode = false;
   R._finished = false;
+  // Lock team selectors for the duration of the reveal so the user can't
+  // swap a team mid-animation (which would desync the visible reveal from
+  // the underlying R data). Cleared in finishReveal.
+  document.body.classList.add('simming');
+  // CSS pointer-events:none doesn't block keystrokes into an already-focused
+  // text input. Blur + disable the search boxes explicitly.
+  document.querySelectorAll('.cf-search').forEach(function(inp){
+    if (document.activeElement === inp) inp.blur();
+    inp.disabled = true;
+  });
+  // Also hard-disable the arrow buttons — disabled <button> never fires
+  // click events, which is more reliable than relying on CSS pointer-events
+  // (some Chromium builds still deliver the click event to listeners on
+  // pointer-events:none elements when the listener was added before the
+  // CSS rule applied).
+  document.querySelectorAll('.cf-arrow').forEach(function(b){ b.disabled = true; });
+  // Force the iframe's own scroll position back to 0 in case content growth
+  // earlier in the session nudged it off the top.
+  try { window.scrollTo(0, 0); } catch(e){}
   var section = document.getElementById('result-section');
   section.innerHTML =
     '<div class="reveal-stage" id="reveal-stage">'+
@@ -4539,31 +4908,51 @@ function renderDramatic(R){
       '<div id="rv-body"></div>'+
     '</div>';
   document.getElementById('reveal-skip').addEventListener('click', function(){
-    revealAbort = true;
-    finishReveal(R);
+    // Fast-forward instead of aborting: every animation step still runs and
+    // renders its final state (veto slots revealed, map cards with scores
+    // and probabilities visible), just with 0ms delays. finishReveal then
+    // fires naturally from the playReveal Promise chain.
+    _ffMode = true;
+    var sb = document.getElementById('reveal-skip');
+    if(sb) sb.remove();   // prevent double-click while we burn through steps
   });
   rvScroll(document.getElementById('reveal-stage'), 'start');
   playReveal(R);
 }
 
+// Suspends rvScroll for a short window after the user scrolls manually, so
+// the reveal animation stops fighting them when they scroll up to look at
+// the team selectors above. Touched by wheel/touch events in the iframe AND
+// by 'userScroll' postMessages from the parent (in case the user is wheeling
+// while the cursor is over parent UI rather than the iframe).
+var _lastUserScroll = 0;
+function _userScrolledRecently(){ return (Date.now() - _lastUserScroll) < 1800; }
+function _markUserScroll(){ _lastUserScroll = Date.now(); }
+window.addEventListener('wheel',     _markUserScroll, {passive:true});
+window.addEventListener('touchmove', _markUserScroll, {passive:true});
+window.addEventListener('keydown', function(e){
+  if (e.key === 'PageUp' || e.key === 'PageDown' || e.key === 'Home' ||
+      e.key === 'End'    || e.key === 'ArrowUp'  || e.key === 'ArrowDown') _markUserScroll();
+});
+window.addEventListener('message', function(e){
+  var d = e && e.data;
+  if (d && d.type === 'userScroll') _markUserScroll();
+});
+
 function rvScroll(el, block){
   if(!el) return;
-  // When iframed into the Modern Hub (LOCK_CURRENT), the simulator's reveal
-  // animation keeps firing even after the user has switched to another tab.
-  // scrollIntoView bubbles through ancestor scroll containers, including the
-  // parent window — so a still-running sim would yank the parent page back
-  // to the simulator panel every few hundred ms. Bail out if our iframe is
-  // currently off-screen in the parent's viewport.
-  if (window !== window.top) {
-    try {
-      var fr = window.frameElement;
-      if (fr) {
-        var r = fr.getBoundingClientRect();
-        var pw = window.parent.innerWidth, ph = window.parent.innerHeight;
-        if (r.right <= 0 || r.left >= pw || r.bottom <= 0 || r.top >= ph) return;
-      }
-    } catch(e) { /* cross-origin parent — fall through */ }
-  }
+  // When iframed (LOCK_CURRENT in the Modern Hub), the iframe must not touch
+  // the parent's scroll position. Every scrollIntoView from here bubbles up
+  // to the parent window and accumulates into a permanent offset that cuts
+  // off the top of the page. Tried this both ways multiple times — leave
+  // the parent alone in iframed mode, period.
+  if (window !== window.top) return;
+  if (_ffMode) return;
+  if (_userScrolledRecently()) return;
+  // Standalone /mapelo/matchup/ page only: original auto-scroll behavior.
+  var elRect = el.getBoundingClientRect();
+  var visBottom = window.innerHeight || document.documentElement.clientHeight;
+  if (elRect.bottom <= visBottom - 8) return;
   try { el.scrollIntoView({behavior:'smooth', block: block || 'center'}); }
   catch(e){ el.scrollIntoView(); }
 }
@@ -4658,11 +5047,13 @@ function revealVetoSlots(grid){
         '<div class="rv-vs-map">'+map+'</div>'+
         '<div class="rv-vs-act '+cls+'">'+lbl+'</div>';
       slot.classList.add('revealed');
-      if(action === 'ban')      tick({freq:380, dur:.07, vol:.05, type:'square'});
-      else if(action === 'pick') tick({freq:1200,dur:.06, vol:.06, type:'square'});
-      else                       tick({freq:900, dur:.08, vol:.05, type:'square'});
+      if(!_ffMode){
+        if(action === 'ban')      tick({freq:380, dur:.07, vol:.05, type:'square'});
+        else if(action === 'pick') tick({freq:1200,dur:.06, vol:.06, type:'square'});
+        else                       tick({freq:900, dur:.08, vol:.05, type:'square'});
+      }
       i++;
-      setTimeout(next, 360);
+      setTimeout(next, _ffMode ? 0 : 360);
     }
     next();
   });
@@ -4722,9 +5113,9 @@ function revealMaps(R, seq, body){
           '<div class="rv-map-result-badge" id="rv-badge-'+idx+'">'+(winA?R.orgA:R.orgB)+' takes it</div>'+
         '</div>';
       mapsHost.appendChild(card);
-      setTimeout(function(){ card.classList.add('shown'); }, 20);
+      setTimeout(function(){ card.classList.add('shown'); }, _ffMode ? 0 : 20);
       rvScroll(card, 'center');
-      tick({freq:660,dur:.12,vol:.06,type:'sine'});
+      if(!_ffMode) tick({freq:660,dur:.12,vol:.06,type:'sine'});
       return abortable(420).then(function(){
         if(revealAbort) return;
         return animateRoundTally(idx, winA, score);
@@ -4805,7 +5196,7 @@ function animateRoundTally(idx, winA, score){
       setTimeout(function(){ el.classList.remove('bumped'); }, 110);
     }
     function step(){
-      if(revealAbort){
+      if(revealAbort || _ffMode){
         winnerEl.textContent = score.winner;
         loserEl.textContent = score.loser;
         return finish();
@@ -4827,7 +5218,7 @@ function animateRoundTally(idx, winA, score){
     function finish(){
       winnerEl.classList.add('win');
       loserEl.classList.add('lose');
-      setTimeout(res, 320);
+      setTimeout(res, _ffMode ? 0 : 320);
     }
     step();
   });
@@ -4841,7 +5232,7 @@ function revealMapPct(idx, pA, winA){
     if(elA){ elA.textContent = Math.round(pA*100)+'% to win'; if(winA) elA.classList.add('win'); elA.classList.add('shown'); }
     if(elB){ elB.textContent = Math.round((1-pA)*100)+'% to win'; if(!winA) elB.classList.add('win'); elB.classList.add('shown'); }
     if(b) b.classList.add('shown');
-    setTimeout(res, 360);
+    setTimeout(res, _ffMode ? 0 : 360);
   });
 }
 
@@ -4864,7 +5255,22 @@ function finishReveal(R){
   section.appendChild(bd);
   var rb = document.getElementById('replay-btn');
   if(rb) rb.addEventListener('click', function(){ renderDramatic(R); });
-  rvScroll(bd, 'start');
+  // Don't fire the "scroll breakdown to viewport start" call when iframed.
+  // Mid-animation rvScroll calls already followed the reveal down, so the
+  // user's already looking at the bottom of the action. The 'start' jump
+  // here was what compounded with prior scrolls into the perma-offset state
+  // where the Bobo logo got cut off at the top of the parent page. On the
+  // standalone /mapelo/matchup/ page we still scroll as before.
+  if (window === window.top) {
+    rvScroll(bd, 'start');
+  }
+  // Clear fast-forward so a subsequent Replay starts clean.
+  _ffMode = false;
+  // Re-enable the team selectors now that the reveal is done. The .4s
+  // opacity transition on .side-grid handles the fade-back animation.
+  document.body.classList.remove('simming');
+  document.querySelectorAll('.cf-search').forEach(function(inp){ inp.disabled = false; });
+  document.querySelectorAll('.cf-arrow').forEach(function(b){ b.disabled = false; });
 }
 
 function runMatchup() {
@@ -4873,6 +5279,13 @@ function runMatchup() {
   if(_clearTimer){ clearTimeout(_clearTimer); _clearTimer = null; }
   var sec = document.getElementById('result-section');
   if(sec){ sec.classList.remove('rs-fade-out'); sec.innerHTML = ''; }
+  // Don't touch the PARENT's scroll position. The iframe used to post
+  // scrollSimIntoView here, but combined with mid-animation rvScroll bubbles
+  // and the end-of-anim breakdown scroll, the parent ended up in a perma-
+  // offset state where the Bobo logo / back link were cut off the top. The
+  // user owns their own scroll position; we just play the animation in
+  // place. (Standalone /mapelo/matchup/ still does its own auto-scroll via
+  // rvScroll, which is unaffected.)
   var R = simulate();
   if(!R) return;
   if(mode==='dramatic') renderDramatic(R);
@@ -5557,8 +5970,10 @@ SHARED_FOOTER
 def mapelo_hub():
     return MAPELO_HUB_HTML
 
-@mapelo_bp.route('/rankings/')
-def mapelo_home():
+def _render_mapelo_home(body_class: str, page_title: str, page_sub: str):
+    """Shared render for /rankings/ and /how-it-works/ — same template, body
+    class controls which sections are visible (CSS .howitworks-only and
+    body.page-howitworks rules)."""
     full = get_ratings()
     intl = get_intl_calibration()
     keep_meta = ('optimal_half_life_matches', 'brier_test', 'n_train', 'n_test', 'mc_n_sims', 'veto_noise_std')
@@ -5570,7 +5985,29 @@ def mapelo_home():
         'intl_params':  intl.get('params', {}),
         'org_regions':  ORG_REGIONS,
     }
-    return MAPELO_HOME_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
+    html = MAPELO_HOME_HTML.replace('RATINGS_JSON', json.dumps(frontend_data))
+    html = html.replace('<body>', '<body class="' + body_class + '">', 1)
+    html = html.replace('PAGE_TITLE_TEXT', page_title, 1)
+    html = html.replace('PAGE_SUB_TEXT',   page_sub,   1)
+    return html
+
+
+@mapelo_bp.route('/rankings/')
+def mapelo_home():
+    return _render_mapelo_home(
+        body_class='page-rankings',
+        page_title='Historical Rankings',
+        page_sub='Opponent-adjusted round differential ratings for VCT franchised teams. Pick a year and period to see the leaderboard and animated rating timeline up to that point.',
+    )
+
+
+@mapelo_bp.route('/how-it-works/')
+def mapelo_how_it_works():
+    return _render_mapelo_home(
+        body_class='page-howitworks',
+        page_title='How does BenPom work?',
+        page_sub='',
+    )
 
 
 # Per-year timeline cache: invalidates on file mtime change so a rebuild
@@ -7154,11 +7591,11 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .tab.active{background:#3d1a6e;border-color:#3d1a6e;color:#fff}
 .tab:hover:not(.active){border-color:#9c6ec8;color:#000}
 
-.panels-outer{overflow:hidden}
+.panels-outer{overflow:hidden;transition:height .55s cubic-bezier(.22,1,.36,1)}
 /* Slide curve = ease-out-quint. Snappier finish than the symmetric ease,
    so the panel "lands" without that mid-slide hesitation that read as
    a stutter. transform-only animation runs on the compositor. */
-.panel-track{display:flex;width:400%;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.panel-track{display:flex;align-items:flex-start;width:400%;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
 .panel-track.show-b{transform:translate3d(-25%,0,0)}
 .panel-track.show-c{transform:translate3d(-50%,0,0)}
 .panel-track.show-d{transform:translate3d(-75%,0,0)}
@@ -7196,8 +7633,16 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
   100%{opacity:0;transform:translateY(48px);filter:blur(4px)}
 }
 .progress-card.exiting{animation:cardExit .55s cubic-bezier(.4,0,1,1) forwards;pointer-events:none}
-@keyframes chartEnter{from{transform:translateX(-100vw)}to{transform:none}}
-.chart-card.entering{animation:chartEnter 2.4s cubic-bezier(.16,1,.3,1) forwards}
+/* translate3d (not translateX) and will-change force the slide-in onto its
+   own compositor layer, so the chart card moves on the GPU instead of
+   repainting the canvas + gradients every frame. backface-visibility:hidden
+   nudges Chrome/Safari to keep the layer alive. */
+@keyframes chartEnter{from{transform:translate3d(-100vw,0,0)}to{transform:translate3d(0,0,0)}}
+.chart-card.entering{animation:chartEnter 1.4s cubic-bezier(.16,1,.3,1) forwards;will-change:transform;backface-visibility:hidden;transform:translate3d(0,0,0)}
+/* While the chart is sliding, pause the body's animated radial-gradient
+   (purpleFloat) — it's the heaviest concurrent paint and pausing it during
+   the 2.4s slide measurably bumps FPS. Resumes the instant .entering ends. */
+body:has(.chart-card.entering)::after{animation-play-state:paused}
 #progressLog{margin-top:20px;text-align:center;max-height:140px;overflow:hidden;display:flex;flex-direction:column;gap:3px;border-top:1px solid rgba(167,139,250,.12);padding-top:14px}
 .plog-entry{font-size:.78rem;color:rgba(167,139,250,.75);padding:1px 0;font-family:'DM Sans',sans-serif;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.5}
 .plog-entry:last-child{opacity:1;color:rgba(200,180,255,.95)}
@@ -7207,7 +7652,12 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 /* Chart card */
 .chart-hint{font-size:.72rem;color:rgba(0,0,0,.38);text-align:center;padding:6px 0 18px;letter-spacing:.01em}
 .chart-hint kbd{display:inline-block;font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:700;background:rgba(0,0,0,.07);border-radius:4px;padding:1px 5px;margin:0 1px}
-.chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin:0 auto 18px;position:relative;max-width:85%}
+/* Promote chart card to its own compositor layer permanently. The card
+   contains a 650px-tall canvas; without its own layer, the .panel-track
+   slide (tab switch) has to repaint the whole canvas every frame, which
+   tanks FPS on the slide. translate3d + backface-visibility keeps the
+   layer alive. */
+.chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin:0 auto 18px;position:relative;max-width:85%;transform:translate3d(0,0,0);backface-visibility:hidden}
 .chart-header{display:flex;flex-direction:column;align-items:stretch;margin-bottom:10px;gap:6px;padding:0 20px;position:relative}
 .chart-header-row{display:flex;justify-content:flex-end;align-items:center;gap:10px}
 .chart-title{align-self:center;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;pointer-events:none}
@@ -7370,12 +7820,15 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .no-upcoming{padding:60px;text-align:center;color:#666;font-size:.88rem}
 
 /* Letter fly-in animation for Upcoming + Recent Matches heading + sub */
+/* translate3d (not translateX) forces a compositor layer per char so the
+   60px slide is a pure GPU translate instead of triggering paint on the
+   text every frame. backface-visibility:hidden anchors the layer. */
 .upcoming-heading .fly-char,
 .upcoming-sub .fly-char,
 .past-heading .fly-char,
 .past-sub .fly-char,
 .sim-heading .fly-char,
-.sim-sub .fly-char{display:inline-block;opacity:0;transform:translateX(60px);transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
+.sim-sub .fly-char{display:inline-block;opacity:0;transform:translate3d(60px,0,0);backface-visibility:hidden;transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
 .upcoming-heading.flying .fly-char,
 .upcoming-sub.flying .fly-char,
 .past-heading.flying .fly-char,
@@ -7387,10 +7840,14 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .past-heading.fly-in .fly-char,
 .past-sub.fly-in .fly-char,
 .sim-heading.fly-in .fly-char,
-.sim-sub.fly-in .fly-char{opacity:1;transform:translateX(0)}
+.sim-sub.fly-in .fly-char{opacity:1;transform:translate3d(0,0,0)}
+/* Pause the body's animated radial-gradient (purpleFloat) while letters
+   are in flight — heaviest concurrent paint, and pausing it during the
+   ~1.5s flight reclaims GPU budget for the per-char transitions. */
+body:has(.flying)::after{animation-play-state:paused}
 /* Match cards fly in from right with cascade */
-.upc-list .upc-card{opacity:0;transform:translateX(80px);transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease;will-change:transform,opacity}
-.upc-list.fly-in .upc-card{opacity:1;transform:translateX(0)}
+.upc-list .upc-card{opacity:0;transform:translate3d(80px,0,0);backface-visibility:hidden;transition:transform .5s cubic-bezier(.16,.85,.34,1.02),opacity .4s ease;will-change:transform,opacity}
+.upc-list.fly-in .upc-card{opacity:1;transform:translate3d(0,0,0)}
 /* Per-card slide-in for progressive loading (used by renderPast — each match
    card is filled in then revealed once its 20k-sim MC completes). */
 .upc-list .upc-card.card-loaded{opacity:1;transform:translateX(0);transition-delay:0ms !important}
@@ -7402,8 +7859,10 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .past-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
 .past-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center;max-width:560px;margin-left:auto;margin-right:auto}
 
-/* Simulator panel — full historical-matchup tool via iframe */
-.sim-iframe{width:100%;min-height:2400px;border:0;background:transparent;display:block}
+/* Simulator panel — full historical-matchup tool via iframe.
+   Height is updated dynamically via postMessage('simHeight') from the
+   iframe so it shrinks to fit its content (no blank gap below results). */
+.sim-iframe{width:100%;height:900px;border:0;background:transparent;display:block}
 
 /* Result strip on past-match cards */
 .upc-result-strip{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:8px;padding:6px 10px;border-radius:8px;background:rgba(0,0,0,.04);font-size:.74rem;font-weight:700;letter-spacing:.02em}
@@ -7505,6 +7964,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 <div class="top-nav">
   <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
   <a href="/mapelo/" class="back-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+  <a href="/mapelo/how-it-works/" class="back-btn" style="margin-left:auto;">How does BenPom work?</a>
 </div>
 
 <main class="hub-main">
@@ -7913,8 +8373,38 @@ document.querySelectorAll('.tab').forEach(btn => {
     if (activePanel === 'd' && !_simInitialized) {
       setTimeout(renderSimulator, 560);
     }
+    syncPanelsHeight();
   });
 });
+
+// .panel-track is a 400%-wide flex row containing all 4 panels at once. Without
+// height management it sizes to the TALLEST sibling (the 2400px sim iframe),
+// which leaves a huge blank gap under shorter panels like Current Rankings.
+// align-items:flex-start keeps panels top-aligned; this fn pins .panels-outer
+// to just the active panel's natural height. Called on tab switch, data
+// render, sim-iframe resize, and window resize.
+function syncPanelsHeight() {
+  var outer = document.querySelector('.panels-outer');
+  if (!outer) return;
+  var idMap = {a:'panelA', b:'panelB', c:'panelC', d:'panelD'};
+  var panel = document.getElementById(idMap[activePanel] || 'panelA');
+  if (!panel) return;
+  var h = panel.scrollHeight;
+  if (h > 0) outer.style.height = h + 'px';
+}
+window.addEventListener('resize', syncPanelsHeight);
+// Watch each panel for size changes (chart expand, leaderboard rows, upcoming
+// list load, etc.) so .panels-outer follows along without explicit calls
+// scattered through every render path.
+if (window.ResizeObserver) {
+  var _panelRO = new ResizeObserver(function(){ syncPanelsHeight(); });
+  document.addEventListener('DOMContentLoaded', function(){
+    ['panelA','panelB','panelC','panelD'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) _panelRO.observe(el);
+    });
+  });
+}
 
 // ── Region filter ────────────────────────────────────────────────────────────
 document.querySelectorAll('.pill').forEach(btn => {
@@ -8923,19 +9413,27 @@ async function showChartAndLeaderboard(data) {
   const chartCard = document.querySelector('.chart-card');
   if (chartCard) chartCard.classList.add('entering');
 
-  // Auto-scroll FIRST so the user lands on a centered chart before the
-  // reveal animation plays. Skip if the user already scrolled themselves.
-  if (window.scrollY < 40 && chartCard) {
-    const _rect = chartCard.getBoundingClientRect();
-    const _target = window.scrollY + _rect.top + _rect.height / 2 - window.innerHeight / 2;
-    window.scrollTo({top: Math.max(0, _target), behavior: 'smooth'});
-  }
+  // Wait for the slide-in to finish so the chart card is in its FINAL
+  // position before we measure / scroll. Doing this before the slide-in
+  // completes can race with the .panels-outer height transition + the
+  // ResizeObserver-driven height syncs, which were intermittently leaving
+  // the page at scrollY=0. Matches the chartEnter animation duration (1.4s)
+  // plus a small buffer.
+  await sleep(1500);
 
-  await sleep(2500);
+  // Auto-scroll: smooth-center the chart card in the viewport. Browser
+  // handles the math (rect + height + innerHeight) and respects scroll
+  // anchoring. Then wait for the smooth scroll to settle before line
+  // drawing begins, so lines reveal on an already-centered page.
+  if (chartCard) {
+    try { chartCard.scrollIntoView({behavior:'smooth', block:'center'}); }
+    catch(e) { chartCard.scrollIntoView(); }
+    await sleep(650);
+  }
 
   // Rebuild with real lines, then immediately sweep curtain from left
   buildChart(data);
-  await revealChart(4400, true);
+  await revealChart(2500, true);
 
   // Show leaderboard and pills after reveal completes
   showEl('lbCard');
@@ -8983,6 +9481,11 @@ async function init() {
   if (pOuter) pOuter.style.overflow = '';
 
   await showChartAndLeaderboard(hubData);
+
+  // Pin .panels-outer to the active panel's height so we don't inherit the
+  // simulator iframe's height (which used to leave a giant blank gap below
+  // the chart). Re-fires on tab switch + sim resize via the message handler.
+  syncPanelsHeight();
 
   // Warm the simulator iframe in the background once the main view has
   // settled. Lets the click-to-open animation slide a fully-rendered panel
@@ -9981,6 +10484,42 @@ function renderSimulator() {
   var f = document.getElementById('simIframe');
   if (f && f.src.indexOf('lockCurrent=1') < 0) f.src = '/mapelo/matchup/?lockCurrent=1';
 }
+// Resize the simulator iframe to its content height. The iframed page posts
+// {type:'simHeight', height:N} via ResizeObserver whenever its body grows or
+// shrinks; we mirror that onto the iframe element so there's no blank gap
+// (used to be a 2400px min-height that left a huge dead zone below results).
+window.addEventListener('message', function(e){
+  var d = e && e.data;
+  if (!d) return;
+  if (d.type === 'simHeight' && typeof d.height === 'number') {
+    var f = document.getElementById('simIframe');
+    if (!f) return;
+    // +8px buffer so a final-line subpixel under-measure doesn't clip content.
+    f.style.height = Math.max(200, d.height + 8) + 'px';
+    // If the user is currently on the simulator panel, mirror the new height
+    // onto .panels-outer so the page itself shrinks/grows with the iframe.
+    if (typeof syncPanelsHeight === 'function' && activePanel === 'd') {
+      syncPanelsHeight();
+    }
+    return;
+  }
+  // (scrollSimIntoView handler removed — see comment in iframed runMatchup:
+  // the iframe must not control parent scroll, since the cascade of forced
+  // scrolls was leaving the parent in a permanently-offset state where the
+  // top of the page got cut off.)
+});
+
+// Forward parent-side scroll intent into the simulator iframe so its reveal
+// animation pauses auto-scrolling. Without this, scrolls happening while the
+// cursor is over parent UI (tab bar, page background) don't reach the iframe
+// and it keeps yanking the page back down step by step.
+function _notifySimUserScroll(){
+  var f = document.getElementById('simIframe');
+  if (!f || !f.contentWindow) return;
+  try { f.contentWindow.postMessage({type:'userScroll'}, '*'); } catch(e){}
+}
+window.addEventListener('wheel',     _notifySimUserScroll, {passive:true});
+window.addEventListener('touchmove', _notifySimUserScroll, {passive:true});
 function preloadSimulator() {
   // Idle-time preload after main UI is settled. requestIdleCallback gives us
   // a chunk of free main-thread time; falls back to setTimeout where unsupported.
