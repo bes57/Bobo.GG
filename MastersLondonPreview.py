@@ -545,7 +545,7 @@ PAGE_HTML = """
 
       <div class="why-block">
         <span class="why-label lose">Why they won&rsquo;t win</span>
-        <p>For the same reason that they might win. They&rsquo;re good, but not great. If G2 doesn&rsquo;t win the last 3 rounds against Kr&uuml; and they lose Lotus instead of winning 13&ndash;11, they go on to Haven as map 3 &mdash; a map which they&rsquo;ve lost the past two times they played it. They probably lose the match, go to Lowers, and maybe they wouldn&rsquo;t even be at London altogether. The round differentials in their last three matches are +1, +4, and &minus;10. Again, they&rsquo;re not that convincing.</p>
+        <p>For the same reason that they might win. They&rsquo;re good, but not great. If G2 doesn&rsquo;t win the last 3 rounds against Kr&uuml; in Playoffs and they lose Lotus, they go on to Haven as map 3 &mdash; a map which they&rsquo;ve lost the past two times they played it. They probably lose the match, go to Lowers, and maybe they wouldn&rsquo;t even be at London altogether. The round differentials in their last three matches are +1, +4, and &minus;10. Again, they&rsquo;re not that convincing.</p>
         <p>If one of PRX, NRG, or EDG can elevate their form, I don&rsquo;t see G2 being able to beat them.</p>
       </div>
 
@@ -589,7 +589,7 @@ PAGE_HTML = """
       </div>
       <div class="why-block">
         <span class="why-label win">Why they can win</span>
-        <p>In Weeks 1 and 2, NRG lost to Furia and Kr&uuml; with Keiko playing Killjoy and Omen through those 4 maps. Since then, Keiko hasn&rsquo;t gone a match without playing duelist at least once and NRG won their next 6 games until they lost 2&ndash;3 to G2, a perfectly respectable loss. With Keiko on duelist, this team is ridiculously hot, and so long as that continues they can go as far as he takes them. It also helps that Brawk is looking like the best initiator in the world.</p>
+        <p>In Weeks 1 and 2, NRG lost to Furia and Kr&uuml; with Keiko playing Killjoy and Omen through those 4 maps. Since then, Keiko hasn&rsquo;t gone a match without playing duelist at least once and NRG has won those next 6 games until losing 2&ndash;3 to G2, a perfectly respectable loss. With Keiko on duelist, this team is ridiculously hot. So long as that continues, they can go as far as he takes them. It also helps that Brawk is looking like the best initiator in the world.</p>
         <p>NRG has the experience and are a proven roster, something that will be valuable at Masters London just as I pointed out with G2. The individuals are in form, even to the point where Ethan dropped a match-high 1.31 rating in their EWC qualifier. If player form continues to be good and role issues are figured out (i.e. Keiko/Mada), NRG have enough momentum to go all the way to the grand final. Whether they can beat a top-level team with their new roster remains to be seen.</p>
       </div>
 
@@ -639,7 +639,7 @@ PAGE_HTML = """
         <span class="why-label win">Why they can win</span>
         <p>I honestly believe that EDG have the strongest case for winning Masters London after Paper Rex, for very simple reasons:</p>
         <ul>
-          <li>As mentioned in my Paper Rex section, they&rsquo;re one of two teams to win their domestic title and do so through the upper bracket.</li>
+          <li>They&rsquo;re the only one-seed to win their domestic title through the upper bracket.</li>
           <li>This EDG core is proven to be of international-winning caliber and has the experience to perform well at an international + in a new meta.</li>
           <li>Speaking of, ZmjjKK has already been playing a copious amount of Jett. Having the historically greatest Chinese Valorant player with his comfort agent coming back into the meta is a huge advantage. Neon did not treat EDG well (see Masters Santiago).</li>
           <li>Their domestic performance was dominant, only losing once to XLG who they proceeded to beat twice in playoffs.</li>
@@ -827,7 +827,7 @@ PAGE_HTML = """
       </div>
       <div class="why-block">
         <span class="why-label win">Why they can win</span>
-        <p>Leviat&aacute;n are one of the more interesting cases. If you want to believe they can win, the only thing you should look at is their recent match results in Stage 1 Playoffs. They were up 10&ndash;8 in map 5 against G2 in the Americas Grand Final. If they closed that map out, they&rsquo;d come into London as the 1-seed from the second-best region after having beaten G2 twice in a row. However, they didn&rsquo;t close out that map, and that&rsquo;s important to acknowledge. The point here is that, whether it be because of inexperience, nerves, or a shallow map pool, Leviat&aacute;n were just barely unable to come into London with such a resume. The good news is how close they were. If they can shore up whatever minute shortcomings they suffered from, then they&rsquo;ve demonstrated that they&rsquo;re right there with the best teams at London.</p>
+        <p>Leviat&aacute;n are one of the more interesting cases. If you want to believe they can win, the only thing you should look at is their recent match results in Stage 1 Playoffs. They were up 10&ndash;8 in map 5 against G2 in the Americas Grand Final. If they closed that map out, they&rsquo;d come into London as the 1-seed from the second-best region after having beaten G2 twice in a row. However, they didn&rsquo;t close out that map, and that&rsquo;s important to acknowledge. The point here is that, whether it be because of inexperience, nerves, or a shallow map pool, Leviat&aacute;n were just barely unable to come into London with such a resume. The good news is how close they were. If they can shore up whatever shortcomings they suffered from, they can be right there with the best teams at London. They&rsquo;ve demonstrated that potential.</p>
         <p>Leviat&aacute;n, other than that Grand Final, went unbeaten in Stage 1&rsquo;s Playoffs after stumbling at the end of Group Stage. Granted these matches were close, but they&rsquo;ve shown that they can lock in for high-stakes scenarios. Also, since Ascent was added to the map pool, they haven&rsquo;t lost it once.</p>
         <p>Stage 1 Playoffs, from a macro perspective, offers reason for optimism in Leviat&aacute;n.</p>
       </div>
@@ -841,7 +841,7 @@ PAGE_HTML = """
 
       <div class="why-block">
         <span class="why-label watch">Something to watch for</span>
-        <p>If Spikezin falls back to other roles, Sato will likely have to shoulder even more responsibility on the duelist role. Spike has often been the player to initiate site hits and first contacts, while Sato and Neon come in after him. With Spike potentially being on Deadlock or Viper, Sato will be the key to any success Leviat&aacute;n has at London. Sato has been touted as a rising star for about a year now, and this would be his opportunity to prove it, with London being his first international and a potentially increased burden on duelist.</p>
+        <p>If Spikezin falls back to other roles, Sato will likely have to shoulder even more responsibility on the duelist role. Spikezin has often been the player to initiate site hits and first contacts, while Sato and Neon come in after him. With Spikezin potentially being on Deadlock or Viper, Sato will be the key to any success Leviat&aacute;n has at London. Sato has been touted as a rising star for about a year now, and this would be his opportunity to prove it, with London being his first international and a potentially increased burden on duelist.</p>
       </div>
 
       <h2 id="c-tier" class="tier-section-header c">C Tier</h2>
@@ -879,7 +879,7 @@ PAGE_HTML = """
       </div>
       <div class="why-block">
         <span class="why-label win">Why they can win</span>
-        <p>Of all that there is to say about Global Esports, the most convincing argument is that they managed to beat Paper Rex 2&ndash;1 in Pacific Playoffs, which is about the best win you could tally before Masters London. Though they lost to Paper Rex 0&ndash;3 in their later rematch, that&rsquo;s partially driven by the fact that GE (in my opinion) messed up the pick/ban. For instance, they didn&rsquo;t pick Breeze when it was offered to them despite beating Paper Rex on Breeze the last time they played and being unbeaten on Breeze in Stage 1 at the time. Also, they&rsquo;re an APAC team in 2026, so they&rsquo;re automatically afforded some level of legitimacy.</p>
+        <p>Of all that there is to say about Global Esports, the most convincing argument is that they managed to beat Paper Rex 2&ndash;1 in Pacific Playoffs, which is about the best win you could tally before Masters London. Though they lost to Paper Rex 0&ndash;3 in their later rematch, that&rsquo;s partially driven by the fact that GE (in my opinion) messed up the pick/ban. They didn&rsquo;t pick Breeze when it was offered to them despite beating Paper Rex on Breeze the last time they played and being unbeaten on Breeze in Stage 1 at the time. Also, they&rsquo;re an APAC team in 2026, so they&rsquo;re automatically afforded some level of legitimacy.</p>
         <p>If they can beat the best team at Masters London, surely they can win the event? Right?</p>
       </div>
 
@@ -934,12 +934,12 @@ PAGE_HTML = """
       </div>
       <div class="why-block">
         <span class="why-label win">Why they can win</span>
-        <p>Between their player quality (i.e. Happywei and Rarga) and their domestic results (e.g. losing 3&ndash;2 in the CN final against EDG), this team is firmly the second-best team in China. If EDG show up despite China&rsquo;s previous performance at Santiago, there are no excuses for XLG not to, at least, qualify for playoffs. As I said previously, I firmly believe EDG have a high chance of winning this tournament, so XLG should be following closely behind them.</p>
+        <p>Between their player quality (i.e. Happywei and Rarga) and their domestic results (e.g. losing 3&ndash;2 in the CN final against EDG), this team is firmly the second-best team in China. If EDG show up despite China&rsquo;s previous performance at Santiago, there are no excuses for XLG not to, at least, qualify for playoffs. As I said previously, I firmly believe EDG have a high chance of winning this tournament, so XLG should follow closely behind them.</p>
       </div>
 
       <div class="why-block">
         <span class="why-label lose">Why they won&rsquo;t win</span>
-        <p>However, if China do make a resurgence, historical precedent will not be XLG&rsquo;s friend. At Masters Santiago they went out 0&ndash;2. At Champions Paris, they went out 1&ndash;2. At Masters Toronto they went out 0&ndash;2. Despite EDG and XLG&rsquo;s (relatively) close matches, the difference in ranking is based on which team has proven themselves at an international level. It will be hard for both China&rsquo;s current status and XLG&rsquo;s historical record at internationals to both flip on their heads. It will be hard for XLG to win.</p>
+        <p>However, if China do make a resurgence, historical precedent will not be XLG&rsquo;s friend. At Masters Santiago they went out 0&ndash;2. At Champions Paris, they went out 1&ndash;2. At Masters Toronto they went out 0&ndash;2. Despite EDG and XLG&rsquo;s (relatively) close matches, the difference in ranking is based on which team has proven themselves at an international level. It will be hard for China&rsquo;s current status and XLG&rsquo;s historical record at internationals to both flip on their heads. It will be hard for XLG to win.</p>
       </div>
 
       <div class="why-block">
@@ -1103,7 +1103,7 @@ PAGE_HTML = """
 
       <p>I&rsquo;m doubtful of G2 and NRG. G2 have shown their worst against top teams in Stage 1 Group Stage, and then managed to pull together a string of close wins to qualify for London through lowers. It&rsquo;ll be hard to recreate that level of luck (or &ldquo;locking in&rdquo; if you prefer to call it that) at Masters London. Again, believing in G2 feels more like doubting the other top teams. G2 won&rsquo;t put up a horrible performance, but I don&rsquo;t expect them to stomp either. NRG feel wishy-washy with their confusing comps. If I had a promise that NRG will put Keiko primarily on duelist, then I&rsquo;d pick them, but that doesn&rsquo;t seem to be happening. EDG have the aforementioned problem of simply being a Chinese team in 2026. It&rsquo;s hard to pick one after Masters Santiago.</p>
 
-      <p>All of this is to say that I think NRG likely have the second-best chance of winning Masters London if Keiko plays duelist, but I think EDG probably are the most undervalued (i.e. the difference between their perceived odds and true odds).</p>
+      <p>All of this is to say that I think NRG likely have the second-best chance of winning Masters London if Keiko plays duelist, but EDG are the most undervalued (i.e. the difference between their perceived odds and true odds).</p>
 
       <p>For the sake of being fun, I&rsquo;ll predict that, if it&rsquo;s not PRX, EDG win Masters London.</p>
 
@@ -1153,20 +1153,20 @@ PAGE_HTML = """
         <div class="player-rank-card">
           <div class="player-rank-header">
             <div class="player-rank-num">2</div>
-            <img class="player-rank-img" src="https://owcdn.net/img/69735f0889a6b.png" alt="Jinggg" onerror="this.style.visibility='hidden'">
-            <div class="player-rank-name">Jinggg</div>
-            <div class="player-rank-team"><img src="/logos/PRX.png" alt="PRX" onerror="this.style.display='none'">PRX</div>
-          </div>
-          <p class="player-rank-desc">He has been the main motor in this Paper Rex iteration, flexing across two or three roles in matches, stepping up in the biggest moments, and creating the space and entries that players like f0rsakeN and something can steamroll off of.</p>
-        </div>
-        <div class="player-rank-card">
-          <div class="player-rank-header">
-            <div class="player-rank-num">3</div>
             <img class="player-rank-img" src="https://owcdn.net/img/697426e1f3308.png" alt="brawk" onerror="this.style.visibility='hidden'">
             <div class="player-rank-name">brawk</div>
             <div class="player-rank-team"><img src="/logos/NRG.png" alt="NRG" onerror="this.style.display='none'">NRG</div>
           </div>
           <p class="player-rank-desc">NRG&rsquo;s success runs entirely through brawk. In their run, it felt that almost every kill is done by brawk or because of his scan, which is proven by him having a 79% KAST (the highest in Americas). He was also the second-highest-rated player in Americas. Besides, I wouldn&rsquo;t bet against the Champions MVP to perform at an international.</p>
+        </div>
+        <div class="player-rank-card">
+          <div class="player-rank-header">
+            <div class="player-rank-num">3</div>
+            <img class="player-rank-img" src="https://owcdn.net/img/69735f0889a6b.png" alt="Jinggg" onerror="this.style.visibility='hidden'">
+            <div class="player-rank-name">Jinggg</div>
+            <div class="player-rank-team"><img src="/logos/PRX.png" alt="PRX" onerror="this.style.display='none'">PRX</div>
+          </div>
+          <p class="player-rank-desc">He has been the main motor in this Paper Rex iteration, flexing across two or three roles in matches, stepping up in the biggest moments, and creating the space that players like f0rsakeN and something can steamroll off of. His impact is so insanely high for the best team in VCT, having the highest KAST% in Pacific.</p>
         </div>
         <div class="player-rank-card">
           <div class="player-rank-header">
