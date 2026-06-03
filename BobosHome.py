@@ -5,6 +5,7 @@ from EventLeaderboards import vct_bp
 from AllTimeHighs import highs_bp
 from IdentifyingOverUnderPerformers import article_overunder_bp
 from AmericasStage1Playoffs import article_americas_stage1_bp
+from MastersLondonPreview import article_masters_london_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 
@@ -14,6 +15,7 @@ app.register_blueprint(vct_bp, url_prefix="/vct")
 app.register_blueprint(highs_bp, url_prefix="/highs")
 app.register_blueprint(article_overunder_bp, url_prefix="/articles/over-underperformers")
 app.register_blueprint(article_americas_stage1_bp, url_prefix="/articles/americas-stage1-playoffs-preview")
+app.register_blueprint(article_masters_london_bp, url_prefix="/articles/masters-london-preview")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 
@@ -118,6 +120,13 @@ HOME_HTML = """
       <div class="section-title">Research / Opinion Articles <span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
+        <a class="nav-card" href="/articles/masters-london-preview/">
+          <img class="nav-card-cover" src="/prxpacstage1win.jpg" alt="Paper Rex win VCT Pacific Stage 1">
+          <div class="nav-card-title">Masters London Preview</div>
+          <div class="nav-card-desc">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div>
+          <div class="nav-card-date">June 2, 2026</div>
+          <div class="nav-card-arrow">Read &rarr;</div>
+        </a>
         <a class="nav-card" href="/articles/americas-stage1-playoffs-preview/">
           <img class="nav-card-cover" src="/loudlev26.jpg" alt="LOUD vs Leviatán">
           <div class="nav-card-title">Americas Stage 1 Playoffs Preview</div>
@@ -271,6 +280,10 @@ def patmen():
 @app.route("/loudlev26.jpg")
 def loudlev26():
     return send_from_directory(os.path.dirname(__file__), "LoudLev26.jpg", mimetype="image/jpeg")
+
+@app.route("/prxpacstage1win.jpg")
+def prxpacstage1win():
+    return send_from_directory(os.path.dirname(__file__), "PRXPacStage1Win.jpg", mimetype="image/jpeg")
 
 @app.route("/krustage1.png")
 def krustage1():

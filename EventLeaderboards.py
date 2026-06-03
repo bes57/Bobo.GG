@@ -27,6 +27,9 @@ STAT_LABELS = {
 }
 
 LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25; now reads from data/2026_stage1.csv like other past events
+ALLTIME_ID = "all_time"
+ALLTIME_EVENT = {"id": ALLTIME_ID, "label": "All-Time", "year": 0, "regions": {"International": ""}}
+
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 _event_cache = {}       # event_id -> DataFrame
@@ -120,6 +123,23 @@ def load_event(event):
     if event_id in _event_cache:
         return _event_cache[event_id]
 
+    # All-Time: concatenate every non-CN-only event's leaderboard, tagging each
+    # row with the source event label so duplicates (same player, different
+    # event) stay distinguishable in the giant ranking.
+    if event_id == ALLTIME_ID:
+        print("All-Time — concatenating every event...")
+        parts = []
+        for e in ALL_EVENTS:
+            if list(e["regions"].keys()) == ["CN"]:
+                continue
+            sub = load_event(e).copy()
+            if not sub.empty:
+                sub["Event"] = e["label"]
+                parts.append(sub)
+        cache = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+        _event_cache[event_id] = cache
+        return cache
+
     # Live event: always scrape fresh
     if event_id == LIVE_EVENT_ID:
         print(f"Live event — scraping {event_id}...")
@@ -143,7 +163,7 @@ def load_event(event):
 def get_all(df, col):
     if df.empty or col not in df.columns:
         return []
-    keep = [c for c in ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", col] if c in df.columns]
+    keep = [c for c in ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", "Event", col] if c in df.columns]
     tmp = df[keep].copy()
     tmp[col] = pd.to_numeric(tmp[col].astype(str).str.replace("%", ""), errors="coerce")
     return tmp.dropna(subset=[col]).sort_values(col, ascending=False).to_dict("records")
@@ -156,7 +176,7 @@ def build_data(cache, event):
     def to_records(df):
         if df.empty:
             return []
-        want = ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd"] + stat_cols
+        want = ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", "Event"] + stat_cols
         cols = [c for c in want if c in df.columns]
         return df[cols].fillna("").to_dict("records")
 
@@ -430,6 +450,9 @@ MAIN_HTML = """
   <div class="event-selector-wrap">
     <div class="event-wrap">
       <select class="event-select" onchange="window.location='/vct/?event='+this.value">
+        <optgroup label="Overall">
+          <option value="all_time"{% if event_id == "all_time" %} selected{% endif %}>All-Time</option>
+        </optgroup>
         {% for year, year_events in events_by_year %}
         <optgroup label="{{ year }}">
           {% for e in year_events %}
@@ -546,7 +569,7 @@ function renderCard(stat, players, idx) {
       ${avatarHTML(p.Player, 52, p.HeadshotURL||'')}
       <div class="player-info">
         <div class="player-name">${p.Player}</div>
-        <div class="player-meta">${p.Org||''} &middot; ${p.Region}</div>
+        <div class="player-meta">${p.Org||''} &middot; ${p.Region}${p.Event ? ' &middot; ' + p.Event : ''}</div>
       </div>
       <div class="stat-val">${p[stat]}</div>
     </div>`
@@ -958,7 +981,10 @@ RANKING_HTML = """
               {% else %}
               <div class="avatar-ph" style="width:52px;height:52px;font-size:16px;background:hsl({{ p.Player | player_hue }},55%,70%)">{{ p.Player[:2] | upper }}</div>
               {% endif %}
-              {{ p.Player }}
+              <div class="player-name-wrap">
+                <div>{{ p.Player }}</div>
+                {% if p.get('Event') %}<div class="player-event-tag">{{ p.Event }}</div>{% endif %}
+              </div>
             </div>
           </td>
           <td>{{ p.get('Org','') }}</td>
@@ -1245,7 +1271,7 @@ def index():
 
     default_id = "2026_stage1"
     event_id = request.args.get("event", default_id)
-    event = next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
+    event = ALLTIME_EVENT if event_id == ALLTIME_ID else next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
 
     cache = load_event(event)
     data, available_regions = build_data(cache, event)
@@ -1270,7 +1296,7 @@ def ranking(stat):
 
     default_id = "2026_stage1"
     event_id = request.args.get("event", default_id)
-    event = next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
+    event = ALLTIME_EVENT if event_id == ALLTIME_ID else next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
     active_region = request.args.get("region", "All")
 
     cache = _event_cache.get(event_id)
