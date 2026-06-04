@@ -588,7 +588,7 @@ _SNAPSHOT_EVENTS = {
     # FURIA/100T/SEN see their league play in "Recent Matches" instead of
     # only their LOCK//IN appearance.
     '2023': {
-        'before_tokyo':     ['2023_lock_in'],
+        'before_tokyo':     ['2023_lock_in', '2023_league'],
         'after_tokyo':      ['2023_lock_in', '2023_league', '2023_masters_tokyo'],
         'before_champions': ['2023_lock_in', '2023_league', '2023_masters_tokyo'],
         'after_champions':  ['2023_lock_in', '2023_league', '2023_masters_tokyo', '2023_champions'],
@@ -2688,6 +2688,29 @@ var logoPlugin = {
   },
 };
 
+// Dim a team color for the "other lines while one team is focused" look.
+// Plain `color + '28'` (alpha 16%) works for 6-digit hex — they fade to
+// pastels against the white chart background. Two failure modes the naive
+// concat hits:
+//   (1) Teams missing from TEAM_COLORS fall back to '#888', and '#888'+'28'
+//       = '#88828' — an invalid 5-char hex that Chrome silently renders as
+//       solid black. That's how BLD (Bleed) ends up as a prominent black
+//       line through the 2024 chart.
+//   (2) Pure black (#000000) at 16% alpha still has near-full contrast
+//       against white, so the dimmed black-team lines (G2/FUR/MIBR/ZETA)
+//       stay visually prominent.
+// Normalize the color to 6-digit hex, then remap pure black to mid-gray.
+function _dimColor(c) {
+  if (!c) return '#88888828';
+  var s = c.toLowerCase();
+  if (/^#[0-9a-f]{3}$/.test(s)) {
+    s = '#' + s[1] + s[1] + s[2] + s[2] + s[3] + s[3];
+  }
+  if (s === '#000000') return '#88888828';
+  if (!/^#[0-9a-f]{6}$/.test(s)) return '#88888828';
+  return s + '28';
+}
+
 function buildChart(data, noLines) {
   if (typeof noLines === 'undefined') noLines = false;
   var checkpoints = (data.chart && data.chart.checkpoints) || [];
@@ -2712,13 +2735,13 @@ function buildChart(data, noLines) {
     if (typeof team.rating === 'number') {
       pts[pts.length - 1].y = team.rating;
     }
-    var color    = TEAM_COLORS[org] || '#888';
+    var color    = TEAM_COLORS[org] || '#888888';
     var isSel    = STATE.selectedTeam === org;
     var isDimmed = STATE.selectedTeam !== null && !isSel;
     datasets.push({
       label: org, org: org,
       data: pts,
-      borderColor: noLines ? 'transparent' : (isDimmed ? color + '28' : color),
+      borderColor: noLines ? 'transparent' : (isDimmed ? _dimColor(color) : color),
       backgroundColor: 'transparent',
       borderWidth: noLines ? 0 : (isSel ? 2.5 : (STATE.selectedTeam ? 1 : 1.5)),
       pointRadius: 0, pointHoverRadius: 0,
@@ -2990,16 +3013,16 @@ function _applyLogoHover(org) {
   if (!myChart) return;
   myChart.data.datasets.forEach(function(ds) {
     if (ds.type === 'scatter' || !ds.org) return;
-    var base = TEAM_COLORS[ds.org] || '#888';
+    var base = TEAM_COLORS[ds.org] || '#888888';
     if (!org) {
       var isSel = ds.org === STATE.selectedTeam;
       var isDim = STATE.selectedTeam !== null && !isSel;
-      ds.borderColor = isDim ? base + '28' : base;
+      ds.borderColor = isDim ? _dimColor(base) : base;
       ds.borderWidth = isSel ? 2.5 : (STATE.selectedTeam ? 1 : 1.5);
       ds._dimmed = isDim;
     } else {
       var isHover = ds.org === org;
-      ds.borderColor = isHover ? base : base + '28';
+      ds.borderColor = isHover ? base : _dimColor(base);
       ds.borderWidth = isHover ? 2.5 : 1;
       ds._dimmed = !isHover;
     }
@@ -6222,16 +6245,27 @@ def mapelo_rankings_data():
         cutoff_date = max(in_snap_dates) if in_snap_dates else ref_date
     else:
         cutoff_date = ref_date
-    if cutoff_date < ref_date:
-        cutoff_date = ref_date
     checkpoints  = [cp for cp in (tl.get('checkpoints') or [])
                     if cp.get('date', '') <= cutoff_date]
     match_events = [me for me in all_match_events
                     if me.get('date', '') <= cutoff_date]
 
+    # Align the leaderboard's "overall_rating" with the chronological-timeline
+    # value at cutoff_date so the chart line, match dots, logo position, and
+    # card number all read the same number. The Massey snapshot in
+    # map_ratings.json can disagree with the timeline when a snap's event
+    # set differs from chronological reality (e.g. 2023 after_tokyo's
+    # snapshot excludes 2023_league to preserve historical kenpom magnitudes,
+    # but the timeline includes it chronologically). Per-map ratings stay
+    # from the snapshot since they only show up in the team-expand panel.
+    last_cp_ratings = {}
+    if checkpoints:
+        last_cp = max(checkpoints, key=lambda cp: cp.get('date', ''))
+        last_cp_ratings = last_cp.get('ratings', {}) or {}
+
     leaderboard = []
     for org, td in teams_raw.items():
-        rating = td.get('overall_rating', 0.0)
+        rating = last_cp_ratings.get(org, td.get('overall_rating', 0.0))
         region = ORG_REGIONS.get(org, 'Unknown')
         all_maps_sorted = sorted(
             (td.get('maps') or {}).items(),
