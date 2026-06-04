@@ -327,11 +327,11 @@ PAGE_HTML = """
     <div class="cover">
       <img src="/prxpacstage1win.jpg" alt="Paper Rex win VCT Pacific Stage 1 in Ho Chi Minh City">
     </div>
-    <p class="cover-caption">Paper Rex hoist the Pacific Stage 1 trophy in Ho Chi Minh City, cementing themselves as Masters London Favorites.</p>
+    <p class="cover-caption">Paper Rex hoist the Pacific Stage 1 trophy in Ho Chi Minh City, cementing themselves as Masters London favorites.</p>
     <div class="content">
       <div class="section-bubble-wrap section-bubble-tight"><span class="section-bubble" id="paperrex"><span class="section-bubble-text">Paper Rex&rsquo;s (Un)inevitability</span></span></div>
 
-      <p>Paper Rex are the favorites for Masters London, and it&rsquo;s not much of a secret. In fact, I believe that Paper Rex are the clearest favorites for an international in the history of VCT post-franchising, aside from one or two teams. This does not necessarily mean they&rsquo;re the strongest pre-international team, just the most consensus favorites. Other favorites often had flaws shown (e.g. before Tokyo, Fnatic lost their domestic grand final to Team Liquid) or had equally strong teams to compete with (e.g. before Bangkok, G2 looked dominant, but so did Vitality). Paper Rex have shown an aversion to slipping up in Stage 1, and no other teams in any region have looked nearly as good. The only other two teams that can compare to Paper Rex&rsquo;s current situation are Champions LA Fnatic and Champions Seoul Gen.G.</p>
+      <p>Paper Rex are the favorites for Masters London, and it&rsquo;s not much of a secret. In fact, I believe that Paper Rex are the clearest favorites for an international in the history of VCT post-franchising, aside from one or two teams. This does not necessarily mean they&rsquo;re the strongest pre-international team, just the most consensus favorites. Other favorites often had flaws shown (e.g. before Tokyo, Fnatic lost their domestic grand final to Team Liquid) or had equally strong teams to compete with (e.g. before Bangkok, G2 looked dominant, but so did Vitality). Paper Rex have shown an aversion to slipping up in Stage 1, and no other teams in any region have looked nearly as good. The only other two teams that can compare to Paper Rex&rsquo;s current situation are Pre-Champions-LA Fnatic and Pre-Champions-Seoul Gen.G.</p>
 
       <p>Heading into Champions LA, Fnatic were the largest favorites we&rsquo;ve ever seen heading into an international. They won the two internationals prior to Champions, which is something we can&rsquo;t say of any other team in VCT history. I have to give Fnatic the nod here.</p>
 
@@ -368,7 +368,7 @@ PAGE_HTML = """
         </div>
         <div class="comparison-row">
           <div class="comparison-value num">+3.61</div>
-          <div class="comparison-label">BenPom<br>(#1 World)</div>
+          <div class="comparison-label">BenPom Rating<br>(#1 World)</div>
           <div class="comparison-value num">+3.80</div>
         </div>
       </div>
@@ -377,7 +377,7 @@ PAGE_HTML = """
 
       <p>Perhaps the most damning data point here is that all four members of Plat Chat predicted Paper Rex to win Masters London, something that (I think) has never happened before. For those curious, no one on Plat Chat picked Gen.G at Champions 2024, which settles the debate between the perceptions of pre-London Paper Rex and pre-Seoul Gen.G.</p>
 
-      <p>Now, funnily enough, both of these two other teams (LA Fnatic and Seoul Gen.G) went on to lose their respective internationals. In this way, Masters London is just as much Paper Rex&rsquo;s event to lose as it is to win. However, the question of who they would even lose to is a hard question to answer. Given this historically significant situation, let&rsquo;s look over all the teams through power rankings, seeing who could pose a threat to Paper Rex.</p>
+      <p>Now, funnily enough, both of these two other teams (LA Fnatic and Seoul Gen.G) went on to lose their respective internationals. In this way, Masters London is just as much Paper Rex&rsquo;s event to lose as it is to win. However, the question of who they would even lose to is a hard question to answer. Let&rsquo;s look over all the teams through power rankings, seeing who could pose a threat to Paper Rex.</p>
 
       <div class="section-bubble-wrap"><span class="section-bubble" id="power-rankings"><span class="section-bubble-text">Power Rankings</span></span></div>
 
@@ -534,7 +534,7 @@ PAGE_HTML = """
       </div>
       <div class="why-block">
         <span class="why-label win">Why they can win</span>
-        <p>Personally, I think G2 are so so so&hellip; good. Not great, but good. In this way, I think they&rsquo;re perfectly poised to win this tournament, conditional upon one or two teams faltering just slightly. I&rsquo;ll explain.</p>
+        <p>Personally, I think G2 are so so so&hellip; good. Not great, but good. In this way, I think they&rsquo;re perfectly poised to win this tournament, conditional upon one or two teams faltering. I&rsquo;ll explain.</p>
         <p>No player on G2 is in insane form, unlike past times (Leaf before Bangkok, Trent before Toronto, Valyn before Champs Paris). Some people would say Trent is, but I disagree. No G2 player is consistently going into the server and dominating.</p>
         <p>In G2&rsquo;s past 3 matches, each one came down to the final map. They haven&rsquo;t been as domestically dominant as previous iterations, and I think they&rsquo;re quite honestly a tad overrated by BenPom.</p>
         <p>How do they win, then? The one metric where they&rsquo;ll win is experience. This core has been dominating domestically and playing well enough at internationals for years now. Meanwhile, London is filled with internationally inexperienced teams (e.g. Global Esports, FUT, LEV, etc.) and relatively new rosters (e.g. Vitality). In fact, other than NRG, PRX, and EDG, every other team at London has at least one player who&rsquo;s never played at an international.</p>
@@ -551,7 +551,7 @@ PAGE_HTML = """
 
       <div class="why-block">
         <span class="why-label watch">Something to watch for</span>
-        <p>One of Babybay or Leaf needs to step up. Or both of them! Trent and Valyn have been carrying too much of the firepower recently. Babybay and Leaf have been allowed to play high-fragging roles like Chamber and Phoenix, but they&rsquo;ve been lackluster. Leaf, we know, has the potential to be a top-5 player in the world, but he&rsquo;s been only decent in Stage 1 (1.01 rating). Keep in mind his most played agent has been Phoenix.</p>
+        <p>One of Babybay or Leaf needs to step up. Or both of them! Trent and Valyn have been carrying too much of the firepower recently. Babybay and Leaf have been playing high-fragging roles like Chamber and Phoenix, but they&rsquo;ve been lackluster. Leaf, we know, has the potential to be a top-5 player in the world, but he&rsquo;s been only decent in Stage 1 (1.01 rating). Keep in mind his most played agent has been Phoenix.</p>
       </div>
 
       <h2 id="b-tier" class="tier-section-header b">B Tier</h2>
@@ -595,7 +595,7 @@ PAGE_HTML = """
 
       <div class="why-block">
         <span class="why-label lose">Why they won&rsquo;t win</span>
-        <p>Transitioning from that previous section, it feels like this NRG lacks a certain W streamer when it comes to these big matches against high-level opponents who put the onus on NRG to step up. NRG barely beat MIBR in Kickoff to qualify for Santiago after faltering multiple times to qualify. At Santiago, when they reached top 3, their performance dropped drastically as they lost to NS and PRX (who they previously 2&ndash;0&rsquo;d a week ago). Similarly, NRG barely squeaked by 100 Thieves for the last spot to qualify for London.</p>
+        <p>Transitioning from that previous section, it feels like this NRG team lacks a certain W streamer when it comes to these big matches against high-level opponents who put the onus on NRG to step up. NRG barely beat MIBR in Kickoff to qualify for Santiago after failing multiple times to qualify. At Santiago, when they reached top 3, their performance dropped drastically as they lost to NS and PRX (who they previously 2&ndash;0&rsquo;d a week ago). Similarly, NRG barely squeaked by 100 Thieves for the last spot to qualify for London.</p>
         <p>This new roster refuses to be irrelevant, but they fail to prove their relevancy when it matters most. Why should London be any different?</p>
       </div>
 
@@ -791,7 +791,7 @@ PAGE_HTML = """
 
       <div class="why-block">
         <span class="why-label watch">Something to watch for</span>
-        <p>Just watch Primmie. This team is much more than Primmie (I specifically rate Killua&rsquo;s aim and CRWS&rsquo;s IGLing very highly), but Primmie is, at the end of the day, this team&rsquo;s human highlight reel.</p>
+        <p>Just watch Primmie. This team is much more than Primmie (I specifically rate Killua&rsquo;s aim and CRWS&rsquo;s IGLing highly), but Primmie is, at the end of the day, this team&rsquo;s human highlight reel.</p>
       </div>
 
       <div class="team-heading">
@@ -939,7 +939,7 @@ PAGE_HTML = """
 
       <div class="why-block">
         <span class="why-label lose">Why they won&rsquo;t win</span>
-        <p>However, if China do make a resurgence, historical precedent will not be XLG&rsquo;s friend. At Masters Santiago they went out 0&ndash;2. At Champions Paris, they went out 1&ndash;2. At Masters Toronto they went out 0&ndash;2. Despite EDG and XLG&rsquo;s (relatively) close matches, the difference in ranking is based on which team has proven themselves at an international level. It will be hard for China&rsquo;s current status and XLG&rsquo;s historical record at internationals to both flip on their heads. It will be hard for XLG to win.</p>
+        <p>However, if China does make a resurgence, historical precedent will not be XLG&rsquo;s friend. At Masters Santiago they went out 0&ndash;2. At Champions Paris, they went out 1&ndash;2. At Masters Toronto they went out 0&ndash;2. Despite EDG and XLG&rsquo;s (relatively) close matches, the difference in ranking is based on how they historically perform at internationals. It will be hard for China&rsquo;s current status and XLG&rsquo;s historical record at internationals to both flip on their heads. It will be hard for XLG to win.</p>
       </div>
 
       <div class="why-block">
@@ -1101,7 +1101,7 @@ PAGE_HTML = """
 
       <p>If PRX doesn&rsquo;t win this tournament, who will?</p>
 
-      <p>I&rsquo;m doubtful of G2 and NRG. G2 have shown their worst against top teams in Stage 1 Group Stage, and then managed to pull together a string of close wins to qualify for London through lowers. It&rsquo;ll be hard to recreate that level of luck (or &ldquo;locking in&rdquo; if you prefer to call it that) at Masters London. Again, believing in G2 feels more like doubting the other top teams. G2 won&rsquo;t put up a horrible performance, but I don&rsquo;t expect them to stomp either. NRG feel wishy-washy with their confusing comps. If I had a promise that NRG will put Keiko primarily on duelist, then I&rsquo;d pick them, but that doesn&rsquo;t seem to be happening. EDG have the aforementioned problem of simply being a Chinese team in 2026. It&rsquo;s hard to pick one after Masters Santiago.</p>
+      <p>G2 have shown their worst against top teams in Stage 1 Group Stage, and then managed to pull together a string of close wins to qualify for London through lowers. It&rsquo;ll be hard to recreate that level of luck (or &ldquo;locking in&rdquo; if you prefer to call it that) at Masters London. Again, believing in G2 feels more like doubting the other top teams. G2 won&rsquo;t put up a horrible performance, but I don&rsquo;t expect them to stomp either. NRG feel wishy-washy with their confusing comps. If I had a promise that NRG will put Keiko primarily on duelist, then I&rsquo;d pick them, but that doesn&rsquo;t seem to be happening. EDG have the aforementioned problem of simply being a Chinese team in 2026. It&rsquo;s hard to pick one after Masters Santiago.</p>
 
       <p>All of this is to say that I think NRG likely have the second-best chance of winning Masters London if Keiko plays duelist, but EDG are the most undervalued (i.e. the difference between their perceived odds and true odds).</p>
 
