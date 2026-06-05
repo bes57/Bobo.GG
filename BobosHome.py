@@ -28,35 +28,8 @@ HOME_HTML = """
 <title>Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <style>
-  :root {
-    --rose:#f4b8c1; --peach:#f9cba7; --mint:#b8e8d4;
-    --sky:#b8d8f4; --lavender:#d4b8f4; --lemon:#f4edb8;
-    --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e;
-  }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 10% 10%,#f4b8c155 0%,transparent 70%),
-      radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
-      radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
-      radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
-  }
-  body::after {
-    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
-      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
-    animation:purpleFloat 12s ease-in-out infinite alternate;
-  }
-  @keyframes purpleFloat {
-    0%   { transform:translate(0,0) scale(1); }
-    33%  { transform:translate(10%,-9%) scale(1.14); }
-    66%  { transform:translate(-9%,12%) scale(0.9); }
-    100% { transform:translate(7%,5%) scale(1.1); }
-  }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
   h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:700; letter-spacing:-2px; line-height:1; }
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
@@ -93,7 +66,7 @@ HOME_HTML = """
   .benpom-hero-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
   .benpom-hero-title { font-family:'Syne',sans-serif; font-size:clamp(1.9rem,5vw,2.6rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
   .benpom-hero-desc { padding:18px 24px 20px; text-align:center; text-wrap:balance; }
-  .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-weight:800; font-size:1rem; color:var(--ink); line-height:1.4; letter-spacing:-.01em; }
+  .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--soft); line-height:1.55; }
 </style>
 </head>
 <body>

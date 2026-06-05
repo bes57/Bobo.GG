@@ -23,7 +23,10 @@ STAT_LABELS = {
     "KAST":   "KAST %",
     "ADR":    "Avg Damage / Round",
     "HS%":    "Headshot %",
+    "CL%":    "Clutch %",
     "FKPR":   "First Kills Per Round",
+    "FIPR":   "First Interactions / Round",
+    "FIWR":   "First Interaction Win %",
 }
 
 LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25; now reads from data/2026_stage1.csv like other past events
@@ -53,6 +56,10 @@ def get_events_by_year():
         # CN-only events feed BenPom (team ratings) but are hidden from the
         # event-leaderboard dropdown — user wants CN scoped to team stats, not players.
         if list(e["regions"].keys()) == ["CN"]:
+            continue
+        # Hide events with no data yet (haven't started, or pre-scrape).
+        csv_path = os.path.join(os.path.dirname(__file__), "data", f"{e['id']}.csv")
+        if not os.path.exists(csv_path):
             continue
         by_year.setdefault(e["year"], []).append(e)
     return sorted(by_year.items(), reverse=True)
@@ -118,6 +125,33 @@ def _scrape_event_live(event):
     return cache
 
 
+def _add_derived_stats(df):
+    """Add FIPR (first interactions / round) and FIWR (first-blood win %)
+    columns derived from FK / FD / Rnd. Safe no-op if columns missing.
+    All first-interaction stats render to 2 decimal places for consistency."""
+    if df.empty or not {"FK", "FD", "Rnd"}.issubset(df.columns):
+        return df
+    fk  = pd.to_numeric(df["FK"],  errors="coerce")
+    fd  = pd.to_numeric(df["FD"],  errors="coerce")
+    rnd = pd.to_numeric(df["Rnd"], errors="coerce")
+    fi  = fk + fd
+    df["FIPR"] = (fi / rnd).apply(lambda v: f"{v:.2f}" if pd.notna(v) else "")
+    fiwr = (fk / fi * 100)
+    df["FIWR"] = fiwr.apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "")
+    # Reformat numeric stats to always 2 decimals (CSV drops trailing zero).
+    for col in ("FKPR", "R2.0", "K:D"):
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce").apply(
+                lambda v: f"{v:.2f}" if pd.notna(v) else ""
+            )
+    # ADR uses 1 decimal place.
+    if "ADR" in df.columns:
+        df["ADR"] = pd.to_numeric(df["ADR"], errors="coerce").apply(
+            lambda v: f"{v:.1f}" if pd.notna(v) else ""
+        )
+    return df
+
+
 def load_event(event):
     event_id = event["id"]
     if event_id in _event_cache:
@@ -157,16 +191,19 @@ def load_event(event):
             print(f"No CSV for {event_id} — scraping live...")
             cache = _scrape_event_live(event)
 
+    cache = _add_derived_stats(cache)
     _event_cache[event_id] = cache
     return cache
 
 def get_all(df, col):
     if df.empty or col not in df.columns:
         return []
-    keep = [c for c in ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", "Event", col] if c in df.columns]
+    keep = [c for c in ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", "Event", "FK", "FD", col] if c in df.columns]
     tmp = df[keep].copy()
-    tmp[col] = pd.to_numeric(tmp[col].astype(str).str.replace("%", ""), errors="coerce")
-    return tmp.dropna(subset=[col]).sort_values(col, ascending=False).to_dict("records")
+    # Sort numerically (strip % for ordering) but preserve the display string.
+    sort_vals = pd.to_numeric(tmp[col].astype(str).str.replace("%", ""), errors="coerce")
+    tmp = tmp.loc[sort_vals.notna()].assign(_sort=sort_vals[sort_vals.notna()])
+    return tmp.sort_values("_sort", ascending=False).drop(columns="_sort").to_dict("records")
 
 def build_data(cache, event):
     is_multi = len(event["regions"]) > 1
@@ -176,7 +213,7 @@ def build_data(cache, event):
     def to_records(df):
         if df.empty:
             return []
-        want = ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", "Event"] + stat_cols
+        want = ["Player", "Org", "ProfileURL", "HeadshotURL", "Region", "Rnd", "Event", "FK", "FD"] + stat_cols
         cols = [c for c in want if c in df.columns]
         return df[cols].fillna("").to_dict("records")
 
@@ -260,10 +297,115 @@ def _fetch_agents_from_match(match_id, profile_url):
     return seen
 
 
+def _orient_score(score, is_win):
+    """match_results.csv stores series score from the winner's perspective
+    (e.g. '2-0'). Flip it so it always reads from the player's perspective:
+    a loss shows '0-2', a win shows '2-0'."""
+    if not score or is_win is None:
+        return score or None
+    if is_win:
+        return score
+    parts = score.split("-", 1)
+    if len(parts) == 2:
+        return f"{parts[1].strip()}-{parts[0].strip()}"
+    return score
+
+
+_match_results_cache = None
+_match_results_mtime = 0.0
+def _get_match_results():
+    """Cached read of match_results.csv keyed by MatchID for series-level rows
+    (MapNum == 'all'). Returns {match_id: (winner_org, score, match_name)}."""
+    global _match_results_cache, _match_results_mtime
+    path = os.path.join(os.path.dirname(__file__), "data", "match_results.csv")
+    if not os.path.exists(path):
+        return {}
+    mtime = os.path.getmtime(path)
+    if _match_results_cache is not None and mtime <= _match_results_mtime:
+        return _match_results_cache
+    try:
+        mr = pd.read_csv(path, dtype={"MatchID": str, "MapNum": str})
+    except Exception:
+        return _match_results_cache or {}
+    series = mr[mr["MapNum"] == "all"]
+    _match_results_cache = {
+        str(r["MatchID"]): (str(r.get("WinnerOrg", "")), str(r.get("Score", "")), str(r.get("MatchName", "")))
+        for _, r in series.iterrows()
+    }
+    _match_results_mtime = mtime
+    return _match_results_cache
+
+
+def _best_match_from_df(df, profile_url):
+    """Return (best_row, opponent_org) for a player across all rows in df, or
+    (None, None) if no qualifying rows exist."""
+    df = df.copy()
+    df["_url"] = df["ProfileURL"].astype(str).str.rstrip("/")
+    player_rows = df[df["_url"] == profile_url.rstrip("/")].copy()
+    if player_rows.empty:
+        return None, None
+    player_rows["R2.0"] = pd.to_numeric(player_rows["R2.0"], errors="coerce")
+    if player_rows["R2.0"].dropna().empty:
+        return None, None
+    best = player_rows.loc[player_rows["R2.0"].idxmax()]
+    match_id = str(best.get("MatchID", ""))
+    player_org = str(best.get("Org", ""))
+    match_rows = df[df["MatchID"].astype(str) == match_id]
+    other_orgs = [o for o in match_rows["Org"].unique() if o != player_org]
+    opponent_org = other_orgs[0] if other_orgs else "Unknown"
+    return best, opponent_org
+
+
 def get_player_best_match(profile_url, event_id):
     cache_key = (profile_url, event_id)
     if cache_key in _player_match_cache:
         return _player_match_cache[cache_key]
+
+    # All-time: walk every event's series CSV, find the player's single best
+    # match across the whole catalog, and report which event it was from.
+    if event_id == ALLTIME_ID:
+        best_row, best_opponent, best_event = None, None, None
+        for e in ALL_EVENTS:
+            if list(e["regions"].keys()) == ["CN"]:
+                continue
+            path = os.path.join(SERIES_DIR, f"{e['id']}.csv")
+            if not os.path.exists(path):
+                continue
+            try:
+                df_e = pd.read_csv(path)
+            except Exception:
+                continue
+            row, opp = _best_match_from_df(df_e, profile_url)
+            if row is None:
+                continue
+            if best_row is None or row["R2.0"] > best_row["R2.0"]:
+                best_row, best_opponent, best_event = row, opp, e
+        if best_row is None:
+            result = {"error": "No match data found for this player"}
+            _player_match_cache[cache_key] = result
+            return result
+        best, opponent_org = best_row, best_opponent
+        match_id = str(best.get("MatchID", ""))
+        rating, kills, deaths = best.get("R2.0"), best.get("K"), best.get("D")
+        agents = _fetch_agents_from_match(match_id, profile_url) if match_id else []
+        mr = _get_match_results().get(match_id, ("", "", ""))
+        player_org_str = str(best_row.get("Org", ""))
+        is_win = mr[0] == player_org_str if mr[0] else None
+        score = _orient_score(mr[1], is_win)
+        result = {
+            "rating":       float(rating) if pd.notna(rating) else None,
+            "kills":        int(kills)    if pd.notna(kills)   else None,
+            "deaths":       int(deaths)   if pd.notna(deaths)  else None,
+            "agents":       agents,
+            "player_org":   player_org_str,
+            "opponent":     opponent_org,
+            "event_label":  best_event["label"],
+            "match_id":     match_id,
+            "series_score": score,
+            "result":       ("W" if is_win else "L") if is_win is not None else None,
+        }
+        _player_match_cache[cache_key] = result
+        return result
 
     series_path = os.path.join(SERIES_DIR, f"{event_id}.csv")
     if not os.path.exists(series_path):
@@ -278,38 +420,34 @@ def get_player_best_match(profile_url, event_id):
         _player_match_cache[cache_key] = result
         return result
 
-    # Normalise URL for matching (strip trailing slashes)
-    df["_url"] = df["ProfileURL"].astype(str).str.rstrip("/")
-    player_rows = df[df["_url"] == profile_url.rstrip("/")].copy()
-
-    if player_rows.empty:
+    best, opponent_org = _best_match_from_df(df, profile_url)
+    if best is None:
         result = {"error": "No match data found for this player"}
         _player_match_cache[cache_key] = result
         return result
 
-    player_rows["R2.0"] = pd.to_numeric(player_rows["R2.0"], errors="coerce")
-    best = player_rows.loc[player_rows["R2.0"].idxmax()]
-
-    match_id   = str(best.get("MatchID", ""))
-    rating     = best.get("R2.0")
-    kills      = best.get("K")
-    deaths     = best.get("D")
-    player_org = str(best.get("Org", ""))
-
-    # Derive opponent from other org in the same match
-    match_rows   = df[df["MatchID"].astype(str) == match_id]
-    other_orgs   = [o for o in match_rows["Org"].unique() if o != player_org]
-    opponent_org = other_orgs[0] if other_orgs else "Unknown"
+    match_id = str(best.get("MatchID", ""))
+    rating   = best.get("R2.0")
+    kills    = best.get("K")
+    deaths   = best.get("D")
 
     # Single match-page fetch just for agents
     agents = _fetch_agents_from_match(match_id, profile_url) if match_id else []
 
+    mr = _get_match_results().get(match_id, ("", "", ""))
+    player_org_str = str(best.get("Org", ""))
+    is_win = mr[0] == player_org_str if mr[0] else None
+    score = _orient_score(mr[1], is_win)
     result = {
-        "rating":   float(rating) if pd.notna(rating) else None,
-        "kills":    int(kills)    if pd.notna(kills)   else None,
-        "deaths":   int(deaths)   if pd.notna(deaths)  else None,
-        "agents":   agents,
-        "opponent": opponent_org,
+        "rating":       float(rating) if pd.notna(rating) else None,
+        "kills":        int(kills)    if pd.notna(kills)   else None,
+        "deaths":       int(deaths)   if pd.notna(deaths)  else None,
+        "agents":       agents,
+        "player_org":   player_org_str,
+        "opponent":     opponent_org,
+        "match_id":     match_id,
+        "series_score": score,
+        "result":       ("W" if is_win else "L") if is_win is not None else None,
     }
     _player_match_cache[cache_key] = result
     return result
@@ -325,35 +463,8 @@ MAIN_HTML = """
 <title>Event Leaderboards</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <style>
-  :root {
-    --rose:#f4b8c1; --peach:#f9cba7; --mint:#b8e8d4;
-    --sky:#b8d8f4; --lavender:#d4b8f4; --lemon:#f4edb8;
-    --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e;
-  }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 10% 10%,#f4b8c155 0%,transparent 70%),
-      radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
-      radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
-      radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
-  }
-  body::after {
-    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
-      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
-    animation:purpleFloat 12s ease-in-out infinite alternate;
-  }
-  @keyframes purpleFloat {
-    0%   { transform:translate(0,0) scale(1); }
-    33%  { transform:translate(10%,-9%) scale(1.14); }
-    66%  { transform:translate(-9%,12%) scale(0.9); }
-    100% { transform:translate(7%,5%) scale(1.1); }
-  }
   .page { position:relative; z-index:1; padding:40px 32px 60px; }
   .top-nav { display:flex; align-items:center; margin-bottom:32px; animation:fadeDown .7s ease both; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
@@ -417,10 +528,17 @@ MAIN_HTML = """
   .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; margin-top:6px; }
   .modal-section-title { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
   .modal-section { margin-bottom:22px; }
-  .best-match-card { background:#fdf6f0; border-radius:14px; padding:14px 18px; }
-  .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:10px; }
-  .best-match-stats { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
-  .best-match-agents { display:flex; gap:6px; margin-right:4px; }
+  .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
+  a.best-match-card:hover { background:#f7ecdf; }
+  .bm-matchup { display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
+  .bm-matchup .bm-vs { color:var(--soft); font-weight:600; font-size:.85rem; margin:0 4px; }
+  .bm-team-logo { height:26px; width:auto; object-fit:contain; }
+  .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
+  .bm-result { font-family:'Syne',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.72rem; letter-spacing:.04em; }
+  .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
+  .bm-result-L { background:#fbe0e0; color:#a51d1d; }
+  .best-match-stats { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; }
+  .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
   .best-match-stat { text-align:center; min-width:44px; }
   .best-match-stat-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1.25rem; display:block; }
@@ -478,7 +596,7 @@ MAIN_HTML = """
 
   <div class="rounds-wrap">
     <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
-    <input type="range" class="rounds-slider" id="rounds-slider" min="0" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
+    <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if event_id == 'all_time' else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
 
   <div class="grid" id="grid"></div>
@@ -505,13 +623,19 @@ MAIN_HTML = """
   </div>
 </div>
 <script>
+const ROUNDS_FLOOR = {{ 50 if event_id == 'all_time' else 0 }};
 const DATA = {{ data_json | safe }};
 const STAT_LABELS = {{ stat_labels_json | safe }};
 const EVENT_ID = {{ event_id | tojson }};
+const EVENT_LABEL = {{ event.label | tojson }};
 const STATS = Object.keys(STAT_LABELS);
 const PILL_CLASSES = ['pill-0','pill-1','pill-2','pill-3','pill-4','pill-5'];
 let currentRegion = 'All';
-let minRounds = 50;
+let minRounds = (function(){
+  var v = parseInt(localStorage.getItem('bobo_min_rounds'));
+  if (isNaN(v)) v = 50;
+  return Math.max(v, ROUNDS_FLOOR);
+})();
 
 function rankClass(i) { return i===0?'r1':i===1?'r2':i===2?'r3':''; }
 
@@ -563,6 +687,7 @@ function renderCard(stat, players, idx) {
        data-profile="${esc(p.ProfileURL||'')}"
        data-name="${esc(p.Player)}" data-headshot="${esc(p.HeadshotURL||'')}"
        data-org="${esc(p.Org||'')}" data-region="${esc(p.Region||'')}"
+       data-fk="${esc(p.FK||'')}" data-fd="${esc(p.FD||'')}"
        data-statval="${esc(String(p[stat]||''))}" data-stat="${esc(stat)}"
        onclick="openPlayerModal(this,event)">
       <div class="rank ${rankClass(i)}">${i+1}</div>
@@ -578,7 +703,7 @@ function renderCard(stat, players, idx) {
   return `<div class="card" style="animation:fadeUp .5s ${idx*0.06}s ease both"
     onclick="window.location='/vct/ranking/${encodeURIComponent(stat)}?event=${EVENT_ID}&region=${currentRegion}'">
     <div class="card-header">
-      <div class="stat-pill ${PILL_CLASSES[idx]}">${stat}</div>
+      <div class="stat-pill ${PILL_CLASSES[idx % PILL_CLASSES.length]}">${stat}</div>
       <div class="card-title">${STAT_LABELS[stat]}</div>
     </div>
     ${rows}
@@ -602,9 +727,17 @@ function switchRegion(region, btn) {
 
 function updateMinRounds(val) {
   minRounds = parseInt(val) || 0;
+  localStorage.setItem('bobo_min_rounds', minRounds);
   document.getElementById('rounds-val').textContent = minRounds === 0 ? 'Any' : minRounds + '+';
   renderGrid(currentRegion);
 }
+
+(function syncRoundsSlider(){
+  var sl = document.getElementById('rounds-slider');
+  var lb = document.getElementById('rounds-val');
+  if (sl) sl.value = minRounds;
+  if (lb) lb.textContent = minRounds === 0 ? 'Any' : minRounds + '+';
+})();
 
 renderGrid('All');
 
@@ -624,12 +757,17 @@ function openPlayerModal(el, e) {
   const avatarEl = headshot
     ? `<img class="modal-avatar" src="${esc(headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'modal-avatar-ph',style:'background:'+avatarColor(${JSON.stringify(name)}),textContent:${JSON.stringify(name)}.slice(0,2).toUpperCase()}))">`
     : `<div class="modal-avatar-ph" style="background:${avatarColor(name)}">${name.slice(0,2).toUpperCase()}</div>`;
+  const fk = el.dataset.fk, fd = el.dataset.fd;
+  const fdInfo = (['FKPR','FIPR','FIWR'].includes(stat) && fk !== '' && fd !== '')
+    ? `<div class="modal-meta" style="margin-top:10px">First duels won: <b>${esc(fk)}</b> &middot; First duels lost: <b>${esc(fd)}</b></div>`
+    : '';
   document.getElementById('modal-player').innerHTML = `
     ${avatarEl}
     <div>
       <div class="modal-name">${esc(name)}</div>
       <div class="modal-meta">${esc(org)} &middot; ${esc(region)}</div>
       <div class="modal-stat-badge">${esc(stat)} &nbsp; ${esc(statVal)}</div>
+      ${fdInfo}
     </div>`;
 
   // Reset match section
@@ -655,8 +793,8 @@ function openPlayerModal(el, e) {
   if (profileUrl) {
     fetch(`/vct/api/player_best_match?url=${encodeURIComponent(profileUrl)}&event=${encodeURIComponent(EVENT_ID)}`)
       .then(r => r.json())
-      .then(renderBestMatch)
-      .catch(() => renderBestMatch({error: 'Request failed'}));
+      .then(data => renderBestMatch(data, org))
+      .catch(() => renderBestMatch({error: 'Request failed'}, org));
   } else {
     document.getElementById('modal-match').innerHTML = '<div class="modal-loading" style="color:#ccc">No profile link available</div>';
   }
@@ -668,7 +806,7 @@ function closeModal(e) {
   document.body.style.overflow = '';
 }
 
-function renderBestMatch(data) {
+function renderBestMatch(data, playerOrg) {
   const el = document.getElementById('modal-match');
   if (data.error) {
     el.innerHTML = `<div class="modal-loading" style="color:#ccc">${esc(data.error)}</div>`;
@@ -677,11 +815,20 @@ function renderBestMatch(data) {
   const agentChips = (data.agents||[]).map(a =>
     `<span class="agent-chip">${esc(a)}</span>`
   ).join('');
+  const teamLogo = (org) => org
+    ? `<img src="/logos/${esc(org)}.png" alt="${esc(org)}" class="bm-team-logo" onerror="this.style.display='none'">`
+    : '';
+  const openTag = data.match_id ? `<a class="best-match-card" href="https://www.vlr.gg/${esc(data.match_id)}/" target="_blank" rel="noopener" title="Open match on VLR.gg">` : `<div class="best-match-card">`;
+  const closeTag = data.match_id ? '</a>' : '</div>';
   el.innerHTML = `
-    <div class="best-match-card">
-      <div class="best-match-vs">vs ${esc(data.opponent||'?')}</div>
+    ${openTag}
+      <div class="bm-matchup">
+        ${teamLogo(playerOrg)}<span>${esc(playerOrg||'?')}</span>
+        <span class="bm-vs">vs</span>
+        <span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}
+      </div>
+      <div class="best-match-vs">${data.result ? `<span class="bm-result bm-result-${data.result}">${esc(data.result)}${data.series_score ? ' ' + esc(data.series_score) : ''}</span>` : ''}${data.result && data.event_label ? ' &middot; ' : ''}${data.event_label ? esc(data.event_label) : ''}</div>
       <div class="best-match-stats">
-        <div class="best-match-agents">${agentChips||'<span class="agent-chip">—</span>'}</div>
         <div class="best-match-stat">
           <span class="best-match-stat-val">${data.rating != null ? data.rating.toFixed(2) : '—'}</span>
           <span class="best-match-stat-lbl">Rating</span>
@@ -695,7 +842,8 @@ function renderBestMatch(data) {
           <span class="best-match-stat-lbl">Deaths</span>
         </div>
       </div>
-    </div>`;
+      <div class="best-match-agents">${agentChips||'<span class="agent-chip">—</span>'}</div>
+    ${closeTag}`;
 }
 
 // ── Normal distribution canvas ────────────────────────────────────────────────
@@ -786,9 +934,10 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
   // Percentile caption
   const below  = values.filter(v => v < playerVal).length;
   const topPct = Math.round((1 - below/values.length)*100);
+  const scope  = EVENT_ID === 'all_time' ? 'all-time' : `at ${EVENT_LABEL}`;
   const pctTxt = topPct <= 50
-    ? `Top ${topPct}% — better than ${100-topPct}% of players at this event`
-    : `Bottom ${100-topPct}% — better than ${100-topPct}% of players at this event`;
+    ? `Top ${topPct}% — better than ${100-topPct}% of players ${scope}`
+    : `Bottom ${100-topPct}% — better than ${100-topPct}% of players ${scope}`;
   document.getElementById('dist-caption').textContent = pctTxt;
 
   distState = {xMin, xMax, PAD, pw, statPlayers: statPlayers || []};
@@ -834,31 +983,8 @@ RANKING_HTML = """
 <title>{{ stat }} Rankings - VCT Stats</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <style>
-  :root { --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e; --lavender:#d4b8f4; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 10% 10%,#f4b8c155 0%,transparent 70%),
-      radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
-      radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
-      radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
-  }
-  body::after {
-    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
-      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
-    animation:purpleFloat 12s ease-in-out infinite alternate;
-  }
-  @keyframes purpleFloat {
-    0%   { transform:translate(0,0) scale(1); }
-    33%  { transform:translate(10%,-9%) scale(1.14); }
-    66%  { transform:translate(-9%,12%) scale(0.9); }
-    100% { transform:translate(7%,5%) scale(1.1); }
-  }
   .page { position:relative; z-index:1; padding:40px 32px 60px; max-width:900px; margin:0 auto; }
   .top-nav { padding:32px 32px 0; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
@@ -871,15 +997,32 @@ RANKING_HTML = """
   .region-filter { display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap; }
   .filter-btn { padding:7px 18px; border-radius:99px; border:2px solid transparent; background:white; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .2s; box-shadow:0 2px 8px #0001; }
   .filter-btn:hover,.filter-btn.active { background:var(--ink); color:white; }
-  .table-wrap { background:white; border-radius:20px; overflow:hidden; box-shadow:0 4px 24px #0000000a; }
-  table { width:100%; border-collapse:collapse; }
+  /* translateZ promotes the wrap to its own GPU layer — the big shadow is
+     painted once and composited on scroll instead of re-painted every frame. */
+  .table-wrap { background:white; border-radius:20px; overflow:hidden; box-shadow:0 4px 24px #0000000a; transform:translateZ(0); }
+  /* table-layout:fixed stops the browser from recomputing column widths
+     from every one of 2000+ rows on each layout pass. */
+  table { width:100%; border-collapse:collapse; table-layout:fixed; }
   thead th { padding:14px 18px; text-align:left; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
   thead th.num { text-align:right; }
-  tbody tr { transition:background .15s; }
+  /* Explicit column widths for table-layout:fixed. Rank fits 4 digits comfortably. */
+  thead th:nth-child(1) { width:120px; }
+  thead th:nth-child(3) { width:90px; }
+  thead th:nth-child(4) { width:130px; }
+  thead th:nth-child(5) { width:110px; }
+  /* No transition on every row — the 150ms hover transition fires on every
+     row that scrolls past the cursor, generating dozens of concurrent
+     animations during scroll. Hover becomes instant; perf jumps. */
   tbody tr:hover { background:#fdf6f0; }
-  tbody td { padding:11px 18px; border-bottom:1px solid #f6f2fa; font-size:.88rem; vertical-align:middle; }
+  tbody td { padding:11px 18px; border-bottom:1px solid #f6f2fa; font-size:.88rem; vertical-align:middle; white-space:nowrap; }
+  /* Numeric cells (rank, stat) should never ellipsis — they're always short. */
+  tbody td.rank-cell, tbody td.num { overflow:visible; text-overflow:clip; }
+  /* Player/Team/Region cells clip if absurdly long, no ellipsis spillover. */
+  tbody td:nth-child(2), tbody td:nth-child(3), tbody td:nth-child(4) { overflow:hidden; text-overflow:ellipsis; }
   tbody td.num { text-align:right; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; }
   tbody tr:last-child td { border-bottom:none; }
+  /* Skip rendering off-screen rows. */
+  tbody tr { content-visibility:auto; contain-intrinsic-size:0 75px; }
   .rank-cell { font-family:'Syne',sans-serif; font-weight:800; color:#ccc; width:44px; }
   .r1{color:#f0b429} .r2{color:#9eaab5} .r3{color:#c07c3a}
   .player-cell { display:flex; align-items:center; gap:12px; }
@@ -911,10 +1054,17 @@ RANKING_HTML = """
   .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; margin-top:6px; }
   .modal-section-title { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
   .modal-section { margin-bottom:22px; }
-  .best-match-card { background:#fdf6f0; border-radius:14px; padding:14px 18px; }
-  .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:10px; }
-  .best-match-stats { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
-  .best-match-agents { display:flex; gap:6px; margin-right:4px; }
+  .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
+  a.best-match-card:hover { background:#f7ecdf; }
+  .bm-matchup { display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
+  .bm-matchup .bm-vs { color:var(--soft); font-weight:600; font-size:.85rem; margin:0 4px; }
+  .bm-team-logo { height:26px; width:auto; object-fit:contain; }
+  .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
+  .bm-result { font-family:'Syne',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.72rem; letter-spacing:.04em; }
+  .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
+  .bm-result-L { background:#fbe0e0; color:#a51d1d; }
+  .best-match-stats { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; }
+  .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
   .best-match-stat { text-align:center; min-width:44px; }
   .best-match-stat-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1.25rem; display:block; }
@@ -953,13 +1103,13 @@ RANKING_HTML = """
   </div>
   <div class="rounds-wrap">
     <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
-    <input type="range" class="rounds-slider" id="rounds-slider" min="0" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
+    <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if event_id == 'all_time' else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th style="width:44px">#</th>
+          <th>#</th>
           <th>Player</th>
           <th>Team</th>
           <th>Region</th>
@@ -967,31 +1117,8 @@ RANKING_HTML = """
         </tr>
       </thead>
       <tbody id="tbody">
-        {% for p in players %}
-        <tr data-region="{{ p.Region }}" data-player="{{ p.Player | lower }}" data-rounds="{{ p.get('Rnd', '') }}"
-            data-profile="{{ p.get('ProfileURL','') }}" data-headshot="{{ p.get('HeadshotURL','') }}"
-            data-name="{{ p.Player }}" data-org="{{ p.get('Org','') }}"
-            data-statval="{{ p[stat] }}" data-stat="{{ stat }}"
-            onclick="openPlayerModal(this, event)">
-          <td class="rank-cell {% if loop.index == 1 %}r1{% elif loop.index == 2 %}r2{% elif loop.index == 3 %}r3{% endif %}">{{ loop.index }}</td>
-          <td>
-            <div class="player-cell">
-              {% if p.get('HeadshotURL') %}
-              <img class="avatar-img" src="{{ p.HeadshotURL }}" data-name="{{ p.Player }}" data-hue="{{ p.Player | player_hue }}" onerror="rankShowInitials(this)">
-              {% else %}
-              <div class="avatar-ph" style="width:52px;height:52px;font-size:16px;background:hsl({{ p.Player | player_hue }},55%,70%)">{{ p.Player[:2] | upper }}</div>
-              {% endif %}
-              <div class="player-name-wrap">
-                <div>{{ p.Player }}</div>
-                {% if p.get('Event') %}<div class="player-event-tag">{{ p.Event }}</div>{% endif %}
-              </div>
-            </div>
-          </td>
-          <td>{{ p.get('Org','') }}</td>
-          <td><span class="badge">{{ p.Region }}</span></td>
-          <td class="num">{{ p[stat] }}</td>
-        </tr>
-        {% endfor %}
+        <tr id="top-spacer"><td colspan="5" style="padding:0;border:none"></td></tr>
+        <tr id="bottom-spacer"><td colspan="5" style="padding:0;border:none"></td></tr>
         <tr id="no-results" style="display:none">
           <td colspan="5" class="no-results">No players match your search.</td>
         </tr>
@@ -1017,11 +1144,18 @@ RANKING_HTML = """
   </div>
 </div>
 <script>
+const ROUNDS_FLOOR = {{ 50 if event_id == 'all_time' else 0 }};
 const STAT_VALUES = {{ stat_values_json | safe }};
 const STAT_PLAYERS = {{ players_hover_json | safe }};
 const EVENT_ID = {{ event_id | tojson }};
+const EVENT_LABEL = {{ event.label | tojson }};
 const STAT_LABELS = {{ stat_labels_json | safe }};
 const CURRENT_STAT = {{ stat | tojson }};
+const PLAYERS = {{ players_json | safe }};
+// All-time view includes the Event column, so rows are 2 lines tall.
+const HAS_EVENT_COL = PLAYERS.length > 0 && !!PLAYERS[0].Event;
+const ROW_HEIGHT = HAS_EVENT_COL ? 75 : 55;
+const ROW_BUFFER = 6;
 
 function rankShowInitials(img) {
   const hue = img.dataset.hue;
@@ -1034,7 +1168,11 @@ function rankShowInitials(img) {
 }
 
 let activeRegion = '{{ active_region }}';
-let minRounds = 50;
+let minRounds = (function(){
+  var v = parseInt(localStorage.getItem('bobo_min_rounds'));
+  if (isNaN(v)) v = 50;
+  return Math.max(v, ROUNDS_FLOOR);
+})();
 
 function filterRegion(region, btn) {
   activeRegion = region;
@@ -1045,23 +1183,113 @@ function filterRegion(region, btn) {
 
 function updateMinRounds(val) {
   minRounds = parseInt(val) || 0;
+  localStorage.setItem('bobo_min_rounds', minRounds);
   document.getElementById('rounds-val').textContent = minRounds === 0 ? 'Any' : minRounds + '+';
   applyFilters();
 }
 
-function applyFilters() {
-  const query = document.getElementById('search').value.trim().toLowerCase();
-  let visible = 0;
-  document.querySelectorAll('#tbody tr:not(#no-results)').forEach(row => {
-    const regionMatch = activeRegion === 'All' || row.dataset.region === activeRegion;
-    const nameMatch = !query || row.dataset.player.includes(query);
-    const roundsMatch = minRounds === 0 || (parseInt(row.dataset.rounds) || 0) >= minRounds;
-    const show = regionMatch && nameMatch && roundsMatch;
-    row.style.display = show ? '' : 'none';
-    if (show) visible++;
-  });
-  document.getElementById('no-results').style.display = visible === 0 ? '' : 'none';
+(function syncRoundsSlider(){
+  var sl = document.getElementById('rounds-slider');
+  var lb = document.getElementById('rounds-val');
+  if (sl) sl.value = minRounds;
+  if (lb) lb.textContent = minRounds === 0 ? 'Any' : minRounds + '+';
+})();
+
+// ── Virtual scroller ─────────────────────────────────────────────────────────
+// Only ~30 rows live in the DOM at a time. Filter operates on the data array,
+// scroll updates the rendered window. Huge win on all-time (~2400 rows).
+
+function htmlEsc(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+function playerHue(name) {
+  let s = 0; const n = (name || '');
+  for (let i = 0; i < n.length; i++) s += n.charCodeAt(i);
+  return s % 360;
+}
+
+let filteredPlayers = PLAYERS;
+
+function rowHTML(p, rank) {
+  const rc = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
+  const hue = playerHue(p.Player);
+  const avatar = p.HeadshotURL
+    ? `<img class="avatar-img" src="${htmlEsc(p.HeadshotURL)}" loading="lazy" decoding="async" data-name="${htmlEsc(p.Player)}" data-hue="${hue}" onerror="rankShowInitials(this)">`
+    : `<div class="avatar-ph" style="width:52px;height:52px;font-size:16px;background:hsl(${hue},55%,70%)">${htmlEsc((p.Player||'').slice(0,2).toUpperCase())}</div>`;
+  const eventTag = p.Event ? `<div class="player-event-tag">${htmlEsc(p.Event)}</div>` : '';
+  return `<tr data-region="${htmlEsc(p.Region)}" data-player="${htmlEsc((p.Player||'').toLowerCase())}" data-rounds="${htmlEsc(p.Rnd)}" `
+       + `data-profile="${htmlEsc(p.ProfileURL)}" data-headshot="${htmlEsc(p.HeadshotURL)}" `
+       + `data-name="${htmlEsc(p.Player)}" data-org="${htmlEsc(p.Org)}" `
+       + `data-fk="${htmlEsc(p.FK)}" data-fd="${htmlEsc(p.FD)}" `
+       + `data-statval="${htmlEsc(p[CURRENT_STAT])}" data-stat="${htmlEsc(CURRENT_STAT)}" `
+       + `onclick="openPlayerModal(this, event)">`
+       + `<td class="rank-cell ${rc}">${rank}</td>`
+       + `<td><div class="player-cell">${avatar}<div class="player-name-wrap"><div>${htmlEsc(p.Player)}</div>${eventTag}</div></div></td>`
+       + `<td>${htmlEsc(p.Org)}</td>`
+       + `<td><span class="badge">${htmlEsc(p.Region)}</span></td>`
+       + `<td class="num">${htmlEsc(p[CURRENT_STAT])}</td>`
+       + `</tr>`;
+}
+
+let _renderState = { firstIdx: -1, lastIdx: -1, totalLen: -1 };
+function renderRows() {
+  const tableWrap = document.querySelector('.table-wrap');
+  if (!tableWrap) return;
+  const wrapRect = tableWrap.getBoundingClientRect();
+  const wrapTopAbs = wrapRect.top + window.scrollY;
+  const headerH = 50;
+  const viewportTop = window.scrollY;
+  const viewportBottom = viewportTop + window.innerHeight;
+
+  const total = filteredPlayers.length;
+  let firstIdx = Math.floor((viewportTop - wrapTopAbs - headerH) / ROW_HEIGHT) - ROW_BUFFER;
+  let lastIdx  = Math.ceil((viewportBottom - wrapTopAbs - headerH) / ROW_HEIGHT) + ROW_BUFFER;
+  firstIdx = Math.max(0, firstIdx);
+  lastIdx  = Math.min(total, lastIdx);
+  if (firstIdx >= lastIdx) { firstIdx = 0; lastIdx = Math.min(total, 30); }
+
+  // Skip if window unchanged and total length unchanged.
+  if (firstIdx === _renderState.firstIdx && lastIdx === _renderState.lastIdx && total === _renderState.totalLen) return;
+  _renderState = { firstIdx, lastIdx, totalLen: total };
+
+  const topPx = firstIdx * ROW_HEIGHT;
+  const botPx = Math.max(0, (total - lastIdx) * ROW_HEIGHT);
+
+  // Build rows in slice.
+  let html = '';
+  for (let i = firstIdx; i < lastIdx; i++) html += rowHTML(filteredPlayers[i], i + 1);
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML =
+    `<tr id="top-spacer" style="height:${topPx}px"><td colspan="5" style="padding:0;border:none;height:${topPx}px"></td></tr>` +
+    html +
+    `<tr id="no-results" style="display:${total === 0 ? '' : 'none'}"><td colspan="5" class="no-results">No players match your search.</td></tr>` +
+    `<tr id="bottom-spacer" style="height:${botPx}px"><td colspan="5" style="padding:0;border:none;height:${botPx}px"></td></tr>`;
+}
+
+function applyFilters() {
+  const query = (document.getElementById('search').value || '').trim().toLowerCase();
+  filteredPlayers = PLAYERS.filter(p => {
+    if (activeRegion !== 'All' && p.Region !== activeRegion) return false;
+    if (query && !(p.Player || '').toLowerCase().includes(query)) return false;
+    if (minRounds > 0 && (parseInt(p.Rnd) || 0) < minRounds) return false;
+    return true;
+  });
+  // Force re-render on filter change.
+  _renderState = { firstIdx: -1, lastIdx: -1, totalLen: -1 };
+  renderRows();
+}
+
+let _scrollPending = false;
+window.addEventListener('scroll', () => {
+  if (_scrollPending) return;
+  _scrollPending = true;
+  requestAnimationFrame(() => { renderRows(); _scrollPending = false; });
+}, { passive: true });
+window.addEventListener('resize', () => {
+  _renderState = { firstIdx: -1, lastIdx: -1, totalLen: -1 };
+  renderRows();
+});
 
 applyFilters();
 
@@ -1091,12 +1319,17 @@ function openPlayerModal(el, e) {
   const avatarEl = headshot
     ? `<img class="modal-avatar" src="${esc(headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'modal-avatar-ph',style:'background:'+avatarColor(${JSON.stringify(name)}),textContent:${JSON.stringify(name)}.slice(0,2).toUpperCase()}))">`
     : `<div class="modal-avatar-ph" style="background:${avatarColor(name)}">${name.slice(0,2).toUpperCase()}</div>`;
+  const fk = el.dataset.fk, fd = el.dataset.fd;
+  const fdInfo = (['FKPR','FIPR','FIWR'].includes(stat) && fk !== '' && fd !== '')
+    ? `<div class="modal-meta" style="margin-top:10px">First duels won: <b>${esc(fk)}</b> &middot; First duels lost: <b>${esc(fd)}</b></div>`
+    : '';
   document.getElementById('modal-player').innerHTML = `
     ${avatarEl}
     <div>
       <div class="modal-name">${esc(name)}</div>
       <div class="modal-meta">${esc(org)} &middot; ${esc(region)}</div>
       <div class="modal-stat-badge">${esc(stat)} &nbsp; ${esc(statVal)}</div>
+      ${fdInfo}
     </div>`;
 
   document.getElementById('modal-match').innerHTML = '<div class="modal-loading">Loading match data&hellip;</div>';
@@ -1111,8 +1344,8 @@ function openPlayerModal(el, e) {
   if (profileUrl) {
     fetch(`/vct/api/player_best_match?url=${encodeURIComponent(profileUrl)}&event=${encodeURIComponent(EVENT_ID)}`)
       .then(r => r.json())
-      .then(renderBestMatch)
-      .catch(() => renderBestMatch({error: 'Request failed'}));
+      .then(data => renderBestMatch(data, org))
+      .catch(() => renderBestMatch({error: 'Request failed'}, org));
   } else {
     document.getElementById('modal-match').innerHTML = '<div class="modal-loading" style="color:#ccc">No profile link available</div>';
   }
@@ -1124,18 +1357,27 @@ function closeModal(e) {
   document.body.style.overflow = '';
 }
 
-function renderBestMatch(data) {
+function renderBestMatch(data, playerOrg) {
   const el = document.getElementById('modal-match');
   if (data.error) {
     el.innerHTML = `<div class="modal-loading" style="color:#ccc">${esc(data.error)}</div>`;
     return;
   }
   const agentChips = (data.agents||[]).map(a => `<span class="agent-chip">${esc(a)}</span>`).join('');
+  const teamLogo = (org) => org
+    ? `<img src="/logos/${esc(org)}.png" alt="${esc(org)}" class="bm-team-logo" onerror="this.style.display='none'">`
+    : '';
+  const openTag = data.match_id ? `<a class="best-match-card" href="https://www.vlr.gg/${esc(data.match_id)}/" target="_blank" rel="noopener" title="Open match on VLR.gg">` : `<div class="best-match-card">`;
+  const closeTag = data.match_id ? '</a>' : '</div>';
   el.innerHTML = `
-    <div class="best-match-card">
-      <div class="best-match-vs">vs ${esc(data.opponent||'?')}</div>
+    ${openTag}
+      <div class="bm-matchup">
+        ${teamLogo(playerOrg)}<span>${esc(playerOrg||'?')}</span>
+        <span class="bm-vs">vs</span>
+        <span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}
+      </div>
+      <div class="best-match-vs">${data.result ? `<span class="bm-result bm-result-${data.result}">${esc(data.result)}${data.series_score ? ' ' + esc(data.series_score) : ''}</span>` : ''}${data.result && data.event_label ? ' &middot; ' : ''}${data.event_label ? esc(data.event_label) : ''}</div>
       <div class="best-match-stats">
-        <div class="best-match-agents">${agentChips||'<span class="agent-chip">—</span>'}</div>
         <div class="best-match-stat">
           <span class="best-match-stat-val">${data.rating != null ? data.rating.toFixed(2) : '—'}</span>
           <span class="best-match-stat-lbl">Rating</span>
@@ -1149,7 +1391,8 @@ function renderBestMatch(data) {
           <span class="best-match-stat-lbl">Deaths</span>
         </div>
       </div>
-    </div>`;
+      <div class="best-match-agents">${agentChips||'<span class="agent-chip">—</span>'}</div>
+    ${closeTag}`;
 }
 
 let distState = null;
@@ -1225,9 +1468,10 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
 
   const below  = values.filter(v => v < playerVal).length;
   const topPct = Math.round((1 - below/values.length)*100);
+  const scope  = EVENT_ID === 'all_time' ? 'all-time' : `at ${EVENT_LABEL}`;
   const pctTxt = topPct <= 50
-    ? `Top ${topPct}% — better than ${100-topPct}% of players at this event`
-    : `Bottom ${100-topPct}% — better than ${100-topPct}% of players at this event`;
+    ? `Top ${topPct}% — better than ${100-topPct}% of players ${scope}`
+    : `Bottom ${100-topPct}% — better than ${100-topPct}% of players ${scope}`;
   document.getElementById('dist-caption').textContent = pctTxt;
 
   distState = {xMin, xMax, PAD, pw, statPlayers: statPlayers || []};
@@ -1265,13 +1509,25 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
 """
 
 
+def _most_recent_event_with_data():
+    """Most recent non-CN-only event whose top-level CSV exists. ALL_EVENTS is
+    ordered most-recent-first, so the first match wins."""
+    data_dir = os.path.join(os.path.dirname(__file__), "data")
+    for e in ALL_EVENTS:
+        if list(e["regions"].keys()) == ["CN"]:
+            continue
+        if os.path.exists(os.path.join(data_dir, f"{e['id']}.csv")):
+            return e
+    return ALL_EVENTS[0]
+
+
 @vct_bp.route("/")
 def index():
     _ensure_headshots_loaded()
 
-    default_id = "2026_stage1"
-    event_id = request.args.get("event", default_id)
-    event = ALLTIME_EVENT if event_id == ALLTIME_ID else next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
+    default_event = _most_recent_event_with_data()
+    event_id = request.args.get("event", default_event["id"])
+    event = ALLTIME_EVENT if event_id == ALLTIME_ID else next((e for e in ALL_EVENTS if e["id"] == event_id), default_event)
 
     cache = load_event(event)
     data, available_regions = build_data(cache, event)
@@ -1315,17 +1571,21 @@ def ranking(stat):
 
     players = get_all(cache, stat)
 
-    stat_values = [float(p[stat]) for p in players
-                   if p.get(stat) not in (None, '', float('nan'))]
-    players_hover = [{"name": p["Player"], "org": p.get("Org", ""), "val": float(p[stat])}
-                     for p in players
-                     if p.get(stat) not in (None, '', float('nan'))]
+    def _num(v):
+        try:
+            return float(str(v).replace("%", ""))
+        except (ValueError, TypeError):
+            return None
+
+    stat_values = [_num(p[stat]) for p in players if _num(p.get(stat)) is not None]
+    players_hover = [{"name": p["Player"], "org": p.get("Org", ""), "val": _num(p[stat])}
+                     for p in players if _num(p.get(stat)) is not None]
 
     return render_template_string(
         RANKING_HTML,
         stat=stat,
         stat_label=STAT_LABELS[stat],
-        players=players,
+        players_json=json.dumps(players),
         active_region=active_region,
         event=event,
         event_id=event_id,

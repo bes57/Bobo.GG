@@ -1059,37 +1059,7 @@ def _get_map_matches(org, map_name, year='2025', snap='after_champions'):
     return result
 
 
-PW_JS = "/* password gate removed */"
-
 SHARED_CSS = """
-  :root {
-    --rose:#f4b8c1; --peach:#f9cba7; --mint:#b8e8d4;
-    --sky:#b8d8f4; --lavender:#d4b8f4; --lemon:#f4edb8;
-    --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e;
-  }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 10% 10%,#f4b8c155 0%,transparent 70%),
-      radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
-      radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
-      radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
-  }
-  body::after {
-    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
-      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
-    animation:purpleFloat 12s ease-in-out infinite alternate;
-  }
-  @keyframes purpleFloat {
-    0%   { transform:translate(0,0) scale(1); }
-    33%  { transform:translate(10%,-9%) scale(1.14); }
-    66%  { transform:translate(-9%,12%) scale(0.9); }
-    100% { transform:translate(7%,5%) scale(1.1); }
-  }
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; display:flex; flex-direction:row; align-items:center; gap:16px; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
@@ -1116,8 +1086,9 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link rel="preload" as="image" fetchpriority="high" href="/static/MastersShanghaiFinal.jpg">
+<link rel="preload" as="image" fetchpriority="high" href="/static/MastersShanghaiFinal-full.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <style>
   SHARED_CSS
   .hub-hero { position:relative; width:100%; padding:24px 32px 170px; min-height:520px; text-align:center; overflow:hidden; isolation:isolate; background-color:#0e0a14; }
@@ -1231,7 +1202,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   (function(){
     var heroImg = document.querySelector('.hub-hero-img');
     if (heroImg) {
-      var src1 = '/static/MastersShanghaiFinal.jpg';
+      var src1 = '/static/MastersShanghaiFinal-full.jpg';
       var img1 = new Image();
       img1.onload = function() {
         heroImg.style.backgroundImage = 'url(' + src1 + ')';
@@ -1326,11 +1297,10 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   })();
   </script>
 </div>
-<script>PW_JS</script>
 SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS).replace('SHARED_FOOTER', SHARED_FOOTER)
+""".replace('SHARED_CSS', SHARED_CSS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 MAPELO_HOME_HTML = """
 <!DOCTYPE html>
@@ -1341,6 +1311,7 @@ MAPELO_HOME_HTML = """
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -3675,11 +3646,10 @@ function initRankings() {
   renderAlphaFormula();
 })();
 </script>
-<script>PW_JS</script>
 SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS).replace('SHARED_FOOTER', SHARED_FOOTER)
+""".replace('SHARED_CSS', SHARED_CSS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -3689,6 +3659,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <title>Historical Matchup Predictor &mdash; BenPom</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:980px; margin:0 auto; }
@@ -5355,11 +5326,10 @@ function runMatchup() {
   })();
 })();
 </script>
-<script>PW_JS</script>
 SHARED_FOOTER
 </body>
 </html>
-""".replace('SHARED_CSS', SHARED_CSS).replace('PW_JS', PW_JS).replace('SHARED_FOOTER', SHARED_FOOTER)
+""".replace('SHARED_CSS', SHARED_CSS).replace('SHARED_FOOTER', SHARED_FOOTER)
 
 MAPELO_PYTH_HTML = """
 <!DOCTYPE html>
@@ -5370,9 +5340,10 @@ MAPELO_PYTH_HTML = """
 <title>Pythagorean Win% — VCT Map Model</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:1000px; margin:0 auto; width:100%; }
@@ -7594,6 +7565,7 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <!-- v2 -->

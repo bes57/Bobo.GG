@@ -18,37 +18,8 @@ PAGE_HTML = """
 <title>Masters London Preview &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
 <style>
-  :root {
-    --rose:#f4b8c1; --peach:#f9cba7; --mint:#b8e8d4;
-    --sky:#b8d8f4; --lavender:#d4b8f4; --lemon:#f4edb8;
-    --cream:#fdf6f0; --ink:#2a1f2d; --soft:#7a6e7e;
-  }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  html { scroll-behavior:smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
-  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--ink); min-height:100vh; display:flex; flex-direction:column; }
-  body::before {
-    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 10% 10%,#f4b8c155 0%,transparent 70%),
-      radial-gradient(ellipse 50% 60% at 90% 20%,#b8d8f455 0%,transparent 70%),
-      radial-gradient(ellipse 55% 45% at 15% 85%,#b8e8d455 0%,transparent 70%),
-      radial-gradient(ellipse 60% 50% at 85% 80%,#d4b8f455 0%,transparent 70%);
-  }
-  body::after {
-    content:''; position:fixed; inset:-50%; pointer-events:none; z-index:0;
-    background:
-      radial-gradient(ellipse 60% 50% at 60% 55%,#c4a0f099 0%,transparent 55%),
-      radial-gradient(ellipse 50% 60% at 38% 42%,#d4a97477 0%,transparent 55%);
-    animation:purpleFloat 12s ease-in-out infinite alternate;
-  }
-  @keyframes purpleFloat {
-    0%   { transform:translate(0,0) scale(1); }
-    33%  { transform:translate(10%,-9%) scale(1.14); }
-    66%  { transform:translate(-9%,12%) scale(0.9); }
-    100% { transform:translate(7%,5%) scale(1.1); }
-  }
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
@@ -325,7 +296,7 @@ PAGE_HTML = """
     <h1>Masters London Preview</h1>
     <div class="byline">Bobo &mdash; June 2026</div>
     <div class="cover">
-      <img src="/prxpacstage1win.jpg" alt="Paper Rex win VCT Pacific Stage 1 in Ho Chi Minh City">
+      <img src="/static/PRXPacStage1Win-full.jpg" alt="Paper Rex win VCT Pacific Stage 1 in Ho Chi Minh City">
     </div>
     <p class="cover-caption">Paper Rex hoist the Pacific Stage 1 trophy in Ho Chi Minh City, cementing themselves as Masters London favorites.</p>
     <div class="content">
