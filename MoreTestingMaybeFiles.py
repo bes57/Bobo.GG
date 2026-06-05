@@ -215,6 +215,14 @@ ALL_EVENTS = [
         },
     },
     {
+        "id": "2024_masters_shanghai",
+        "label": "2024 Masters Shanghai",
+        "year": 2024,
+        "regions": {
+            "International": "https://www.vlr.gg/event/stats/1999/champions-tour-2024-masters-shanghai",
+        },
+    },
+    {
         "id": "2024_stage1",
         "label": "2024 Stage 1",
         "year": 2024,
@@ -230,14 +238,6 @@ ALL_EVENTS = [
         "year": 2024,
         "regions": {
             "CN": "https://www.vlr.gg/event/stats/2006/champions-tour-2024-china-stage-1",
-        },
-    },
-    {
-        "id": "2024_masters_shanghai",
-        "label": "2024 Masters Shanghai",
-        "year": 2024,
-        "regions": {
-            "International": "https://www.vlr.gg/event/stats/1999/champions-tour-2024-masters-shanghai",
         },
     },
     {

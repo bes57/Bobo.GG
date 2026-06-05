@@ -62,6 +62,11 @@ def get_events_by_year():
         if not os.path.exists(csv_path):
             continue
         by_year.setdefault(e["year"], []).append(e)
+    # Sort within each year by start date, most-recent first, so events like
+    # Masters Shanghai (Jun 2024) sit between Stage 2 and Stage 1 instead of
+    # falling wherever ALL_EVENTS happens to list them.
+    for year in by_year:
+        by_year[year].sort(key=lambda e: e.get("start", ""), reverse=True)
     return sorted(by_year.items(), reverse=True)
 
 def scrape_stats(region, url):
@@ -530,14 +535,22 @@ MAIN_HTML = """
   .modal-section { margin-bottom:22px; }
   .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
   a.best-match-card:hover { background:#f7ecdf; }
-  .bm-matchup { display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
-  .bm-matchup .bm-vs { color:var(--soft); font-weight:600; font-size:.85rem; margin:0 4px; }
+  /* Grid forces "vs" to sit on the card's central axis; team names balance
+     around it regardless of length (NRG vs LOUD reads symmetric, not lopsided). */
+  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
+  .bm-side { display:flex; align-items:center; gap:8px; }
+  .bm-side-left  { justify-self:end; }
+  .bm-side-right { justify-self:start; }
+  .bm-matchup .bm-vs { justify-self:center; color:var(--soft); font-weight:600; font-size:.85rem; }
   .bm-team-logo { height:26px; width:auto; object-fit:contain; }
   .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
   .bm-result { font-family:'Syne',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.72rem; letter-spacing:.04em; }
   .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
   .bm-result-L { background:#fbe0e0; color:#a51d1d; }
-  .best-match-stats { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; }
+  /* 3-equal-column grid keeps Kills exactly under "vs" and centers each
+     stat in its own column. max-width tightens the spacing so Rating and
+     Deaths don't drift to the card edges. */
+  .best-match-stats { display:grid; grid-template-columns:repeat(3, 1fr); align-items:center; max-width:220px; margin:0 auto; }
   .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
   .best-match-stat { text-align:center; min-width:44px; }
@@ -611,7 +624,7 @@ MAIN_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Match Performance of the Event</div>
+      <div class="modal-section-title">Best Match Performance {% if event_id == 'all_time' %}of All-Time{% else %}of the Event{% endif %}</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -758,7 +771,7 @@ function openPlayerModal(el, e) {
     ? `<img class="modal-avatar" src="${esc(headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'modal-avatar-ph',style:'background:'+avatarColor(${JSON.stringify(name)}),textContent:${JSON.stringify(name)}.slice(0,2).toUpperCase()}))">`
     : `<div class="modal-avatar-ph" style="background:${avatarColor(name)}">${name.slice(0,2).toUpperCase()}</div>`;
   const fk = el.dataset.fk, fd = el.dataset.fd;
-  const fdInfo = (['FKPR','FIPR','FIWR'].includes(stat) && fk !== '' && fd !== '')
+  const fdInfo = (stat === 'FIWR' && fk !== '' && fd !== '')
     ? `<div class="modal-meta" style="margin-top:10px">First duels won: <b>${esc(fk)}</b> &middot; First duels lost: <b>${esc(fd)}</b></div>`
     : '';
   document.getElementById('modal-player').innerHTML = `
@@ -780,7 +793,7 @@ function openPlayerModal(el, e) {
     .filter(v => v > 0);
   const statPlayers = allPlayers
     .filter(p => p[stat] !== undefined && p[stat] !== '')
-    .map(p => ({name: p.Player, org: p.Org||'', val: parseVal(p[stat])}))
+    .map(p => ({name: p.Player, org: p.Org||'', event: p.Event||'', val: parseVal(p[stat])}))
     .filter(p => p.val > 0);
   document.getElementById('modal-dist-title').textContent = `${STAT_LABELS[stat]} Distribution — ${values.length} players`;
   drawDistribution(values, parseVal(statVal), stat, statPlayers);
@@ -812,6 +825,10 @@ function renderBestMatch(data, playerOrg) {
     el.innerHTML = `<div class="modal-loading" style="color:#ccc">${esc(data.error)}</div>`;
     return;
   }
+  // Prefer the player's org AT THE TIME of the best match (from the API)
+  // over the current org from the leaderboard row. For all-time, these can
+  // differ — N4rrate's best was on SEN even though he's currently KC.
+  const historicalOrg = data.player_org || playerOrg;
   const agentChips = (data.agents||[]).map(a =>
     `<span class="agent-chip">${esc(a)}</span>`
   ).join('');
@@ -823,9 +840,9 @@ function renderBestMatch(data, playerOrg) {
   el.innerHTML = `
     ${openTag}
       <div class="bm-matchup">
-        ${teamLogo(playerOrg)}<span>${esc(playerOrg||'?')}</span>
+        <div class="bm-side bm-side-left">${teamLogo(historicalOrg)}<span>${esc(historicalOrg||'?')}</span></div>
         <span class="bm-vs">vs</span>
-        <span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}
+        <div class="bm-side bm-side-right"><span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}</div>
       </div>
       <div class="best-match-vs">${data.result ? `<span class="bm-result bm-result-${data.result}">${esc(data.result)}${data.series_score ? ' ' + esc(data.series_score) : ''}</span>` : ''}${data.result && data.event_label ? ' &middot; ' : ''}${data.event_label ? esc(data.event_label) : ''}</div>
       <div class="best-match-stats">
@@ -958,14 +975,15 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
     const below = statPlayers.filter(p => p.val < nearest.val).length;
     const pct = Math.round((1 - below/statPlayers.length) * 100);
     const pctLabel = pct <= 50 ? `Top ${pct}%` : `Bottom ${100-pct}%`;
-    tooltip.innerHTML = `<strong style="font-family:'Syne',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
+    const eventLine = nearest.event ? `<br><span style="color:#9e96a8;font-size:.7rem">${esc(nearest.event)}</span>` : '';
+    tooltip.innerHTML = `<strong style="font-family:'Syne',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
     const wrapEl = canvas.parentElement;
     const wrapRect = wrapEl.getBoundingClientRect();
     const tipX = e.clientX - wrapRect.left;
     const tipY = e.clientY - wrapRect.top;
     tooltip.style.display = 'block';
     tooltip.style.left = Math.min(tipX + 14, wrapEl.offsetWidth - 190) + 'px';
-    tooltip.style.top = Math.max(tipY - 58, 4) + 'px';
+    tooltip.style.top = Math.max(tipY - 78, 4) + 'px';
   });
   canvas.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
 })();
@@ -1056,14 +1074,22 @@ RANKING_HTML = """
   .modal-section { margin-bottom:22px; }
   .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
   a.best-match-card:hover { background:#f7ecdf; }
-  .bm-matchup { display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
-  .bm-matchup .bm-vs { color:var(--soft); font-weight:600; font-size:.85rem; margin:0 4px; }
+  /* Grid forces "vs" to sit on the card's central axis; team names balance
+     around it regardless of length (NRG vs LOUD reads symmetric, not lopsided). */
+  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
+  .bm-side { display:flex; align-items:center; gap:8px; }
+  .bm-side-left  { justify-self:end; }
+  .bm-side-right { justify-self:start; }
+  .bm-matchup .bm-vs { justify-self:center; color:var(--soft); font-weight:600; font-size:.85rem; }
   .bm-team-logo { height:26px; width:auto; object-fit:contain; }
   .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
   .bm-result { font-family:'Syne',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.72rem; letter-spacing:.04em; }
   .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
   .bm-result-L { background:#fbe0e0; color:#a51d1d; }
-  .best-match-stats { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; }
+  /* 3-equal-column grid keeps Kills exactly under "vs" and centers each
+     stat in its own column. max-width tightens the spacing so Rating and
+     Deaths don't drift to the card edges. */
+  .best-match-stats { display:grid; grid-template-columns:repeat(3, 1fr); align-items:center; max-width:220px; margin:0 auto; }
   .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
   .best-match-stat { text-align:center; min-width:44px; }
@@ -1132,7 +1158,7 @@ RANKING_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Match Performance</div>
+      <div class="modal-section-title">Best Match Performance {% if event_id == 'all_time' %}of All-Time{% else %}of the Event{% endif %}</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -1320,7 +1346,7 @@ function openPlayerModal(el, e) {
     ? `<img class="modal-avatar" src="${esc(headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'modal-avatar-ph',style:'background:'+avatarColor(${JSON.stringify(name)}),textContent:${JSON.stringify(name)}.slice(0,2).toUpperCase()}))">`
     : `<div class="modal-avatar-ph" style="background:${avatarColor(name)}">${name.slice(0,2).toUpperCase()}</div>`;
   const fk = el.dataset.fk, fd = el.dataset.fd;
-  const fdInfo = (['FKPR','FIPR','FIWR'].includes(stat) && fk !== '' && fd !== '')
+  const fdInfo = (stat === 'FIWR' && fk !== '' && fd !== '')
     ? `<div class="modal-meta" style="margin-top:10px">First duels won: <b>${esc(fk)}</b> &middot; First duels lost: <b>${esc(fd)}</b></div>`
     : '';
   document.getElementById('modal-player').innerHTML = `
@@ -1363,6 +1389,9 @@ function renderBestMatch(data, playerOrg) {
     el.innerHTML = `<div class="modal-loading" style="color:#ccc">${esc(data.error)}</div>`;
     return;
   }
+  // Prefer the player's org AT THE TIME of the best match (from the API)
+  // over the current org from the leaderboard row.
+  const historicalOrg = data.player_org || playerOrg;
   const agentChips = (data.agents||[]).map(a => `<span class="agent-chip">${esc(a)}</span>`).join('');
   const teamLogo = (org) => org
     ? `<img src="/logos/${esc(org)}.png" alt="${esc(org)}" class="bm-team-logo" onerror="this.style.display='none'">`
@@ -1372,9 +1401,9 @@ function renderBestMatch(data, playerOrg) {
   el.innerHTML = `
     ${openTag}
       <div class="bm-matchup">
-        ${teamLogo(playerOrg)}<span>${esc(playerOrg||'?')}</span>
+        <div class="bm-side bm-side-left">${teamLogo(historicalOrg)}<span>${esc(historicalOrg||'?')}</span></div>
         <span class="bm-vs">vs</span>
-        <span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}
+        <div class="bm-side bm-side-right"><span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}</div>
       </div>
       <div class="best-match-vs">${data.result ? `<span class="bm-result bm-result-${data.result}">${esc(data.result)}${data.series_score ? ' ' + esc(data.series_score) : ''}</span>` : ''}${data.result && data.event_label ? ' &middot; ' : ''}${data.event_label ? esc(data.event_label) : ''}</div>
       <div class="best-match-stats">
@@ -1492,14 +1521,15 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
     const below = statPlayers.filter(p => p.val < nearest.val).length;
     const pct = Math.round((1 - below/statPlayers.length) * 100);
     const pctLabel = pct <= 50 ? `Top ${pct}%` : `Bottom ${100-pct}%`;
-    tooltip.innerHTML = `<strong style="font-family:'Syne',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
+    const eventLine = nearest.event ? `<br><span style="color:#9e96a8;font-size:.7rem">${esc(nearest.event)}</span>` : '';
+    tooltip.innerHTML = `<strong style="font-family:'Syne',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
     const wrapEl = canvas.parentElement;
     const wrapRect = wrapEl.getBoundingClientRect();
     const tipX = e.clientX - wrapRect.left;
     const tipY = e.clientY - wrapRect.top;
     tooltip.style.display = 'block';
     tooltip.style.left = Math.min(tipX + 14, wrapEl.offsetWidth - 190) + 'px';
-    tooltip.style.top = Math.max(tipY - 58, 4) + 'px';
+    tooltip.style.top = Math.max(tipY - 78, 4) + 'px';
   });
   canvas.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
 })();
@@ -1578,7 +1608,7 @@ def ranking(stat):
             return None
 
     stat_values = [_num(p[stat]) for p in players if _num(p.get(stat)) is not None]
-    players_hover = [{"name": p["Player"], "org": p.get("Org", ""), "val": _num(p[stat])}
+    players_hover = [{"name": p["Player"], "org": p.get("Org", ""), "event": p.get("Event", ""), "val": _num(p[stat])}
                      for p in players if _num(p.get(stat)) is not None]
 
     return render_template_string(
