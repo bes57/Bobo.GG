@@ -604,12 +604,32 @@ def api_results():
     # Pick the right dataset
     if fmt == "map":
         df = _load_map_data()
-    elif fmt in ("bo3", "bo5"):
+    elif fmt in ("bo3", "bo5", "all_series"):
         df = _load_series_data()
-        if not df.empty and "SeriesFormat" in df.columns:
-            df = df[df["SeriesFormat"] == fmt]
-    elif fmt == "all_series":
-        df = _load_series_data()
+        # The series CSVs' SeriesFormat column is unreliable — the scraper
+        # sometimes mis-detects Bo5 as Bo3 or Bo1 from VLR's match-header
+        # text (e.g. all four 2026 Stage 1 Grand Finals are mislabeled).
+        # Derive the actual format from the series Score in match_results:
+        #   max(a, b) == 2 → Bo3   max == 3 → Bo5   max == 1 → Bo1
+        mr_fmt = _load_match_results()
+        if not df.empty and not mr_fmt.empty and "Score" in mr_fmt.columns:
+            ss = mr_fmt[mr_fmt["MapNum"] == "all"][["MatchID", "Score"]].copy()
+            def _max_score(s):
+                try:
+                    a, b = str(s).split("-")
+                    return max(int(a), int(b))
+                except Exception:
+                    return None
+            ss["MaxScore"] = ss["Score"].apply(_max_score)
+            ss = ss.dropna(subset=["MaxScore"])
+            ss["MatchID"] = ss["MatchID"].astype(str).str.strip()
+            if fmt == "bo3":
+                keep = set(ss.loc[ss["MaxScore"] == 2, "MatchID"])
+            elif fmt == "bo5":
+                keep = set(ss.loc[ss["MaxScore"] == 3, "MatchID"])
+            else:  # all_series — Bo3 + Bo5 (drop Bo1 regular-season single maps)
+                keep = set(ss.loc[ss["MaxScore"].isin([2, 3]), "MatchID"])
+            df = df[df["MatchID"].astype(str).str.strip().isin(keep)]
     else:
         df = _load_event_data()
 
