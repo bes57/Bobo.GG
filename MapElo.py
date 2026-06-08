@@ -618,6 +618,28 @@ _SNAPSHOT_EVENTS = {
     },
 }
 
+# Auto-extend for 2026+ years using BuildMapRatings.YEAR_CONFIGS, which is
+# itself built from ALL_EVENTS and skips events without CSVs. This means
+# 2026_stage2 / 2026_champions (and any future season) wire up their
+# snap-event lists automatically once their CSVs land — no code edit per
+# event. Historical years stay hardcoded above (2023 has a deliberate
+# 2023_league inclusion that the dynamic generator wouldn't produce).
+# Mirrors the _HISTORICAL_SNAP_POOL_EVENTS + _build_dynamic_snap_pool_events
+# pattern further down in this module.
+try:
+    from scrapers.BuildMapRatings import YEAR_CONFIGS as _SE_YC
+    for _year, _cfg in _SE_YC.items():
+        if int(_year) < 2026:
+            continue  # historical years are frozen above
+        if _year not in _SNAPSHOT_EVENTS:
+            _SNAPSHOT_EVENTS[_year] = {}
+        for _snap_id, _snap in (_cfg.get('snapshots') or {}).items():
+            _evs = _snap.get('events') or []
+            if _evs:
+                _SNAPSHOT_EVENTS[_year].setdefault(_snap_id, list(_evs))
+except Exception:
+    pass
+
 _map_name_index   = None
 _headshots_cache  = None
 _TEAM_INFO_VER    = 6   # bump this to bust _team_info_cache across all keys
