@@ -13,10 +13,41 @@ HEADSHOTS_FILE = os.path.join(os.path.dirname(__file__), "data", "headshots.json
 
 _headshot_cache   = {}
 _headshots_loaded = False
-_event_data     = None
-_map_data       = None
-_series_data    = None
-_match_results  = None
+_event_data         = None
+_event_data_mtime   = 0.0
+_map_data           = None
+_map_data_mtime     = 0.0
+_series_data        = None
+_series_data_mtime  = 0.0
+_match_results      = None
+_match_results_mtime = 0.0
+
+
+def _csv_dir_mtime(folder, top_level_only_year_csvs=False):
+    """Latest mtime across all CSVs in the folder (non-recursive). Cheap on
+    the ~30 event files. Returns 0.0 if folder is missing or unreadable. Used
+    to auto-invalidate the in-memory caches when the live scrape writes new
+    rows — so /highs/ picks up Masters London matches as they're scraped
+    without needing a Flask restart."""
+    if not os.path.isdir(folder):
+        return 0.0
+    try:
+        latest = 0.0
+        for entry in os.scandir(folder):
+            if not entry.name.endswith('.csv'):
+                continue
+            # When scanning DATA_DIR, ignore non-event CSVs (e.g. match_results,
+            # map_vetos) so we only invalidate the event-level cache on
+            # event-CSV changes.
+            if top_level_only_year_csvs and ('match_results' in entry.name or 'map_vetos' in entry.name):
+                continue
+            try:
+                latest = max(latest, entry.stat().st_mtime)
+            except OSError:
+                continue
+        return latest
+    except OSError:
+        return 0.0
 
 STAT_COLS = {
     "VLR Rating":       "R2.0",
@@ -24,7 +55,17 @@ STAT_COLS = {
     "Deaths":           "D",
     "Kill/Death Ratio": "K:D",
     "Assists":          "A",
+    # Per-map normalizations — only meaningful for series formats. Computed
+    # as raw_value / map_count, where map_count comes from the series'
+    # MapNum="all" row in match_results.csv (Score "2-1" → 3 maps).
+    "Kills/Map":        "K",
+    "Deaths/Map":       "D",
+    "Assists/Map":      "A",
 }
+
+# Stats that divide the raw column by the series map count. Only valid when
+# format is bo3 / bo5 / all_series (not "One Map" — already per-map by def).
+PER_MAP_STATS = {"Kills/Map", "Deaths/Map", "Assists/Map"}
 
 MATCH_UNSUPPORTED_STATS = set()
 
@@ -131,33 +172,42 @@ def _load_match_data(subdir):
 
 
 def _load_map_data():
-    global _map_data
-    if _map_data is not None:
+    global _map_data, _map_data_mtime
+    cur = _csv_dir_mtime(MAPS_DIR)
+    if _map_data is not None and cur <= _map_data_mtime:
         return _map_data
     _map_data = _load_match_data("maps")
+    _map_data_mtime = cur
     return _map_data
 
 
 def _load_series_data():
-    global _series_data
-    if _series_data is not None:
+    global _series_data, _series_data_mtime
+    cur = _csv_dir_mtime(SERIES_DIR)
+    if _series_data is not None and cur <= _series_data_mtime:
         return _series_data
     _series_data = _load_match_data("series")
+    _series_data_mtime = cur
     return _series_data
 
 
 def _load_match_results():
-    global _match_results
-    if _match_results is not None and not _match_results.empty:
-        return _match_results
+    global _match_results, _match_results_mtime
     path = os.path.join(DATA_DIR, "match_results.csv")
     if not os.path.exists(path):
         return pd.DataFrame()
+    try:
+        cur = os.path.getmtime(path)
+    except OSError:
+        cur = 0.0
+    if _match_results is not None and not _match_results.empty and cur <= _match_results_mtime:
+        return _match_results
     try:
         df = pd.read_csv(path, dtype=str)
         df["MatchID"] = df["MatchID"].str.strip()
         df["MapNum"]  = df["MapNum"].str.strip()
         _match_results = df
+        _match_results_mtime = cur
     except Exception:
         return pd.DataFrame()
     return _match_results
@@ -207,6 +257,19 @@ PAGE_HTML = """
   .empty { text-align:center; padding:40px; color:var(--soft); font-size:.88rem; }
   @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeDown .5s ease both; }
+  .refresh-bar { margin-top:14px; display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .refresh-btn { background:transparent; border:1.5px solid var(--accent); color:var(--accent); padding:6px 14px; border-radius:99px; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
+  .refresh-btn:hover:not(:disabled) { background:var(--accent); color:#fff; }
+  .refresh-btn:disabled { opacity:.6; cursor:wait; }
+  .refresh-icon { display:inline-block; transition:transform .3s; }
+  .refresh-btn.spinning .refresh-icon { animation:rspin 1s linear infinite; }
+  @keyframes rspin { to { transform:rotate(360deg); } }
+  .refresh-status { font-size:.78rem; color:var(--soft); }
+  .refresh-progress-wrap { margin:10px auto 0; width:320px; max-width:90%; height:6px; background:rgba(0,0,0,.07); border-radius:99px; overflow:hidden; opacity:0; transition:opacity .25s; pointer-events:none; }
+  .refresh-progress-wrap.active { opacity:1; }
+  .refresh-progress-fill { height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #a78bfa); transition:width .35s ease; border-radius:99px; }
+  tbody tr.clickable { cursor:pointer; }
+  tbody tr.clickable:hover { background:#faf6ff; }
 </style>
 </head>
 <body>
@@ -217,6 +280,15 @@ PAGE_HTML = """
   <header>
     <h1>All-Time Highs (and Lows)</h1>
     <p>Records across all VCT franchised events, 2023&ndash;{{ latest_event_label }}</p>
+    <div class="refresh-bar">
+      <button class="refresh-btn" id="refreshBtn" onclick="triggerRefresh()">
+        <span class="refresh-icon">&#x21bb;</span> <span class="refresh-label">Check for new matches</span>
+      </button>
+      <span class="refresh-status" id="refreshStatus"></span>
+    </div>
+    <div class="refresh-progress-wrap" id="refreshProgressWrap">
+      <div class="refresh-progress-fill" id="refreshProgressFill"></div>
+    </div>
   </header>
 
   <div class="filters">
@@ -231,10 +303,13 @@ PAGE_HTML = """
       <span class="filter-label">Stat</span>
       <select class="filter-select" id="f-stat" onchange="onStatChange()">
         <option value="VLR Rating">VLR Rating</option>
+        <option value="Kill/Death Ratio">Kill/Death Ratio</option>
         <option value="Kills">Kills</option>
         <option value="Deaths">Deaths</option>
-        <option value="Kill/Death Ratio">Kill/Death Ratio</option>
         <option value="Assists">Assists</option>
+        <option value="Kills/Map">Kills/Map</option>
+        <option value="Deaths/Map">Deaths/Map</option>
+        <option value="Assists/Map">Assists/Map</option>
       </select>
     </div>
     <div class="filter-group">
@@ -243,6 +318,7 @@ PAGE_HTML = """
         <option value="map">One Map</option>
         <option value="bo3">Bo3</option>
         <option value="bo5">Bo5</option>
+        <option value="all_series">All Matches (Bo3 + Bo5)</option>
       </select>
     </div>
     <div class="filter-group">
@@ -290,6 +366,7 @@ PAGE_HTML = """
 
 <script>
 const MATCH_UNSUPPORTED = new Set(["# of Clutches"]);
+const PER_MAP_STATS = new Set(["Kills/Map", "Deaths/Map", "Assists/Map"]);
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -305,17 +382,32 @@ function rankClass(i) { return i===0?'r1':i===1?'r2':i===2?'r3':''; }
 function onFormatChange() {
   const fmt  = document.getElementById('f-format').value;
   const stat = document.getElementById('f-stat').value;
-  if (MATCH_UNSUPPORTED.has(stat)) {
-    document.getElementById('f-stat').value = 'Kills';
-  }
+  const isSeriesFmt = (fmt === 'bo3' || fmt === 'bo5' || fmt === 'all_series');
+  // /Map stats only make sense for series formats.
   for (const opt of document.getElementById('f-stat').options) {
-    opt.disabled = MATCH_UNSUPPORTED.has(opt.value);
+    opt.disabled = MATCH_UNSUPPORTED.has(opt.value) ||
+                   (PER_MAP_STATS.has(opt.value) && !isSeriesFmt);
+  }
+  if (MATCH_UNSUPPORTED.has(stat) || (PER_MAP_STATS.has(stat) && !isSeriesFmt)) {
+    document.getElementById('f-stat').value = 'Kills';
   }
   document.getElementById('map-col-header').style.display = fmt === 'map' ? '' : 'none';
   fetchResults();
 }
 
 function onStatChange() {
+  const stat   = document.getElementById('f-stat').value;
+  const fmtSel = document.getElementById('f-format');
+  const isPerMap = PER_MAP_STATS.has(stat);
+  // /Map stats are per-series-map averages, so "One Map" makes no sense.
+  // Disable the option and bump the format to Bo3 if it's currently selected.
+  for (const opt of fmtSel.options) {
+    if (opt.value === 'map') opt.disabled = isPerMap;
+  }
+  if (isPerMap && fmtSel.value === 'map') {
+    fmtSel.value = 'bo3';
+    document.getElementById('map-col-header').style.display = 'none';
+  }
   fetchResults();
 }
 
@@ -343,16 +435,25 @@ function fetchResults() {
           ? `<img class="avatar-img" src="${esc(row.headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar-ph',style:'background:'+${JSON.stringify(avatarColor(row.player))},textContent:${JSON.stringify((row.player||'').slice(0,2).toUpperCase())}}))">`
           : `<div class="avatar-ph" style="background:${avatarColor(row.player)}">${esc((row.player||'').slice(0,2).toUpperCase())}</div>`;
         const mapCell = showMap ? `<td>${esc(row.map_name||'')}</td>` : '';
-        const isKD = document.getElementById('f-stat').value === 'Kill/Death Ratio';
+        const curStat = document.getElementById('f-stat').value;
+        const isKD = curStat === 'Kill/Death Ratio';
+        // VLR Rating is conventionally shown to the hundredths (1.00, 1.45).
+        const valStr = (curStat === 'VLR Rating' && typeof row.value === 'number')
+          ? row.value.toFixed(2)
+          : String(row.value);
         const valDisplay = (isKD && row.kills != null && row.deaths != null)
-          ? `${esc(String(row.value))} <span style="font-size:.75rem;font-weight:400;color:var(--soft)">(${row.kills}/${row.deaths})</span>`
-          : esc(String(row.value));
+          ? `${esc(valStr)} <span style="font-size:.75rem;font-weight:400;color:var(--soft)">(${row.kills}/${row.deaths})</span>`
+          : esc(valStr);
         let resultCell = '<td></td>';
         if (row.result) {
           const won = row.result.startsWith('W');
           resultCell = `<td><span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:.7rem;font-weight:600;background:${won?'#d4f4e8':'#fde8e8'};color:${won?'#1a5a3a':'#7a1a1a'}">${esc(row.result)}</span></td>`;
         }
-        return `<tr>
+        // Inline `onclick="window.open(JSON.stringify(url)...)"` breaks the
+        // attribute parser — the double quote inside JSON.stringify ends the
+        // attribute early. Use a data attribute + delegated handler instead.
+        const clickAttrs = row.vlr_url ? ` class="clickable" data-vlr="${esc(row.vlr_url)}"` : '';
+        return `<tr${clickAttrs}>
           <td class="rank-cell ${rankClass(i)}">${i+1}</td>
           <td><div class="player-cell">${avatar}<span>${esc(row.player)}</span></div></td>
           <td>${esc(row.org||'')}</td>
@@ -364,9 +465,91 @@ function fetchResults() {
         </tr>`;
       }).join('');
     })
-    .catch(() => {
-      document.getElementById('results-body').innerHTML = '<tr><td colspan="8" class="empty">Failed to load results.</td></tr>';
+    .catch((err) => {
+      console.error('[highs] fetchResults failed:', err);
+      const msg = err && err.message ? err.message : String(err || 'unknown');
+      document.getElementById('results-body').innerHTML = `<tr><td colspan="8" class="empty">Failed to load results: ${esc(msg)}</td></tr>`;
     });
+}
+
+// Delegated click handler — every row with data-vlr opens the match page in
+// a new tab. Single listener on the tbody so it survives re-renders.
+document.getElementById('results-body').addEventListener('click', (ev) => {
+  const tr = ev.target.closest('tr.clickable');
+  if (!tr) return;
+  const url = tr.dataset.vlr;
+  if (url) window.open(url, '_blank', 'noopener');
+});
+
+// ── Refresh button: trigger the Modern Hub's live-scrape pipeline, poll
+// progress, then re-fetch results once it's done. Reuses /mapelo/modern/
+// refresh + /progress so we don't duplicate the scrape infrastructure;
+// the AllTimeHighs cache auto-invalidates via mtime on the next API call.
+let _refreshing = false;
+async function triggerRefresh() {
+  if (_refreshing) return;
+  _refreshing = true;
+  const btn      = document.getElementById('refreshBtn');
+  const lbl      = btn.querySelector('.refresh-label');
+  const status   = document.getElementById('refreshStatus');
+  const barWrap  = document.getElementById('refreshProgressWrap');
+  const barFill  = document.getElementById('refreshProgressFill');
+  const origLbl  = lbl.textContent;
+  btn.classList.add('spinning');
+  btn.disabled = true;
+  lbl.textContent = 'Refreshing…';
+  status.textContent = '';
+  // Reveal the bar at 0% so it's visible while we wait for the first poll.
+  barFill.style.width = '0%';
+  barWrap.classList.add('active');
+  let lastPct = 0;
+
+  try {
+    await fetch('/mapelo/modern/refresh', { cache: 'no-store' });
+    // Poll progress every 1.5s, watch for terminal phase.
+    let phase = '';
+    let safety = 80; // ~2 minutes max
+    while (phase !== 'done' && phase !== 'error' && safety-- > 0) {
+      await new Promise(r => setTimeout(r, 1500));
+      try {
+        const r = await fetch('/mapelo/modern/progress', { cache: 'no-store' });
+        const wrap = await r.json();
+        // /modern/progress wraps the actual progress object:
+        // { progress: {pct, phase, message, ...}, stderr_tail, build_running }
+        const p = (wrap && wrap.progress) ? wrap.progress : {};
+        if (p.message) status.textContent = p.message;
+        if (typeof p.pct === 'number') {
+          // Monotonic — don't let a stale poll yank the bar backwards.
+          const next = Math.max(lastPct, Math.min(99, p.pct));
+          lastPct = next;
+          barFill.style.width = next + '%';
+        }
+        if (p.phase) phase = p.phase;
+      } catch (e) { /* keep polling */ }
+    }
+    if (phase === 'error') {
+      status.textContent = 'Refresh failed — try again.';
+      // Leave the bar visible at last position so it's clear something stalled.
+    } else {
+      // Finish the bar before re-fetching so the user sees it complete.
+      barFill.style.width = '100%';
+      status.textContent = 'Updated.';
+      await fetchResults();
+      setTimeout(() => {
+        status.textContent = '';
+        barWrap.classList.remove('active');
+        // Reset width after fade-out so the next refresh starts clean.
+        setTimeout(() => { barFill.style.width = '0%'; }, 350);
+      }, 1200);
+    }
+  } catch (e) {
+    status.textContent = 'Refresh failed: ' + e.message;
+  } finally {
+    btn.classList.remove('spinning');
+    btn.disabled = false;
+    lbl.textContent = origLbl;
+    _refreshing = false;
+  }
 }
 
 fetchResults();
@@ -381,12 +564,16 @@ fetchResults();
 
 
 def _latest_event_label():
-    """Most recent non-CN-only event whose top-level CSV exists. ALL_EVENTS is
-    most-recent-first, so the first match wins."""
+    """Most recent non-CN-only event whose maps CSV exists. ALL_EVENTS is
+    most-recent-first, so the first match wins. We check the maps CSV (not
+    the top-level event CSV) because the live scrape pipeline only writes
+    maps/series/match_results — never the top-level event CSV (that's
+    ScrapeAllEvents only). Without this, the subtitle stays stuck at the
+    last full-scrape event even after live data has been pulled."""
     for event in ALL_EVENTS:
         if event["id"] in CN_ONLY_IDS:
             continue
-        if os.path.exists(os.path.join(DATA_DIR, f"{event['id']}.csv")):
+        if os.path.exists(os.path.join(MAPS_DIR, f"{event['id']}.csv")):
             return event["label"]
     return "2023"
 
@@ -408,6 +595,12 @@ def api_results():
     if not col:
         return jsonify([])
 
+    is_per_map = stat_name in PER_MAP_STATS
+    # /Map stats only make sense in series formats — One Map is already
+    # per-map by definition, Event totals span the whole event.
+    if is_per_map and fmt not in ("bo3", "bo5", "all_series"):
+        return jsonify([])
+
     # Pick the right dataset
     if fmt == "map":
         df = _load_map_data()
@@ -415,11 +608,54 @@ def api_results():
         df = _load_series_data()
         if not df.empty and "SeriesFormat" in df.columns:
             df = df[df["SeriesFormat"] == fmt]
+    elif fmt == "all_series":
+        df = _load_series_data()
     else:
         df = _load_event_data()
 
     if df.empty or col not in df.columns:
         return jsonify([])
+
+    # Filter out showmatches. MatchNames in match_results.csv prefixed with
+    # "Showmatch" (e.g. "Showmatch: Showmatch", "Showmatch: Main Event") are
+    # non-competitive exhibition matches and shouldn't show up as records.
+    # Only applies to formats with a MatchID column (map / series); event
+    # totals don't carry per-match rows.
+    if "MatchID" in df.columns:
+        mr_sm = _load_match_results()
+        if not mr_sm.empty and "MatchName" in mr_sm.columns:
+            show_ids = set(
+                mr_sm.loc[mr_sm["MatchName"].astype(str).str.startswith("Showmatch", na=False), "MatchID"]
+                     .astype(str).str.strip().tolist()
+            )
+            if show_ids:
+                df = df[~df["MatchID"].astype(str).str.strip().isin(show_ids)]
+
+    # /Map stats: divide the raw column by the series map count, derived from
+    # the MapNum="all" row's Score field ("2-1" → 3 maps).
+    if is_per_map:
+        mr = _load_match_results()
+        if mr.empty:
+            return jsonify([])
+        series_scores = mr[mr["MapNum"] == "all"][["MatchID", "Score"]].copy()
+        def _map_count(score):
+            try:
+                a, b = str(score).split("-")
+                return int(a) + int(b)
+            except Exception:
+                return None
+        series_scores["MapCount"] = series_scores["Score"].apply(_map_count)
+        series_scores = series_scores.dropna(subset=["MapCount"])
+        series_scores["MatchID"] = series_scores["MatchID"].astype(str).str.strip()
+        df = df.copy()
+        df["MatchID"] = df["MatchID"].astype(str).str.strip()
+        df = df.merge(series_scores[["MatchID", "MapCount"]], on="MatchID", how="left")
+        df = df.dropna(subset=["MapCount"])
+        # Compute the per-map value into a new derived column so the rest of
+        # the pipeline (sort, format, output) treats it like any other column.
+        derived_col = f"__{col}_per_map"
+        df[derived_col] = df[col] / df["MapCount"]
+        col = derived_col
 
     # Year filter
     if year != "all":
@@ -495,16 +731,42 @@ def api_results():
             except Exception:
                 pass
 
+        # VLR URL for click-through: maps point to /<match>/?game=<MapNum>
+        # (MapNum is the VLR game id in our CSVs); series + event point to
+        # /<match>/. Skipped for the "event" totals format since there's no
+        # single match to link to.
+        vlr_url = ""
+        mid_str = str(row.get("MatchID", "")).strip()
+        if mid_str and fmt != "event":
+            if fmt == "map":
+                mnum_link = str(row.get("MapNum", "")).strip()
+                vlr_url = f"https://www.vlr.gg/{mid_str}/?game={mnum_link}&tab=overview" if mnum_link else f"https://www.vlr.gg/{mid_str}/"
+            else:
+                vlr_url = f"https://www.vlr.gg/{mid_str}/"
+
+        # Pandas can yield NaN for missing string cells (e.g. a series row
+        # whose Region column was blank in the CSV). NaN is JSON-illegal —
+        # Python json emits literal `NaN` which JSON.parse rejects, breaking
+        # the entire response. Coerce missing string fields to "".
+        def _s(v):
+            try:
+                if pd.isna(v):
+                    return ""
+            except Exception:
+                pass
+            return v if v is not None else ""
+
         entry = {
-            "player":      row.get("Player", ""),
-            "org":         row.get("Org", ""),
-            "region":      row.get("Region", ""),
-            "event":       row.get("_event_label", ""),
+            "player":      _s(row.get("Player", "")),
+            "org":         _s(row.get("Org", "")),
+            "region":      _s(row.get("Region", "")),
+            "event":       _s(row.get("_event_label", "")),
             "match_name":  match_name,
             "map_name":    map_name,
             "result":      result_str,
             "value":       round(val, 3) if isinstance(val, float) else val,
-            "headshot":    row.get("HeadshotURL", ""),
+            "headshot":    _s(row.get("HeadshotURL", "")),
+            "vlr_url":     vlr_url,
         }
 
         if is_kd:
