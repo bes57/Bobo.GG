@@ -136,6 +136,16 @@ EVENT_DATES = {
     "2026_stage1":           ("2026-04-01", "2026-05-25"),
 }
 
+# Auto-extend with any ALL_EVENTS entry not already covered. Hardcoded entries
+# above use real first/last match dates (better date interpolation when
+# match_dates.json is missing IDs); new events fall back to the declared
+# start/end window from ALL_EVENTS so they aren't silently dropped from the
+# timeline by the `eid not in EVENT_DATES` gate in load_all_games().
+for _e in ALL_EVENTS:
+    _eid = _e.get("id")
+    if _eid and _e.get("start") and _e.get("end"):
+        EVENT_DATES.setdefault(_eid, (_e["start"], _e["end"]))
+
 
 # ── Massey solver ──────────────────────────────────────────────────────────────
 # `massey_ratings` is imported from BuildMapRatings.py so the live timeline

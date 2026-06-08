@@ -613,6 +613,8 @@ _SNAPSHOT_EVENTS = {
         'before_santiago': ['2026_kickoff', '2026_china_kickoff'],
         'after_santiago':  ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago'],
         'after_stage1':    ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago', '2026_stage1'],
+        'before_london':   ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago', '2026_stage1'],
+        'after_london':    ['2026_kickoff', '2026_china_kickoff', '2026_masters_santiago', '2026_stage1', '2026_masters_london'],
     },
 }
 
@@ -2716,7 +2718,12 @@ function buildChart(data, noLines) {
       backgroundColor: 'transparent',
       borderWidth: noLines ? 0 : (isSel ? 2.5 : (STATE.selectedTeam ? 1 : 1.5)),
       pointRadius: 0, pointHoverRadius: 0,
-      tension: 0.25, _dimmed: isDimmed, _noLogo: noLines,
+      // monotone cubic: smooth curves without endpoint overshoot. The previous
+      // `tension: 0.25` (Catmull-Rom-style) drew a tangent that extended past
+      // ds.data[length-1] — sub-pixel in non-zoom view, but ~20px past the
+      // logoPlugin endpoint dot when zoomed into a single event band.
+      cubicInterpolationMode: 'monotone',
+      _dimmed: isDimmed, _noLogo: noLines,
     });
   });
 
@@ -8007,7 +8014,7 @@ body:has(.flying)::after{animation-play-state:paused}
             <div class="progress-msg" id="progressMsg">Initializing&hellip;</div>
             <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
             <div class="progress-pct" id="progressPct">0%</div>
-            <div class="progress-note">Note: This process may take a few minutes</div>
+            <div class="progress-note">Note: This process may take up to a minute</div>
             <div id="progressLog"></div>
           </div>
         </div>
@@ -8726,7 +8733,13 @@ const logoPlugin = {
     chart.data.datasets.forEach(ds => {
       if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed || ds._noLogo) return;
       const last = ds.data[ds.data.length - 1];
-      const px   = x.getPixelForValue(new Date(last.x));
+      // Construct a LOCAL-midnight Date to match how the chart's date-fns
+      // adapter parses the line's date-only strings on the line data. Using
+      // `new Date("2026-06-08")` directly would give UTC midnight — a 7h
+      // shift in PDT, ~30px in zoom view — putting the dot to the LEFT of
+      // where the line actually ends.
+      const _lp = String(last.x).split('-').map(Number);
+      const px   = x.getPixelForValue(new Date(_lp[0], _lp[1] - 1, _lp[2]));
       const py   = y.getPixelForValue(last.y);
       if (px < chartArea.left || px > chartArea.right + 30) return;
       const _isFocused = (selectedTeam === ds.org) || (_logoHoverOrg === ds.org);
@@ -8871,7 +8884,12 @@ function buildChart(data, noLines = false) {
       backgroundColor: 'transparent',
       borderWidth: noLines ? 0 : (isSel ? 2.5 : (selectedTeam ? 1 : 1.5)),
       pointRadius: 0, pointHoverRadius: 0,
-      tension: 0.25, _dimmed: isDimmed, _noLogo: noLines,
+      // monotone cubic: smooth curves without endpoint overshoot. The previous
+      // `tension: 0.25` (Catmull-Rom-style) drew a tangent that extended past
+      // ds.data[length-1] — sub-pixel in non-zoom view, but ~20px past the
+      // logoPlugin endpoint dot when zoomed into a single event band.
+      cubicInterpolationMode: 'monotone',
+      _dimmed: isDimmed, _noLogo: noLines,
     });
   });
 
@@ -8969,7 +8987,11 @@ function _initCanvasListeners() {
     myChart.data.datasets.forEach(ds => {
       if (!ds.data?.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
       const last = ds.data[ds.data.length - 1];
-      const px = x.getPixelForValue(new Date(last.x));
+      // LOCAL-midnight Date — matches the chart's date-fns adapter parse so
+      // the hit-test pixel matches the rendered dot pixel (logoPlugin uses
+      // the same pattern).
+      const _lp = String(last.x).split('-').map(Number);
+      const px = x.getPixelForValue(new Date(_lp[0], _lp[1] - 1, _lp[2]));
       const py = y.getPixelForValue(last.y);
       // Small-dot test — always available, this is what triggers focus.
       if (Math.sqrt((mx - px) ** 2 + (my - py) ** 2) <= SMALL_HIT) { hit = ds.org; return; }
