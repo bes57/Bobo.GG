@@ -2600,7 +2600,10 @@ var logoPlugin = {
     chart.data.datasets.forEach(function(ds) {
       if (!ds.data || !ds.data.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed || ds._noLogo) return;
       var last = ds.data[ds.data.length - 1];
-      var px = xs.getPixelForValue(new Date(last.x));
+      // LOCAL-midnight Date matches the chart's date-fns adapter parse;
+      // `new Date("2026-06-08")` is UTC midnight → ~30px offset in PDT.
+      var _lp = String(last.x).split('-').map(Number);
+      var px = xs.getPixelForValue(new Date(_lp[0], _lp[1] - 1, _lp[2]));
       var py = ys.getPixelForValue(last.y);
       if (px < ca.left || px > ca.right + 30) return;
       var isFocused = (STATE.selectedTeam === ds.org) || (STATE.hoveredOrg === ds.org);
@@ -2853,14 +2856,19 @@ async function animateAxesOverlay(data, gen) {
     // already drawn with its real lines — simply appears without the sweep.
     if (!ca || ![ca.left, ca.right, ca.top, ca.bottom, ox, oy].every(isFinite)) return;
 
-    // Phase 1: glowing-dot pop → axes extend out from origin
+    // Phase 1: glowing-dot pop → axes extend out from origin.
+    // Fill the FULL overlay (not just the chartArea) — Chart.js draws the
+    // y-axis tick labels to the left of ca.left and right-edge tick marks
+    // past ca.right, so a chartArea-only cover lets those bleed through and
+    // the user sees a partial "+0" label and right-side grid lines while the
+    // purple axes are supposedly being drawn from scratch.
     await new Promise(function(resolve) {
       var dur = 950, start = performance.now();
       function frame(now) {
         var p = Math.min((now - start) / dur, 1);
         oc.clearRect(0, 0, W, H);
         oc.fillStyle = '#fff';
-        oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+        oc.fillRect(0, 0, W, H);
         oc.save();
         if (p < 0.12) {
           var r = easeOut(p / 0.12) * 6;
@@ -2898,7 +2906,7 @@ async function animateAxesOverlay(data, gen) {
 
     // Phase 1.5: fade the purple axis decorations out smoothly instead of
     // blipping them away on the first frame of phase 2. White cover stays
-    // solid so the chart underneath remains hidden — only the strokes fade.
+    // solid + full-overlay so the chart's labels and ticks stay hidden too.
     await new Promise(function(resolve) {
       var dur = 280, start = performance.now();
       function frame(now) {
@@ -2906,7 +2914,7 @@ async function animateAxesOverlay(data, gen) {
         var a = 1 - p;
         oc.clearRect(0, 0, W, H);
         oc.fillStyle = '#fff';
-        oc.fillRect(ca.left, ca.top, ca.right - ca.left, ca.bottom - ca.top);
+        oc.fillRect(0, 0, W, H);
         oc.save();
         oc.shadowColor = '#8b5cf6'; oc.shadowBlur = 10 * a;
         oc.strokeStyle = 'rgba(167,139,250,' + (0.9 * a).toFixed(3) + ')';
@@ -2928,31 +2936,34 @@ async function animateAxesOverlay(data, gen) {
     });
     if (gen !== _lastAnimationGen) return;
 
-    // Phase 2: curtain sweeps right revealing the chart underneath. Bands
-    // stay HIDDEN under the solid white curtain — they only appear as the
-    // reveal line crosses each band's left edge (per user spec: "shaded
-    // bars appear as the purple line goes over them, not before").
+    // Phase 2: curtain sweeps right revealing the chart underneath. The
+    // sweep now covers the FULL overlay width (0 → W) so the y-axis labels
+    // on the left and any right-edge tick marks are revealed in step with
+    // the data — they were appearing all at once at the start of phase 2
+    // when the sweep was constrained to the chart area.
     await new Promise(function(resolve) {
       var dur = 2200;
-      var cw = ca.right - ca.left;
-      var ch = ca.bottom - ca.top;
       var startT = null;
       function frame(ts) {
         if (!startT) startT = ts;
         var raw = Math.min((ts - startT) / dur, 1);
         var p = 1 - Math.pow(1 - raw, 3);
-        var revX = ca.left + cw * p;
+        var revX = W * p;
         oc.clearRect(0, 0, W, H);
-        if (revX < ca.right) {
+        if (revX < W) {
           oc.fillStyle = '#fff';
-          oc.fillRect(revX, ca.top, ca.right - revX + 1, ch);
+          oc.fillRect(revX, 0, W - revX + 1, H);
         }
+        // Purple leading-edge stripe follows the curtain all the way to the
+        // right edge of the overlay — the user wants the axis lines to be
+        // revealed behind the moving purple line, not have the line pin at
+        // ca.right while the curtain keeps going.
         if (revX > ca.left) {
           var grd = oc.createLinearGradient(revX - 28, 0, revX + 4, 0);
           grd.addColorStop(0, 'rgba(167,139,250,0)');
           grd.addColorStop(1, 'rgba(167,139,250,0.32)');
           oc.fillStyle = grd;
-          oc.fillRect(revX - 28, ca.top, 32, ch);
+          oc.fillRect(revX - 28, ca.top, 32, ca.bottom - ca.top);
         }
         if (raw < 1) requestAnimationFrame(frame);
         else resolve();
@@ -2961,11 +2972,14 @@ async function animateAxesOverlay(data, gen) {
     });
     if (gen !== _lastAnimationGen) return;
 
-    // Phase 3: hold the purple sweep line at the right edge and fade its
-    // alpha out per-frame so it dissolves where it landed.
+    // Phase 3: hold the purple sweep line at the right edge of the overlay
+    // (where phase 2's sweep landed) and fade its alpha out per-frame so it
+    // dissolves where it landed. Was ca.right but phase 2 now sweeps the
+    // full overlay width, so pin at W to match — otherwise the stripe
+    // jumped back ~ca.right-to-W pixels left when phase 3 began.
     await new Promise(function(resolve) {
       var dur = 360, start = performance.now();
-      var revX = ca.right;
+      var revX = W;
       var ch   = ca.bottom - ca.top;
       function frame(now) {
         var p = Math.min((now - start) / dur, 1);
@@ -2997,7 +3011,10 @@ function _hitTestLogos(mx, my) {
   myChart.data.datasets.forEach(function(ds) {
     if (!ds.data || !ds.data.length || !ds.org || !logos[ds.org] || ds.type === 'scatter' || ds._dimmed) return;
     var last = ds.data[ds.data.length - 1];
-    var px = xs.getPixelForValue(new Date(last.x));
+    // String, not new Date — matches the date-fns adapter parse so the
+    // hit-test pixel matches the rendered dot pixel (logoPlugin uses same).
+    var _lp = String(last.x).split('-').map(Number);
+    var px = xs.getPixelForValue(new Date(_lp[0], _lp[1] - 1, _lp[2]));
     var py = ys.getPixelForValue(last.y);
     if (Math.sqrt((mx - px) ** 2 + (my - py) ** 2) <= SMALL_HIT) { hit = ds.org; return; }
     var focused = (STATE.selectedTeam === ds.org) || (STATE.hoveredOrg === ds.org);
@@ -6129,12 +6146,26 @@ def _event_bands_for_year(year):
     real_spans = _get_real_event_spans()
     year_int = int(year)
 
+    from datetime import datetime as _dt
+    today_str = _dt.now().strftime('%Y-%m-%d')
+
     def _span_for(e):
         eid = e['id']
+        declared_start = e.get('start')
+        declared_end   = e.get('end')
+        # In-progress or future events: prefer the declared window from
+        # ALL_EVENTS so the band shows the full event period. Otherwise
+        # real_spans (= actual first/last match dates) would draw the band
+        # as a tiny sliver covering only the matches played so far, making
+        # the chart look like the data ends prematurely (the Masters London
+        # band was rendering as Jun 6-8 — a 3-day sliver — while data
+        # extended through Jun 8 and the real event runs through Jun 21).
+        if declared_start and declared_end and declared_end >= today_str:
+            return declared_start, declared_end
         if eid in real_spans:
             return real_spans[eid]
-        if e.get('start') and e.get('end'):
-            return e['start'], e['end']
+        if declared_start and declared_end:
+            return declared_start, declared_end
         if eid in _HIST_DATES:
             return _HIST_DATES[eid]
         return None, None
@@ -6203,11 +6234,11 @@ def mapelo_rankings_data():
     year_ratings = (full.get('ratings') or {}).get(year, {})
     snapshots = year_ratings.get('snapshots', {}) or {}
 
-    # "Live" snaps cover ongoing (unfinished) events — Modern Hub owns those,
-    # the historical rankings page should only show completed periods. Build a
-    # filtered dict for both default-snap resolution and snap_options output.
-    def _is_live(v): return (v.get('label') or '').lower() == 'live'
-    completed = {k: v for k, v in snapshots.items() if not _is_live(v)}
+    # Include "Live" (in-progress) snaps too — the user wants the current
+    # season's chart on the historical rankings page to extend through the
+    # latest match, not stop at the last completed event. _readable_snap_label
+    # below renames "Live" to e.g. "After Masters London" for display.
+    completed = dict(snapshots)
 
     if snap not in completed:
         pool = list(completed.items())
@@ -6299,7 +6330,7 @@ def mapelo_rankings_data():
     for i, t in enumerate(leaderboard):
         t['rank'] = i + 1
 
-    def _readable_snap_label(snap_id, raw_label):
+    def _readable_snap_label(snap_id, raw_label, events=None):
         # The build mangles the latest in-progress snap's label to "Live" for
         # the Modern Hub. On the historical rankings page we'd rather show the
         # natural label so the period segments don't read "Before Madrid / Live".
@@ -6307,25 +6338,49 @@ def mapelo_rankings_data():
             return raw_label or snap_id
         parts = snap_id.split('_', 1)
         prefix = parts[0].capitalize() if parts else snap_id
+        # Prefer the snap's last event's natural label so e.g. after_london
+        # renders "After Masters London" not "After London", and after_stage2
+        # renders "After Stage 2" not "After Stage2". `events` from the snap
+        # dict is often empty (map_ratings.json doesn't persist it), so fall
+        # back to _SNAPSHOT_EVENTS which is the authoritative source.
+        ev_list = events or _SNAPSHOT_EVENTS.get(str(year), {}).get(snap_id, [])
+        if ev_list:
+            from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+            last_eid = ev_list[-1]
+            ev = next((e for e in _AE if e.get('id') == last_eid), None)
+            if ev:
+                yr = ev.get('year')
+                lbl = ev.get('label', '') or ''
+                if yr is not None:
+                    lbl = lbl.replace(f"{yr} ", '', 1).strip()
+                if lbl:
+                    return f"{prefix} {lbl}".strip()
+        # Fallback: synthesize from snap_id suffix.
         short  = parts[1].replace('_', ' ').title() if len(parts) > 1 else ''
         if short.lower().startswith('masters'):
             short = 'Masters' + short[7:]
         short = re.sub(r'([A-Za-z])(\d)', r'\1 \2', short)  # "Stage1" -> "Stage 1"
         return f"{prefix} {short}".strip()
 
+    # The displayed "through" date and the leaderboard's as_of_date should
+    # be the real cutoff (latest match date inside the snap), not the snap's
+    # model ref_date — for in-progress snaps (e.g. after_london ref_date =
+    # Jun 21 / band end, data ends Jun 8) those differ and the chart looks
+    # like it's missing two weeks of activity if we display ref_date.
+    display_through = cutoff_date or ref_date
     out = {
         "year":         int(year),
         "snap":         snap,
-        "snap_label":   _readable_snap_label(snap, snap_data.get('label')),
-        "ref_date":     ref_date,
+        "snap_label":   _readable_snap_label(snap, snap_data.get('label'), snap_data.get('events')),
+        "ref_date":     display_through,
         "snap_options": [
-            {"id": k, "label": _readable_snap_label(k, v.get('label')),
+            {"id": k, "label": _readable_snap_label(k, v.get('label'), v.get('events')),
              "ref_date": v.get('ref_date', '')}
             for k, v in completed.items()
         ],
         "event_bands":  _event_bands_for_year(year),
         "chart":        {"checkpoints": checkpoints, "match_events": match_events},
-        "leaderboard":  {"teams": leaderboard, "as_of_date": ref_date, "snapshot": snap},
+        "leaderboard":  {"teams": leaderboard, "as_of_date": display_through, "snapshot": snap},
     }
     return Response(json.dumps(out), mimetype='application/json')
 
