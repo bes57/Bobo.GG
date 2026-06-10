@@ -1,24 +1,24 @@
 [
   {
-    "team_a": "Dragon Ranger Gaming",
-    "team_b": "Xi Lai Gaming",
-    "org_a": "DRG",
-    "org_b": "XLG",
-    "date": "2026-06-09",
+    "team_a": "FUT Esports",
+    "team_b": "NRG",
+    "org_a": "FUT",
+    "org_b": "NRG",
+    "date": "2026-06-10",
     "region": "International",
     "event": "2026 Masters London",
     "format": "bo3",
-    "match_name": "Round 2 (0-1) Swiss Stage"
+    "match_name": "Round 3 (1-1) Swiss Stage"
   },
   {
     "team_a": "Global Esports",
-    "team_b": "FULL SENSE",
+    "team_b": "Xi Lai Gaming",
     "org_a": "GE",
-    "org_b": "FS",
-    "date": "2026-06-09",
+    "org_b": "XLG",
+    "date": "2026-06-10",
     "region": "International",
     "event": "2026 Masters London",
     "format": "bo3",
-    "match_name": "Round 2 (0-1) Swiss Stage"
+    "match_name": "Round 3 (1-1) Swiss Stage"
   }
 ]
