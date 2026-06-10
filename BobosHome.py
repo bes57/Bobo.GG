@@ -31,7 +31,7 @@ HOME_HTML = """
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
-  h1 { font-family:'Syne',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:700; letter-spacing:-2px; line-height:1; }
+  h1 { font-family:'DM Sans',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:800; letter-spacing:-2px; line-height:1.15; padding-bottom:.12em; overflow:visible; }
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
   .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; transition:opacity .28s ease, transform .28s ease; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:20px; width:100%; max-width:900px; }
@@ -71,7 +71,7 @@ HOME_HTML = """
 </head>
 <body>
 <div class="page">
-  <h1><img src="/logo.svg" alt="B" style="height:1.65em;width:auto;vertical-align:-0.2em;margin-right:-0.2em;object-fit:contain;cursor:pointer;" onclick="easterEgg()">obo's VCT Database</h1>
+  <h1><img src="/logo.svg" alt="B" style="height:1.65em;width:auto;vertical-align:-0.2em;margin-left:-0.3em;margin-right:-0.2em;object-fit:contain;cursor:pointer;" onclick="easterEgg()">obo gg</h1>
   <p class="tagline" id="tagline">Misceallneous analyses in the competitive Valorant space</p>
   <details class="ai-disclosure">
     <summary>AI Disclosure</summary>
@@ -133,7 +133,7 @@ HOME_HTML = """
         </a>
         <a class="nav-card" href="/highs/">
           <div class="nav-card-title">All-Time Highs<br>(and Lows)</div>
-          <div class="nav-card-desc">The best and worst individual performances across all VCT franchised events.</div>
+          <div class="nav-card-desc">The best and worst individual map/match performances across all VCT franchised events.</div>
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>
       </div>
@@ -277,11 +277,6 @@ def map_img(filename):
 @app.route("/logos/<filename>")
 def team_logo(filename):
     return send_from_directory(os.path.join(os.path.dirname(__file__), "static/logos"), filename)
-
-@app.route("/health")
-def health():
-    return "ok", 200
-
 
 @app.route("/")
 def home():

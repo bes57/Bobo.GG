@@ -230,25 +230,50 @@ PAGE_HTML = """
   .page { position:relative; z-index:1; padding:32px 32px 60px; max-width:1100px; margin:0 auto; }
   header { margin-bottom:32px; text-align:center; }
   header h1 { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; text-align:center; }
-  header p { color:var(--soft); font-size:.88rem; margin-top:8px; font-weight:300; text-align:center; }
-  .filters { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:32px; align-items:flex-start; }
+  header p { color:#111; font-size:1.02rem; margin-top:8px; font-weight:500; text-align:center; }
+  .filters { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:32px; align-items:flex-start; justify-content:center; }
   .filter-group { display:flex; flex-direction:column; gap:4px; }
-  .filter-label { font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); }
+  .filter-label { font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); text-align:center; }
   .filter-select { -webkit-appearance:none; appearance:none; padding:8px 32px 8px 16px; border-radius:99px; border:2px solid #f0ecf4; background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a6e7e'/%3E%3C/svg%3E") no-repeat right 12px center; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; color:var(--ink); cursor:pointer; box-shadow:0 2px 8px #0001; outline:none; transition:border-color .2s; min-width:160px; }
   .filter-select:focus { border-color:var(--lavender); }
   .filter-select:disabled { opacity:.45; cursor:not-allowed; }
+  /* Custom dropdown (Context + the cloned single-selects) share one look */
+  .ctx-dd, .fdd { position:relative; }
+  .ctx-toggle, .fdd-toggle { width:100%; text-align:center; padding-left:32px; }
+  .ctx-menu, .fdd-menu { position:absolute; top:calc(100% + 6px); left:0; min-width:100%; background:white; border:2px solid #f0ecf4; border-radius:16px; box-shadow:0 10px 30px #00000022; padding:6px; z-index:50; display:none; }
+  .ctx-menu.open, .fdd-menu.open { display:block; }
+  .ctx-opt, .fdd-opt { display:flex; align-items:center; gap:9px; padding:8px 12px; border-radius:10px; cursor:pointer; font-size:.85rem; font-weight:500; color:var(--ink); user-select:none; white-space:nowrap; }
+  .ctx-opt:hover, .fdd-opt:hover { background:#faf6ff; }
+  .ctx-opt input { width:16px; height:16px; accent-color:#8b5cf6; cursor:pointer; flex-shrink:0; }
+  .ctx-opt.disabled, .fdd-opt.disabled { opacity:.38; cursor:not-allowed; }
+  .ctx-opt.disabled input { cursor:not-allowed; }
+  .ctx-sep { height:1px; background:#f0ecf4; margin:5px 8px; }
+  .fdd-check { width:16px; height:16px; border-radius:5px; border:2px solid #d8d0e0; flex-shrink:0; position:relative; box-sizing:border-box; }
+  .fdd-opt.active .fdd-check { background:#8b5cf6; border-color:#8b5cf6; }
+  .fdd-opt.active .fdd-check::after { content:''; position:absolute; left:50%; top:50%; width:4px; height:8px; border:solid white; border-width:0 2px 2px 0; transform:translate(-50%,-58%) rotate(45deg); }
   .results-wrap { background:white; border-radius:20px; overflow:hidden; box-shadow:0 4px 24px #0000000a; }
   table { width:100%; border-collapse:collapse; }
-  thead th { padding:13px 18px; text-align:left; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
-  thead th.num { text-align:right; }
+  thead th { padding:13px 18px; text-align:center; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
+  thead th.num { text-align:center; }
   tbody tr { transition:background .15s; }
   tbody tr:hover { background:#fdf6f0; }
-  tbody td { padding:11px 18px; border-bottom:1px solid #f6f2fa; font-size:.88rem; vertical-align:middle; }
-  tbody td.num { text-align:right; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; }
+  tbody td { padding:11px 18px; border-bottom:1px solid #f6f2fa; font-size:.88rem; vertical-align:middle; text-align:center; }
+  tbody td.num { text-align:center; font-family:'DM Sans',sans-serif; font-weight:700; font-size:1rem; }
   tbody tr:last-child td { border-bottom:none; }
   .rank-cell { font-family:'Syne',sans-serif; font-weight:800; color:#ccc; width:44px; text-align:center; }
   .r1{color:#f0b429} .r2{color:#9eaab5} .r3{color:#c07c3a}
-  .player-cell { display:flex; align-items:center; gap:12px; }
+  .player-cell { display:flex; align-items:center; justify-content:center; gap:12px; }
+  .team-cell { display:flex; align-items:center; justify-content:center; gap:8px; }
+  .team-logo { height:22px; width:auto; object-fit:contain; flex-shrink:0; }
+  .result-cell { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:8px; white-space:nowrap; }
+  .result-cell > .result-team:first-child { justify-self:end; }
+  .result-cell > .result-team:last-child { justify-self:start; }
+  .result-team { display:inline-flex; align-items:center; gap:5px; font-size:.82rem; font-weight:700; }
+  .result-logo { height:20px; width:auto; object-fit:contain; flex-shrink:0; }
+  .result-score { display:inline-flex; flex-direction:column; align-items:center; gap:1px; line-height:1.1; padding:3px 10px; border-radius:12px; }
+  .result-wl { font-family:'DM Sans',sans-serif; font-weight:700; font-size:.72rem; letter-spacing:.05em; opacity:.85; }
+  .result-num { display:inline-flex; align-items:center; gap:3px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:.78rem; }
+  .result-dash { opacity:.45; font-weight:400; }
   .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; color:white; font-size:14px; width:40px; height:40px; }
   .avatar-img { width:40px; height:40px; border-radius:50%; object-fit:cover; flex-shrink:0; }
   .badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:.7rem; font-weight:600; background:#f0ecf4; color:var(--soft); }
@@ -279,7 +304,7 @@ PAGE_HTML = """
 <div class="page">
   <header>
     <h1>All-Time Highs (and Lows)</h1>
-    <p>Records across all VCT franchised events, 2023&ndash;{{ latest_event_label }}</p>
+    <p>Individual map/match records across all VCT franchised events, 2023&ndash;{{ latest_event_label }}</p>
     <div class="refresh-bar">
       <button class="refresh-btn" id="refreshBtn" onclick="triggerRefresh()">
         <span class="refresh-icon">&#x21bb;</span> <span class="refresh-label">Check for new matches</span>
@@ -316,9 +341,9 @@ PAGE_HTML = """
       <span class="filter-label">Format</span>
       <select class="filter-select" id="f-format" onchange="onFormatChange()">
         <option value="map">One Map</option>
+        <option value="all_series">One Match (Bo3 + Bo5)</option>
         <option value="bo3">Bo3</option>
         <option value="bo5">Bo5</option>
-        <option value="all_series">All Matches (Bo3 + Bo5)</option>
       </select>
     </div>
     <div class="filter-group">
@@ -333,13 +358,16 @@ PAGE_HTML = """
     </div>
     <div class="filter-group">
       <span class="filter-label">Context</span>
-      <select class="filter-select" id="f-context" onchange="fetchResults()">
-        <option value="all">All Events</option>
-        <option value="intl">At an International</option>
-        <option value="regional">Regional Only</option>
-        <option value="win">In a Win</option>
-        <option value="loss">In a Loss</option>
-      </select>
+      <div class="ctx-dd" id="ctxDD">
+        <button type="button" class="filter-select ctx-toggle" id="ctxToggle" onclick="toggleCtxMenu(event)"><span id="ctxLabel">All Events</span></button>
+        <div class="ctx-menu" id="ctxMenu">
+          <label class="ctx-opt"><input type="checkbox" class="ctx-cb" value="intl"><span>At an International</span></label>
+          <label class="ctx-opt"><input type="checkbox" class="ctx-cb" value="regional"><span>Regional Only</span></label>
+          <div class="ctx-sep"></div>
+          <label class="ctx-opt"><input type="checkbox" class="ctx-cb" value="win"><span>In a Win</span></label>
+          <label class="ctx-opt"><input type="checkbox" class="ctx-cb" value="loss"><span>In a Loss</span></label>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -350,7 +378,6 @@ PAGE_HTML = """
           <th style="width:44px">#</th>
           <th>Player</th>
           <th>Team</th>
-          <th>Region</th>
           <th>Event</th>
           <th id="map-col-header" style="display:none">Map</th>
           <th>Result</th>
@@ -358,7 +385,7 @@ PAGE_HTML = """
         </tr>
       </thead>
       <tbody id="results-body">
-        <tr><td colspan="8" class="empty">Loading&hellip;</td></tr>
+        <tr><td colspan="7" class="empty">Loading&hellip;</td></tr>
       </tbody>
     </table>
   </div>
@@ -411,21 +438,105 @@ function onStatChange() {
   fetchResults();
 }
 
+// Context multi-select: two mutually-exclusive pairs (intl/regional, win/loss).
+// Checking one disables its contradiction so impossible combos can't be set.
+const CTX_EXCLUDE = { intl:'regional', regional:'intl', win:'loss', loss:'win' };
+const CTX_LABELS  = { intl:'At an International', regional:'Regional Only', win:'In a Win', loss:'In a Loss' };
+
+function closeAllMenus(except) {
+  document.querySelectorAll('.ctx-menu.open, .fdd-menu.open').forEach(m => { if (m !== except) m.classList.remove('open'); });
+}
+function toggleCtxMenu(ev) {
+  ev.stopPropagation();
+  const m = document.getElementById('ctxMenu');
+  closeAllMenus(m);
+  m.classList.toggle('open');
+}
+function getContextValue() {
+  const sel = Array.from(document.querySelectorAll('.ctx-cb:checked')).map(c => c.value);
+  return sel.length ? sel.join(',') : 'all';
+}
+function updateCtxState() {
+  const checked = new Set(Array.from(document.querySelectorAll('.ctx-cb:checked')).map(c => c.value));
+  document.querySelectorAll('.ctx-cb').forEach(cb => {
+    const opp = CTX_EXCLUDE[cb.value];
+    const blocked = opp && checked.has(opp);
+    cb.disabled = !!blocked;
+    cb.closest('.ctx-opt').classList.toggle('disabled', !!blocked);
+  });
+  const labels = Array.from(checked).map(v => CTX_LABELS[v]);
+  document.getElementById('ctxLabel').textContent = labels.length ? labels.join(', ') : 'All Events';
+}
+document.querySelectorAll('.ctx-cb').forEach(cb => {
+  cb.addEventListener('change', () => { updateCtxState(); fetchResults(); });
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.ctx-dd') && !e.target.closest('.fdd')) closeAllMenus(null);
+});
+
+// Clone each native single-select into a custom dropdown styled like Context.
+// The native <select> stays as the source of truth (hidden); the custom menu
+// just mirrors it and dispatches `change` so existing onchange handlers fire.
+function buildCustomDropdowns() {
+  document.querySelectorAll('select.filter-select').forEach(sel => {
+    sel.style.display = 'none';
+    const wrap = document.createElement('div');
+    wrap.className = 'fdd';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-select fdd-toggle';
+    btn.innerHTML = '<span class="fdd-label"></span>';
+    const menu = document.createElement('div');
+    menu.className = 'fdd-menu';
+    Array.from(sel.options).forEach(opt => {
+      const item = document.createElement('div');
+      item.className = 'fdd-opt';
+      item.dataset.value = opt.value;
+      item.innerHTML = '<span class="fdd-check"></span><span>' + esc(opt.textContent) + '</span>';
+      item.addEventListener('click', () => {
+        if (item.classList.contains('disabled')) return;
+        sel.value = opt.value;
+        sel.dispatchEvent(new Event('change'));
+        menu.classList.remove('open');
+        syncCustomDropdowns();
+      });
+      menu.appendChild(item);
+    });
+    btn.addEventListener('click', (e) => { e.stopPropagation(); closeAllMenus(menu); menu.classList.toggle('open'); });
+    wrap.appendChild(btn);
+    wrap.appendChild(menu);
+    sel.parentNode.insertBefore(wrap, sel.nextSibling);
+    sel._fdd = { btn, menu };
+  });
+  syncCustomDropdowns();
+}
+function syncCustomDropdowns() {
+  document.querySelectorAll('select.filter-select').forEach(sel => {
+    if (!sel._fdd) return;
+    sel._fdd.btn.querySelector('.fdd-label').textContent = sel.options[sel.selectedIndex].textContent;
+    sel._fdd.menu.querySelectorAll('.fdd-opt').forEach(item => {
+      const opt = Array.from(sel.options).find(o => o.value === item.dataset.value);
+      item.classList.toggle('active', sel.value === item.dataset.value);
+      item.classList.toggle('disabled', !!(opt && opt.disabled));
+    });
+  });
+}
+
 function fetchResults() {
   const direction = document.getElementById('f-direction').value;
   const stat      = document.getElementById('f-stat').value;
   const fmt       = document.getElementById('f-format').value;
   const year      = document.getElementById('f-year').value;
-  const context   = document.getElementById('f-context').value;
+  const context   = getContextValue();
 
   document.getElementById('stat-col-header').textContent = stat;
-  document.getElementById('results-body').innerHTML = '<tr><td colspan="8" class="empty">Loading&hellip;</td></tr>';
+  document.getElementById('results-body').innerHTML = '<tr><td colspan="7" class="empty">Loading&hellip;</td></tr>';
 
   fetch(`/highs/api/results?direction=${encodeURIComponent(direction)}&stat=${encodeURIComponent(stat)}&format=${encodeURIComponent(fmt)}&year=${encodeURIComponent(year)}&context=${encodeURIComponent(context)}`)
     .then(r => r.json())
     .then(data => {
       if (!data.length) {
-        document.getElementById('results-body').innerHTML = '<tr><td colspan="8" class="empty">No data found for this combination.</td></tr>';
+        document.getElementById('results-body').innerHTML = '<tr><td colspan="7" class="empty">No data found for this combination.</td></tr>';
         return;
       }
       const showMap = document.getElementById('f-format').value === 'map';
@@ -446,8 +557,20 @@ function fetchResults() {
           : esc(valStr);
         let resultCell = '<td></td>';
         if (row.result) {
-          const won = row.result.startsWith('W');
-          resultCell = `<td><span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:.7rem;font-weight:600;background:${won?'#d4f4e8':'#fde8e8'};color:${won?'#1a5a3a':'#7a1a1a'}">${esc(row.result)}</span></td>`;
+          const won = (row.won != null) ? row.won : row.result.startsWith('W');
+          const bg = won ? '#d4f4e8' : '#fde8e8';
+          const fg = won ? '#1a5a3a' : '#7a1a1a';
+          const wl = won ? 'W' : 'L';
+          if (row.opp) {
+            const logo = (o) => `<img class="result-logo" src="/logos/${esc(o)}.png" alt="${esc(o)}" onerror="this.style.display='none'">`;
+            resultCell = `<td><div class="result-cell">`
+              + `<span class="result-team">${logo(row.org)}<b>${esc(row.org)}</b></span>`
+              + `<span class="result-score" style="background:${bg};color:${fg}"><span class="result-wl">${wl}</span><span class="result-num">${esc(row.team_score)}<span class="result-dash">&ndash;</span>${esc(row.opp_score)}</span></span>`
+              + `<span class="result-team"><b>${esc(row.opp)}</b>${logo(row.opp)}</span>`
+              + `</div></td>`;
+          } else {
+            resultCell = `<td><span style="display:inline-block;padding:2px 8px;border-radius:99px;font-size:.7rem;font-weight:600;background:${bg};color:${fg}">${esc(row.result)}</span></td>`;
+          }
         }
         // Inline `onclick="window.open(JSON.stringify(url)...)"` breaks the
         // attribute parser — the double quote inside JSON.stringify ends the
@@ -456,8 +579,7 @@ function fetchResults() {
         return `<tr${clickAttrs}>
           <td class="rank-cell ${rankClass(i)}">${i+1}</td>
           <td><div class="player-cell">${avatar}<span>${esc(row.player)}</span></div></td>
-          <td>${esc(row.org||'')}</td>
-          <td><span class="badge">${esc(row.region||'')}</span></td>
+          <td><div class="team-cell"><img class="team-logo" src="/logos/${esc(row.org||'')}.png" alt="${esc(row.org||'')}" onerror="this.style.display='none'"><span>${esc(row.org||'')}</span></div></td>
           <td><span class="event-badge">${esc(row.event)}</span>${row.match_name ? `<div style="font-size:.7rem;color:var(--soft);margin-top:3px">${esc(row.match_name)}</div>` : ''}</td>
           ${mapCell}
           ${resultCell}
@@ -468,7 +590,7 @@ function fetchResults() {
     .catch((err) => {
       console.error('[highs] fetchResults failed:', err);
       const msg = err && err.message ? err.message : String(err || 'unknown');
-      document.getElementById('results-body').innerHTML = `<tr><td colspan="8" class="empty">Failed to load results: ${esc(msg)}</td></tr>`;
+      document.getElementById('results-body').innerHTML = `<tr><td colspan="7" class="empty">Failed to load results: ${esc(msg)}</td></tr>`;
     });
 }
 
@@ -552,6 +674,8 @@ async function triggerRefresh() {
   }
 }
 
+buildCustomDropdowns();
+updateCtxState();
 fetchResults();
 </script>
 <footer style="text-align:center;padding:24px 16px 28px;color:#7a6e7e;font-size:.75rem;font-weight:300;line-height:1.55;font-family:'DM Sans',sans-serif;">
@@ -651,6 +775,22 @@ def api_results():
             if show_ids:
                 df = df[~df["MatchID"].astype(str).str.strip().isin(show_ids)]
 
+    # Omit teams that fielded 6+ players in a match (subs). A substitution
+    # means a player only appears on some maps of the series, so their raw
+    # K/D/A divided by the full series map count produces bogus /Map records
+    # (and broader records are unrepresentative too). Common in 2023. Drop
+    # that team's rows for that match; the opposing team (if it ran 5) stays.
+    if "MatchID" in df.columns and "Org" in df.columns:
+        pid = "ProfileURL" if "ProfileURL" in df.columns else "Player"
+        if pid in df.columns:
+            df = df.copy()
+            df["MatchID"] = df["MatchID"].astype(str).str.strip()
+            roster = df.groupby(["MatchID", "Org"])[pid].nunique()
+            bad = set(roster[roster > 5].index)  # {(MatchID, Org), ...}
+            if bad:
+                keep = [(m, o) not in bad for m, o in zip(df["MatchID"], df["Org"])]
+                df = df[pd.Series(keep, index=df.index)]
+
     # /Map stats: divide the raw column by the series map count, derived from
     # the MapNum="all" row's Score field ("2-1" → 3 maps).
     if is_per_map:
@@ -681,12 +821,15 @@ def api_results():
     if year != "all":
         df = df[df["_year"] == int(year)]
 
-    # Context filter
-    if context == "intl":
+    # Context filter — context is a comma-separated set of tokens from
+    # {intl, regional, win, loss}. The two pairs are mutually exclusive
+    # (enforced client-side); filters within the set are ANDed together.
+    ctx = {t for t in str(context).split(",") if t and t != "all"}
+    if "intl" in ctx:
         df = df[df["_intl"] == True]
-    elif context == "regional":
+    elif "regional" in ctx:
         df = df[df["_intl"] == False]
-    elif context in ("win", "loss"):
+    if ("win" in ctx) or ("loss" in ctx):
         results_df = _load_match_results()
         if results_df.empty:
             return jsonify([])
@@ -699,7 +842,7 @@ def api_results():
         else:
             lookup = results_df[results_df["MapNum"] == "all"][["MatchID", "WinnerOrg"]]
             merged = df.merge(lookup, on="MatchID", how="left")
-        if context == "win":
+        if "win" in ctx:
             df = merged[merged["WinnerOrg"] == merged["Org"]].drop(columns=["WinnerOrg"])
         else:
             df = merged[(merged["WinnerOrg"].notna()) & (merged["WinnerOrg"] != merged["Org"])].drop(columns=["WinnerOrg"])
@@ -719,6 +862,27 @@ def api_results():
     else:
         res_lookup = None
 
+    # Opponent lookup: match_results only stores the WINNER's org, so derive
+    # the two teams that played from the distinct Orgs in each match's player
+    # rows. Built from the FULL (unfiltered) dataset so the win/loss context
+    # filter — which drops one team's rows — can't hide the opponent.
+    opp_map = {}
+    if fmt == "map":
+        _full = _load_map_data()
+        if _full is not None and not _full.empty and {"MatchID", "MapNum", "Org"} <= set(_full.columns):
+            _g = _full[["MatchID", "MapNum", "Org"]].copy()
+            _g["MatchID"] = _g["MatchID"].astype(str).str.strip()
+            _g["MapNum"]  = _g["MapNum"].astype(str).str.strip()
+            for (mid_k, mnum_k), grp in _g.groupby(["MatchID", "MapNum"]):
+                opp_map[(mid_k, mnum_k)] = list(pd.unique(grp["Org"].dropna()))
+    elif fmt in ("bo3", "bo5", "all_series"):
+        _full = _load_series_data()
+        if _full is not None and not _full.empty and {"MatchID", "Org"} <= set(_full.columns):
+            _g = _full[["MatchID", "Org"]].copy()
+            _g["MatchID"] = _g["MatchID"].astype(str).str.strip()
+            for mid_k, grp in _g.groupby("MatchID"):
+                opp_map[mid_k] = list(pd.unique(grp["Org"].dropna()))
+
     is_kd = (col == "K:D")
 
     results = []
@@ -730,6 +894,10 @@ def api_results():
         map_name   = ""
         result_str = ""
         match_name = ""
+        opp        = ""
+        team_score = ""
+        opp_score  = ""
+        won        = None
 
         if fmt == "map":
             map_name = str(row.get("MapName", "")) or ""
@@ -746,8 +914,15 @@ def api_results():
                 winner_org = res_row["WinnerOrg"]
                 score      = res_row["Score"]
                 w_score, l_score = score.split("-")
-                result_str = f"W {w_score}-{l_score}" if org == winner_org else f"L {l_score}-{w_score}"
+                won        = (org == winner_org)
+                result_str = f"W {w_score}-{l_score}" if won else f"L {l_score}-{w_score}"
                 match_name = str(res_row.get("MatchName", "") or "")
+                # Player's team score first, opponent's second — synced to sides.
+                team_score, opp_score = (w_score, l_score) if won else (l_score, w_score)
+                # Opponent = the other org that played this match/map.
+                orgs = opp_map.get((mid, mnum)) if fmt == "map" else opp_map.get(mid)
+                if orgs:
+                    opp = next((o for o in orgs if o and o != org), "")
             except Exception:
                 pass
 
@@ -784,6 +959,10 @@ def api_results():
             "match_name":  match_name,
             "map_name":    map_name,
             "result":      result_str,
+            "opp":         _s(opp),
+            "team_score":  _s(team_score),
+            "opp_score":   _s(opp_score),
+            "won":         won,
             "value":       round(val, 3) if isinstance(val, float) else val,
             "headshot":    _s(row.get("HeadshotURL", "")),
             "vlr_url":     vlr_url,
