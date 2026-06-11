@@ -6,6 +6,7 @@ from AllTimeHighs import highs_bp
 from IdentifyingOverUnderPerformers import article_overunder_bp
 from AmericasStage1Playoffs import article_americas_stage1_bp
 from MastersLondonPreview import article_masters_london_bp
+from MastersLondonPlayoffsPreview import article_masters_london_playoffs_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 
@@ -16,6 +17,7 @@ app.register_blueprint(highs_bp, url_prefix="/highs")
 app.register_blueprint(article_overunder_bp, url_prefix="/articles/over-underperformers")
 app.register_blueprint(article_americas_stage1_bp, url_prefix="/articles/americas-stage1-playoffs-preview")
 app.register_blueprint(article_masters_london_bp, url_prefix="/articles/masters-london-preview")
+app.register_blueprint(article_masters_london_playoffs_bp, url_prefix="/articles/masters-london-playoffs-preview")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 
@@ -31,7 +33,7 @@ HOME_HTML = """
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
-  h1 { font-family:'DM Sans',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:800; letter-spacing:-2px; line-height:1.15; padding-bottom:.12em; overflow:visible; }
+  h1 { font-family:'DM Sans',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:400; letter-spacing:normal; line-height:1.15; padding-bottom:.12em; overflow:visible; }
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
   .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; transition:opacity .28s ease, transform .28s ease; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:20px; width:100%; max-width:900px; }
@@ -93,9 +95,16 @@ HOME_HTML = """
       <div class="section-title">Research / Opinion Articles <span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
+        <a class="nav-card" href="/articles/masters-london-playoffs-preview/">
+          <img class="nav-card-cover" src="/chronlondon.jpg" alt="Masters London">
+          <div class="nav-card-title">Masters London: Playoffs Preview</div>
+          <div class="nav-card-desc">A brief statistical glimpse into the final stage of Masters London.</div>
+          <div class="nav-card-date">June 10, 2026</div>
+          <div class="nav-card-arrow">Read &rarr;</div>
+        </a>
         <a class="nav-card" href="/articles/masters-london-preview/">
           <img class="nav-card-cover" src="/prxpacstage1win.jpg" alt="Paper Rex win VCT Pacific Stage 1">
-          <div class="nav-card-title">Masters London Preview</div>
+          <div class="nav-card-title">Masters London: Tournament Preview</div>
           <div class="nav-card-desc">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div>
           <div class="nav-card-date">June 2, 2026</div>
           <div class="nav-card-arrow">Read &rarr;</div>
@@ -265,6 +274,10 @@ def krustage1():
 @app.route("/mapelo.png")
 def mapelo_img():
     return send_from_directory(os.path.dirname(__file__), "MapElo.png", mimetype="image/png")
+
+@app.route("/chronlondon.jpg")
+def chronlondon_jpg():
+    return send_from_directory(os.path.dirname(__file__), "ChronLondon.jpg", mimetype="image/jpeg")
 
 @app.route("/edgchamps.jpg")
 def edgchamps_img():

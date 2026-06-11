@@ -6234,11 +6234,14 @@ def mapelo_rankings_data():
     year_ratings = (full.get('ratings') or {}).get(year, {})
     snapshots = year_ratings.get('snapshots', {}) or {}
 
-    # Include "Live" (in-progress) snaps too — the user wants the current
-    # season's chart on the historical rankings page to extend through the
-    # latest match, not stop at the last completed event. _readable_snap_label
-    # below renames "Live" to e.g. "After Masters London" for display.
-    completed = dict(snapshots)
+    # Exclude the in-progress "Live" snap from the historical rankings: an
+    # event that hasn't finished shouldn't appear as "After <event>" (e.g.
+    # "After Masters London" while London playoffs are still being played).
+    # The build marks the in-progress snap's label "Live"; once the event
+    # completes the build relabels it and it shows up here automatically.
+    # Live/current ratings still live on the Modern Hub.
+    completed = {k: v for k, v in snapshots.items()
+                 if (v.get('label') or '').strip().lower() != 'live'}
 
     if snap not in completed:
         pool = list(completed.items())
@@ -6294,9 +6297,23 @@ def mapelo_rankings_data():
         last_cp = max(checkpoints, key=lambda cp: cp.get('date', ''))
         last_cp_ratings = last_cp.get('ratings', {}) or {}
 
+    # The chronological timeline (rating_timeline.json) is the SINGLE source of
+    # truth for the displayed rating — identical to the Modern Hub, just solved
+    # with data up to this snap's cutoff. The map_ratings.json snapshot's
+    # `overall_rating` is a separate intermediate (different ref_date + the
+    # regional-spillover dampener) that must NEVER be shown; we only borrow its
+    # per-map breakdowns. So when a timeline checkpoint exists, drop any team
+    # the timeline doesn't rate at this cutoff rather than fall back to the
+    # snapshot value.
+    timeline_authoritative = bool(last_cp_ratings)
     leaderboard = []
     for org, td in teams_raw.items():
-        rating = last_cp_ratings.get(org, td.get('overall_rating', 0.0))
+        if timeline_authoritative:
+            if org not in last_cp_ratings:
+                continue
+            rating = last_cp_ratings[org]
+        else:
+            rating = td.get('overall_rating', 0.0)
         region = ORG_REGIONS.get(org, 'Unknown')
         all_maps_sorted = sorted(
             (td.get('maps') or {}).items(),
@@ -7160,15 +7177,41 @@ def _mhub_load():
         "2026_masters_santiago", "2026_masters_london", "2026_champions",
     }
     intl_attendance_2026 = {}
+    _intl_event_earliest = {}
     for _me in result["chart"]["match_events"]:
-        if _me.get("event_id") not in _INTL_EVENT_IDS_2026:
+        _eid = _me.get("event_id")
+        if _eid not in _INTL_EVENT_IDS_2026:
             continue
         _d = _me.get("date") or ""
+        if _d and (_eid not in _intl_event_earliest or _d < _intl_event_earliest[_eid]):
+            _intl_event_earliest[_eid] = _d
         for _org in (_me.get("winner"), _me.get("loser")):
             if not _org:
                 continue
             if _org not in intl_attendance_2026 or _d < intl_attendance_2026[_org]:
                 intl_attendance_2026[_org] = _d
+
+    # A team that's AT an ongoing 2026 international but hasn't played a
+    # *completed* match yet (e.g. awaiting its playoff opener) would otherwise
+    # register zero intl experience, while a co-participant that already played
+    # a Swiss match registers as experienced — mis-firing intl_exp_diff and
+    # flipping the higher-rated team to underdog (e.g. TH vs VIT at Masters
+    # London). Register every upcoming-intl-match participant at that event's
+    # earliest completed-match date so co-attendees count as present.
+    from MoreTestingMaybeFiles import ALL_EVENTS as _ALL_EV_FOR_ATT
+    _label_to_id = {e.get("label"): e["id"] for e in _ALL_EV_FOR_ATT}
+    for _um in upcoming_raw:
+        if _um.get("region") != "International":
+            continue
+        _eid = _label_to_id.get(_um.get("event"))
+        _ed = _intl_event_earliest.get(_eid)
+        if not _ed:
+            continue
+        for _org in (_um.get("org_a"), _um.get("org_b")):
+            if not _org:
+                continue
+            if _org not in intl_attendance_2026 or _ed < intl_attendance_2026[_org]:
+                intl_attendance_2026[_org] = _ed
     result["intl_attendance_2026"] = intl_attendance_2026
 
     # ── Past matches — replay each match with 12:01-AM ratings ───────────────
@@ -8441,12 +8484,34 @@ let activeRegion = 'All';
 let expandedOrg  = null;
 let activePanel  = 'a';
 
+// The 4 panels live side-by-side in a 400%-wide .panel-track that's positioned
+// purely by translateX. Off-screen panels are still in the DOM and focusable —
+// so pressing Tab eventually moves focus INTO an off-screen panel (e.g. the
+// Simulator iframe). The browser then scroll-into-views that focused element,
+// setting scrollLeft on the overflow:hidden .panels-outer, which fights the
+// transform and leaves the visible panel shoved out of frame (page looks
+// broken/blank and won't recover). Mark every non-active panel `inert` so Tab
+// can never enter it, and zero any stray focus-scroll on the container.
+function updatePanelInert() {
+  const idMap = {a:'panelA', b:'panelB', c:'panelC', d:'panelD'};
+  Object.keys(idMap).forEach(p => {
+    const el = document.getElementById(idMap[p]);
+    if (!el) return;
+    if (p === activePanel) el.removeAttribute('inert');
+    else el.setAttribute('inert', '');
+  });
+  const outer = document.querySelector('.panels-outer');
+  if (outer) { outer.scrollLeft = 0; outer.scrollTop = 0; }
+}
+updatePanelInert();
+
 // ── Tab switching ────────────────────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activePanel = btn.dataset.panel;
+    updatePanelInert();
     const track = document.getElementById('panelTrack');
     track.classList.toggle('show-b', activePanel === 'b');
     track.classList.toggle('show-c', activePanel === 'c');

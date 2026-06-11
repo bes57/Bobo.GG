@@ -10525,3 +10525,17 @@ MatchID,step,team,action,map
 684617,5,GE,ban,Fracture
 684617,6,FS,ban,Haven
 684617,7,,remains,Pearl
+684618,1,GE,ban,Fracture
+684618,2,XLG,ban,Pearl
+684618,3,GE,pick,Haven
+684618,4,XLG,pick,Lotus
+684618,5,GE,ban,Split
+684618,6,XLG,ban,Ascent
+684618,7,,remains,Breeze
+684619,1,NRG,ban,Split
+684619,2,FUT,ban,Breeze
+684619,3,NRG,pick,Lotus
+684619,4,FUT,pick,Haven
+684619,5,NRG,ban,Ascent
+684619,6,FUT,ban,Pearl
+684619,7,,remains,Fracture
