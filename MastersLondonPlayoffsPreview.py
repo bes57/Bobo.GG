@@ -194,7 +194,7 @@ PAGE_HTML = """
 <title>Masters London: Playoffs Preview &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preload" as="image" href="/logos/TH.png"><link rel="preload" as="image" href="/logos/G2.png"><link rel="preload" as="image" href="/logos/PRX.png"><link rel="preload" as="image" href="/logos/VIT.png"><link rel="preload" as="image" href="/logos/FUT.png"><link rel="preload" as="image" href="/logos/LEV.png"><link rel="preload" as="image" href="/logos/EDG.png"><link rel="preload" as="image" href="/logos/XLG.png">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -330,11 +330,11 @@ PAGE_HTML = """
   @media(max-width:1120px) { .data-table-wrap { margin-left:0; margin-right:0; } }
   .data-table-label { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; letter-spacing:.02em; text-transform:uppercase; color:var(--ink); text-align:center; margin-bottom:16px; }
   .data-table { width:100%; border-collapse:collapse; font-size:.96rem; font-weight:400; }
-  .data-table th { font-family:'Syne',sans-serif; font-size:.66rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:9px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
+  .data-table th { font-family:'DM Sans',sans-serif; font-size:.95rem; font-weight:700; letter-spacing:.01em; color:var(--ink); padding:9px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
   .data-table td { padding:11px 12px; border-bottom:1px solid #f5eff8; }
   .data-table tr:last-child td { border-bottom:none; }
   .data-table .num { font-variant-numeric:tabular-nums; text-align:center; }
-  .data-table td.num:not(.pos):not(.neg) { font-weight:700; }
+  .data-table td.num:not(.pos):not(.neg) { font-weight:800; font-size:1.08rem; }
   .data-table th.num { text-align:center; }
   .data-table .rank { color:var(--soft); font-weight:500; width:96px; text-align:center; }
   .data-table th.rank { text-align:center; white-space:nowrap; }
