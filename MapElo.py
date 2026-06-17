@@ -1206,6 +1206,17 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     .hub-hero { height:280px; margin:16px 16px 24px; border-radius:18px; }
     .hub-hero-content { padding:24px 22px 20px; }
   }
+  /* ── Mobile ── */
+  @media (max-width:640px){
+    .hub-hero-sub{white-space:normal}
+    .hub-hero-nav{padding:16px 16px 0}
+    .hub-page{padding:0 14px 48px}
+    .hub-cards{gap:14px}
+    .hub-card{width:100%;max-width:340px}
+    .hub-card-wide{height:190px}
+    .hub-cards-wide{padding:0}
+    .hub-logo-strip{overflow:hidden;padding:14px 8px}
+  }
 </style>
 </head>
 <body>
@@ -1777,6 +1788,12 @@ MAPELO_HOME_HTML = """
     .lb-col-hdr, .lb-row { grid-template-columns:36px 1.6fr 1fr 0.8fr 18px; padding:11px 12px; }
     .lb-team img { width:24px; height:24px; }
     .lb-name { font-size:.85rem; }
+  }
+  /* ── Mobile (extra) ── */
+  @media (max-width:720px){
+    .page{padding:18px 12px 48px}
+    .model-card{padding:18px 14px}
+    .modal-box{padding:22px 18px}
   }
 </style>
 </head>
@@ -5543,6 +5560,14 @@ MAPELO_PYTH_HTML = """
   .map-diff { font-size:.76rem; font-weight:500; white-space:nowrap; }
   .map-diff.pos { color:#1a6a4a; }
   .map-diff.neg { color:#7a1a1a; }
+  /* ── Mobile ── */
+  @media (max-width:600px){
+    .page{padding:18px 12px 40px}
+    .card{padding:20px 16px}
+    .intro-details{margin-bottom:22px}
+    .filter-row,.filter-row-maps{flex-wrap:wrap}
+    .modal-box{padding:22px 18px}
+  }
 </style>
 </head>
 <body>
@@ -8144,6 +8169,34 @@ body:has(.flying)::after{animation-play-state:paused}
 .step-arrow{color:#666;font-weight:700;font-size:.9rem;line-height:1}
 
 .hidden{display:none}
+  /* ── Mobile (Modern VCT Hub) ─────────────────────────────── */
+  @media (max-width:600px){
+    .top-nav{padding:16px 14px 0;gap:10px;flex-wrap:wrap}
+    .home-logo{height:52px}
+    .back-btn{font-size:.72rem;padding:5px 11px}
+    .hub-main{padding:14px 0 48px}
+    .tab-bar{gap:5px;flex-wrap:wrap;padding:0 10px}
+    .tab{padding:7px 14px;font-size:.78rem}
+    .region-pills{gap:6px;padding:0 12px;max-height:160px}
+    .pill{padding:5px 12px;font-size:.74rem}
+    .progress-card{padding:30px 20px;max-width:92%}
+    .chart-card{max-width:96%}
+    .chart-wrap{height:440px}
+    .chart-header{padding:0 12px}
+    .chart-title{white-space:normal;text-align:center}
+    .lb-card-wrap{padding:0 10px}
+    .lb-col-hdr,.lb-row{padding-left:12px;padding-right:12px;gap:7px}
+    .lb-team{gap:7px}
+    .lb-team img{width:24px;height:24px}
+    .lb-name{font-size:.85rem}
+    .lb-rating{font-size:.9rem}
+    .lb-region{font-size:.58rem;padding:2px 6px}
+    .lb-asof{display:none}
+    #dotTooltip{min-width:0;max-width:88vw}
+    .match-popup{min-width:0;padding:24px 18px}
+    .upc-list{gap:26px}
+    .upc-card{padding:12px 13px}
+  }
 </style>
 </head>
 <body>

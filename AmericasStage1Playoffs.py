@@ -169,6 +169,21 @@ PAGE_HTML = """
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
+  /* ── Mobile (phone) ── */
+  @media (max-width:600px){
+    .page{padding:24px 14px 48px}
+    .data-table{font-size:.78rem}
+    .data-table th{padding:6px 6px;font-size:.6rem;letter-spacing:.03em}
+    .data-table td{padding:6px 6px}
+    .data-table .team-logo{width:18px;height:18px}
+    .bracket-wrap{padding:18px 14px}
+    .section-bubble{padding:12px 22px}
+    .section-bubble-text{font-size:1.5rem}
+    .expand-card-summary{padding:12px 16px}
+    .expand-card-body table{font-size:.78rem}
+    .expand-card-body td{padding:6px 4px}
+    .expand-card-body .ec-logo{width:15px;height:15px}
+  }
 </style>
 </head>
 <body>

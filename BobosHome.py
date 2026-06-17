@@ -69,6 +69,17 @@ HOME_HTML = """
   .benpom-hero-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5.5vw,3.1rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
   .benpom-hero-desc { padding:18px 24px 20px; text-align:center; text-wrap:balance; }
   .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--soft); line-height:1.55; }
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width:600px){
+    .page { padding:32px 16px; }
+    .tagline { white-space:normal; }
+    .ai-disclosure-body { white-space:normal; }
+    .sections { gap:30px; }
+    .cards { gap:14px; justify-content:center; }
+    .nav-card { width:100%; max-width:360px; }
+    .nav-card-cover { height:120px; }
+    .benpom-hero { max-width:100%; }
+  }
 </style>
 </head>
 <body>

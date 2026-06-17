@@ -693,6 +693,20 @@ PAGE_HTML = """
   .interact-role:hover:not(.active) { border-color:#b09ad4; }
   .omit-search:focus { border-color:#b09ad4; }
   .omit-scroll { max-height:240px; overflow-y:auto; border-radius:8px; border:1px solid #f0eaf4; }
+  /* ── Mobile (phone) ── */
+  @media (max-width:600px){
+    .page{padding:24px 14px 48px}
+    .chart-wrap{padding:18px 14px 14px}
+    .chart-canvas-box{height:300px}
+    .res-table th{padding:6px 5px;font-size:.58rem;letter-spacing:.03em}
+    .res-table td{padding:6px 5px}
+    .res-table .td-img img{width:26px;height:26px}
+    .res-pname{font-size:.82rem}
+    .role-table th,.role-table td{padding:6px 6px}
+    .side-notes{padding:18px 16px 12px}
+    .clip-frame-wrap{height:300px}
+    .model-equation{font-size:1rem;padding:16px 14px}
+  }
 </style>
 </head>
 <body>

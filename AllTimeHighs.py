@@ -295,6 +295,19 @@ PAGE_HTML = """
   .refresh-progress-fill { height:100%; width:0%; background:linear-gradient(90deg, var(--accent), #a78bfa); transition:width .35s ease; border-radius:99px; }
   tbody tr.clickable { cursor:pointer; }
   tbody tr.clickable:hover { background:#faf6ff; }
+  /* ── Mobile ─────────────────────────────────────────────── */
+  @media (max-width:640px){
+    .top-nav { padding:20px 16px 0; }
+    .page { padding:20px 12px 48px; }
+    .filters { gap:10px; margin-bottom:22px; }
+    .filter-group { flex:1 1 140px; }
+    .filter-select { min-width:0; width:100%; }
+    thead th { padding:10px 7px; font-size:.6rem; letter-spacing:.03em; }
+    tbody td { padding:9px 7px; font-size:.8rem; }
+    tbody td.num { font-size:.9rem; }
+    .result-cell { column-gap:5px; }
+    .badge, .event-badge, .map-badge { font-size:.62rem; padding:2px 6px; }
+  }
 </style>
 </head>
 <body>
