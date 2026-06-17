@@ -1208,7 +1208,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   }
   /* ── Mobile ── */
   @media (max-width:640px){
-    .hub-hero-sub{white-space:normal}
+    .hub-hero-sub{display:none}
     .hub-hero-nav{padding:16px 16px 0}
     .hub-page{padding:0 14px 48px}
     .hub-cards{gap:14px}
@@ -1218,7 +1218,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     .hub-hero-sub{font-size:.9rem}
     .hub-hero-cap{top:12px;right:12px;font-size:.5rem;padding:5px 9px}
     .hub-cards-wide{padding:0}
-    .hub-logo-strip{overflow:hidden;padding:14px 8px}
+    .hub-logo-strip{display:none}
   }
 </style>
 </head>
@@ -1229,7 +1229,6 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     <div class="top-nav hub-hero-nav">
       <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
     </div>
-    <div class="hub-hero-cap">2024 Masters Shanghai</div>
     <div class="hub-hero-content">
       <div class="hub-hero-eyebrow">Bobo&rsquo;s VCT Database</div>
       <h1 class="hub-hero-title">BenPom</h1>
