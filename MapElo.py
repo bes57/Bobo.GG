@@ -1212,9 +1212,11 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     .hub-hero-nav{padding:16px 16px 0}
     .hub-page{padding:0 14px 48px}
     .hub-cards{gap:14px}
-    .hub-card{width:100%;max-width:none}
-    .hub-card-wide{height:160px}
-    .hub-card-wide-title{font-size:clamp(1.9rem,8vw,2.6rem)}
+    .hub-card{width:100%;max-width:300px;padding:24px 20px 22px}
+    .hub-card-title--sm{font-size:.96rem}
+    .hub-card-desc{font-size:.78rem}
+    .hub-card-wide{height:170px;max-width:320px}
+    .hub-card-wide-title{font-size:clamp(1.8rem,7vw,2.4rem)}
     .hub-hero-sub{font-size:.9rem}
     .hub-hero-cap{top:12px;right:12px;font-size:.5rem;padding:5px 9px}
     .hub-cards-wide{padding:0}
