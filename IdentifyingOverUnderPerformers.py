@@ -606,7 +606,7 @@ PAGE_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Overperforming in VCT: who's doing it? — Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; padding:60px 32px 80px; }
@@ -614,20 +614,20 @@ PAGE_HTML = """
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
   .toc { position:fixed; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:220px; }
-  .toc-title { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
+  .toc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
   .toc a.active { color:var(--ink); font-weight:500; }
   @media(max-width:900px) { .toc { display:none; } }
   .article { max-width:860px; width:100%; }
-  .label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
-  h1 { font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:800; letter-spacing:-1px; line-height:1.1; margin-bottom:24px; }
-  .byline { font-size:.82rem; color:var(--soft); font-weight:300; margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid #e8e0ec; }
+  .label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; text-align:center; }
+  h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5vw,3.52rem); font-weight:800; letter-spacing:-1px; line-height:1.1; margin-bottom:24px; text-align:center; }
+  .byline { font-size:.82rem; color:var(--soft); font-weight:300; margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid #e8e0ec; text-align:center; }
   .cover { width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px; }
   .cover img { width:100%; height:auto; display:block; }
   .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
-  .content h2 { font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
+  .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content a { color:var(--ink); font-weight:400; }
   .content a:hover { opacity:.7; }
   .chart-wrap { background:white; border-radius:20px; padding:28px 28px 20px; box-shadow:0 4px 24px #0000000a; margin:32px 0 32px; }
@@ -636,12 +636,12 @@ PAGE_HTML = """
   .player-popup { position:fixed; background:white; border-radius:16px; padding:16px 18px; box-shadow:0 8px 40px #00000022; z-index:100; text-align:center; min-width:150px; pointer-events:none; opacity:0; transform:scale(0.92) translateY(4px); transition:opacity .15s ease, transform .15s ease; }
   .player-popup.visible { opacity:1; transform:scale(1) translateY(0); }
   .player-popup img { width:72px; height:72px; border-radius:50%; object-fit:cover; margin-bottom:10px; display:block; margin-left:auto; margin-right:auto; }
-  .player-popup .popup-name { font-family:'Syne',sans-serif; font-size:.95rem; font-weight:800; color:var(--ink); pointer-events:auto; cursor:pointer; }
+  .player-popup .popup-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.045rem; font-weight:800; color:var(--ink); pointer-events:auto; cursor:pointer; }
   .player-popup .popup-org  { font-size:.75rem; color:var(--soft); font-weight:300; margin-top:2px; margin-bottom:10px; }
   .player-popup .popup-stats { font-size:.75rem; color:var(--ink); font-weight:400; line-height:1.7; border-top:1px solid #f0eaf4; padding-top:8px; text-align:left; }
   .player-popup .popup-stats span { color:var(--soft); font-weight:300; }
   #rPopupAgentLabel { color:var(--ink); font-weight:400; }
-  .chart-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
+  .chart-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
@@ -656,7 +656,7 @@ PAGE_HTML = """
   .clip-frame-wrap iframe { width:100%; height:100%; border-radius:10px; border:none; }
   #clipVideo { width:100%; height:100%; border-radius:10px; display:block; }
   .side-notes { background:white; border-radius:16px; padding:24px 28px 16px; margin:-12px 0 40px; box-shadow:0 4px 24px #0000000a; }
-  .side-notes-title { font-family:'Syne',sans-serif; font-size:.75rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
+  .side-notes-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.825rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
   .side-notes ul { list-style:none; margin:0; display:flex; flex-direction:column; gap:12px; }
   .side-notes ul li { font-size:.9rem; font-weight:300; line-height:1.7; color:var(--ink); padding-left:20px; position:relative; }
   .side-notes ul li::before { content:'—'; position:absolute; left:0; color:var(--soft); }
@@ -669,9 +669,9 @@ PAGE_HTML = """
   .content ol { list-style:decimal; margin:-8px 0 24px; display:flex; flex-direction:column; gap:8px; padding-left:24px; }
   .content ol li { font-size:1rem; font-weight:300; line-height:1.8; padding-left:8px; }
   .role-table { width:100%; border-collapse:collapse; font-size:.88rem; font-weight:300; margin-top:20px; }
-  .role-table th { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
+  .role-table th { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.748rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
   .role-table td { padding:8px 12px; border-bottom:1px solid #f0eaf4; color:var(--ink); }
-  .model-equation { background:white; border-radius:16px; padding:20px 24px; margin:24px 0; box-shadow:0 4px 24px #0000000a; font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; text-align:center; color:var(--ink); }
+  .model-equation { background:white; border-radius:16px; padding:20px 24px; margin:24px 0; box-shadow:0 4px 24px #0000000a; font-family:'Plus Jakarta Sans',sans-serif; font-size:1.21rem; font-weight:700; text-align:center; color:var(--ink); }
   .model-equation .eq-sub { font-size:.78rem; font-weight:300; font-family:'DM Sans',sans-serif; color:var(--soft); margin-top:8px; }
   .role-btns { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
   .role-btn { background:none; border:1.5px solid #e0d8ea; border-radius:10px; padding:7px 16px; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:400; color:var(--soft); cursor:pointer; transition:background .15s,border-color .15s,color .15s; }
@@ -681,11 +681,12 @@ PAGE_HTML = """
   .model-toggle input { cursor:pointer; accent-color:var(--lavender); width:15px; height:15px; }
   .model-slope { font-size:.82rem; font-weight:300; color:var(--soft); margin-bottom:12px; }
   .res-table { width:100%; border-collapse:collapse; font-size:.85rem; font-weight:300; margin-top:16px; }
-  .res-table th { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 10px; text-align:left; border-bottom:2px solid #f0eaf4; }
+  .res-table th { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.715rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 10px; text-align:left; border-bottom:2px solid #f0eaf4; }
   .res-table td { padding:7px 10px; border-bottom:1px solid #f0eaf4; color:var(--ink); vertical-align:middle; }
   .res-table .td-img img { width:32px; height:32px; border-radius:50%; object-fit:cover; display:block; }
   .res-table .td-pos { color:#3aaa6e; font-weight:500; }
   .res-table .td-neg { color:#d45870; font-weight:500; }
+  .res-pname { font-size:.93rem; }
   .omit-search { width:100%; border:1.5px solid #e0d8ea; border-radius:10px; padding:7px 14px; font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--ink); background:white; outline:none; margin-bottom:12px; }
   .interact-role { font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; padding:6px 14px; border-radius:20px; border:1.5px solid #e0d8ea; background:white; color:var(--ink); cursor:pointer; transition:all .15s; }
   .interact-role.active { background:#9060c4; border-color:#9060c4; color:white; }
@@ -713,7 +714,7 @@ PAGE_HTML = """
 <div class="page">
   <div class="article">
     <div class="label">Research / Opinion</div>
-    <h1>Overperforming in VCT: who&rsquo;s doing it?</h1>
+    <h1>Overperforming in VCT:<br>who&rsquo;s doing it?</h1>
     <div class="byline">Bobo &mdash; May 2026</div>
     <div class="cover" id="intro">
       <img src="/patmen.jpg" alt="Patmen at VCT Pacific Kickoff 2026">
@@ -881,7 +882,7 @@ PAGE_HTML = """
         <li>2 of the 3 greatest &ldquo;overperformers&rdquo; of all time came from this most recent Kickoff &mdash; Johnqt and Hiro. Perhaps we should be more grateful for the quality of players that we&rsquo;re currently witnessing. I can&rsquo;t speak so much for Hiro as I didn&rsquo;t closely follow EMEA this Kickoff, but Johnqt did have a ridiculously good Kickoff. However, he was also accused of baiting and statfarming this Kickoff (hence the nickname JohnKD), which would potentially skew the validity of using rating as our outcome variable.</li>
       </ul>
 
-      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;margin:40px 0 16px;letter-spacing:-0.5px;" id="baiting">The Baiting Problem</h2>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.76rem;margin:40px 0 16px;letter-spacing:-0.5px;" id="baiting">The Baiting Problem</h2>
 
       <p>This is a genuine concern &mdash; if baiting inflates a player&rsquo;s rating beyond their actual contribution to the team, our model is rewarding them for it. What if we removed all players who had the lowest FDPR (First Deaths Per Round) on their team as a way of filtering out baiters? Let&rsquo;s see:</p>
 
@@ -927,7 +928,7 @@ PAGE_HTML = """
 
       <p>Seems like we can move past &ldquo;accused of baiting&rdquo; and just say &ldquo;baiting&rdquo; for Johnqt.</p>
 
-      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;margin:40px 0 16px;letter-spacing:-0.5px;" id="ptd-model">Final PTD Model</h2>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.76rem;margin:40px 0 16px;letter-spacing:-0.5px;" id="ptd-model">Final PTD Model</h2>
 
       <p>Now, let&rsquo;s add PTD as a variable to the model, which makes it now look like:</p>
 
@@ -951,7 +952,7 @@ PAGE_HTML = """
 
       <p>With this new model, let&rsquo;s look again at the greatest over/underperformers of all time.</p>
 
-      <h3 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;margin:32px 0 12px;letter-spacing:-0.3px;" id="ptd-alltime">Updated Greatest Over/Underperformers of All Time</h3>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.32rem;margin:32px 0 12px;letter-spacing:-0.3px;" id="ptd-alltime">Updated Greatest Over/Underperformers of All Time</h3>
 
       <div class="chart-wrap">
         <div class="chart-label">Greatest Overperformers of All Time (PTD Model)</div>
@@ -969,7 +970,7 @@ PAGE_HTML = """
         </table>
       </div>
 
-      <h3 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;margin:32px 0 12px;letter-spacing:-0.3px;" id="ptd-kickoff">For the Current Era (Kickoff 2026)</h3>
+      <h3 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.32rem;margin:32px 0 12px;letter-spacing:-0.3px;" id="ptd-kickoff">For the Current Era (Kickoff 2026)</h3>
 
       <div class="chart-wrap">
         <div class="chart-label">Greatest Overperformers &mdash; Kickoff 2026 (PTD Model)</div>
@@ -1019,7 +1020,7 @@ PAGE_HTML = """
         <li>Based on this list for Kickoff 2026, I&rsquo;ll predict that at least 3 of C1ndeR, Okeanos, Eggster, and GLYPH will be dropped by the end of the year. The rest have already been dropped (thyy, d3mur, UNFAKE, and baha) or have too much historical credit (Boaster and Jawgemo).</li>
       </ol>
 
-      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;margin:48px 0 20px;letter-spacing:-0.5px;" id="conclusion">Conclusion</h2>
+      <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.76rem;margin:48px 0 20px;letter-spacing:-0.5px;" id="conclusion">Conclusion</h2>
 
       <p>Finally, we&rsquo;ve answered many questions: how do we understand being an &ldquo;overperformer&rdquo; or &ldquo;underperformer&rdquo;? Who are the greatest over/underperformers of all time? What about in current times? Yet, one question remains:</p><p>How much is Patmen truly &ldquo;better than the mediocrity that is Global Esports&rdquo;?</p>
 
@@ -1763,7 +1764,7 @@ const residualsData = {{ residuals_json | safe }};
       var tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="td-img">' + imgHtml + '</td>' +
-        '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
+        '<td><span class="res-pname">' + row.player + '</span><br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
         '<td>' + row.rating.toFixed(2) + '</td>' +
         '<td>' + row.expected.toFixed(2) + '</td>' +
         '<td class="' + resClass + '">' + resSign + row.residual.toFixed(3) + '</td>' +
@@ -1791,7 +1792,7 @@ const alltimeNoBaiters = {{ alltime_nobaiters_json | safe }};
     var tr = document.createElement('tr');
     tr.innerHTML =
       '<td class="td-img">' + imgHtml + '</td>' +
-      '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
+      '<td><span class="res-pname">' + row.player + '</span><br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
       '<td>' + row.rating.toFixed(2) + '</td>' +
       '<td>' + row.expected.toFixed(2) + '</td>' +
       '<td class="' + resClass + '">' + resSign + row.residual.toFixed(3) + '</td>' +
@@ -1956,7 +1957,7 @@ const oxyPtdChart    = {{ oxy_ptd_chart_json  | safe }};
       var tr = document.createElement('tr');
       tr.innerHTML =
         '<td class="td-img">' + imgHtml + '</td>' +
-        '<td>' + row.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
+        '<td><span class="res-pname">' + row.player + '</span><br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + window.logoFor(row.org) + row.org + ' &middot; ' + row.event + '</span></td>' +
         '<td>' + row.rating.toFixed(2) + '</td>' +
         '<td>' + row.expected.toFixed(2) + '</td>' +
         '<td class="' + resClass + '">' + resSign + row.residual.toFixed(3) + '</td>' +
@@ -1986,7 +1987,7 @@ const oxyPtdChart    = {{ oxy_ptd_chart_json  | safe }};
     var tr = document.createElement('tr');
     tr.innerHTML =
       '<td class="td-img">' + imgHtml + '</td>' +
-      '<td>' + p.player + '<br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + p.org + ' &middot; ' + p.event + '</span></td>' +
+      '<td><span class="res-pname">' + p.player + '</span><br><span style="color:var(--soft);font-size:.75rem;font-weight:300;">' + p.org + ' &middot; ' + p.event + '</span></td>' +
       '<td>' + p.rating.toFixed(2) + '</td>' +
       '<td>' + p.expected.toFixed(2) + '</td>' +
       '<td class="' + resClass + '">' + resSign + p.residual.toFixed(3) + '</td>' +

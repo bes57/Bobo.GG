@@ -467,7 +467,7 @@ MAIN_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Event Leaderboards</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; padding:40px 32px 60px; }
@@ -475,8 +475,8 @@ MAIN_HTML = """
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
   header { text-align:center; margin-bottom:16px; animation:fadeDown .7s ease both; }
-  header h1 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); }
-  .event-title { text-align:center; font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:20px; animation:fadeDown .7s .03s ease both; }
+  header h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); }
+  .event-title { text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.85rem,4.4vw,3.1rem); font-weight:800; letter-spacing:-1px; margin-bottom:20px; animation:fadeDown .7s .03s ease both; }
   .event-selector-wrap { text-align:center; margin-bottom:24px; animation:fadeDown .7s .05s ease both; }
   .event-wrap { display:inline-block; position:relative; }
   .event-select { -webkit-appearance:none; appearance:none; padding:9px 38px 9px 20px; border-radius:99px; border:2px solid #f0ecf4; background:white; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; color:var(--ink); cursor:pointer; box-shadow:0 2px 8px #0001; outline:none; transition:border-color .2s; min-width:220px; }
@@ -485,7 +485,7 @@ MAIN_HTML = """
   .region-filter { display:flex; justify-content:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; animation:fadeDown .7s .1s ease both; }
   .rounds-wrap { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; margin-bottom:36px; flex-wrap:wrap; animation:fadeDown .7s .15s ease both; }
   .rounds-label { font-size:.83rem; color:var(--soft); font-weight:500; }
-  .rounds-val { font-family:'Syne',sans-serif; font-weight:700; color:var(--ink); min-width:40px; display:inline-block; }
+  .rounds-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:var(--ink); min-width:40px; display:inline-block; }
   input[type=range].rounds-slider { -webkit-appearance:none; width:180px; height:4px; border-radius:99px; background:#f0ecf4; outline:none; cursor:pointer; vertical-align:middle; }
   input[type=range].rounds-slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--ink); cursor:pointer; }
   input[type=range].rounds-slider::-moz-range-thumb { width:18px; height:18px; border:none; border-radius:50%; background:var(--ink); cursor:pointer; }
@@ -497,20 +497,20 @@ MAIN_HTML = """
   .card { background:white; border-radius:20px; padding:22px; box-shadow:0 4px 24px #0000000a; transition:transform .2s,box-shadow .2s; cursor:pointer; }
   .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px #00000014; }
   .card-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
-  .stat-pill { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.08em; padding:4px 12px; border-radius:99px; text-transform:uppercase; }
-  .card-title { font-family:'Syne',sans-serif; font-size:.95rem; font-weight:700; }
+  .stat-pill { font-family:'Plus Jakarta Sans',sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.08em; padding:4px 12px; border-radius:99px; text-transform:uppercase; }
+  .card-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.06rem; font-weight:700; }
   .pill-0{background:var(--rose);color:#8a3040} .pill-1{background:var(--sky);color:#1a4a7a}
   .pill-2{background:var(--mint);color:#1a6a4a} .pill-3{background:var(--peach);color:#8a4a1a}
   .pill-4{background:var(--lavender);color:#4a1a8a} .pill-5{background:var(--lemon);color:#6a5a1a}
   .player-row { display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid #f0ecf4; }
   .player-row:last-child { border-bottom:none; }
-  .rank { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; color:#ccc; width:20px; text-align:center; flex-shrink:0; }
+  .rank { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.08rem; font-weight:800; color:#ccc; width:20px; text-align:center; flex-shrink:0; }
   .r1{color:#f0b429} .r2{color:#9eaab5} .r3{color:#c07c3a}
-  .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; color:white; }
+  .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:white; }
   .player-info { flex:1; min-width:0; }
   .player-name { font-weight:500; font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .player-meta { font-size:.72rem; color:var(--soft); margin-top:1px; }
-  .stat-val { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; flex-shrink:0; }
+  .stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.08rem; font-weight:700; flex-shrink:0; }
   .empty { color:var(--soft); font-size:.85rem; padding:12px 0; text-align:center; }
   .view-more { margin-top:12px; font-size:.75rem; color:#bbb; text-align:right; }
   @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
@@ -527,24 +527,24 @@ MAIN_HTML = """
   .modal-player { display:flex; align-items:center; gap:18px; margin-bottom:22px; }
   .modal-player { flex-direction:column; align-items:center; text-align:center; }
   .modal-avatar { width:135px; height:135px; border-radius:50%; object-fit:cover; flex-shrink:0; }
-  .modal-avatar-ph { width:135px; height:135px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:40px; color:white; }
-  .modal-name { font-family:'Syne',sans-serif; font-size:1.35rem; font-weight:800; line-height:1.1; }
+  .modal-avatar-ph { width:135px; height:135px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:40px; color:white; }
+  .modal-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; font-weight:800; line-height:1.1; }
   .modal-meta { color:var(--soft); font-size:.82rem; margin-top:4px; }
-  .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; margin-top:6px; }
-  .modal-section-title { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
+  .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.88rem; font-weight:700; margin-top:6px; }
+  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
   .modal-section { margin-bottom:22px; }
   .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
   a.best-match-card:hover { background:#f7ecdf; }
   /* Grid forces "vs" to sit on the card's central axis; team names balance
      around it regardless of length (NRG vs LOUD reads symmetric, not lopsided). */
-  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
+  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.18rem; margin-bottom:6px; }
   .bm-side { display:flex; align-items:center; gap:8px; }
   .bm-side-left  { justify-self:end; }
   .bm-side-right { justify-self:start; }
   .bm-matchup .bm-vs { justify-self:center; color:var(--soft); font-weight:600; font-size:.85rem; }
   .bm-team-logo { height:26px; width:auto; object-fit:contain; }
   .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
-  .bm-result { font-family:'Syne',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.72rem; letter-spacing:.04em; }
+  .bm-result { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.8rem; letter-spacing:.04em; }
   .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
   .bm-result-L { background:#fbe0e0; color:#a51d1d; }
   /* 3-equal-column grid keeps Kills exactly under "vs" and centers each
@@ -554,7 +554,7 @@ MAIN_HTML = """
   .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
   .best-match-stat { text-align:center; min-width:44px; }
-  .best-match-stat-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1.25rem; display:block; }
+  .best-match-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; display:block; }
   .best-match-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
   .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; }
   .dist-wrap { position:relative; }
@@ -944,7 +944,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
   });
 
   // Player label
-  ctx.font = 'bold 12px "Syne",sans-serif'; ctx.fillStyle = '#7c3aed';
+  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif'; ctx.fillStyle = '#7c3aed';
   ctx.textAlign = 'center';
   ctx.fillText(String(playerVal), pPx, toY(pdf(playerVal)) - 14);
 
@@ -976,7 +976,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
     const pct = Math.round((1 - below/statPlayers.length) * 100);
     const pctLabel = pct <= 50 ? `Top ${pct}%` : `Bottom ${100-pct}%`;
     const eventLine = nearest.event ? `<br><span style="color:#9e96a8;font-size:.7rem">${esc(nearest.event)}</span>` : '';
-    tooltip.innerHTML = `<strong style="font-family:'Syne',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
+    tooltip.innerHTML = `<strong style="font-family:'Plus Jakarta Sans',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
     const wrapEl = canvas.parentElement;
     const wrapRect = wrapEl.getBoundingClientRect();
     const tipX = e.clientX - wrapRect.left;
@@ -1000,17 +1000,17 @@ RANKING_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ stat }} Rankings - VCT Stats</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; padding:40px 32px 60px; max-width:900px; margin:0 auto; }
   .top-nav { padding:32px 32px 0; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  .back { display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink); font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:700; transition:opacity .2s; margin-bottom:32px; }
+  .back { display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink); font-family:'Plus Jakarta Sans',sans-serif; font-size:1.4rem; font-weight:700; transition:opacity .2s; margin-bottom:32px; }
   .back:hover { opacity:.7; }
   header { margin-bottom:32px; }
-  header h1 { font-family:'Syne',sans-serif; font-size:2.4rem; font-weight:800; }
+  header h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:2.4rem; font-weight:800; }
   header p { color:var(--soft); font-size:.9rem; margin-top:6px; }
   .region-filter { display:flex; gap:10px; margin-bottom:28px; flex-wrap:wrap; }
   .filter-btn { padding:7px 18px; border-radius:99px; border:2px solid transparent; background:white; font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; transition:all .2s; box-shadow:0 2px 8px #0001; }
@@ -1021,7 +1021,7 @@ RANKING_HTML = """
   /* table-layout:fixed stops the browser from recomputing column widths
      from every one of 2000+ rows on each layout pass. */
   table { width:100%; border-collapse:collapse; table-layout:fixed; }
-  thead th { padding:14px 18px; text-align:left; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
+  thead th { padding:14px 18px; text-align:left; font-family:'Plus Jakarta Sans',sans-serif; font-size:.8rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
   thead th.num { text-align:right; }
   /* Explicit column widths for table-layout:fixed. Rank fits 4 digits comfortably. */
   thead th:nth-child(1) { width:120px; }
@@ -1037,14 +1037,14 @@ RANKING_HTML = """
   tbody td.rank-cell, tbody td.num { overflow:visible; text-overflow:clip; }
   /* Player/Team/Region cells clip if absurdly long, no ellipsis spillover. */
   tbody td:nth-child(2), tbody td:nth-child(3), tbody td:nth-child(4) { overflow:hidden; text-overflow:ellipsis; }
-  tbody td.num { text-align:right; font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; }
+  tbody td.num { text-align:right; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:1.06rem; }
   tbody tr:last-child td { border-bottom:none; }
   /* Skip rendering off-screen rows. */
   tbody tr { content-visibility:auto; contain-intrinsic-size:0 75px; }
-  .rank-cell { font-family:'Syne',sans-serif; font-weight:800; color:#ccc; width:44px; }
+  .rank-cell { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:#ccc; width:44px; }
   .r1{color:#f0b429} .r2{color:#9eaab5} .r3{color:#c07c3a}
   .player-cell { display:flex; align-items:center; gap:12px; }
-  .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; color:white; }
+  .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:white; }
   .avatar-img { width:52px; height:52px; border-radius:50%; object-fit:cover; flex-shrink:0; }
   .badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:.7rem; font-weight:600; background:#f0ecf4; color:var(--soft); }
   .search-wrap { margin-bottom:14px; }
@@ -1052,7 +1052,7 @@ RANKING_HTML = """
   .search-input:focus { border-color:var(--lavender); }
   .rounds-wrap { display:flex; align-items:center; gap:14px; margin-bottom:18px; flex-wrap:wrap; }
   .rounds-label { font-size:.83rem; color:var(--soft); font-weight:500; }
-  .rounds-val { font-family:'Syne',sans-serif; font-weight:700; color:var(--ink); min-width:40px; display:inline-block; }
+  .rounds-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:var(--ink); min-width:40px; display:inline-block; }
   input[type=range].rounds-slider { -webkit-appearance:none; width:180px; height:4px; border-radius:99px; background:#f0ecf4; outline:none; cursor:pointer; vertical-align:middle; }
   input[type=range].rounds-slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--ink); cursor:pointer; }
   input[type=range].rounds-slider::-moz-range-thumb { width:18px; height:18px; border:none; border-radius:50%; background:var(--ink); cursor:pointer; }
@@ -1066,24 +1066,24 @@ RANKING_HTML = """
   .modal-player { display:flex; align-items:center; gap:18px; margin-bottom:22px; }
   .modal-player { flex-direction:column; align-items:center; text-align:center; }
   .modal-avatar { width:135px; height:135px; border-radius:50%; object-fit:cover; flex-shrink:0; }
-  .modal-avatar-ph { width:135px; height:135px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:40px; color:white; }
-  .modal-name { font-family:'Syne',sans-serif; font-size:1.35rem; font-weight:800; line-height:1.1; }
+  .modal-avatar-ph { width:135px; height:135px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:40px; color:white; }
+  .modal-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; font-weight:800; line-height:1.1; }
   .modal-meta { color:var(--soft); font-size:.82rem; margin-top:4px; }
-  .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700; margin-top:6px; }
-  .modal-section-title { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
+  .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.88rem; font-weight:700; margin-top:6px; }
+  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
   .modal-section { margin-bottom:22px; }
   .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
   a.best-match-card:hover { background:#f7ecdf; }
   /* Grid forces "vs" to sit on the card's central axis; team names balance
      around it regardless of length (NRG vs LOUD reads symmetric, not lopsided). */
-  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:6px; }
+  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.18rem; margin-bottom:6px; }
   .bm-side { display:flex; align-items:center; gap:8px; }
   .bm-side-left  { justify-self:end; }
   .bm-side-right { justify-self:start; }
   .bm-matchup .bm-vs { justify-self:center; color:var(--soft); font-weight:600; font-size:.85rem; }
   .bm-team-logo { height:26px; width:auto; object-fit:contain; }
   .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
-  .bm-result { font-family:'Syne',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.72rem; letter-spacing:.04em; }
+  .bm-result { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.8rem; letter-spacing:.04em; }
   .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
   .bm-result-L { background:#fbe0e0; color:#a51d1d; }
   /* 3-equal-column grid keeps Kills exactly under "vs" and centers each
@@ -1093,7 +1093,7 @@ RANKING_HTML = """
   .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
   .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
   .best-match-stat { text-align:center; min-width:44px; }
-  .best-match-stat-val { font-family:'Syne',sans-serif; font-weight:800; font-size:1.25rem; display:block; }
+  .best-match-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; display:block; }
   .best-match-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
   .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; }
   .dist-wrap { position:relative; }
@@ -1491,7 +1491,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
     ctx.fillText(label, toX(v), H - 8);
   });
 
-  ctx.font = 'bold 12px "Syne",sans-serif'; ctx.fillStyle = '#7c3aed';
+  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif'; ctx.fillStyle = '#7c3aed';
   ctx.textAlign = 'center';
   ctx.fillText(String(playerVal), pPx, toY(pdf(playerVal)) - 14);
 
@@ -1522,7 +1522,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
     const pct = Math.round((1 - below/statPlayers.length) * 100);
     const pctLabel = pct <= 50 ? `Top ${pct}%` : `Bottom ${100-pct}%`;
     const eventLine = nearest.event ? `<br><span style="color:#9e96a8;font-size:.7rem">${esc(nearest.event)}</span>` : '';
-    tooltip.innerHTML = `<strong style="font-family:'Syne',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
+    tooltip.innerHTML = `<strong style="font-family:'Plus Jakarta Sans',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
     const wrapEl = canvas.parentElement;
     const wrapRect = wrapEl.getBoundingClientRect();
     const tipX = e.clientX - wrapRect.left;

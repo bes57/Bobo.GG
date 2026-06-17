@@ -208,7 +208,7 @@ INTL_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>International Events — Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --rose:#f4b8c1; --peach:#f9cba7; --mint:#b8e8d4;
@@ -225,9 +225,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .top-nav{position:relative;z-index:10;display:flex;align-items:center;padding:16px 32px;gap:12px;}
 .home-logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);}
 .home-logo img{height:32px;width:auto;}
-.home-logo span{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;opacity:.7;}
+.home-logo span{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.045rem;font-weight:700;opacity:.7;}
 .page{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 24px 60px;}
-h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
+h1{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(1.98rem,4vw,3.08rem);font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
 .subtitle{color:var(--soft);font-size:.9rem;margin-bottom:28px;}
 
 /* Event tabs */
@@ -237,17 +237,17 @@ h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:
 .event-tab.active{background:var(--ink);color:white;box-shadow:0 4px 12px #0000001a;}
 .event-tab:hover:not(.active){transform:translateY(-2px);box-shadow:0 4px 12px #0000001a;}
 .year-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.year-label{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:1px;padding:4px 0;}
+.year-label{font-family:'Plus Jakarta Sans',sans-serif;font-size:0.825rem;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:1px;padding:4px 0;}
 
 /* Sections */
 .section{margin-bottom:32px;}
-.section-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:14px;color:var(--ink);}
+.section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.21rem;font-weight:800;margin-bottom:14px;color:var(--ink);}
 
 /* Standings */
 .standings-grid{display:flex;flex-wrap:wrap;gap:12px;}
 .standing-card{background:white;border-radius:16px;padding:14px 18px;display:flex;align-items:center;
   gap:12px;box-shadow:0 2px 12px #0000000a;min-width:160px;}
-.standing-place{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--soft);width:32px;}
+.standing-place{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.54rem;font-weight:800;color:var(--soft);width:32px;}
 .standing-place.gold{color:#c89b3c;}
 .standing-place.silver{color:#9ca3af;}
 .standing-place.bronze{color:#c87c3c;}
@@ -265,7 +265,7 @@ h1{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:
 .match-team.loser{opacity:.5;}
 .match-logo{width:22px;height:22px;object-fit:contain;}
 .match-org{font-size:.85rem;font-weight:500;}
-.match-score{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;color:var(--ink);min-width:40px;text-align:center;}
+.match-score{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.045rem;font-weight:800;color:var(--ink);min-width:40px;text-align:center;}
 .match-vs{color:var(--soft);font-size:.75rem;min-width:14px;text-align:center;}
 
 /* Map breakdown row */
@@ -287,7 +287,7 @@ table{width:100%;border-collapse:collapse;background:white;border-radius:16px;ov
   box-shadow:0 2px 12px #0000000a;font-size:.8rem;}
 thead{background:var(--ink);color:white;}
 th{padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap;cursor:pointer;user-select:none;
-  font-family:'Syne',sans-serif;font-size:.72rem;letter-spacing:.3px;}
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:0.792rem;letter-spacing:.3px;}
 th:hover{background:#3d2f41;}
 th.active-sort{background:#503958;}
 th .sort-arrow{margin-left:4px;opacity:.6;}
@@ -306,7 +306,7 @@ tr:hover td{background:#faf6f3;}
 .modal-bg{display:none;position:fixed;inset:0;background:#0006;z-index:100;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
 .modal{background:white;border-radius:20px;padding:28px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;}
-.modal-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:16px;}
+.modal-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.21rem;font-weight:800;margin-bottom:16px;}
 .modal-close{float:right;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--soft);}
 .modal-map-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
   padding:8px 0;border-bottom:1px solid #f0ebe6;font-size:.82rem;}

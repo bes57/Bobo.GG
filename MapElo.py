@@ -905,8 +905,8 @@ def _mvp_of(rows):
     return rows.sample(1).iloc[0]
 
 def _get_mvp_stat(org, year='2025', snap='after_champions', n_maps=3):
-    """MVP function. Pool = the team's most recent 20 *maps played* (win or loss,
-    any opponent). Sample `n_maps` of them at random, aggregate every player's
+    """MVP function. Pool = the team's most recent 20 *maps the team WON* (falls
+    back to maps played if none are recorded). Sample `n_maps` of them at random, aggregate every player's
     stats across the sample (sums for K/D/A, averages for ACS and R 2.0), and
     return the highest-average-rated player's combined statline.
 
@@ -922,43 +922,69 @@ def _get_mvp_stat(org, year='2025', snap='after_champions', n_maps=3):
     if not snap_events:
         return None
 
-    # Walk events newest-first; collect up to 20 unique (MatchID, MapNum) pairs the team played.
-    pool = []   # list of dataframe slices (one slice per map, holding all of the team's player rows)
-    seen = set()
-    for event_id in reversed(snap_events):
-        maps_path = os.path.join(data_dir, 'maps', f'{event_id}.csv')
-        if not os.path.exists(maps_path):
-            continue
+    # An MVP statline should come from maps the team actually WON, not games
+    # dragged down by losses. Build the set of (MatchID, MapNum) the team won
+    # from match_results.csv (one WinnerOrg row per map; MapNum 'all' = series).
+    won_maps = set()
+    mr_path = os.path.join(data_dir, 'match_results.csv')
+    if os.path.exists(mr_path):
         try:
-            mdf = pd.read_csv(maps_path)
+            _mr = pd.read_csv(mr_path)
+            _mw = _mr[(_mr['MapNum'].astype(str) != 'all') & (_mr['WinnerOrg'] == org)]
+            for _, _r in _mw.iterrows():
+                try:
+                    won_maps.add((int(_r['MatchID']), str(_r['MapNum'])))
+                except Exception:
+                    pass
         except Exception:
-            continue
-        org_rows = mdf[mdf['Org'] == org]
-        ordered = []
-        ev_seen = set()
-        for _, row in org_rows.iterrows():
+            won_maps = set()
+
+    # Walk events newest-first; collect up to 20 unique (MatchID, MapNum) the team
+    # played. wins_only keeps just the maps they won.
+    def _collect_pool(wins_only):
+        pool = []   # list of dataframe slices (one per map, all the team's player rows)
+        seen = set()
+        for event_id in reversed(snap_events):
+            maps_path = os.path.join(data_dir, 'maps', f'{event_id}.csv')
+            if not os.path.exists(maps_path):
+                continue
             try:
-                key = (int(row['MatchID']), str(row['MapNum']))
+                mdf = pd.read_csv(maps_path)
             except Exception:
                 continue
-            if key in ev_seen: continue
-            ev_seen.add(key); ordered.append(key)
-        for mid, mn in reversed(ordered):  # newest first within the event
-            if (mid, mn) in seen: continue
-            seen.add((mid, mn))
-            grp = mdf[(mdf['MatchID'] == mid) & (mdf['MapNum'].astype(str) == mn) & (mdf['Org'] == org)]
-            if grp.empty: continue
-            # Skip maps with no usable rating data (e.g. Shanghai, where R2.0 is all NaN).
-            try:
-                if 'R2.0' in grp.columns and pd.to_numeric(grp['R2.0'], errors='coerce').dropna().empty:
+            org_rows = mdf[mdf['Org'] == org]
+            ordered = []
+            ev_seen = set()
+            for _, row in org_rows.iterrows():
+                try:
+                    key = (int(row['MatchID']), str(row['MapNum']))
+                except Exception:
                     continue
-            except Exception:
-                pass
-            pool.append(grp)
+                if key in ev_seen: continue
+                ev_seen.add(key); ordered.append(key)
+            for mid, mn in reversed(ordered):  # newest first within the event
+                if (mid, mn) in seen: continue
+                seen.add((mid, mn))
+                if wins_only and (mid, mn) not in won_maps:
+                    continue
+                grp = mdf[(mdf['MatchID'] == mid) & (mdf['MapNum'].astype(str) == mn) & (mdf['Org'] == org)]
+                if grp.empty: continue
+                # Skip maps with no usable rating data (e.g. Shanghai, where R2.0 is all NaN).
+                try:
+                    if 'R2.0' in grp.columns and pd.to_numeric(grp['R2.0'], errors='coerce').dropna().empty:
+                        continue
+                except Exception:
+                    pass
+                pool.append(grp)
+                if len(pool) >= 20:
+                    break
             if len(pool) >= 20:
                 break
-        if len(pool) >= 20:
-            break
+        return pool
+
+    pool = _collect_pool(bool(won_maps))
+    if not pool and won_maps:
+        pool = _collect_pool(False)   # fallback: no recorded map wins -> maps played
 
     if not pool:
         return None
@@ -1111,7 +1137,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preload" as="image" fetchpriority="high" href="/static/MastersShanghaiFinal-full.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   SHARED_CSS
@@ -1121,11 +1147,11 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   /* darken at top for legibility, fade to Modern VCT Hub bg at the bottom edge */
   .hub-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(14,10,20,0.45) 0%, rgba(14,10,20,0.55) 30%, rgba(14,10,20,0.20) 55%, rgba(232,213,245,0.40) 72%, rgba(232,213,245,0.85) 88%, #e8d5f5 100%); z-index:-1; pointer-events:none; }
   .hub-hero-content { position:relative; z-index:1; max-width:840px; margin:0 auto; }
-  .hub-hero-eyebrow { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#e8dff4; margin-bottom:14px; display:inline-flex; align-items:center; gap:12px; }
+  .hub-hero-eyebrow { font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase; color:#e8dff4; margin-bottom:14px; display:inline-flex; align-items:center; gap:12px; }
   .hub-hero-eyebrow::before, .hub-hero-eyebrow::after { content:''; display:inline-block; width:36px; height:2px; background:linear-gradient(90deg, transparent, #d4b8f4, transparent); }
-  .hub-hero-title { font-family:'Syne',sans-serif; font-size:clamp(2.6rem,7.5vw,5.4rem); font-weight:800; letter-spacing:-2px; line-height:1; margin-bottom:18px; background:linear-gradient(135deg,#fff 0%,#e6d6f7 60%,#d4b8f4 100%); -webkit-background-clip:text; background-clip:text; color:transparent; word-break:keep-all; text-shadow:0 8px 36px #0e0a1455; }
+  .hub-hero-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.6rem,7.5vw,5.4rem); font-weight:800; letter-spacing:-2px; line-height:1; margin-bottom:18px; background:linear-gradient(135deg,#fff 0%,#e6d6f7 60%,#d4b8f4 100%); -webkit-background-clip:text; background-clip:text; color:transparent; word-break:keep-all; text-shadow:0 8px 36px #0e0a1455; }
   .hub-hero-sub { font-family:'DM Sans',sans-serif; font-size:1rem; color:#f5eaf5; max-width:none; margin:0 auto; line-height:1.5; text-shadow:0 2px 14px #0e0a1466; white-space:nowrap; }
-  .hub-hero-cap { position:absolute; top:22px; right:24px; z-index:2; font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:#ffffffcc; padding:6px 12px; border-radius:99px; background:#0e0a1466; backdrop-filter:blur(6px); }
+  .hub-hero-cap { position:absolute; top:22px; right:24px; z-index:2; font-family:'Plus Jakarta Sans',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; color:#ffffffcc; padding:6px 12px; border-radius:99px; background:#0e0a1466; backdrop-filter:blur(6px); }
   .hub-hero-nav { position:absolute; top:0; left:0; right:0; z-index:3; padding:24px 32px 0; }
   .hub-hero-nav .home-logo { filter:drop-shadow(0 4px 18px #0e0a1466); }
   /* Top overscroll shows the dark hero color, bottom overscroll shows cream.
@@ -1145,10 +1171,10 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   .hub-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg, transparent 60%, #d4b8f422 100%); opacity:0; transition:opacity .25s; pointer-events:none; }
   .hub-card:hover { transform:translateY(-6px); box-shadow:0 16px 44px #00000018; }
   .hub-card:hover::after { opacity:1; }
-  .hub-card-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; }
-  .hub-card-title--sm { font-size:.92rem; }
+  .hub-card-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; }
+  .hub-card-title--sm { font-size:1.15rem; }
   .hub-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
-  .hub-card-arrow { margin-top:auto; padding-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
+  .hub-card-arrow { margin-top:auto; padding-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; letter-spacing:.04em; }
 
   /* Wide hero-card row underneath the two regular cards (Modern VCT Hub) */
   .hub-cards-wide { display:flex; justify-content:center; margin-top:24px; padding:0 4px; }
@@ -1157,7 +1183,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
   .hub-card-wide-bg { position:absolute; inset:0; background-size:cover; background-position:center 40%; background-repeat:no-repeat; transform:scale(1.03); transition:transform 14s linear, opacity .8s ease; z-index:-2; opacity:0; }
   .hub-card-wide:hover .hub-card-wide-bg { transform:scale(1.10); }
   .hub-card-wide::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, #0e0a1422 0%, #0e0a1488 70%, #0e0a14bb 100%), radial-gradient(ellipse 60% 40% at 50% 60%, #00000044 0%, transparent 70%); z-index:-1; pointer-events:none; }
-  .hub-card-wide-title { position:relative; font-family:'Syne',sans-serif; font-size:clamp(1.8rem, 4vw, 2.6rem); font-weight:800; letter-spacing:-.02em; line-height:1; text-shadow:0 4px 22px #0e0a14cc; background:linear-gradient(135deg,#fff 0%,#ffd9b3 100%); -webkit-background-clip:text; background-clip:text; color:transparent; padding:0 24px; text-align:center; }
+  .hub-card-wide-title { position:relative; font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.4rem, 5.5vw, 3.6rem); font-weight:800; letter-spacing:-.02em; line-height:1; text-shadow:0 4px 22px #0e0a14cc; background:linear-gradient(135deg,#fff 0%,#ffd9b3 100%); -webkit-background-clip:text; background-clip:text; color:transparent; padding:0 24px; text-align:center; }
   .hub-logo-strip { width:100vw; position:relative; left:50%; transform:translateX(-50%); display:flex; justify-content:space-evenly; align-items:center; flex-wrap:nowrap; padding:14px 24px; margin-bottom:20px; opacity:.85; }
   .hub-logo-strip img { height:28px; width:28px; object-fit:contain; flex-shrink:0; filter:grayscale(.4); transition:filter .2s, transform .2s; cursor:pointer; user-select:none; }
   .hub-logo-strip img:hover { filter:none; transform:scale(1.18); }
@@ -1217,7 +1243,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
       </a>
     </div>
     <div class="hub-cards-wide" style="margin-top:18px;">
-      <a class="hub-card hub-card-howbp" href="/mapelo/how-it-works/" style="max-width:660px;width:100%;text-align:center;justify-content:center;align-items:center;display:flex;">
+      <a class="hub-card hub-card-howbp" href="/mapelo/how-it-works/" style="max-width:660px;width:100%;text-align:center;justify-content:center;align-items:center;display:flex;padding:30px 26px;">
         <div class="hub-card-title hub-card-title--sm" style="margin:0;font-size:1.05rem;">How does BenPom work?</div>
       </a>
     </div>
@@ -1334,7 +1360,7 @@ MAPELO_HOME_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -1343,7 +1369,7 @@ MAPELO_HOME_HTML = """
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:1440px; margin:0 auto; width:100%; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; text-align:center; }
+  .page-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:6px; text-align:center; }
   .page-sub  { font-size:.83rem; color:var(--soft); margin-bottom:22px; line-height:1.5; text-align:center; max-width:780px; margin-left:auto; margin-right:auto; }
   /* Model explanation + animated pipeline */
   .model-card { background:white; border-radius:24px; padding:24px 28px; box-shadow:0 4px 24px #0000000a; margin-bottom:20px; }
@@ -1376,8 +1402,8 @@ MAPELO_HOME_HTML = """
   body.page-howitworks .table-wrap,
   body.page-howitworks #team-modal { display: none !important; }
   .model-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0; }
-  .model-card-title { font-family:'Syne',sans-serif; font-size:.85rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--soft); }
-  .model-card-toggle { background:none; border:none; cursor:pointer; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#9a7ab4; display:flex; align-items:center; gap:6px; padding:0; }
+  .model-card-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.85rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--soft); }
+  .model-card-toggle { background:none; border:none; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#9a7ab4; display:flex; align-items:center; gap:6px; padding:0; }
   .model-card-toggle .toggle-arrow { display:inline-block; transition:transform .2s; font-style:normal; }
   .model-card-toggle.open .toggle-arrow { transform:rotate(90deg); }
   .model-collapsible { overflow:hidden; transition:max-height .6s ease, opacity .3s ease; max-height:0; opacity:0; }
@@ -1390,7 +1416,7 @@ MAPELO_HOME_HTML = """
   .pipe-stage.active-current { box-shadow:0 0 0 2px #a060d0, 0 6px 28px #9a4ab438 !important; }
   @keyframes stageGlow { 0%{box-shadow:0 0 0 2px #a060d0,0 6px 28px #9a4ab438} 50%{box-shadow:0 0 0 2.5px #8040c0,0 8px 36px #9a4ab450} 100%{box-shadow:0 0 0 2px #a060d0,0 6px 28px #9a4ab438} }
   .pipe-stage.active-current { animation:stageGlow 2s ease-in-out infinite; }
-  .pipe-num { flex-shrink:0; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:.85rem; color:white; transition:transform .3s, box-shadow .3s; }
+  .pipe-num { flex-shrink:0; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.85rem; color:white; transition:transform .3s, box-shadow .3s; }
   .pipe-stage.active .pipe-num { transform:scale(1.12); box-shadow:0 4px 12px #9a4ab444; }
   .pipe-n0 { background:linear-gradient(135deg,#e8a060,#d4804a); }
   .pipe-n1 { background:linear-gradient(135deg,#7a60e8,#5a3ab4); }
@@ -1400,7 +1426,7 @@ MAPELO_HOME_HTML = """
   .pipe-n5 { background:linear-gradient(135deg,#e8c060,#c89a30); }
   .pipe-n6 { background:linear-gradient(135deg,#9a4ab4,#5a2a7a); }
   .pipe-content { flex:1; min-width:0; }
-  .pipe-title { font-family:'Syne',sans-serif; font-size:.88rem; font-weight:800; color:var(--ink); margin-bottom:3px; transition:color .2s; }
+  .pipe-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.88rem; font-weight:800; color:var(--ink); margin-bottom:3px; transition:color .2s; }
   .pipe-stage.active .pipe-title { color:#5a2a7a; }
   .pipe-desc { font-size:.79rem; color:var(--soft); line-height:1.6; max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .35s ease; }
   .pipe-stage.active .pipe-desc { max-height:200px; opacity:1; }
@@ -1412,19 +1438,19 @@ MAPELO_HOME_HTML = """
   /* Score bars (Stage 1) */
   .pg-scorebar { display:flex; flex-direction:column; gap:7px; padding:4px 0 2px; }
   .pg-score-row { display:flex; align-items:center; gap:10px; }
-  .pg-score-label { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; color:var(--soft); min-width:46px; text-align:right; flex-shrink:0; white-space:nowrap; }
+  .pg-score-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800; color:var(--soft); min-width:46px; text-align:right; flex-shrink:0; white-space:nowrap; }
   .pg-bar-track { flex:1; height:10px; background:#f0ecf8; border-radius:5px; overflow:hidden; }
   .pg-bar-fill { height:100%; border-radius:5px; width:0; transition:width 1.1s cubic-bezier(.4,0,.2,1); }
   .pg-bar-big { background:linear-gradient(90deg,#a060d0,#d080f8); }
   .pg-bar-small { background:linear-gradient(90deg,#c8b0e0,#dcccea); }
-  .pg-score-diff { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; width:28px; flex-shrink:0; }
+  .pg-score-diff { font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800; width:28px; flex-shrink:0; }
   .pg-score-diff-big { color:#5a2a7a; } .pg-score-diff-small { color:#b4a0c8; }
   /* Decay canvas (Stage 3) */
   .pg-decay-wrap { padding:4px 0 2px; }
   .pg-decay-canvas { display:block; width:100%; height:120px; }
   /* Map veto (Stage 5) */
   .pg-veto { display:flex; flex-wrap:wrap; gap:5px; padding:6px 0 2px; }
-  .pg-map-chip { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; padding:3px 9px; border-radius:6px; background:#f0ecf8; color:var(--ink); transition:all .4s; }
+  .pg-map-chip { font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; padding:3px 9px; border-radius:6px; background:#f0ecf8; color:var(--ink); transition:all .4s; }
   .pg-map-chip.banned { background:#f5e8e8; color:#c07070; text-decoration:line-through; opacity:.45; }
   .pg-map-chip.picked { background:linear-gradient(135deg,#a060d0,#7040a0); color:white; box-shadow:0 2px 8px #9a4ab455; transform:scale(1.06); }
   .pg-map-chip.float  { background:linear-gradient(135deg,#f0e8ff,#e0d0f8); color:#5a2a7a; box-shadow:0 0 0 1.5px #c8a0e8; }
@@ -1434,16 +1460,16 @@ MAPELO_HOME_HTML = """
   .pg-roster-team { display:grid; grid-template-columns:auto 1fr auto auto; gap:10px; align-items:center; padding:8px 12px; background:#f8f4fc; border-radius:10px; opacity:0; transform:translateX(-12px); transition:opacity .45s ease, transform .45s ease; }
   .pg-roster-team.show { opacity:1; transform:translateX(0); }
   .pg-roster-stars { font-size:.85rem; color:#9a4ab4; letter-spacing:1px; white-space:nowrap; }
-  .pg-roster-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; color:var(--soft); }
+  .pg-roster-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:.7rem; font-weight:800; color:var(--soft); }
   .pg-roster-arrow { font-size:.8rem; color:#c8b8e0; }
-  .pg-roster-pct { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; padding:3px 9px; border-radius:6px; }
+  .pg-roster-pct { font-family:'Plus Jakarta Sans',sans-serif; font-size:.68rem; font-weight:800; padding:3px 9px; border-radius:6px; }
   .pg-roster-pct-hi { background:linear-gradient(135deg,#9a4ab4,#5a2a7a); color:white; box-shadow:0 2px 8px #9a4ab433; }
   .pg-roster-pct-lo { background:#f0ecf8; color:#9a7ab4; }
   /* Region offsets (Stage 6) */
   .pg-regions { display:flex; gap:10px; padding:6px 6px 2px 6px; align-items:center; flex-wrap:wrap; }
   .pg-region { display:flex; flex-direction:column; align-items:center; gap:4px; width:66px; }
-  .pg-region-name { font-family:'Syne',sans-serif; font-size:.63rem; font-weight:800; color:var(--soft); }
-  .pg-region-bubble { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; transition:transform .5s, box-shadow .5s; }
+  .pg-region-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:.63rem; font-weight:800; color:var(--soft); }
+  .pg-region-bubble { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800; transition:transform .5s, box-shadow .5s; }
   .pg-region-bubble.r-emea { background:linear-gradient(135deg,#ebe5ff,#d8ccf8); color:#5a2a9a; }
   .pg-region-bubble.r-am   { background:linear-gradient(135deg,#e5f5e5,#c8edd8); color:#2a6a4a; }
   .pg-region-bubble.r-pac  { background:linear-gradient(135deg,#e5f0ff,#c8daf8); color:#2a4a9a; }
@@ -1452,7 +1478,7 @@ MAPELO_HOME_HTML = """
   .pg-intl-arrow { font-size:.9rem; color:#c8b8e0; margin-bottom:15px; }
   /* Formula assembly (Stage 7) */
   .pg-formula { display:flex; align-items:center; gap:5px; padding:8px 0 2px; flex-wrap:wrap; }
-  .pg-formula-part { font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; padding:4px 10px; border-radius:8px; opacity:0; transform:translateY(6px); transition:opacity .45s, transform .45s; }
+  .pg-formula-part { font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800; padding:4px 10px; border-radius:8px; opacity:0; transform:translateY(6px); transition:opacity .45s, transform .45s; }
   .pg-formula-part.show { opacity:1; transform:translateY(0); }
   .pg-formula-dom { background:#f0ecf8; color:var(--ink); }
   .pg-formula-op  { background:none; color:var(--soft); padding:4px 3px; }
@@ -1471,12 +1497,12 @@ MAPELO_HOME_HTML = """
   .model-stats { display:flex; gap:12px; flex-wrap:wrap; margin:18px 0 0; }
   .stat-pill { background:#f8f4fc; border-radius:99px; padding:6px 16px; font-size:.78rem; display:flex; gap:6px; align-items:center; }
   .stat-pill-label { color:var(--soft); }
-  .stat-pill-value { font-family:'Syne',sans-serif; font-weight:800; color:var(--ink); }
+  .stat-pill-value { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:var(--ink); }
   .stat-pill-value.good { color:#1a6a4a; }
   .chart-section { margin-top:18px; }
-  .chart-title { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:800; color:var(--soft); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px; }
+  .chart-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.78rem; font-weight:800; color:var(--soft); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px; }
   .chart-wrap { position:relative; height:160px; }
-  .pipe-replay-btn { background:none; border:1.5px solid #e0d8ec; border-radius:99px; padding:4px 14px; font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#9a7ab4; cursor:pointer; transition:all .15s; }
+  .pipe-replay-btn { background:none; border:1.5px solid #e0d8ec; border-radius:99px; padding:4px 14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#9a7ab4; cursor:pointer; transition:all .15s; }
   .pipe-replay-btn:hover { border-color:#c89ee8; color:#5a2a7a; background:#f8f4fc; }
   /* Filters */
   .filter-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
@@ -1491,7 +1517,7 @@ MAPELO_HOME_HTML = """
   .card { background:white; border-radius:24px; padding:24px 28px; box-shadow:0 4px 24px #0000000a; }
   .table-wrap { overflow-x:auto; }
   table { width:100%; border-collapse:collapse; font-size:.85rem; }
-  thead th { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 12px; text-align:right; border-bottom:2px solid #f0ecf4; cursor:pointer; user-select:none; white-space:nowrap; }
+  thead th { font-family:'Plus Jakarta Sans',sans-serif; font-size:.68rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 12px; text-align:right; border-bottom:2px solid #f0ecf4; cursor:pointer; user-select:none; white-space:nowrap; }
   thead th:nth-child(2) { text-align:left; }
   thead th[style*="cursor:default"] { cursor:default !important; }
   thead th.sorted-asc::after  { content:' ▲'; font-size:.6rem; }
@@ -1502,7 +1528,7 @@ MAPELO_HOME_HTML = """
   td { padding:10px 12px; text-align:right; vertical-align:middle; }
   td:nth-child(2) { text-align:left; }
   .rank-cell { color:var(--soft); font-size:.78rem; width:32px; }
-  .org-cell { font-family:'Syne',sans-serif; font-weight:800; font-size:.88rem; display:flex; align-items:center; gap:8px; }
+  .org-cell { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.88rem; display:flex; align-items:center; gap:8px; }
   .org-cell:hover .org-name { text-decoration:underline dotted; text-underline-offset:3px; color:#5a3a8a; }
   .team-logo { width:22px; height:22px; object-fit:contain; flex-shrink:0; }
   .rating-pos { color:#1a6a4a; font-weight:700; }
@@ -1515,11 +1541,11 @@ MAPELO_HOME_HTML = """
   .modal-box { background:white; border-radius:24px; padding:28px 32px; max-width:780px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:0 24px 60px #0003; position:relative; animation:modalIn .2s ease; }
   @keyframes modalIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
   .modal-close { position:absolute; top:14px; right:18px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--soft); padding:4px; line-height:1; }
-  .modal-header { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:10px; }
+  .modal-header { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.05rem; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:10px; }
   .modal-sub { font-size:.78rem; color:var(--soft); margin-bottom:20px; }
   .modal-logo { width:30px; height:30px; object-fit:contain; }
   .map-table { width:100%; border-collapse:collapse; font-size:.82rem; }
-  .map-table thead th { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:6px 10px; text-align:right; border-bottom:1px solid #f0ecf4; }
+  .map-table thead th { font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:6px 10px; text-align:right; border-bottom:1px solid #f0ecf4; }
   .map-table thead th:first-child { text-align:left; }
   .map-table tbody td { padding:7px 10px; text-align:right; border-bottom:1px solid #f8f4fc; }
   .map-table tbody td:first-child { text-align:left; font-weight:500; }
@@ -1527,7 +1553,7 @@ MAPELO_HOME_HTML = """
   .overall-row td { border-top:2px solid #f0ecf4 !important; font-weight:700; padding-top:10px !important; }
   /* Roster & recent matches in modal */
   .team-section { margin-top:20px; border-top:1px solid #f0ecf4; padding-top:16px; }
-  .team-section-title { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:12px; }
+  .team-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:12px; }
   .roster-list { display:flex; flex-wrap:wrap; gap:14px; }
   .roster-player { display:flex; flex-direction:column; align-items:center; gap:7px; width:96px; }
   .roster-headshot { width:72px; height:72px; border-radius:50%; object-fit:cover; object-position:top center; background:#f0ecf4; flex-shrink:0; }
@@ -1535,8 +1561,8 @@ MAPELO_HOME_HTML = """
   .recent-match { border:1px solid #f0ecf4; border-radius:12px; padding:11px 13px; margin-bottom:8px; }
   .recent-match:last-child { margin-bottom:0; }
   .recent-match-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
-  .recent-match-opp { font-family:'Syne',sans-serif; font-weight:800; font-size:.88rem; }
-  .result-badge { font-family:'Syne',sans-serif; font-weight:800; font-size:.78rem; border-radius:6px; padding:2px 8px; }
+  .recent-match-opp { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.88rem; }
+  .result-badge { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.78rem; border-radius:6px; padding:2px 8px; }
   .result-badge.rw { background:#e8f5ee; color:#1a6a4a; }
   .result-badge.rl { background:#f5e8e8; color:#7a1a1a; }
   .recent-match-sub { font-size:.71rem; color:var(--soft); margin-bottom:7px; line-height:1.4; }
@@ -1552,24 +1578,24 @@ MAPELO_HOME_HTML = """
   .map-history-body.open { /* max-height set by JS */ }
   .mh-inner { padding:14px 16px 18px; }
   .mh-table { width:100%; border-collapse:collapse; font-size:.8rem; }
-  .mh-table thead th { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:6px 10px; text-align:center; border-bottom:1px solid #ede8f4; }
+  .mh-table thead th { font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:6px 10px; text-align:center; border-bottom:1px solid #ede8f4; }
   .mh-table thead th:first-child { text-align:left; }
   .mh-table tbody tr { height:38px; }
   .mh-table tbody td { padding:6px 10px; border-bottom:1px solid #f0ecf8; vertical-align:middle; white-space:nowrap; text-align:center; }
   .mh-table tbody td.mh-label { white-space:normal; text-align:left; max-width:220px; line-height:1.45; }
   .mh-table tbody tr:last-child td { border-bottom:none; }
   .mh-label { font-size:.75rem; color:var(--soft); }
-  .mh-opp { display:inline-flex; align-items:center; gap:6px; font-family:'Syne',sans-serif; font-weight:800; font-size:.82rem; }
+  .mh-opp { display:inline-flex; align-items:center; gap:6px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.82rem; }
   .mh-opp-logo { width:18px; height:18px; object-fit:contain; }
   .map-chip-l { background:#f5e8e8; color:#7a1a1a; }
   .team-extra-loading { color:var(--soft); font-size:.78rem; padding:8px 0; }
   /* International adjustment badge in rankings table */
-  .intl-badge { display:inline-block; margin-left:5px; font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; padding:1px 6px; border-radius:99px; vertical-align:middle; }
+  .intl-badge { display:inline-block; margin-left:5px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; padding:1px 6px; border-radius:99px; vertical-align:middle; }
   .intl-badge-pos { background:#e8f5ee; color:#1a6a4a; }
   .intl-badge-neg { background:#f5e8e8; color:#7a1a1a; }
   /* Intl breakdown row in modal */
   .intl-row { display:flex; align-items:center; gap:6px; padding:10px 0; border-top:1px solid #f0ecf4; margin-top:4px; flex-wrap:wrap; }
-  .intl-row-label { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); min-width:100px; }
+  .intl-row-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); min-width:100px; }
   .intl-chip { font-size:.75rem; padding:2px 10px; border-radius:99px; font-weight:700; }
   .intl-chip-dom { background:#f0ecf8; color:var(--ink); }
   .intl-chip-reg-pos { background:#e8f5ee; color:#1a6a4a; }
@@ -1585,14 +1611,14 @@ MAPELO_HOME_HTML = """
   .ranks-controls { background:white; border-radius:24px; padding:18px 22px 22px; box-shadow:0 4px 24px #0000000a; margin:0 auto 18px; max-width:780px; }
   .ranks-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; }
   .ranks-row + .ranks-row { margin-top:14px; }
-  .ranks-row-label { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); flex-basis:100%; text-align:center; margin-bottom:6px; }
+  .ranks-row-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); flex-basis:100%; text-align:center; margin-bottom:6px; }
   .yr-scrubber { position:relative; padding:0 12px 22px; user-select:none; flex:0 1 560px; min-width:240px; max-width:560px; }
   .yr-track { position:relative; height:4px; border-radius:99px; background:linear-gradient(90deg,#f4b8c1,#d4b8f4,#b8d8f4,#b8e8d4); margin:14px 0 4px; cursor:pointer; }
   .yr-tick { position:absolute; top:50%; width:8px; height:8px; border-radius:50%; background:white; border:2px solid #d4b8f4; transform:translate(-50%,-50%); transition:transform .15s; cursor:pointer; }
   .yr-tick.active { background:var(--ink); border-color:var(--ink); transform:translate(-50%,-50%) scale(1.4); }
   .yr-tick:hover { transform:translate(-50%,-50%) scale(1.3); }
   .yr-knob { position:absolute; top:50%; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); transform:translate(-50%,-50%); box-shadow:0 4px 12px #5a2a7a55, 0 0 0 4px white; transition:left .35s cubic-bezier(.5,1.6,.4,1); pointer-events:none; }
-  .yr-labels { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
+  .yr-labels { display:flex; justify-content:space-between; font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
   .yr-labels span { cursor:pointer; padding:2px 4px; transition:color .15s; }
   .yr-labels span.active { color:var(--ink); }
   .yr-labels span:hover { color:var(--ink); }
@@ -1605,7 +1631,7 @@ MAPELO_HOME_HTML = """
   .chart-card { background:#fff; border-radius:16px; padding:14px 0 10px; margin:0 auto 18px; position:relative; box-shadow:0 4px 24px #0000000a; max-width:1180px; }
   .chart-header { display:flex; flex-direction:column; align-items:stretch; margin-bottom:10px; gap:6px; padding:0 24px; position:relative; }
   .chart-header-row { display:flex; justify-content:flex-end; align-items:center; gap:10px; }
-  .ranks-chart-title { align-self:center; font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; letter-spacing:-.02em; background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; white-space:nowrap; pointer-events:none; }
+  .ranks-chart-title { align-self:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:800; letter-spacing:-.02em; background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; white-space:nowrap; pointer-events:none; }
   .chart-asof { color:rgba(0,0,0,.4); font-size:.75rem; }
   .chart-hint { font-size:.7rem; color:rgba(0,0,0,.4); padding:0 0 8px; letter-spacing:.01em; text-align:center; }
   .chart-controls { display:flex; gap:8px; align-items:center; flex-shrink:0; }
@@ -1624,7 +1650,7 @@ MAPELO_HOME_HTML = """
   #dotTooltip .popup-logo { width:38px; height:38px; object-fit:contain; }
   #dotTooltip .popup-team-name { font-size:.66rem; color:rgba(232,213,245,.6); font-weight:500; }
   #dotTooltip .popup-score-block { display:flex; flex-direction:column; align-items:center; gap:2px; }
-  #dotTooltip .popup-score { font-size:1.7rem; font-weight:800; font-family:'Syne',sans-serif; line-height:1; }
+  #dotTooltip .popup-score { font-size:1.7rem; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; line-height:1; }
   #dotTooltip .popup-score.w { color:#4ade80; } #dotTooltip .popup-score.l { color:#f87171; }
   #dotTooltip .popup-vs-label { font-size:.6rem; color:rgba(232,213,245,.3); }
   #dotTooltip .popup-date { color:rgba(232,213,245,.3); font-size:.65rem; margin-bottom:3px; }
@@ -1643,12 +1669,12 @@ MAPELO_HOME_HTML = """
   /* ── Modern-Hub-style WHITE leaderboard ───────────────────────────────── */
   .lb-card { background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px #0000000a; margin:0 auto 24px; max-width:780px; }
   .lb-header-row { padding:14px 20px; display:flex; align-items:center; justify-content:center; position:relative; border-bottom:1px solid rgba(61,26,110,.1); }
-  .lb-title { font-family:'Syne',sans-serif; font-weight:700; font-size:.95rem; color:#000; text-align:center; }
+  .lb-title { font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:.95rem; color:#000; text-align:center; }
   .lb-asof { position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:.7rem; color:#666; text-align:right; max-width:240px; }
   @keyframes lbRowSlideIn { from { opacity:0; transform:translateX(-30px); } to { opacity:1; transform:translateX(0); } }
   .lb-row.slide-in { animation:lbRowSlideIn .5s cubic-bezier(.16,1,.3,1) backwards; }
   .lb-col-hdr { display:grid; grid-template-columns:44px 2fr 1fr 1fr 24px; align-items:center; padding:8px 24px; gap:10px; border-bottom:2px solid rgba(61,26,110,.1); }
-  .lb-col-hdr span { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#888; text-align:center; }
+  .lb-col-hdr span { font-family:'Plus Jakarta Sans',sans-serif; font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#888; text-align:center; }
   .lb-col-hdr span.sortable { cursor:pointer; user-select:none; transition:color .15s; }
   .lb-col-hdr span.sortable:hover { color:#3d1a6e; }
   .lb-col-hdr span.sort-asc::after  { content:' ▲'; font-size:.55rem; margin-left:1px; }
@@ -1842,19 +1868,19 @@ MAPELO_HOME_HTML = """
                   <text x="4"  y="27" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m2" style="opacity:0;transition:opacity .35s">-1  1  0  0</text>
                   <text x="4"  y="38" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m3" style="opacity:0;transition:opacity .35s"> 0 -1  1  0</text>
                   <text x="4"  y="49" font-size="7.5" font-family="monospace" fill="#9a7ab4" id="pg1-m4" style="opacity:0;transition:opacity .35s"> 0  0 -1  1</text>
-                  <text x="22" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-ml" style="opacity:0;transition:opacity .35s">M</text>
+                  <text x="22" y="62" font-size="7" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-ml" style="opacity:0;transition:opacity .35s">M</text>
                   <text x="65" y="36" font-size="18" font-family="sans-serif" fill="#c8b8e0" id="pg1-dot" style="opacity:0;transition:opacity .35s">&middot;</text>
                   <rect x="74" y="6"  width="16" height="50" rx="4" fill="#e8e0f8" id="pg1-rv" style="opacity:0;transition:opacity .35s"/>
                   <text x="77" y="20" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r1" style="opacity:0;transition:opacity .35s">r&#8321;</text>
                   <text x="77" y="32" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r2" style="opacity:0;transition:opacity .35s">r&#8322;</text>
                   <text x="77" y="44" font-size="7.5" font-family="monospace" fill="#7a60d0" id="pg1-r3" style="opacity:0;transition:opacity .35s">r&#8323;</text>
-                  <text x="76" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-rl" style="opacity:0;transition:opacity .35s">r</text>
+                  <text x="76" y="62" font-size="7" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-rl" style="opacity:0;transition:opacity .35s">r</text>
                   <text x="96" y="36" font-size="14" font-family="sans-serif" fill="#c8b8e0" id="pg1-eq" style="opacity:0;transition:opacity .35s">=</text>
                   <rect x="109" y="6" width="16" height="50" rx="4" fill="#dff0e8" id="pg1-pv" style="opacity:0;transition:opacity .35s"/>
                   <text x="111" y="20" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p1" style="opacity:0;transition:opacity .35s">+8</text>
                   <text x="111" y="32" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p2" style="opacity:0;transition:opacity .35s">-3</text>
                   <text x="111" y="44" font-size="7.5" font-family="monospace" fill="#2a7a50" id="pg1-p3" style="opacity:0;transition:opacity .35s">+5</text>
-                  <text x="110" y="62" font-size="7" font-family="Syne,sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-pl" style="opacity:0;transition:opacity .35s">p</text>
+                  <text x="110" y="62" font-size="7" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" fill="#b0a0c8" id="pg1-pl" style="opacity:0;transition:opacity .35s">p</text>
                 </svg>
                 <div style="font-size:.68rem;color:var(--soft);line-height:1.8;padding-top:4px">
                   <strong style="color:var(--ink)">M</strong> = matchup matrix<br>
@@ -1891,11 +1917,11 @@ MAPELO_HOME_HTML = """
             <div class="pipe-graphic">
               <div style="padding:4px 0 2px;display:flex;gap:10px;flex-wrap:wrap">
                 <div style="background:#f8f4fc;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
-                  <strong style="font-family:'Syne',sans-serif;color:var(--ink)">2 games</strong><br>
+                  <strong style="font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink)">2 games</strong><br>
                   <span style="color:var(--soft)">&alpha; &asymp; 0.14<br>heavy pull &rarr; overall</span>
                 </div>
                 <div style="background:#f0f8f4;border-radius:10px;padding:6px 11px;font-size:.7rem;line-height:1.85;flex:1;min-width:110px">
-                  <strong style="font-family:'Syne',sans-serif;color:var(--ink)">20 games</strong><br>
+                  <strong style="font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink)">20 games</strong><br>
                   <span style="color:var(--soft)">&alpha; &asymp; 0.63<br>mostly raw map signal</span>
                 </div>
               </div>
@@ -1914,13 +1940,13 @@ MAPELO_HOME_HTML = """
             <div class="pipe-desc">Each team runs through 10,000 simulated BO3 vetoes against league-average opponents using historical ban/pick patterns. Expected round-diff across the surviving maps becomes the headline rating. Thus, a great ban target is worth as much as a great map.</div>
             <div class="pipe-graphic">
               <div style="display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap">
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
-                <span style="font-family:'Syne',sans-serif;font-size:.6rem;font-weight:800;color:#5a2a7a;padding:2px 7px;background:linear-gradient(135deg,#f0e8ff,#e0d0f8);border-radius:5px;box-shadow:0 0 0 1px #c8a0e8">float</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:white;padding:2px 7px;background:linear-gradient(135deg,#a060d0,#7040a0);border-radius:5px">pick</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:#c07070;padding:2px 7px;background:#f5e8e8;border-radius:5px">ban</span>
+                <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;color:#5a2a7a;padding:2px 7px;background:linear-gradient(135deg,#f0e8ff,#e0d0f8);border-radius:5px;box-shadow:0 0 0 1px #c8a0e8">float</span>
               </div>
               <div class="pg-veto" id="pg4-veto">
                 <div class="pg-map-chip">Abyss</div>
@@ -2174,7 +2200,7 @@ function _drawDecayCanvas() {
       ctx.strokeStyle='#ccc0e0'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
       ctx.beginPath(); ctx.moveTo(hlX,H-PB); ctx.lineTo(hlX,hlY); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle='#9060b8'; ctx.font='bold 8px Syne,sans-serif'; ctx.textAlign='center';
+      ctx.fillStyle='#9060b8'; ctx.font='bold 8px "Plus Jakarta Sans",sans-serif'; ctx.textAlign='center';
       ctx.fillText('t½=5w', hlX, hlY-4);
     }
     t=Math.min(t+2, STEPS);
@@ -3704,35 +3730,34 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Historical Matchup Predictor &mdash; BenPom</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:980px; margin:0 auto; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; text-align:center; min-height:1.2em; line-height:1; transition:opacity .2s; }
-  .type-cursor{opacity:1;animation:blink .55s step-end infinite}
-  .dot-seed{font-size:1.6rem}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  .page-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.4rem,3vw,2.2rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; text-align:center; min-height:1.2em; line-height:1; transition:opacity .2s; }
+  .ht-char{display:inline-block;opacity:0;will-change:transform,opacity,filter;animation:htCharIn .58s cubic-bezier(.2,.75,.25,1) both}
+  @keyframes htCharIn{0%{opacity:0;transform:translateY(.55em) scale(.82) rotate(-7deg);filter:blur(9px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0);filter:blur(0)}}
   /* Team selector panels */
   .teams-grid { display:grid; grid-template-columns:1fr 96px 1fr; gap:0; align-items:start; margin-bottom:24px; }
   .team-panel { background:white; border-radius:24px; padding:22px 24px; box-shadow:0 4px 24px #0000000a; }
-  .tp-side { font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:14px; }
+  .tp-side { font-family:'Plus Jakarta Sans',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:14px; }
   .yr-row { display:flex; gap:5px; margin-bottom:10px; }
   .yr-btn { padding:3px 10px; border-radius:99px; border:1.5px solid #f0ecf4; background:white; font-family:'DM Sans',sans-serif; font-size:.72rem; font-weight:500; cursor:pointer; color:var(--soft); transition:all .15s; }
   .yr-btn:hover { border-color:#d4b8f4; color:var(--ink); }
   .yr-btn.active { background:var(--ink); color:white; border-color:var(--ink); }
   .snap-sel { appearance:none; padding:5px 26px 5px 11px; border-radius:99px; border:1.5px solid #f0ecf4; background:white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%237a6e7e'/%3E%3C/svg%3E") no-repeat right 10px center; font-family:'DM Sans',sans-serif; font-size:.74rem; color:var(--ink); cursor:pointer; outline:none; margin-bottom:10px; display:block; }
   .snap-sel:focus { border-color:#d4b8f4; }
-  .team-sel { width:100%; border:2px solid #f0ecf4; border-radius:12px; padding:9px 12px; font-size:.92rem; font-family:'Syne',sans-serif; font-weight:800; background:white; color:var(--ink); cursor:pointer; appearance:none; outline:none; transition:border-color .15s; }
+  .team-sel { width:100%; border:2px solid #f0ecf4; border-radius:12px; padding:9px 12px; font-size:.92rem; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; background:white; color:var(--ink); cursor:pointer; appearance:none; outline:none; transition:border-color .15s; }
   .team-sel:focus { border-color:#d4b8f4; }
   /* VS column */
   .vs-col { display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:0; }
-  .vs-text { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; color:#c0b8c8; }
-  .sim-btn { background:#2a1f2d; color:white; border:none; border-radius:99px; padding:9px 18px; font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:background .15s; white-space:nowrap; }
+  .vs-text { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.95rem; color:#c0b8c8; }
+  .sim-btn { background:#2a1f2d; color:white; border:none; border-radius:99px; padding:11px 24px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.82rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:background .15s; white-space:nowrap; }
   .sim-btn:hover { background:#5a2a7a; }
-  .controls-row { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:28px; margin-top:18px; }
+  .controls-row { display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:28px; margin-top:18px; }
   .fmt-row { display:flex; gap:5px; }
-  .fmt-btn { padding:5px 16px; border-radius:99px; border:1.5px solid #f0ecf4; background:white; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; cursor:pointer; color:var(--soft); transition:all .15s; white-space:nowrap; }
+  .fmt-btn { padding:8px 20px; border-radius:99px; border:1.5px solid #f0ecf4; background:white; font-family:'Plus Jakarta Sans',sans-serif; font-size:.85rem; font-weight:800; cursor:pointer; color:var(--soft); transition:all .15s; white-space:nowrap; }
   .fmt-btn:hover { border-color:#d4b8f4; color:var(--ink); }
   .fmt-btn.active { background:var(--ink); color:white; border-color:var(--ink); }
   /* Result card */
@@ -3741,41 +3766,41 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .result-teams-row { display:flex; align-items:center; gap:0; margin-bottom:18px; }
   .result-team-block { flex:1; display:flex; flex-direction:column; align-items:center; gap:5px; }
   .result-logo { width:44px; height:44px; object-fit:contain; }
-  .result-org { font-family:'Syne',sans-serif; font-weight:800; font-size:.85rem; }
+  .result-org { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.85rem; }
   .result-ctx { font-size:.68rem; color:var(--soft); text-align:center; line-height:1.4; }
-  .result-pct { font-family:'Syne',sans-serif; font-weight:800; font-size:2.4rem; line-height:1; }
+  .result-pct { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:2.4rem; line-height:1; }
   .result-pct.fav { color:#2a1f2d; }
   .result-pct.dog { color:#d0c8d8; }
   .result-mid { flex:0 0 120px; display:flex; flex-direction:column; align-items:center; gap:8px; }
   .result-bar-outer { width:100%; height:8px; border-radius:99px; overflow:hidden; display:flex; }
   .result-bar-a { background:#5a2a7a; height:100%; transition:width .6s ease; }
   .result-bar-b { background:#e0d8ec; height:100%; transition:width .6s ease; }
-  .result-bar-label { font-family:'Syne',sans-serif; font-size:.55rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
+  .result-bar-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:.55rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
   /* Legend */
   .fate-legend { display:flex; gap:12px; flex-wrap:wrap; padding:22px 32px 14px; }
   .fate-legend-item { display:flex; align-items:center; gap:5px; font-size:.67rem; color:var(--soft); }
   .fate-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
   /* Map table */
   .map-tbl { width:100%; border-collapse:collapse; font-size:.86rem; }
-  .map-tbl thead th { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:10px 14px; border-top:1px solid #f0ecf4; border-bottom:1px solid #f0ecf4; text-align:center; background:#faf8fc; white-space:nowrap; }
+  .map-tbl thead th { font-family:'Plus Jakarta Sans',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:10px 14px; border-top:1px solid #f0ecf4; border-bottom:1px solid #f0ecf4; text-align:center; background:#faf8fc; white-space:nowrap; }
   .map-tbl thead th:first-child { text-align:left; padding-left:24px; }
   .map-tbl thead th:nth-child(2) { text-align:left; }
   .map-tbl tbody tr { border-bottom:1px solid #f8f4fc; transition:background .1s; }
   .map-tbl tbody tr:last-child { border-bottom:none; }
   .map-tbl tbody tr:hover { background:#fdf6f0; }
   .map-tbl tbody td { padding:18px 14px; text-align:center; vertical-align:middle; }
-  .map-tbl tbody td:first-child { text-align:left; font-family:'Syne',sans-serif; font-weight:800; padding-left:24px; }
+  .map-tbl tbody td:first-child { text-align:left; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; padding-left:24px; }
   .bd-map-mini { display:flex; align-items:center; gap:12px; font-size:1.05rem; }
   .bd-map-mini img { width:38px; height:38px; object-fit:cover; border-radius:8px; }
   /* Prominent probability cell */
   .wp-prom { display:flex; align-items:center; gap:10px; justify-content:flex-start; }
-  .wp-prom-num { font-family:'Syne',sans-serif; font-size:1.45rem; font-weight:800; min-width:62px; text-align:left; line-height:1; }
+  .wp-prom-num { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.45rem; font-weight:800; min-width:62px; text-align:left; line-height:1; }
   .wp-prom-num.fav { color:#1a6a4a; }
   .wp-prom-num.dog { color:#7a1a1a; }
   .wp-prom-num.neu { color:var(--soft); }
   .wp-prom-bg { width:90px; height:9px; border-radius:99px; background:#f0ecf4; overflow:hidden; }
   .wp-prom-fill { height:100%; background:linear-gradient(90deg,#5a2a7a,#9a4ab4); border-radius:99px; transition:width .4s; }
-  .wp-prom-empty { font-family:'Syne',sans-serif; font-size:1rem; color:var(--soft); }
+  .wp-prom-empty { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; color:var(--soft); }
   /* Fate bar */
   .fate-bar-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; }
   .fate-bar { display:flex; border-radius:4px; overflow:hidden; height:8px; width:110px; background:#f0ecf4; }
@@ -3800,30 +3825,30 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .result-note { font-size:.68rem; color:var(--soft); text-align:center; padding:12px 32px 18px; opacity:.75; }
   .intl-adj { display:flex; align-items:center; gap:4px; margin:3px 0 5px; font-size:.72rem; flex-wrap:wrap; }
   .intl-adj-label { color:var(--soft); font-size:.65rem; letter-spacing:.05em; text-transform:uppercase; font-weight:700; }
-  .intl-adj-val { font-family:'Syne',sans-serif; font-weight:800; font-size:.75rem; }
+  .intl-adj-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.75rem; }
   .intl-adj-tip { color:var(--soft); font-size:.65rem; }
   /* Predicted veto */
   .veto-pred-card { background:white; border-radius:24px; box-shadow:0 4px 24px #0000000a; padding:24px 28px; margin-bottom:20px; }
-  .veto-pred-title { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
+  .veto-pred-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; text-align:center; }
   .veto-seq { margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid #f0ecf4; }
   .veto-seq:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
-  .veto-seq-header { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-  .veto-seq-rank { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; color:var(--soft); }
-  .veto-seq-pct { font-family:'Syne',sans-serif; font-size:.78rem; font-weight:800; color:#2a1f2d; background:#f4f0fa; border-radius:99px; padding:2px 10px; }
-  .veto-steps { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .veto-seq-header { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:8px; }
+  .veto-seq-rank { font-family:'Plus Jakarta Sans',sans-serif; font-size:.68rem; font-weight:800; color:var(--soft); }
+  .veto-seq-pct { font-family:'Plus Jakarta Sans',sans-serif; font-size:.78rem; font-weight:800; color:#2a1f2d; background:#f4f0fa; border-radius:99px; padding:2px 10px; }
+  .veto-steps { display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:center; }
   .veto-step { display:flex; flex-direction:column; align-items:center; gap:2px; }
   .step-lbl { font-size:.55rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; border-radius:4px; padding:2px 5px; white-space:nowrap; }
   .step-lbl-banA, .step-lbl-banB   { background:#fde8ec; color:#b03050; }
   .step-lbl-pickA, .step-lbl-pickB { background:#e3f6ea; color:#206040; }
   .step-lbl-dec                    { background:#f0ecf4; color:#7a6e7e; }
-  .step-map { font-family:'Syne',sans-serif; font-weight:800; font-size:.72rem; color:#2a1f2d; white-space:nowrap; }
+  .step-map { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.72rem; color:#2a1f2d; white-space:nowrap; }
   .step-arrow { font-size:.7rem; color:#ccc; align-self:center; margin-top:10px; }
   .no-veto-data { font-size:.78rem; color:var(--soft); font-style:italic; }
 
   /* === MODE TOGGLE === */
   .mode-toggle-row { display:flex; justify-content:center; margin-bottom:22px; }
   .mode-toggle { display:inline-flex; background:white; border-radius:99px; padding:4px; box-shadow:0 4px 18px #0000000a; gap:2px; }
-  .mode-btn { background:transparent; border:none; padding:8px 18px; border-radius:99px; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); cursor:pointer; transition:all .2s; }
+  .mode-btn { background:transparent; border:none; padding:8px 18px; border-radius:99px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); cursor:pointer; transition:all .2s; }
   .mode-btn.active { background:linear-gradient(135deg,#5a2a7a,#9a4ab4); color:white; box-shadow:0 4px 12px #5a2a7a33; }
   .mode-btn:not(.active):hover { color:var(--ink); }
 
@@ -3848,7 +3873,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   body.simming .cf-item,
   body.simming .cf-arrow { cursor:default !important; }
   .side-panel { background:white; border-radius:24px; padding:18px 16px 22px; box-shadow:0 4px 24px #0000000a; display:flex; flex-direction:column; align-items:stretch; }
-  .side-label { font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; text-align:center; }
+  .side-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; text-align:center; }
 
   /* === YEAR SCRUBBER === */
   .yr-scrubber { position:relative; padding:6px 12px 22px; user-select:none; }
@@ -3857,7 +3882,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .yr-tick.active { background:var(--ink); border-color:var(--ink); transform:translate(-50%,-50%) scale(1.4); }
   .yr-tick:hover { transform:translate(-50%,-50%) scale(1.3); }
   .yr-knob { position:absolute; top:50%; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); transform:translate(-50%,-50%); box-shadow:0 4px 12px #5a2a7a55, 0 0 0 4px white; transition:left .35s cubic-bezier(.5,1.6,.4,1); pointer-events:none; }
-  .yr-labels { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
+  .yr-labels { display:flex; justify-content:space-between; font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
   .yr-labels span { cursor:pointer; padding:2px 4px; transition:color .15s; }
   .yr-labels span.active { color:var(--ink); }
   .yr-labels span:hover { color:var(--ink); }
@@ -3889,13 +3914,13 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .cf-item .cf-card { width:96px; height:96px; border-radius:18px; background:white; display:flex; align-items:center; justify-content:center; padding:8px; box-shadow:0 4px 14px #00000014; transition:box-shadow .2s, transform .2s; }
   .cf-item.center .cf-card { box-shadow:0 10px 28px #5a2a7a33, 0 0 0 2px #d4b8f4; transform:scale(1.04); }
   .cf-item img { max-width:74px; max-height:74px; object-fit:contain; }
-  .cf-item .cf-fallback { font-family:'Syne',sans-serif; font-weight:800; font-size:.85rem; color:var(--ink); text-align:center; }
-  .cf-rtg { font-family:'Syne',sans-serif; font-weight:800; font-size:.72rem; font-variant-numeric:tabular-nums; margin-top:6px; padding:2px 8px; border-radius:99px; background:rgba(0,0,0,.04); letter-spacing:.02em; }
+  .cf-item .cf-fallback { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.85rem; color:var(--ink); text-align:center; }
+  .cf-rtg { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.85rem; font-variant-numeric:tabular-nums; margin-top:10px; padding:2px 8px; border-radius:99px; background:rgba(0,0,0,.04); letter-spacing:.02em; }
   .cf-rtg-pos { color:#16a34a; }
   .cf-rtg-neg { color:#dc2626; }
-  .cf-item.center .cf-rtg { background:rgba(124,58,237,.12); font-size:.78rem; }
-  .cf-name { text-align:center; font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; letter-spacing:-.02em; color:var(--ink); margin-top:6px; min-height:1.4em; }
-  .cf-region { text-align:center; font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:2px; min-height:1em; }
+  .cf-item.center .cf-rtg { background:rgba(124,58,237,.12); font-size:.92rem; }
+  .cf-name { text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; letter-spacing:-.02em; color:var(--ink); margin-top:-22px; min-height:1.2em; }
+  .cf-region { text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:2px; min-height:1em; }
   .cf-arrows { display:flex; justify-content:space-between; padding:0 6px; pointer-events:none; position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); z-index:6; }
   .cf-arrow { pointer-events:all; background:white; border:none; width:32px; height:32px; border-radius:50%; box-shadow:0 2px 10px #00000018; cursor:pointer; font-size:1rem; color:var(--ink); display:flex; align-items:center; justify-content:center; transition:transform .15s, background .15s; }
   .cf-arrow:hover { background:var(--ink); color:white; transform:scale(1.1); }
@@ -3904,13 +3929,13 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 
   /* === VS DIVIDER === */
   .vs-divider { display:flex; align-items:center; justify-content:center; }
-  .vs-badge { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); color:white; font-family:'Syne',sans-serif; font-weight:800; font-size:.9rem; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px #5a2a7a44; letter-spacing:.05em; }
+  .vs-badge { width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); color:white; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.9rem; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px #5a2a7a44; letter-spacing:.05em; }
 
   /* === REVEAL OVERLAY === */
   .reveal-stage { background:white; border-radius:24px; box-shadow:0 4px 24px #0000000a; padding:30px; margin-bottom:20px; position:relative; min-height:240px; overflow:hidden; }
-  .reveal-skip { position:absolute; top:14px; right:16px; background:transparent; border:1.5px solid #e8dff4; color:var(--soft); border-radius:99px; padding:5px 14px; font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:all .15s; z-index:10; }
+  .reveal-skip { position:absolute; top:14px; right:16px; background:transparent; border:1.5px solid #e8dff4; color:var(--soft); border-radius:99px; padding:5px 14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; transition:all .15s; z-index:10; }
   .reveal-skip:hover { color:var(--ink); border-color:#5a2a7a; }
-  .rv-step { font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:14px; text-align:center; }
+  .rv-step { font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:14px; text-align:center; }
 
   /* Sim intro */
   .rv-intro { display:flex; align-items:center; justify-content:center; gap:40px; padding:30px 0; }
@@ -3919,22 +3944,22 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   @keyframes rvSlideIn { to { opacity:1; transform:translateX(0); } }
   @keyframes rvSlideInR { to { opacity:1; transform:translateX(0); } }
   .rv-intro-team img { width:72px; height:72px; object-fit:contain; }
-  .rv-intro-vs { font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; animation:rvFadeIn .4s .3s forwards; }
+  .rv-intro-vs { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.6rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; animation:rvFadeIn .4s .3s forwards; }
   @keyframes rvFadeIn { to { opacity:1; } }
   .rv-shimmer { position:absolute; inset:0; background:linear-gradient(110deg,transparent 30%,#d4b8f455 50%,transparent 70%); transform:translateX(-100%); animation:rvShimmer 1.6s ease-in-out infinite; pointer-events:none; }
   @keyframes rvShimmer { to { transform:translateX(100%); } }
 
   /* Veto reveal grid */
-  .rv-veto-grid { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:14px 0; }
-  .rv-veto-slot { width:104px; height:108px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 6px; opacity:.55; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
-  .rv-veto-slot.rv-vs-pending .rv-vs-q { font-family:'Syne',sans-serif; font-weight:800; font-size:2.4rem; color:#bcb2c4; line-height:1; }
+  .rv-veto-grid { display:flex; gap:8px; flex-wrap:nowrap; justify-content:center; padding:14px 0; }
+  .rv-veto-slot { flex:1 1 0; min-width:0; max-width:116px; height:118px; border-radius:14px; background:#faf6fc; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; padding:8px 6px; opacity:.55; transition:opacity .3s, transform .35s, background .35s, box-shadow .35s; transform:scale(.92); position:relative; overflow:hidden; }
+  .rv-veto-slot.rv-vs-pending .rv-vs-q { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:2.4rem; color:#bcb2c4; line-height:1; }
   .rv-veto-slot.revealed { opacity:1; transform:scale(1); animation:rvPop .4s ease; }
   @keyframes rvPop { 0%{transform:scale(.7);} 60%{transform:scale(1.08);} 100%{transform:scale(1);} }
   .rv-veto-slot.banned::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(45deg,transparent 0 6px,#f4b8c133 6px 12px); pointer-events:none; }
   .rv-veto-slot.banned img { filter:grayscale(1); opacity:.55; }
   .rv-veto-slot img { width:54px; height:54px; object-fit:cover; border-radius:8px; }
-  .rv-veto-slot .rv-vs-map { font-family:'Syne',sans-serif; font-weight:800; font-size:.75rem; color:var(--ink); text-align:center; }
-  .rv-veto-slot .rv-vs-act { font-family:'Syne',sans-serif; font-weight:800; font-size:.55rem; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:99px; white-space:nowrap; max-width:100%; text-align:center; }
+  .rv-veto-slot .rv-vs-map { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.85rem; color:var(--ink); text-align:center; }
+  .rv-veto-slot .rv-vs-act { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; padding:2px 8px; border-radius:99px; white-space:nowrap; max-width:100%; text-align:center; }
   .rv-act-banA, .rv-act-banB   { background:#fde8ec; color:#b03050; }
   .rv-act-pickA, .rv-act-pickB { background:#e3f6ea; color:#206040; }
   .rv-act-dec                  { background:#f0ecf4; color:#7a6e7e; }
@@ -3945,44 +3970,44 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
   .rv-map-card.shown { opacity:1; transform:translateY(0); }
   .rv-map-card .rv-map-bg { position:absolute; inset:0; background-size:cover; background-position:center; opacity:.55; }
   .rv-map-card .rv-map-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#0e0a1499 0%,#0e0a14ee 100%); }
-  .rv-map-inner { position:relative; z-index:1; padding:18px 22px; display:flex; align-items:center; gap:18px; width:100%; }
-  .rv-map-name { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; letter-spacing:.04em; text-transform:uppercase; flex:0 0 auto; }
-  .rv-map-num { font-family:'Syne',sans-serif; font-weight:800; font-size:.6rem; letter-spacing:.18em; text-transform:uppercase; color:#a08fbf; margin-bottom:3px; }
-  .rv-map-pickedby { font-family:'Syne',sans-serif; font-size:.55rem; letter-spacing:.1em; text-transform:uppercase; color:#9a7ab4; margin-top:2px; }
-  .rv-map-h2h { display:flex; flex:1; align-items:center; justify-content:flex-end; gap:18px; }
+  .rv-map-inner { position:relative; z-index:1; padding:18px 22px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:18px; width:100%; }
+  .rv-map-name { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem; letter-spacing:.04em; text-transform:uppercase; flex:0 0 auto; }
+  .rv-map-num { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:#a08fbf; margin-bottom:3px; }
+  .rv-map-pickedby { font-family:'Plus Jakarta Sans',sans-serif; font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:#9a7ab4; margin-top:2px; }
+  .rv-map-h2h { display:flex; flex:1; align-items:center; justify-content:center; gap:18px; }
   .rv-map-team { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:84px; }
   .rv-map-team img { width:38px; height:38px; object-fit:contain; filter:drop-shadow(0 2px 6px #00000060); }
-  .rv-map-team-name { font-family:'Syne',sans-serif; font-weight:800; font-size:.6rem; letter-spacing:.08em; color:#a08fbf; }
-  .rv-map-score { font-family:'Syne',sans-serif; font-weight:800; font-size:2.4rem; line-height:1; color:white; transition:color .3s, transform .25s, text-shadow .3s; }
+  .rv-map-team-name { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.74rem; letter-spacing:.08em; color:#a08fbf; }
+  .rv-map-score { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:2.85rem; line-height:1; color:white; transition:color .3s, transform .25s, text-shadow .3s; }
   .rv-map-score.bumped { transform:scale(1.18); }
   .rv-map-score.win { color:#9affd0; text-shadow:0 0 22px #9affd088; }
   .rv-map-score.lose { color:#7d6a8e; }
-  .rv-map-team-pct { font-family:'DM Sans',sans-serif; font-weight:600; font-size:.78rem; color:#a08fbf; min-height:1.1em; opacity:0; transition:opacity .35s; }
+  .rv-map-team-pct { font-family:'DM Sans',sans-serif; font-weight:600; font-size:.84rem; color:#a08fbf; min-height:1.1em; opacity:0; transition:opacity .35s; }
   .rv-map-team-pct.shown { opacity:1; }
   .rv-map-team-pct.win { color:#9affd0; }
-  .rv-map-vs-mini { font-family:'Syne',sans-serif; font-weight:800; font-size:.7rem; color:#796a89; align-self:center; }
-  .rv-map-result-badge { font-family:'Syne',sans-serif; font-weight:800; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; padding:5px 10px; border-radius:99px; background:#9a4ab4; color:white; align-self:center; opacity:0; transform:scale(.6); transition:opacity .35s, transform .35s; }
+  .rv-map-vs-mini { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.82rem; color:#796a89; align-self:center; }
+  .rv-map-result-badge { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; padding:5px 10px; border-radius:99px; background:#9a4ab4; color:white; align-self:center; justify-self:end; opacity:0; transform:scale(.6); transition:opacity .35s, transform .35s; }
   .rv-map-result-badge.shown { opacity:1; transform:scale(1); }
 
   /* Series clinch */
-  .rv-clinch { text-align:center; padding:20px 20px 4px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; transform:scale(.85); transition:opacity .4s, transform .4s; }
+  .rv-clinch { text-align:center; padding:20px 20px 4px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.5rem; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; transform:scale(.85); transition:opacity .4s, transform .4s; }
   .rv-clinch.shown { opacity:1; transform:scale(1); }
   .rv-statline { text-align:center; padding:6px 24px 22px; font-family:'DM Sans',sans-serif; font-size:.95rem; color:var(--soft); opacity:0; transform:translateY(8px); transition:opacity .5s, transform .5s; line-height:1.45; max-width:640px; margin:0 auto; }
   .rv-statline.shown { opacity:1; transform:translateY(0); }
-  .rv-statline strong { font-family:'Syne',sans-serif; font-weight:800; color:var(--ink); }
+  .rv-statline strong { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:var(--ink); }
   .rv-statline em { font-style:italic; color:#5a2a7a; font-weight:600; }
-  .rv-mvp-tag { display:inline-block; font-family:'Syne',sans-serif; font-weight:800; font-size:.62rem; letter-spacing:.14em; color:white; background:linear-gradient(135deg,#9a4ab4,#5a2a7a); padding:3px 10px; border-radius:99px; vertical-align:1px; margin-right:6px; box-shadow:0 2px 8px #5a2a7a44; }
+  .rv-mvp-tag { display:inline-block; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.62rem; letter-spacing:.14em; color:white; background:linear-gradient(135deg,#9a4ab4,#5a2a7a); padding:3px 10px; border-radius:99px; vertical-align:1px; margin-right:6px; box-shadow:0 2px 8px #5a2a7a44; }
 
   /* Final breakdown card grid */
   .breakdown-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:18px; }
   .bd-card { background:white; border-radius:18px; padding:16px 18px; box-shadow:0 4px 18px #00000008; }
-  .bd-card-title { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
+  .bd-card-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
   .bd-mini-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; font-size:.78rem; border-bottom:1px solid #f6f1fa; }
   .bd-mini-row:last-child { border-bottom:none; }
   .bd-map-mini { display:flex; align-items:center; gap:8px; }
   .bd-map-mini img { width:22px; height:22px; object-fit:cover; border-radius:5px; }
 
-  .replay-btn { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1.5px solid #e0d0ec; color:#5a2a7a; padding:6px 14px; border-radius:99px; font-family:'Syne',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:all .15s; margin-top:10px; }
+  .replay-btn { display:inline-flex; align-items:center; gap:6px; background:transparent; border:1.5px solid #e0d0ec; color:#5a2a7a; padding:6px 14px; border-radius:99px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; letter-spacing:.07em; text-transform:uppercase; cursor:pointer; transition:all .15s; margin-top:10px; }
   .replay-btn:hover { background:#5a2a7a; color:white; border-color:#5a2a7a; }
 
   /* Smooth result-section dismissal */
@@ -3995,6 +4020,10 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
     .result-mid { flex:0 0 80px; }
     .result-pct { font-size:1.8rem; }
     .rv-map-h2h { flex-wrap:wrap; gap:8px; }
+    .rv-map-inner { grid-template-columns:1fr; justify-items:center; gap:12px; }
+    .rv-map-result-badge { justify-self:center; }
+    .rv-veto-grid { flex-wrap:wrap; }
+    .rv-veto-slot { flex:0 0 88px; max-width:88px; }
   }
 </style>
 </head>
@@ -4142,6 +4171,10 @@ if (LOCK_CURRENT) {
       '.page > .subtitle { display: none !important; }' +
       '.result-ctx { display: none !important; }' +
       'footer { display: none !important; }' +
+      // Embedded: the iframe is sized to content, so the page's own 32px bottom
+      // padding just adds dead space below the results before the parent footer
+      // (the parent's .hub-main already provides the breathing room). Trim it.
+      '.page { padding-bottom: 8px !important; }' +
       // Prevent the iframe's OWN window from scrolling. Parent sizes the
       // iframe to body height via postMessage, so there's never anything
       // legitimately scrollable. Without overflow:hidden here, mid-sim
@@ -4524,6 +4557,26 @@ document.querySelectorAll('.cf-arrow').forEach(function(b){
 });
 
 // ── Team search ──────────────────────────────────────────────────────────────
+// Org tag -> full name + common aliases, so search matches "Nongshim Redforce",
+// "Team Heretics", etc. — not just the tag. Unknown orgs still match by tag.
+var TEAM_ALIASES = {
+  'SEN':['sentinels'], 'NRG':['nrg esports'], 'LOUD':['loud'], 'LEV':['leviatan','leviatán'],
+  '100T':['100 thieves'], 'C9':['cloud9','cloud nine'], 'EG':['evil geniuses'], 'G2':['g2 esports'],
+  'KRU':['kru esports','krü esports'], 'KRÜ':['kru esports','krü esports'], 'MIBR':['mibr','made in brazil'],
+  'FUR':['furia','furia esports'], 'VKS':['vivo keyd stars','vivo keyd','keyd'], '2G':['2game esports','2game'],
+  'FNC':['fnatic'], 'TH':['team heretics','heretics'], 'TL':['team liquid','liquid'], 'VIT':['team vitality','vitality'],
+  'NAVI':['natus vincere','navi'], 'KC':['karmine corp','karmine'], 'KOI':['koi'], 'BBL':['bbl esports'],
+  'FUT':['fut esports'], 'EF':['eternal fire','eternal'], 'M8':['gentle mates','mates'], 'GX':['giantx','giants'], 'APK':['apeks'], 'BIG':['big'],
+  'PRX':['paper rex'], 'DRX':['drx'], 'GEN':['gen.g','geng','gen g'], 'T1':['t1'],
+  'NS':['nongshim redforce','nongshim','redforce'], 'ZETA':['zeta division','zeta'],
+  'DFM':['detonation focusme','detonation','focusme'], 'TLN':['talon','talon esports'], 'TS':['team secret','secret'],
+  'RRQ':['rex regum qeon','rrq'], 'GE':['global esports'], 'BLEED':['bleed esports','bleed'], 'BOOM':['boom esports','boom'],
+  'EDG':['edward gaming','edg'], 'BLG':['bilibili gaming','bilibili'], 'TE':['trace esports','trace'],
+  'DRG':['dragon ranger gaming','dragon ranger'], 'ASE':['attacking soul esports','attacking soul'], 'AG':['all gamers'],
+  'XLG':['xlg esports','xlg'], 'WOL':['wolves esports','wolves'], 'FPX':['funplus phoenix','funplus'],
+  'JDG':['jd gaming','jdg esports'], 'NOVA':['nova esports','nova'], 'TEC':['titan esports club','titan'],
+  'TYL':['tyloo'], 'TYLOO':['tyloo'], 'RED':['red canids','canids']
+};
 ['a','b'].forEach(function(side){
   var input = document.getElementById('cf-search-'+side);
   var clear = document.querySelector('.cf-search-clear[data-side="'+side+'"]');
@@ -4535,9 +4588,15 @@ document.querySelectorAll('.cf-arrow').forEach(function(b){
     var teams = CF[side].teams;
     var prefix = -1, contain = -1;
     for(var i=0;i<teams.length;i++){
-      var t = teams[i].toLowerCase();
-      if(prefix<0 && t.indexOf(q)===0){ prefix=i; break; }
-      if(contain<0 && t.indexOf(q)>=0) contain=i;
+      var org = teams[i].toLowerCase();
+      var al = TEAM_ALIASES[teams[i]] || TEAM_ALIASES[teams[i].toUpperCase()] || [];
+      var hay = (teams[i] + ' ' + al.join(' ')).toLowerCase();
+      if(prefix<0){
+        if(org.indexOf(q)===0) prefix=i;
+        else { var toks=hay.split(' '); for(var k=0;k<toks.length;k++){ if(toks[k] && toks[k].indexOf(q)===0){ prefix=i; break; } } }
+        if(prefix>=0) break;
+      }
+      if(contain<0 && q.length>=3 && hay.indexOf(q)>=0) contain=i;
     }
     var hit = prefix>=0 ? prefix : contain;
     if(hit>=0 && hit !== CF[side].idx){ CF[side].idx = hit; updateCoverflow(side); clearResult(); }
@@ -4981,14 +5040,21 @@ window.addEventListener('message', function(e){
 
 function rvScroll(el, block){
   if(!el) return;
-  // When iframed (LOCK_CURRENT in the Modern Hub), the iframe must not touch
-  // the parent's scroll position. Every scrollIntoView from here bubbles up
-  // to the parent window and accumulates into a permanent offset that cuts
-  // off the top of the page. Tried this both ways multiple times — leave
-  // the parent alone in iframed mode, period.
-  if (window !== window.top) return;
   if (_ffMode) return;
   if (_userScrolledRecently()) return;
+  // When iframed (LOCK_CURRENT in the Modern Hub) our own window is pinned to
+  // scrollY=0 and sized to content, so we can't scroll here. Instead ask the
+  // parent to follow: since scrollY is pinned to 0, getBoundingClientRect()
+  // already gives the element's offset within our document. The parent turns
+  // that into a single absolute, downward-only smooth scroll (see 'simFollow'),
+  // so it can't accumulate into the old "top of page cut off" state.
+  if (window !== window.top) {
+    try {
+      var r = el.getBoundingClientRect();
+      window.parent.postMessage({type:'simFollow', top:r.top, bottom:r.bottom}, '*');
+    } catch(e){}
+    return;
+  }
   // Standalone /mapelo/matchup/ page only: original auto-scroll behavior.
   var elRect = el.getBoundingClientRect();
   var visBottom = window.innerHeight || document.documentElement.clientHeight;
@@ -5031,9 +5097,9 @@ function playReveal(R){
   body.innerHTML =
     '<div class="rv-shimmer"></div>'+
     '<div class="rv-intro">'+
-      '<div class="rv-intro-team">'+logoTag(R.orgA,'')+'<div style="font-family:Syne,sans-serif;font-weight:800;">'+R.orgA+'</div></div>'+
+      '<div class="rv-intro-team">'+logoTag(R.orgA,'')+'<div style="font-family:Plus Jakarta Sans,sans-serif;font-weight:800;">'+R.orgA+'</div></div>'+
       '<div class="rv-intro-vs">VS</div>'+
-      '<div class="rv-intro-team b">'+logoTag(R.orgB,'')+'<div style="font-family:Syne,sans-serif;font-weight:800;">'+R.orgB+'</div></div>'+
+      '<div class="rv-intro-team b">'+logoTag(R.orgB,'')+'<div style="font-family:Plus Jakarta Sans,sans-serif;font-weight:800;">'+R.orgB+'</div></div>'+
     '</div>';
   tick({freq:520,dur:.18,vol:.04,type:'sine'});
 
@@ -5342,34 +5408,22 @@ function runMatchup() {
   if(bi >= 0){ CF.b.idx = bi; updateCoverflow('b'); }
 })();
 
-// ── Title intro animation (dot → typewriter), mirrors the Modern Hub ─────────
-// Runs in both the standalone page and the iframed Modern Hub Simulator so
-// the simulator tab always opens with a real title instead of a blank slot.
+// Title intro: staggered per-letter reveal (matches the Modern Hub title).
+// Runs on the standalone page and the iframed Modern Hub Simulator.
 (function introMatchupTitle(){
   var title = document.getElementById('matchupTitle');
   if (!title) return;
-  function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
-  (async function(){
-    title.style.opacity = '1';
-    title.innerHTML = '<span class="dot-seed">·</span>';
-    await sleep(380);
-    // "Historical" only on the standalone page; the Modern Hub simulator
-    // (LOCK_CURRENT iframe) is for live/current matchups, so the typewriter
-    // there should read "Matchup Predictor" without the prefix.
-    var text = LOCK_CURRENT ? 'Matchup Predictor' : 'Historical Matchup Predictor';
-    title.textContent = '';
-    var built = '';
-    for (var i = 0; i < text.length; i++) {
-      built += text[i];
-      title.innerHTML = built + '<span class="type-cursor">|</span>';
-      await sleep(48 + Math.random() * 38);
-    }
-    for (var j = 0; j < 4; j++) {
-      title.innerHTML = text + (j % 2 === 0 ? '<span class="type-cursor">|</span>' : '');
-      await sleep(210);
-    }
-    title.textContent = text;
-  })();
+  var text = LOCK_CURRENT ? 'Matchup Predictor' : 'Historical Matchup Predictor';
+  var STEP = 35;
+  title.style.opacity = '1';
+  title.innerHTML = '';
+  for (var i = 0; i < text.length; i++) {
+    var span = document.createElement('span');
+    span.className = 'ht-char';
+    span.textContent = text[i] === ' ' ? String.fromCharCode(160) : text[i];
+    span.style.animationDelay = (i * STEP) + 'ms';
+    title.appendChild(span);
+  }
 })();
 </script>
 SHARED_FOOTER
@@ -5385,7 +5439,7 @@ MAPELO_PYTH_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pythagorean Win% — VCT Map Model</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -5393,13 +5447,13 @@ MAPELO_PYTH_HTML = """
 <style>
   SHARED_CSS
   .page { position:relative; z-index:1; padding:32px; max-width:1000px; margin:0 auto; width:100%; }
-  .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; text-align:center; }
+  .page-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; margin-bottom:28px; text-align:center; }
   .card { background:white; border-radius:24px; padding:28px 32px; box-shadow:0 4px 24px #0000000a; }
   .card-header { display:flex; align-items:baseline; gap:14px; margin-bottom:6px; flex-wrap:wrap; }
   .exponent-badge { font-size:.75rem; font-weight:500; background:#f4edb8; color:#6a5a1a; padding:3px 10px; border-radius:99px; }
   .card-desc { font-size:.82rem; color:var(--soft); line-height:1.6; margin-bottom:18px; }
   .intro-details { max-width:780px; margin:0 auto 32px; }
-  .intro-details summary { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; letter-spacing:.02em; cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; color:var(--soft); user-select:none; margin-bottom:0; }
+  .intro-details summary { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.95rem; letter-spacing:.02em; cursor:pointer; list-style:none; display:flex; align-items:center; gap:8px; color:var(--soft); user-select:none; margin-bottom:0; }
   .intro-details summary::-webkit-details-marker { display:none; }
   .intro-details summary::before { content:'▸'; font-size:.75rem; transition:transform .2s; display:inline-block; }
   .intro-details[open] summary::before { transform:rotate(90deg); }
@@ -5407,7 +5461,7 @@ MAPELO_PYTH_HTML = """
   .intro-body { display:flex; flex-direction:column; gap:14px; overflow:hidden; transition:max-height .35s ease; }
   .intro-p { font-size:.9rem; color:var(--ink); line-height:1.75; }
   .intro-note { background:#f8f4fc; border-radius:16px; padding:18px 22px; display:flex; flex-direction:column; gap:10px; }
-  .intro-note-label { font-family:'Syne',sans-serif; font-weight:800; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); }
+  .intro-note-label { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); }
   .intro-note-list { padding-left:1.4em; display:flex; flex-direction:column; gap:10px; }
   .intro-note-subp { margin-top:8px; }
   .intro-formula-block { background:#f8f4fc; border-radius:14px; padding:12px 20px; text-align:center; }
@@ -5426,7 +5480,7 @@ MAPELO_PYTH_HTML = """
   .filter-divider { width:1px; height:20px; background:#f0ecf4; margin:0 4px; }
   .table-wrap { overflow-x:auto; margin-top:20px; }
   table { width:100%; border-collapse:collapse; font-size:.88rem; }
-  thead th { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 12px; text-align:right; border-bottom:2px solid #f0ecf4; cursor:pointer; user-select:none; white-space:nowrap; }
+  thead th { font-family:'Plus Jakarta Sans',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:8px 12px; text-align:right; border-bottom:2px solid #f0ecf4; cursor:pointer; user-select:none; white-space:nowrap; }
   thead th:nth-child(2) { text-align:left; }
   thead th.sorted-asc::after  { content:' ▲'; font-size:.6rem; }
   thead th.sorted-desc::after { content:' ▼'; font-size:.6rem; }
@@ -5436,23 +5490,23 @@ MAPELO_PYTH_HTML = """
   td { padding:10px 12px; text-align:right; }
   td:nth-child(2) { text-align:left; }
   .rank-cell { color:var(--soft); font-size:.78rem; width:32px; }
-  .org-cell { font-family:'Syne',sans-serif; font-weight:800; font-size:.88rem; cursor:pointer; display:flex; align-items:center; gap:8px; }
+  .org-cell { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.88rem; cursor:pointer; display:flex; align-items:center; gap:8px; }
   .org-cell:hover .org-name { text-decoration:underline dotted; text-underline-offset:3px; color:#5a3a8a; }
   .team-logo { width:22px; height:22px; object-fit:contain; flex-shrink:0; }
   .wl-cell { color:var(--ink); font-size:.8rem; cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px; }
   .wl-cell:hover { color:#5a3a8a; }
   /* Team card modal */
-  .team-modal-header { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .team-modal-header { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:800; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
   .team-modal-logo { width:32px; height:32px; object-fit:contain; }
   .map-cards { display:flex; gap:14px; flex-direction:column; margin-top:20px; }
   .map-card { border-radius:16px; overflow:hidden; background:#fdf6f0; }
   .map-card-img { width:100%; height:110px; object-fit:cover; object-position:center; display:block; }
   .map-card-body { padding:12px 16px; }
   .map-card-label { font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
-  .map-card-name { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; margin-bottom:10px; }
+  .map-card-name { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1rem; margin-bottom:10px; }
   .map-card-stats { display:flex; gap:18px; }
   .map-stat { display:flex; flex-direction:column; gap:2px; }
-  .map-stat-val { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; }
+  .map-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.95rem; }
   .map-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.06em; }
   .map-rd-pos { color:#1a6a4a; }
   .map-rd-neg { color:#7a1a1a; }
@@ -5462,7 +5516,7 @@ MAPELO_PYTH_HTML = """
   .roster-player { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); font-size:.85rem; padding:6px 10px; border-radius:10px; transition:background .15s; }
   .roster-player:hover { background:#f8f4fc; }
   .roster-headshot { width:36px; height:36px; border-radius:50%; object-fit:cover; object-position:top; background:#f0ecf4; flex-shrink:0; }
-  .roster-player-name { font-family:'Syne',sans-serif; font-weight:800; font-size:.85rem; }
+  .roster-player-name { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.85rem; }
   .pct-cell { font-weight:500; }
   .pyth-cell { font-weight:700; }
   .luck-pos { color:#1a6a4a; font-weight:500; }
@@ -5473,14 +5527,14 @@ MAPELO_PYTH_HTML = """
   .modal-box { background:white; border-radius:24px; padding:28px 32px; max-width:480px; width:100%; max-height:80vh; overflow-y:auto; box-shadow:0 24px 60px #0003; position:relative; animation:modalIn .2s ease; }
   @keyframes modalIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
   .modal-close { position:absolute; top:14px; right:18px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:var(--soft); padding:4px; line-height:1; }
-  .modal-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; margin-bottom:16px; }
+  .modal-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:800; margin-bottom:16px; }
   .series-group { margin-bottom:14px; }
   .series-group:last-child { margin-bottom:0; }
   .series-header { display:flex; align-items:center; gap:10px; padding-bottom:7px; border-bottom:2px solid #f0ecf4; margin-bottom:4px; }
   .series-result { font-weight:700; font-size:.72rem; padding:2px 8px; border-radius:99px; white-space:nowrap; flex-shrink:0; }
   .series-result.w { background:#d4f4e8; color:#1a5a3a; }
   .series-result.l { background:#fde8e8; color:#7a1a1a; }
-  .series-opp { font-family:'Syne',sans-serif; font-weight:800; font-size:.88rem; flex:1; }
+  .series-opp { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.88rem; flex:1; }
   .series-score { font-size:.78rem; color:var(--soft); white-space:nowrap; }
   .map-row { display:grid; grid-template-columns:1fr auto auto; align-items:center; padding:5px 0 5px 10px; border-bottom:1px solid #faf6fc; font-size:.8rem; gap:10px; }
   .map-row:last-child { border-bottom:none; }
@@ -7691,7 +7745,7 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
@@ -7713,10 +7767,9 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 
 .hub-main{padding:20px 0 60px;width:100%;position:relative;z-index:1}
 .hub-header{text-align:center;margin-bottom:20px}
-.hub-title{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:800;letter-spacing:-.03em;color:#000;line-height:1;min-height:1.2em;transition:opacity .2s}
-.type-cursor{opacity:1;animation:blink .55s step-end infinite}
-.dot-seed{font-size:2rem}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hub-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;letter-spacing:-.03em;color:#000;line-height:1;min-height:1.2em;transition:opacity .2s}
+.ht-char{display:inline-block;opacity:0;will-change:transform,opacity,filter;animation:htCharIn .58s cubic-bezier(.2,.75,.25,1) both}
+@keyframes htCharIn{0%{opacity:0;transform:translateY(.55em) scale(.82) rotate(-7deg);filter:blur(9px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0);filter:blur(0)}}
 .hub-sub{color:#444;font-size:.9rem;margin-top:6px;transition:opacity .5s}
 
 .tab-bar{display:flex;gap:8px;justify-content:center;margin-bottom:16px;transition:opacity .5s}
@@ -7752,7 +7805,7 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 
 /* Progress */
 .progress-card{background:#1a0a2e;border-radius:20px;padding:44px 48px;margin:0 auto 18px;max-width:560px;text-align:center}
-.progress-label{color:rgba(232,213,245,.95);font-family:'Syne',sans-serif;font-weight:800;font-size:1.25rem;margin-bottom:6px;letter-spacing:.01em}
+.progress-label{color:rgba(232,213,245,.95);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.25rem;margin-bottom:6px;letter-spacing:.01em}
 .progress-msg{color:rgba(232,213,245,.55);font-size:.82rem;margin-bottom:28px;font-variant-numeric:tabular-nums}
 .progress-track{height:10px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;margin-bottom:10px;position:relative}
 .progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd);background-size:200% 100%;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;animation:progressShimmer 1.8s linear infinite}
@@ -7793,7 +7846,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .chart-card{background:#fff;border-radius:16px;padding:12px 0 8px;margin:0 auto 18px;position:relative;max-width:85%;transform:translate3d(0,0,0);backface-visibility:hidden}
 .chart-header{display:flex;flex-direction:column;align-items:stretch;margin-bottom:10px;gap:6px;padding:0 20px;position:relative}
 .chart-header-row{display:flex;justify-content:flex-end;align-items:center;gap:10px}
-.chart-title{align-self:center;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;pointer-events:none}
+.chart-title{align-self:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,#2a1f2d 0%,#7c3aed 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap;pointer-events:none}
 .chart-asof{color:rgba(0,0,0,.4);font-size:.75rem}
 .chart-controls{display:flex;gap:8px;align-items:center;flex-shrink:0}
 .chart-btn{padding:5px 14px;border-radius:100px;border:1.5px solid rgba(0,0,0,.15);background:rgba(0,0,0,.03);color:rgba(0,0,0,.55);font-size:.75rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
@@ -7812,7 +7865,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 #dotTooltip .popup-logo{width:44px;height:44px;object-fit:contain}
 #dotTooltip .popup-team-name{font-size:.7rem;color:rgba(232,213,245,.6);font-weight:500}
 #dotTooltip .popup-score-block{display:flex;flex-direction:column;align-items:center;gap:3px}
-#dotTooltip .popup-score{font-size:1.9rem;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+#dotTooltip .popup-score{font-size:1.9rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;line-height:1}
 #dotTooltip .popup-score.w{color:#4ade80}#dotTooltip .popup-score.l{color:#f87171}
 #dotTooltip .popup-vs-label{font-size:.65rem;color:rgba(232,213,245,.3)}
 #dotTooltip .popup-date{color:rgba(232,213,245,.3);font-size:.68rem;margin-bottom:4px}
@@ -7843,7 +7896,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .popup-logo{width:60px;height:60px;object-fit:contain}
 .popup-team-name{font-size:.75rem;color:rgba(232,213,245,.6);font-weight:500}
 .popup-score-block{display:flex;flex-direction:column;align-items:center;gap:4px}
-.popup-score{font-size:2.4rem;font-weight:800;font-family:'Syne',sans-serif;line-height:1}
+.popup-score{font-size:2.4rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;line-height:1}
 .popup-score.w{color:#4ade80}.popup-score.l{color:#f87171}
 .popup-vs-label{font-size:.7rem;color:rgba(232,213,245,.3)}
 .popup-date{color:rgba(232,213,245,.3);font-size:.72rem;margin-bottom:6px}
@@ -7865,12 +7918,12 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 /* Leaderboard */
 .lb-card{background:#fff;border-radius:16px;overflow:hidden}
 .lb-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid rgba(61,26,110,.1)}
-.lb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#000;text-align:center}
+.lb-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.95rem;color:#000;text-align:center}
 .lb-asof{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:.7rem;color:#666;text-align:right;max-width:240px}
 @keyframes lbRowSlideIn { from { opacity:0; transform:translateX(-60px); } to { opacity:1; transform:translateX(0); } }
 .lb-row.slide-in { animation:lbRowSlideIn .55s cubic-bezier(.16,1,.3,1) backwards; }
 .lb-col-hdr{display:grid;grid-template-columns:44px 2fr 1fr 1fr 24px;align-items:center;padding:8px 24px;gap:10px;border-bottom:2px solid rgba(61,26,110,.1)}
-.lb-col-hdr span{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#888;text-align:center}
+.lb-col-hdr span{font-family:'Plus Jakarta Sans',sans-serif;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#888;text-align:center}
 .lb-row{display:grid;grid-template-columns:44px 2fr 1fr 1fr 24px;align-items:center;padding:13px 24px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(61,26,110,.06);gap:10px}
 .lb-row:last-child{border-bottom:none}
 .lb-row:hover{background:rgba(61,26,110,.05)}
@@ -7948,7 +8001,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 
 /* Upcoming */
 .upcoming-panel{padding:4px 0 20px}
-.upcoming-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
+.upcoming-heading{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
 .upcoming-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center}
 .no-upcoming{padding:60px;text-align:center;color:#666;font-size:.88rem}
 
@@ -7989,7 +8042,7 @@ body:has(.flying)::after{animation-play-state:paused}
 .upc-list.anim-done .upc-card{will-change:auto}
 
 /* Recent Matches heading (mirror upcoming-heading) */
-.past-heading{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
+.past-heading{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.3rem;color:#000;margin-bottom:4px;text-align:center}
 .past-sub{color:#444;font-size:.83rem;margin-bottom:16px;text-align:center;max-width:560px;margin-left:auto;margin-right:auto}
 
 /* Simulator panel — full historical-matchup tool via iframe.
@@ -8013,7 +8066,7 @@ body:has(.flying)::after{animation-play-state:paused}
    wrapper one at a time (progressive load) — without explicit gap here,
    the day-group's gap doesn't reach the grand-children. */
 .upc-day-cards{display:flex;flex-direction:column;gap:10px}
-.upc-day-label{font-family:'Syne',sans-serif;font-weight:800;font-size:.85rem;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-top:6px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
+.upc-day-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.85rem;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-top:6px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,.1);margin-bottom:2px}
 /* No backdrop-filter — at 8% bg opacity the blur is invisible but costs
    a full GPU recompute per card per frame during the cascade animation
    (FPS would drop to ~15 on the 26-card Recent Matches panel). */
@@ -8026,7 +8079,7 @@ body:has(.flying)::after{animation-play-state:paused}
 .upc-header{display:flex;align-items:center;gap:12px}
 .upc-team-a,.upc-team-b{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:60px}
 .upc-logo{width:36px;height:36px;object-fit:contain}
-.upc-org{font-family:'Syne',sans-serif;font-weight:800;font-size:.84rem;color:#000;text-align:center}
+.upc-org{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.84rem;color:#000;text-align:center}
 .upc-rtg{font-size:.95rem;color:#111;font-weight:800;font-variant-numeric:tabular-nums}
 .upc-center{flex:1;text-align:center;padding:0 4px}
 .upc-date-event{font-size:.65rem;color:#666;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -8069,7 +8122,7 @@ body:has(.flying)::after{animation-play-state:paused}
 /* Recent form */
 .upc-recent-row{display:flex;gap:10px;margin-top:4px}
 .upc-recent-col{flex:1;min-width:0}
-.upc-recent-col-hdr{font-family:'Syne',sans-serif;font-weight:800;font-size:.72rem;color:#111;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upc-recent-col-hdr{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.72rem;color:#111;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .upc-recent-match{display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:.68rem}
 .upc-recent-match:last-child{border-bottom:none}
 .upc-recent-result{font-weight:800;font-size:.72rem;min-width:14px}
@@ -8579,28 +8632,24 @@ document.querySelectorAll('.pill').forEach(btn => {
 // ── Intro animation ──────────────────────────────────────────────────────────
 async function introAnimation() {
   const title = document.getElementById('hubTitle');
+  const text  = 'VCT Hub 2026';
 
-  // Phase 1 — dot
+  // Staggered per-letter reveal — each char rises up, un-blurs and settles
+  // into place one after another (replaces the old typewriter effect).
+  const STEP = 55;   // ms between letters
+  const DUR  = 580;  // ms per-letter animation (matches .ht-char CSS)
   title.style.opacity = '1';
-  title.innerHTML = '<span class="dot-seed">&middot;</span>';
-  await sleep(380);
+  title.innerHTML = '';
+  [...text].forEach(function(ch, i) {
+    const span = document.createElement('span');
+    span.className = 'ht-char';
+    span.textContent = ch === ' ' ? ' ' : ch;
+    span.style.animationDelay = (i * STEP) + 'ms';
+    title.appendChild(span);
+  });
+  await sleep((text.length - 1) * STEP + DUR);
 
-  // Phase 2 — typewriter
-  const text = 'VCT Hub 2026';
-  title.textContent = '';
-  let built = '';
-  for (const ch of text) {
-    built += ch;
-    title.innerHTML = built + '<span class="type-cursor">|</span>';
-    await sleep(48 + Math.random() * 38);
-  }
-  for (let i = 0; i < 4; i++) {
-    title.innerHTML = text + (i % 2 === 0 ? '<span class="type-cursor">|</span>' : '');
-    await sleep(210);
-  }
-  title.textContent = text;
-
-  // Phase 3 — fade rest in
+  // Fade rest in
   fadeIn('tabBar', 0.5);
   await sleep(80);
   // regionPills start invisible; shown later after chart is ready
@@ -9613,6 +9662,12 @@ async function showChartAndLeaderboard(data) {
 
 // ── Main init ────────────────────────────────────────────────────────────────
 async function init() {
+  // Always start at the very top on (re)load so the title slide-in is visible.
+  // history.scrollRestoration='manual' stops the browser from restoring a
+  // previous scroll position (which would drop you below the fold and you'd
+  // miss the intro). This runs at parse time — before the browser restores.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
   const dataP = fetchData();     // start fetch immediately
   await introAnimation();        // run intro in parallel
 
@@ -10679,6 +10734,22 @@ window.addEventListener('message', function(e){
   // top of the page got cut off.)
 });
 
+// Follow the simulator reveal. The iframe (own scroll pinned to 0, sized to its
+// content) posts the active reveal element's offset; we smooth-scroll the PARENT
+// to center it. One absolute, downward-only target per reveal — it can't
+// accumulate into a stuck offset, and the iframe stops posting while the user
+// scrolls (the userScroll relay below pauses its auto-follow).
+window.addEventListener('message', function(e){
+  var d = e && e.data;
+  if (!d || d.type !== 'simFollow') return;
+  var f = document.getElementById('simIframe');
+  if (!f) return;
+  var ifrTop = f.getBoundingClientRect().top + window.scrollY;
+  var center = ifrTop + (d.top + d.bottom) / 2;
+  var target = center - window.innerHeight / 2;
+  if (target > window.scrollY + 24) window.scrollTo({top: target, behavior: 'smooth'});
+});
+
 // Forward parent-side scroll intent into the simulator iframe so its reveal
 // animation pauses auto-scrolling. Without this, scrolls happening while the
 // cursor is over parent UI (tab bar, page background) don't reach the iframe
@@ -10722,6 +10793,7 @@ function _flyInPanel(panelSel, headingSel, subSel, opts) {
   // MC sim completes (per-card .card-loaded class, not a list-wide fly-in).
   opts = opts || {};
   var skipList = !!opts.skipList;
+  var sp = opts.speed || 1;   // stagger multiplier (<1 = faster cascade)
   var root    = document.querySelector(panelSel);
   if (!root) return;
   var heading = root.querySelector(headingSel);
@@ -10755,24 +10827,24 @@ function _flyInPanel(panelSel, headingSel, subSel, opts) {
   // Restore transitions + assign per-element stagger delays
   hChars.forEach(function(c, i) {
     c.style.transition = '';
-    c.style.transitionDelay = (i * 35) + 'ms';
+    c.style.transitionDelay = (i * 35 * sp) + 'ms';
   });
-  var headingDur = hChars.length * 35 + 450;
+  var headingDur = hChars.length * 35 * sp + 450;
 
   sChars.forEach(function(c, i) {
     c.style.transition = '';
-    c.style.transitionDelay = (headingDur * 0.4 + i * 14) + 'ms';
+    c.style.transitionDelay = (headingDur * 0.4 * sp + i * 14 * sp) + 'ms';
   });
-  var subDur = headingDur * 0.4 + sChars.length * 14 + 350;
+  var subDur = headingDur * 0.4 * sp + sChars.length * 14 * sp + 350;
 
   // Cap the cascade — beyond ~20 cards in flight at once, the GPU starts
   // dropping frames. Stagger small for the first 12, snap the rest in fast.
   cards.forEach(function(c, i) {
     c.style.transition = '';
-    var delay = (subDur * 0.55) + (i < 12 ? i * 50 : 12 * 50 + (i - 12) * 18);
+    var delay = (subDur * 0.55) + (i < 12 ? i * 50 * sp : 12 * 50 * sp + (i - 12) * 18 * sp);
     c.style.transitionDelay = delay + 'ms';
   });
-  var totalDur = (subDur * 0.55) + (cards.length < 12 ? cards.length * 50 : 12 * 50 + (cards.length - 12) * 18) + 600;
+  var totalDur = (subDur * 0.55) + (cards.length < 12 ? cards.length * 50 * sp : 12 * 50 * sp + (cards.length - 12) * 18 * sp) + 600;
 
   // Apply will-change for the flight, then strip it once the animation is done
   if (heading) heading.classList.add('flying');
@@ -10795,7 +10867,7 @@ function triggerPastFlyIn() {
   // skipList: cards are added + revealed individually via the progressive-load
   // path in renderPast (.card-loaded class per match). The list-wide fly-in
   // would snap everything visible immediately.
-  _flyInPanel('#panelC', '.past-heading', '.past-sub', {skipList: true});
+  _flyInPanel('#panelC', '.past-heading', '.past-sub', {skipList: true, speed: 0.4});
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────

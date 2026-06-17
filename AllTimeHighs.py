@@ -221,7 +221,7 @@ PAGE_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>All-Time Highs (and Lows)</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
@@ -229,7 +229,7 @@ PAGE_HTML = """
   .home-logo:hover { opacity:1; }
   .page { position:relative; z-index:1; padding:32px 32px 60px; max-width:1100px; margin:0 auto; }
   header { margin-bottom:32px; text-align:center; }
-  header h1 { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,4vw,2.8rem); font-weight:800; letter-spacing:-1px; text-align:center; }
+  header h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.76rem,4vw,3.08rem); font-weight:800; letter-spacing:-1px; text-align:center; }
   header p { color:#111; font-size:1.02rem; margin-top:8px; font-weight:500; text-align:center; }
   .filters { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:32px; align-items:flex-start; justify-content:center; }
   .filter-group { display:flex; flex-direction:column; gap:4px; }
@@ -253,14 +253,14 @@ PAGE_HTML = """
   .fdd-opt.active .fdd-check::after { content:''; position:absolute; left:50%; top:50%; width:4px; height:8px; border:solid white; border-width:0 2px 2px 0; transform:translate(-50%,-58%) rotate(45deg); }
   .results-wrap { background:white; border-radius:20px; overflow:hidden; box-shadow:0 4px 24px #0000000a; }
   table { width:100%; border-collapse:collapse; }
-  thead th { padding:13px 18px; text-align:center; font-family:'Syne',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
+  thead th { padding:13px 18px; text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); border-bottom:2px solid #f0ecf4; }
   thead th.num { text-align:center; }
   tbody tr { transition:background .15s; }
   tbody tr:hover { background:#fdf6f0; }
   tbody td { padding:11px 18px; border-bottom:1px solid #f6f2fa; font-size:.88rem; vertical-align:middle; text-align:center; }
   tbody td.num { text-align:center; font-family:'DM Sans',sans-serif; font-weight:700; font-size:1rem; }
   tbody tr:last-child td { border-bottom:none; }
-  .rank-cell { font-family:'Syne',sans-serif; font-weight:800; color:#ccc; width:44px; text-align:center; }
+  .rank-cell { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:#ccc; width:44px; text-align:center; }
   .r1{color:#f0b429} .r2{color:#9eaab5} .r3{color:#c07c3a}
   .player-cell { display:flex; align-items:center; justify-content:center; gap:12px; }
   .team-cell { display:flex; align-items:center; justify-content:center; gap:8px; }
@@ -274,7 +274,7 @@ PAGE_HTML = """
   .result-wl { font-family:'DM Sans',sans-serif; font-weight:700; font-size:.72rem; letter-spacing:.05em; opacity:.85; }
   .result-num { display:inline-flex; align-items:center; gap:3px; font-family:'DM Sans',sans-serif; font-weight:700; font-size:.78rem; }
   .result-dash { opacity:.45; font-weight:400; }
-  .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; color:white; font-size:14px; width:40px; height:40px; }
+  .avatar-ph { border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:white; font-size:14px; width:40px; height:40px; }
   .avatar-img { width:40px; height:40px; border-radius:50%; object-fit:cover; flex-shrink:0; }
   .badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:.7rem; font-weight:600; background:#f0ecf4; color:var(--soft); }
   .event-badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:.7rem; font-weight:500; background:#f4edb8; color:#6a5a1a; }

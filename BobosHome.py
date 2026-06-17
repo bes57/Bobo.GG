@@ -29,7 +29,7 @@ HOME_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 32px; text-align:center; }
@@ -37,7 +37,7 @@ HOME_HTML = """
   .nav-card-cover { width:calc(100% + 48px); margin:-32px -24px 20px; height:140px; object-fit:cover; object-position:center top; display:block; border-radius:24px 24px 0 0; }
   .tagline { margin-top:16px; color:#111; font-size:1rem; font-weight:300; line-height:1.6; white-space:nowrap; transition:opacity .28s ease, transform .28s ease; }
   .sections { display:flex; flex-direction:column; gap:40px; margin-top:20px; width:100%; max-width:900px; }
-  .section-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--ink); margin-bottom:28px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:10px; user-select:none; letter-spacing:-0.5px; }
+  .section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.75rem; font-weight:800; color:var(--ink); margin-bottom:28px; text-align:left; cursor:pointer; display:flex; align-items:center; gap:10px; user-select:none; letter-spacing:-0.5px; }
   .section-chevron { font-size:1rem; color:var(--soft); transition:transform .25s ease; display:inline-block; }
   .section.collapsed .section-chevron { transform:rotate(-90deg); }
   .cards-wrap { display:grid; grid-template-rows:1fr; transition:grid-template-rows .3s ease, opacity .3s ease; opacity:1; overflow:hidden; }
@@ -46,9 +46,9 @@ HOME_HTML = """
   .cards { display:flex; gap:20px; flex-wrap:wrap; justify-content:flex-start; padding:8px 0 8px; }
   .nav-card { background:white; border-radius:24px; padding:32px 24px 26px; width:275px; text-decoration:none; color:var(--ink); box-shadow:0 4px 24px #0000000a; transition:transform .2s,box-shadow .2s; text-align:center; display:flex; flex-direction:column; }
   .nav-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px #00000014; }
-  .nav-card-title { font-family:'Syne',sans-serif; font-size:.92rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; overflow-wrap:anywhere; }
+  .nav-card-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.08rem; font-weight:800; margin-bottom:8px; letter-spacing:-.01em; overflow-wrap:anywhere; }
   .nav-card-desc { font-size:.82rem; color:var(--soft); line-height:1.55; }
-  .nav-card-arrow { margin-top:auto; padding-top:20px; font-size:.8rem; color:#9a7ab4; font-family:'Syne',sans-serif; font-weight:800; letter-spacing:.04em; }
+  .nav-card-arrow { margin-top:auto; padding-top:20px; font-size:.85rem; color:#9a7ab4; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; letter-spacing:.04em; }
   .nav-card-date { margin-top:10px; font-size:.7rem; color:var(--soft); font-weight:500; letter-spacing:.04em; text-transform:uppercase; }
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   .ai-disclosure { margin-top:10px; margin-bottom:4px; }
@@ -66,7 +66,7 @@ HOME_HTML = """
   .benpom-hero:hover .benpom-hero-img { transform:scale(1.06); }
   .benpom-hero-banner::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,#1a0f2455 0%,#1a0f24d0 100%); z-index:1; }
   .benpom-hero-content { position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; }
-  .benpom-hero-title { font-family:'Syne',sans-serif; font-size:clamp(1.9rem,5vw,2.6rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
+  .benpom-hero-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5.5vw,3.1rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
   .benpom-hero-desc { padding:18px 24px 20px; text-align:center; text-wrap:balance; }
   .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--soft); line-height:1.55; }
 </style>
@@ -97,21 +97,21 @@ HOME_HTML = """
       <div class="cards">
         <a class="nav-card" href="/articles/masters-london-playoffs-preview/">
           <img class="nav-card-cover" src="/chronlondon.jpg" alt="Masters London">
-          <div class="nav-card-title">Masters London: Playoffs Preview</div>
+          <div class="nav-card-title">Masters London<br>Playoffs Preview</div>
           <div class="nav-card-desc">A brief statistical glimpse into the final stage of Masters London.</div>
           <div class="nav-card-date">June 10, 2026</div>
           <div class="nav-card-arrow">Read &rarr;</div>
         </a>
         <a class="nav-card" href="/articles/masters-london-preview/">
           <img class="nav-card-cover" src="/prxpacstage1win.jpg" alt="Paper Rex win VCT Pacific Stage 1">
-          <div class="nav-card-title">Masters London: Tournament Preview</div>
+          <div class="nav-card-title">Masters London<br>Tournament Preview</div>
           <div class="nav-card-desc">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div>
           <div class="nav-card-date">June 2, 2026</div>
           <div class="nav-card-arrow">Read &rarr;</div>
         </a>
         <a class="nav-card" href="/articles/americas-stage1-playoffs-preview/">
           <img class="nav-card-cover" src="/loudlev26.jpg" alt="LOUD vs Leviatán">
-          <div class="nav-card-title">Americas Stage 1 Playoffs Preview</div>
+          <div class="nav-card-title">Americas Stage 1<br>Playoffs Preview</div>
           <div class="nav-card-desc">A quick discussion after a wild Split 1: LOUD's resurgence, Leviatan's Bind, the ubiquitous question of 100 Thieves, and BenPom's final say.</div>
           <div class="nav-card-date">May 12, 2026</div>
           <div class="nav-card-arrow">Read &rarr;</div>

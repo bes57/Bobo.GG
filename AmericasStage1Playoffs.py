@@ -18,7 +18,7 @@ PAGE_HTML = """
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Americas Stage 1 Playoffs Preview &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
@@ -28,7 +28,7 @@ PAGE_HTML = """
      page and scrolls away as the reader moves down — only visible at the
      start of the article. */
   .toc { position:absolute; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:240px; }
-  .toc-title { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
+  .toc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
   .toc a.active { color:var(--ink); font-weight:500; }
@@ -37,21 +37,21 @@ PAGE_HTML = """
   @media(max-width:1180px) { .toc { display:none; } }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; padding:60px 32px 80px; }
   .article { max-width:860px; width:100%; }
-  .label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; }
-  h1 { font-family:'Syne',sans-serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:800; letter-spacing:-1px; line-height:1.1; margin-bottom:16px; }
+  .label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; text-align:center; }
+  h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5vw,3.52rem); font-weight:800; letter-spacing:-1px; line-height:1.1; margin-bottom:16px; text-align:center; }
   .dek { font-size:1.05rem; font-weight:300; line-height:1.55; color:var(--ink); margin-bottom:24px; opacity:.85; }
-  .byline { font-size:.82rem; color:var(--soft); font-weight:300; margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid #e8e0ec; }
+  .byline { font-size:.82rem; color:var(--soft); font-weight:300; margin-bottom:48px; padding-bottom:32px; border-bottom:1px solid #e8e0ec; text-align:center; }
   .cover { width:100%; border-radius:16px; overflow:hidden; margin-bottom:12px; }
   .cover img { width:100%; height:auto; display:block; }
   .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
-  .content h2 { font-family:'Syne',sans-serif; font-size:1.4rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
+  .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content h2.centered { text-align:center; }
   /* Bubble-style section header — white pill with pink→purple gradient
      text. Two elements: .section-bubble is the white pill; .section-bubble
      -text receives the gradient via background-clip:text. */
   .section-bubble { display:inline-block; background:white; padding:16px 44px; border-radius:999px; box-shadow:0 6px 32px #0000001a; }
-  .section-bubble-text { font-family:'Syne',sans-serif; font-size:1.9rem; font-weight:800; letter-spacing:.01em;
+  .section-bubble-text { font-family:'Plus Jakarta Sans',sans-serif; font-size:2.09rem; font-weight:800; letter-spacing:.01em;
     background-image:linear-gradient(95deg,#f472b6 0%,#a855f7 55%,#7c3aed 100%);
     -webkit-background-clip:text; background-clip:text;
     -webkit-text-fill-color:transparent; color:transparent;
@@ -69,8 +69,8 @@ PAGE_HTML = """
   .expand-card-summary { width:100%; border:0; background:transparent; font:inherit; color:inherit; cursor:pointer; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; user-select:none; text-align:left; }
   .expand-card-chevron { font-size:.85rem; color:var(--soft); transition:transform .25s cubic-bezier(.4,0,.2,1); }
   .expand-card.open .expand-card-chevron { transform:rotate(180deg); }
-  .expand-card-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
-  .expand-card-headline { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .expand-card-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
+  .expand-card-headline { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.21rem; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
   /* CSS-grid expand trick: grid-template-rows transitions from 0fr → 1fr
      smoothly. The inner body sets overflow:hidden so content clips during
      the animation. Modern browsers (Chrome 118+, Firefox 117+, Safari 17+). */
@@ -83,6 +83,10 @@ PAGE_HTML = """
   .expand-card-body tr:last-child td { border-bottom:none; }
   .expand-card-body .L { color:#a33247; font-weight:600; }
   .expand-card-body .W { color:#1a6a4a; font-weight:600; }
+  .expand-card-body .ec-opp { display:inline-flex; align-items:center; gap:8px; font-weight:600; }
+  .expand-card-body .ec-logo { width:18px; height:18px; object-fit:contain; flex-shrink:0; }
+  .expand-card-body .ec-delta { color:var(--soft); font-weight:400; font-size:.82rem; }
+  .expand-card-body .ec-date { color:var(--soft); }
   /* Bulleted list used in the per-team thought sections. Em-dash bullet for
      editorial feel — literal em-dash char (not the \\2014 escape, which gets
      eaten by Python's octal-escape parsing in this triple-quoted string). */
@@ -94,25 +98,25 @@ PAGE_HTML = """
   .team-stat-card { background:white; border-radius:14px; padding:18px 22px; box-shadow:0 4px 24px #0000000a; margin:0 0 28px; }
   .team-stat-row { display:flex; gap:56px; margin-bottom:16px; flex-wrap:wrap; justify-content:center; }
   .team-stat-block { display:flex; flex-direction:column; gap:3px; align-items:center; text-align:center; }
-  .team-stat-label { font-family:'Syne',sans-serif; font-size:.62rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
-  .team-stat-value { font-family:'Syne',sans-serif; font-size:1.45rem; font-weight:800; font-variant-numeric:tabular-nums; }
+  .team-stat-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.792rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
+  .team-stat-value { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.595rem; font-weight:800; font-variant-numeric:tabular-nums; }
   .team-stat-value.pos { color:#1a6a4a; }
   .team-stat-value.neg { color:#a33247; }
   .team-stat-matches { display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; justify-content:center; }
-  .team-stat-matches-label { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); margin:0 0 10px; display:block; text-align:center; }
+  .team-stat-matches-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.1rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); margin:0 0 10px; display:block; text-align:center; }
   .match-col { display:flex; flex-direction:column; align-items:stretch; gap:3px; }
-  .match-week { font-family:'Syne',sans-serif; font-size:.55rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); text-align:center; }
+  .match-week { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.605rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); text-align:center; }
   .match-chip { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:7px; font-size:.78rem; font-weight:500; font-variant-numeric:tabular-nums; }
-  .match-chip .res { font-weight:800; font-family:'Syne',sans-serif; }
+  .match-chip .res { font-weight:800; font-family:'Plus Jakarta Sans',sans-serif; }
   .match-chip.win { background:rgba(34,197,94,.13); color:#176a47; }
   .match-chip.loss { background:rgba(220,38,38,.11); color:#a33247; }
   .content em { font-style:italic; }
   .content a { color:var(--ink); font-weight:400; }
   .content a:hover { opacity:.7; }
   .data-table-wrap { background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000a; margin:24px 0 32px; }
-  .data-table-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:12px; }
+  .data-table-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:12px; }
   .data-table { width:100%; border-collapse:collapse; font-size:.9rem; font-weight:400; }
-  .data-table th { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
+  .data-table th { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.748rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
   .data-table td { padding:10px 12px; border-bottom:1px solid #f5eff8; }
   .data-table tr:last-child td { border-bottom:none; }
   .data-table .num { font-variant-numeric:tabular-nums; }
@@ -126,25 +130,25 @@ PAGE_HTML = """
   /* Break out of the article's 860px max-width so the whole bracket fits in
      one view. Pinned to the viewport center; never wider than 1200px. */
   .bracket-wrap { background:white; border-radius:16px; padding:24px 28px; box-shadow:0 4px 24px #0000000a; margin:24px 0 32px; overflow-x:auto; position:relative; left:50%; transform:translateX(-50%); width:min(96vw,1200px); max-width:none; }
-  .bracket-label { font-family:'Syne',sans-serif; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:18px; text-align:center; }
+  .bracket-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:18px; text-align:center; }
   .bracket-section { margin-bottom:32px; min-width:fit-content; }
-  .bracket-section-title { font-family:'Syne',sans-serif; font-size:.8rem; font-weight:800; letter-spacing:.05em; color:var(--ink); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid #f0eaf4; }
+  .bracket-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.88rem; font-weight:800; letter-spacing:.05em; color:var(--ink); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid #f0eaf4; }
   .bracket-rounds { display:flex; gap:28px; align-items:stretch; }
   .bracket-round { flex:1; min-width:160px; display:flex; flex-direction:column; justify-content:space-around; gap:18px; }
-  .bracket-round-title { font-family:'Syne',sans-serif; font-size:.6rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); text-align:center; margin-bottom:4px; }
+  .bracket-round-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.66rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); text-align:center; margin-bottom:4px; }
   .bracket-cell { background:#faf6fd; border-radius:10px; padding:0; overflow:hidden; font-size:.82rem; box-shadow:0 1px 4px #00000008; }
   .bracket-cell .slot { display:flex; align-items:center; gap:8px; padding:8px 12px; }
   .bracket-cell .slot + .slot { border-top:1px solid #ece5f3; }
   .bracket-cell .slot img { width:18px; height:18px; object-fit:contain; flex-shrink:0; }
   .bracket-cell .slot .name { flex:1; font-weight:500; }
-  .bracket-cell .slot .score { font-family:'Syne',sans-serif; font-weight:800; font-variant-numeric:tabular-nums; font-size:.78rem; color:var(--soft); }
+  .bracket-cell .slot .score { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-variant-numeric:tabular-nums; font-size:0.858rem; color:var(--soft); }
   .bracket-cell .slot.winner { background:rgba(34,197,94,.13); }
   .bracket-cell .slot.winner .name { color:#176a47; font-weight:700; }
   .bracket-cell .slot.winner .score { color:#176a47; }
   .bracket-cell .slot.loser .name { color:#a89db4; }
   .bracket-cell .slot.loser img { opacity:.6; }
   .bracket-cell .slot.tbd .name { color:#c2b8ce; font-style:italic; }
-  .bracket-cell-pct { font-family:'Syne',sans-serif; font-size:.58rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:4px 12px; background:#f3eef8; text-align:right; }
+  .bracket-cell-pct { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.638rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); padding:4px 12px; background:#f3eef8; text-align:right; }
   /* Bracket body splits into two columns: main (upper + lower stacked) on
      the left, the Grand Final pinned to the right and vertically centered. */
   .bracket-body { display:flex; gap:32px; align-items:stretch; min-width:fit-content; }
@@ -154,14 +158,14 @@ PAGE_HTML = """
   .bracket-gf .bracket-round-title { font-size:.78rem; color:#5a2a7a; margin-bottom:8px; letter-spacing:.12em; }
   .bracket-gf .bracket-cell { min-width:220px; background:linear-gradient(180deg,#faf2f8,#f4eaf8); box-shadow:0 4px 18px #5a2a7a15; }
   .bracket-gf .bracket-cell .slot.winner { background:linear-gradient(90deg,rgba(124,58,237,.16),rgba(34,197,94,.18)); }
-  .bracket-final-line { margin-top:18px; font-family:'Syne',sans-serif; font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); text-align:center; max-width:240px; }
+  .bracket-final-line { margin-top:18px; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.792rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); text-align:center; max-width:240px; }
   .bracket-final-line .pod { color:#5a2a7a; display:block; margin-top:4px; }
   .bracket-snapshot { font-size:.7rem; color:var(--soft); font-weight:300; font-style:italic; text-align:center; margin-top:14px; }
   .stat-callout { background:white; border-radius:14px; padding:18px 24px; box-shadow:0 4px 24px #0000000a; margin:8px 0 32px; display:flex; align-items:center; justify-content:center; gap:16px; }
-  .stat-callout-label { font-family:'Syne',sans-serif; font-size:.68rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
+  .stat-callout-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.748rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); }
   .stat-callout-team { display:flex; align-items:center; gap:8px; font-weight:600; }
   .stat-callout-team img { width:24px; height:24px; object-fit:contain; }
-  .stat-callout-rating { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:#1a6a4a; font-variant-numeric:tabular-nums; }
+  .stat-callout-rating { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.76rem; font-weight:800; color:#1a6a4a; font-variant-numeric:tabular-nums; }
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
@@ -186,7 +190,7 @@ PAGE_HTML = """
 <div class="page">
   <div class="article">
     <div class="label">Research / Opinion</div>
-    <h1>Americas Stage 1 Playoffs Preview</h1>
+    <h1>Americas Stage 1<br>Playoffs Preview</h1>
     <div class="byline">Bobo &mdash; May 2026</div>
     <div class="cover">
       <img src="/loudlev26.jpg" alt="LOUD vs Leviat&aacute;n at VCT Americas Stage 1 2026">
@@ -342,10 +346,10 @@ PAGE_HTML = """
         <div class="expand-card-wrap">
           <div class="expand-card-body">
             <table>
-              <tr><td>vs SEN</td><td>Haven</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>Apr 19</td></tr>
-              <tr><td>vs SEN</td><td>Split</td><td class="L">L 17&ndash;19</td><td>(&Delta; &minus;2)</td><td>Apr 19</td></tr>
-              <tr><td>vs NRG</td><td>Lotus</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>Apr 25</td></tr>
-              <tr><td>vs Kr&uuml;</td><td>Haven</td><td class="L">L 10&ndash;13</td><td>(&Delta; &minus;3)</td><td>May 2</td></tr>
+              <tr><td><span class="ec-opp"><img class="ec-logo" src="/logos/SEN.png" alt="SEN" onerror="this.style.display='none'">vs SEN</span></td><td>Haven</td><td class="L">L 10&ndash;13</td><td class="ec-delta">(&Delta; &minus;3)</td><td class="ec-date">Apr 19</td></tr>
+              <tr><td><span class="ec-opp"><img class="ec-logo" src="/logos/SEN.png" alt="SEN" onerror="this.style.display='none'">vs SEN</span></td><td>Split</td><td class="L">L 17&ndash;19</td><td class="ec-delta">(&Delta; &minus;2)</td><td class="ec-date">Apr 19</td></tr>
+              <tr><td><span class="ec-opp"><img class="ec-logo" src="/logos/NRG.png" alt="NRG" onerror="this.style.display='none'">vs NRG</span></td><td>Lotus</td><td class="L">L 10&ndash;13</td><td class="ec-delta">(&Delta; &minus;3)</td><td class="ec-date">Apr 25</td></tr>
+              <tr><td><span class="ec-opp"><img class="ec-logo" src="/logos/KR%C3%9C.png" alt="KR&Uuml;" onerror="this.style.display='none'">vs Kr&uuml;</span></td><td>Haven</td><td class="L">L 10&ndash;13</td><td class="ec-delta">(&Delta; &minus;3)</td><td class="ec-date">May 2</td></tr>
             </table>
           </div>
         </div>
