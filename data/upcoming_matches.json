@@ -1,46 +1,24 @@
 [
   {
-    "team_a": "Paper Rex",
-    "team_b": "LEVIAT\u00c1N",
-    "org_a": "PRX",
-    "org_b": "LEV",
-    "date": "2026-06-12",
-    "region": "International",
-    "event": "2026 Masters London",
-    "format": "bo3",
-    "match_name": "Upper Quarterfinals Playoffs"
-  },
-  {
-    "team_a": "Team Heretics",
-    "team_b": "Team Vitality",
-    "org_a": "TH",
-    "org_b": "VIT",
-    "date": "2026-06-12",
-    "region": "International",
-    "event": "2026 Masters London",
-    "format": "bo3",
-    "match_name": "Upper Quarterfinals Playoffs"
-  },
-  {
     "team_a": "EDward Gaming",
-    "team_b": "FUT Esports",
+    "team_b": "Paper Rex",
     "org_a": "EDG",
-    "org_b": "FUT",
-    "date": "2026-06-13",
+    "org_b": "PRX",
+    "date": "2026-06-19",
     "region": "International",
     "event": "2026 Masters London",
     "format": "bo3",
-    "match_name": "Upper Quarterfinals Playoffs"
+    "match_name": "Upper Final Playoffs"
   },
   {
-    "team_a": "G2 Esports",
-    "team_b": "Xi Lai Gaming",
-    "org_a": "G2",
-    "org_b": "XLG",
-    "date": "2026-06-13",
+    "team_a": "Team Vitality",
+    "team_b": "LEVIAT\u00c1N",
+    "org_a": "VIT",
+    "org_b": "LEV",
+    "date": "2026-06-19",
     "region": "International",
     "event": "2026 Masters London",
     "format": "bo3",
-    "match_name": "Upper Quarterfinals Playoffs"
+    "match_name": "Lower Round 3 Playoffs"
   }
 ]

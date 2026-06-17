@@ -74,11 +74,17 @@ HOME_HTML = """
     .page { padding:32px 16px; }
     .tagline { white-space:normal; }
     .ai-disclosure-body { white-space:normal; }
-    .sections { gap:30px; }
-    .cards { gap:14px; justify-content:center; }
-    .nav-card { width:100%; max-width:360px; }
-    .nav-card-cover { height:120px; }
-    .benpom-hero { max-width:100%; }
+    .sections { gap:28px; }
+    .cards { gap:13px; justify-content:center; }
+    .nav-card { width:100%; max-width:300px; padding:24px 20px 22px; }
+    .nav-card-cover { height:100px; margin:-24px -20px 16px; width:calc(100% + 40px); }
+    .nav-card-title { font-size:.96rem; }
+    .nav-card-desc { font-size:.78rem; }
+    .nav-card-arrow { font-size:.8rem; padding-top:16px; }
+    .nav-card-date { font-size:.66rem; }
+    .benpom-hero { max-width:320px; }
+    .benpom-hero-banner { height:170px; }
+    .benpom-hero-title { font-size:clamp(1.8rem,7vw,2.4rem); }
   }
 </style>
 </head>

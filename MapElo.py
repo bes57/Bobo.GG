@@ -8206,7 +8206,7 @@ body:has(.flying)::after{animation-play-state:paused}
   }
   /* Mobile (touch only): enlarge the BenPom Ratings/Upcoming/Recent content for legibility,
      but keep the tab bubbles at their original size. Touch-only; desktop unchanged. */
-  @media (hover:none) and (pointer:coarse){ html{font-size:150%} .tab{font-size:14px} }
+  @media (hover:none) and (pointer:coarse){ html{font-size:150%} .tab{font-size:14px} .pill{font-size:14px} }
 </style>
 </head>
 <body>
