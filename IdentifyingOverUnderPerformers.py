@@ -609,6 +609,7 @@ PAGE_HTML = """
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; padding:60px 32px 80px; }
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
@@ -696,12 +697,15 @@ PAGE_HTML = """
   /* ── Mobile (phone) ── */
   @media (max-width:600px){
     .page{padding:24px 14px 48px}
-    .chart-wrap{padding:18px 14px 14px}
+    .content p, .content ul li, .content ol li { font-size:.94rem; }
+    .chart-wrap{padding:18px 14px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
     .chart-canvas-box{height:300px}
+    .res-table{min-width:540px}
     .res-table th{padding:6px 5px;font-size:.58rem;letter-spacing:.03em}
     .res-table td{padding:6px 5px}
     .res-table .td-img img{width:26px;height:26px}
     .res-pname{font-size:.82rem}
+    .role-table{min-width:460px}
     .role-table th,.role-table td{padding:6px 6px}
     .side-notes{padding:18px 16px 12px}
     .clip-frame-wrap{height:300px}

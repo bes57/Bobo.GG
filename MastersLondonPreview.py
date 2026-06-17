@@ -20,6 +20,7 @@ PAGE_HTML = """
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
@@ -147,7 +148,7 @@ PAGE_HTML = """
   .delta-event-pill { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.638rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:6px; }
   .delta-event-pill.won  { background:rgba(34,197,94,.18); color:#176a47; }
   .delta-event-pill.lost { background:rgba(220,38,38,.13); color:#a33247; }
-  .data-table-wrap { background:white; border-radius:14px; padding:16px 20px; box-shadow:0 4px 24px #0000000a; margin:14px 0 4px; }
+  .data-table-wrap { background:white; border-radius:14px; padding:16px 20px; box-shadow:0 4px 24px #0000000a; margin:14px 0 4px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
   .data-table-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.748rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; }
   .data-table { width:100%; border-collapse:collapse; font-size:.88rem; font-weight:400; }
   .data-table th { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.682rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:7px 10px; text-align:left; border-bottom:2px solid #f0eaf4; }
@@ -272,6 +273,15 @@ PAGE_HTML = """
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
+  /* ── Mobile (phone) ── */
+  @media (max-width:600px){
+    .page { padding:24px 16px 56px; }
+    .content p, .content ul li, .content ol.numbered li { font-size:.94rem; }
+    .data-table-wrap { padding:14px 12px; }
+    .data-table { font-size:.8rem; min-width:480px; }
+    .data-table th, .data-table td { padding:7px 6px; }
+    .data-table .team-logo { width:18px; height:18px; }
+  }
 </style>
 </head>
 <body>

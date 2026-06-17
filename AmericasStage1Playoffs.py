@@ -21,6 +21,7 @@ PAGE_HTML = """
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <style>
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
@@ -113,7 +114,7 @@ PAGE_HTML = """
   .content em { font-style:italic; }
   .content a { color:var(--ink); font-weight:400; }
   .content a:hover { opacity:.7; }
-  .data-table-wrap { background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000a; margin:24px 0 32px; }
+  .data-table-wrap { background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000a; margin:24px 0 32px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
   .data-table-label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:12px; }
   .data-table { width:100%; border-collapse:collapse; font-size:.9rem; font-weight:400; }
   .data-table th { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.748rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--soft); padding:8px 12px; text-align:left; border-bottom:2px solid #f0eaf4; }
@@ -172,7 +173,8 @@ PAGE_HTML = """
   /* ── Mobile (phone) ── */
   @media (max-width:600px){
     .page{padding:24px 14px 48px}
-    .data-table{font-size:.78rem}
+    .content p, .content ul li, .content ol li { font-size:.94rem; }
+    .data-table{font-size:.78rem;min-width:480px}
     .data-table th{padding:6px 6px;font-size:.6rem;letter-spacing:.03em}
     .data-table td{padding:6px 6px}
     .data-table .team-logo{width:18px;height:18px}
