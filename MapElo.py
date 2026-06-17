@@ -1203,7 +1203,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     100% { transform:translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,0px))) rotate(var(--rot,360deg)); opacity:0; }
   }
   @media(max-width:640px){
-    .hub-hero { height:auto; min-height:0; margin:14px 12px 22px; border-radius:18px; padding:24px 18px 30px; }
+    .hub-hero { height:auto; min-height:0; margin:0; border-radius:0; padding:18px 16px 92px; }
     .hub-hero-content { padding:0; max-width:none; }
   }
   /* ── Mobile ── */
