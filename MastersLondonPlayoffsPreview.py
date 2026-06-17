@@ -190,7 +190,7 @@ PAGE_HTML = """
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=820">
 <title>Masters London: Playoffs Preview &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preload" as="image" href="/logos/TH.png"><link rel="preload" as="image" href="/logos/G2.png"><link rel="preload" as="image" href="/logos/PRX.png"><link rel="preload" as="image" href="/logos/VIT.png"><link rel="preload" as="image" href="/logos/FUT.png"><link rel="preload" as="image" href="/logos/LEV.png"><link rel="preload" as="image" href="/logos/EDG.png"><link rel="preload" as="image" href="/logos/XLG.png">
@@ -566,6 +566,15 @@ PAGE_HTML = """
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
+  /* Bracket: shrink internals so it fits the fixed-width mobile viewport
+     with NO horizontal scroll (fires at width=820). */
+  @media (max-width:1000px){
+    .br-flow { min-width:660px; }
+    .br-col { min-width:120px; padding:0 6px; }
+    .br-team { font-size:.72rem; padding:5px 7px; gap:6px; }
+    .br-team img { width:14px; height:14px; }
+    .br-round-label { font-size:.58rem; }
+  }
   /* ── Mobile (phone) ── */
   @media (max-width:600px){
     .page { padding:24px 16px 56px; }

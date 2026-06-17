@@ -15,7 +15,7 @@ PAGE_HTML = """
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=820">
 <title>Americas Stage 1 Playoffs Preview &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -170,6 +170,21 @@ PAGE_HTML = """
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
+  /* Bracket: shrink internals so the whole bracket fits the fixed-width
+     mobile viewport with NO horizontal scroll (fires at width=820). */
+  @media (max-width:1000px){
+    .bracket-rounds { gap:14px; }
+    .bracket-round { min-width:104px; }
+    .bracket-body { gap:18px; }
+    .bracket-cell { font-size:.72rem; }
+    .bracket-cell .slot { padding:6px 8px; gap:6px; }
+    .bracket-cell .slot img { width:14px; height:14px; }
+    .bracket-cell .slot .score { font-size:.74rem; }
+    .bracket-cell-pct { font-size:.58rem; padding:3px 8px; }
+    .bracket-round-title { font-size:.6rem; }
+    .bracket-gf-col { padding-left:4px; }
+    .bracket-gf .bracket-cell { min-width:150px; }
+  }
   /* ── Mobile (phone) ── */
   @media (max-width:600px){
     .page{padding:24px 14px 48px}
