@@ -694,6 +694,10 @@ PAGE_HTML = """
   .interact-role:hover:not(.active) { border-color:#b09ad4; }
   .omit-search:focus { border-color:#b09ad4; }
   .omit-scroll { max-height:240px; overflow-y:auto; border-radius:8px; border:1px solid #f0eaf4; }
+  /* Larger body text on the fixed-width mobile viewport (fires at width=820). */
+  @media (max-width:1000px){
+    .content p, .content ul li, .content ol li { font-size:1.3rem; }
+  }
   /* ── Mobile (phone) ── */
   @media (max-width:600px){
     .page{padding:24px 14px 48px}

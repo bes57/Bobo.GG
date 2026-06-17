@@ -569,6 +569,7 @@ PAGE_HTML = """
   /* Bracket: shrink internals so it fits the fixed-width mobile viewport
      with NO horizontal scroll (fires at width=820). */
   @media (max-width:1000px){
+    .content p, .content ul li, .content ol.numbered li, .content blockquote p { font-size:1.3rem; }
     .br-flow { min-width:660px; }
     .br-col { min-width:120px; padding:0 6px; }
     .br-team { font-size:.72rem; padding:5px 7px; gap:6px; }

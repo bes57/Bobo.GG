@@ -273,6 +273,10 @@ PAGE_HTML = """
   footer { position:relative; z-index:1; text-align:center; padding:24px; color:var(--soft); font-size:.75rem; font-weight:300; }
   @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
   .page { animation:fadeUp .6s ease both; }
+  /* Larger body text on the fixed-width mobile viewport (fires at width=820). */
+  @media (max-width:1000px){
+    .content p, .content ul li, .content ol.numbered li { font-size:1.3rem; }
+  }
   /* ── Mobile (phone) ── */
   @media (max-width:600px){
     .page { padding:24px 16px 56px; }

@@ -173,6 +173,7 @@ PAGE_HTML = """
   /* Bracket: shrink internals so the whole bracket fits the fixed-width
      mobile viewport with NO horizontal scroll (fires at width=820). */
   @media (max-width:1000px){
+    .content p, .content ul li, .content ol li { font-size:1.3rem; }
     .bracket-rounds { gap:14px; }
     .bracket-round { min-width:104px; }
     .bracket-body { gap:18px; }
