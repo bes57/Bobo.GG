@@ -8181,9 +8181,13 @@ body:has(.flying)::after{animation-play-state:paused}
     .pill{padding:5px 12px;font-size:.74rem}
     .progress-card{padding:30px 20px;max-width:92%}
     .chart-card{max-width:96%}
-    .chart-wrap{height:440px}
+    .chart-wrap{height:auto;aspect-ratio:1.85}
     .chart-header{padding:0 12px}
     .chart-title{white-space:normal;text-align:center}
+    .chart-hint{display:none}
+    .chart-header-row{flex-wrap:wrap;justify-content:center;gap:8px}
+    .chart-asof{flex-basis:100%;text-align:center}
+    .chart-controls{justify-content:center;flex-wrap:wrap}
     .lb-card-wrap{padding:0 10px}
     .lb-col-hdr,.lb-row{padding-left:12px;padding-right:12px;gap:7px}
     .lb-team{gap:7px}
