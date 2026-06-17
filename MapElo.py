@@ -1133,7 +1133,7 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1000">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BenPom &mdash; Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preload" as="image" fetchpriority="high" href="/static/MastersShanghaiFinal-full.jpg">
@@ -1203,8 +1203,8 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     100% { transform:translate(calc(-50% + var(--dx,0px)), calc(-50% + var(--dy,0px))) rotate(var(--rot,360deg)); opacity:0; }
   }
   @media(max-width:640px){
-    .hub-hero { height:280px; margin:16px 16px 24px; border-radius:18px; }
-    .hub-hero-content { padding:24px 22px 20px; }
+    .hub-hero { height:auto; min-height:0; margin:14px 12px 22px; border-radius:18px; padding:24px 18px 30px; }
+    .hub-hero-content { padding:0; max-width:none; }
   }
   /* ── Mobile ── */
   @media (max-width:640px){
@@ -1212,8 +1212,11 @@ MAPELO_HUB_HTML = """<!DOCTYPE html>
     .hub-hero-nav{padding:16px 16px 0}
     .hub-page{padding:0 14px 48px}
     .hub-cards{gap:14px}
-    .hub-card{width:100%;max-width:340px}
-    .hub-card-wide{height:190px}
+    .hub-card{width:100%;max-width:none}
+    .hub-card-wide{height:160px}
+    .hub-card-wide-title{font-size:clamp(1.9rem,8vw,2.6rem)}
+    .hub-hero-sub{font-size:.9rem}
+    .hub-hero-cap{top:12px;right:12px;font-size:.5rem;padding:5px 9px}
     .hub-cards-wide{padding:0}
     .hub-logo-strip{overflow:hidden;padding:14px 8px}
   }
