@@ -4044,6 +4044,9 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
     .rv-veto-grid { flex-wrap:wrap; }
     .rv-veto-slot { flex:0 0 88px; max-width:88px; }
   }
+  /* Mobile (touch only): enlarge all text for legibility in the scaled-down layout.
+     Fires on phones/tablets (not desktop mouse); layout is px-based so only rem text scales. */
+  @media (hover:none) and (pointer:coarse){ html{font-size:150%} }
 </style>
 </head>
 <body>
@@ -8203,6 +8206,9 @@ body:has(.flying)::after{animation-play-state:paused}
     .upc-list{gap:26px}
     .upc-card{padding:12px 13px}
   }
+  /* Mobile (touch only): enlarge all text for legibility in the scaled-down layout.
+     Fires on phones/tablets (not desktop mouse); layout is px-based so only rem text scales. */
+  @media (hover:none) and (pointer:coarse){ html{font-size:150%} }
 </style>
 </head>
 <body>
