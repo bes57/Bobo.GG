@@ -3746,7 +3746,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1000">
+<meta name="viewport" content="width=800">
 <title>Historical Matchup Predictor &mdash; BenPom</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -7767,7 +7767,7 @@ MAPELO_MODERN_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1000">
+<meta name="viewport" content="width=800">
 <title>Modern VCT Hub — Bobo.GG</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
