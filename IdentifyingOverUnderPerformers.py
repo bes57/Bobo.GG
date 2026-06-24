@@ -604,7 +604,7 @@ PAGE_HTML = """
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
-<title>Overperforming in VCT: who's doing it? — Bobo's VCT Database</title>
+<title>Overperforming in VCT: Who's Doing It? — Bobo's VCT Database</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
@@ -736,7 +736,7 @@ PAGE_HTML = """
 <div class="page">
   <div class="article">
     <div class="label">Research / Opinion</div>
-    <h1>Overperforming in VCT:<br>who&rsquo;s doing it?</h1>
+    <h1>Overperforming in VCT:<br>Who&rsquo;s Doing It?</h1>
     <div class="byline">Bobo &mdash; May 2026</div>
     <div class="cover" id="intro">
       <img src="/patmen.jpg" alt="Patmen at VCT Pacific Kickoff 2026">

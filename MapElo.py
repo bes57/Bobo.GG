@@ -257,6 +257,7 @@ def _compute_pyth_data():
         '2025_masters_toronto':  ('2025-05-13', '2025-06-01'),
         '2025_champions':        ('2025-08-07', '2025-08-24'),
         '2026_masters_santiago': ('2026-03-26', '2026-04-06'),
+        '2026_masters_london':   ('2026-06-05', '2026-06-21'),
     }
 
     INTL_EVENT_DATES = {
@@ -269,13 +270,15 @@ def _compute_pyth_data():
         '2025_masters_toronto':  ('Masters Toronto',    '2025'),
         '2025_champions':        ('Champions',          '2025'),
         '2026_masters_santiago': ('Masters Santiago',   '2026'),
+        '2026_masters_london':   ('Masters London',     '2026'),
     }
     # International events that fall between regional events, keyed by year
     INTL_EVENTS = {
         '2024': [{'label': 'Masters Madrid',   'end': '2024-03-03'}],
         '2025': [{'label': 'Masters Bangkok',  'end': '2025-02-23'},
                  {'label': 'Masters Toronto',  'end': '2025-06-01'}],
-        '2026': [{'label': 'Masters Santiago', 'end': '2026-04-06'}],
+        '2026': [{'label': 'Masters Santiago', 'end': '2026-04-06'},
+                 {'label': 'Masters London',   'end': '2026-06-21'}],
     }
 
     # Assign approximate date using event start date
@@ -385,6 +388,8 @@ def _compute_pyth_data():
         'rex-regum-qeon': 'RRQ', 'mibr': 'MIBR', 'giantx': 'GX',
         'nongshim-redforce': 'NS', 'all-gamers': 'AG', 'bbl-esports': 'BBL',
         'gentle-mates': 'M8', 'furia': 'FUR',
+        'fut-esports': 'FUT', 'dragon-ranger-gaming': 'DRG', 'fearx': 'FS',
+        'global-esports': 'GE',
     }
     # Build org→place lookup per event
     intl_org_place = {}
@@ -2400,9 +2405,9 @@ var TEAM_COLORS = {
   VIT:'#FFD100', TH:'#FFD700', FNC:'#FF5900', TL:'#002B5C',
   NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#4FC3F7',
   M8:'#39FF14', BBL:'#D4AF37', EF:'#D4AF37', PCF:'#87CEEB',
-  EDG:'#E60012', BLG:'#FB7299', TE:'#00B0FF', DRG:'#FFD600',
+  EDG:'#E60012', BLG:'#FB7299', TE:'#00B0FF', DRG:'#2E9E44',
   ASE:'#FF6F00', AG:'#FF8800', XLG:'#1A1A1A', WOL:'#F5C400',
-  FPX:'#E60012', JDG:'#00C853', NOVA:'#7B1FA2', TEC:'#1565C0',
+  FPX:'#E60012', JDG:'#A6192E', NOVA:'#7B1FA2', TEC:'#D7263D',
   TYL:'#D32F2F', TYLOO:'#D32F2F',
   DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
   MKOI:'#7C3AED', KOI:'#7C3AED', GIA:'#FFFFFF',
@@ -6997,7 +7002,7 @@ def _mhub_load():
             org = me[role]
             if org not in recent_by_org:
                 recent_by_org[org] = []
-            if len(recent_by_org[org]) < 4:
+            if len(recent_by_org[org]) < 5:
                 is_winner = (role == "winner")
                 recent_by_org[org].append({
                     "date":     me["date"],
@@ -7008,6 +7013,15 @@ def _mhub_load():
                     "maps":     me.get("maps", []),
                     "event_id": me.get("event_id", ""),
                     "match_id": me.get("match_id", ""),
+                    # Full fields so the Alpha UI can render the same match-hover
+                    # card the BenPom chart shows (and team-profile recent list).
+                    "winner":       me["winner"],
+                    "loser":        me["loser"],
+                    "winner_after": me.get("winner_after"),
+                    "loser_after":  me.get("loser_after"),
+                    "winner_delta": me.get("winner_delta"),
+                    "loser_delta":  me.get("loser_delta"),
+                    "series_score": me.get("series_score"),
                 })
 
     # Build most-recently-used roster for each org from 2026 player CSVs
@@ -7320,7 +7334,7 @@ def _mhub_load():
             _as_of_dt = _dt.strptime(_as_of_str, "%Y-%m-%d") if _as_of_str else _dt.utcnow()
         except Exception:
             _as_of_dt = _dt.utcnow()
-        _cutoff = _as_of_dt - _td(days=14)
+        _cutoff = _as_of_dt - _td(days=75)   # recent list spans ~2.5 months back
 
         # Build a "morning-of" rating lookup keyed by match date.  Checkpoints
         # are sorted ascending by date; checkpoint(X) represents ratings at
@@ -7959,7 +7973,8 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-row:hover{background:rgba(61,26,110,.05)}
 .lb-row.selected{background:rgba(61,26,110,.08)}
 .lb-rank{color:#aaa;font-size:.78rem;font-weight:600;text-align:center}
-.lb-team{display:flex;align-items:center;justify-content:center;gap:10px}
+.lb-team{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;color:inherit;cursor:pointer}
+.lb-team:hover .lb-name{text-decoration:underline;text-underline-offset:2px}
 .lb-team img{width:30px;height:30px;object-fit:contain;flex-shrink:0}
 .lb-name{font-weight:700;font-size:.92rem;color:#111}
 .lb-rating{font-weight:700;font-size:1rem;text-align:center;justify-self:center;font-variant-numeric:tabular-nums;color:#111}
@@ -8045,6 +8060,11 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .past-sub .fly-char,
 .sim-heading .fly-char,
 .sim-sub .fly-char{display:inline-block;opacity:0;transform:translate3d(60px,0,0);backface-visibility:hidden;transition:transform .55s cubic-bezier(.16,.85,.34,1.02),opacity .45s ease}
+/* Each word's per-char spans are grouped in a nowrap inline-block so a line
+   can only break at the spaces BETWEEN words — never mid-word (the inline-block
+   chars would otherwise let the line wrap between any two letters, e.g. "f|rom"
+   on a narrow mobile viewport). */
+.fly-word{display:inline-block;white-space:nowrap}
 .upcoming-heading.flying .fly-char,
 .upcoming-sub.flying .fly-char,
 .past-heading.flying .fly-char,
@@ -8364,9 +8384,9 @@ const TEAM_COLORS = {
   NAVI:'#F7D417', FUT:'#E10600', KC:'#1B6FE2', GX:'#4FC3F7',
   M8:'#39FF14', BBL:'#D4AF37', EF:'#D4AF37', PCF:'#87CEEB',
   // CN (provisional brand colors — confirm with user)
-  EDG:'#E60012', BLG:'#FB7299', TE:'#00B0FF', DRG:'#FFD600',
+  EDG:'#E60012', BLG:'#FB7299', TE:'#00B0FF', DRG:'#2E9E44',
   ASE:'#FF6F00', AG:'#FF8800', XLG:'#1A1A1A', WOL:'#F5C400',
-  FPX:'#E60012', JDG:'#00C853', NOVA:'#7B1FA2', TEC:'#1565C0',
+  FPX:'#E60012', JDG:'#A6192E', NOVA:'#7B1FA2', TEC:'#D7263D',
   TYL:'#D32F2F', TYLOO:'#D32F2F',
   // Team Secret (grey — appears as 'Secret' in older data)
   Secret:'#808080', SCRT:'#808080', TSEC:'#808080',
@@ -8688,6 +8708,13 @@ document.querySelectorAll('.pill').forEach(btn => {
     selectedTeam = null;
     expandedOrg  = null;
     if (hubData) {
+      // While zoomed into a split, re-fit the y-axis to the newly-visible
+      // region's high/low within the same window (else it keeps the prior
+      // region's fit); otherwise keep the whole-season ±bound range.
+      if (_isZoomed && _savedZoomMin && _savedZoomMax) {
+        const _yr = _yRangeForWindow(hubData, _savedZoomMin, _savedZoomMax);
+        if (_yr) { _chartYMin = _yr.yMin; _chartYMax = _yr.yMax; }
+      }
       buildChart(hubData);
       renderLeaderboard(hubData);
     }
@@ -8912,6 +8939,19 @@ async function animateAxesOverlay() {
   ov.remove();
 }
 
+// Parse a date-only 'YYYY-MM-DD' string as LOCAL midnight, matching how the
+// chart's date-fns adapter parses the line data's date strings. Plain
+// `new Date('2026-06-21')` yields UTC midnight — a ~7h gap in PDT that, when
+// the x-axis is zoomed to a band's end, pushes the last data point (and its
+// endpoint dot/logo) off the right edge of the plot. Returns epoch ms.
+function _xParse(v) {
+  if (typeof v === 'string') {
+    const m = v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3]).getTime();
+  }
+  return new Date(v).getTime();
+}
+
 // ── Band plugin ──────────────────────────────────────────────────────────────
 function makeBandsPlugin(bands) {
   const COLS = [
@@ -8923,8 +8963,8 @@ function makeBandsPlugin(bands) {
     beforeDraw(chart) {
       const {ctx, chartArea:{left,top,right,bottom}, scales:{x}} = chart;
       bands.forEach((band, i) => {
-        const x1 = Math.max(left,  x.getPixelForValue(new Date(band.start)));
-        const x2 = Math.min(right, x.getPixelForValue(new Date(band.end)));
+        const x1 = Math.max(left,  x.getPixelForValue(_xParse(band.start)));
+        const x2 = Math.min(right, x.getPixelForValue(_xParse(band.end)));
         if (x2 <= x1) return;
         ctx.fillStyle = COLS[i % COLS.length];
         ctx.fillRect(x1, top, x2 - x1, bottom - top);
@@ -9114,6 +9154,53 @@ function _computeGlobalYRange(data) {
   _chartYMax =  bound;
 }
 
+// Y-range fitted to only the checkpoints visible inside a zoomed x-window,
+// for the currently-visible teams (region filter), snapped OUTWARD to the
+// nearest integer. Used when zooming into a split so the focused window uses
+// the full vertical space instead of the whole-season ±bound. Includes the
+// edge-interpolated value where a line crosses each window boundary (monotone
+// cubic never overshoots its data, so the edges bound the visible curve).
+// Returns {yMin, yMax} (integers) or null if nothing is visible in the window.
+function _yRangeForWindow(data, xMinMs, xMaxMs) {
+  const checkpoints = (data.chart && data.chart.checkpoints) || [];
+  const teams = data.leaderboard.teams || [];
+  const visible = activeRegion === 'All' ? teams
+    : activeRegion === 'Top10'           ? teams.slice(0, 10)
+    : teams.filter(t => t.region === activeRegion);
+
+  let lo = Infinity, hi = -Infinity;
+  const consider = v => { if (v < lo) lo = v; if (v > hi) hi = v; };
+
+  visible.forEach(team => {
+    const org = team.org;
+    const series = checkpoints
+      .filter(cp => org in (cp.ratings || {}))
+      .map(cp => ({ t: _xParse(cp.date), y: cp.ratings[org] }))
+      .sort((a, b) => a.t - b.t);
+    if (!series.length) return;
+    // Checkpoints inside the window
+    series.forEach(p => { if (p.t >= xMinMs && p.t <= xMaxMs) consider(p.y); });
+    // Interpolated value where the line crosses each window edge
+    [xMinMs, xMaxMs].forEach(edge => {
+      if (edge < series[0].t || edge > series[series.length - 1].t) return;
+      for (let i = 0; i < series.length - 1; i++) {
+        if (edge >= series[i].t && edge <= series[i + 1].t) {
+          const span = series[i + 1].t - series[i].t || 1;
+          const f = (edge - series[i].t) / span;
+          consider(series[i].y + f * (series[i + 1].y - series[i].y));
+          break;
+        }
+      }
+    });
+  });
+
+  if (lo === Infinity) return null;
+  let yMin = Math.floor(lo);
+  let yMax = Math.ceil(hi);
+  if (yMax - yMin < 1) yMax = yMin + 1;  // never a degenerate axis
+  return { yMin, yMax };
+}
+
 function buildChart(data, noLines = false) {
   const checkpoints = data.chart.checkpoints || [];
   const matchEvents = data.chart.match_events || [];
@@ -9201,10 +9288,14 @@ function buildChart(data, noLines = false) {
           grid:{color:'rgba(0,0,0,.07)'},
           ticks:{color:'rgba(0,0,0,.45)', font:{size:11}, callback:v => v===0 ? '0' : (v>0?'+':'')+v.toFixed(0), stepSize:1},
           afterBuildTicks(scale) {
+            // Integer ticks that fall WITHIN the current scale range — derived
+            // from scale.min/max (not the resting globals) so that while the
+            // y-bounds are tweened to fractional values during a zoom
+            // animation, the labels stay clean integers instead of "-5.7…".
+            const lo = Math.ceil(scale.min - 1e-9);
+            const hi = Math.floor(scale.max + 1e-9);
             const ticks = [];
-            for (let v = _chartYMin; v <= _chartYMax + 0.001; v += 1) {
-              ticks.push({value: v});
-            }
+            for (let v = lo; v <= hi; v += 1) ticks.push({value: v});
             scale.ticks = ticks;
           },
           border:{color:'rgba(0,0,0,.12)'},
@@ -9603,12 +9694,18 @@ async function replayChart() {
   await revealChart(3700);
 }
 
-async function animateZoom(toMin, toMax, duration) {
+async function animateZoom(toMin, toMax, duration, toYMin, toYMax) {
   if (!myChart) return;
-  const fmn = new Date(myChart.options.scales.x.min).getTime();
-  const fmx = new Date(myChart.options.scales.x.max).getTime();
-  const tmn = new Date(toMin).getTime();
-  const tmx = new Date(toMax).getTime();
+  const fmn = _xParse(myChart.options.scales.x.min);
+  const fmx = _xParse(myChart.options.scales.x.max);
+  const tmn = _xParse(toMin);
+  const tmx = _xParse(toMax);
+  // Optional y tween — runs in lockstep with x so the axis re-fit reads as
+  // one smooth zoom rather than a snap after the slide. afterBuildTicks keeps
+  // the labels integer-only while min/max pass through fractional values.
+  const animY = (toYMin != null && toYMax != null);
+  const fYmn = animY ? Number(myChart.options.scales.y.min) : 0;
+  const fYmx = animY ? Number(myChart.options.scales.y.max) : 0;
   await new Promise(resolve => {
     const startT = performance.now();
     function frame(ts) {
@@ -9616,6 +9713,10 @@ async function animateZoom(toMin, toMax, duration) {
       const ep = 1 - Math.pow(1 - p, 3);
       myChart.options.scales.x.min = new Date(fmn + ep * (tmn - fmn));
       myChart.options.scales.x.max = new Date(fmx + ep * (tmx - fmx));
+      if (animY) {
+        myChart.options.scales.y.min = fYmn + ep * (toYMin - fYmn);
+        myChart.options.scales.y.max = fYmx + ep * (toYMax - fYmx);
+      }
       myChart.update('none');
       if (p < 1) requestAnimationFrame(frame);
       else resolve();
@@ -9628,15 +9729,23 @@ async function toggleZoom() {
   if (_isReplaying || !myChart) return;
   const btn = document.getElementById('zoomBtn');
   if (_isZoomed) {
-    const prevMin = myChart.options.scales.x.min;
-    const prevMax = myChart.options.scales.x.max;
+    const prevMin  = myChart.options.scales.x.min;
+    const prevMax  = myChart.options.scales.x.max;
+    const prevYMin = Number(myChart.options.scales.y.min);   // current fitted y
+    const prevYMax = Number(myChart.options.scales.y.max);
     _isZoomed = false;
     _savedZoomMin = null; _savedZoomMax = null;
-    buildChart(hubData);
+    _computeGlobalYRange(hubData);   // whole-season ±bound is the target
+    const gYMin = _chartYMin, gYMax = _chartYMax;
+    buildChart(hubData);             // rebuilds (drops zoom-only match dots)
+    // Restart from where we were (zoomed x + fitted y), then tween both back
+    // out together so the y-axis un-fits as smoothly as it fit.
     myChart.options.scales.x.min = prevMin;
     myChart.options.scales.x.max = prevMax;
+    myChart.options.scales.y.min = prevYMin;
+    myChart.options.scales.y.max = prevYMax;
     myChart.update('none');
-    await animateZoom('2026-01-07', '2026-10-25', 600);
+    await animateZoom('2026-01-07', '2026-10-25', 600, gYMin, gYMax);
     if (btn) { btn.textContent = '⊕ Zoom Split'; btn.classList.remove('active'); }
   } else {
     const asOf  = hubData?.as_of_date || '2026-05-10';
@@ -9647,25 +9756,35 @@ async function toggleZoom() {
     const zStart = band ? band.start : asOf;
     const zEnd   = band ? band.end   : asOf;
     _isZoomed = true;
-    buildChart(hubData);
-    await animateZoom(zStart, zEnd, 600);
+    buildChart(hubData);   // builds at the current whole-season y (anim start)
+    // Target y = high/low inside the focused split (nearest integer outward),
+    // tweened in lockstep with the x zoom for one smooth motion.
+    const _yr = _yRangeForWindow(hubData, _xParse(zStart), _xParse(zEnd));
+    await animateZoom(zStart, zEnd, 600, _yr ? _yr.yMin : null, _yr ? _yr.yMax : null);
     _savedZoomMin = myChart.scales.x.min;
     _savedZoomMax = myChart.scales.x.max;
+    if (_yr) { _chartYMin = _yr.yMin; _chartYMax = _yr.yMax; }  // resting range for rebuilds
     if (btn) { btn.textContent = '⊖ Zoom Out'; btn.classList.add('active'); }
   }
 }
 
 async function resetZoom() {
   if (!myChart) return;
-  const prevMin = myChart.options.scales.x.min;
-  const prevMax = myChart.options.scales.x.max;
+  const prevMin  = myChart.options.scales.x.min;
+  const prevMax  = myChart.options.scales.x.max;
+  const prevYMin = Number(myChart.options.scales.y.min);
+  const prevYMax = Number(myChart.options.scales.y.max);
   _isZoomed     = false;
   _savedZoomMin = null; _savedZoomMax = null;
+  _computeGlobalYRange(hubData);   // whole-season ±bound is the target
+  const gYMin = _chartYMin, gYMax = _chartYMax;
   buildChart(hubData);
   myChart.options.scales.x.min = prevMin;
   myChart.options.scales.x.max = prevMax;
+  myChart.options.scales.y.min = prevYMin;
+  myChart.options.scales.y.max = prevYMax;
   myChart.update('none');
-  await animateZoom('2026-01-07', '2026-10-25', 400);
+  await animateZoom('2026-01-07', '2026-10-25', 400, gYMin, gYMax);
   const zBtn = document.getElementById('zoomBtn');
   if (zBtn) { zBtn.textContent = '⊕ Zoom Split'; zBtn.classList.remove('active'); }
 }
@@ -9811,10 +9930,10 @@ function renderLeaderboard(data, opts) {
     if (animate) row.style.animationDelay = (_idx * 55) + 'ms';
     row.innerHTML = `
       <div class="lb-rank">${team.rank}</div>
-      <div class="lb-team">
+      <a class="lb-team" href="/team/${encodeURIComponent(org)}" onclick="event.stopPropagation()" title="${org} — full team profile">
         <img src="/static/logos/${org}.png" onerror="this.style.display='none'" alt="${org}">
         <span class="lb-name">${org}</span>
-      </div>
+      </a>
       <div class="lb-rating">${rStr}</div>
       <div class="lb-region ${regCls}">${team.region || ''}</div>
       <div class="lb-chevron">&#9660;</div>`;
@@ -10843,12 +10962,26 @@ function _splitIntoChars(el) {
   if (!el || el.dataset.split === '1') return;
   var text = el.textContent;
   el.textContent = '';
+  var word = null;  // current word wrapper (nowrap); null between words
   for (var i = 0; i < text.length; i++) {
     var ch = text[i];
+    if (ch === ' ') {
+      word = null;  // space ends the word - the only place a line may break
+      var sp = document.createElement('span');
+      sp.className = 'fly-char';
+      sp.textContent = ' ';
+      el.appendChild(sp);
+      continue;
+    }
+    if (!word) {
+      word = document.createElement('span');
+      word.className = 'fly-word';
+      el.appendChild(word);
+    }
     var span = document.createElement('span');
     span.className = 'fly-char';
-    span.textContent = ch === ' ' ? ' ' : ch;
-    el.appendChild(span);
+    span.textContent = ch;
+    word.appendChild(span);
   }
   el.dataset.split = '1';
 }
@@ -10929,14 +11062,41 @@ function triggerUpcomingFlyIn() {
   _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub');
 }
 function triggerPastFlyIn() {
-  // skipList: cards are added + revealed individually via the progressive-load
-  // path in renderPast (.card-loaded class per match). The list-wide fly-in
-  // would snap everything visible immediately.
-  _flyInPanel('#panelC', '.past-heading', '.past-sub', {skipList: true, speed: 0.4});
+  // Recent Matches heading + subtitle render statically (no letter fly-in) —
+  // per user preference. The match cards still reveal individually via the
+  // progressive-load path in renderPast (.card-loaded class per match), which
+  // is independent of this function.
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
 init();
+
+// Deep-link: /mapelo/modern/#team=ORG selects + expands that team once the
+// leaderboard is ready (the Alpha dashboard's team links point here).
+(function(){
+  var m = (location.hash || '').match(/team=([^&]+)/i);
+  if (!m) return;
+  var org = decodeURIComponent(m[1]).toUpperCase();
+  var tries = 0;
+  var iv = setInterval(function(){
+    tries++;
+    try {
+      var ready = (typeof toggleTeam === 'function') && (typeof hubData !== 'undefined')
+                  && hubData && hubData.leaderboard
+                  && document.querySelectorAll('#lbBody .lb-row').length;
+      if (ready) {
+        clearInterval(iv);
+        var has = (hubData.leaderboard.teams || []).some(function(t){ return t.org === org; });
+        if (has && typeof selectedTeam !== 'undefined' && selectedTeam !== org) toggleTeam(org);
+        setTimeout(function(){
+          var sel = document.querySelector('#lbBody .lb-row.selected');
+          if (sel) sel.scrollIntoView({behavior:'smooth', block:'center'});
+        }, 400);
+      }
+    } catch (e) { /* keep polling until ready */ }
+    if (tries > 80) clearInterval(iv);
+  }, 250);
+})();
 </script>
 SHARED_FOOTER
 </body>

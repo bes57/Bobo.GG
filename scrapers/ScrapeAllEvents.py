@@ -17,7 +17,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from MoreTestingMaybeFiles import ALL_EVENTS
 
-LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25; next live event
+LIVE_EVENT_ID = "2026_stage2"   # Masters London completed 2026-06-21; next live event
 DATA_DIR = os.path.join(ROOT, "data")
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
@@ -35,7 +35,7 @@ ORG_REGIONS = {
     "PRX":"Pacific","DRX":"Pacific","T1":"Pacific",
     "TLN":"Pacific","GEN":"Pacific","DFM":"Pacific",
     "ZETA":"Pacific","RRQ":"Pacific","TS":"Pacific","GE":"Pacific",
-    "KRX":"Pacific","NS":"Pacific",
+    "KRX":"Pacific","NS":"Pacific","FS":"Pacific",
     "EDG":"CN","BLG":"CN","TE":"CN","DRG":"CN","ASE":"CN",
     "AG":"CN","XLG":"CN","WOL":"CN","FPX":"CN",
     "JDG":"CN","NOVA":"CN","TEC":"CN","TYL":"CN","TYLOO":"CN",

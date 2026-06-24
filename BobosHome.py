@@ -1,4 +1,8 @@
 import os
+import json as _json
+import re as _re
+import math as _math
+import datetime as _datetime
 from flask import Flask, render_template_string, send_from_directory
 from flask_compress import Compress
 from EventLeaderboards import vct_bp
@@ -21,6 +25,301 @@ app.register_blueprint(article_masters_london_playoffs_bp, url_prefix="/articles
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 
+# ── Alpha UI data layer ──────────────────────────────────────────────────────
+# The alpha dashboard reuses the Modern Hub's read-only data builder
+# (_mhub_load: power ratings, recent matches with pre-match odds, event bands,
+# upcoming) plus the Event Leaderboards' player data. No new scraping — it just
+# reads the same files the rest of the site already produces.
+_BASE = os.path.dirname(__file__)
+
+
+def _parse_team_colors():
+    """Single source of truth for team brand colors: the canonical
+    one-color-per-team `var TEAM_COLORS` dict in MapElo.py (the user-curated
+    palette). Parsed at import so the alpha UI never drifts from the rest of
+    the site. Falls back to an empty dict (region colors used instead)."""
+    try:
+        src = open(os.path.join(_BASE, "MapElo.py"), encoding="utf-8").read()
+        m = _re.search(r"\nvar TEAM_COLORS = \{(.*?)\n\};", src, _re.S)
+        block = m.group(1) if m else ""
+        return {k: v for k, v in _re.findall(
+            r"['\"]?([^'\":\s]+)['\"]?\s*:\s*'(#[0-9A-Fa-f]{3,8})'", block)}
+    except Exception:
+        return {}
+
+
+ALPHA_TEAM_COLORS = _parse_team_colors()
+try:
+    ALPHA_LOGOS = _json.load(open(os.path.join(_BASE, "static", "logos", "logos.json")))
+except Exception:
+    ALPHA_LOGOS = {}
+
+
+def _alpha_days_between(a, b):
+    try:
+        return (_datetime.date.fromisoformat(b) - _datetime.date.fromisoformat(a)).days
+    except Exception:
+        return None
+
+
+def _alpha_event_context(bands, today):
+    bands = sorted([b for b in bands if b.get("start")], key=lambda b: b["start"])
+    live = next((b for b in bands if b.get("start", "") <= today <= b.get("end", "")), None)
+    nxt = next((b for b in bands if b.get("start", "") > today), None)
+    past = [b for b in bands if b.get("end", "") < today]
+    return live, nxt, (past[-1] if past else None)
+
+
+def _build_alpha_data():
+    """Assemble the compact payload the alpha dashboard renders from."""
+    from MapElo import _mhub_load
+    hub = _mhub_load()
+    lb = hub.get("leaderboard") or {}
+    beta = lb.get("beta") or 0.33
+    teams = lb.get("teams", [])
+    today = _datetime.date.today().isoformat()
+
+    # Power rankings — rating + an intuitive "expected map win vs an average
+    # VCT team" percentage (sigmoid of the snapshot-calibrated rating), region,
+    # and last-5 form.
+    rankings = []
+    for t in teams:
+        rating = t.get("rating", 0.0)
+        rankings.append({
+            "rank": t.get("rank"),
+            "org": t["org"],
+            "region": t.get("region", ""),
+            "rating": round(rating, 2),
+            "w": t.get("w", 0), "l": t.get("l", 0),
+            "winpct": round(100.0 / (1.0 + _math.exp(-beta * rating))),
+            # Full last-5 match objects (newest first) so each dot can show the
+            # same BenPom match-hover card the chart uses. Reversed + padded in UI.
+            "form": (t.get("recent_matches") or [])[:5],
+        })
+
+    # Recent matches — already carry pre-match (morning-of) series odds + result.
+    recent = []
+    _past_sorted = sorted((hub.get("past_matches") or []),
+                          key=lambda x: ((x.get("date") or ""), x.get("match_id") or 0),
+                          reverse=True)
+    for m in _past_sorted[:140]:
+        recent.append({k: m.get(k) for k in (
+            "org_a", "org_b", "date", "event", "format", "region",
+            "rating_a", "rating_b",
+            "win_prob_a", "win_prob_b", "actual_winner", "actual_score", "gf_upper")})
+
+    # Upcoming matches — show everything scheduled within ~a month ahead
+    # (soonest first, no count cap). Closed-form series win prob from morning
+    # ratings (β = 0.17, same per-map sigmoid the rest of the model uses). The
+    # Modern Hub's MC veto sim is authoritative; cards link there for the full
+    # picture.
+    try:
+        _horizon = (_datetime.date.fromisoformat(today) + _datetime.timedelta(days=31)).isoformat()
+    except Exception:
+        _horizon = "9999-12-31"
+    upcoming = []
+    for m in (hub.get("upcoming") or []):
+        md = m.get("date") or ""
+        if md and md > _horizon:        # beyond the one-month window
+            continue
+        ra, rb = m.get("rating_a"), m.get("rating_b")
+        wp = None
+        if ra is not None and rb is not None:
+            p = 1.0 / (1.0 + _math.exp(-0.17 * (ra - rb)))
+            fmt = m.get("format", "bo3")
+            wp = (p**3 * (1 + 3*(1-p) + 6*(1-p)**2)) if fmt in ("bo5", "bo5_gf") \
+                else (p**2 * (3 - 2*p))
+        upcoming.append({
+            "org_a": m.get("org_a"), "org_b": m.get("org_b"),
+            "date": m.get("date"), "time": m.get("time"),
+            "event": m.get("event"), "format": m.get("format"),
+            "region": m.get("region"),
+            "rating_a": ra, "rating_b": rb,
+            "win_prob_a": round(wp, 3) if wp is not None else None,
+            "match_name": m.get("match_name"),
+        })
+    upcoming.sort(key=lambda x: ((x.get("date") or "9999"), x.get("time") or ""))
+
+    # International events (Masters/Champions) span every region, so their matches
+    # shouldn't inherit a single team's region — tag them "International".
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS as _AE2
+        _intl_labels = {e.get("label", e["id"]) for e in _AE2
+                        if "International" in (e.get("regions") or {})}
+    except Exception:
+        _intl_labels = set()
+    for _m in recent:
+        if _m.get("event") in _intl_labels:
+            _m["region"] = "International"
+    for _m in upcoming:
+        if _m.get("event") in _intl_labels:
+            _m["region"] = "International"
+
+    live, nxt, last = _alpha_event_context(hub.get("event_bands") or [], today)
+    event = None
+    if live:
+        event = {"status": "live", "label": live["label"],
+                 "start": live["start"], "end": live["end"]}
+    elif nxt:
+        event = {"status": "upcoming", "label": nxt["label"], "start": nxt["start"],
+                 "end": nxt["end"], "days": _alpha_days_between(today, nxt["start"])}
+    elif last:
+        event = {"status": "recent", "label": last["label"],
+                 "start": last["start"], "end": last["end"]}
+    last_event = {"label": last["label"], "end": last["end"]} if last else None
+    next_event = ({"label": nxt["label"], "start": nxt["start"],
+                   "days": _alpha_days_between(today, nxt["start"])} if nxt else None)
+
+    # Player leaderboard — top by VLR rating at the most recent event with data.
+    player_stats, players_event, players_event_id = [], None, None
+    try:
+        from EventLeaderboards import (load_event, _most_recent_event_with_data,
+                                       get_all, _ensure_headshots_loaded)
+        _ensure_headshots_loaded()
+        ev = _most_recent_event_with_data()
+        cache = load_event(ev)
+
+        def _rnd(p):
+            try:
+                return int(float(p.get("Rnd", 0)))
+            except Exception:
+                return 0
+        # Top players across a few different stats (mini-leaderboard each).
+        for _col, _label in (("R2.0", "VLR Rating"), ("KAST", "KAST"),
+                             ("HS%", "Headshot %"), ("FIWR", "First Duel Win %")):
+            try:
+                allp = get_all(cache, _col)
+                picked = [p for p in allp if _rnd(p) >= 80][:5] or allp[:5]
+                leaders = [{"name": p.get("Player"), "org": p.get("Org", ""),
+                            "region": p.get("Region", ""),
+                            "headshot": p.get("HeadshotURL", ""),
+                            "profile": p.get("ProfileURL", ""),
+                            "value": p.get(_col)} for p in picked]
+                if leaders:
+                    player_stats.append({"stat": _col, "label": _label, "leaders": leaders})
+            except Exception:
+                pass
+        players_event = ev.get("label")
+        players_event_id = ev.get("id")
+    except Exception:
+        pass
+
+    # 2026 season timeline — every non-CN-only 2026 event, tagged done/live/next.
+    season = []
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS
+        seen = set()
+        for e in ALL_EVENTS:
+            if e.get("year") != 2026 or list(e.get("regions", {}).keys()) == ["CN"]:
+                continue
+            lbl = (e.get("label", "") or "").replace("2026 ", "")
+            if lbl in seen:
+                continue
+            seen.add(lbl)
+            st, en = e.get("start", ""), e.get("end", "")
+            status = "done" if en and en < today else (
+                "live" if (st <= today <= en) else "upcoming")
+            season.append({"label": lbl, "start": st, "end": en, "status": status,
+                           "intl": list(e.get("regions", {}).keys()) == ["International"]})
+        season.sort(key=lambda x: x["start"])
+    except Exception:
+        season = []
+
+    # event_id → label, for the match-hover card event tag.
+    event_labels = {}
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+        event_labels = {e["id"]: e.get("label", e["id"]) for e in _AE}
+    except Exception:
+        pass
+
+    orgs = ({r["org"] for r in rankings}
+            | {x for m in recent for x in (m["org_a"], m["org_b"])}
+            | {x for m in upcoming for x in (m["org_a"], m["org_b"])}
+            | {l["org"] for s in player_stats for l in s["leaders"]}
+            | {x for r in rankings for m in r["form"] for x in (m.get("winner"), m.get("loser"))})
+    colors = {o: ALPHA_TEAM_COLORS.get(o, "#8a8a8a") for o in orgs if o}
+    logos = {o: ALPHA_LOGOS.get(o) for o in orgs if o and ALPHA_LOGOS.get(o)}
+
+    return {
+        "as_of": hub.get("as_of_date"), "today": today, "beta": beta,
+        "event": event, "last_event": last_event, "next_event": next_event,
+        "season": season,
+        "rankings": rankings, "recent": recent, "upcoming": upcoming,
+        "player_stats": player_stats, "players_event": players_event,
+        "players_event_id": players_event_id,
+        "event_labels": event_labels,
+        "colors": colors, "logos": logos,
+    }
+
+
+def _build_team_profile(org):
+    """Fast team-profile payload (no scrape) for /team/<org>: BenPom rating,
+    global rank, record, recent matches (with maps), best/worst maps, roster."""
+    from MapElo import _mhub_load
+    hub = _mhub_load()
+    lb = hub.get("leaderboard") or {}
+    teams = lb.get("teams", [])
+    t = next((x for x in teams if x.get("org") == org), None)
+    if not t:
+        return None
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+        elabels = {e["id"]: e.get("label", e["id"]) for e in _AE}
+    except Exception:
+        elabels = {}
+    # Season rating trajectory for this org (one point per timeline checkpoint).
+    traj = []
+    for cp in (hub.get("chart") or {}).get("checkpoints", []):
+        rr = (cp.get("ratings") or {}).get(org)
+        if rr is not None:
+            traj.append({"d": cp.get("date", ""), "r": round(float(rr), 2)})
+    # Every match this org played (for the per-map game breakdown — same source the
+    # Modern Hub's map drill-down uses). Keep just the fields the breakdown needs.
+    org_events = []
+    for me in (hub.get("chart") or {}).get("match_events", []):
+        if me.get("winner") == org or me.get("loser") == org:
+            org_events.append({k: me.get(k) for k in
+                ("date", "event_id", "winner", "loser", "match_id", "maps")})
+    opp_orgs = {(me["loser"] if me.get("winner") == org else me.get("winner"))
+                for me in org_events}
+    # Every event relevant to this team's region (its own region's events + ALL
+    # internationals), with official start/end dates — so the season-trajectory
+    # graph can mark each event's start AND end, INCLUDING internationals the team
+    # didn't attend (e.g. a team that skipped Masters still gets the Masters band).
+    team_region = t.get("region", "")
+    season_events = []
+    for e in _AE:
+        regs = e.get("regions") or {}
+        if ("International" in regs) or (team_region and team_region in regs):
+            season_events.append({
+                "id": e["id"], "label": e.get("label", e["id"]),
+                "start": e.get("start", ""), "end": e.get("end", ""),
+            })
+    season_events.sort(key=lambda x: x.get("start", ""))
+    # Colors/logos for this team + every opponent it has faced
+    orgs = ({org} | {m.get("opponent") for m in (t.get("recent_matches") or [])}
+            | opp_orgs)
+    return {
+        "org": org, "region": t.get("region", ""),
+        "rating": round(t.get("rating", 0.0), 2), "rank": t.get("rank"),
+        "n_teams": len(teams), "w": t.get("w", 0), "l": t.get("l", 0),
+        "season": (lb.get("as_of_date") or "")[:4],
+        "beta": lb.get("beta", 0.3237),
+        "all_maps": t.get("all_maps") or [],
+        "best_maps": (t.get("best_maps") or [])[:3],
+        "worst_maps": (t.get("worst_maps") or [])[:3],
+        "recent": (t.get("recent_matches") or [])[:4],
+        "form": (t.get("recent_matches") or [])[:5],
+        "roster": (t.get("roster") or [])[:6],
+        "traj": traj,
+        "events": org_events,
+        "season_events": season_events,
+        "event_labels": elabels,
+        "colors": {o: ALPHA_TEAM_COLORS.get(o, "#8a8a8a") for o in orgs if o},
+        "logos": {o: ALPHA_LOGOS.get(o) for o in orgs if o and ALPHA_LOGOS.get(o)},
+    }
+
 HOME_HTML = """
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +327,10 @@ HOME_HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bobo's VCT Database</title>
+<script>/* Alpha mode is sticky: if the user opted into Alpha, send "/" straight to
+   /alpha so every "back to home" across the site stays in Alpha. Runs before
+   paint to avoid a classic-layout flash. Default (no choice) = classic. */
+try{if(localStorage.getItem('bobo_ui')==='alpha'){location.replace('/alpha');}}catch(e){}</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
@@ -69,6 +372,19 @@ HOME_HTML = """
   .benpom-hero-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5.5vw,3.1rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
   .benpom-hero-desc { padding:18px 24px 20px; text-align:center; text-wrap:balance; }
   .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--soft); line-height:1.55; }
+  /* ── Alpha-UI entry toggle (classic stays the default; this just opens /alpha) ── */
+  .uiswitch{position:fixed;top:16px;right:18px;z-index:60;display:inline-flex;align-items:center;gap:9px;
+            cursor:pointer;user-select:none;background:#fff;border:1px solid #e7e2ee;border-radius:999px;
+            padding:6px 12px;box-shadow:0 3px 14px #0000000f;transition:border-color .2s,box-shadow .2s}
+  .uiswitch:hover{border-color:#d6cce8;box-shadow:0 6px 20px #00000016}
+  .uiswitch .lbl{font-size:.76rem;font-weight:700;color:#a39bb0;transition:color .2s}
+  .uiswitch .lbl.on{color:#16121d}
+  .uitrack{position:relative;width:42px;height:23px;border-radius:999px;background:#e7e2ee;transition:background .25s}
+  .uitrack.alpha{background:#7c4dd6}
+  .uiknob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;
+          box-shadow:0 1px 4px #0003;transition:transform .25s cubic-bezier(.34,1.4,.5,1)}
+  .uitrack.alpha .uiknob{transform:translateX(19px)}
+  @media (max-width:600px){ .uiswitch{top:10px;right:10px;padding:5px 9px;gap:6px} .uiswitch .lbl{font-size:.68rem} }
   /* ── Mobile ─────────────────────────────────────────────── */
   @media (max-width:600px){
     .page { padding:32px 16px; }
@@ -89,6 +405,11 @@ HOME_HTML = """
 </style>
 </head>
 <body>
+<div class="uiswitch" onclick="goAlpha()" title="Try the new Alpha layout — this classic view stays the default">
+  <span class="lbl on">Classic</span>
+  <div class="uitrack"><div class="uiknob"></div></div>
+  <span class="lbl">Alpha</span>
+</div>
 <div class="page">
   <h1><img src="/logo.svg" alt="B" style="height:1.65em;width:auto;vertical-align:-0.2em;margin-left:-0.3em;margin-right:-0.2em;object-fit:contain;cursor:pointer;" onclick="easterEgg()">obo gg</h1>
   <p class="tagline" id="tagline">Misceallneous analyses in the competitive Valorant space</p>
@@ -135,7 +456,7 @@ HOME_HTML = """
         </a>
         <a class="nav-card" href="/articles/over-underperformers/">
           <img class="nav-card-cover" src="/patmen.jpg" alt="Patmen">
-          <div class="nav-card-title">Overperforming in VCT: who's doing it?</div>
+          <div class="nav-card-title">Overperforming in VCT: Who's Doing It?</div>
           <div class="nav-card-desc">Using VCT stats to surface players who are outperforming (or underperforming) their team.</div>
           <div class="nav-card-date">May 4, 2026</div>
           <div class="nav-card-arrow">Read &rarr;</div>
@@ -172,6 +493,15 @@ HOME_HTML = """
   <div style="margin-top:8px;">Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;">ko-fi.com/bobovct</a></div>
 </footer>
 <script>
+function goAlpha(){
+  try{localStorage.setItem('bobo_ui','alpha');}catch(e){}
+  var t=document.querySelector('.uiswitch .uitrack');
+  var labels=document.querySelectorAll('.uiswitch .lbl');
+  if(t)t.classList.add('alpha');
+  if(labels[0])labels[0].classList.remove('on');
+  if(labels[1])labels[1].classList.add('on');
+  setTimeout(function(){location.href='/alpha';},240);
+}
 var EGG_TEXT = "Uxie is N0te's dada";
 var ORIG_TAGLINE = null;
 var eggTimer = null;
@@ -258,6 +588,1098 @@ document.querySelectorAll('.section-title').forEach(function(title) {
 </html>
 """
 
+ALPHA_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobo gg — Alpha</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
+<style>
+  /* Kill the perpetual background animation on this view — it repaints the whole
+     viewport every frame and makes scrolling the long dashboard janky. The
+     static gradient (body::before) stays for the look. */
+  body::after{animation:none !important;}
+  :root{
+    --card:#ffffff; --line:#eceef2; --ink:#16121d; --soft:#6b6478; --faint:#9a93a6;
+    --good:#1f9d55; --bad:#d23b3b; --accent:#7c4dd6;
+    /* Canonical VCT region colors (match .lb-region across the site):
+       EMEA=green, Americas=orange, Pacific=blue, CN=pink/magenta. */
+    --r-emea:#15803d; --r-amer:#c2410c; --r-pac:#1d4ed8; --r-cn:#be185d; --r-int:#666;
+  }
+  *{box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;color:var(--ink);}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px 64px;position:relative;z-index:1}
+
+  /* ── Top bar + nav ── */
+  .atop{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 4px 8px}
+  .abrand{display:flex;align-items:center;gap:9px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:-.02em}
+  .abrand img{height:1.5em;width:auto}
+  .abeta{font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--accent);padding:3px 7px;border-radius:6px}
+  .uiswitch{position:fixed;top:16px;right:18px;z-index:60;display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;background:#fff;border:1px solid #e7e2ee;border-radius:999px;padding:6px 12px;box-shadow:0 3px 14px #0000000f;transition:border-color .2s,box-shadow .2s}
+  .uiswitch:hover{border-color:#d9d2e6}
+  .uiswitch .lbl{font-size:.78rem;font-weight:700;color:var(--faint)}
+  .uiswitch .lbl.on{color:var(--ink)}
+  .uitrack{position:relative;width:42px;height:23px;border-radius:999px;background:var(--accent)}
+  .uiknob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;transform:translateX(19px)}
+  .anav{display:flex;gap:7px;overflow-x:auto;padding:4px 4px 14px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .anav::-webkit-scrollbar{display:none}
+  .anav a{flex:0 0 auto;font-size:.82rem;font-weight:700;color:var(--soft);background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;transition:color .16s,border-color .16s,background .16s;white-space:nowrap}
+  .anav a:hover{color:var(--ink);border-color:#d9d2e6;background:#faf8ff}
+  .anav a.cta{color:#fff;background:var(--accent);border-color:var(--accent)}
+  .anav a.cta:hover{background:#6c3fc6}
+  /* ── Home title (the fixed top nav carries the brand; this is the page's own
+        hero header so /alpha doesn't start cramped right under the nav bar) ── */
+  .ahome{padding:16px 4px 22px;text-align:center}
+  .ahome-brand{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.6rem;letter-spacing:-.03em;color:var(--ink);line-height:1}
+  .ahome-logo{height:1.65em;width:auto;vertical-align:-0.2em;margin-left:-0.3em;margin-right:-0.2em;object-fit:contain}
+  .ahome-badge{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--accent);padding:4px 9px;border-radius:7px;vertical-align:middle;margin-left:10px;transform:translateY(-3px)}
+  @media (max-width:600px){.ahome{padding:10px 4px 16px}.ahome-brand{font-size:1.95rem}}
+
+  /* ── Banner + season timeline ── */
+  .ebanner{background:linear-gradient(135deg,#1d1330 0%,#2a1c44 55%,#3a1f55 100%);border-radius:22px;padding:24px 28px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 34px #1d133033;margin-bottom:24px}
+  .ebanner::after{content:'';position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#a87bff2e,transparent 70%);pointer-events:none}
+  .epill{display:inline-flex;align-items:center;gap:7px;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:#ffffff1c;margin-bottom:12px}
+  .epill .dot{width:7px;height:7px;border-radius:50%;background:#ffd56b}
+  .epill.live .dot{background:#41f59a;animation:lpulse 1.6s infinite}
+  @keyframes lpulse{0%{box-shadow:0 0 0 0 #41f59a99}70%{box-shadow:0 0 0 7px #41f59a00}100%{box-shadow:0 0 0 0 #41f59a00}}
+  .etitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(1.9rem,4vw,2.7rem);letter-spacing:-.02em;line-height:1.04}
+  .esub{margin-top:7px;font-size:.92rem;color:#e6dcf5;font-weight:500}
+  .ebtns{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+  .ebtn{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:700;padding:9px 15px;border-radius:11px;background:#fff;color:#241636;transition:opacity .2s}
+  .ebtn:hover{opacity:.88}
+  .ebtn.ghost{background:#ffffff1f;color:#fff}
+  .timeline{display:flex;align-items:flex-start;margin-top:22px;position:relative;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .timeline::-webkit-scrollbar{display:none}
+  .tnode{flex:1 1 0;min-width:82px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+  .tnode::before{content:'';position:absolute;top:8px;left:-50%;width:100%;height:2px;background:#ffffff22}
+  .tnode:first-child::before{display:none}
+  .tnode.done::before,.tnode.live::before{background:#a98bff}
+  .tdot{width:17px;height:17px;border-radius:50%;background:#ffffff2e;z-index:1;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:#3a1f55;font-weight:800}
+  .tnode.done .tdot{background:#a98bff}
+  .tnode.live .tdot,.tnode.next .tdot{background:#fff;box-shadow:0 0 0 4px #ffffff30}
+  .tlbl{margin-top:7px;font-size:.68rem;font-weight:700;color:#cdbfe6;line-height:1.2}
+  .tnode.next .tlbl,.tnode.live .tlbl{color:#fff}
+  .tdate{font-size:.6rem;color:#9d8fbb;font-weight:600;margin-top:2px}
+
+  /* ── Panels / grid ── */
+  .agrid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start}
+  #rankings-panel{position:sticky;top:14px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 20px 14px;box-shadow:0 4px 22px #0000000a}
+  .phead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+  .ptitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:-.01em}
+  .plink{font-size:.82rem;font-weight:800;color:var(--accent);background:#f1ebfb;border:1px solid #e4d9f6;padding:7px 15px;border-radius:999px;white-space:nowrap;flex-shrink:0;transition:background .15s,transform .12s,box-shadow .15s}
+  .plink:hover{background:#e7dbfa;transform:translateY(-1px);box-shadow:0 4px 13px rgba(124,77,214,.2)}
+  .psub{font-size:.74rem;color:var(--faint);font-weight:600;margin:0 0 12px}
+  .seg-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .seg{display:inline-flex;background:#f1eef6;border-radius:10px;padding:3px;gap:2px}
+  .mregion{font-family:inherit;font-size:.78rem;font-weight:700;color:var(--soft);background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 11px;cursor:pointer;transition:border-color .15s}
+  .mregion:hover{border-color:#d6cce8}
+  .seg button{border:0;background:transparent;font-family:inherit;font-size:.8rem;font-weight:700;color:var(--soft);padding:6px 14px;border-radius:8px;cursor:pointer;transition:color .16s,background .16s}
+  .seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 5px #00000012}
+
+  /* ── Match cards ── */
+  .mcard{border:1px solid var(--line);border-radius:15px;padding:13px 15px;margin-bottom:11px;transition:border-color .16s,background .16s;background:#fff}
+  .mcard:hover{border-color:#e0d8ee;background:#fcfbff}
+  .mc-meta{display:flex;align-items:center;gap:8px;font-size:.7rem;color:var(--faint);font-weight:600;margin-bottom:9px;flex-wrap:wrap}
+  .mc-meta .mtag{background:#f3eefb;color:#6a4caf;padding:2px 7px;border-radius:6px;font-weight:700}
+  .mc-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+  .mc-team{display:flex;align-items:center;gap:9px;min-width:0;color:inherit;text-decoration:none;border-radius:9px;transition:background .15s;justify-self:start}
+  a.mc-team{padding:3px 6px;margin:-3px -6px}
+  a.mc-team:hover{background:rgba(124,77,214,.09)}   /* clear "clickable team" affordance, no stray underline */
+  .mc-team.b{flex-direction:row-reverse;text-align:right;justify-self:end}   /* shrink link to its content, not the whole column */
+  .mc-logo{width:30px;height:30px;border-radius:7px;object-fit:contain;flex-shrink:0}
+  .mc-init{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:#fff;flex-shrink:0}
+  .mc-name{font-weight:800;font-size:.95rem;letter-spacing:-.01em;line-height:1.1}
+  .mc-rat{font-size:.68rem;color:var(--soft);font-weight:600}
+  .mc-win{font-size:1.18rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;text-align:center;min-width:54px}
+  .mc-win .vs{font-size:.6rem;color:var(--faint);font-weight:700;display:block;letter-spacing:.1em}
+  .mc-win .mc-vs{color:#b9b1c6;letter-spacing:.04em}
+  .mc-bar{height:22px;border-radius:7px;display:flex;overflow:hidden;margin:11px 0 7px;background:#eee;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.72rem}
+  .mc-seg{display:flex;align-items:center;justify-content:center;height:100%;white-space:nowrap;min-width:0;padding:0 6px}
+  .mc-seg.a{background:linear-gradient(90deg,#9b7be6,#7c4dd6);color:#fff}
+  .mc-seg.b{background:#e2dcec;color:#6b6478}
+  .mc-foot{display:flex;align-items:center;justify-content:center;gap:9px;font-size:.8rem;font-weight:700}
+  a.mc-simlink{color:inherit;text-decoration:none}
+  a.mc-simlink:hover .mc-final{color:var(--accent)}
+  .mc-pager{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 0 4px;color:var(--soft);font-size:.74rem;font-weight:700}
+  .mc-pager button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-size:1rem;font-weight:700;cursor:pointer;line-height:1;transition:border-color .15s,background .15s}
+  .mc-pager button:hover:not(:disabled){border-color:#d6cce8;background:#faf8ff}
+  .mc-pager button:disabled{opacity:.35;cursor:default}
+  .mc-score{font-weight:800}
+  .mc-res{font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px}
+  .mc-res.win{background:#e7f6ec;color:var(--good)}
+  .mc-res.upset{background:#fdeaea;color:var(--bad)}
+  .mc-final{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:800}
+  .empty{padding:26px 12px;text-align:center;color:var(--faint);font-size:.86rem;font-weight:600;line-height:1.7}
+  /* match-body fade cap so the panel never grows too tall when a card expands */
+  #match-body{overflow-y:auto;scrollbar-width:thin}
+  #match-body.capped{-webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(to bottom,#000 calc(100% - 22px),transparent)}
+  #match-body::-webkit-scrollbar{width:6px}#match-body::-webkit-scrollbar-thumb{background:#dcd5e8;border-radius:6px}
+  /* upcoming card expand */
+  .mcard.upc{cursor:pointer}
+  .mc-expand-hint{text-align:center;font-size:.6rem;color:#c3bcd0;margin-top:8px;letter-spacing:.06em;font-weight:700;text-transform:uppercase;cursor:pointer}
+  .mcard.upc:hover .mc-expand-hint{color:var(--accent)}
+  .mc-details{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.22,1,.36,1)}
+  .mc-details-inner{overflow:hidden;min-height:0;transition:padding-top .32s ease,margin-top .32s ease}
+  .mcard.open .mc-details{grid-template-rows:1fr}
+  .mcard.open .mc-details-inner{padding-top:13px;margin-top:11px;border-top:1px solid rgba(0,0,0,.07)}
+  .h2h-load{text-align:center;color:var(--faint);font-size:.78rem;font-weight:600;padding:10px}
+  .h2h-head{text-align:center;font-size:.92rem;font-weight:700;margin-bottom:12px}
+  .h2h-head b{font-weight:800}
+  .h2h-sub{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+  .h2h-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:start}
+  .h2h-col{text-align:center;min-width:0}
+  .h2h-col.b{}
+  .h2h-vs{align-self:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.72rem;color:var(--faint)}
+  .h2h-org{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:.95rem;color:inherit;text-decoration:none}
+  .h2h-org:hover span{text-decoration:underline}
+  .h2h-logo{width:24px;height:24px;object-fit:contain;border-radius:5px}
+  .h2h-init{width:24px;height:24px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:800;color:#fff}
+  .h2h-meta{display:flex;align-items:center;justify-content:center;gap:7px;margin:5px 0 6px}
+  .h2h-rank{font-size:.7rem;font-weight:700;color:var(--soft)}
+  .h2h-rat{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.25rem;line-height:1}
+  .h2h-rat span{display:block;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .h2h-rat.pos{color:#16a34a}.h2h-rat.neg{color:#c0392b}
+  .h2h-form{display:flex;justify-content:center;gap:4px;margin:8px 0}
+  .h2h-dot{width:8px;height:8px;border-radius:50%}.h2h-dot.w{background:var(--good)}.h2h-dot.l{background:#e6b0b0}
+  .h2h-mtitle{font-size:.74rem;font-weight:800;letter-spacing:.03em;color:var(--ink);margin:11px 0 6px}
+  .h2h-map{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:.74rem;font-weight:600;padding:2px 0}
+  .h2h-map b{font-family:'Plus Jakarta Sans',sans-serif}.h2h-map b.pos{color:#16a34a}.h2h-map b.neg{color:#c0392b}
+  .h2h-na{font-size:.72rem;color:var(--faint);font-weight:600}
+  .h2h-simlink{display:block;text-align:center;margin-top:12px;font-size:.76rem;font-weight:800;color:var(--accent)}
+  .h2h-simlink:hover{text-decoration:underline}
+
+  /* ── Rankings — aligned columns ── */
+  .rhead,.rrow{display:grid;grid-template-columns:26px 32px minmax(0,1fr) 64px 44px 58px;align-items:center;gap:10px}
+  .rhead{padding:0 4px 8px;border-bottom:1px solid #eee;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .rhead .rh-r{text-align:center}.rhead .rh-form{text-align:center}.rhead .rh-pct,.rhead .rh-rat{text-align:right}
+  .rrow{padding:9px 4px;border-bottom:1px solid #f4f2f8}
+  .rrow:last-child{border-bottom:0}
+  .rrow:first-child .rrank{color:#d9a300}
+  .rrank{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.92rem;color:var(--faint);text-align:center}
+  .rlogo{width:32px;height:32px;border-radius:7px;object-fit:contain}
+  .rinit{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:800;color:#fff}
+  .rteam{display:flex;align-items:center;gap:8px;min-width:0}
+  .rorg{font-weight:800;font-size:.95rem;letter-spacing:-.01em}
+  .rbadge{font-size:.56rem;font-weight:800;letter-spacing:.03em;padding:2px 7px;border-radius:5px;flex:0 0 auto}
+  .rbadge.emea{background:rgba(22,163,74,.14);color:#15803d}
+  .rbadge.americas{background:rgba(234,88,12,.14);color:#c2410c}
+  .rbadge.pacific{background:rgba(37,99,235,.14);color:#1d4ed8}
+  .rbadge.cn{background:rgba(219,39,119,.14);color:#be185d}
+  .rbadge.int{background:rgba(0,0,0,.06);color:#666}
+  .rcell-link{display:inline-flex;align-items:center;justify-content:center;justify-self:center}
+  .rteam-link{display:inline-flex;align-items:center;gap:8px;min-width:0;color:inherit;text-decoration:none;justify-self:start}
+  .rteam-link:hover .rorg{text-decoration:underline}
+  .rform{display:flex;gap:5px;justify-content:center;align-items:center}
+  .fdot{width:9px;height:9px;border-radius:50%;display:block;flex:0 0 9px;padding:0;box-sizing:border-box;transition:transform .12s}
+  a.fdot:hover{transform:scale(1.35)}
+  .fdot.w{background:var(--good)}
+  .fdot.l{background:#e6b0b0}
+  .fdot.empty{background:#edebf2}
+  .rpct{font-size:.82rem;color:var(--soft);font-weight:700;text-align:right}
+  .rrat{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.0rem;text-align:right}
+  .rlegend{font-size:.66rem;color:var(--faint);font-weight:600;padding:11px 4px 2px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  /* Match-hover card — copied from the Modern Hub chart dot tooltip */
+  #dotTooltip{position:fixed;z-index:200;pointer-events:none;min-width:240px;max-width:340px;background:#f3edfc;border:1px solid #e1d6f4;border-radius:14px;padding:16px 20px;box-shadow:0 18px 50px rgba(40,20,70,.22);opacity:0;transform:translateY(8px);transition:opacity .15s ease,transform .15s ease;left:0;top:0}
+  #dotTooltip.visible{opacity:1;transform:translateY(0)}
+  #dotTooltip .popup-inner{text-align:center}
+  #dotTooltip .popup-event-label{font-size:.64rem;font-weight:800;color:#6a35b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+  #dotTooltip .popup-teams{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px}
+  #dotTooltip .popup-team-block{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:54px}
+  #dotTooltip .popup-logo{width:38px;height:38px;object-fit:contain}
+  #dotTooltip .popup-team-name{font-size:.68rem;color:#241a2e;font-weight:700}
+  #dotTooltip .popup-score-block{display:flex;flex-direction:column;align-items:center;gap:2px}
+  #dotTooltip .popup-score{font-size:1.7rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;line-height:1}
+  #dotTooltip .popup-score.w{color:#16a34a}#dotTooltip .popup-score.l{color:#dc2626}
+  #dotTooltip .popup-vs-label{font-size:.6rem;color:#6b6478;font-weight:600}
+  #dotTooltip .popup-date{color:#544c63;font-size:.66rem;font-weight:600;margin-bottom:3px}
+  #dotTooltip .popup-delta{font-size:.8rem;font-weight:700;margin-bottom:10px;color:#241a2e}
+  #dotTooltip .popup-delta .pos{color:#16a34a}#dotTooltip .popup-delta .neg{color:#c0392b}
+  #dotTooltip .popup-maps-table{width:100%;border-collapse:collapse;margin-top:2px}
+  #dotTooltip .popup-maps-table th{font-size:.58rem;font-weight:800;color:#6a35b8;text-transform:uppercase;letter-spacing:.07em;padding:0 6px 5px;text-align:center}
+  #dotTooltip .popup-maps-table td{padding:4px 6px;font-size:.74rem;color:#2a1f2d;border-top:1px solid #e1d6f4;text-align:center}
+  #dotTooltip .popup-map-name{font-weight:700;color:#2a1f2d;text-align:center}
+  #dotTooltip .popup-map-score{text-align:center;font-variant-numeric:tabular-nums;font-weight:700}
+  #dotTooltip .popup-map-score.w{color:#16a34a}#dotTooltip .popup-map-score.l{color:#dc2626}
+  #dotTooltip .popup-map-diff{text-align:center;font-size:.7rem;font-weight:700;color:#4a4357}
+  .rlegend i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;vertical-align:middle}
+  .rlegend i.w{background:var(--good)}
+
+  /* ── Player leaders — one mini-leaderboard per stat ── */
+  .players{margin-top:22px}
+  .pl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .pl-card{border:1px solid var(--line);border-radius:15px;padding:13px 13px 9px;background:#fff}
+  .pl-stat{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:-.01em;color:var(--ink);padding:0 4px 9px;border-bottom:1px solid var(--line);margin-bottom:5px}
+  .plr{display:flex;align-items:center;gap:9px;padding:6px 5px;border-radius:9px;color:inherit;text-decoration:none;transition:background .14s}
+  .plr:hover{background:#faf8ff}
+  .plr-n{font-family:'Plus Jakarta Sans',sans-serif;font-size:.74rem;font-weight:800;color:var(--faint);width:14px;text-align:center;flex:0 0 auto}
+  .plr-av{width:30px;height:30px;border-radius:50%;object-fit:cover;object-position:top center;background:#efeaf6;flex:0 0 auto;box-shadow:0 0 0 2px var(--ring,#eee)}
+  .plr-av-ph{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.64rem;font-weight:800;color:#fff;flex:0 0 auto}
+  .plr-info{display:flex;flex-direction:column;min-width:0;flex:1}
+  .plr-name{font-weight:700;font-size:.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .plr-meta{font-size:.65rem;color:var(--soft);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .plr-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.92rem;flex:0 0 auto;font-variant-numeric:tabular-nums}
+
+  /* ── Explore ── */
+  #explore{margin-top:30px}
+  .sec-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.3rem;letter-spacing:-.01em;margin:0 2px 14px}
+  /* Match the classic home nav-cards exactly: centered, 24px radius, full-bleed
+     cover, generous padding, bottom action link. */
+  .acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:20px;margin-bottom:34px}
+  .acard,.dbtile{background:#fff;border-radius:24px;padding:32px 24px 26px;text-decoration:none;color:var(--ink);box-shadow:0 4px 24px #0000000a;transition:transform .2s,box-shadow .2s;text-align:center;display:flex;flex-direction:column}
+  .acard:hover,.dbtile:hover{transform:translateY(-6px);box-shadow:0 16px 40px #00000014}
+  .acard img{width:calc(100% + 48px);margin:-32px -24px 20px;height:140px;object-fit:cover;object-position:center top;display:block;border-radius:24px 24px 0 0;background:#1a0f24}
+  .acard .ab{display:flex;flex-direction:column;flex:1}
+  .acard .at,.dbtile .dt{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.08rem;margin-bottom:8px;letter-spacing:-.01em;overflow-wrap:anywhere}
+  .acard .ad,.dbtile .dd{font-size:.82rem;color:var(--soft);line-height:1.55}
+  .acard .adate{margin-top:10px;font-size:.7rem;color:var(--soft);font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+  .acard .ab::after{content:'Read →';margin-top:auto;padding-top:20px;font-size:.85rem;color:#9a7ab4;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;letter-spacing:.04em}
+  .dbtiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:20px}
+  .dbtile .dd{flex:1}
+  .dbtile .darrow{margin-top:auto;padding-top:20px;font-size:.85rem;color:#9a7ab4;font-weight:800;letter-spacing:.04em;font-family:'Plus Jakarta Sans',sans-serif}
+
+  footer{text-align:center;padding:30px 18px;color:var(--faint);font-size:.74rem;font-weight:500;position:relative;z-index:1}
+
+  @media (max-width:860px){
+    .agrid{grid-template-columns:1fr}
+    #rankings-panel{position:static}
+    .wrap{padding:0 14px 48px}
+  }
+  @media (max-width:560px){
+    .uiswitch{top:10px;right:10px;padding:5px 9px;gap:6px}
+    .uiswitch .lbl{display:none}
+    .podium{grid-template-columns:1fr}
+    .plist{grid-template-columns:1fr}
+    .mc-name{font-size:.88rem}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Top nav is the shared, app-wide Alpha bar injected by _inject_alpha_nav,
+       so it is byte-identical on every page. Do not add a bespoke nav here.
+       (Do not name the injected script file here — the injector guards on that
+       string and would skip injection if it appeared in this page's body.) -->
+
+  <header class="ahome">
+    <div class="ahome-brand"><img class="ahome-logo" src="/logo.svg" alt="B">obo gg <span class="ahome-badge">Alpha</span></div>
+  </header>
+
+  <div id="banner"></div>
+
+  <div class="agrid">
+    <div class="panel" id="matches-panel">
+      <div class="phead"><div class="ptitle">Matches</div><a class="plink" href="/mapelo/modern/">Live hub &rarr;</a></div>
+      <div class="seg-row">
+        <div class="seg" id="match-seg"><button data-tab="upcoming" class="on">Upcoming</button><button data-tab="recent">Recent</button></div>
+        <select id="match-region" class="mregion" title="Filter by region">
+          <option value="All">All Regions</option>
+          <option value="EMEA">EMEA</option>
+          <option value="Americas">Americas</option>
+          <option value="Pacific">Pacific</option>
+          <option value="CN">China</option>
+          <option value="International">International</option>
+        </select>
+      </div>
+      <div id="match-body"></div>
+    </div>
+    <div class="panel" id="rankings-panel">
+      <div class="phead"><div class="ptitle">BenPom Power Rankings</div><a class="plink" href="/mapelo/modern/">Full current rankings &rarr;</a></div>
+      <div class="psub">Net rating &middot; top 15 currently</div>
+      <div class="rhead"><div class="rh-r">#</div><div></div><div>Team</div><div class="rh-form">Last 5</div><div class="rh-pct">Win%</div><div class="rh-rat">Rating</div></div>
+      <div id="rankings-body"></div>
+      <div class="rlegend"><span><i class="w"></i><i class="l" style="background:#e6b0b0"></i> last 5 &middot; oldest&rarr;newest &middot; click a dot for the match</span><span>Win% = expected map win vs an average team</span></div>
+    </div>
+  </div>
+
+  <div class="panel players" id="players-panel">
+    <div class="phead"><div class="ptitle">Player Leaders</div><a class="plink" href="/vct/">Full Leaderboards &rarr;</a></div>
+    <div class="psub" id="players-sub"></div>
+    <div id="players-body"></div>
+  </div>
+
+  <div id="explore">
+    <div class="sec-title">Articles</div>
+    <div class="acards">
+      <a class="acard" href="/articles/masters-london-playoffs-preview/"><img src="/chronlondon.jpg" alt=""><div class="ab"><div class="at">Masters London Playoffs Preview</div><div class="ad">A brief statistical glimpse into the final stage of Masters London.</div><div class="adate">Jun 10, 2026</div></div></a>
+      <a class="acard" href="/articles/masters-london-preview/"><img src="/prxpacstage1win.jpg" alt=""><div class="ab"><div class="at">Masters London Tournament Preview</div><div class="ad">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div><div class="adate">Jun 2, 2026</div></div></a>
+      <a class="acard" href="/articles/americas-stage1-playoffs-preview/"><img src="/loudlev26.jpg" alt=""><div class="ab"><div class="at">Americas Stage 1 Playoffs Preview</div><div class="ad">LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.</div><div class="adate">May 12, 2026</div></div></a>
+      <a class="acard" href="/articles/over-underperformers/"><img src="/patmen.jpg" alt=""><div class="ab"><div class="at">Overperforming in VCT: Who's Doing It?</div><div class="ad">Surfacing the players outperforming (or underperforming) their team.</div><div class="adate">May 4, 2026</div></div></a>
+    </div>
+    <div class="sec-title">Stats &amp; Databases</div>
+    <div class="dbtiles">
+      <a class="dbtile" href="/highs/"><div class="dt">All-Time Highs &amp; Lows</div><div class="dd">The best and worst individual performances across VCT.</div><div class="darrow">Open &rarr;</div></a>
+      <a class="dbtile" href="/vct/"><div class="dt">Event Leaderboards</div><div class="dd">Per-event player leaderboards, percentiles, and best matches.</div><div class="darrow">Open &rarr;</div></a>
+      <a class="dbtile" href="/mapelo/pythagorean/"><div class="dt">VCT Pythagorean</div><div class="dd">A Pythagorean win% model hand-tuned for VCT's domestic strength.</div><div class="darrow">Open &rarr;</div></a>
+      <a class="dbtile" href="/mapelo/"><div class="dt">BenPom</div><div class="dd">A statistical rating system for VCT teams, past and present.</div><div class="darrow">Open &rarr;</div></a>
+    </div>
+  </div>
+</div>
+<div id="dotTooltip"><div id="dotTooltipContent" class="popup-inner"></div></div>
+<footer>Like my work? Tips are appreciated! <a href="https://ko-fi.com/bobovct" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">ko-fi.com/bobovct</a></footer>
+<script>
+var DATA = {{ data_json | safe }};
+var COL = DATA.colors || {}, LOGOS = DATA.logos || {};
+var REGION_COLOR = {EMEA:'var(--r-emea)',Americas:'var(--r-amer)',Pacific:'var(--r-pac)',CN:'var(--r-cn)',International:'var(--r-int)'};
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function col(org){return COL[org]||'#8a8a8a';}
+function regColor(r){return REGION_COLOR[r]||'var(--r-int)';}
+function regClass(r){return ({EMEA:'emea',Americas:'americas',Pacific:'pacific',CN:'cn'})[r]||'int';}
+function fmtR(r){if(r==null||r==='')return '';var n=Number(r);return (n>=0?'+':'')+n.toFixed(2);}
+function fmtFmt(f){return f==='bo5_gf'?'Bo5 GF':String(f||'').toUpperCase().replace('BO','Bo');}
+var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function shortDate(d){if(!d)return '';var p=String(d).split('-');if(p.length<3)return d;return MO[+p[1]-1]+' '+(+p[2]);}
+function logoOrInit(org,logoCls,initCls){
+  var f=LOGOS[org];
+  if(f)return '<img class="'+logoCls+'" src="/logos/'+esc(f)+'" alt="'+esc(org)+'" loading="lazy">';
+  return '<div class="'+initCls+'" style="background:'+col(org)+'">'+esc(String(org||'').slice(0,3))+'</div>';
+}
+function imgFail(img){img.style.display='none';var n=img.nextElementSibling;if(n)n.style.display='flex';}
+function goClassic(){try{localStorage.setItem('bobo_ui','classic');}catch(e){}location.href='/';}
+
+/* ── Banner + season timeline ── */
+function renderBanner(){
+  var e=DATA.event, le=DATA.last_event;
+  var pillCls='', pillTxt='Upcoming', title='VCT 2026', sub='Season in progress';
+  if(e && e.status==='live'){pillCls='live';pillTxt='Live now';title=e.label;sub='In progress &middot; '+shortDate(e.start)+' – '+shortDate(e.end);}
+  else if(e && e.status==='upcoming'){pillTxt=(e.days!=null?('Starts in '+e.days+' day'+(e.days===1?'':'s')):'Upcoming');title=e.label;sub='Begins '+shortDate(e.start)+(le?' &middot; last: '+esc(le.label)+' ('+shortDate(le.end)+')':'');}
+  else if(e && e.status==='recent'){pillTxt='Most recent';title=e.label;sub='Ended '+shortDate(e.end);}
+  var tl=(DATA.season||[]).map(function(s){
+    var mark=s.status==='done'?'&#10003;':'';
+    return '<div class="tnode '+s.status+'"><span class="tdot">'+mark+'</span><span class="tlbl">'+esc(s.label)+'</span><span class="tdate">'+shortDate(s.start)+'</span></div>';
+  }).join('');
+  document.getElementById('banner').innerHTML='<div class="ebanner">'
+    +'<div class="epill '+pillCls+'"><span class="dot"></span>'+pillTxt+'</div>'
+    +'<div class="etitle">'+esc(title)+'</div>'
+    +'<div class="esub">'+sub+'</div>'
+    +'<div class="ebtns"><a class="ebtn" href="/mapelo/modern/">Open live hub &rarr;</a></div>'
+    +(tl?'<div class="timeline">'+tl+'</div>':'')
+    +'</div>';
+}
+
+/* ── Matches (paginated, 4 per page) ── */
+var PER_PAGE=4, PAGE={upcoming:0,recent:0}, CUR_TAB='upcoming', MATCH_REGION='All';
+var TEAM_HREF=function(org){return '/team/'+encodeURIComponent(org);};
+function probBar(pa){pa=Math.max(0,Math.min(1,pa||0));
+  var a=Math.round(pa*100), b=100-a;
+  return '<div class="mc-bar"><span class="mc-seg a" style="width:'+(pa*100)+'%">'+a+'%</span>'
+    +'<span class="mc-seg b" style="width:'+((1-pa)*100)+'%">'+b+'%</span></div>';}
+function teamSide(org,rating,side,link){
+  var inner=logoOrInit(org,'mc-logo','mc-init')+'<div><div class="mc-name">'+esc(org)+'</div><div class="mc-rat">'+fmtR(rating)+'</div></div>';
+  if(link)return '<a class="mc-team '+side+'" href="'+TEAM_HREF(org)+'" title="'+esc(org)+' profile">'+inner+'</a>';
+  return '<div class="mc-team '+side+'">'+inner+'</div>';}   // non-link (upcoming card expands instead)
+function recentCard(m){
+  var pa=m.win_prob_a||0, aWon=m.actual_winner==='a', favA=pa>=0.5;
+  var favWon=(favA&&aWon)||(!favA&&!aWon), resCls=favWon?'win':'upset', resTxt=favWon?'Result':'Upset';
+  return '<div class="mcard">'
+    +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span><span>&middot;</span><span>'+shortDate(m.date)+'</span></div>'
+    +'<div class="mc-row">'+teamSide(m.org_a,m.rating_a,'a',true)
+    +'<div class="mc-win"><span class="mc-vs">VS</span><span class="vs">PRE-MATCH</span></div>'
+    +teamSide(m.org_b,m.rating_b,'b',true)+'</div>'+probBar(pa)
+    +'<div class="mc-foot"><span class="mc-final">Final</span><span class="mc-score">'+esc(m.org_a)+' '+esc(m.actual_score||'')+' '+esc(m.org_b)+'</span><span class="mc-res '+resCls+'">'+resTxt+'</span></div></div>';}
+function upcomingCard(m,i){
+  var pa=m.win_prob_a;
+  return '<div class="mcard upc" data-ua="'+esc(m.org_a)+'" data-ub="'+esc(m.org_b)+'" data-up="'+(pa!=null?pa:'')+'" data-fmt="'+esc(m.format||'')+'" data-i="'+i+'">'
+    +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span>'+(m.date?'<span>&middot;</span><span>'+shortDate(m.date)+'</span>':'')+'</div>'
+    +'<div class="mc-row">'+teamSide(m.org_a,m.rating_a,'a',true)
+    +'<div class="mc-win"><span class="mc-vs">'+(pa!=null?'VS':'–')+'</span><span class="vs">PROJ</span></div>'
+    +teamSide(m.org_b,m.rating_b,'b',true)+'</div>'+(pa!=null?probBar(pa):'')
+    +'<div class="mc-details"><div class="mc-details-inner" id="ud'+i+'"></div></div>'
+    +'<div class="mc-expand-hint">&#9656; tap for analysis</div></div>';}
+function pager(tab,total){
+  var pages=Math.ceil(total/PER_PAGE); if(pages<=1)return '';
+  var p=PAGE[tab];
+  return '<div class="mc-pager"><button '+(p<=0?'disabled':'')+' onclick="matchPage(-1)">&lsaquo;</button>'
+    +'<span>'+(p+1)+' / '+pages+'</span>'
+    +'<button '+(p>=pages-1?'disabled':'')+' onclick="matchPage(1)">&rsaquo;</button></div>';}
+function _matchList(tab){
+  var list=tab==='upcoming'?(DATA.upcoming||[]):(DATA.recent||[]);
+  if(MATCH_REGION!=='All') list=list.filter(function(m){return m.region===MATCH_REGION;});
+  return list;}
+function matchPage(d){
+  var list=_matchList(CUR_TAB);
+  var pages=Math.max(1,Math.ceil(list.length/PER_PAGE));
+  PAGE[CUR_TAB]=Math.max(0,Math.min(pages-1,PAGE[CUR_TAB]+d));
+  renderMatches(CUR_TAB);
+  var mp=document.getElementById('matches-panel'); if(mp)mp.scrollIntoView({block:'nearest'});}
+function renderMatches(tab){
+  CUR_TAB=tab;
+  var body=document.getElementById('match-body');
+  var list=_matchList(tab);
+  if(!list.length){
+    if(MATCH_REGION!=='All'){
+      body.innerHTML='<div class="empty">No '+esc(MATCH_REGION)+' matches '+(tab==='upcoming'?'scheduled':'recently')+'.<br>Try <b>All Regions</b>.</div>';
+    } else if(tab==='upcoming'){var ne=DATA.next_event;
+      body.innerHTML='<div class="empty">No matches scheduled right now.'+(ne?'<br><b>'+esc(ne.label)+'</b> starts '+shortDate(ne.start)+(ne.days!=null?' ('+ne.days+' days)':'')+'.':'')+'<br>Check <b>Recent</b> for the latest results.</div>';}
+    else body.innerHTML='<div class="empty">No recent matches.</div>';
+    return;}
+  var p=Math.min(PAGE[tab], Math.max(0,Math.ceil(list.length/PER_PAGE)-1));
+  PAGE[tab]=p;
+  var start=p*PER_PAGE, card=(tab==='upcoming')?upcomingCard:recentCard;
+  body.innerHTML=list.slice(start,start+PER_PAGE).map(card).join('')+pager(tab,list.length);
+  body.scrollTop=0; if(typeof _updateMatchCap==='function')_updateMatchCap();}   // fresh page: no card open → clear cap
+
+/* ── Upcoming-card in-place analysis (accordion) ── */
+var TEAM_CACHE={};
+function _fetchTeam(org){
+  if(TEAM_CACHE[org])return Promise.resolve(TEAM_CACHE[org]);
+  return fetch('/api/team/'+encodeURIComponent(org)).then(function(r){return r.json();})
+    .then(function(j){TEAM_CACHE[org]=j;return j;}).catch(function(){return null;});
+}
+function _h2hCol(t,org,side){
+  if(!t)return '<div class="h2h-col '+side+'"><div class="h2h-org">'+esc(org)+'</div><div class="h2h-na">no data</div></div>';
+  var best=(t.best_maps||[]).slice(0,3).map(function(mp){
+    return '<div class="h2h-map"><span>'+esc(mp.map)+'</span><b class="'+(mp.rating>=0?'pos':'neg')+'">'+fmtR(mp.rating)+'</b></div>';}).join('');
+  return '<div class="h2h-col '+side+'">'
+    +'<a class="h2h-org" href="/team/'+encodeURIComponent(org)+'">'+logoOrInit(org,'h2h-logo','h2h-init')+'<span>'+esc(org)+'</span></a>'
+    +'<div class="h2h-meta"><span class="rbadge '+regClass(t.region)+'">'+esc(t.region||'')+'</span><span class="h2h-rank">#'+t.rank+'</span></div>'
+    +'<div class="h2h-rat '+(t.rating>=0?'pos':'neg')+'">'+fmtR(t.rating)+'<span>BenPom</span></div>'
+    +'<div class="h2h-form">'+formDots(t.form)+'</div>'
+    +'<div class="h2h-mtitle">Best maps</div>'+best+'</div>';
+}
+function renderH2H(id,org_a,org_b,pa){
+  var el=document.getElementById(id); if(!el)return;
+  el.innerHTML='<div class="h2h-load">Loading analysis…</div>';
+  Promise.all([_fetchTeam(org_a),_fetchTeam(org_b)]).then(function(res){
+    var A=res[0],B=res[1], pct=(pa!=null)?Math.round(pa*100):null;
+    el.innerHTML=(pct!=null?'<div class="h2h-head"><b>'+esc(org_a)+'</b> '+pct+'%&nbsp;&middot;&nbsp;'+(100-pct)+'% <b>'+esc(org_b)+'</b><div class="h2h-sub">projected series win</div></div>':'')
+      +'<div class="h2h-grid">'+_h2hCol(A,org_a,'a')+'<div class="h2h-vs">VS</div>'+_h2hCol(B,org_b,'b')+'</div>'
+      +'<a class="h2h-simlink" href="/mapelo/modern/">Full veto sim &amp; per-map odds &rarr;</a>';
+    // Make the form dots interactable like Power Rankings (hover = BenPom match card).
+    el.addEventListener('mouseover',function(e){var d=e.target.closest&&e.target.closest('.fdot[data-mi]');if(d)_showDotTip(d);});
+    el.addEventListener('mouseout',function(e){var d=e.target.closest&&e.target.closest('.fdot[data-mi]');if(d)_hideDotTip();});
+  });
+}
+function _onMatchClick(e){
+  if(e.target.closest('a'))return;                 // team links / sim link navigate
+  var card=e.target.closest('.mcard.upc'); if(!card)return;
+  var open=card.classList.toggle('open');
+  var hint=card.querySelector('.mc-expand-hint');
+  if(hint)hint.innerHTML=open?'&#9662; close analysis':'&#9656; tap for analysis';
+  if(open && !card.dataset.loaded){
+    card.dataset.loaded='1';
+    var up=card.dataset.up; renderH2H(card.querySelector('.mc-details-inner').id, card.dataset.ua, card.dataset.ub, up!==''?parseFloat(up):null);
+  }
+  if(open)setTimeout(function(){card.scrollIntoView({block:'nearest',behavior:'smooth'});},60);
+  setTimeout(_updateMatchCap,380);   // cap + fade only while expanded
+}
+
+/* ── Rankings ── */
+var DOT_MATCHES=[];   // registry: index -> full match object, for hover cards
+function formDots(form,nopad){
+  // form is newest-first; show oldest→newest. Padded to 5 (empty on the old
+  // side) for the rankings grid alignment, but NOT when nopad is set (h2h, where
+  // an empty slot would leave a stray grey dot). Hover shows the BenPom card.
+  var arr=(form||[]).slice().reverse();
+  if(!nopad){ while(arr.length<5)arr.unshift(null); arr=arr.slice(-5); }
+  return '<div class="rform">'+arr.map(function(m,i){
+    var newest=(i===arr.length-1);
+    if(!m)return '<span class="fdot empty"></span>';
+    var idx=DOT_MATCHES.push(m)-1;
+    var cls='fdot '+(m.result==='W'?'w':'l')+(newest?' new':'');
+    if(m.match_id)return '<a class="'+cls+'" data-mi="'+idx+'" href="https://www.vlr.gg/'+esc(m.match_id)+'" target="_blank" rel="noopener"></a>';
+    return '<span class="'+cls+'" data-mi="'+idx+'"></span>';
+  }).join('')+'</div>';}
+// BenPom match-hover card — copied from the Modern Hub chart's dot tooltip.
+function _matchTooltipHTML(m, won){
+  var org=won?m.winner:m.loser, opp=won?m.loser:m.winner;
+  var d=won?m.winner_delta:m.loser_delta, rat=won?m.winner_after:m.loser_after;
+  var dStr=((d||0)>=0?'+':'')+Number(d||0).toFixed(2);
+  var evt=(DATA.event_labels||{})[m.event_id]||m.event_id||'';
+  var raw=String(m.series_score||m.score||'0-0').split('-');
+  var disp=won?(m.series_score||m.score):(raw[1]+'-'+raw[0]);
+  var rows=(m.maps||[]).map(function(mp){
+    var mw=mp.winner===org, a=mw?mp.wr:mp.lr, b=mw?mp.lr:mp.wr, diff=a-b;
+    return '<tr><td class="popup-map-name">'+esc(mp.map)+'</td>'
+      +'<td class="popup-map-score '+(mw?'w':'l')+'">'+a+'</td>'
+      +'<td class="popup-map-score '+(mw?'l':'w')+'">'+b+'</td>'
+      +'<td class="popup-map-diff">'+(diff>=0?'+':'')+diff+'</td></tr>';
+  }).join('');
+  return (evt?'<div class="popup-event-label">'+esc(evt)+'</div>':'')
+    +'<div class="popup-teams"><div class="popup-team-block">'
+    +'<img class="popup-logo" src="/static/logos/'+esc(org)+'.png" onerror="this.style.display=\\'none\\'" alt="'+esc(org)+'">'
+    +'<span class="popup-team-name">'+esc(org)+'</span></div>'
+    +'<div class="popup-score-block"><span class="popup-score '+(won?'w':'l')+'">'+esc(disp)+'</span><span class="popup-vs-label">series</span></div>'
+    +'<div class="popup-team-block"><img class="popup-logo" src="/static/logos/'+esc(opp)+'.png" onerror="this.style.display=\\'none\\'" alt="'+esc(opp)+'">'
+    +'<span class="popup-team-name">'+esc(opp)+'</span></div></div>'
+    +'<div class="popup-date">'+esc(m.date)+'</div>'
+    +'<div class="popup-delta">BenPom '+Number(rat||0).toFixed(2)+' &nbsp;(<span class="'+((d||0)>=0?'pos':'neg')+'">'+dStr+'</span>)</div>'
+    +(rows?'<table class="popup-maps-table"><thead><tr><th>Map</th><th>'+esc(org)+'</th><th>'+esc(opp)+'</th><th>Diff</th></tr></thead><tbody>'+rows+'</tbody></table>':'');
+}
+function _showDotTip(el){
+  var idx=el.getAttribute('data-mi'); if(idx==null)return;
+  var m=DOT_MATCHES[+idx]; if(!m)return;
+  var tt=document.getElementById('dotTooltip');
+  document.getElementById('dotTooltipContent').innerHTML=_matchTooltipHTML(m, m.result==='W');
+  tt.style.visibility='hidden'; tt.classList.add('visible');
+  // Consistent placement: to the RIGHT of the dot (into the page margin),
+  // vertically centered. Only flips left if it can't fit on the right. Never
+  // flips above/below, so it doesn't jump around between dots.
+  var r=el.getBoundingClientRect(), w=tt.offsetWidth, h=tt.offsetHeight, gap=14;
+  var left=r.right+gap;
+  if(left+w>window.innerWidth-6) left=r.left-w-gap;
+  var top=r.top+r.height/2-h/2;
+  top=Math.max(6, Math.min(top, window.innerHeight-h-6));
+  tt.style.left=left+'px'; tt.style.top=top+'px'; tt.style.visibility='';
+}
+function _hideDotTip(){document.getElementById('dotTooltip').classList.remove('visible');}
+function rankRow(t){
+  var href=TEAM_HREF(t.org);
+  return '<div class="rrow"><div class="rrank">'+t.rank+'</div>'
+    +'<a class="rcell-link" href="'+href+'" title="'+esc(t.org)+' profile">'+logoOrInit(t.org,'rlogo','rinit')+'</a>'
+    +'<a class="rteam-link" href="'+href+'" title="'+esc(t.org)+' profile"><span class="rorg">'+esc(t.org)+'</span><span class="rbadge '+regClass(t.region)+'">'+esc(t.region||'')+'</span></a>'
+    +formDots(t.form)
+    +'<div class="rpct">'+t.winpct+'%</div>'
+    +'<div class="rrat" style="color:'+(t.rating>=0?'#16121d':'#c0392b')+'">'+fmtR(t.rating)+'</div></div>';}
+function renderRankings(){
+  DOT_MATCHES=[];
+  var body=document.getElementById('rankings-body');
+  body.innerHTML=(DATA.rankings||[]).slice(0,15).map(rankRow).join('');
+  body.addEventListener('mouseover',function(e){var d=e.target.closest&&e.target.closest('.fdot[data-mi]');if(d)_showDotTip(d);});
+  body.addEventListener('mouseout',function(e){var d=e.target.closest&&e.target.closest('.fdot[data-mi]');if(d)_hideDotTip();});
+}
+
+/* ── Players (podium + list) ── */
+function avatar(p,cls,phcls){
+  var img=p.headshot?'<img class="'+cls+'" style="--ring:'+col(p.org)+'" src="'+esc(p.headshot)+'" loading="lazy" onerror="imgFail(this)">':'';
+  var ph='<div class="'+phcls+'" style="background:'+col(p.org)+(p.headshot?';display:none':'')+'">'+esc(String(p.name||'').slice(0,2))+'</div>';
+  return img+ph;}
+function plRow(p,i,stat){
+  var href='/vct/player?profile='+encodeURIComponent(p.profile||'')
+    +'&stat='+encodeURIComponent(stat||'')
+    +'&event='+encodeURIComponent(DATA.players_event_id||'');
+  return '<a class="plr" href="'+href+'" title="'+esc(p.name)+' player card">'
+    +'<span class="plr-n">'+(i+1)+'</span>'+avatar(p,'plr-av','plr-av-ph')
+    +'<span class="plr-info"><span class="plr-name">'+esc(p.name)+'</span><span class="plr-meta">'+esc(p.org)+' &middot; '+esc(p.region)+'</span></span>'
+    +'<span class="plr-val">'+esc(p.value)+'</span></a>';}
+function renderPlayers(){
+  document.getElementById('players-sub').textContent=DATA.players_event?('Leaders · '+DATA.players_event):'';
+  var ss=DATA.player_stats||[];
+  document.getElementById('players-body').innerHTML = ss.length
+    ? '<div class="pl-grid">'+ss.map(function(s){
+        return '<div class="pl-card"><div class="pl-stat">'+esc(s.label)+'</div>'
+          +(s.leaders||[]).map(function(p,i){return plRow(p,i,s.stat);}).join('')+'</div>';
+      }).join('')+'</div>'
+    : '<div class="empty">No player data.</div>';}
+
+/* ── Init ── */
+try{localStorage.setItem('bobo_ui','alpha');}catch(e){}   // remember the choice
+renderBanner();renderRankings();renderPlayers();
+document.getElementById('match-body').addEventListener('click',_onMatchClick);  // upcoming expand
+var startTab='upcoming';   // matches default to Upcoming
+document.querySelectorAll('#match-seg button').forEach(function(b){
+  b.classList.toggle('on',b.dataset.tab===startTab);
+  b.addEventListener('click',function(){document.querySelectorAll('#match-seg button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');PAGE[b.dataset.tab]=0;renderMatches(b.dataset.tab);});
+});
+var _mrSel=document.getElementById('match-region');
+if(_mrSel)_mrSel.addEventListener('change',function(){MATCH_REGION=this.value;PAGE.upcoming=0;PAGE.recent=0;renderMatches(CUR_TAB);});
+renderMatches(startTab);
+
+// Size the Matches pages so the panel is the same height as Power Rankings
+// (desktop side-by-side only). Measures a real card + the panel chrome, then
+// picks how many cards fit the rankings height.
+// Only cap + fade the match-body when a card is EXPANDED (so the panel doesn't
+// grow past the rankings). On the normal paginated view there's NO cap/fade.
+function _updateMatchCap(){
+  var mb=document.getElementById('match-body'); if(!mb)return;
+  var open=mb.querySelector('.mcard.open');
+  if(!(open && window.innerWidth>860)){ mb.style.maxHeight=''; mb.classList.remove('capped'); return; }
+  var rp=document.getElementById('rankings-panel'); if(!rp)return;
+  var avail=Math.max(260, rp.getBoundingClientRect().bottom - mb.getBoundingClientRect().top);
+  mb.style.maxHeight=Math.round(avail)+'px';
+  mb.classList.toggle('capped', mb.scrollHeight-mb.clientHeight>4);
+}
+function fitMatchesToRankings(){
+  var mb=document.getElementById('match-body');
+  if(window.innerWidth<=860){ if(mb)mb.style.maxHeight=''; return; }
+  var rp=document.getElementById('rankings-panel'), mp=document.getElementById('matches-panel');
+  if(!rp||!mp||!mb) return;
+  var card=mb.querySelector('.mcard'); if(!card) return;
+  var cardH=card.getBoundingClientRect().height+11;            // + margin
+  var chrome=mp.getBoundingClientRect().height-mb.getBoundingClientRect().height;
+  var avail=rp.getBoundingClientRect().height-chrome;
+  var n=Math.max(3,Math.round(avail/cardH));
+  if(n!==PER_PAGE){PER_PAGE=n;PAGE[CUR_TAB]=0;renderMatches(CUR_TAB);}
+}
+setTimeout(fitMatchesToRankings,60);
+var _fitT;window.addEventListener('resize',function(){clearTimeout(_fitT);_fitT=setTimeout(fitMatchesToRankings,150);});
+</script>
+</body>
+</html>
+"""
+
+ARTICLES_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Articles — Bobo gg</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
+<style>
+  *{box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;color:#16121d}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1000px;margin:0 auto;padding:30px 22px 64px;position:relative;z-index:1}
+  h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.02em;margin:6px 2px 22px;color:#16121d}
+  .alist{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+  .acard{background:#fff;border:1px solid #eceef2;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:left;box-shadow:0 4px 24px #0000000a;transition:transform .16s,box-shadow .16s}
+  .acard:hover{transform:translateY(-5px);box-shadow:0 16px 40px #2a224018}
+  .acard img{width:100%;height:168px;object-fit:cover;object-position:center top;display:block;background:#1a0f24}
+  .ab{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+  .at{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.16rem;line-height:1.22;color:#16121d}
+  .ad{font-size:.85rem;color:#6b6478;font-weight:500;margin-top:8px;line-height:1.55;flex:1}
+  .adate{font-size:.66rem;text-transform:uppercase;letter-spacing:.04em;color:#9a93a6;font-weight:700;margin-top:14px}
+  .ab::after{content:'Read →';margin-top:12px;font-size:.82rem;font-weight:800;color:#7c4dd6;font-family:'Plus Jakarta Sans',sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Articles</h1>
+  <div class="alist">
+    <a class="acard" href="/articles/masters-london-playoffs-preview/">
+      <img src="/chronlondon.jpg" alt="">
+      <div class="ab">
+        <div class="at">Masters London Playoffs Preview</div>
+        <div class="ad">A brief statistical glimpse into the final stage of Masters London.</div>
+        <div class="adate">Jun 10, 2026</div>
+      </div>
+    </a>
+    <a class="acard" href="/articles/masters-london-preview/">
+      <img src="/prxpacstage1win.jpg" alt="">
+      <div class="ab">
+        <div class="at">Masters London Tournament Preview</div>
+        <div class="ad">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div>
+        <div class="adate">Jun 2, 2026</div>
+      </div>
+    </a>
+    <a class="acard" href="/articles/americas-stage1-playoffs-preview/">
+      <img src="/loudlev26.jpg" alt="">
+      <div class="ab">
+        <div class="at">Americas Stage 1 Playoffs Preview</div>
+        <div class="ad">LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.</div>
+        <div class="adate">May 12, 2026</div>
+      </div>
+    </a>
+    <a class="acard" href="/articles/over-underperformers/">
+      <img src="/patmen.jpg" alt="">
+      <div class="ab">
+        <div class="at">Overperforming in VCT: Who's Doing It?</div>
+        <div class="ad">Surfacing the players outperforming (or underperforming) their team.</div>
+        <div class="adate">May 4, 2026</div>
+      </div>
+    </a>
+  </div>
+</div>
+</body></html>
+"""
+
+
+TEAM_PROFILE_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ org }} — Bobo gg</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
+<style>
+  body::after{animation:none !important;}
+  :root{--card:#fff;--line:#eceef2;--ink:#16121d;--soft:#6b6478;--faint:#9a93a6;--good:#1f9d55;--bad:#d23b3b;--accent:#7c4dd6;}
+  *{box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;color:var(--ink)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:18px 22px 64px;position:relative;z-index:1}
+
+  /* ── hero (team-color themed) ── */
+  .tp-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;
+    background:linear-gradient(140deg,#fbf9ff,#f1ecf9);border-radius:22px;padding:24px 28px;color:var(--ink);overflow:hidden;
+    box-shadow:0 8px 26px #2a224012;border:1px solid var(--line);border-left:5px solid var(--tc,#7c4dd6)}
+  .tp-glow{position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;
+    background:radial-gradient(circle,var(--tc,#7c4dd6) 0%,transparent 68%);opacity:.1;pointer-events:none}
+  .tp-hl{display:flex;align-items:center;gap:18px;position:relative;z-index:1;min-width:0}
+  .tp-logo{width:72px;height:72px;border-radius:16px;background:#f4f2f8;object-fit:contain;padding:8px;flex-shrink:0;box-shadow:0 0 0 2px var(--tc,#7c4dd6)}
+  .tp-logo-ph{width:72px;height:72px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.4rem;color:#fff;flex-shrink:0;box-shadow:0 0 0 2px var(--tc,#7c4dd6)}
+  .tp-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(1.8rem,4vw,2.5rem);letter-spacing:-.02em;line-height:1}
+  .tp-meta{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .tp-reg{font-size:.62rem;font-weight:800;letter-spacing:.05em;padding:3px 9px;border-radius:6px;text-transform:uppercase}
+  .fdots{display:flex;gap:5px}
+  .fdot{width:13px;height:13px;border-radius:50%;display:block;border:2px solid transparent;transition:transform .12s}
+  .fdot:hover{transform:scale(1.28)}
+  .fdot.w{background:#19a85e}.fdot.l{background:#e8536a}
+  .tp-hr{display:flex;align-items:center;gap:24px;flex-wrap:wrap;position:relative;z-index:1}
+  .tp-stat{text-align:center}
+  .tp-stat .v{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;line-height:1}
+  .tp-stat .k{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a8296;margin-top:4px}
+  .tp-spark{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .tp-spark svg{display:block}
+  .tp-spark-k{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a8296}
+
+  /* ── two equal columns ── */
+  .tp-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;align-items:stretch}
+  /* Recent panel keeps its natural height — only the right column stretches to
+     fill when it is shorter; expanding a map must NOT extend recent matches. */
+  .tp-cols > .panel{align-self:start}
+  .tp-right{display:flex;flex-direction:column;gap:18px;min-width:0}
+  .mapwrap{display:flex;flex-direction:column;flex:1}
+  #maps{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:3px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px 14px;box-shadow:0 4px 22px #0000000a}
+  .ptitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:13px;display:flex;align-items:baseline;gap:9px}
+  .ptit-sub{font-family:'DM Sans',sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+
+  /* recent matches (expandable + filterable) */
+  .rm{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:10px 13px;margin-bottom:10px;transition:box-shadow .15s}
+  .rm.win{border-left-color:var(--good)}.rm.loss{border-left-color:var(--bad)}
+  .rm:hover{box-shadow:0 3px 14px #0000000a}
+  .rm-top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.68rem;color:var(--faint);font-weight:600;margin-bottom:4px}
+  .rm-tag{background:#f3eefb;color:#6a4caf;padding:2px 7px;border-radius:6px;font-weight:700}
+  .rm-right{display:flex;align-items:center;gap:9px}
+  .rm-wl{font-weight:800;font-size:.8rem;letter-spacing:.08em;padding:3px 13px;border-radius:7px;color:#fff;box-shadow:0 2px 9px #00000022}
+  .rm-wl.w{background:var(--good)}.rm-wl.l{background:var(--bad)}
+  /* VLR-style scoreboard: ONE grid shared by the header + both team rows (rows
+     are display:contents) so every map column lines up exactly. */
+  .rm-board{display:grid;grid-template-columns:var(--gtc);gap:6px 10px;align-items:center;margin-top:7px}
+  .rb-row{display:contents}
+  .rb-head{font-size:.6rem;color:var(--faint);font-weight:700;letter-spacing:.01em}
+  .rb-team{display:flex;align-items:center;gap:8px;min-width:0}
+  .rb-logo{width:22px;height:22px;object-fit:contain;border-radius:5px;background:#f6f4fa;flex:0 0 auto}
+  .rb-ph{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800;color:#fff;flex:0 0 auto}
+  .rb-nm{font-weight:700;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--soft)}
+  .rb-row.wn .rb-nm{font-weight:800;color:var(--ink)}
+  .rb-mh{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rb-c{text-align:center;font-size:.8rem;font-variant-numeric:tabular-nums;color:var(--faint)}
+  .rb-c.win{color:var(--ink);font-weight:800}
+  .rb-tot{text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.98rem;font-variant-numeric:tabular-nums;color:var(--faint)}
+  .rb-row.wn .rb-tot{color:var(--ink)}
+
+  /* ── map-performance diverging bars (KenPom net rating per map) ── */
+  .mapblk{border-radius:9px}
+  .mapbar{display:flex;align-items:center;gap:9px;padding:8px 6px;border-radius:9px;cursor:pointer;transition:background .12s}
+  .mapbar:hover{background:#faf8ff}
+  .mapblk.open .mapbar{background:#f3eefb}
+  .mb-name{flex:0 0 60px;font-weight:700;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mb-wl{flex:0 0 38px;font-size:.66rem;color:var(--faint);font-weight:600;font-variant-numeric:tabular-nums}
+  .mb-track{position:relative;flex:1;height:17px;border-radius:0;background:#f4f2f8}
+  .mb-zero{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:#dcd6e6;transform:translateX(-1px)}
+  .mb-seg{position:absolute;top:0;bottom:0;border-radius:0}
+  .mb-seg.pos{background:linear-gradient(90deg,#34c47a,#1f9d55);border-radius:0 9px 9px 0}
+  .mb-seg.neg{background:linear-gradient(270deg,#e06464,#d23b3b);border-radius:9px 0 0 9px}
+  .mb-val{flex:0 0 42px;text-align:right;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.84rem;font-variant-numeric:tabular-nums}
+  .mb-val.pos{color:#16a34a}.mb-val.neg{color:#c0392b}
+  .mb-chev{flex:0 0 auto;color:var(--faint);font-size:.62rem;transition:transform .18s}
+  .mapblk.open .mb-chev{transform:rotate(180deg)}
+  /* per-map game breakdown (every time the map was played) */
+  .mapgames{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s cubic-bezier(.4,0,.2,1)}
+  .mapblk.open .mapgames{grid-template-rows:1fr}
+  .mapgames-in{overflow:hidden;min-height:0;padding-left:4px}
+  .mg{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:7px;font-size:.72rem}
+  .mg+.mg{margin-top:3px}
+  .mg:first-child{margin-top:5px}
+  .mg.win{background:#f3faf5}.mg.loss{background:#fdf4f4}
+  .mg-res{font-weight:800;font-size:.62rem;width:15px;text-align:center;flex:0 0 auto}
+  .mg.win .mg-res{color:var(--good)}.mg.loss .mg-res{color:var(--bad)}
+  .mg-logo{width:18px;height:18px;object-fit:contain;border-radius:4px;background:#fff;flex:0 0 auto}
+  .mg-logoph{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.46rem;font-weight:800;color:#fff;flex:0 0 auto}
+  .mg-opp{font-weight:700;flex:0 0 auto}
+  .mg-score{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-variant-numeric:tabular-nums;color:var(--soft)}
+  .mg-score.wn{color:var(--ink)}
+  .mg-dash{color:var(--faint);margin:0 -2px}
+  .mg-diff{font-weight:700;font-variant-numeric:tabular-nums}
+  .mg-diff.pos{color:#16a34a}.mg-diff.neg{color:#c0392b}
+  .mg-meta{margin-left:auto;color:var(--faint);font-size:.63rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:6px}
+  .mg-empty{color:var(--faint);font-size:.72rem;padding:6px 8px}
+
+  /* ── roster (right column, under map performance) — one even row ── */
+  .roster{display:flex;gap:10px}
+  .pl{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;flex:1 1 0;min-width:0;padding:12px 6px;border:1px solid var(--line);border-radius:13px;transition:border-color .15s,transform .15s}
+  .pl:hover{border-color:#d6cce8;transform:translateY(-2px)}
+  .pl-ring{display:inline-flex;border-radius:50%;padding:2px;background:var(--tc,#7c4dd6)}
+  .pl-ring img{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:top center;background:#efeaf6;display:block;border:2px solid #fff}
+  .pl-ring .ph{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;border:2px solid #fff}
+  .pl .nm{font-weight:700;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  .empty{color:var(--faint);font-size:.84rem;font-weight:600;padding:14px 4px;text-align:center}
+  footer{text-align:center;padding:28px;color:var(--faint);font-size:.74rem;font-weight:500;position:relative;z-index:1}
+  html.inmodal footer{display:none}
+  /* Compact the profile when shown inside the team modal so it fits with no scroll. */
+  html.inmodal .wrap{padding:10px 18px 14px}
+  html.inmodal .tp-hero{padding:16px 22px}
+  html.inmodal .tp-cols{gap:14px;margin-top:14px}
+  html.inmodal .panel{padding:14px 16px 11px}
+  html.inmodal .tp-roster{margin-top:14px}
+  html.inmodal .rm{margin-bottom:8px}
+  /* hover popup: match card on form dots, label on trajectory event lines */
+  #tpop{position:fixed;z-index:99999;pointer-events:none;background:linear-gradient(160deg,#241839,#19102a);color:#fff;border:1px solid #3a2a5a;border-radius:13px;padding:11px 13px;box-shadow:0 14px 38px #0007;font-size:.74rem;max-width:232px;opacity:0;visibility:hidden;transition:opacity .12s}
+  #tpop.on{opacity:1;visibility:visible}
+  #tpop .tp-evt{font-size:.56rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#a78bfa;margin-bottom:6px}
+  #tpop .tp-h{display:flex;align-items:center;gap:7px;font-weight:800;font-size:.84rem}
+  #tpop .tp-h b{margin-left:auto;font-variant-numeric:tabular-nums}
+  #tpop .tp-res{font-size:.6rem;font-weight:800;padding:1px 6px;border-radius:5px}
+  #tpop .tp-res.w{background:#1f6f43;color:#b6f0cd}#tpop .tp-res.l{background:#7a2230;color:#ffc7cf}
+  #tpop .tp-date{color:#b9a9d6;font-size:.64rem;margin-top:4px}
+  #tpop .tp-delta{font-weight:700;font-size:.66rem;margin-top:6px}
+  #tpop .tp-delta.pos{color:#41f59a}#tpop .tp-delta.neg{color:#ff8b8b}
+  #tpop .tp-maps{width:100%;border-collapse:collapse;margin-top:7px}
+  #tpop .tp-maps td{font-size:.66rem;padding:3px 2px;border-top:1px solid #ffffff14;color:#cdbfe6}
+  #tpop .tp-ms{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  #tpop .tp-ms.mw{color:#41f59a}#tpop .tp-ms.ml{color:#ff8b8b}
+  @media (max-width:780px){.tp-cols{grid-template-columns:1fr}.tp-hero{gap:16px}.tp-hr{gap:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="profile"></div>
+</div>
+<footer>Team profile &middot; BenPom &middot; <a href="/mapelo/" style="text-decoration:underline">full ratings</a></footer>
+<script>
+var D = {{ data_json | safe }};
+var COL=D.colors||{}, LOGOS=D.logos||{}, EL=D.event_labels||{};
+var RC={EMEA:['#15803d','rgba(22,163,74,.14)'],Americas:['#c2410c','rgba(234,88,12,.14)'],Pacific:['#1d4ed8','rgba(37,99,235,.14)'],CN:['#be185d','rgba(219,39,119,.14)']};
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function col(o){return COL[o]||'#8a8a8a';}
+function logo(o,cls,phcls,big){var f=LOGOS[o];if(f)return '<img class="'+cls+'" src="/logos/'+esc(f)+'" alt="'+esc(o)+'">';return '<div class="'+phcls+'" style="background:'+col(o)+'">'+esc(String(o||'').slice(0,big?3:2))+'</div>';}
+function fmtR(r){if(r==null)return '';var n=Number(r);return (n>=0?'+':'')+n.toFixed(2);}
+var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function sd(d){if(!d)return '';var p=String(d).split('-');if(p.length<3)return d;return MO[+p[1]-1]+' '+(+p[2]);}
+function winVsAvg(r){return Math.round(100/(1+Math.exp(-(D.beta||0.3237)*r)));}
+function vlrUrl(id){return id?('https://www.vlr.gg/'+id):'';}
+
+function evAbbr(label){
+  var s=String(label||'').trim();
+  // drop a leading 4-digit year, then keep capitals + digits (Stage 1 -> S1,
+  // Masters London -> ML, China Kickoff -> CK, Champions -> C).
+  if(s.length>=4 && s.charCodeAt(0)>=48 && s.charCodeAt(0)<=57){
+    var k=0; while(k<s.length && s[k]>='0' && s[k]<='9')k++; s=s.slice(k).trim();
+  }
+  var out='';
+  for(var i=0;i<s.length;i++){ var c=s[i]; if((c>='A'&&c<='Z')||(c>='0'&&c<='9'))out+=c; }
+  return (out||s).slice(0,3);
+}
+function sparkline(traj,color,events){
+  if(!traj||traj.length<2)return '';
+  var rs=traj.map(function(p){return p.r;});
+  var mn=Math.min.apply(null,rs), mx=Math.max.apply(null,rs);
+  // Headroom/footroom so the line never touches the top/bottom edge.
+  var rng=(mx-mn)||1, marg=Math.max(rng*0.28,0.15);
+  mn-=marg; mx+=marg;
+  var W=230,H=66,pad=5,top=15,span=(mx-mn);   // `top` band holds the event labels
+  // Date-based x-axis so event boundary lines line up with the rating line.
+  var t0=+new Date(traj[0].d), t1=+new Date(traj[traj.length-1].d), tspan=(t1-t0)||1;
+  function xRaw(d){return pad+((+new Date(d))-t0)/tspan*(W-2*pad);}
+  function xCl(d){return Math.max(pad,Math.min(W-pad,xRaw(d)));}
+  function yOf(r){return top+(1-(r-mn)/span)*(H-pad-top);}
+  var pts=traj.map(function(p){ return xCl(p.d).toFixed(1)+','+yOf(p.r).toFixed(1); });
+  var area='M'+pts.join(' L')+' L'+(W-pad).toFixed(1)+','+(H-pad)+' L'+pad+','+(H-pad)+' Z';
+  // For every event on this team's timeline — including internationals it didn't
+  // attend — draw a labelled bracket spanning the event whose two ends drop down
+  // as dashed boundary lines into the chart.
+  var ev='', braY=11;
+  function dline(x,y0){return '<line x1="'+x.toFixed(1)+'" y1="'+y0+'" x2="'+x.toFixed(1)+'" y2="'+(H-pad)+'" stroke="#9a93a6" stroke-opacity="0.45" stroke-width="1" stroke-dasharray="2 3"></line>';}
+  if(events&&events.length){
+    events.forEach(function(e){
+      if(!e.start)return;
+      var rs0=xRaw(e.start), re0=xRaw(e.end||e.start);
+      if(re0<pad-1 || rs0>W-pad+1) return;             // event outside this team's span
+      var xs=Math.max(pad,Math.min(W-pad,rs0)), xe=Math.max(pad,Math.min(W-pad,re0));
+      var mid=Math.max(10,Math.min((xs+xe)/2,W-10)), lbl=esc(e.label||'');
+      if(xe-xs>3){
+        // bracket: top bar + short feet at each end, then dashed lines descend
+        ev+='<path d="M'+xs.toFixed(1)+','+(braY+3)+' L'+xs.toFixed(1)+','+braY+' L'+xe.toFixed(1)+','+braY+' L'+xe.toFixed(1)+','+(braY+3)+'" fill="none" stroke="#9a93a6" stroke-opacity="0.6" stroke-width="1"></path>'
+          +dline(xs,braY+3)+dline(xe,braY+3);
+      } else {
+        ev+=dline(xs,braY);
+      }
+      ev+='<text x="'+mid.toFixed(1)+'" y="8" text-anchor="middle" font-size="7.4" font-weight="700" fill="#8a8296" fill-opacity="0.95">'+esc(evAbbr(e.label||''))+'</text>'
+        +'<rect x="'+(xs-5).toFixed(1)+'" y="0" width="'+Math.max(xe-xs+10,12).toFixed(1)+'" height="'+H+'" fill="transparent" data-ev="'+lbl+'" data-d="'+esc(e.start)+'" data-d2="'+esc(e.end||e.start)+'" style="pointer-events:all;cursor:pointer"></rect>';
+    });
+  }
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'
+    +'<path d="'+area+'" fill="'+color+'" opacity="0.16"/>'+ev
+    +'<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+    +'</svg>';
+}
+var FORMM=[];          // registry: form-dot index -> full match object
+function formDots(){
+  var r=(D.recent||[]).slice(0,5).slice().reverse();
+  if(!r.length)return '';
+  return '<div class="fdots">'+r.map(function(m){
+    var won=m.result==='W', idx=FORMM.push(m)-1;
+    return '<a class="fdot '+(won?'w':'l')+'" data-mi="'+idx+'" href="'+vlrUrl(m.match_id)+'" target="_blank" rel="noopener"></a>';
+  }).join('')+'</div>';
+}
+// Shared hover popup (BenPom match card on form dots, event label on trajectory lines).
+var POP=null;
+function _pop(){ if(!POP){POP=document.createElement('div');POP.id='tpop';document.body.appendChild(POP);} return POP; }
+function _showPop(html,el){
+  var p=_pop(); p.innerHTML=html; p.classList.add('on');
+  var r=el.getBoundingClientRect(), pr=p.getBoundingClientRect(), gap=12;
+  var left=r.right+gap; if(left+pr.width>window.innerWidth-8)left=r.left-pr.width-gap;
+  var top=r.top+r.height/2-pr.height/2; top=Math.max(8,Math.min(top,window.innerHeight-pr.height-8));
+  p.style.left=left+'px'; p.style.top=top+'px';
+}
+function _hidePop(){ if(POP)POP.classList.remove('on'); }
+function matchCardHTML(m){
+  var won=m.result==='W', rat=won?m.winner_after:m.loser_after, d=m.delta;
+  var evt=EL[m.event_id]||m.event_id||'';
+  var rows=(m.maps||[]).map(function(mp){
+    var mw=mp.winner===D.org, a=mw?mp.wr:mp.lr, b=mw?mp.lr:mp.wr;
+    return '<tr><td class="tp-mn">'+esc(mp.map)+'</td><td class="tp-ms '+(mw?'mw':'ml')+'">'+a+'–'+b+'</td></tr>';
+  }).join('');
+  return (evt?'<div class="tp-evt">'+esc(evt)+'</div>':'')
+    +'<div class="tp-h"><span class="tp-res '+(won?'w':'l')+'">'+(won?'W':'L')+'</span><span>vs '+esc(m.opponent)+'</span><b>'+esc(m.score||'')+'</b></div>'
+    +'<div class="tp-date">'+esc(sd(m.date))+'</div>'
+    +(d!=null?'<div class="tp-delta '+(d>=0?'pos':'neg')+'">BenPom '+Number(rat||0).toFixed(2)+' &nbsp;('+(d>=0?'+':'')+Number(d).toFixed(2)+')</div>':'')
+    +(rows?'<table class="tp-maps">'+rows+'</table>':'');
+}
+
+// VLR-style scoreboard: both teams stacked, each with its per-map rounds in
+// aligned columns + the series total. Series winner is bold/highlighted; a clear
+// WIN/LOSS badge + green/red left edge identify this team's result.
+function recentCard(m){
+  var won=m.result==='W', opp=m.opponent, maps=m.maps||[];
+  var aWins=0,bWins=0; maps.forEach(function(mp){ if(mp.winner===D.org)aWins++; else bWins++; });
+  var n=maps.length;
+  if(!n){ var raw=String(m.score||'0-0').split('-'), ws=+raw[0]||0, ls=+raw[1]||0; aWins=won?ws:ls; bWins=won?ls:ws; }
+  var evt=EL[m.event_id]||m.event_id||'';
+  var gtc='minmax(74px,auto) 26px 1fr '+new Array(n+1).join('52px ');
+  function teamRow(org,tot,winner){
+    var cells=maps.map(function(mp){ var w=(mp.winner===org); return '<div class="rb-c'+(w?' win':'')+'">'+(w?mp.wr:mp.lr)+'</div>'; }).join('');
+    return '<div class="rb-row'+(winner?' wn':'')+'"><div class="rb-team">'+logo(org,'rb-logo','rb-ph','')+'<span class="rb-nm">'+esc(org)+'</span></div><div class="rb-tot">'+tot+'</div><div></div>'+cells+'</div>';
+  }
+  var head=n?('<div class="rb-row rb-head"><div></div><div></div><div></div>'+maps.map(function(mp){return '<div class="rb-mh">'+esc(mp.map)+'</div>';}).join('')+'</div>'):'';
+  return '<div class="rm '+(won?'win':'loss')+'">'
+    +'<div class="rm-top"><span class="rm-tag">'+esc(evt)+'</span><span class="rm-right"><span>'+sd(m.date)+'</span><span class="rm-wl '+(won?'w':'l')+'">'+(won?'WIN':'LOSS')+'</span></span></div>'
+    +'<div class="rm-board" style="--gtc:'+gtc+'">'+head+teamRow(D.org,aWins,won)+teamRow(opp,bWins,!won)+'</div>'
+    +'</div>';
+}
+function mapBar(mp,maxAbs){
+  var r=mp.rating, frac=Math.min(1,Math.abs(r)/(maxAbs||1)), pos=r>=0, w=(frac*46).toFixed(1);
+  var seg=pos?('<span class="mb-seg pos" style="left:50%;width:'+w+'%"></span>')
+             :('<span class="mb-seg neg" style="right:50%;width:'+w+'%"></span>');
+  return '<div class="mapblk" data-map="'+esc(mp.map)+'">'
+    +'<div class="mapbar">'
+    +'<span class="mb-name">'+esc(mp.map)+'</span>'
+    +'<span class="mb-wl">'+mp.w+'-'+mp.l+'</span>'
+    +'<span class="mb-track"><span class="mb-zero"></span>'+seg+'</span>'
+    +'<span class="mb-val '+(pos?'pos':'neg')+'">'+fmtR(r)+'</span>'
+    +'<span class="mb-chev">&#9662;</span>'
+    +'</div><div class="mapgames"><div class="mapgames-in"></div></div></div>';
+}
+// Every game this team played on `map` (newest first) — same drill-down as the
+// BenPom hub's map breakdown: W/L is the MAP outcome, with rounds + round diff.
+function mapGamesHTML(map){
+  var games=(D.events||[]).filter(function(me){
+    return (me.maps||[]).some(function(m){return m.map===map;});
+  }).slice().sort(function(a,b){return (b.match_id||0)-(a.match_id||0);});
+  if(!games.length)return '<div class="mg-empty">No recorded games.</div>';
+  return games.map(function(me){
+    var mi=(me.maps||[]).filter(function(m){return m.map===map;})[0];
+    var won=mi?(mi.winner===D.org):(me.winner===D.org);
+    var opp=(me.winner===D.org)?me.loser:me.winner;
+    var orgRd=mi?(mi.winner===D.org?mi.wr:mi.lr):'?';
+    var oppRd=mi?(mi.winner===D.org?mi.lr:mi.wr):'?';
+    var diff=(typeof orgRd==='number'&&typeof oppRd==='number')?(orgRd-oppRd):null;
+    var diffStr=diff!=null?((diff>=0?'+':'')+diff):'';
+    var evt=EL[me.event_id]||me.event_id||'';
+    return '<div class="mg '+(won?'win':'loss')+'">'
+      +'<span class="mg-res">'+(won?'W':'L')+'</span>'
+      +logo(D.org,'mg-logo','mg-logoph','')
+      +'<span class="mg-score'+(won?' wn':'')+'">'+orgRd+'</span>'
+      +'<span class="mg-dash">&ndash;</span>'
+      +'<span class="mg-score'+(won?'':' wn')+'">'+oppRd+'</span>'
+      +logo(opp,'mg-logo','mg-logoph','')
+      +'<span class="mg-opp">'+esc(opp)+'</span>'
+      +(diffStr?'<span class="mg-diff '+(diff>=0?'pos':'neg')+'">'+diffStr+'</span>':'')
+      +'<span class="mg-meta">'+sd(me.date)+(evt?' &middot; '+esc(evt):'')+'</span>'
+      +'</div>';
+  }).join('');
+}
+function pf(img){img.style.display='none';var n=img.nextElementSibling;if(n)n.style.display='flex';}
+function playerCard(p){
+  var img=p.headshot?'<img src="'+esc(p.headshot)+'" loading="lazy" onerror="pf(this)">':'';
+  var ph='<div class="ph" style="background:'+col(D.org)+(p.headshot?';display:none':'')+'">'+esc(String(p.player||'').slice(0,2))+'</div>';
+  return '<a class="pl" href="'+esc(p.url||'#')+'" target="_blank" rel="noopener"><span class="pl-ring" style="--tc:'+col(D.org)+'">'+img+ph+'</span><span class="nm">'+esc(p.player)+'</span></a>';
+}
+
+(function(){
+  var root=document.getElementById('profile');
+  if(!D || !D.org){root.innerHTML='<div class="empty" style="padding:60px">Team not found.</div>';return;}
+  var rc=RC[D.region]||['#666','rgba(0,0,0,.06)'];
+  var rec=(D.region==='International')?'':((D.w||0)+'-'+(D.l||0));
+  var C=col(D.org);
+
+  var hero='<div class="tp-hero" style="--tc:'+C+'"><div class="tp-glow" style="--tc:'+C+'"></div>'
+    +'<div class="tp-hl">'+logo(D.org,'tp-logo','tp-logo-ph',true)
+    +'<div><div class="tp-name">'+esc(D.org)+'</div>'
+    +'<div class="tp-meta"><span class="tp-reg" style="color:'+rc[0]+';background:'+rc[1]+'">'+esc(D.region||'')+'</span>'+formDots()+'</div></div></div>'
+    +'<div class="tp-hr">'
+    +'<div class="tp-stat"><div class="v">'+fmtR(D.rating)+'</div><div class="k">BenPom</div></div>'
+    +'<div class="tp-stat"><div class="v">#'+D.rank+'</div><div class="k">of '+D.n_teams+' VCT teams</div></div>'
+    +(rec?'<div class="tp-stat"><div class="v">'+rec+'</div><div class="k">Map W-L'+(D.season?'<br>'+D.season+' season':'')+'</div></div>':'')
+    +'<div class="tp-stat" title="Expected chance to win a single map against an average VCT team"><div class="v">'+winVsAvg(D.rating)+'%</div><div class="k">Map win vs avg<br>VCT team</div></div>'
+    +((D.traj&&D.traj.length>1)?('<div class="tp-spark">'+sparkline(D.traj,'#7c4dd6',D.season_events)+'<div class="tp-spark-k">Season trajectory</div></div>'):'')
+    +'</div></div>';
+
+  var recentHTML=(D.recent&&D.recent.length)?D.recent.map(recentCard).join(''):'<div class="empty">No recent matches.</div>';
+  var maps=D.all_maps||[];
+  var maxAbs=maps.reduce(function(a,m){return Math.max(a,Math.abs(m.rating));},0)||1;
+  var mapsHTML=maps.length?maps.map(function(m){return mapBar(m,maxAbs);}).join(''):'<div class="empty">No map data yet.</div>';
+  var rosterHTML=(D.roster&&D.roster.length)?D.roster.map(playerCard).join(''):'<div class="empty">No roster data.</div>';
+
+  root.innerHTML=hero
+    +'<div class="tp-cols">'
+    +'<section class="panel"><div class="ptitle">Recent matches</div><div id="recent">'+recentHTML+'</div></section>'
+    +'<div class="tp-right">'
+    +'<section class="panel mapwrap"><div class="ptitle">Map performance <span class="ptit-sub">net rating &middot; click a map for its games</span></div><div id="maps">'+mapsHTML+'</div></section>'
+    +'<section class="panel"><div class="ptitle">Roster</div><div class="roster">'+rosterHTML+'</div></section>'
+    +'</div>'
+    +'</div>';
+
+  // Click a map → expand the game-by-game breakdown underneath it (lazy-built).
+  document.getElementById('maps').addEventListener('click',function(e){
+    var blk=e.target.closest('.mapblk'); if(!blk)return;
+    var open=blk.classList.toggle('open');
+    if(open && !blk.dataset.loaded){
+      blk.dataset.loaded='1';
+      blk.querySelector('.mapgames-in').innerHTML=mapGamesHTML(blk.getAttribute('data-map'));
+    }
+  });
+  // Form dots → BenPom match card on hover.
+  var fd=document.querySelector('.fdots');
+  if(fd){
+    fd.addEventListener('mouseover',function(e){var d=e.target.closest('.fdot[data-mi]');if(d){var m=FORMM[+d.getAttribute('data-mi')];if(m)_showPop(matchCardHTML(m),d);}});
+    fd.addEventListener('mouseout',function(e){if(e.target.closest('.fdot[data-mi]'))_hidePop();});
+  }
+  // Trajectory event lines → event label on hover.
+  var sv=document.querySelector('.tp-spark svg');
+  if(sv){
+    sv.addEventListener('mouseover',function(e){var t=e.target.closest('[data-ev]');if(t){var d1=sd(t.getAttribute('data-d')),d2=sd(t.getAttribute('data-d2')),dr=(d2&&d2!==d1)?(d1+' – '+d2):d1;_showPop('<div class="tp-h"><span>'+esc(t.getAttribute('data-ev'))+'</span></div><div class="tp-date">'+esc(dr)+'</div>',t);}});
+    sv.addEventListener('mouseout',function(e){if(e.target.closest('[data-ev]'))_hidePop();});
+  }
+})();
+(function(){
+  if(window.self===window.top) return;            // only when embedded in the modal
+  document.documentElement.classList.add('inmodal');
+  function postH(){ try{ parent.postMessage({__teamH: Math.ceil(document.documentElement.scrollHeight)}, '*'); }catch(e){} }
+  postH();
+  window.addEventListener('load', postH);
+  window.addEventListener('resize', postH);
+  setTimeout(postH, 250); setTimeout(postH, 800); setTimeout(postH, 1500);
+})();
+</script>
+</body>
+</html>
+"""
+
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
 
 @app.route("/static/<path:filename>")
@@ -311,6 +1733,76 @@ def team_logo(filename):
 @app.route("/")
 def home():
     return render_template_string(HOME_HTML)
+
+
+@app.route("/alpha")
+def alpha_home():
+    try:
+        data = _build_alpha_data()
+    except Exception as e:
+        data = {"error": str(e), "event": None, "next_event": None, "last_event": None,
+                "rankings": [], "recent": [], "upcoming": [], "player_stats": [],
+                "players_event": None, "colors": {}, "logos": {}}
+    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+
+
+@app.route("/articles/")
+def articles_index():
+    return render_template_string(ARTICLES_HTML)
+
+
+@app.route("/team/<org>")
+def team_profile(org):
+    try:
+        data = _build_team_profile(org)
+    except Exception:
+        data = None
+    return render_template_string(TEAM_PROFILE_HTML,
+                                  org=org, data_json=_json.dumps(data))
+
+
+@app.route("/api/team/<org>")
+def api_team(org):
+    try:
+        data = _build_team_profile(org)
+    except Exception:
+        data = None
+    from flask import Response
+    return Response(_json.dumps(data), mimetype="application/json")
+
+
+def _anav_ver():
+    """Cache-buster for alpha-nav.js: its file mtime. /static/ is served with a
+    1-year max-age, so without this the browser would keep an old cached copy of
+    the nav script forever (it did — a stale copy that still skipped /alpha)."""
+    try:
+        return str(int(os.path.getmtime(os.path.join(STATIC_DIR, "alpha-nav.js"))))
+    except Exception:
+        return "0"
+
+
+@app.after_request
+def _inject_alpha_nav(resp):
+    """Inject the persistent Alpha top-nav script into every HTML page. The
+    script (static/alpha-nav.js) is the single source of truth for the bar: it
+    renders always on /alpha and /team/*, in Alpha mode on every other page, and
+    never on the classic home (/). Runs before flask-compress (registered later
+    → called first), and bails if the body is already compressed or is a
+    passthrough/static response."""
+    try:
+        if resp.direct_passthrough or resp.headers.get("Content-Encoding"):
+            return resp
+        if "text/html" not in resp.headers.get("Content-Type", ""):
+            return resp
+        body = resp.get_data(as_text=True)
+        if "</body>" in body and "alpha-nav.js" not in body:
+            resp.set_data(body.replace(
+                "</body>",
+                '<script src="/static/alpha-nav.js?v=%s" defer></script></body>'
+                % _anav_ver(), 1))
+    except Exception:
+        pass
+    return resp
 
 
 if __name__ == "__main__":

@@ -29,9 +29,43 @@ STAT_LABELS = {
     "FIWR":   "First Interaction Win %",
 }
 
-LIVE_EVENT_ID = "2026_masters_london"   # Stage 1 completed 2026-05-25; now reads from data/2026_stage1.csv like other past events
+LIVE_EVENT_ID = "2026_stage2"   # Masters London completed 2026-06-21; now reads from data/2026_masters_london.csv like other past events
 ALLTIME_ID = "all_time"
+ALLTIME_INTL_ID = "all_time_intl"     # All-Time aggregate, international events only
+ALLTIME_DOM_ID = "all_time_dom"       # All-Time aggregate, domestic/regional events only
 ALLTIME_EVENT = {"id": ALLTIME_ID, "label": "All-Time", "year": 0, "regions": {"International": ""}}
+ALLTIME_INTL_EVENT = {"id": ALLTIME_INTL_ID, "label": "All-Time (Internationals Only)", "year": 0, "regions": {"International": ""}}
+ALLTIME_DOM_EVENT = {"id": ALLTIME_DOM_ID, "label": "All-Time (Domestic Only)", "year": 0, "regions": {"International": ""}}
+
+# The set of synthetic All-Time aggregate IDs and the event dicts they resolve to.
+ALLTIME_IDS = {ALLTIME_ID, ALLTIME_INTL_ID, ALLTIME_DOM_ID}
+ALLTIME_EVENTS_BY_ID = {
+    ALLTIME_ID:      ALLTIME_EVENT,
+    ALLTIME_INTL_ID: ALLTIME_INTL_EVENT,
+    ALLTIME_DOM_ID:  ALLTIME_DOM_EVENT,
+}
+
+
+def _is_international(event):
+    """Source-of-truth rule: an event is international iff its regions dict
+    contains the 'International' key; otherwise it is domestic/regional."""
+    return "International" in event.get("regions", {})
+
+
+def _alltime_event_filter(alltime_id):
+    """Return a predicate selecting which ALL_EVENTS a given All-Time aggregate
+    should include. CN-only events are always excluded (they feed BenPom, not
+    the player leaderboards). The intl/dom variants further restrict to
+    international or domestic events respectively."""
+    def keep(e):
+        if list(e["regions"].keys()) == ["CN"]:
+            return False
+        if alltime_id == ALLTIME_INTL_ID:
+            return _is_international(e)
+        if alltime_id == ALLTIME_DOM_ID:
+            return not _is_international(e)
+        return True   # plain all_time: every non-CN-only event
+    return keep
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
@@ -111,6 +145,12 @@ def _scrape_event_live(event):
     """Scrape all regions for an event and return a cleaned DataFrame."""
     dfs = []
     for region_name, url in event["regions"].items():
+        # Skip region slots with no URL yet (e.g. an upcoming event that's the
+        # live target but hasn't been posted on VLR). Scraping "" just fails and
+        # the per-region time.sleep(1) would otherwise burn ~1s each — costly
+        # when the All-Time view concatenates every event, including this one.
+        if not url:
+            continue
         df = scrape_stats(region_name, url)
         if not df.empty:
             dfs.append(df)
@@ -162,14 +202,16 @@ def load_event(event):
     if event_id in _event_cache:
         return _event_cache[event_id]
 
-    # All-Time: concatenate every non-CN-only event's leaderboard, tagging each
-    # row with the source event label so duplicates (same player, different
-    # event) stay distinguishable in the giant ranking.
-    if event_id == ALLTIME_ID:
-        print("All-Time — concatenating every event...")
+    # All-Time (and its Internationals-Only / Domestic-Only variants):
+    # concatenate the relevant subset of events' leaderboards, tagging each row
+    # with the source event label so duplicates (same player, different event)
+    # stay distinguishable in the giant ranking.
+    if event_id in ALLTIME_IDS:
+        print(f"{event['label']} — concatenating matching events...")
+        keep = _alltime_event_filter(event_id)
         parts = []
         for e in ALL_EVENTS:
-            if list(e["regions"].keys()) == ["CN"]:
+            if not keep(e):
                 continue
             sub = load_event(e).copy()
             if not sub.empty:
@@ -208,7 +250,14 @@ def get_all(df, col):
     # Sort numerically (strip % for ordering) but preserve the display string.
     sort_vals = pd.to_numeric(tmp[col].astype(str).str.replace("%", ""), errors="coerce")
     tmp = tmp.loc[sort_vals.notna()].assign(_sort=sort_vals[sort_vals.notna()])
-    return tmp.sort_values("_sort", ascending=False).drop(columns="_sort").to_dict("records")
+    # kind="stable" is REQUIRED for consistency with the dashboard cards. The
+    # dashboard sorts client-side with JS Array.sort (stable since ES2019), so
+    # tied values keep their source-data order. pandas' default sort is
+    # quicksort (unstable) — it would break ties in a different order, so the
+    # same two tied players (e.g. FIPR 0.35) could swap places between the
+    # dashboard top-5 and this full-ranking page. Stable sort makes both pages
+    # fall back to the same source order, so ties are ordered identically.
+    return tmp.sort_values("_sort", ascending=False, kind="stable").drop(columns="_sort").to_dict("records")
 
 def build_data(cache, event):
     is_multi = len(event["regions"]) > 1
@@ -222,21 +271,17 @@ def build_data(cache, event):
         cols = [c for c in want if c in df.columns]
         return df[cols].fillna("").to_dict("records")
 
+    # Ship every row exactly once under "All"; the client derives each region's
+    # subset by filtering on the row's own Region field. Building per-region
+    # arrays here used to duplicate the whole dataset N times — on the All-Time
+    # view that doubled a 1.6 MB payload, the dominant cost of that page's load.
     data = {"All": to_records(cache)}
-    if is_multi:
-        for region_name in event["regions"]:
-            df_r = cache[cache["Region"] == region_name] if not cache.empty else pd.DataFrame()
-            data[region_name] = to_records(df_r)
-    elif is_international:
-        for region_name in ["EMEA", "Americas", "Pacific", "CN"]:
-            df_r = cache[cache["Region"] == region_name] if not cache.empty else pd.DataFrame()
-            if not df_r.empty:
-                data[region_name] = to_records(df_r)
 
+    present = set(cache["Region"].unique()) if (not cache.empty and "Region" in cache.columns) else set()
     if is_multi:
-        available_regions = ["All"] + list(event["regions"].keys())
+        available_regions = ["All"] + [r for r in event["regions"] if r in present]
     elif is_international:
-        available_regions = ["All"] + [r for r in ["EMEA", "Americas", "Pacific", "CN"] if r in data]
+        available_regions = ["All"] + [r for r in ["EMEA", "Americas", "Pacific", "CN"] if r in present]
     else:
         available_regions = ["All"]
     return data, available_regions
@@ -262,6 +307,7 @@ ORG_REGIONS = {
     "TLN":  "Pacific",  "GEN":  "Pacific",  "DFM":  "Pacific",
     "ZETA": "Pacific",  "RRQ":  "Pacific",  "TS":   "Pacific",
     "GE":   "Pacific",  "KRX":  "Pacific",  "NS":   "Pacific",
+    "FS":   "Pacific",
     # CN
     "EDG":  "CN",  "BLG":  "CN",  "TE":   "CN",  "DRG":  "CN",
     "ASE":  "CN",  "AG":   "CN",  "XLG":  "CN",  "WOL":  "CN",
@@ -366,12 +412,14 @@ def get_player_best_match(profile_url, event_id):
     if cache_key in _player_match_cache:
         return _player_match_cache[cache_key]
 
-    # All-time: walk every event's series CSV, find the player's single best
-    # match across the whole catalog, and report which event it was from.
-    if event_id == ALLTIME_ID:
+    # All-time (and intl-only / domestic-only variants): walk the matching
+    # subset of events' series CSVs, find the player's single best match across
+    # that subset, and report which event it was from.
+    if event_id in ALLTIME_IDS:
+        keep = _alltime_event_filter(event_id)
         best_row, best_opponent, best_event = None, None, None
         for e in ALL_EVENTS:
-            if list(e["regions"].keys()) == ["CN"]:
+            if not keep(e):
                 continue
             path = os.path.join(SERIES_DIR, f"{e['id']}.csv")
             if not os.path.exists(path):
@@ -531,7 +579,7 @@ MAIN_HTML = """
   .modal-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; font-weight:800; line-height:1.1; }
   .modal-meta { color:var(--soft); font-size:.82rem; margin-top:4px; }
   .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.88rem; font-weight:700; margin-top:6px; }
-  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
+  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; text-align:center; }
   .modal-section { margin-bottom:22px; }
   .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
   a.best-match-card:hover { background:#f7ecdf; }
@@ -583,6 +631,8 @@ MAIN_HTML = """
       <select class="event-select" onchange="window.location='/vct/?event='+this.value">
         <optgroup label="Overall">
           <option value="all_time"{% if event_id == "all_time" %} selected{% endif %}>All-Time</option>
+          <option value="all_time_intl"{% if event_id == "all_time_intl" %} selected{% endif %}>All-Time (Internationals Only)</option>
+          <option value="all_time_dom"{% if event_id == "all_time_dom" %} selected{% endif %}>All-Time (Domestic Only)</option>
         </optgroup>
         {% for year, year_events in events_by_year %}
         <optgroup label="{{ year }}">
@@ -609,7 +659,7 @@ MAIN_HTML = """
 
   <div class="rounds-wrap">
     <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
-    <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if event_id == 'all_time' else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
+    <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if is_alltime else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
 
   <div class="grid" id="grid"></div>
@@ -624,7 +674,7 @@ MAIN_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Match Performance {% if event_id == 'all_time' %}of All-Time{% else %}of the Event{% endif %}</div>
+      <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}of the Event{% endif %}</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -636,7 +686,7 @@ MAIN_HTML = """
   </div>
 </div>
 <script>
-const ROUNDS_FLOOR = {{ 50 if event_id == 'all_time' else 0 }};
+const ROUNDS_FLOOR = {{ 50 if is_alltime else 0 }};
 const DATA = {{ data_json | safe }};
 const STAT_LABELS = {{ stat_labels_json | safe }};
 const EVENT_ID = {{ event_id | tojson }};
@@ -724,8 +774,19 @@ function renderCard(stat, players, idx) {
   </div>`;
 }
 
+// Region subsets are derived (and memoized) from the single "All" array the
+// server now ships, rather than being sent as duplicate arrays per region.
+const _regionPlayersCache = {};
+function regionPlayers(region) {
+  if (region === 'All') return DATA['All'] || [];
+  if (!_regionPlayersCache[region]) {
+    _regionPlayersCache[region] = (DATA['All'] || []).filter(p => p.Region === region);
+  }
+  return _regionPlayersCache[region];
+}
+
 function renderGrid(region) {
-  const players = DATA[region] || DATA['All'];
+  const players = regionPlayers(region);
   document.getElementById('grid').innerHTML = STATS.map((stat, idx) =>
     renderCard(stat, getTopN(players, stat, 5), idx)
   ).join('');
@@ -884,7 +945,7 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
   const mean = values.reduce((a,b)=>a+b,0) / values.length;
   const std  = Math.sqrt(values.reduce((a,b)=>a+(b-mean)**2,0) / values.length) || 0.001;
 
-  const PAD  = { l:40, r:20, t:20, b:36 };
+  const PAD  = { l:30, r:30, t:20, b:36 };
   const pw   = W - PAD.l - PAD.r;
   const ph   = H - PAD.t - PAD.b;
   const xMin = mean - 3.6*std;
@@ -944,14 +1005,20 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
   });
 
   // Player label
-  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif'; ctx.fillStyle = '#7c3aed';
-  ctx.textAlign = 'center';
-  ctx.fillText(String(playerVal), pPx, toY(pdf(playerVal)) - 14);
+  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  // Centered directly above the dot; white halo keeps it crisp over the curve.
+  const valStr = String(playerVal);
+  const lblY = Math.max(toY(pdf(playerVal)) - 13, 13);
+  ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = '#fff';
+  ctx.strokeText(valStr, pPx, lblY);
+  ctx.fillStyle = '#7c3aed';
+  ctx.fillText(valStr, pPx, lblY);
 
   // Percentile caption
   const below  = values.filter(v => v < playerVal).length;
   const topPct = Math.round((1 - below/values.length)*100);
-  const scope  = EVENT_ID === 'all_time' ? 'all-time' : `at ${EVENT_LABEL}`;
+  const scope  = EVENT_ID.indexOf('all_time') === 0 ? 'all-time' : `at ${EVENT_LABEL}`;
   const pctTxt = topPct <= 50
     ? `Top ${topPct}% — better than ${100-topPct}% of players ${scope}`
     : `Bottom ${100-topPct}% — better than ${100-topPct}% of players ${scope}`;
@@ -1070,7 +1137,7 @@ RANKING_HTML = """
   .modal-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; font-weight:800; line-height:1.1; }
   .modal-meta { color:var(--soft); font-size:.82rem; margin-top:4px; }
   .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.88rem; font-weight:700; margin-top:6px; }
-  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; }
+  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; text-align:center; }
   .modal-section { margin-bottom:22px; }
   .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
   a.best-match-card:hover { background:#f7ecdf; }
@@ -1129,7 +1196,7 @@ RANKING_HTML = """
   </div>
   <div class="rounds-wrap">
     <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
-    <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if event_id == 'all_time' else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
+    <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if is_alltime else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
   <div class="table-wrap">
     <table>
@@ -1158,7 +1225,7 @@ RANKING_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Match Performance {% if event_id == 'all_time' %}of All-Time{% else %}of the Event{% endif %}</div>
+      <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}of the Event{% endif %}</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -1170,7 +1237,7 @@ RANKING_HTML = """
   </div>
 </div>
 <script>
-const ROUNDS_FLOOR = {{ 50 if event_id == 'all_time' else 0 }};
+const ROUNDS_FLOOR = {{ 50 if is_alltime else 0 }};
 const STAT_VALUES = {{ stat_values_json | safe }};
 const STAT_PLAYERS = {{ players_hover_json | safe }};
 const EVENT_ID = {{ event_id | tojson }};
@@ -1283,7 +1350,7 @@ function renderRows() {
 
   // Build rows in slice.
   let html = '';
-  for (let i = firstIdx; i < lastIdx; i++) html += rowHTML(filteredPlayers[i], i + 1);
+  for (let i = firstIdx; i < lastIdx; i++) html += rowHTML(filteredPlayers[i], filteredPlayers[i]._rank);
 
   const tbody = document.getElementById('tbody');
   tbody.innerHTML =
@@ -1295,12 +1362,19 @@ function renderRows() {
 
 function applyFilters() {
   const query = (document.getElementById('search').value || '').trim().toLowerCase();
-  filteredPlayers = PLAYERS.filter(p => {
+  // Rank is assigned over the region + min-rounds pool ONLY — never the search.
+  // That way a name search just hides non-matching rows; the rows that remain
+  // keep their true standing (e.g. searching "n" still shows a player as #137,
+  // not renumbered to #2).
+  const ranked = PLAYERS.filter(p => {
     if (activeRegion !== 'All' && p.Region !== activeRegion) return false;
-    if (query && !(p.Player || '').toLowerCase().includes(query)) return false;
     if (minRounds > 0 && (parseInt(p.Rnd) || 0) < minRounds) return false;
     return true;
   });
+  ranked.forEach((p, i) => { p._rank = i + 1; });
+  filteredPlayers = query
+    ? ranked.filter(p => (p.Player || '').toLowerCase().includes(query))
+    : ranked;
   // Force re-render on filter change.
   _renderState = { firstIdx: -1, lastIdx: -1, totalLen: -1 };
   renderRows();
@@ -1491,13 +1565,19 @@ function drawDistribution(values, playerVal, stat, statPlayers) {
     ctx.fillText(label, toX(v), H - 8);
   });
 
-  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif'; ctx.fillStyle = '#7c3aed';
-  ctx.textAlign = 'center';
-  ctx.fillText(String(playerVal), pPx, toY(pdf(playerVal)) - 14);
+  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  // Centered directly above the dot; white halo keeps it crisp over the curve.
+  const valStr = String(playerVal);
+  const lblY = Math.max(toY(pdf(playerVal)) - 13, 13);
+  ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = '#fff';
+  ctx.strokeText(valStr, pPx, lblY);
+  ctx.fillStyle = '#7c3aed';
+  ctx.fillText(valStr, pPx, lblY);
 
   const below  = values.filter(v => v < playerVal).length;
   const topPct = Math.round((1 - below/values.length)*100);
-  const scope  = EVENT_ID === 'all_time' ? 'all-time' : `at ${EVENT_LABEL}`;
+  const scope  = EVENT_ID.indexOf('all_time') === 0 ? 'all-time' : `at ${EVENT_LABEL}`;
   const pctTxt = topPct <= 50
     ? `Top ${topPct}% — better than ${100-topPct}% of players ${scope}`
     : `Bottom ${100-topPct}% — better than ${100-topPct}% of players ${scope}`;
@@ -1557,7 +1637,7 @@ def index():
 
     default_event = _most_recent_event_with_data()
     event_id = request.args.get("event", default_event["id"])
-    event = ALLTIME_EVENT if event_id == ALLTIME_ID else next((e for e in ALL_EVENTS if e["id"] == event_id), default_event)
+    event = ALLTIME_EVENTS_BY_ID.get(event_id) or next((e for e in ALL_EVENTS if e["id"] == event_id), default_event)
 
     cache = load_event(event)
     data, available_regions = build_data(cache, event)
@@ -1568,6 +1648,7 @@ def index():
         stat_labels_json=json.dumps(STAT_LABELS),
         event=event,
         event_id=event_id,
+        is_alltime=event_id in ALLTIME_IDS,
         events_by_year=get_events_by_year(),
         available_regions=available_regions,
     )
@@ -1582,7 +1663,7 @@ def ranking(stat):
 
     default_id = "2026_stage1"
     event_id = request.args.get("event", default_id)
-    event = ALLTIME_EVENT if event_id == ALLTIME_ID else next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
+    event = ALLTIME_EVENTS_BY_ID.get(event_id) or next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
     active_region = request.args.get("region", "All")
 
     cache = _event_cache.get(event_id)
@@ -1619,6 +1700,7 @@ def ranking(stat):
         active_region=active_region,
         event=event,
         event_id=event_id,
+        is_alltime=event_id in ALLTIME_IDS,
         available_regions=available_regions,
         stat_values_json=json.dumps(stat_values),
         stat_labels_json=json.dumps(STAT_LABELS),
@@ -1634,5 +1716,363 @@ def player_best_match_api():
         return json.dumps({"error": "Missing parameters"}), 400
     result = get_player_best_match(profile_url, event_id)
     return json.dumps(result)
+
+
+# ── Standalone player card (iframe-embeddable; opened by the /alpha home modal) ──
+# Renders ONLY the player header + Best Match Performance + percentile
+# normal-distribution chart — the same three pieces the /vct/ modal shows — on a
+# clean white page that posts its height to the parent so the modal can size to
+# fit. Reuses the modal CSS classes, drawDistribution, get_player_best_match, and
+# the same per-event stat-value list (computed server-side, embedded as JSON).
+PLAYER_CARD_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ player.Player }} — {{ stat_label }}</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/base.css">
+<style>
+  :root { --ink:#2a1f2d; --soft:#9e96a8; }
+  html { scrollbar-gutter:stable both-edges; }
+  html,body { background:#fff; margin:0; }
+  /* kill base.css's gradient washes so the card is solid white like the /vct/ modal */
+  body::before, body::after { display:none !important; content:none !important; }
+  body { font-family:'DM Sans',system-ui,sans-serif; color:var(--ink); }
+  .pc-wrap { max-width:580px; margin:0 auto; padding:28px 32px 32px; box-sizing:border-box; }
+  .modal-player { display:flex; flex-direction:column; align-items:center; text-align:center; gap:0; margin-bottom:22px; }
+  .modal-avatar { width:135px; height:135px; border-radius:50%; object-fit:cover; flex-shrink:0; }
+  .modal-avatar-ph { width:135px; height:135px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:40px; color:white; }
+  .modal-name { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.5rem; font-weight:800; line-height:1.1; margin-top:14px; }
+  .modal-meta { color:var(--soft); font-size:.82rem; margin-top:4px; }
+  .modal-stat-badge { display:inline-flex; align-items:center; gap:6px; background:#f0ecf4; border-radius:99px; padding:4px 12px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.88rem; font-weight:700; margin-top:6px; }
+  .modal-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--soft); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #f0ecf4; text-align:center; }
+  .modal-section { margin-bottom:22px; }
+  .best-match-card { background:#fdf6f0; border-radius:14px; padding:16px 18px; color:inherit; text-decoration:none; display:block; text-align:center; transition:background .15s; }
+  a.best-match-card:hover { background:#f7ecdf; }
+  .bm-matchup { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; column-gap:12px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.18rem; margin-bottom:6px; }
+  .bm-side { display:flex; align-items:center; gap:8px; }
+  .bm-side-left  { justify-self:end; }
+  .bm-side-right { justify-self:start; }
+  .bm-matchup .bm-vs { justify-self:center; color:var(--soft); font-weight:600; font-size:.85rem; }
+  .bm-team-logo { height:26px; width:auto; object-fit:contain; }
+  .best-match-vs { font-size:.78rem; color:var(--soft); margin-bottom:12px; }
+  .bm-result { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; padding:2px 9px; border-radius:99px; font-size:.8rem; letter-spacing:.04em; }
+  .bm-result-W { background:#d6f5e3; color:#1a7a3f; }
+  .bm-result-L { background:#fbe0e0; color:#a51d1d; }
+  .best-match-stats { display:grid; grid-template-columns:repeat(3, 1fr); align-items:center; max-width:220px; margin:0 auto; }
+  .best-match-agents { display:flex; gap:6px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
+  .agent-chip { background:white; border-radius:8px; padding:3px 8px; font-size:.75rem; font-weight:500; color:var(--ink); border:1px solid #f0ecf4; }
+  .best-match-stat { text-align:center; min-width:44px; }
+  .best-match-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; display:block; }
+  .best-match-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
+  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; }
+  .dist-wrap { position:relative; }
+  .dist-wrap canvas { display:block; width:100%; cursor:crosshair; }
+  .dist-caption { text-align:center; font-size:.78rem; color:var(--soft); margin-top:8px; }
+  .dist-tooltip { display:none; position:absolute; background:white; border:1px solid #f0ecf4; border-radius:10px; padding:6px 11px; font-size:.76rem; pointer-events:none; box-shadow:0 4px 16px #0002; z-index:10; white-space:nowrap; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="pc-wrap">
+  <div class="modal-player" id="modal-player"></div>
+  <div class="modal-section">
+    <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}of the Event{% endif %}</div>
+    <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
+  </div>
+  <div class="modal-section dist-wrap">
+    <div class="modal-section-title" id="modal-dist-title">Distribution</div>
+    <canvas id="dist-canvas" height="180"></canvas>
+    <div class="dist-caption" id="dist-caption"></div>
+    <div class="dist-tooltip" id="dist-tooltip"></div>
+  </div>
+</div>
+<script>
+const STAT       = {{ stat | tojson }};
+const STAT_LABEL = {{ stat_label | tojson }};
+const PLAYER     = {{ player_json | safe }};
+const STAT_VALUES  = {{ stat_values_json | safe }};
+const STAT_PLAYERS = {{ players_hover_json | safe }};
+const BEST_MATCH = {{ best_match_json | safe }};
+const EVENT_ID    = {{ event_id | tojson }};
+const EVENT_LABEL = {{ event.label | tojson }};
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function parseVal(v) {
+  return parseFloat(String(v || '').replace('%', '')) || 0;
+}
+function avatarColor(name) {
+  const colors = ['#f4a0ae','#90b8e8','#90d4b4','#f4b878','#b498e8','#e8d478','#78c8e8','#e898c8'];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return colors[Math.abs(hash) % colors.length];
+}
+
+// ── Player header (mirrors openPlayerModal's header block) ────────────────────
+(function renderHeader() {
+  const name = PLAYER.name || '';
+  const headshot = PLAYER.headshot || '';
+  const avatarEl = headshot
+    ? `<img class="modal-avatar" src="${esc(headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'modal-avatar-ph',style:'background:'+avatarColor(${JSON.stringify(name)}),textContent:${JSON.stringify(name)}.slice(0,2).toUpperCase()}))">`
+    : `<div class="modal-avatar-ph" style="background:${avatarColor(name)}">${name.slice(0,2).toUpperCase()}</div>`;
+  const fk = PLAYER.fk, fd = PLAYER.fd;
+  const fdInfo = (STAT === 'FIWR' && fk !== '' && fd !== '')
+    ? `<div class="modal-meta" style="margin-top:10px">First duels won: <b>${esc(fk)}</b> &middot; First duels lost: <b>${esc(fd)}</b></div>`
+    : '';
+  document.getElementById('modal-player').innerHTML = `
+    ${avatarEl}
+    <div>
+      <div class="modal-name">${esc(name)}</div>
+      <div class="modal-meta">${esc(PLAYER.org)} &middot; ${esc(PLAYER.region)}</div>
+      <div class="modal-stat-badge">${esc(STAT)} &nbsp; ${esc(PLAYER.value)}</div>
+      ${fdInfo}
+    </div>`;
+})();
+
+// ── Best match (ported verbatim from the /vct/ modal's renderBestMatch) ───────
+function renderBestMatch(data, playerOrg) {
+  const el = document.getElementById('modal-match');
+  if (!data || data.error) {
+    el.innerHTML = `<div class="modal-loading" style="color:#ccc">${esc((data&&data.error)||'No match data found')}</div>`;
+    return;
+  }
+  const historicalOrg = data.player_org || playerOrg;
+  const agentChips = (data.agents||[]).map(a => `<span class="agent-chip">${esc(a)}</span>`).join('');
+  const teamLogo = (org) => org
+    ? `<img src="/logos/${esc(org)}.png" alt="${esc(org)}" class="bm-team-logo" onerror="this.style.display='none'">`
+    : '';
+  const openTag = data.match_id ? `<a class="best-match-card" href="https://www.vlr.gg/${esc(data.match_id)}/" target="_blank" rel="noopener" title="Open match on VLR.gg">` : `<div class="best-match-card">`;
+  const closeTag = data.match_id ? '</a>' : '</div>';
+  el.innerHTML = `
+    ${openTag}
+      <div class="bm-matchup">
+        <div class="bm-side bm-side-left">${teamLogo(historicalOrg)}<span>${esc(historicalOrg||'?')}</span></div>
+        <span class="bm-vs">vs</span>
+        <div class="bm-side bm-side-right"><span>${esc(data.opponent||'?')}</span>${teamLogo(data.opponent)}</div>
+      </div>
+      <div class="best-match-vs">${data.result ? `<span class="bm-result bm-result-${data.result}">${esc(data.result)}${data.series_score ? ' ' + esc(data.series_score) : ''}</span>` : ''}${data.result && data.event_label ? ' &middot; ' : ''}${data.event_label ? esc(data.event_label) : ''}</div>
+      <div class="best-match-stats">
+        <div class="best-match-stat">
+          <span class="best-match-stat-val">${data.rating != null ? data.rating.toFixed(2) : '—'}</span>
+          <span class="best-match-stat-lbl">Rating</span>
+        </div>
+        <div class="best-match-stat">
+          <span class="best-match-stat-val">${data.kills ?? '—'}</span>
+          <span class="best-match-stat-lbl">Kills</span>
+        </div>
+        <div class="best-match-stat">
+          <span class="best-match-stat-val">${data.deaths ?? '—'}</span>
+          <span class="best-match-stat-lbl">Deaths</span>
+        </div>
+      </div>
+      <div class="best-match-agents">${agentChips||'<span class="agent-chip">—</span>'}</div>
+    ${closeTag}`;
+}
+renderBestMatch(BEST_MATCH, PLAYER.org);
+
+// ── Normal distribution canvas (ported verbatim from the /vct/ modal) ─────────
+let distState = null;
+function drawDistribution(values, playerVal, stat, statPlayers) {
+  const canvas = document.getElementById('dist-canvas');
+  const dpr    = window.devicePixelRatio || 1;
+  const H      = 180;
+  // Let CSS size the display width to 100% of the box (so the canvas is always
+  // full-width and centered), then read the realized width back for the backing
+  // buffer. Setting a fixed px width from an early offsetWidth (in the iframe,
+  // before layout settles) was locking it narrow → left-aligned in its box.
+  canvas.style.width  = '100%';
+  canvas.style.height = H + 'px';
+  const W = canvas.clientWidth || canvas.parentElement.offsetWidth || 520;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  if (!values.length) return;
+  const mean = values.reduce((a,b)=>a+b,0) / values.length;
+  const std  = Math.sqrt(values.reduce((a,b)=>a+(b-mean)**2,0) / values.length) || 0.001;
+  const PAD  = { l:30, r:30, t:20, b:36 };
+  const pw   = W - PAD.l - PAD.r;
+  const ph   = H - PAD.t - PAD.b;
+  const xMin = mean - 3.6*std;
+  const xMax = mean + 3.6*std;
+  const toX  = v => PAD.l + (v - xMin) / (xMax - xMin) * pw;
+  const pdf  = v => Math.exp(-0.5*((v-mean)/std)**2);
+  const maxY = pdf(mean);
+  const toY  = p => PAD.t + ph - (p / maxY) * ph;
+  const N   = 400;
+  const dx  = (xMax - xMin) / N;
+  const pPx = toX(playerVal);
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const v = xMin + i*dx;
+    if (v < playerVal) continue;
+    i === 0 || v - dx < playerVal ? ctx.moveTo(toX(v), toY(pdf(v))) : ctx.lineTo(toX(v), toY(pdf(v)));
+  }
+  ctx.lineTo(toX(xMax), toY(0)); ctx.lineTo(pPx, toY(0)); ctx.closePath();
+  ctx.fillStyle = '#d4b8f430'; ctx.fill();
+  ctx.beginPath();
+  for (let i = 0; i <= N; i++) {
+    const v = xMin + i*dx;
+    i === 0 ? ctx.moveTo(toX(v), toY(pdf(v))) : ctx.lineTo(toX(v), toY(pdf(v)));
+  }
+  ctx.strokeStyle = '#2a1f2d'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(toX(mean), toY(1)); ctx.lineTo(toX(mean), toY(0));
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pPx, toY(pdf(playerVal))); ctx.lineTo(pPx, toY(0));
+  ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 2;
+  ctx.setLineDash([5,4]); ctx.stroke(); ctx.setLineDash([]);
+  ctx.beginPath(); ctx.arc(pPx, toY(pdf(playerVal)), 5, 0, 2*Math.PI);
+  ctx.fillStyle = '#7c3aed'; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(PAD.l, toY(0)+1); ctx.lineTo(W-PAD.r, toY(0)+1);
+  ctx.strokeStyle = '#e0dce8'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.font = '11px "DM Sans",sans-serif'; ctx.fillStyle = '#9e96a8'; ctx.textAlign = 'center';
+  [[xMin,''], [mean,'avg'], [xMax,'']].forEach(([v,lbl]) => {
+    const label = lbl ? `${v.toFixed(2)} (${lbl})` : v.toFixed(2);
+    ctx.fillText(label, toX(v), H - 8);
+  });
+  ctx.font = 'bold 12px "Plus Jakarta Sans",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  // Centered directly above the dot; white halo keeps it crisp over the curve.
+  const valStr = String(playerVal);
+  const lblY = Math.max(toY(pdf(playerVal)) - 13, 13);
+  ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeStyle = '#fff';
+  ctx.strokeText(valStr, pPx, lblY);
+  ctx.fillStyle = '#7c3aed';
+  ctx.fillText(valStr, pPx, lblY);
+  const below  = values.filter(v => v < playerVal).length;
+  const topPct = Math.round((1 - below/values.length)*100);
+  const scope  = EVENT_ID.indexOf('all_time') === 0 ? 'all-time' : `at ${EVENT_LABEL}`;
+  const pctTxt = topPct <= 50
+    ? `Top ${topPct}% — better than ${100-topPct}% of players ${scope}`
+    : `Bottom ${100-topPct}% — better than ${100-topPct}% of players ${scope}`;
+  document.getElementById('dist-caption').textContent = pctTxt;
+  distState = {xMin, xMax, PAD, pw, statPlayers: statPlayers || []};
+}
+
+(function() {
+  const canvas = document.getElementById('dist-canvas');
+  const tooltip = document.getElementById('dist-tooltip');
+  if (!canvas || !tooltip) return;
+  canvas.addEventListener('mousemove', function(e) {
+    if (!distState || !distState.statPlayers.length) { tooltip.style.display='none'; return; }
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio||1);
+    const {xMin, xMax, PAD, pw, statPlayers} = distState;
+    if (mouseX < PAD.l || mouseX > PAD.l + pw) { tooltip.style.display='none'; return; }
+    const hoverVal = xMin + (mouseX - PAD.l) / pw * (xMax - xMin);
+    const nearest = statPlayers.reduce((a,b) => Math.abs(a.val-hoverVal) < Math.abs(b.val-hoverVal) ? a : b);
+    const below = statPlayers.filter(p => p.val < nearest.val).length;
+    const pct = Math.round((1 - below/statPlayers.length) * 100);
+    const pctLabel = pct <= 50 ? `Top ${pct}%` : `Bottom ${100-pct}%`;
+    const eventLine = nearest.event ? `<br><span style="color:#9e96a8;font-size:.7rem">${esc(nearest.event)}</span>` : '';
+    tooltip.innerHTML = `<strong style="font-family:'Plus Jakarta Sans',sans-serif">${esc(nearest.name)}</strong>${nearest.org ? ` <span style="color:#9e96a8;font-weight:400">${esc(nearest.org)}</span>` : ''}${eventLine}<br><span style="color:#7c3aed;font-weight:700">${nearest.val.toFixed(2)}</span> · <span style="color:#9e96a8">${pctLabel}</span>`;
+    const wrapEl = canvas.parentElement;
+    const tipX = e.clientX - wrapEl.getBoundingClientRect().left;
+    const tipY = e.clientY - wrapEl.getBoundingClientRect().top;
+    tooltip.style.display = 'block';
+    tooltip.style.left = Math.min(tipX + 14, wrapEl.offsetWidth - 190) + 'px';
+    tooltip.style.top = Math.max(tipY - 78, 4) + 'px';
+  });
+  canvas.addEventListener('mouseleave', () => { tooltip.style.display='none'; });
+})();
+
+function renderDist() {
+  document.getElementById('modal-dist-title').textContent = `${STAT_LABEL} Distribution — ${STAT_VALUES.length} players`;
+  drawDistribution(STAT_VALUES, parseVal(PLAYER.value), STAT, STAT_PLAYERS);
+}
+renderDist();
+window.addEventListener('resize', renderDist);
+window.addEventListener('load', renderDist);
+// re-measure once the iframe layout has settled so the buffer matches the final width
+setTimeout(renderDist, 120); setTimeout(renderDist, 400);
+
+// ── Post height so the parent modal sizes to fit this card ────────────────────
+(function(){
+  function postH(){ try{ parent.postMessage({__teamH: Math.ceil(document.documentElement.scrollHeight)}, '*'); }catch(e){} }
+  postH();
+  window.addEventListener('load', postH);
+  window.addEventListener('resize', postH);
+  setTimeout(postH, 250); setTimeout(postH, 800); setTimeout(postH, 1500);
+})();
+</script>
+</body>
+</html>
+"""
+
+
+@vct_bp.route("/player")
+def player_card():
+    """Standalone, iframe-embeddable card for ONE player at ONE event: header +
+    Best Match Performance + percentile distribution. Opened by the /alpha home
+    page's player-leader rows (via the alpha-nav modal). Query params:
+      profile — the player's VLR ProfileURL (required)
+      stat    — stat key, e.g. R2.0 / KAST / HS% / FIWR (default R2.0)
+      event   — event id (default: most recent event with data, same as /vct/)."""
+    _ensure_headshots_loaded()
+
+    profile_url = request.args.get("profile", "")
+    stat = request.args.get("stat", "R2.0")
+    if stat not in STAT_LABELS:
+        stat = "R2.0"
+
+    default_event = _most_recent_event_with_data()
+    event_id = request.args.get("event", "") or default_event["id"]
+    event = (ALLTIME_EVENTS_BY_ID.get(event_id)
+             or next((e for e in ALL_EVENTS if e["id"] == event_id), default_event))
+    event_id = event["id"]
+
+    cache = _event_cache.get(event_id)
+    if cache is None:
+        cache = load_event(event)
+
+    # Full sorted stat list for this event — the source for both the distribution
+    # values and the lookup of this player's row (matched by ProfileURL).
+    players = get_all(cache, stat)
+
+    def _num(v):
+        try:
+            return float(str(v).replace("%", ""))
+        except (ValueError, TypeError):
+            return None
+
+    stat_values = [_num(p[stat]) for p in players if _num(p.get(stat)) is not None]
+    players_hover = [{"name": p["Player"], "org": p.get("Org", ""),
+                      "event": p.get("Event", ""), "val": _num(p[stat])}
+                     for p in players if _num(p.get(stat)) is not None]
+
+    row = next((p for p in players if p.get("ProfileURL") == profile_url), None)
+    if row is None:
+        return "Player not found at this event", 404
+
+    player = {
+        "name":     row.get("Player", ""),
+        "org":      row.get("Org", ""),
+        "region":   row.get("Region", ""),
+        "headshot": row.get("HeadshotURL", "") or "",
+        "value":    str(row.get(stat, "")),
+        "fk":       "" if row.get("FK", "") in (None, "") else str(row.get("FK", "")),
+        "fd":       "" if row.get("FD", "") in (None, "") else str(row.get("FD", "")),
+        "Player":   row.get("Player", ""),
+    }
+
+    best_match = get_player_best_match(profile_url, event_id) if profile_url else {"error": "No profile link available"}
+
+    return render_template_string(
+        PLAYER_CARD_HTML,
+        stat=stat,
+        stat_label=STAT_LABELS[stat],
+        player=player,
+        player_json=json.dumps(player),
+        best_match_json=json.dumps(best_match),
+        stat_values_json=json.dumps(stat_values),
+        players_hover_json=json.dumps(players_hover),
+        event=event,
+        event_id=event_id,
+        is_alltime=event_id in ALLTIME_IDS,
+    )
 
 

@@ -292,5 +292,71 @@
         "slug": "furia"
       }
     ]
+  },
+  "2026_masters_london": {
+    "label": "Masters London 2026",
+    "event_id": 2765,
+    "standings": [
+      {
+        "place": 1,
+        "team": "Leviat\u00e1n",
+        "slug": "leviat-n"
+      },
+      {
+        "place": 2,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      },
+      {
+        "place": 3,
+        "team": "EDward Gaming",
+        "slug": "edward-gaming"
+      },
+      {
+        "place": 4,
+        "team": "Team Vitality",
+        "slug": "team-vitality"
+      },
+      {
+        "place": 5,
+        "team": "FUT Esports",
+        "slug": "fut-esports"
+      },
+      {
+        "place": 5,
+        "team": "Xi Lai Gaming",
+        "slug": "xi-lai-gaming"
+      },
+      {
+        "place": 7,
+        "team": "G2 Esports",
+        "slug": "g2-esports"
+      },
+      {
+        "place": 7,
+        "team": "Team Heretics",
+        "slug": "team-heretics"
+      },
+      {
+        "place": 9,
+        "team": "Dragon Ranger Gaming",
+        "slug": "dragon-ranger-gaming"
+      },
+      {
+        "place": 9,
+        "team": "FearX",
+        "slug": "fearx"
+      },
+      {
+        "place": 9,
+        "team": "Global Esports",
+        "slug": "global-esports"
+      },
+      {
+        "place": 9,
+        "team": "NRG",
+        "slug": "nrg"
+      }
+    ]
   }
 }

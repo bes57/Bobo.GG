@@ -7,7 +7,7 @@ MoreTestingMaybeFiles.live_events_today():
   1. Discover every event whose date window contains today (with a small lead/trail).
   2. For each region of each live event, scan VLR for completed matches and scrape
      new ones into data/maps/{event_id}.csv and data/series/{event_id}.csv.
-  3. Scrape upcoming (un-played) matches for the next 14 days from every live event.
+  3. Scrape upcoming (un-played) matches for the next ~month from every live event.
   4. Rebuild match_results.csv, fetch any new match dates, and rebuild the BenPom
      rating timeline.
 
@@ -133,6 +133,10 @@ VLR_NAME_TO_ORG = {
     'Team Heretics': 'TH', 'Team Liquid': 'TL', 'Team Secret': 'TS',
     'Team Vitality': 'VIT', 'VARREL': 'VL', 'ZETA DIVISION': 'ZETA',
 }
+# Case-insensitive index — VLR sometimes upper-cases names on the matches page
+# (e.g. "KIWOOM DRX" vs the dict's "Kiwoom DRX"), which otherwise leaves the
+# org as the full name and breaks the logo lookup.
+_VLR_NAME_TO_ORG_CI = {k.lower(): v for k, v in VLR_NAME_TO_ORG.items()}
 
 # Cloudflare challenge fingerprints — if any of these show up in a response body
 # we treat the page as unscrapeable and log loudly instead of silently parsing.
@@ -494,11 +498,11 @@ def _scrape_date(mid):
 # ── Upcoming match scraper ────────────────────────────────────────────────────
 
 def _scrape_upcoming_for(vlr_id, slug, region, event_label):
-    """Return upcoming-match dicts for one (event, region) within the next 14 days."""
+    """Return upcoming-match dicts for one (event, region) within the next ~month."""
     from datetime import datetime as _dt
     from bs4 import NavigableString
     today = datetime.date.today()
-    cutoff = today + datetime.timedelta(days=14)
+    cutoff = today + datetime.timedelta(days=31)
 
     url = f"https://www.vlr.gg/event/matches/{vlr_id}/{slug}/"
     soup = _fetch(url, retries=2)
@@ -565,8 +569,8 @@ def _scrape_upcoming_for(vlr_id, slug, region, event_label):
 
             out.append({
                 "team_a": team_a, "team_b": team_b,
-                "org_a":  VLR_NAME_TO_ORG.get(team_a, team_a),
-                "org_b":  VLR_NAME_TO_ORG.get(team_b, team_b),
+                "org_a":  _VLR_NAME_TO_ORG_CI.get(team_a.lower(), team_a),
+                "org_b":  _VLR_NAME_TO_ORG_CI.get(team_b.lower(), team_b),
                 "date":   match_date,
                 "region": region,
                 "event":  f"{event_label} — {region}" if region != "International" else event_label,
@@ -707,6 +711,32 @@ def _resolve_live_targets():
     return []
 
 
+def _upcoming_lookahead_targets(live_targets):
+    """Events that START within ~a month but aren't 'live' yet (i.e. beyond the
+    live lead window), so their already-posted VLR schedule still surfaces as
+    'upcoming' up to a month out — e.g. Pacific Stage 2 matches posted weeks
+    before the split begins. URLs auto-resolve from VLR's season page when the
+    ALL_EVENTS placeholder is blank. Deduped against the live targets."""
+    import datetime as _dt
+    today = _dt.date.today()
+    horizon = today + _dt.timedelta(days=31)
+    have = {t.get("label") for t in live_targets}
+    out = []
+    for ev in ALL_EVENTS:
+        s = ev.get("start")
+        if not s or ev.get("label") in have:
+            continue
+        try:
+            sd = _dt.date.fromisoformat(s)
+        except Exception:
+            continue
+        if today < sd <= horizon:
+            t = _event_to_target(ev)
+            if t:
+                out.append(t)
+    return out
+
+
 def main():
     import pandas as pd
 
@@ -781,9 +811,12 @@ def main():
            [f"Total completed across all live events: {total_completed}",
             f"New to scrape: {len(all_new_urls)}"])
 
-    # ── Step 2: Scrape upcoming for every live event (always) ───────────────
+    # ── Step 2: Scrape upcoming for live events + any starting within a month ─
+    # Look-ahead lets a not-yet-live split (e.g. Pacific Stage 2, 3 weeks out)
+    # surface its already-posted VLR schedule as "upcoming".
+    upc_targets = list(targets) + _upcoming_lookahead_targets(targets)
     all_upcoming = []
-    for t in targets:
+    for t in upc_targets:
         for region, vlr_id, slug in t["regions"]:
             upc = _scrape_upcoming_for(vlr_id, slug, region, t["label"])
             all_upcoming.extend(upc)
@@ -802,7 +835,7 @@ def main():
         with open(out_upc, "w") as f:
             json.dump(deduped, f, indent=2)
         _write("checking", 34,
-               f"Upcoming matches: {len(deduped)} in next 14 days",
+               f"Upcoming matches: {len(deduped)} in next ~month",
                [f"Upcoming saved: {len(deduped)} match(es)"])
     except Exception as e:
         _write("checking", 34, "Upcoming write failed",
