@@ -623,7 +623,7 @@ ALPHA_HTML = """
   *{box-sizing:border-box}
   body{font-family:'DM Sans',sans-serif;color:var(--ink);}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 22px 64px;position:relative;z-index:1}
+  .wrap{width:100%;max-width:1180px;margin:0 auto;padding:0 22px 64px;position:relative;z-index:1}
 
   /* ── Top bar + nav ── */
   .atop{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 4px 8px}

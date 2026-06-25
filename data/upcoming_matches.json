@@ -482,5 +482,27 @@
     "event": "2026 Stage 2 \u2014 Pacific",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Paper Rex",
+    "team_b": "KIWOOM DRX",
+    "org_a": "PRX",
+    "org_b": "KRX",
+    "date": "2026-07-26",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Gen.G",
+    "team_b": "Rex Regum Qeon",
+    "org_a": "GEN",
+    "org_b": "RRQ",
+    "date": "2026-07-26",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
   }
 ]

@@ -877,12 +877,27 @@ def _rank_df(direction, stat_name, fmt, year, context):
     return df, col, (col == "K:D")
 
 
-def _format_entries(df, fmt, col, is_kd):
-    """Turn a ranked df (from _rank_df) into the list of result dicts the page
-    and the home-page records preview both consume."""
+_FMT_LOOKUP_CACHE = {}   # group -> (mtime_key, res_lookup, opp_map)
+
+
+def _fmt_lookups(fmt):
+    """Per-format result lookup + opponent map. These depend only on the format
+    GROUP (map vs series) and the underlying CSVs — not on the stat/context — so
+    cache them. The home-page records scan calls _format_entries ~30x and was
+    rebuilding a full-dataset groupby each time (the bulk of its cold-build cost)."""
+    grp = "map" if fmt == "map" else "series"
+    try:
+        _mr_mt = os.path.getmtime(os.path.join(DATA_DIR, "match_results.csv"))
+    except OSError:
+        _mr_mt = 0.0
+    key = (_csv_dir_mtime(MAPS_DIR if grp == "map" else SERIES_DIR), _mr_mt)
+    cached = _FMT_LOOKUP_CACHE.get(grp)
+    if cached and cached[0] == key:
+        return cached[1], cached[2]
+
     results_df = _load_match_results()
     if not results_df.empty and "Score" in results_df.columns:
-        if fmt == "map":
+        if grp == "map":
             res_lookup = results_df[results_df["MapNum"] != "all"].set_index(["MatchID", "MapNum"])
         else:
             res_lookup = results_df[results_df["MapNum"] == "all"].set_index("MatchID")
@@ -890,21 +905,30 @@ def _format_entries(df, fmt, col, is_kd):
         res_lookup = None
 
     opp_map = {}
-    if fmt == "map":
+    if grp == "map":
         _full = _load_map_data()
         if _full is not None and not _full.empty and {"MatchID", "MapNum", "Org"} <= set(_full.columns):
             _g = _full[["MatchID", "MapNum", "Org"]].copy()
             _g["MatchID"] = _g["MatchID"].astype(str).str.strip()
             _g["MapNum"]  = _g["MapNum"].astype(str).str.strip()
-            for (mid_k, mnum_k), grp in _g.groupby(["MatchID", "MapNum"]):
-                opp_map[(mid_k, mnum_k)] = list(pd.unique(grp["Org"].dropna()))
-    elif fmt in ("bo3", "bo5", "all_series"):
+            for (mid_k, mnum_k), grp_rows in _g.groupby(["MatchID", "MapNum"]):
+                opp_map[(mid_k, mnum_k)] = list(pd.unique(grp_rows["Org"].dropna()))
+    else:
         _full = _load_series_data()
         if _full is not None and not _full.empty and {"MatchID", "Org"} <= set(_full.columns):
             _g = _full[["MatchID", "Org"]].copy()
             _g["MatchID"] = _g["MatchID"].astype(str).str.strip()
-            for mid_k, grp in _g.groupby("MatchID"):
-                opp_map[mid_k] = list(pd.unique(grp["Org"].dropna()))
+            for mid_k, grp_rows in _g.groupby("MatchID"):
+                opp_map[mid_k] = list(pd.unique(grp_rows["Org"].dropna()))
+
+    _FMT_LOOKUP_CACHE[grp] = (key, res_lookup, opp_map)
+    return res_lookup, opp_map
+
+
+def _format_entries(df, fmt, col, is_kd):
+    """Turn a ranked df (from _rank_df) into the list of result dicts the page
+    and the home-page records preview both consume."""
+    res_lookup, opp_map = _fmt_lookups(fmt)
 
     results = []
     for _, row in df.iterrows():

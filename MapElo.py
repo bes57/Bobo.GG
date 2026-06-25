@@ -4157,6 +4157,25 @@ var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
 var LOCK_CURRENT = LOCK_CURRENT_FLAG;
+// Historical simulator only: disambiguate a same-org matchup (e.g. PRX after
+// London vs PRX after Toronto) by appending each side's snapshot in parens:
+// "PRX (After London)". The Modern/live simulator (LOCK_CURRENT) keeps the bare
+// org name — both teams there are the current snapshot, so it's never ambiguous.
+function simTeamLabel(org, lbl){
+  return (LOCK_CURRENT || !lbl) ? org : (org + ' (' + lbl + ')');
+}
+// VCT Champions has no unique venue in the event label, so "After Champions"
+// repeats every year and is ambiguous. Map each year to its host city so a
+// snapshot reads "After Champions Seoul" instead. (Masters labels already carry
+// a unique location — Tokyo, Madrid, Shanghai, Bangkok, Toronto, London, ….)
+var CHAMPIONS_LOC = {'2023':'LA','2024':'Seoul','2025':'Paris'};
+function prettySnapLabel(lbl, year){
+  if(lbl && lbl.indexOf('Champions')>=0){
+    var loc = CHAMPIONS_LOC[String(year)];
+    if(loc) return lbl.replace('Champions','Champions '+loc);
+  }
+  return lbl;
+}
 function _latestSnapFor(y){
   var snaps = ((DATA.ratings||{})[y]||{}).snapshots || {};
   var keys = Object.keys(snaps);
@@ -4349,7 +4368,7 @@ function populateSnapSeg(side){
   if(!keys.length){ host.innerHTML=''; return; }
   if(keys.indexOf(cur)<0){ cur=keys[0]; if(side==='a') snapA=cur; else snapB=cur; }
   host.innerHTML = keys.map(function(k){
-    var lbl = (snaps[k]||{}).label || k;
+    var lbl = prettySnapLabel((snaps[k]||{}).label || k, year);
     return '<button class="snap-seg-btn'+(k===cur?' active':'')+'" data-side="'+side+'" data-snap="'+k+'">'+lbl+'</button>';
   }).join('');
   host.querySelectorAll('.snap-seg-btn').forEach(function(b){
@@ -4842,8 +4861,8 @@ function simulate() {
   }
 
   var pA_=seriesWins/nSims, pctA=Math.round(pA_*100), pctB=100-pctA;
-  var lblA=((getSnapsFor(yearA)[snapA])||{}).label||snapA;
-  var lblB=((getSnapsFor(yearB)[snapB])||{}).label||snapB;
+  var lblA=prettySnapLabel(((getSnapsFor(yearA)[snapA])||{}).label||snapA, yearA);
+  var lblB=prettySnapLabel(((getSnapsFor(yearB)[snapB])||{}).label||snapB, yearB);
   var fmtLabel = fmt==='bo1'?'Map win prob.'
               : fmt==='bo5_gf'?'Series win prob. (Bo5 GF)'
               : fmt==='bo5'?'Series win prob. (Bo5)'
@@ -4920,7 +4939,7 @@ function topHeaderHtml(R){
       '<div class="result-teams-row">'+
         '<div class="result-team-block">'+
           logoTag(R.orgA,'result-logo')+
-          '<div class="result-org">'+R.orgA+'</div>'+
+          '<div class="result-org">'+simTeamLabel(R.orgA,R.lblA)+'</div>'+
           '<div class="result-ctx">'+R.yearA+'&thinsp;&middot;&thinsp;'+R.lblA+'</div>'+
           intlBadgeHtml(R.orgA, R.intlA)+
           '<div class="result-pct '+(R.pctA>=50?'fav':'dog')+'">'+R.pctA+'%</div>'+
@@ -4931,7 +4950,7 @@ function topHeaderHtml(R){
         '</div>'+
         '<div class="result-team-block">'+
           logoTag(R.orgB,'result-logo')+
-          '<div class="result-org">'+R.orgB+'</div>'+
+          '<div class="result-org">'+simTeamLabel(R.orgB,R.lblB)+'</div>'+
           '<div class="result-ctx">'+R.yearB+'&thinsp;&middot;&thinsp;'+R.lblB+'</div>'+
           intlBadgeHtml(R.orgB, R.intlB)+
           '<div class="result-pct '+(R.pctB>=50?'fav':'dog')+'">'+R.pctB+'%</div>'+
@@ -4943,7 +4962,7 @@ function topHeaderHtml(R){
 
 function breakdownHtml(R){
   return '<div class="veto-pred-card">'+
-    '<div class="veto-pred-title">Predicted Veto — '+R.orgA+' vs '+R.orgB+'</div>'+
+    '<div class="veto-pred-title">Predicted Veto — '+simTeamLabel(R.orgA,R.lblA)+' vs '+simTeamLabel(R.orgB,R.lblB)+'</div>'+
     vetoListHtml(R)+
   '</div>'+
   '<div class="result-card">'+
@@ -5124,9 +5143,9 @@ function playReveal(R){
   body.innerHTML =
     '<div class="rv-shimmer"></div>'+
     '<div class="rv-intro">'+
-      '<div class="rv-intro-team">'+logoTag(R.orgA,'')+'<div style="font-family:Plus Jakarta Sans,sans-serif;font-weight:800;">'+R.orgA+'</div></div>'+
+      '<div class="rv-intro-team">'+logoTag(R.orgA,'')+'<div style="font-family:Plus Jakarta Sans,sans-serif;font-weight:800;">'+simTeamLabel(R.orgA,R.lblA)+'</div></div>'+
       '<div class="rv-intro-vs">VS</div>'+
-      '<div class="rv-intro-team b">'+logoTag(R.orgB,'')+'<div style="font-family:Plus Jakarta Sans,sans-serif;font-weight:800;">'+R.orgB+'</div></div>'+
+      '<div class="rv-intro-team b">'+logoTag(R.orgB,'')+'<div style="font-family:Plus Jakarta Sans,sans-serif;font-weight:800;">'+simTeamLabel(R.orgB,R.lblB)+'</div></div>'+
     '</div>';
   tick({freq:520,dur:.18,vol:.04,type:'sine'});
 
@@ -5231,14 +5250,14 @@ function revealMaps(R, seq, body){
           '<div class="rv-map-h2h">'+
             '<div class="rv-map-team">'+
               logoTag(R.orgA,'')+
-              '<div class="rv-map-team-name">'+R.orgA+'</div>'+
+              '<div class="rv-map-team-name">'+simTeamLabel(R.orgA,R.lblA)+'</div>'+
               '<div class="rv-map-score" id="rv-score-A-'+idx+'">0</div>'+
               '<div class="rv-map-team-pct" id="rv-pct-A-'+idx+'"></div>'+
             '</div>'+
             '<div class="rv-map-vs-mini">VS</div>'+
             '<div class="rv-map-team">'+
               logoTag(R.orgB,'')+
-              '<div class="rv-map-team-name">'+R.orgB+'</div>'+
+              '<div class="rv-map-team-name">'+simTeamLabel(R.orgB,R.lblB)+'</div>'+
               '<div class="rv-map-score" id="rv-score-B-'+idx+'">0</div>'+
               '<div class="rv-map-team-pct" id="rv-pct-B-'+idx+'"></div>'+
             '</div>'+
@@ -5265,7 +5284,7 @@ function revealMaps(R, seq, body){
           var winnerSnap = winnerSide==='A' ? R.snapA : R.snapB;
           var clinch = document.createElement('div');
           clinch.className = 'rv-clinch';
-          clinch.textContent = winnerOrg + ' clinches the series ' +
+          clinch.textContent = (winnerSide==='A'?simTeamLabel(R.orgA,R.lblA):simTeamLabel(R.orgB,R.lblB)) + ' clinches the series ' +
             Math.max(seriesA,seriesB) + '-' + Math.min(seriesA,seriesB);
           mapsHost.appendChild(clinch);
           setTimeout(function(){ clinch.classList.add('shown'); }, 20);
@@ -5441,8 +5460,9 @@ function runMatchup() {
   var title = document.getElementById('matchupTitle');
   if (!title) return;
   var text = LOCK_CURRENT ? 'Matchup Predictor' : 'Historical Matchup Predictor';
-  var STEP = 35;
   title.style.opacity = '1';
+  if (!LOCK_CURRENT) { title.textContent = text; return; }  // historical: no title animation
+  var STEP = 35;
   title.innerHTML = '';
   for (var i = 0; i < text.length; i++) {
     var span = document.createElement('span');
@@ -5485,7 +5505,8 @@ MAPELO_PYTH_HTML = """
   .intro-details summary::before { content:'▸'; font-size:.75rem; transition:transform .2s; display:inline-block; }
   .intro-details[open] summary::before { transform:rotate(90deg); }
   .intro-details[open] summary { margin-bottom:18px; }
-  .intro-body { display:flex; flex-direction:column; gap:14px; overflow:hidden; transition:max-height .35s ease; }
+  .intro-body-wrap { display:grid; grid-template-rows:1fr; transition:grid-template-rows .35s ease; will-change:grid-template-rows; }
+  .intro-body { display:flex; flex-direction:column; gap:14px; overflow:hidden; min-height:0; }
   .intro-p { font-size:.9rem; color:var(--ink); line-height:1.75; }
   .intro-note { background:#f8f4fc; border-radius:16px; padding:18px 22px; display:flex; flex-direction:column; gap:10px; }
   .intro-note-label { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; color:var(--soft); }
@@ -5590,7 +5611,7 @@ MAPELO_PYTH_HTML = """
 
     <details class="intro-details" open>
       <summary>Explanation</summary>
-      <div class="intro-body">
+      <div class="intro-body-wrap"><div class="intro-body">
         <p class="intro-p">The Pythagorean Rating formula originates from baseball statistician Bill James, who crafted a formula that settles the discrepancy between how many games a team <em>should</em> win vs. how many they actually won by using a team&rsquo;s margins of victory over a season. Specifically, it looks like:</p>
         <div class="intro-formula-block">
           <div id="baseball-formula"></div>
@@ -5608,7 +5629,7 @@ MAPELO_PYTH_HTML = """
             <li class="intro-p">If you&rsquo;re interested in seeing international Pyth%, those are calculated separately and located within the all-time category in the &ldquo;Internationals&rdquo; filter.</li>
           </ul>
         </div>
-      </div>
+      </div></div>
     </details>
 
     <div class="card">
@@ -5666,18 +5687,18 @@ document.addEventListener('DOMContentLoaded', function() {
     katex.renderToString('k',  {throwOnError:false}) + ' = optimal exponent fit to VCT data';
 
   var details = document.querySelector('.intro-details');
-  var body    = details.querySelector('.intro-body');
-  body.style.maxHeight = body.scrollHeight + 'px';
+  var wrap    = details.querySelector('.intro-body-wrap');
   details.querySelector('summary').addEventListener('click', function(e) {
     e.preventDefault();
     if (details.open) {
-      body.style.maxHeight = body.scrollHeight + 'px';
-      requestAnimationFrame(function() { body.style.maxHeight = '0'; });
+      wrap.style.gridTemplateRows = '0fr';
       setTimeout(function() { details.removeAttribute('open'); }, 350);
     } else {
       details.setAttribute('open', '');
-      body.style.maxHeight = '0';
-      requestAnimationFrame(function() { body.style.maxHeight = body.scrollHeight + 'px'; });
+      wrap.style.gridTemplateRows = '0fr';
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { wrap.style.gridTemplateRows = '1fr'; });
+      });
     }
   });
 });
