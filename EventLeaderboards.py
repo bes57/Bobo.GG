@@ -519,19 +519,19 @@ MAIN_HTML = """
 <link rel="stylesheet" href="/static/base.css">
 <style>
   .page { position:relative; z-index:1; padding:40px 32px 60px; }
-  .top-nav { display:flex; align-items:center; margin-bottom:32px; animation:fadeDown .7s ease both; }
+  .top-nav { display:flex; align-items:center; margin-bottom:32px; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  header { text-align:center; margin-bottom:16px; animation:fadeDown .7s ease both; }
+  header { text-align:center; margin-bottom:16px; }
   header h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--soft); }
-  .event-title { text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.85rem,4.4vw,3.1rem); font-weight:800; letter-spacing:-1px; margin-bottom:20px; animation:fadeDown .7s .03s ease both; }
-  .event-selector-wrap { text-align:center; margin-bottom:24px; animation:fadeDown .7s .05s ease both; }
+  .event-title { text-align:center; font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(1.85rem,4.4vw,3.1rem); font-weight:800; letter-spacing:-1px; margin-bottom:20px; }
+  .event-selector-wrap { text-align:center; margin-bottom:24px; }
   .event-wrap { display:inline-block; position:relative; }
   .event-select { -webkit-appearance:none; appearance:none; padding:9px 38px 9px 20px; border-radius:99px; border:2px solid #f0ecf4; background:white; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; color:var(--ink); cursor:pointer; box-shadow:0 2px 8px #0001; outline:none; transition:border-color .2s; min-width:220px; }
   .event-select:focus { border-color:var(--lavender); }
   .chevron { position:absolute; right:14px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--soft); font-size:.75rem; }
-  .region-filter { display:flex; justify-content:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; animation:fadeDown .7s .1s ease both; }
-  .rounds-wrap { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; margin-bottom:36px; flex-wrap:wrap; animation:fadeDown .7s .15s ease both; }
+  .region-filter { display:flex; justify-content:center; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
+  .rounds-wrap { display:flex; align-items:center; justify-content:center; gap:14px; margin-top:18px; margin-bottom:36px; flex-wrap:wrap; }
   .rounds-label { font-size:.83rem; color:var(--soft); font-weight:500; }
   .rounds-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:var(--ink); min-width:40px; display:inline-block; }
   input[type=range].rounds-slider { -webkit-appearance:none; width:180px; height:4px; border-radius:99px; background:#f0ecf4; outline:none; cursor:pointer; vertical-align:middle; }
@@ -763,7 +763,7 @@ function renderCard(stat, players, idx) {
     </div>`
   ).join('') : '<div class="empty">No data for this selection</div>';
 
-  return `<div class="card" style="animation:fadeUp .5s ${idx*0.06}s ease both"
+  return `<div class="card"
     onclick="window.location='/vct/ranking/${encodeURIComponent(stat)}?event=${EVENT_ID}&region=${currentRegion}'">
     <div class="card-header">
       <div class="stat-pill ${PILL_CLASSES[idx % PILL_CLASSES.length]}">${stat}</div>

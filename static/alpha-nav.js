@@ -124,6 +124,21 @@
   window.addEventListener('resize', pad);
   setTimeout(pad, 300);
 
+  // The bar now renders before the page content (injected at the top of <body>),
+  // which means its labels can paint in a fallback font and then reflow — visibly
+  // shifting the tabs — when the web font swaps in. Reserve the bar's height right
+  // away (done by pad() above) but keep its content invisible until the nav's own
+  // fonts are ready, then reveal. Reserved space => no layout jump; cached fonts
+  // (the common case when moving between pages) resolve in a few ms, so the reveal
+  // is imperceptible. A short fallback guarantees the bar never stays hidden.
+  if (document.fonts && document.fonts.ready) {
+    bar.style.visibility = 'hidden';
+    var __shown = false;
+    var revealBar = function () { if (__shown) return; __shown = true; bar.style.visibility = ''; pad(); };
+    document.fonts.ready.then(revealBar);
+    setTimeout(revealBar, 450);
+  }
+
   // ---- team modal implementation ----
   function setupTeamModal() {
     var mcss =

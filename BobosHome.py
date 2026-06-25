@@ -1340,11 +1340,31 @@ ARTICLES_HTML = """
   *{box-sizing:border-box}
   body{font-family:'DM Sans',sans-serif;color:#16121d}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1000px;margin:0 auto;padding:30px 22px 64px;position:relative;z-index:1}
+  .wrap{width:100%;max-width:1180px;margin:0 auto;padding:30px 22px 64px;position:relative;z-index:1}
   h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.02em;margin:6px 2px 22px;color:#16121d}
-  .alist{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
-  .acard{background:#fff;border:1px solid #eceef2;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:left;box-shadow:0 4px 24px #0000000a;transition:transform .16s,box-shadow .16s}
+  .alist{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .asub{font-size:.95rem;color:#6b6478;font-weight:500;margin:-12px 2px 22px;line-height:1.5}
+  .afilter{display:flex;gap:8px;flex-wrap:wrap;margin:0 2px 26px}
+  .afbtn{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#6b6478;background:#fff;border:1.5px solid #eceef2;border-radius:99px;padding:8px 17px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+  .afbtn:hover{border-color:#d8cdee;color:#16121d}
+  .afbtn.on{background:#16121d;color:#fff;border-color:#16121d}
+  .acard{position:relative;background:#fff;border:1px solid #eceef2;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:left;box-shadow:0 4px 24px #0000000a;transition:transform .16s,box-shadow .16s}
   .acard:hover{transform:translateY(-5px);box-shadow:0 16px 40px #2a224018}
+  /* featured (latest) story spans full width, image beside the text */
+  .afeat{flex-direction:row;align-items:stretch;margin-bottom:22px}
+  .acard.afeat img{width:50%;height:auto;min-height:308px;flex-shrink:0}
+  .afeat .ab{padding:36px 40px;justify-content:center}
+  .afeat .at{font-size:1.85rem;line-height:1.16}
+  .afeat .ad{font-size:1.02rem;margin-top:13px;flex:0}
+  .afeat .adate{margin-top:18px}
+  .afeat .acat{top:16px;left:16px;font-size:.64rem;padding:6px 13px}
+  .seclabel{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#9a93a6;margin:6px 2px 14px}
+  @media(max-width:680px){.afeat{flex-direction:column}.acard.afeat img{width:100%;min-height:0;height:200px}.afeat .ab{padding:24px}.afeat .at{font-size:1.45rem}}
+  .acat{position:absolute;top:13px;left:13px;z-index:2;font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:5px 11px;border-radius:99px;color:#fff;box-shadow:0 3px 10px #0000003d}
+  .acat.preview{background:#7c4dd6}
+  .acat.opinion{background:#e07b39}
+  .acat.research{background:#1f9d8a}
+  .aempty{text-align:center;color:#9a93a6;font-weight:600;font-size:.9rem;padding:48px 0}
   .acard img{width:100%;height:168px;object-fit:cover;object-position:center top;display:block;background:#1a0f24}
   .ab{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
   .at{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.16rem;line-height:1.22;color:#16121d}
@@ -1356,8 +1376,16 @@ ARTICLES_HTML = """
 <body>
 <div class="wrap">
   <h1>Articles</h1>
+  <p class="asub">Previews, research, and opinions from across the VCT season.</p>
+  <div class="afilter">
+    <button class="afbtn on" data-f="all" type="button">All</button>
+    <button class="afbtn" data-f="preview" type="button">Preview</button>
+    <button class="afbtn" data-f="opinion" type="button">Opinion</button>
+    <button class="afbtn" data-f="research" type="button">Research</button>
+  </div>
   <div class="alist">
-    <a class="acard" href="/articles/masters-london-playoffs-preview/">
+    <a class="acard" data-cat="preview" href="/articles/masters-london-playoffs-preview/">
+      <span class="acat preview">Preview</span>
       <img src="/chronlondon.jpg" alt="">
       <div class="ab">
         <div class="at">Masters London Playoffs Preview</div>
@@ -1365,7 +1393,8 @@ ARTICLES_HTML = """
         <div class="adate">Jun 10, 2026</div>
       </div>
     </a>
-    <a class="acard" href="/articles/masters-london-preview/">
+    <a class="acard" data-cat="preview" href="/articles/masters-london-preview/">
+      <span class="acat preview">Preview</span>
       <img src="/prxpacstage1win.jpg" alt="">
       <div class="ab">
         <div class="at">Masters London Tournament Preview</div>
@@ -1373,7 +1402,8 @@ ARTICLES_HTML = """
         <div class="adate">Jun 2, 2026</div>
       </div>
     </a>
-    <a class="acard" href="/articles/americas-stage1-playoffs-preview/">
+    <a class="acard" data-cat="preview" href="/articles/americas-stage1-playoffs-preview/">
+      <span class="acat preview">Preview</span>
       <img src="/loudlev26.jpg" alt="">
       <div class="ab">
         <div class="at">Americas Stage 1 Playoffs Preview</div>
@@ -1381,7 +1411,8 @@ ARTICLES_HTML = """
         <div class="adate">May 12, 2026</div>
       </div>
     </a>
-    <a class="acard" href="/articles/over-underperformers/">
+    <a class="acard" data-cat="research" href="/articles/over-underperformers/">
+      <span class="acat research">Research</span>
       <img src="/patmen.jpg" alt="">
       <div class="ab">
         <div class="at">Overperforming in VCT: Who's Doing It?</div>
@@ -1390,7 +1421,28 @@ ARTICLES_HTML = """
       </div>
     </a>
   </div>
+  <div class="aempty" hidden>No articles in this category yet.</div>
 </div>
+<script>
+(function(){
+  var btns=document.querySelectorAll('.afbtn'),
+      cards=document.querySelectorAll('.acard'),
+      empty=document.querySelector('.aempty');
+  btns.forEach(function(b){
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      var f=b.getAttribute('data-f'), shown=0;
+      cards.forEach(function(c){
+        var ok=(f==='all'||c.getAttribute('data-cat')===f);
+        c.style.display=ok?'':'none';
+        if(ok)shown++;
+      });
+      empty.hidden=shown>0;
+    });
+  });
+})();
+</script>
 </body></html>
 """
 
@@ -1907,10 +1959,18 @@ def _inject_alpha_nav(resp):
         if "text/html" not in resp.headers.get("Content-Type", ""):
             return resp
         body = resp.get_data(as_text=True)
-        if "</body>" in body and "alpha-nav.js" not in body:
+        if "alpha-nav.js" in body:
+            return resp
+        # Run the bar builder at the TOP of <body> (not deferred at the end) so the
+        # bar is in place before the page's content renders. Deferred-at-end meant
+        # long/slow pages (e.g. Articles, Pythagorean) painted first, then the bar
+        # popped in a beat later — a visible blip.
+        m = _re.search(r"<body[^>]*>", body)
+        if m:
+            tag = m.group(0)
             resp.set_data(body.replace(
-                "</body>",
-                '<script src="/static/alpha-nav.js?v=%s" defer></script></body>'
+                tag,
+                tag + '<script src="/static/alpha-nav.js?v=%s"></script>'
                 % _anav_ver(), 1))
     except Exception:
         pass
