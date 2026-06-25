@@ -1342,7 +1342,7 @@ ARTICLES_HTML = """
   a{color:inherit;text-decoration:none}
   .wrap{width:100%;max-width:1180px;margin:0 auto;padding:30px 22px 64px;position:relative;z-index:1}
   h1{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:clamp(2rem,5vw,2.8rem);letter-spacing:-.02em;margin:6px 2px 22px;color:#16121d}
-  .alist{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .alist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
   .asub{font-size:.95rem;color:#6b6478;font-weight:500;margin:-12px 2px 22px;line-height:1.5}
   .afilter{display:flex;gap:8px;flex-wrap:wrap;margin:0 2px 26px}
   .afbtn{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#6b6478;background:#fff;border:1.5px solid #eceef2;border-radius:99px;padding:8px 17px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
