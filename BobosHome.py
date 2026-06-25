@@ -233,10 +233,19 @@ def _build_alpha_data():
     except Exception:
         pass
 
+    # Recent all-time records (performances from the latest event that cracked an
+    # all-time top-50) — previewed beneath the player leaders.
+    try:
+        from AllTimeHighs import build_recent_records
+        records = build_recent_records(8)
+    except Exception:
+        records = []
+
     orgs = ({r["org"] for r in rankings}
             | {x for m in recent for x in (m["org_a"], m["org_b"])}
             | {x for m in upcoming for x in (m["org_a"], m["org_b"])}
             | {l["org"] for s in player_stats for l in s["leaders"]}
+            | {r.get("org") for r in records} | {r.get("opp") for r in records}
             | {x for r in rankings for m in r["form"] for x in (m.get("winner"), m.get("loser"))})
     colors = {o: ALPHA_TEAM_COLORS.get(o, "#8a8a8a") for o in orgs if o}
     logos = {o: ALPHA_LOGOS.get(o) for o in orgs if o and ALPHA_LOGOS.get(o)}
@@ -248,6 +257,7 @@ def _build_alpha_data():
         "rankings": rankings, "recent": recent, "upcoming": upcoming,
         "player_stats": player_stats, "players_event": players_event,
         "players_event_id": players_event_id,
+        "records": records,
         "event_labels": event_labels,
         "colors": colors, "logos": logos,
     }
@@ -675,7 +685,7 @@ ALPHA_HTML = """
   .plink{font-size:.82rem;font-weight:800;color:var(--accent);background:#f1ebfb;border:1px solid #e4d9f6;padding:7px 15px;border-radius:999px;white-space:nowrap;flex-shrink:0;transition:background .15s,transform .12s,box-shadow .15s}
   .plink:hover{background:#e7dbfa;transform:translateY(-1px);box-shadow:0 4px 13px rgba(124,77,214,.2)}
   .psub{font-size:.74rem;color:var(--faint);font-weight:600;margin:0 0 12px}
-  .seg-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .seg-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;margin-bottom:14px;flex-wrap:wrap}
   .seg{display:inline-flex;background:#f1eef6;border-radius:10px;padding:3px;gap:2px}
   .mregion{font-family:inherit;font-size:.78rem;font-weight:700;color:var(--soft);background:#fff;border:1px solid var(--line);border-radius:9px;padding:6px 11px;cursor:pointer;transition:border-color .15s}
   .mregion:hover{border-color:#d6cce8}
@@ -814,6 +824,28 @@ ALPHA_HTML = """
   .players{margin-top:22px}
   .pl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
   .pl-card{border:1px solid var(--line);border-radius:15px;padding:13px 13px 9px;background:#fff}
+  #records-panel{margin-top:22px}
+  .rec-wrap{display:flex;align-items:center;gap:8px}
+  .rec-nav{flex:0 0 30px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:#7c4dd6;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 3px 12px #00000014;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s,box-shadow .15s}
+  .rec-nav:hover{background:#f1ebfb;transform:scale(1.1);box-shadow:0 5px 16px #7c4dd633}
+  .rec-vp{flex:1;min-width:0;overflow:hidden;position:relative;padding:4px 0;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%)}
+  .rec-track{display:flex;align-items:stretch;width:max-content;will-change:transform}
+  .rec-card{position:relative;flex:0 0 300px;margin-right:13px;display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:15px;padding:12px 14px;background:#fff;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s,border-color .15s}
+  .rec-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0000000f;border-color:#e4d9f6}
+  .rec-rankbadge{position:absolute;top:8px;right:12px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.8rem;color:#bcaadd}
+  .rec-av,.rec-av-ph{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:top center;flex:0 0 46px}
+  .rec-av-ph{display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:#fff;font-size:15px}
+  .rec-info{display:flex;flex-direction:column;min-width:0;flex:1}
+  .rec-name{display:flex;align-items:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.95rem;letter-spacing:-.01em}
+  .rec-tlogo{height:15px;width:auto;object-fit:contain;flex:0 0 auto}
+  .rec-tinit{height:15px;min-width:15px;padding:0 3px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800;color:#fff;flex:0 0 auto}
+  .rec-desc{font-size:.74rem;font-weight:700;color:#7c4dd6;margin-top:2px;line-height:1.3}
+  .rec-foot{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:4px;font-size:.7rem;color:var(--soft);font-weight:600}
+  .rec-foot .rec-vs{display:inline-flex;align-items:center;gap:4px}
+  .rec-foot .rec-vs img{height:13px;width:auto}
+  .rec-ev{color:#9a93a6}
+  .rec-map{background:#f0ecf4;border-radius:99px;padding:1px 8px;color:var(--soft)}
+  .rec-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.32rem;color:var(--ink);flex:0 0 auto;padding-left:6px}
   .pl-stat{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:-.01em;color:var(--ink);padding:0 4px 9px;border-bottom:1px solid var(--line);margin-bottom:5px}
   .plr{display:flex;align-items:center;gap:9px;padding:6px 5px;border-radius:9px;color:inherit;text-decoration:none;transition:background .14s}
   .plr:hover{background:#faf8ff}
@@ -901,6 +933,12 @@ ALPHA_HTML = """
     <div class="phead"><div class="ptitle">Player Leaders</div><a class="plink" href="/vct/">Full Leaderboards &rarr;</a></div>
     <div class="psub" id="players-sub"></div>
     <div id="players-body"></div>
+  </div>
+
+  <div class="panel" id="records-panel">
+    <div class="phead"><div class="ptitle">Recent VCT Records</div><a class="plink" href="/highs/">Full VCT Records &rarr;</a></div>
+    <div class="psub" id="records-sub"></div>
+    <div id="records-body"></div>
   </div>
 
   <div id="explore">
@@ -1167,10 +1205,84 @@ function renderPlayers(){
           +(s.leaders||[]).map(function(p,i){return plRow(p,i,s.stat);}).join('')+'</div>';
       }).join('')+'</div>'
     : '<div class="empty">No player data.</div>';}
+function recHref(r){
+  return '/highs/?direction='+encodeURIComponent(r.direction||'high')
+    +'&stat='+encodeURIComponent(r.stat||'')
+    +'&format='+encodeURIComponent(r.fmt||'')
+    +'&context='+encodeURIComponent(r.context||'all')
+    +'&year=all';
+}
+function recCard(r){
+  var pa={headshot:r.headshot,org:r.org,name:r.player};
+  var vs=r.opp?'<span class="rec-vs">vs '+logoOrInit(r.opp,'rec-tlogo','rec-tinit')+esc(r.opp)+'</span>':'';
+  var mp=r.map_name?'<span class="rec-map">'+esc(r.map_name)+'</span>':'';
+  var ev=r.event?'<span class="rec-ev">'+esc(r.event)+'</span>':'';
+  return '<a class="rec-card" href="'+esc(recHref(r))+'" target="_blank" rel="noopener" title="'+esc(r.player)+' — '+esc(r.desc)+'">'
+    +'<span class="rec-rankbadge">#'+r.rank+'</span>'
+    +avatar(pa,'rec-av','rec-av-ph')
+    +'<span class="rec-info">'
+      +'<span class="rec-name">'+esc(r.player)+(r.org?logoOrInit(r.org,'rec-tlogo','rec-tinit'):'')+'</span>'
+      +'<span class="rec-desc">'+esc(r.desc)+'</span>'
+      +'<span class="rec-foot">'+vs+ev+mp+'</span>'
+    +'</span>'
+    +'<span class="rec-val">'+esc(r.value)+'</span>'
+  +'</a>';}
+var _recTimer=null;
+function renderRecords(){
+  var rs=DATA.records||[];
+  var sub=document.getElementById('records-sub');
+  if(sub)sub.textContent=rs.length?'Latest performances that cracked an all-time top 50':'';
+  var body=document.getElementById('records-body');
+  if(!rs.length){body.innerHTML='<div class="empty">No recent record-setting performances.</div>';return;}
+  // Gallery: cards rendered twice so we glide one step at a time and loop
+  // seamlessly. Steady auto-advance + prev/next controls, pauses on hover.
+  var cards=rs.map(recCard).join('');
+  body.innerHTML='<div class="rec-wrap">'
+    +'<button class="rec-nav rec-prev" type="button" aria-label="Previous record">&#8249;</button>'
+    +'<div class="rec-vp"><div class="rec-track" id="rec-track">'+cards+cards+cards+'</div></div>'
+    +'<button class="rec-nav rec-next" type="button" aria-label="Next record">&#8250;</button>'
+    +'</div>';
+  _recSlideshow(rs.length);}
+function _recSlideshow(n){
+  if(_recTimer){clearTimeout(_recTimer);_recTimer=null;}
+  var track=document.getElementById('rec-track'); if(!track)return;
+  // The track holds 3 copies of the cards (indices 0..3n-1); we keep the visible
+  // index in the MIDDLE copy [n, 2n) so there's always a full copy of runway in
+  // either direction. Wrapping is a synchronous, no-transition jump to the
+  // identical-looking middle position — so manual clicks and the auto timer can
+  // never drift the target or fight a half-finished transition.
+  var wrap=track.closest('.rec-wrap'), i=n, STEP=313, hover=false;
+  function measure(){var c=track.children[0];if(c){var cs=getComputedStyle(c);
+    STEP=Math.round(c.getBoundingClientRect().width+(parseFloat(cs.marginRight)||0));}}
+  function apply(anim){
+    track.style.transition=anim?'transform .55s cubic-bezier(.4,.02,.2,1)':'none';
+    track.style.transform='translateX('+(-i*STEP)+'px)';}
+  function move(dir){                       // dir>0 slides cards LEFT (right-to-left, auto dir)
+    measure();
+    if(i<n){ i+=n; apply(false); void track.offsetWidth; }
+    else if(i>=2*n){ i-=n; apply(false); void track.offsetWidth; }
+    i+=dir; apply(true);
+  }
+  function schedule(){ if(_recTimer)clearTimeout(_recTimer);
+    _recTimer=window.setTimeout(function(){ if(!hover)move(1); schedule(); }, 3800); }  // slides right-to-left
+  if(wrap){
+    wrap.addEventListener('mouseenter',function(){hover=true;});
+    wrap.addEventListener('mouseleave',function(){hover=false;});
+    var nb=wrap.querySelector('.rec-next'), pb=wrap.querySelector('.rec-prev');
+    if(n<2){ if(nb)nb.style.display='none'; if(pb)pb.style.display='none'; }
+    else{
+      // Every manual step restarts the auto timer from full, so a click never
+      // triggers an immediate auto-advance on top of it.
+      if(nb)nb.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();move(1);schedule();});
+      if(pb)pb.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();move(-1);schedule();});
+    }
+  }
+  measure(); apply(false);
+  if(n>=2) schedule();}
 
 /* ── Init ── */
 try{localStorage.setItem('bobo_ui','alpha');}catch(e){}   // remember the choice
-renderBanner();renderRankings();renderPlayers();
+renderBanner();renderRankings();renderPlayers();renderRecords();
 document.getElementById('match-body').addEventListener('click',_onMatchClick);  // upcoming expand
 var startTab='upcoming';   // matches default to Upcoming
 document.querySelectorAll('#match-seg button').forEach(function(b){

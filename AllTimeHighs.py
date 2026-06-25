@@ -1,6 +1,7 @@
 import os
 import json
 import pandas as pd
+import datetime as _dt
 from flask import Blueprint, render_template_string, request, jsonify
 from MoreTestingMaybeFiles import ALL_EVENTS
 
@@ -687,6 +688,31 @@ async function triggerRefresh() {
   }
 }
 
+// Deep-link support: /highs/?direction=&stat=&format=&year=&context= preselects
+// the filters (used by the home page's "Recent VCT Records" cards so a click
+// lands on that exact all-time leaderboard).
+function applyUrlParams() {
+  const q = new URLSearchParams(location.search);
+  if (!['stat','format','direction','context','year'].some(k => q.has(k))) return;
+  const setSel = (id,v) => { const el=document.getElementById(id); if(el&&v!=null) el.value=v; };
+  setSel('f-direction', q.get('direction'));
+  setSel('f-format',    q.get('format'));
+  setSel('f-stat',      q.get('stat'));
+  setSel('f-year',      q.get('year'));
+  const ctx = (q.get('context')||'').split(',').map(s=>s.trim()).filter(Boolean);
+  document.querySelectorAll('.ctx-cb').forEach(cb => { cb.checked = ctx.indexOf(cb.value) >= 0; });
+  // Reconcile the format/stat option enabled-state with the chosen values.
+  const fmt = document.getElementById('f-format').value;
+  const isSeries = (fmt==='bo3'||fmt==='bo5'||fmt==='all_series');
+  for (const opt of document.getElementById('f-stat').options)
+    opt.disabled = MATCH_UNSUPPORTED.has(opt.value) || (PER_MAP_STATS.has(opt.value) && !isSeries);
+  const stat = document.getElementById('f-stat').value;
+  for (const opt of document.getElementById('f-format').options)
+    if (opt.value==='map') opt.disabled = PER_MAP_STATS.has(stat);
+  document.getElementById('map-col-header').style.display = (fmt==='map') ? '' : 'none';
+}
+
+applyUrlParams();
 buildCustomDropdowns();
 updateCtxState();
 fetchResults();
@@ -727,29 +753,30 @@ def api_results():
     fmt       = request.args.get("format", "event")
     year      = request.args.get("year", "all")
     context   = request.args.get("context", "all")
+    df, col, is_kd = _rank_df(direction, stat_name, fmt, year, context)
+    if df is None or df.empty:
+        return jsonify([])
+    return jsonify(_format_entries(df, fmt, col, is_kd))
 
+
+def _rank_df(direction, stat_name, fmt, year, context):
+    """Shared ranking core for one leaderboard cell. Returns
+    (df_top50, value_col, is_kd) sorted best-first with a reset index (so row
+    position == rank-1), or (None, None, None) when invalid/empty."""
     col = STAT_COLS.get(stat_name)
     if not col:
-        return jsonify([])
+        return None, None, None
 
     is_per_map = stat_name in PER_MAP_STATS
-    # /Map stats only make sense in series formats — One Map is already
-    # per-map by definition, Event totals span the whole event.
     if is_per_map and fmt not in ("bo3", "bo5", "all_series"):
-        return jsonify([])
+        return None, None, None
 
-    # Pick the right dataset
     if fmt == "map":
         df = _load_map_data()
     elif fmt in ("bo3", "bo5", "all_series"):
         df = _load_series_data()
-        # The series CSVs' SeriesFormat column is unreliable — the scraper
-        # sometimes mis-detects Bo5 as Bo3 or Bo1 from VLR's match-header
-        # text (e.g. all four 2026 Stage 1 Grand Finals are mislabeled).
-        # Derive the actual format from the series Score in match_results:
-        #   max(a, b) == 2 → Bo3   max == 3 → Bo5   max == 1 → Bo1
         mr_fmt = _load_match_results()
-        if not df.empty and not mr_fmt.empty and "Score" in mr_fmt.columns:
+        if df is not None and not df.empty and not mr_fmt.empty and "Score" in mr_fmt.columns:
             ss = mr_fmt[mr_fmt["MapNum"] == "all"][["MatchID", "Score"]].copy()
             def _max_score(s):
                 try:
@@ -764,20 +791,15 @@ def api_results():
                 keep = set(ss.loc[ss["MaxScore"] == 2, "MatchID"])
             elif fmt == "bo5":
                 keep = set(ss.loc[ss["MaxScore"] == 3, "MatchID"])
-            else:  # all_series — Bo3 + Bo5 (drop Bo1 regular-season single maps)
+            else:
                 keep = set(ss.loc[ss["MaxScore"].isin([2, 3]), "MatchID"])
             df = df[df["MatchID"].astype(str).str.strip().isin(keep)]
     else:
         df = _load_event_data()
 
-    if df.empty or col not in df.columns:
-        return jsonify([])
+    if df is None or df.empty or col not in df.columns:
+        return None, None, None
 
-    # Filter out showmatches. MatchNames in match_results.csv prefixed with
-    # "Showmatch" (e.g. "Showmatch: Showmatch", "Showmatch: Main Event") are
-    # non-competitive exhibition matches and shouldn't show up as records.
-    # Only applies to formats with a MatchID column (map / series); event
-    # totals don't carry per-match rows.
     if "MatchID" in df.columns:
         mr_sm = _load_match_results()
         if not mr_sm.empty and "MatchName" in mr_sm.columns:
@@ -788,28 +810,21 @@ def api_results():
             if show_ids:
                 df = df[~df["MatchID"].astype(str).str.strip().isin(show_ids)]
 
-    # Omit teams that fielded 6+ players in a match (subs). A substitution
-    # means a player only appears on some maps of the series, so their raw
-    # K/D/A divided by the full series map count produces bogus /Map records
-    # (and broader records are unrepresentative too). Common in 2023. Drop
-    # that team's rows for that match; the opposing team (if it ran 5) stays.
     if "MatchID" in df.columns and "Org" in df.columns:
         pid = "ProfileURL" if "ProfileURL" in df.columns else "Player"
         if pid in df.columns:
             df = df.copy()
             df["MatchID"] = df["MatchID"].astype(str).str.strip()
             roster = df.groupby(["MatchID", "Org"])[pid].nunique()
-            bad = set(roster[roster > 5].index)  # {(MatchID, Org), ...}
+            bad = set(roster[roster > 5].index)
             if bad:
                 keep = [(m, o) not in bad for m, o in zip(df["MatchID"], df["Org"])]
                 df = df[pd.Series(keep, index=df.index)]
 
-    # /Map stats: divide the raw column by the series map count, derived from
-    # the MapNum="all" row's Score field ("2-1" → 3 maps).
     if is_per_map:
         mr = _load_match_results()
         if mr.empty:
-            return jsonify([])
+            return None, None, None
         series_scores = mr[mr["MapNum"] == "all"][["MatchID", "Score"]].copy()
         def _map_count(score):
             try:
@@ -824,19 +839,13 @@ def api_results():
         df["MatchID"] = df["MatchID"].astype(str).str.strip()
         df = df.merge(series_scores[["MatchID", "MapCount"]], on="MatchID", how="left")
         df = df.dropna(subset=["MapCount"])
-        # Compute the per-map value into a new derived column so the rest of
-        # the pipeline (sort, format, output) treats it like any other column.
         derived_col = f"__{col}_per_map"
         df[derived_col] = df[col] / df["MapCount"]
         col = derived_col
 
-    # Year filter
     if year != "all":
         df = df[df["_year"] == int(year)]
 
-    # Context filter — context is a comma-separated set of tokens from
-    # {intl, regional, win, loss}. The two pairs are mutually exclusive
-    # (enforced client-side); filters within the set are ANDed together.
     ctx = {t for t in str(context).split(",") if t and t != "all"}
     if "intl" in ctx:
         df = df[df["_intl"] == True]
@@ -845,7 +854,7 @@ def api_results():
     if ("win" in ctx) or ("loss" in ctx):
         results_df = _load_match_results()
         if results_df.empty:
-            return jsonify([])
+            return None, None, None
         df = df.copy()
         df["MatchID"] = df["MatchID"].astype(str).str.strip()
         if fmt == "map":
@@ -861,11 +870,16 @@ def api_results():
             df = merged[(merged["WinnerOrg"].notna()) & (merged["WinnerOrg"] != merged["Org"])].drop(columns=["WinnerOrg"])
 
     df = df.dropna(subset=[col])
-
+    if df.empty:
+        return None, None, None
     ascending = (direction == "low")
-    df = df.sort_values(col, ascending=ascending).head(50)
+    df = df.sort_values(col, ascending=ascending).head(50).reset_index(drop=True)
+    return df, col, (col == "K:D")
 
-    # Build match results lookup for the result + match name columns
+
+def _format_entries(df, fmt, col, is_kd):
+    """Turn a ranked df (from _rank_df) into the list of result dicts the page
+    and the home-page records preview both consume."""
     results_df = _load_match_results()
     if not results_df.empty and "Score" in results_df.columns:
         if fmt == "map":
@@ -875,10 +889,6 @@ def api_results():
     else:
         res_lookup = None
 
-    # Opponent lookup: match_results only stores the WINNER's org, so derive
-    # the two teams that played from the distinct Orgs in each match's player
-    # rows. Built from the FULL (unfiltered) dataset so the win/loss context
-    # filter — which drops one team's rows — can't hide the opponent.
     opp_map = {}
     if fmt == "map":
         _full = _load_map_data()
@@ -895,8 +905,6 @@ def api_results():
             _g["MatchID"] = _g["MatchID"].astype(str).str.strip()
             for mid_k, grp in _g.groupby("MatchID"):
                 opp_map[mid_k] = list(pd.unique(grp["Org"].dropna()))
-
-    is_kd = (col == "K:D")
 
     results = []
     for _, row in df.iterrows():
@@ -930,19 +938,13 @@ def api_results():
                 won        = (org == winner_org)
                 result_str = f"W {w_score}-{l_score}" if won else f"L {l_score}-{w_score}"
                 match_name = str(res_row.get("MatchName", "") or "")
-                # Player's team score first, opponent's second — synced to sides.
                 team_score, opp_score = (w_score, l_score) if won else (l_score, w_score)
-                # Opponent = the other org that played this match/map.
                 orgs = opp_map.get((mid, mnum)) if fmt == "map" else opp_map.get(mid)
                 if orgs:
                     opp = next((o for o in orgs if o and o != org), "")
             except Exception:
                 pass
 
-        # VLR URL for click-through: maps point to /<match>/?game=<MapNum>
-        # (MapNum is the VLR game id in our CSVs); series + event point to
-        # /<match>/. Skipped for the "event" totals format since there's no
-        # single match to link to.
         vlr_url = ""
         mid_str = str(row.get("MatchID", "")).strip()
         if mid_str and fmt != "event":
@@ -952,10 +954,6 @@ def api_results():
             else:
                 vlr_url = f"https://www.vlr.gg/{mid_str}/"
 
-        # Pandas can yield NaN for missing string cells (e.g. a series row
-        # whose Region column was blank in the CSV). NaN is JSON-illegal —
-        # Python json emits literal `NaN` which JSON.parse rejects, breaking
-        # the entire response. Coerce missing string fields to "".
         def _s(v):
             try:
                 if pd.isna(v):
@@ -966,9 +964,11 @@ def api_results():
 
         entry = {
             "player":      _s(row.get("Player", "")),
+            "profile":     _s(row.get("ProfileURL", "")),
             "org":         _s(row.get("Org", "")),
             "region":      _s(row.get("Region", "")),
             "event":       _s(row.get("_event_label", "")),
+            "event_id":    _s(row.get("_event_id", "")),
             "match_name":  match_name,
             "map_name":    map_name,
             "result":      result_str,
@@ -990,4 +990,141 @@ def api_results():
 
         results.append(entry)
 
-    return jsonify(results)
+    return results
+
+
+# ── Recent records preview (home page) ───────────────────────────────────────
+# Scan a curated slice of the leaderboard space (good-stat HIGHS across the
+# meaningful format/context combinations) and surface performances from the most
+# recent event that have cracked an all-time top-50.
+# NOTE: only formats the /highs/ page actually exposes — so every surfaced record
+# deep-links to a leaderboard the user can open and verify (there is no "event"
+# format on that page, so event totals are intentionally excluded).
+_REC_STATS    = ["VLR Rating", "Kills", "Kill/Death Ratio", "Assists", "Kills/Map"]
+_REC_FORMATS  = ["map", "bo3", "bo5"]
+_REC_CONTEXTS = ["all", "intl", "regional", "win"]
+_REC_STAT_WORD = {
+    "VLR Rating":       ("rating",    "highest"),
+    "Kills":            ("kills",     "most"),
+    "Kill/Death Ratio": ("K/D",       "highest"),
+    "Assists":          ("assists",   "most"),
+    "Kills/Map":        ("kills/map", "most"),
+}
+_REC_FMT_NOUN = {"event": "event", "map": "map", "bo3": "Bo3", "bo5": "Bo5", "all_series": "series"}
+_RECENT_RECORDS_CACHE = {"data": None, "key": None}
+
+
+def _recent_event_ids(window_days=21):
+    """Event ids in the most recent competitive cluster (the latest event with
+    data, plus anything ending within `window_days` of it) — these are the
+    'recent' performances whose top-50 entries we show off."""
+    dated = []
+    for e in ALL_EVENTS:
+        if e["id"] in CN_ONLY_IDS:
+            continue
+        if not os.path.exists(os.path.join(MAPS_DIR, f"{e['id']}.csv")):
+            continue
+        raw = e.get("end") or e.get("start") or ""
+        try:
+            d = _dt.date.fromisoformat(str(raw)[:10])
+        except Exception:
+            continue
+        dated.append((d, e["id"]))
+    if not dated:
+        return set()
+    latest = max(d for d, _ in dated)
+    cutoff = latest - _dt.timedelta(days=window_days)
+    return {eid for d, eid in dated if d >= cutoff}
+
+
+def _ordinal(n):
+    if 10 <= (n % 100) <= 20:
+        suf = "th"
+    else:
+        suf = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suf}"
+
+
+def _rec_scope(fmt, context):
+    ctx = {t for t in str(context).split(",") if t and t != "all"}
+    noun   = _REC_FMT_NOUN.get(fmt, fmt)
+    adj    = "international " if "intl" in ctx else ("domestic " if "regional" in ctx else "")
+    suffix = " win" if "win" in ctx else (" loss" if "loss" in ctx else "")
+    return (adj + noun + suffix).strip()
+
+
+def build_recent_records(limit=8):
+    # Cache key spans every data file the records derive from, so the moment the
+    # live scrape writes new maps/series/event rows OR updates match_results, the
+    # next page load rebuilds with the fresh data (and picks up a new latest event
+    # automatically via _recent_event_ids).
+    try:
+        _mr_mtime = os.path.getmtime(os.path.join(DATA_DIR, "match_results.csv"))
+    except OSError:
+        _mr_mtime = 0.0
+    key = (_csv_dir_mtime(MAPS_DIR), _csv_dir_mtime(SERIES_DIR),
+           _csv_dir_mtime(DATA_DIR, True), _mr_mtime)
+    if _RECENT_RECORDS_CACHE["data"] is not None and _RECENT_RECORDS_CACHE["key"] == key:
+        return _RECENT_RECORDS_CACHE["data"]
+
+    recent = _recent_event_ids()
+    best = {}   # (profile, matchid, mapnum, stat, fmt) -> record (best rank framing)
+    if recent:
+        for stat in _REC_STATS:
+            word, verb = _REC_STAT_WORD[stat][0], _REC_STAT_WORD[stat][1]
+            for fmt in _REC_FORMATS:
+                if stat in PER_MAP_STATS and fmt not in ("bo3", "bo5"):
+                    continue
+                for context in _REC_CONTEXTS:
+                    try:
+                        df, col, is_kd = _rank_df("high", stat, fmt, "all", context)
+                    except Exception:
+                        df = None
+                    if df is None or df.empty or "_event_id" not in df.columns:
+                        continue
+                    evs = df["_event_id"].tolist()
+                    idxs = [i for i, e in enumerate(evs) if e in recent]
+                    if not idxs:
+                        continue
+                    sub = df.iloc[idxs]
+                    entries = _format_entries(sub, fmt, col, is_kd)
+                    for j, pos in enumerate(idxs):
+                        row  = df.iloc[pos]
+                        ent  = entries[j]
+                        rank = pos + 1
+                        prof = str(row.get("ProfileURL", "") or row.get("Player", ""))
+                        mid  = str(row.get("MatchID", "")).strip()
+                        mnum = str(row.get("MapNum", "")).strip() if fmt == "map" else ""
+                        rkey = (prof, mid, mnum, stat, fmt)
+                        prev = best.get(rkey)
+                        if prev is None or rank < prev["rank"]:
+                            scope = _rec_scope(fmt, context)
+                            art = "an" if scope[:1].lower() in "aeiou" else "a"
+                            best[rkey] = dict(ent,
+                                rank=rank, stat=stat, stat_label=stat, fmt=fmt,
+                                context=context, direction="high",
+                                scope=scope, matchid=mid, mapnum=mnum,
+                                desc=f"{_ordinal(rank)}-{verb} {word} in {art} {scope} of all time")
+
+    # Collapse to one headline per actual performance (best stat-rank), then
+    # order by rank and cap repeats from a single player for variety.
+    by_perf = {}
+    for r in best.values():
+        pk = (r.get("player", ""), r.get("matchid", ""), r.get("mapnum", ""), r.get("fmt", ""))
+        if pk not in by_perf or r["rank"] < by_perf[pk]["rank"]:
+            by_perf[pk] = r
+
+    ordered = sorted(by_perf.values(), key=lambda r: (r["rank"], r.get("player", "")))
+    out, per_player = [], {}
+    for r in ordered:
+        p = r.get("player", "")
+        if per_player.get(p, 0) >= 2:
+            continue
+        per_player[p] = per_player.get(p, 0) + 1
+        out.append(r)
+        if len(out) >= limit:
+            break
+
+    _RECENT_RECORDS_CACHE["data"] = out
+    _RECENT_RECORDS_CACHE["key"]  = key
+    return out
