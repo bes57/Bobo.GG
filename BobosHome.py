@@ -70,6 +70,23 @@ def _alpha_event_context(bands, today):
     return live, nxt, (past[-1] if past else None)
 
 
+def _alpha_data_version():
+    """A cheap CONTENT signature of the data the home page depends on. Uses
+    signals that only move when there's genuinely new data (latest ratings date,
+    match/upcoming counts, newest match id) — NOT file mtimes, so a background
+    re-scrape that finds nothing doesn't falsely flag an update. mhub is cached,
+    so this is a few ms."""
+    try:
+        from MapElo import _mhub_load
+        hub = _mhub_load()
+        pm = hub.get("past_matches") or []
+        up = hub.get("upcoming") or []
+        return "|".join([str(hub.get("as_of_date")), str(len(pm)), str(len(up)),
+                         str(pm[0].get("match_id")) if pm else ""])
+    except Exception:
+        return ""
+
+
 def _build_alpha_data():
     """Assemble the compact payload the alpha dashboard renders from."""
     from MapElo import _mhub_load
@@ -251,6 +268,7 @@ def _build_alpha_data():
     logos = {o: ALPHA_LOGOS.get(o) for o in orgs if o and ALPHA_LOGOS.get(o)}
 
     return {
+        "version": _alpha_data_version(),
         "as_of": hub.get("as_of_date"), "today": today, "beta": beta,
         "event": event, "last_event": last_event, "next_event": next_event,
         "season": season,
@@ -919,6 +937,13 @@ ALPHA_HTML = """
   .rfp-pct{color:rgba(232,213,245,.5);font-size:.72rem;font-variant-numeric:tabular-nums}
   .rfp-log{margin-top:14px;text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem;color:rgba(232,213,245,.42);line-height:1.7}
   .rfp-log .ple{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Floating "new data" pill — shown when a background auto-refresh finds new
+     matches, so the page updates without a jarring auto-reload. */
+  .update-pill{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:500;display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:999px;padding:11px 20px;cursor:pointer;box-shadow:0 10px 30px rgba(124,58,237,.42);animation:pillIn .42s cubic-bezier(.22,1,.36,1)}
+  .update-pill:hover{filter:brightness(1.08)}
+  .update-pill:disabled{opacity:.7;cursor:default}
+  .update-pill .ricon{font-size:1rem;line-height:1}
+  @keyframes pillIn{from{opacity:0;transform:translate(-50%,22px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
@@ -1440,6 +1465,43 @@ function _rfFail(msg){
   document.getElementById('rfpMsg').textContent=msg;
   var btn=document.getElementById('refreshBtn'); btn.disabled=false;
   btn.innerHTML='<span class="ricon">↻</span> Try again';
+}
+
+// ── Auto background refresh (stale-while-revalidate) ─────────────────────────
+// The page renders instantly from cache; ~2s after load we quietly ask the
+// server to check VLR for new matches (throttled server-side). We then poll the
+// content version — if it actually changes, a gentle "new matches" pill appears.
+// No auto-reload: the user taps to update when they're ready.
+(function autoRefresh(){
+  var baseVersion = (typeof DATA!=='undefined' && DATA && DATA.version) || '';
+  if(!baseVersion) return;
+  setTimeout(function(){
+    fetch('/alpha/auto-refresh').catch(function(){});
+    var tries=0;
+    (function poll(){
+      if(tries++>14) return;                        // ~3.5 min, then stop
+      setTimeout(function(){
+        fetch('/alpha/version').then(function(r){return r.json();}).then(function(d){
+          if(d && d.version && d.version!==baseVersion){ _showUpdatePill(); return; }
+          poll();
+        }).catch(poll);
+      }, 14000);
+    })();
+  }, 2200);
+})();
+function _showUpdatePill(){
+  if(document.getElementById('updatePill')) return;
+  var pill=document.createElement('button');
+  pill.id='updatePill'; pill.className='update-pill'; pill.type='button';
+  pill.innerHTML='<span class="ricon">&#x21bb;</span> New matches &mdash; tap to update';
+  pill.onclick=function(){
+    pill.disabled=true; pill.innerHTML='<span class="ricon">&#x21bb;</span> Updating&hellip;';
+    fetch('/alpha/bust-cache').catch(function(){}).then(function(){
+      try{ if('scrollRestoration' in history) history.scrollRestoration='manual'; }catch(e){}
+      window.scrollTo(0,0); location.reload();
+    });
+  };
+  document.body.appendChild(pill);
 }
 </script>
 </body>
@@ -2028,6 +2090,27 @@ def alpha_home():
                 "rankings": [], "recent": [], "upcoming": [], "player_stats": [],
                 "players_event": None, "colors": {}, "logos": {}}
     return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+
+
+@app.route("/alpha/version")
+def alpha_version():
+    """Current content signature — the home page polls this after kicking a
+    background refresh to detect whether new data actually arrived."""
+    return {"version": _alpha_data_version()}
+
+
+@app.route("/alpha/auto-refresh")
+def alpha_auto_refresh():
+    """Kick a background data refresh IF one is due. Non-forcing, so the
+    scraper's own cooldown throttles it — many page loads still produce at most
+    one scrape every couple minutes. The home page calls this on load so it
+    self-updates for new matches without the user clicking anything."""
+    try:
+        from MapElo import _mhub_trigger_build
+        _mhub_trigger_build(force=False)
+    except Exception:
+        pass
+    return {"ok": True}
 
 
 @app.route("/alpha/bust-cache")
