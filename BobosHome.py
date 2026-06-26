@@ -2050,10 +2050,12 @@ def alpha_bust_cache():
         cleared.append("leaders")
     except Exception:
         pass
+    # Warm (recompute + repersist) the recent-records cache when the data has
+    # changed, so the reload after a refresh doesn't pay the cold ~1.3s build —
+    # and the disk JSON is fresh for every other worker. No-op/fast if unchanged.
     try:
-        from AllTimeHighs import _RECENT_RECORDS_CACHE
-        _RECENT_RECORDS_CACHE["data"] = None
-        _RECENT_RECORDS_CACHE["key"] = None
+        from AllTimeHighs import build_recent_records
+        build_recent_records(8)
         cleared.append("records")
     except Exception:
         pass

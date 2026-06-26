@@ -5,3 +5,6 @@ __pycache__/
 .env
 .DS_Store
 .claude/worktrees/
+# Derived cache: recent-records precompute, regenerated on demand + keyed on
+# data mtimes (which differ per checkout, so committing it gives no benefit).
+data/recent_records.json

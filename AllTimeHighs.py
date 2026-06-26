@@ -1036,6 +1036,7 @@ _REC_STAT_WORD = {
 }
 _REC_FMT_NOUN = {"event": "event", "map": "map", "bo3": "Bo3", "bo5": "Bo5", "all_series": "series"}
 _RECENT_RECORDS_CACHE = {"data": None, "key": None}
+_RECENT_RECORDS_DISK  = os.path.join(DATA_DIR, "recent_records.json")
 
 
 def _recent_event_ids(window_days=21):
@@ -1090,6 +1091,21 @@ def build_recent_records(limit=8):
            _csv_dir_mtime(DATA_DIR, True), _mr_mtime)
     if _RECENT_RECORDS_CACHE["data"] is not None and _RECENT_RECORDS_CACHE["key"] == key:
         return _RECENT_RECORDS_CACHE["data"]
+
+    # Disk-backed cache: a COLD process (server start / new gunicorn worker) reads
+    # the precomputed JSON instead of paying the ~1.3s rebuild. Keyed on the same
+    # data-file mtimes, so it self-invalidates the instant the scrape writes new
+    # data, and it's shared across workers via the filesystem.
+    try:
+        with open(_RECENT_RECORDS_DISK) as f:
+            disk = json.load(f)
+        if disk.get("key") == list(key) and disk.get("limit", 0) >= limit:
+            out = disk["data"][:limit]
+            _RECENT_RECORDS_CACHE["data"] = out
+            _RECENT_RECORDS_CACHE["key"]  = key
+            return out
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
 
     recent = _recent_event_ids()
     best = {}   # (profile, matchid, mapnum, stat, fmt) -> record (best rank framing)
@@ -1151,4 +1167,12 @@ def build_recent_records(limit=8):
 
     _RECENT_RECORDS_CACHE["data"] = out
     _RECENT_RECORDS_CACHE["key"]  = key
+    # Persist for cold processes / other workers (atomic write).
+    try:
+        tmp = _RECENT_RECORDS_DISK + ".tmp"
+        with open(tmp, "w") as f:
+            json.dump({"key": list(key), "limit": limit, "data": out}, f)
+        os.replace(tmp, _RECENT_RECORDS_DISK)
+    except OSError:
+        pass
     return out
