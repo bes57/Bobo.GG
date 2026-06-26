@@ -898,6 +898,27 @@ ALPHA_HTML = """
     .rrow .rbadge{display:none}
     .rform{gap:4px}
   }
+
+  /* ── Bottom data-refresh widget (mirrors the Modern Hub progress bar) ── */
+  .refresh-sec{margin:46px auto 4px;text-align:center;max-width:560px}
+  .refresh-divider{height:1px;background:var(--line);margin:0 0 26px}
+  .refresh-btn{display:inline-flex;align-items:center;gap:9px;font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#1d1330,#3a1f55);border:none;border-radius:13px;padding:13px 22px;cursor:pointer;box-shadow:0 8px 26px rgba(29,19,48,.22);transition:transform .14s,box-shadow .2s,opacity .2s}
+  .refresh-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 30px rgba(29,19,48,.3)}
+  .refresh-btn:disabled{opacity:.55;cursor:default}
+  .refresh-btn .ricon{font-size:1.1rem;line-height:1}
+  .refresh-sub{font-size:.76rem;color:var(--faint);font-weight:600;margin-top:11px;line-height:1.5}
+  .rfp-card{background:#1a0a2e;border-radius:20px;padding:28px 30px;margin:20px auto 0;max-width:520px;text-align:center;display:none}
+  .rfp-card.show{display:block}
+  .rfp-label{color:rgba(232,213,245,.95);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:5px}
+  .rfp-msg{color:rgba(232,213,245,.55);font-size:.8rem;margin-bottom:20px;font-variant-numeric:tabular-nums}
+  .rfp-track{height:9px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden;margin-bottom:9px}
+  .rfp-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd);background-size:200% 100%;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;animation:rfpShimmer 1.8s linear infinite}
+  @keyframes rfpShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .rfp-fill.done{animation:none;width:100%!important;background:#c4b5fd}
+  .rfp-card.err .rfp-fill{animation:none;background:#e06666}
+  .rfp-pct{color:rgba(232,213,245,.5);font-size:.72rem;font-variant-numeric:tabular-nums}
+  .rfp-log{margin-top:14px;text-align:left;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem;color:rgba(232,213,245,.42);line-height:1.7}
+  .rfp-log .ple{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 </head>
 <body>
@@ -964,6 +985,24 @@ ALPHA_HTML = """
       <a class="dbtile" href="/vct/"><div class="dt">Event Leaderboards</div><div class="dd">Per-event player leaderboards, percentiles, and best matches.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/mapelo/pythagorean/"><div class="dt">VCT Pythagorean</div><div class="dd">A Pythagorean win% model hand-tuned for VCT's domestic strength.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/mapelo/"><div class="dt">BenPom</div><div class="dd">A statistical rating system for VCT teams, past and present.</div><div class="darrow">Open &rarr;</div></a>
+    </div>
+  </div>
+
+  <!-- Bottom: manual data refresh. Runs the SAME RefreshLiveData pipeline as the
+       Modern Hub (new matches -> BenPom ratings -> win probabilities -> records
+       -> leaders), shows its live progress, then reloads with the fresh data. -->
+  <div class="refresh-sec" id="refreshSec">
+    <div class="refresh-divider"></div>
+    <button class="refresh-btn" id="refreshBtn" type="button" onclick="startRefresh()">
+      <span class="ricon">&#x21bb;</span> Check for new matches &amp; refresh
+    </button>
+    <div class="refresh-sub">Scrapes new results and recomputes BenPom ratings, win probabilities, recent records &amp; leaders.</div>
+    <div class="rfp-card" id="rfpCard">
+      <div class="rfp-label" id="rfpLabel">Refreshing VCT data</div>
+      <div class="rfp-msg" id="rfpMsg">Starting&hellip;</div>
+      <div class="rfp-track"><div class="rfp-fill" id="rfpFill"></div></div>
+      <div class="rfp-pct" id="rfpPct">0%</div>
+      <div class="rfp-log" id="rfpLog"></div>
     </div>
   </div>
 </div>
@@ -1330,6 +1369,78 @@ function fitMatchesToRankings(){
 }
 setTimeout(fitMatchesToRankings,60);
 var _fitT;window.addEventListener('resize',function(){clearTimeout(_fitT);_fitT=setTimeout(fitMatchesToRankings,150);});
+
+// ── Bottom data-refresh widget ──────────────────────────────────────────────
+// Reuses the Modern Hub pipeline: /mapelo/modern/refresh kicks off the same
+// RefreshLiveData scrape (new matches -> BenPom -> probabilities -> records),
+// and /mapelo/modern/progress is its live progress file. On completion we clear
+// the home page's sticky leaders cache and reload with the fresh data.
+var _rfSeen={}, _rfBaseTs=0;
+function _rfSet(pct,msg,log){
+  document.getElementById('rfpFill').style.width=(pct||0)+'%';
+  document.getElementById('rfpPct').textContent=(pct||0)+'%';
+  if(msg) document.getElementById('rfpMsg').textContent=msg;
+  var logEl=document.getElementById('rfpLog');
+  (log||[]).forEach(function(line){
+    if(_rfSeen[line]) return; _rfSeen[line]=1;
+    var d=document.createElement('div'); d.className='ple'; d.textContent=line;
+    logEl.appendChild(d);
+  });
+  var es=logEl.querySelectorAll('.ple');
+  for(var i=0;i<es.length-4;i++) es[i].remove();
+}
+function startRefresh(){
+  var btn=document.getElementById('refreshBtn'); btn.disabled=true;
+  _rfSeen={};
+  var card=document.getElementById('rfpCard');
+  card.classList.add('show'); card.classList.remove('err');
+  document.getElementById('rfpLabel').textContent='Refreshing VCT data';
+  document.getElementById('rfpFill').classList.remove('done');
+  _rfSet(3,'Starting refresh…',[]);
+  // Baseline the current progress timestamp so a STALE 'done' from a previous
+  // run isn't mistaken for this run completing instantly.
+  fetch('/mapelo/modern/progress').then(function(r){return r.json();})
+    .then(function(d){ _rfBaseTs=(d.progress&&d.progress.ts)||0; })
+    .catch(function(){ _rfBaseTs=0; })
+    .then(function(){
+      fetch('/mapelo/modern/refresh').catch(function(){})
+        .then(function(){ _rfPoll(0); });
+    });
+}
+function _rfPoll(n){
+  if(n>400){ _rfFail('Timed out — please try again later.'); return; }
+  fetch('/mapelo/modern/progress').then(function(r){return r.json();}).then(function(d){
+    var p=d.progress||{}, phase=p.phase||'', fresh=((p.ts||0)>_rfBaseTs);
+    // Only reflect progress once THIS run starts writing (ts past the baseline);
+    // otherwise a stale 'done' (pct 100) from a previous run flashes the bar to
+    // 100% before the real run drops it back to ~2%.
+    if(fresh) _rfSet(p.pct||0, p.message||'Working…', p.log||[]);
+    if(fresh && phase==='error'){ _rfFail(p.message||'Refresh failed.'); return; }
+    if(fresh && phase==='done'){
+      _rfSet(100,'All data refreshed!',p.log||[]);
+      document.getElementById('rfpFill').classList.add('done');
+      document.getElementById('rfpLabel').textContent='Done';
+      fetch('/alpha/bust-cache').catch(function(){}).then(function(){
+        setTimeout(function(){
+          // Reload at the TOP — restoring the bottom scroll position makes the
+          // page visibly jump as the matches panel re-fits its height on load.
+          try { if('scrollRestoration' in history) history.scrollRestoration='manual'; } catch(e){}
+          window.scrollTo(0,0);
+          location.reload();
+        }, 1100);
+      });
+      return;
+    }
+    setTimeout(function(){ _rfPoll(n+1); }, 2000);
+  }).catch(function(){ setTimeout(function(){ _rfPoll(n+1); }, 2500); });
+}
+function _rfFail(msg){
+  document.getElementById('rfpCard').classList.add('err');
+  document.getElementById('rfpLabel').textContent='Refresh failed';
+  document.getElementById('rfpMsg').textContent=msg;
+  var btn=document.getElementById('refreshBtn'); btn.disabled=false;
+  btn.innerHTML='<span class="ricon">↻</span> Try again';
+}
 </script>
 </body>
 </html>
@@ -1917,6 +2028,36 @@ def alpha_home():
                 "rankings": [], "recent": [], "upcoming": [], "player_stats": [],
                 "players_event": None, "colors": {}, "logos": {}}
     return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+
+
+@app.route("/alpha/bust-cache")
+def alpha_bust_cache():
+    """Clear the home page's in-process data caches so a reload right after a
+    manual refresh shows freshly-scraped data. BenPom (mhub) and recent-records
+    already self-invalidate on file mtime; the event-leaderboard cache that feeds
+    the player leaders does NOT, so clear it explicitly."""
+    cleared = []
+    try:
+        from MapElo import _mhub_cache, _mhub_cache_lock
+        with _mhub_cache_lock:
+            _mhub_cache["ts"] = 0.0
+        cleared.append("benpom")
+    except Exception:
+        pass
+    try:
+        import EventLeaderboards as _EL
+        _EL._event_cache.clear()
+        cleared.append("leaders")
+    except Exception:
+        pass
+    try:
+        from AllTimeHighs import _RECENT_RECORDS_CACHE
+        _RECENT_RECORDS_CACHE["data"] = None
+        _RECENT_RECORDS_CACHE["key"] = None
+        cleared.append("records")
+    except Exception:
+        pass
+    return {"cleared": cleared}
 
 
 @app.route("/articles/")
