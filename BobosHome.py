@@ -1561,7 +1561,7 @@ TEAM_PROFILE_HTML = """
   .mg.win{background:#f3faf5}.mg.loss{background:#fdf4f4}
   .mg-res{font-weight:800;font-size:.62rem;width:15px;text-align:center;flex:0 0 auto}
   .mg.win .mg-res{color:var(--good)}.mg.loss .mg-res{color:var(--bad)}
-  .mg-logo{width:18px;height:18px;object-fit:contain;border-radius:4px;background:#fff;flex:0 0 auto}
+  .mg-logo{width:18px;height:18px;object-fit:contain;border-radius:4px;flex:0 0 auto}
   .mg-logoph{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.46rem;font-weight:800;color:#fff;flex:0 0 auto}
   .mg-opp{font-weight:700;flex:0 0 auto}
   .mg-score{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-variant-numeric:tabular-nums;color:var(--soft)}
