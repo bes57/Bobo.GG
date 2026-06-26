@@ -27,6 +27,9 @@ STAT_LABELS = {
     "FKPR":   "First Kills Per Round",
     "FIPR":   "First Interactions / Round",
     "FIWR":   "First Interaction Win %",
+    "KPR":    "Kills Per Round",
+    "DPR":    "Deaths Per Round",
+    "APR":    "Assists Per Round",
 }
 
 LIVE_EVENT_ID = "2026_stage2"   # Masters London completed 2026-06-21; now reads from data/2026_masters_london.csv like other past events
@@ -183,8 +186,12 @@ def _add_derived_stats(df):
     df["FIPR"] = (fi / rnd).apply(lambda v: f"{v:.2f}" if pd.notna(v) else "")
     fiwr = (fk / fi * 100)
     df["FIWR"] = fiwr.apply(lambda v: f"{v:.2f}%" if pd.notna(v) else "")
+    # Per-round KDA row: KPR/APR ship raw in the event CSVs; DPR we derive from
+    # D / Rnd. All three render to 2 decimals like the other per-round stats.
+    if "D" in df.columns:
+        df["DPR"] = pd.to_numeric(df["D"], errors="coerce") / rnd
     # Reformat numeric stats to always 2 decimals (CSV drops trailing zero).
-    for col in ("FKPR", "R2.0", "K:D"):
+    for col in ("FKPR", "KPR", "DPR", "APR", "R2.0", "K:D"):
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce").apply(
                 lambda v: f"{v:.2f}" if pd.notna(v) else ""
@@ -1302,6 +1309,11 @@ function playerHue(name) {
 }
 
 let filteredPlayers = PLAYERS;
+// The region + min-rounds pool the ranks are numbered over. `rankedPool` is the
+// array (used to draw the modal distribution over the same population); its
+// length is the "#rank of N" denominator shown in a player's modal.
+let rankedPool = PLAYERS;
+let rankedTotal = PLAYERS.length;
 
 function rowHTML(p, rank) {
   const rc = rank === 1 ? 'r1' : rank === 2 ? 'r2' : rank === 3 ? 'r3' : '';
@@ -1314,7 +1326,7 @@ function rowHTML(p, rank) {
        + `data-profile="${htmlEsc(p.ProfileURL)}" data-headshot="${htmlEsc(p.HeadshotURL)}" `
        + `data-name="${htmlEsc(p.Player)}" data-org="${htmlEsc(p.Org)}" `
        + `data-fk="${htmlEsc(p.FK)}" data-fd="${htmlEsc(p.FD)}" `
-       + `data-statval="${htmlEsc(p[CURRENT_STAT])}" data-stat="${htmlEsc(CURRENT_STAT)}" `
+       + `data-statval="${htmlEsc(p[CURRENT_STAT])}" data-stat="${htmlEsc(CURRENT_STAT)}" data-rank="${rank}" `
        + `onclick="openPlayerModal(this, event)">`
        + `<td class="rank-cell ${rc}">${rank}</td>`
        + `<td><div class="player-cell">${avatar}<div class="player-name-wrap"><div>${htmlEsc(p.Player)}</div>${eventTag}</div></div></td>`
@@ -1372,6 +1384,8 @@ function applyFilters() {
     return true;
   });
   ranked.forEach((p, i) => { p._rank = i + 1; });
+  rankedPool = ranked;
+  rankedTotal = ranked.length;
   filteredPlayers = query
     ? ranked.filter(p => (p.Player || '').toLowerCase().includes(query))
     : ranked;
@@ -1435,8 +1449,25 @@ function openPlayerModal(el, e) {
   document.getElementById('modal-match').innerHTML = '<div class="modal-loading">Loading match data&hellip;</div>';
 
   const playerVal = parseFloat(String(statVal).replace('%','')) || 0;
-  document.getElementById('modal-dist-title').textContent = `${STAT_LABELS[stat]||stat} Distribution — ${STAT_VALUES.length} players`;
-  drawDistribution(STAT_VALUES, playerVal, stat, STAT_PLAYERS);
+  // Draw the distribution over the SAME pool the table ranks are numbered over
+  // (region + min-rounds filtered) so the curve, percentile, count, and the
+  // "#rank of N" line all agree. STAT_VALUES would be the unfiltered superset.
+  const distVals = [], distPlayers = [];
+  for (const p of rankedPool) {
+    const v = parseFloat(String(p[stat] == null ? '' : p[stat]).replace('%',''));
+    if (p[stat] !== '' && p[stat] != null && !isNaN(v)) {
+      distVals.push(v);
+      distPlayers.push({name: p.Player, org: p.Org || '', event: p.Event || '', val: v});
+    }
+  }
+  document.getElementById('modal-dist-title').textContent = `${STAT_LABELS[stat]||stat} Distribution — ${distVals.length} players`;
+  drawDistribution(distVals, playerVal, stat, distPlayers);
+  // Lead the caption with the player's standing in this ranking, e.g.
+  // "#2345 of 2370 · Bottom 1% — better than 1% of players all-time".
+  if (el.dataset.rank) {
+    const cap = document.getElementById('dist-caption');
+    cap.textContent = `#${el.dataset.rank} of ${rankedTotal} · ${cap.textContent}`;
+  }
 
   document.getElementById('modal-backdrop').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -1635,8 +1666,8 @@ def _most_recent_event_with_data():
 def index():
     _ensure_headshots_loaded()
 
-    default_event = _most_recent_event_with_data()
-    event_id = request.args.get("event", default_event["id"])
+    default_event = ALLTIME_EVENT
+    event_id = request.args.get("event", ALLTIME_ID)
     event = ALLTIME_EVENTS_BY_ID.get(event_id) or next((e for e in ALL_EVENTS if e["id"] == event_id), default_event)
 
     cache = load_event(event)

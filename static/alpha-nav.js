@@ -100,7 +100,19 @@
     '.alpha-navbar .an-switch span.on{color:#16121d;}' +
     '.alpha-navbar .an-track{position:relative;width:38px;height:21px;border-radius:999px;background:#7c4dd6;}' +
     '.alpha-navbar .an-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transform:translateX(17px);box-shadow:0 1px 4px #0003;}' +
-    '@media(max-width:600px){.alpha-navbar{gap:9px;padding:7px 12px;}.alpha-navbar .an-switch span{display:none;}}';
+    // Phones: the 7 nav items can't fit one row at a readable size, so shrink
+    // the text and let the links WRAP (brand + toggle on row 1, pills below)
+    // instead of horizontal-scrolling — every option stays visible. pad() keys
+    // off bar.offsetHeight, so the taller wrapped nav reserves its own space.
+    '@media(max-width:600px){' +
+      '.alpha-navbar{gap:7px 9px;padding:7px 11px;flex-wrap:wrap;}' +
+      '.alpha-navbar .an-brand{font-size:.9rem;}' +
+      '.alpha-navbar .an-switch{margin-left:auto;}' +
+      '.alpha-navbar .an-switch span{display:none;}' +
+      '.alpha-navbar .an-links{flex:1 1 100%;order:3;overflow-x:visible;flex-wrap:wrap;gap:5px;}' +
+      '.alpha-navbar .an-link{font-size:.7rem;padding:5px 9px;}' +
+      '.alpha-navbar .an-caret{font-size:.82rem;}' +
+    '}';
 
   var st = document.createElement('style');
   st.textContent = css;

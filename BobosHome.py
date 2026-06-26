@@ -889,6 +889,15 @@ ALPHA_HTML = """
     .plist{grid-template-columns:1fr}
     .mc-name{font-size:.88rem}
   }
+  /* Phones: the team column gets too narrow for the region badge, which is
+     flex:0 0 auto and overflows onto the form-dots column. Drop the badge
+     (logos already signal region; it's on the full rankings page) and tighten
+     the fixed columns so names + last-5 dots get breathing room. */
+  @media (max-width:480px){
+    .rhead,.rrow{grid-template-columns:22px 30px minmax(0,1fr) 64px 40px 52px;gap:7px}
+    .rrow .rbadge{display:none}
+    .rform{gap:4px}
+  }
 </style>
 </head>
 <body>
