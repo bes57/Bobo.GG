@@ -354,11 +354,7 @@ HOME_HTML = """
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bobo's VCT Database</title>
-<script>/* Alpha mode is sticky: if the user opted into Alpha, send "/" straight to
-   /alpha so every "back to home" across the site stays in Alpha. Runs before
-   paint to avoid a classic-layout flash. Default (no choice) = classic. */
-try{if(localStorage.getItem('bobo_ui')==='alpha'){location.replace('/alpha');}}catch(e){}</script>
+<title>Bobo's VCT Database — Classic</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
@@ -400,19 +396,19 @@ try{if(localStorage.getItem('bobo_ui')==='alpha'){location.replace('/alpha');}}c
   .benpom-hero-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5.5vw,3.1rem); font-weight:800; color:#fff; letter-spacing:-1px; line-height:1; text-shadow:0 4px 22px #0e0a14cc; }
   .benpom-hero-desc { padding:18px 24px 20px; text-align:center; text-wrap:balance; }
   .benpom-hero-desc-body { font-family:'DM Sans',sans-serif; font-size:.82rem; color:var(--soft); line-height:1.55; }
-  /* ── Alpha-UI entry toggle (classic stays the default; this just opens /alpha) ── */
-  .uiswitch{position:fixed;top:16px;right:18px;z-index:60;display:inline-flex;align-items:center;gap:9px;
-            cursor:pointer;user-select:none;background:#fff;border:1px solid #e7e2ee;border-radius:999px;
-            padding:6px 12px;box-shadow:0 3px 14px #0000000f;transition:border-color .2s,box-shadow .2s}
-  .uiswitch:hover{border-color:#d6cce8;box-shadow:0 6px 20px #00000016}
-  .uiswitch .lbl{font-size:.76rem;font-weight:700;color:#a39bb0;transition:color .2s}
+  /* ── Alpha/Classic toggle — styled to MATCH the injected Alpha nav switch
+        exactly (bare, same 38x21 purple track, same top-right position) so the
+        control doesn't change size/shape/position between pages. Default knob is
+        on the right (Classic active here); .alpha slides it left toward Alpha. ── */
+  .uiswitch{position:fixed;top:12px;right:18px;z-index:60;display:inline-flex;align-items:center;gap:8px;
+            cursor:pointer;user-select:none}
+  .uiswitch .lbl{font-size:.74rem;font-weight:700;color:#9a93a6;transition:color .2s}
   .uiswitch .lbl.on{color:#16121d}
-  .uitrack{position:relative;width:42px;height:23px;border-radius:999px;background:#e7e2ee;transition:background .25s}
-  .uitrack.alpha{background:#7c4dd6}
-  .uiknob{position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:#fff;
-          box-shadow:0 1px 4px #0003;transition:transform .25s cubic-bezier(.34,1.4,.5,1)}
-  .uitrack.alpha .uiknob{transform:translateX(19px)}
-  @media (max-width:600px){ .uiswitch{top:10px;right:10px;padding:5px 9px;gap:6px} .uiswitch .lbl{font-size:.68rem} }
+  .uitrack{position:relative;width:38px;height:21px;border-radius:999px;background:#7c4dd6}
+  .uiknob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;
+          box-shadow:0 1px 4px #0003;transform:translateX(17px);transition:transform .25s cubic-bezier(.34,1.4,.5,1)}
+  .uitrack.alpha .uiknob{transform:translateX(0)}
+  @media (max-width:600px){ .uiswitch{top:10px;right:10px} }
   /* ── Mobile ─────────────────────────────────────────────── */
   @media (max-width:600px){
     .page { padding:32px 16px; }
@@ -433,10 +429,10 @@ try{if(localStorage.getItem('bobo_ui')==='alpha'){location.replace('/alpha');}}c
 </style>
 </head>
 <body>
-<div class="uiswitch" onclick="goAlpha()" title="Try the new Alpha layout — this classic view stays the default">
-  <span class="lbl on">Classic</span>
-  <div class="uitrack"><div class="uiknob"></div></div>
+<div class="uiswitch" onclick="goAlpha()" title="Back to the Alpha layout (now the default)">
   <span class="lbl">Alpha</span>
+  <div class="uitrack"><div class="uiknob"></div></div>
+  <span class="lbl on">Classic</span>
 </div>
 <div class="page">
   <h1><img src="/logo.svg" alt="B" style="height:1.65em;width:auto;vertical-align:-0.2em;margin-left:-0.3em;margin-right:-0.2em;object-fit:contain;cursor:pointer;" onclick="easterEgg()">obo gg</h1>
@@ -526,9 +522,9 @@ function goAlpha(){
   var t=document.querySelector('.uiswitch .uitrack');
   var labels=document.querySelectorAll('.uiswitch .lbl');
   if(t)t.classList.add('alpha');
-  if(labels[0])labels[0].classList.remove('on');
-  if(labels[1])labels[1].classList.add('on');
-  setTimeout(function(){location.href='/alpha';},240);
+  if(labels[0])labels[0].classList.add('on');     // Alpha (now the left label)
+  if(labels[1])labels[1].classList.remove('on');  // Classic (right label)
+  setTimeout(function(){location.href='/';},240);
 }
 var EGG_TEXT = "Uxie is N0te's dada";
 var ORIG_TAGLINE = null;
@@ -622,6 +618,9 @@ ALPHA_HTML = """
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>/* Alpha is the default. Only "/" honors a saved classic preference (so /alpha
+   stays explicitly Alpha). Runs before paint to avoid a flash. */
+try{if(location.pathname==='/'&&localStorage.getItem('bobo_ui')==='classic'){location.replace('/classic');}}catch(e){}</script>
 <title>Bobo gg — Alpha</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -864,7 +863,10 @@ ALPHA_HTML = """
   .rec-ev{color:#9a93a6}
   .rec-map{background:#f0ecf4;border-radius:99px;padding:1px 8px;color:var(--soft)}
   .rec-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.32rem;color:var(--ink);flex:0 0 auto;padding-left:6px}
-  .pl-stat{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:-.01em;color:var(--ink);padding:0 4px 9px;border-bottom:1px solid var(--line);margin-bottom:5px}
+  .pl-stat{display:flex;align-items:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none;padding:0 4px 9px;border-bottom:1px solid var(--line);margin-bottom:5px;transition:color .14s}
+  a.pl-stat:hover{color:var(--accent)}
+  .pl-arrow{margin-left:auto;color:var(--accent);opacity:0;transform:translateX(-3px);transition:opacity .14s,transform .14s}
+  a.pl-stat:hover .pl-arrow{opacity:1;transform:translateX(0)}
   .plr{display:flex;align-items:center;gap:9px;padding:6px 5px;border-radius:9px;color:inherit;text-decoration:none;transition:background .14s}
   .plr:hover{background:#faf8ff}
   .plr-n{font-family:'Plus Jakarta Sans',sans-serif;font-size:.74rem;font-weight:800;color:var(--faint);width:14px;text-align:center;flex:0 0 auto}
@@ -1274,7 +1276,10 @@ function renderPlayers(){
   var ss=DATA.player_stats||[];
   document.getElementById('players-body').innerHTML = ss.length
     ? '<div class="pl-grid">'+ss.map(function(s){
-        return '<div class="pl-card"><div class="pl-stat">'+esc(s.label)+'</div>'
+        var lbHref='/vct/ranking/'+encodeURIComponent(s.stat)
+          +'?event='+encodeURIComponent(DATA.players_event_id||'')+'&region=All';
+        return '<div class="pl-card"><a class="pl-stat" href="'+lbHref+'" title="Full '+esc(s.label)+' leaderboard">'
+          +esc(s.label)+'<span class="pl-arrow">&rarr;</span></a>'
           +(s.leaders||[]).map(function(p,i){return plRow(p,i,s.stat);}).join('')+'</div>';
       }).join('')+'</div>'
     : '<div class="empty">No player data.</div>';}
@@ -1774,6 +1779,11 @@ TEAM_PROFILE_HTML = """
   #tpop .tp-date{color:#b9a9d6;font-size:.64rem;margin-top:4px}
   #tpop .tp-delta{font-weight:700;font-size:.66rem;margin-top:6px}
   #tpop .tp-delta.pos{color:#41f59a}#tpop .tp-delta.neg{color:#ff8b8b}
+  /* event tooltip: start/end date each paired with the team's BenPom then */
+  #tpop .tp-erow{display:flex;align-items:baseline;gap:9px;font-size:.66rem;margin-top:5px;font-variant-numeric:tabular-nums}
+  #tpop .tp-erow .l{color:#8d80ad;font-weight:800;font-size:.54rem;letter-spacing:.07em;text-transform:uppercase;width:30px;flex:0 0 auto}
+  #tpop .tp-erow .dt{color:#cdbfe6}
+  #tpop .tp-erow b{margin-left:auto;color:#fff;font-weight:800;padding-left:10px}
   #tpop .tp-maps{width:100%;border-collapse:collapse;margin-top:7px}
   #tpop .tp-maps td{font-size:.66rem;padding:3px 2px;border-top:1px solid #ffffff14;color:#cdbfe6}
   #tpop .tp-ms{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
@@ -2005,10 +2015,35 @@ function playerCard(p){
     fd.addEventListener('mouseover',function(e){var d=e.target.closest('.fdot[data-mi]');if(d){var m=FORMM[+d.getAttribute('data-mi')];if(m)_showPop(matchCardHTML(m),d);}});
     fd.addEventListener('mouseout',function(e){if(e.target.closest('.fdot[data-mi]'))_hidePop();});
   }
-  // Trajectory event lines → event label on hover.
+  // Trajectory event lines → event label + the team's BenPom at the event's
+  // start and end (read off the trajectory) on hover.
+  // BenPom as of an ISO date = the last checkpoint on or before it; null for a
+  // date past the latest checkpoint (a future/unfinished event has no data yet).
+  function _ratingAt(traj,date){
+    if(!traj||!traj.length||!date) return null;
+    var lastD=traj[traj.length-1].d;
+    if(lastD && date>lastD) return null;
+    var best=null;
+    for(var i=0;i<traj.length;i++){ var p=traj[i];
+      if(p.d && p.d<=date && (best===null || p.d>=best.d)) best=p; }
+    return best?best.r:null;
+  }
   var sv=document.querySelector('.tp-spark svg');
   if(sv){
-    sv.addEventListener('mouseover',function(e){var t=e.target.closest('[data-ev]');if(t){var d1=sd(t.getAttribute('data-d')),d2=sd(t.getAttribute('data-d2')),dr=(d2&&d2!==d1)?(d1+' – '+d2):d1;_showPop('<div class="tp-h"><span>'+esc(t.getAttribute('data-ev'))+'</span></div><div class="tp-date">'+esc(dr)+'</div>',t);}});
+    sv.addEventListener('mouseover',function(e){
+      var t=e.target.closest('[data-ev]'); if(!t) return;
+      var raw1=t.getAttribute('data-d'), raw2=t.getAttribute('data-d2');
+      var r1=_ratingAt(D.traj,raw1), r2=_ratingAt(D.traj,raw2);
+      var same=(!raw2||raw2===raw1);
+      function row(lbl,raw,r){
+        return '<div class="tp-erow"><span class="l">'+lbl+'</span><span class="dt">'+esc(sd(raw))+'</span>'
+          +(r!=null?'<b>'+Number(r).toFixed(2)+'</b>':'')+'</div>';
+      }
+      var body = same
+        ? '<div class="tp-date">'+esc(sd(raw1))+(r1!=null?' &middot; BenPom '+Number(r1).toFixed(2):'')+'</div>'
+        : row('Start',raw1,r1)+row('End',raw2,r2);
+      _showPop('<div class="tp-h"><span>'+esc(t.getAttribute('data-ev'))+'</span></div>'+body,t);
+    });
     sv.addEventListener('mouseout',function(e){if(e.target.closest('[data-ev]'))_hidePop();});
   }
 })();
@@ -2076,11 +2111,9 @@ def map_img(filename):
 def team_logo(filename):
     return send_from_directory(os.path.join(os.path.dirname(__file__), "static/logos"), filename)
 
+# Alpha is the default home now; /classic is the alternative. /alpha stays as an
+# explicit alias so existing links/bookmarks keep working.
 @app.route("/")
-def home():
-    return render_template_string(HOME_HTML)
-
-
 @app.route("/alpha")
 def alpha_home():
     try:
@@ -2090,6 +2123,11 @@ def alpha_home():
                 "rankings": [], "recent": [], "upcoming": [], "player_stats": [],
                 "players_event": None, "colors": {}, "logos": {}}
     return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+
+
+@app.route("/classic")
+def classic_home():
+    return render_template_string(HOME_HTML)
 
 
 @app.route("/alpha/version")

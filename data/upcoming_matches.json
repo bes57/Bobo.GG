@@ -132,6 +132,28 @@
     "match_name": "Week 2 Group Stage"
   },
   {
+    "team_a": "LEVIAT\u00c1N",
+    "team_b": "FURIA",
+    "org_a": "LEV",
+    "org_b": "FUR",
+    "date": "2026-07-16",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "Sentinels",
+    "team_b": "Cloud9",
+    "org_a": "SEN",
+    "org_b": "C9",
+    "date": "2026-07-16",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
     "team_a": "Gen.G",
     "team_b": "ZETA DIVISION",
     "org_a": "GEN",
@@ -174,6 +196,28 @@
     "event": "2026 Stage 2 \u2014 CN",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "ENVY",
+    "team_b": "Evil Geniuses",
+    "org_a": "ENVY",
+    "org_b": "EG",
+    "date": "2026-07-17",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "KR\u00dc Esports",
+    "team_b": "LOUD",
+    "org_a": "KR\u00dc",
+    "org_b": "LOUD",
+    "date": "2026-07-17",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
   },
   {
     "team_a": "FULL SENSE",
@@ -229,6 +273,28 @@
     "event": "2026 Stage 2 \u2014 CN",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "G2 Esports",
+    "team_b": "100 Thieves",
+    "org_a": "G2",
+    "org_b": "100T",
+    "date": "2026-07-18",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "NRG",
+    "team_b": "MIBR",
+    "org_a": "NRG",
+    "org_b": "MIBR",
+    "date": "2026-07-18",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
   },
   {
     "team_a": "Rex Regum Qeon",
@@ -396,6 +462,28 @@
     "match_name": "Week 3 Group Stage"
   },
   {
+    "team_a": "Evil Geniuses",
+    "team_b": "LEVIAT\u00c1N",
+    "org_a": "EG",
+    "org_b": "LEV",
+    "date": "2026-07-23",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "ENVY",
+    "team_b": "MIBR",
+    "org_a": "ENVY",
+    "org_b": "MIBR",
+    "date": "2026-07-23",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
     "team_a": "Global Esports",
     "team_b": "FULL SENSE",
     "org_a": "GE",
@@ -440,6 +528,28 @@
     "match_name": "Week 3 Group Stage"
   },
   {
+    "team_a": "FURIA",
+    "team_b": "NRG",
+    "org_a": "FUR",
+    "org_b": "NRG",
+    "date": "2026-07-24",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "100 Thieves",
+    "team_b": "KR\u00dc Esports",
+    "org_a": "100T",
+    "org_b": "KR\u00dc",
+    "date": "2026-07-24",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
     "team_a": "Rex Regum Qeon",
     "team_b": "ZETA DIVISION",
     "org_a": "RRQ",
@@ -462,6 +572,28 @@
     "match_name": "Week 2 Group Stage"
   },
   {
+    "team_a": "G2 Esports",
+    "team_b": "Cloud9",
+    "org_a": "G2",
+    "org_b": "C9",
+    "date": "2026-07-25",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Sentinels",
+    "team_b": "LOUD",
+    "org_a": "SEN",
+    "org_b": "LOUD",
+    "date": "2026-07-25",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
     "team_a": "Nongshim RedForce",
     "team_b": "Global Esports",
     "org_a": "NS",
@@ -480,6 +612,28 @@
     "date": "2026-07-25",
     "region": "Pacific",
     "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "ENVY",
+    "team_b": "LEVIAT\u00c1N",
+    "org_a": "ENVY",
+    "org_b": "LEV",
+    "date": "2026-07-26",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "FURIA",
+    "team_b": "MIBR",
+    "org_a": "FUR",
+    "org_b": "MIBR",
+    "date": "2026-07-26",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
   },

@@ -22,10 +22,12 @@
   // ---- 2) Nav bar ----
   var p = location.pathname;
   if (inIframe) return;                               // no nav inside the modal iframe
-  if (p === '/') return;                              // classic home renders its own
-  var ALWAYS = (p === '/alpha' || p.indexOf('/team/') === 0);
+  if (p === '/classic') return;                       // classic home renders its own
+  var ALWAYS = (p === '/' || p === '/alpha' || p.indexOf('/team/') === 0);
   if (!ALWAYS) {
-    try { if (localStorage.getItem('bobo_ui') !== 'alpha') return; } catch (e) { return; }
+    // Alpha is the default — show the nav everywhere except when the user has
+    // explicitly chosen the classic layout.
+    try { if (localStorage.getItem('bobo_ui') === 'classic') return; } catch (e) {}
   }
   if (document.querySelector('.alpha-navbar')) return;
 
@@ -41,7 +43,7 @@
 
   // A nav entry is either a link [href, label] or a dropdown {label, items:[...]}.
   var links = [
-    ['/alpha', 'Home'],
+    ['/', 'Home'],
     ['/mapelo/', 'BenPom'],
     ['/articles/', 'Articles'],
     ['/vct/', 'Leaderboards'],
@@ -99,7 +101,7 @@
     '.alpha-navbar .an-switch span{font-size:.74rem;font-weight:700;color:#9a93a6;}' +
     '.alpha-navbar .an-switch span.on{color:#16121d;}' +
     '.alpha-navbar .an-track{position:relative;width:38px;height:21px;border-radius:999px;background:#7c4dd6;}' +
-    '.alpha-navbar .an-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transform:translateX(17px);box-shadow:0 1px 4px #0003;}' +
+    '.alpha-navbar .an-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;}' +
     // Phones: the 7 nav items can't fit one row at a readable size, so shrink
     // the text and let the links WRAP (brand + toggle on row 1, pills below)
     // instead of horizontal-scrolling — every option stays visible. pad() keys
@@ -123,7 +125,7 @@
 
   var brand = document.createElement('a');
   brand.className = 'an-brand';
-  brand.href = '/alpha';
+  brand.href = '/';
   brand.innerHTML = '<img src="/logo.svg" alt="B">Bobo gg';
   bar.appendChild(brand);
 
@@ -183,10 +185,10 @@
   var sw = document.createElement('div');
   sw.className = 'an-switch';
   sw.title = 'Switch to the classic layout';
-  sw.innerHTML = '<span>Classic</span><div class="an-track"><div class="an-knob"></div></div><span class="on">Alpha</span>';
+  sw.innerHTML = '<span class="on">Alpha</span><div class="an-track"><div class="an-knob"></div></div><span>Classic</span>';
   sw.addEventListener('click', function () {
     try { localStorage.setItem('bobo_ui', 'classic'); } catch (e) {}
-    location.href = '/';
+    location.href = '/classic';
   });
   bar.appendChild(sw);
 

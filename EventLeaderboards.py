@@ -611,7 +611,7 @@ MAIN_HTML = """
   .best-match-stat { text-align:center; min-width:44px; }
   .best-match-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; display:block; }
   .best-match-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
-  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; }
+  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; text-align:center; }
   .dist-wrap { position:relative; }
   .dist-wrap canvas { display:block; width:100%; cursor:crosshair; }
   .dist-caption { text-align:center; font-size:.78rem; color:var(--soft); margin-top:8px; }
@@ -1169,7 +1169,7 @@ RANKING_HTML = """
   .best-match-stat { text-align:center; min-width:44px; }
   .best-match-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; display:block; }
   .best-match-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
-  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; }
+  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; text-align:center; }
   .dist-wrap { position:relative; }
   .dist-wrap canvas { display:block; width:100%; cursor:crosshair; }
   .dist-caption { text-align:center; font-size:.78rem; color:var(--soft); margin-top:8px; }
@@ -1799,7 +1799,7 @@ PLAYER_CARD_HTML = """
   .best-match-stat { text-align:center; min-width:44px; }
   .best-match-stat-val { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; display:block; }
   .best-match-stat-lbl { font-size:.65rem; color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
-  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; }
+  .modal-loading { color:var(--soft); font-size:.85rem; padding:16px 0; text-align:center; }
   .dist-wrap { position:relative; }
   .dist-wrap canvas { display:block; width:100%; cursor:crosshair; }
   .dist-caption { text-align:center; font-size:.78rem; color:var(--soft); margin-top:8px; }
