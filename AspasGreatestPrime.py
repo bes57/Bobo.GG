@@ -150,6 +150,22 @@ PAGE_HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
 <title>The Greatest Prime in VCT History Isn't a Debate — Bobo's VCT Database</title>
+<!-- Open Graph / Twitter link-preview cards (Reddit, X, Discord, iMessage, etc.) -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Bobo gg">
+<meta property="og:title" content="The Greatest Prime in VCT History Isn't a Debate">
+<meta property="og:description" content="Aspas at Champions Paris towers over VCT history, including your favorite player.">
+<meta property="og:url" content="https://bobo-gg.net/articles/greatest-prime/">
+<meta property="og:image" content="https://bobo-gg.net/aspas25corrode.jpg">
+<meta property="og:image:secure_url" content="https://bobo-gg.net/aspas25corrode.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1366">
+<meta property="og:image:alt" content="Aspas at Champions 2025 in Paris">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Greatest Prime in VCT History Isn't a Debate">
+<meta name="twitter:description" content="Aspas at Champions Paris towers over VCT history, including your favorite player.">
+<meta name="twitter:image" content="https://bobo-gg.net/aspas25corrode.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
