@@ -605,6 +605,21 @@ PAGE_HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
 <title>Overperforming in VCT: Who's Doing It? — Bobo's VCT Database</title>
+<!-- Open Graph / Twitter link-preview cards -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Bobo gg">
+<meta property="og:title" content="Overperforming in VCT: Who's Doing It?">
+<meta property="og:description" content="Surfacing the players outperforming (or underperforming) their team.">
+<meta property="og:url" content="https://bobo-gg.net/articles/over-underperformers/">
+<meta property="og:image" content="https://bobo-gg.net/patmen.jpg">
+<meta property="og:image:secure_url" content="https://bobo-gg.net/patmen.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Overperforming in VCT: Who's Doing It?">
+<meta name="twitter:description" content="Surfacing the players outperforming (or underperforming) their team.">
+<meta name="twitter:image" content="https://bobo-gg.net/patmen.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">

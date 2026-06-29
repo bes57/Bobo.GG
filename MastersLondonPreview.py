@@ -16,6 +16,21 @@ PAGE_HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
 <title>Masters London Preview &mdash; Bobo's VCT Database</title>
+<!-- Open Graph / Twitter link-preview cards -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Bobo gg">
+<meta property="og:title" content="Masters London Tournament Preview">
+<meta property="og:description" content="Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.">
+<meta property="og:url" content="https://bobo-gg.net/articles/masters-london-preview/">
+<meta property="og:image" content="https://bobo-gg.net/prxpacstage1win.jpg">
+<meta property="og:image:secure_url" content="https://bobo-gg.net/prxpacstage1win.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="900">
+<meta property="og:image:height" content="600">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Masters London Tournament Preview">
+<meta name="twitter:description" content="Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.">
+<meta name="twitter:image" content="https://bobo-gg.net/prxpacstage1win.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">

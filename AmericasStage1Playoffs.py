@@ -17,6 +17,21 @@ PAGE_HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
 <title>Americas Stage 1 Playoffs Preview &mdash; Bobo's VCT Database</title>
+<!-- Open Graph / Twitter link-preview cards -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Bobo gg">
+<meta property="og:title" content="Americas Stage 1 Playoffs Preview">
+<meta property="og:description" content="LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.">
+<meta property="og:url" content="https://bobo-gg.net/articles/americas-stage1-playoffs-preview/">
+<meta property="og:image" content="https://bobo-gg.net/loudlev26.jpg">
+<meta property="og:image:secure_url" content="https://bobo-gg.net/loudlev26.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1720">
+<meta property="og:image:height" content="1146">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Americas Stage 1 Playoffs Preview">
+<meta name="twitter:description" content="LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.">
+<meta name="twitter:image" content="https://bobo-gg.net/loudlev26.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">

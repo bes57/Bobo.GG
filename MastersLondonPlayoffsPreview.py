@@ -192,6 +192,21 @@ PAGE_HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
 <title>Masters London: Playoffs Preview &mdash; Bobo's VCT Database</title>
+<!-- Open Graph / Twitter link-preview cards -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Bobo gg">
+<meta property="og:title" content="Masters London Playoffs Preview">
+<meta property="og:description" content="A brief statistical glimpse into the final stage of Masters London.">
+<meta property="og:url" content="https://bobo-gg.net/articles/masters-london-playoffs-preview/">
+<meta property="og:image" content="https://bobo-gg.net/chronlondon.jpg">
+<meta property="og:image:secure_url" content="https://bobo-gg.net/chronlondon.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1366">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Masters London Playoffs Preview">
+<meta name="twitter:description" content="A brief statistical glimpse into the final stage of Masters London.">
+<meta name="twitter:image" content="https://bobo-gg.net/chronlondon.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preload" as="image" href="/logos/TH.png"><link rel="preload" as="image" href="/logos/G2.png"><link rel="preload" as="image" href="/logos/PRX.png"><link rel="preload" as="image" href="/logos/VIT.png"><link rel="preload" as="image" href="/logos/FUT.png"><link rel="preload" as="image" href="/logos/LEV.png"><link rel="preload" as="image" href="/logos/EDG.png"><link rel="preload" as="image" href="/logos/XLG.png">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
