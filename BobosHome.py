@@ -627,9 +627,6 @@ ALPHA_HTML = """
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>/* Alpha is the default. Only "/" honors a saved classic preference (so /alpha
-   stays explicitly Alpha). Runs before paint to avoid a flash. */
-try{if(location.pathname==='/'&&localStorage.getItem('bobo_ui')==='classic'){location.replace('/classic');}}catch(e){}</script>
 <title>Bobo gg — Alpha</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">

@@ -97,11 +97,6 @@
     '.an-dd-menu a{display:block;padding:9px 13px;border-radius:9px;font-size:.8rem;font-weight:700;color:#6b6478;text-decoration:none;white-space:nowrap;transition:color .12s,background .12s;}' +
     '.an-dd-menu a:hover{background:#f3eefb;color:#16121d;}' +
     '.an-dd-menu a.active{color:#7c4dd6;background:#f3eefb;}' +
-    '.alpha-navbar .an-switch{display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;}' +
-    '.alpha-navbar .an-switch span{font-size:.74rem;font-weight:700;color:#9a93a6;}' +
-    '.alpha-navbar .an-switch span.on{color:#16121d;}' +
-    '.alpha-navbar .an-track{position:relative;width:38px;height:21px;border-radius:999px;background:#7c4dd6;}' +
-    '.alpha-navbar .an-knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0003;}' +
     // Phones: the 7 nav items can't fit one row at a readable size, so shrink
     // the text and let the links WRAP (brand + toggle on row 1, pills below)
     // instead of horizontal-scrolling — every option stays visible. pad() keys
@@ -109,8 +104,6 @@
     '@media(max-width:600px){' +
       '.alpha-navbar{gap:7px 9px;padding:7px 11px;flex-wrap:wrap;}' +
       '.alpha-navbar .an-brand{font-size:.9rem;}' +
-      '.alpha-navbar .an-switch{margin-left:auto;}' +
-      '.alpha-navbar .an-switch span{display:none;}' +
       '.alpha-navbar .an-links{flex:1 1 100%;order:3;overflow-x:visible;flex-wrap:wrap;gap:5px;}' +
       '.alpha-navbar .an-link{font-size:.7rem;padding:5px 9px;}' +
       '.alpha-navbar .an-caret{font-size:.82rem;}' +
@@ -181,16 +174,6 @@
     });
   });
   bar.appendChild(lwrap);
-
-  var sw = document.createElement('div');
-  sw.className = 'an-switch';
-  sw.title = 'Switch to the classic layout';
-  sw.innerHTML = '<span class="on">Alpha</span><div class="an-track"><div class="an-knob"></div></div><span>Classic</span>';
-  sw.addEventListener('click', function () {
-    try { localStorage.setItem('bobo_ui', 'classic'); } catch (e) {}
-    location.href = '/classic';
-  });
-  bar.appendChild(sw);
 
   document.body.insertBefore(bar, document.body.firstChild);
 

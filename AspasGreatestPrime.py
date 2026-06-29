@@ -313,7 +313,6 @@ PAGE_HTML = """
         <li>
           <p>While other variations are valid, I only considered international performances. Players and rosters fluctuate too much over an entire year. Domestic splits involve lesser and uneven competition, further clouded by discussions of regional power levels. Internationals are consistent, with high-level teams from all regions and high-stakes matches.</p>
           <p>I consider internationals to be a true reflection of player form against the best teams in the world and, importantly, comparable from one to another.</p>
-          <p>I&rsquo;m looking at you, Marteen at Masters Santiago.</p>
         </li>
         <li>
           <p>I use a filter of minimum rounds: 150+ when looking at contenders/statistics. This omits players whose statistics are anomalies based on variance + low sample size. It also eliminates players whose teams did extremely poorly, which is fine, as no player whose team couldn&rsquo;t win a match at an international is a true candidate for having &ldquo;the greatest prime in VCT history&rdquo;. Even players whose teams were mediocre, like Marteen at Santiago (where Gentle Mates went 2-2, not beating a single team who made Playoffs), are still in contention with this filter. Here are some examples of players who were omitted based on this filter:</p>
@@ -414,7 +413,7 @@ PAGE_HTML = """
 
       <p>Now, he&rsquo;s in the {{ duelist_fipr_pctile }}rd percentile for duelists. It&rsquo;s lower than average, but not crazy low.</p>
 
-      <p>However, this isn&rsquo;t the full story. How often was he winning those first duels?</p>
+      <p>Let&rsquo;s look further into this. How often was he winning those first duels?</p>
 
       {{ fiwr_table | safe }}
 
@@ -470,14 +469,14 @@ PAGE_HTML = """
 
       <p>During MIBR&rsquo;s Champions Paris run, they played each of the top-3 teams - NRG, FNATIC, and DRX. Those were the only teams they lost to, each loss being 1-2. Every other game was a 2-0, including against Team Heretics who finished 5th-6th alongside MIBR.</p>
 
-      <p>Aspas was dropping these numbers against the best in the world. There&rsquo;s no caveat of &ldquo;opponent quality&rdquo; (I&rsquo;m looking at you Marteen at Masters Santiago).</p>
+      <p>Dropping these numbers against the best teams in the world. There&rsquo;s no caveat of &ldquo;opponent quality&rdquo; (I&rsquo;m looking at you Marteen at Masters Santiago).</p>
 
       <h2 id="synopsis">Synopsis</h2>
 
       <p>Summarizing these findings, let&rsquo;s look back at how Aspas compares with other international performances (150+ rounds):</p>
 
       <div class="syn-card">
-        <div class="syn-title">Aspas at Champions Paris &mdash; International Historical Rankings</div>
+        <div class="syn-title">Aspas at Champions Paris &mdash; International Historical Rankings <span class="note">(min 150+ rounds)</span></div>
         <div class="syn-stat"><div class="syn-rank second">2nd</div><div class="syn-label">VLR Rating</div><div class="syn-of">of 397</div></div>
         <div class="syn-stat"><div class="syn-rank">1st</div><div class="syn-label">K/D</div><div class="syn-of">of 437</div></div>
         <div class="syn-stat"><div class="syn-rank">1st</div><div class="syn-label">KPR</div><div class="syn-of">of 437</div></div>
@@ -504,9 +503,7 @@ PAGE_HTML = """
         <div class="scatter-box"><canvas id="synScatter"></canvas><div class="aspas-card" id="synScatterCard" style="display:none"></div></div>
       </div>
 
-      <p>Aspas at Champions Paris wasn&rsquo;t just the best at what he does, he was the best we&rsquo;ve ever seen by a large, large margin.</p>
-
-      <p>Analytically, the greatest prime in VCT history is not a debate.</p>
+      <p>Aspas at Champions Paris wasn&rsquo;t just the best, he&rsquo;s the best we&rsquo;ve ever seen by a large, large margin.</p>
 
     </div>
   </div>
