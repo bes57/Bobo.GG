@@ -35,6 +35,7 @@ PAGE_HTML = """
   .toc a.active { color:var(--ink); font-weight:500; }
   .toc a.toc-sub { padding-left:16px; font-size:.74rem; border-left:2px solid #ede5f3; margin-left:4px; }
   .toc a.toc-sub.active { border-left-color:#7c3aed; color:var(--ink); font-weight:600; }
+  .alpha-navbar ~ .toc { top:72px; }
   @media(max-width:1180px) { .toc { display:none; } }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; padding:60px 32px 80px; }
   .article { max-width:860px; width:100%; }

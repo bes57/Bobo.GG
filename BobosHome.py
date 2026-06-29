@@ -11,6 +11,7 @@ from IdentifyingOverUnderPerformers import article_overunder_bp
 from AmericasStage1Playoffs import article_americas_stage1_bp
 from MastersLondonPreview import article_masters_london_bp
 from MastersLondonPlayoffsPreview import article_masters_london_playoffs_bp
+from AspasGreatestPrime import article_aspas_prime_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 
@@ -22,6 +23,7 @@ app.register_blueprint(article_overunder_bp, url_prefix="/articles/over-underper
 app.register_blueprint(article_americas_stage1_bp, url_prefix="/articles/americas-stage1-playoffs-preview")
 app.register_blueprint(article_masters_london_bp, url_prefix="/articles/masters-london-preview")
 app.register_blueprint(article_masters_london_playoffs_bp, url_prefix="/articles/masters-london-playoffs-preview")
+app.register_blueprint(article_aspas_prime_bp, url_prefix="/articles/greatest-prime")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 
@@ -457,6 +459,13 @@ HOME_HTML = """
       <div class="section-title">Research / Opinion Articles <span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
+        <a class="nav-card" href="/articles/greatest-prime/">
+          <img class="nav-card-cover" src="/aspas25corrode.jpg" alt="Aspas at Champions 2025">
+          <div class="nav-card-title">The Greatest Prime in<br>VCT History Isn&rsquo;t a Debate</div>
+          <div class="nav-card-desc">Aspas at Champions Paris towers over VCT history, including your favorite player.</div>
+          <div class="nav-card-date">June 28, 2026</div>
+          <div class="nav-card-arrow">Read &rarr;</div>
+        </a>
         <a class="nav-card" href="/articles/masters-london-playoffs-preview/">
           <img class="nav-card-cover" src="/chronlondon.jpg" alt="Masters London">
           <div class="nav-card-title">Masters London<br>Playoffs Preview</div>
@@ -668,7 +677,18 @@ try{if(location.pathname==='/'&&localStorage.getItem('bobo_ui')==='classic'){loc
   @media (max-width:600px){.ahome{padding:10px 4px 16px}.ahome-brand{font-size:1.95rem}}
 
   /* ── Banner + season timeline ── */
-  .ebanner{background:linear-gradient(135deg,#1d1330 0%,#2a1c44 55%,#3a1f55 100%);border-radius:22px;padding:24px 28px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 34px #1d133033;margin-bottom:24px}
+  .ebanner{background:linear-gradient(135deg,#1d1330 0%,#2a1c44 55%,#3a1f55 100%);border-radius:22px;padding:24px 28px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 34px #1d133033;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:stretch}
+  .ebanner-l{min-width:0;display:flex;flex-direction:column}
+  .ebanner-l .timeline{margin-top:auto}
+  .ebanner-r{position:relative;border-radius:16px;overflow:hidden;min-height:240px;display:flex;flex-direction:column;justify-content:flex-end;padding:22px 22px 17px;text-decoration:none;color:#fff;background:#1a0f24;transition:transform .18s,box-shadow .18s}
+  .ebanner-r:hover{transform:translateY(-3px);box-shadow:0 16px 38px #00000040}
+  .ebanner-r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
+  .ebanner-r::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#1a0f2400 0%,#1a0f2452 36%,#1a0f24dd 66%,#1a0f24 100%)}
+  .ebanner-r>*{position:relative;z-index:1}
+  .ead-tag{font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#e7dcff;margin-bottom:8px;text-shadow:0 1px 7px #1a0f24}
+  .ead-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;line-height:1.13;letter-spacing:-.01em;text-shadow:0 2px 10px #1a0f24cc}
+  .ead-link{margin-top:13px;font-size:.86rem;font-weight:800;color:#fff}
+  @media(max-width:760px){.ebanner{grid-template-columns:1fr}.ebanner-r{min-height:170px}}
   .ebanner::after{content:'';position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#a87bff2e,transparent 70%);pointer-events:none}
   .epill{display:inline-flex;align-items:center;gap:7px;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:#ffffff1c;margin-bottom:12px}
   .epill .dot{width:7px;height:7px;border-radius:50%;background:#ffd56b}
@@ -682,16 +702,16 @@ try{if(location.pathname==='/'&&localStorage.getItem('bobo_ui')==='classic'){loc
   .ebtn.ghost{background:#ffffff1f;color:#fff}
   .timeline{display:flex;align-items:flex-start;margin-top:22px;position:relative;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
   .timeline::-webkit-scrollbar{display:none}
-  .tnode{flex:1 1 0;min-width:82px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+  .tnode{flex:1 1 0;min-width:54px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
   .tnode::before{content:'';position:absolute;top:8px;left:-50%;width:100%;height:2px;background:#ffffff22}
   .tnode:first-child::before{display:none}
   .tnode.done::before,.tnode.live::before{background:#a98bff}
   .tdot{width:17px;height:17px;border-radius:50%;background:#ffffff2e;z-index:1;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:#3a1f55;font-weight:800}
   .tnode.done .tdot{background:#a98bff}
   .tnode.live .tdot,.tnode.next .tdot{background:#fff;box-shadow:0 0 0 4px #ffffff30}
-  .tlbl{margin-top:7px;font-size:.68rem;font-weight:700;color:#cdbfe6;line-height:1.2}
+  .tlbl{margin-top:7px;font-size:.61rem;font-weight:700;color:#cdbfe6;line-height:1.18;width:100%;padding:0 4px;box-sizing:border-box}
   .tnode.next .tlbl,.tnode.live .tlbl{color:#fff}
-  .tdate{font-size:.6rem;color:#9d8fbb;font-weight:600;margin-top:2px}
+  .tdate{font-size:.54rem;color:#9d8fbb;font-weight:600;margin-top:2px}
 
   /* ── Panels / grid ── */
   .agrid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start}
@@ -999,12 +1019,12 @@ try{if(location.pathname==='/'&&localStorage.getItem('bobo_ui')==='classic'){loc
   </div>
 
   <div id="explore">
-    <div class="sec-title">Articles</div>
+    <div class="phead" style="margin-bottom:14px"><div class="sec-title" style="margin:0">Recent Articles</div><a class="plink" href="/articles/">View all articles &rarr;</a></div>
     <div class="acards">
+      <a class="acard" href="/articles/greatest-prime/"><img src="/aspas25corrode.jpg" alt=""><div class="ab"><div class="at">The Greatest Prime in VCT History Isn't a Debate</div><div class="ad">Aspas at Champions Paris towers over VCT history, including your favorite player.</div><div class="adate">Jun 28, 2026</div></div></a>
       <a class="acard" href="/articles/masters-london-playoffs-preview/"><img src="/chronlondon.jpg" alt=""><div class="ab"><div class="at">Masters London Playoffs Preview</div><div class="ad">A brief statistical glimpse into the final stage of Masters London.</div><div class="adate">Jun 10, 2026</div></div></a>
       <a class="acard" href="/articles/masters-london-preview/"><img src="/prxpacstage1win.jpg" alt=""><div class="ab"><div class="at">Masters London Tournament Preview</div><div class="ad">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div><div class="adate">Jun 2, 2026</div></div></a>
       <a class="acard" href="/articles/americas-stage1-playoffs-preview/"><img src="/loudlev26.jpg" alt=""><div class="ab"><div class="at">Americas Stage 1 Playoffs Preview</div><div class="ad">LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.</div><div class="adate">May 12, 2026</div></div></a>
-      <a class="acard" href="/articles/over-underperformers/"><img src="/patmen.jpg" alt=""><div class="ab"><div class="at">Overperforming in VCT: Who's Doing It?</div><div class="ad">Surfacing the players outperforming (or underperforming) their team.</div><div class="adate">May 4, 2026</div></div></a>
     </div>
     <div class="sec-title">Stats &amp; Databases</div>
     <div class="dbtiles">
@@ -1068,11 +1088,19 @@ function renderBanner(){
     return '<div class="tnode '+s.status+'"><span class="tdot">'+mark+'</span><span class="tlbl">'+esc(s.label)+'</span><span class="tdate">'+shortDate(s.start)+'</span></div>';
   }).join('');
   document.getElementById('banner').innerHTML='<div class="ebanner">'
+    +'<div class="ebanner-l">'
     +'<div class="epill '+pillCls+'"><span class="dot"></span>'+pillTxt+'</div>'
     +'<div class="etitle">'+esc(title)+'</div>'
     +'<div class="esub">'+sub+'</div>'
     +'<div class="ebtns"><a class="ebtn" href="/mapelo/modern/">Open live hub &rarr;</a></div>'
     +(tl?'<div class="timeline">'+tl+'</div>':'')
+    +'</div>'
+    +'<a class="ebanner-r" href="/articles/greatest-prime/">'
+    +'<img src="/aspas25corrode.jpg" alt="">'
+    +'<div class="ead-tag">Latest Article</div>'
+    +'<div class="ead-title">The Greatest Prime in VCT History Isn&rsquo;t a Debate</div>'
+    +'<div class="ead-link">Read &rarr;</div>'
+    +'</a>'
     +'</div>';
 }
 
@@ -1535,7 +1563,7 @@ ARTICLES_HTML = """
   .afbtn{font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#6b6478;background:#fff;border:1.5px solid #eceef2;border-radius:99px;padding:8px 17px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
   .afbtn:hover{border-color:#d8cdee;color:#16121d}
   .afbtn.on{background:#16121d;color:#fff;border-color:#16121d}
-  .acard{position:relative;background:#fff;border:1px solid #eceef2;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:left;box-shadow:0 4px 24px #0000000a;transition:transform .16s,box-shadow .16s}
+  .acard{position:relative;background:#fff;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;text-align:center;box-shadow:0 4px 24px #0000000a;transition:transform .16s,box-shadow .16s}
   .acard:hover{transform:translateY(-5px);box-shadow:0 16px 40px #2a224018}
   /* featured (latest) story spans full width, image beside the text */
   .afeat{flex-direction:row;align-items:stretch;margin-bottom:22px}
@@ -1548,6 +1576,8 @@ ARTICLES_HTML = """
   .seclabel{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#9a93a6;margin:6px 2px 14px}
   @media(max-width:680px){.afeat{flex-direction:column}.acard.afeat img{width:100%;min-height:0;height:200px}.afeat .ab{padding:24px}.afeat .at{font-size:1.45rem}}
   .acat{position:absolute;top:13px;left:13px;z-index:2;font-family:'Plus Jakarta Sans',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:5px 11px;border-radius:99px;color:#fff;box-shadow:0 3px 10px #0000003d}
+  .acats{position:absolute;top:13px;left:13px;z-index:2;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+  .acats .acat{position:static;top:auto;left:auto;box-shadow:0 3px 10px #0000003d}
   .acat.preview{background:#7c4dd6}
   .acat.opinion{background:#e07b39}
   .acat.research{background:#1f9d8a}
@@ -1571,6 +1601,15 @@ ARTICLES_HTML = """
     <button class="afbtn" data-f="research" type="button">Research</button>
   </div>
   <div class="alist">
+    <a class="acard" data-cat="research opinion" href="/articles/greatest-prime/">
+      <span class="acats"><span class="acat research">Research</span><span class="acat opinion">Opinion</span></span>
+      <img src="/aspas25corrode.jpg" alt="">
+      <div class="ab">
+        <div class="at">The Greatest Prime in VCT History Isn't a Debate</div>
+        <div class="ad">Aspas at Champions Paris towers over VCT history, including your favorite player.</div>
+        <div class="adate">Jun 28, 2026</div>
+      </div>
+    </a>
     <a class="acard" data-cat="preview" href="/articles/masters-london-playoffs-preview/">
       <span class="acat preview">Preview</span>
       <img src="/chronlondon.jpg" alt="">
@@ -1621,7 +1660,7 @@ ARTICLES_HTML = """
       b.classList.add('on');
       var f=b.getAttribute('data-f'), shown=0;
       cards.forEach(function(c){
-        var ok=(f==='all'||c.getAttribute('data-cat')===f);
+        var ok=(f==='all'||(' '+(c.getAttribute('data-cat')||'')+' ').indexOf(' '+f+' ')!==-1);
         c.style.display=ok?'':'none';
         if(ok)shown++;
       });
@@ -2078,6 +2117,10 @@ def logo():
 @app.route("/patmen.jpg")
 def patmen():
     return send_from_directory(os.path.dirname(__file__), "Patmen.jpg", mimetype="image/jpeg")
+
+@app.route("/aspas25corrode.jpg")
+def aspas25corrode():
+    return send_from_directory(os.path.dirname(__file__), "Aspas25CorrodeChamps.jpg", mimetype="image/jpeg")
 
 @app.route("/loudlev26.jpg")
 def loudlev26():

@@ -658,5 +658,49 @@
     "event": "2026 Stage 2 \u2014 Pacific",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "KR\u00dc Esports",
+    "team_b": "G2 Esports",
+    "org_a": "KR\u00dc",
+    "org_b": "G2",
+    "date": "2026-07-30",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "100 Thieves",
+    "team_b": "Sentinels",
+    "org_a": "100T",
+    "org_b": "SEN",
+    "date": "2026-07-30",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "VARREL",
+    "team_b": "DetonatioN FocusMe",
+    "org_a": "VL",
+    "org_b": "DFM",
+    "date": "2026-07-30",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "FULL SENSE",
+    "team_b": "ZETA DIVISION",
+    "org_a": "FS",
+    "org_b": "ZETA",
+    "date": "2026-07-30",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
   }
 ]

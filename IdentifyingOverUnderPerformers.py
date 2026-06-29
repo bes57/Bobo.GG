@@ -619,6 +619,7 @@ PAGE_HTML = """
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
   .toc a.active { color:var(--ink); font-weight:500; }
+  .alpha-navbar ~ .toc { top:72px; }
   @media(max-width:900px) { .toc { display:none; } }
   .article { max-width:860px; width:100%; }
   .label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; text-align:center; }
