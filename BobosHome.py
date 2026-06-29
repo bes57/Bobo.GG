@@ -1021,7 +1021,7 @@ ALPHA_HTML = """
       <a class="acard" href="/articles/greatest-prime/"><img src="/aspas25corrode.jpg" alt=""><div class="ab"><div class="at">The Greatest Prime in VCT History Isn't a Debate</div><div class="ad">Aspas at Champions Paris towers over VCT history, including your favorite player.</div><div class="adate">Jun 28, 2026</div></div></a>
       <a class="acard" href="/articles/masters-london-playoffs-preview/"><img src="/chronlondon.jpg" alt=""><div class="ab"><div class="at">Masters London Playoffs Preview</div><div class="ad">A brief statistical glimpse into the final stage of Masters London.</div><div class="adate">Jun 10, 2026</div></div></a>
       <a class="acard" href="/articles/masters-london-preview/"><img src="/prxpacstage1win.jpg" alt=""><div class="ab"><div class="at">Masters London Tournament Preview</div><div class="ad">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div><div class="adate">Jun 2, 2026</div></div></a>
-      <a class="acard" href="/articles/americas-stage1-playoffs-preview/"><img src="/loudlev26.jpg" alt=""><div class="ab"><div class="at">Americas Stage 1 Playoffs Preview</div><div class="ad">LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.</div><div class="adate">May 12, 2026</div></div></a>
+      <a class="acard" href="/articles/over-underperformers/"><img src="/patmen.jpg" alt=""><div class="ab"><div class="at">Overperforming in VCT: Who's Doing It?</div><div class="ad">Surfacing the players outperforming (or underperforming) their team.</div><div class="adate">May 4, 2026</div></div></a>
     </div>
     <div class="sec-title">Stats &amp; Databases</div>
     <div class="dbtiles">
