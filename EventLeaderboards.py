@@ -7,6 +7,19 @@ import os
 from flask import Blueprint, render_template_string, request
 from MoreTestingMaybeFiles import ALL_EVENTS
 
+# Reuse the live pipeline's Cloudflare-aware fetch (curl_cffi) + event-URL
+# resolver so the live/in-progress split can be scraped from VLR's event-stats
+# pages even though its region URLs are left blank in ALL_EVENTS.
+import sys as _sys
+_scr_dir = os.path.join(os.path.dirname(__file__), "scrapers")
+if _scr_dir not in _sys.path:
+    _sys.path.insert(0, _scr_dir)
+try:
+    from RefreshLiveData import _fetch as _bypass_fetch, _resolve_event_url as _resolve_url
+except Exception:
+    _bypass_fetch = None
+    _resolve_url = None
+
 vct_bp = Blueprint('vct', __name__)
 
 @vct_bp.app_template_filter('player_hue')
@@ -63,6 +76,11 @@ def _alltime_event_filter(alltime_id):
     def keep(e):
         if list(e["regions"].keys()) == ["CN"]:
             return False
+        # Keep the live/in-progress split out of All-Time aggregates — its
+        # partial per-map data shouldn't dilute all-time rankings. It re-enters
+        # automatically once it completes (top-level CSV) and LIVE_EVENT_ID moves on.
+        if e["id"] == LIVE_EVENT_ID:
+            return False
         if alltime_id == ALLTIME_INTL_ID:
             return _is_international(e)
         if alltime_id == ALLTIME_DOM_ID:
@@ -74,6 +92,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 _event_cache = {}       # event_id -> DataFrame
 _headshot_cache = {}    # profile_url -> headshot_url or ""
+_split_lb_cache = {}    # event_id -> (maps_csv_mtime, DataFrame) for live/in-progress splits
 _headshots_loaded = False
 
 _HEADSHOTS_FILE = os.path.join(os.path.dirname(__file__), "data", "headshots.json")
@@ -94,9 +113,15 @@ def get_events_by_year():
         # event-leaderboard dropdown — user wants CN scoped to team stats, not players.
         if list(e["regions"].keys()) == ["CN"]:
             continue
-        # Hide events with no data yet (haven't started, or pre-scrape).
-        csv_path = os.path.join(os.path.dirname(__file__), "data", f"{e['id']}.csv")
-        if not os.path.exists(csv_path):
+        # Hide events with no data yet (haven't started, or pre-scrape). The
+        # live/in-progress split has no top-level CSV until first accessed, so
+        # also admit it once it has scraped per-map data (load_event builds its
+        # event CSV on demand).
+        csv_path  = os.path.join(os.path.dirname(__file__), "data", f"{e['id']}.csv")
+        maps_path = os.path.join(os.path.dirname(__file__), "data", "maps", f"{e['id']}.csv")
+        has_data = os.path.exists(csv_path) or (
+            e["id"] == LIVE_EVENT_ID and os.path.exists(maps_path))
+        if not has_data:
             continue
         by_year.setdefault(e["year"], []).append(e)
     # Sort within each year by start date, most-recent first, so events like
@@ -108,12 +133,19 @@ def get_events_by_year():
 
 def scrape_stats(region, url):
     print(f"Scraping {region} — {url}...")
-    try:
-        res = requests.get(url, headers=HEADERS, timeout=15)
-    except Exception as e:
-        print(f"  Request failed: {e}")
-        return pd.DataFrame()
-    soup = BeautifulSoup(res.text, "html.parser")
+    soup = None
+    if _bypass_fetch is not None:
+        try:
+            soup = _bypass_fetch(url)   # curl_cffi impersonation → BeautifulSoup
+        except Exception:
+            soup = None
+    if soup is None:
+        try:
+            res = requests.get(url, headers=HEADERS, timeout=15)
+            soup = BeautifulSoup(res.text, "html.parser")
+        except Exception as e:
+            print(f"  Request failed: {e}")
+            return pd.DataFrame()
     table = soup.find("table")
     if not table:
         print(f"  No table found.")
@@ -173,6 +205,43 @@ def _scrape_event_live(event):
     return cache
 
 
+def _rebuild_live_event_csv(event):
+    """Scrape the live/in-progress split's authoritative VLR event-stats pages —
+    resolving each region's blank URL from VLR's season page — and write the
+    complete per-player leaderboard to data/{id}.csv (all columns incl. CL%,
+    KMax, KPR…), the same schema every completed event uses. This makes the live
+    split a first-class event: it shows up in the dropdown, feeds /vct/ and the
+    home player-leaders identically, and stays complete. Returns the DataFrame
+    (empty if every region failed to scrape)."""
+    dfs = []
+    for region_name, url in event["regions"].items():
+        u = url or (_resolve_url(event, region_name) if _resolve_url else None)
+        if not u:
+            continue
+        df = scrape_stats(region_name, u)
+        if not df.empty:
+            dfs.append(df)
+        time.sleep(0.3)
+    if not dfs:
+        return pd.DataFrame()
+    cache = pd.concat(dfs, ignore_index=True)
+    # VLR's current event-stats headers: "R" (rating) and "KMAX"; the stored
+    # schema uses "R2.0"/"KMax". Drop the extra "Maps"/"FK:FD" columns.
+    cache = cache.rename(columns={"R": "R2.0", "KMAX": "KMax"})
+    cache = cache.drop(columns=[c for c in ("Maps", "FK:FD") if c in cache.columns])
+    if "R2.0" in cache.columns:
+        r2 = pd.to_numeric(cache["R2.0"].astype(str).str.replace("%", ""), errors="coerce")
+        cache = cache[r2.notna() & (r2 > 0)].reset_index(drop=True)
+    if "Org" in cache.columns:
+        cache = cache[cache["Org"].isin(ORG_REGIONS)].reset_index(drop=True)
+    if not cache.empty:
+        try:
+            cache.to_csv(os.path.join(DATA_DIR, f"{event['id']}.csv"), index=False)
+        except Exception as e:
+            print(f"  live event CSV write failed: {e}")
+    return cache
+
+
 def _add_derived_stats(df):
     """Add FIPR (first interactions / round) and FIWR (first-blood win %)
     columns derived from FK / FD / Rnd. Safe no-op if columns missing.
@@ -204,6 +273,98 @@ def _add_derived_stats(df):
     return df
 
 
+def _split_leaderboard_from_maps(event_id):
+    """Build an event-level per-player leaderboard for a live / in-progress split
+    by aggregating that split's per-map CSV (which the live scrape writes) plus
+    match_results.csv for rounds-per-map. Fast and local — no network — so the
+    home page can surface the *current* split's leaders without a live scrape.
+    Rate stats (rating, KAST, HS%, ACS, ADR) are round-weighted; counting stats
+    (K/D/A/FK/FD/Rnd) are summed. Cached on the maps CSV mtime, so it refreshes
+    automatically as new matches land. Returns an empty frame if no maps data."""
+    maps_path = os.path.join(DATA_DIR, "maps", f"{event_id}.csv")
+    if not os.path.exists(maps_path):
+        return pd.DataFrame()
+    mtime = os.path.getmtime(maps_path)
+    hit = _split_lb_cache.get(event_id)
+    if hit and hit[0] == mtime:
+        return hit[1]
+    try:
+        maps = pd.read_csv(maps_path)
+    except Exception:
+        return pd.DataFrame()
+    if maps.empty or "ProfileURL" not in maps.columns:
+        return pd.DataFrame()
+
+    # rounds per (MatchID, MapNum) from match_results scores ("13-8" -> 21)
+    rounds = {}
+    mr_path = os.path.join(DATA_DIR, "match_results.csv")
+    if os.path.exists(mr_path):
+        try:
+            mr = pd.read_csv(mr_path, dtype=str)
+            for mi, mn, sc in zip(mr["MatchID"], mr["MapNum"], mr["Score"]):
+                if str(mn) == "all" or not isinstance(sc, str) or "-" not in sc:
+                    continue
+                a, b = sc.split("-", 1)
+                try:
+                    rounds[(str(mi), str(mn))] = int(a) + int(b)
+                except ValueError:
+                    pass
+        except Exception:
+            pass
+
+    maps = maps.copy()
+    maps["_rnd"] = [rounds.get((str(mi), str(mn)), 0)
+                    for mi, mn in zip(maps["MatchID"], maps["MapNum"])]
+
+    def _num(s):
+        return pd.to_numeric(s.astype(str).str.replace("%", "", regex=False), errors="coerce")
+
+    rows = []
+    for prof, g in maps.groupby("ProfileURL"):
+        w = g["_rnd"]
+        wsum = w.sum()
+
+        def wmean(col):
+            if col not in g.columns:
+                return None
+            v = _num(g[col])
+            m = v.notna() & (w > 0)
+            if m.any() and w[m].sum() > 0:
+                return (v[m] * w[m]).sum() / w[m].sum()
+            vv = v.dropna()
+            return vv.mean() if len(vv) else None
+
+        def ssum(col):
+            return int(_num(g[col]).fillna(0).sum()) if col in g.columns else 0
+
+        r20, kast, hs = wmean("R2.0"), wmean("KAST"), wmean("HS%")
+        acs, adr = wmean("ACS"), wmean("ADR")
+        rows.append({
+            "Player": g["Player"].iloc[0], "Org": g["Org"].iloc[0], "ProfileURL": prof,
+            "Region": g["Region"].iloc[0] if "Region" in g.columns else "",
+            "Rnd": int(wsum), "K": ssum("K"), "D": ssum("D"), "A": ssum("A"),
+            "FK": ssum("FK"), "FD": ssum("FD"),
+            "R2.0": (f"{r20:.2f}" if r20 is not None and pd.notna(r20) else ""),
+            "ACS":  (f"{acs:.1f}" if acs is not None and pd.notna(acs) else ""),
+            "KAST": (f"{kast:.0f}%" if kast is not None and pd.notna(kast) else ""),
+            "ADR":  (f"{adr:.1f}" if adr is not None and pd.notna(adr) else ""),
+            "HS%":  (f"{hs:.0f}%" if hs is not None and pd.notna(hs) else ""),
+        })
+
+    df = pd.DataFrame(rows)
+    if not df.empty:
+        df["HeadshotURL"] = df["ProfileURL"].map(lambda u: _headshot_cache.get(u, ""))
+        df = _add_derived_stats(df)   # adds FIPR / FIWR / DPR from FK/FD/Rnd
+    _split_lb_cache[event_id] = (mtime, df)
+    return df
+
+
+def _live_split_has_data(event_id=LIVE_EVENT_ID):
+    """True if the (live) split has scraped per-map data on disk yet."""
+    p = os.path.join(DATA_DIR, "maps", f"{event_id}.csv")
+    return os.path.exists(p) and os.path.getsize(p) > 0
+
+
 def load_event(event):
     event_id = event["id"]
     if event_id in _event_cache:
@@ -228,10 +389,27 @@ def load_event(event):
         _event_cache[event_id] = cache
         return cache
 
-    # Live event: always scrape fresh
+    # Live / in-progress split: use the authoritative VLR event-stats CSV
+    # (complete columns, same schema as every completed event). Regenerate it
+    # whenever new match data has landed (its per-map CSV is newer), so it stays
+    # current without a scrape on every page load. Fall back to the fast per-map
+    # aggregation if the scrape yields nothing (e.g. VLR unreachable).
     if event_id == LIVE_EVENT_ID:
-        print(f"Live event — scraping {event_id}...")
-        cache = _scrape_event_live(event)
+        csv_path  = os.path.join(DATA_DIR, f"{event_id}.csv")
+        maps_path = os.path.join(DATA_DIR, "maps", f"{event_id}.csv")
+        stale = (not os.path.exists(csv_path)) or (
+            os.path.exists(maps_path) and os.path.getmtime(maps_path) > os.path.getmtime(csv_path))
+        cache = pd.DataFrame()
+        if stale:
+            print(f"Live event — rebuilding {event_id} event-stats CSV...")
+            cache = _rebuild_live_event_csv(event)
+        if cache.empty and os.path.exists(csv_path):
+            cache = pd.read_csv(csv_path)
+        if cache.empty:
+            cache = _split_leaderboard_from_maps(event_id)   # fast fallback
+        if not cache.empty and "HeadshotURL" not in cache.columns:
+            cache["HeadshotURL"] = cache.get("ProfileURL", pd.Series(dtype=str)).map(
+                lambda u: _headshot_cache.get(u, ""))
     else:
         # Past event: load from pre-scraped CSV if available
         csv_path = os.path.join(DATA_DIR, f"{event_id}.csv")
