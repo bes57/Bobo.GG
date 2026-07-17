@@ -14,6 +14,7 @@ from MastersLondonPlayoffsPreview import article_masters_london_playoffs_bp
 from AspasGreatestPrime import article_aspas_prime_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
+from MatchDataExplorer import match_data_bp
 
 app = Flask(__name__)
 Compress(app)
@@ -26,6 +27,7 @@ app.register_blueprint(article_masters_london_playoffs_bp, url_prefix="/articles
 app.register_blueprint(article_aspas_prime_bp, url_prefix="/articles/greatest-prime")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
+app.register_blueprint(match_data_bp, url_prefix="/match-data")
 
 # ── Alpha UI data layer ──────────────────────────────────────────────────────
 # The alpha dashboard reuses the Modern Hub's read-only data builder
@@ -504,6 +506,11 @@ HOME_HTML = """
         <a class="nav-card" href="/mapelo/pythagorean/">
           <div class="nav-card-title">VCT's Pythagorean Rating</div>
           <div class="nav-card-desc">A pythagorean win% model hand-tuned for VCT, ranking teams by how dominant they've been and their true domestic strength levels.</div>
+          <div class="nav-card-arrow">Explore &rarr;</div>
+        </a>
+        <a class="nav-card" href="/match-data/">
+          <div class="nav-card-title">Match Data Explorer</div>
+          <div class="nav-card-desc">Browse deeper per-map data from VLR match pages: round-by-round outcomes (side &amp; win condition), economy, clutches &amp; multikills, and the kill matrix.</div>
           <div class="nav-card-arrow">Explore &rarr;</div>
         </a>
         <a class="nav-card" href="/vct/">
@@ -1028,6 +1035,7 @@ ALPHA_HTML = """
       <a class="dbtile" href="/highs/"><div class="dt">All-Time Highs &amp; Lows</div><div class="dd">The best and worst individual performances across VCT.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/vct/"><div class="dt">Event Leaderboards</div><div class="dd">Per-event player leaderboards, percentiles, and best matches.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/mapelo/pythagorean/"><div class="dt">VCT Pythagorean</div><div class="dd">A Pythagorean win% model hand-tuned for VCT's domestic strength.</div><div class="darrow">Open &rarr;</div></a>
+      <a class="dbtile" href="/match-data/"><div class="dt">Match Data Explorer</div><div class="dd">Round-by-round outcomes, economy, clutches, and kill matrices from VLR match pages.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/mapelo/"><div class="dt">BenPom</div><div class="dd">A statistical rating system for VCT teams, past and present.</div><div class="darrow">Open &rarr;</div></a>
     </div>
   </div>
