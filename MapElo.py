@@ -6940,11 +6940,65 @@ MHUB_COLORS = {
 }
 
 
+def _mhub_dynamic_bands():
+    """Return MHUB_EVENT_BANDS with in-progress event bands snapped to real match dates.
+
+    Each entry in MHUB_EVENT_BANDS carries an event's *declared* calendar window.
+    For a completed event that window is preserved verbatim (returned unchanged).
+    But for an in-progress / live event the declared start can lag the real
+    schedule — e.g. 2026 Stage 2 was declared to start 2026-07-15, yet China
+    Stage 2 matches actually began 2026-07-09 — which leaves visible rating
+    movement sitting *outside* (before) the shaded band.
+
+    So for any band whose declared end is today or later, we derive the START
+    from the earliest REAL scraped match date of that event and the END from the
+    later of {declared end, latest real match date, today}. The window is looked
+    up dynamically from the scraped data (`_get_real_event_spans`), never a
+    hardcoded calendar date, so this stays correct for Stage 2 now and for any
+    future event automatically. Bands are matched to their event by identical
+    declared window (MHUB_EVENT_BANDS and ALL_EVENTS are populated from the same
+    dates), so no per-event id table is needed.
+    """
+    from datetime import datetime as _dt
+    today_str = _dt.now().strftime('%Y-%m-%d')
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS
+    except Exception:
+        ALL_EVENTS = []
+    real_spans = _get_real_event_spans()
+    ev_by_window = {(e.get('start'), e.get('end')): e for e in ALL_EVENTS}
+
+    bands = []
+    for band in MHUB_EVENT_BANDS:
+        b = dict(band)
+        # Only touch in-progress / future events; completed bands stay verbatim.
+        if b.get("end", "") >= today_str:
+            ev = ev_by_window.get((b.get("start"), b.get("end")))
+            if ev:
+                eid = ev["id"]
+                starts, ends = [], []
+                span = real_spans.get(eid)
+                if span:
+                    starts.append(span[0]); ends.append(span[1])
+                # Union any separate CN counterpart event (e.g. 2025_china_stage2
+                # for parent 2025_stage2); mirrors _event_bands_for_year. For
+                # 2026, CN is a region inside the parent event so this is a no-op,
+                # but it keeps the builder correct for the split-event years too.
+                for other_id, (o_s, o_e) in real_spans.items():
+                    if "_china_" in other_id and other_id.replace("_china_", "_", 1) == eid:
+                        starts.append(o_s); ends.append(o_e)
+                if starts:
+                    b["start"] = min(starts)
+                    b["end"]   = max(b.get("end", ""), max(ends), today_str)
+        bands.append(b)
+    return bands
+
+
 def _mhub_load():
     """Load rating_timeline.json + map_ratings.json and merge into hub payload."""
     result = {
         "status":      "ready",
-        "event_bands": MHUB_EVENT_BANDS,
+        "event_bands": _mhub_dynamic_bands(),
         "chart":       {"checkpoints": [], "match_events": []},
         "leaderboard": {"teams": [], "beta": 0.3237, "as_of_date": None},
     }
@@ -7016,6 +7070,16 @@ def _mhub_load():
     if result["chart"]["checkpoints"]:
         last_checkpoint_ratings = result["chart"]["checkpoints"][-1]["ratings"]
 
+    # Exact per-match UTC start times ("YYYY-MM-DD HH:MM:SS"), keyed by MatchID.
+    # The frontend renders these in the viewer's local timezone. Absent for old
+    # matches (date-only) — the UI falls back to just the date.
+    _match_times = {}
+    try:
+        with open(os.path.join(ROOT, 'data', 'match_times.json')) as _f:
+            _match_times = json.load(_f)
+    except Exception:
+        _match_times = {}
+
     # Build per-team recent-matches from match_events (include maps + event)
     recent_by_org: dict = {}
     for me in reversed(result["chart"]["match_events"]):
@@ -7027,6 +7091,7 @@ def _mhub_load():
                 is_winner = (role == "winner")
                 recent_by_org[org].append({
                     "date":     me["date"],
+                    "time":     _match_times.get(str(me.get("match_id") or ""), ""),
                     "opponent": me["loser"] if is_winner else me["winner"],
                     "result":   "W" if is_winner else "L",
                     "score":    me["series_score"],
@@ -7488,6 +7553,7 @@ def _mhub_load():
                 "team_a":      _org_a,
                 "team_b":      _org_b,
                 "date":        _me.get("date"),
+                "time":        _match_times.get(str(_me.get("match_id") or ""), ""),
                 "region":      _region,
                 "event":       _evt_label,
                 "event_id":    _me.get("event_id", ""),
@@ -7505,7 +7571,10 @@ def _mhub_load():
                 "gf_upper":      _gf_upper_org or "",
             })
 
-        past_matches.sort(key=lambda x: x["date"] or "", reverse=True)
+        # Sort by full timestamp when known (so same-day matches order by actual
+        # kickoff time, not just date) — "time" is a full "YYYY-MM-DD HH:MM:SS"
+        # UTC string that string-sorts correctly against "date" alone.
+        past_matches.sort(key=lambda x: x.get("time") or x["date"] or "", reverse=True)
 
     # Per-region pool — Stage 1 runs three regional leagues, each with its own
     # 7-map pool. Derive each pool from the maps played in past-7-day matches
@@ -7613,7 +7682,7 @@ def _mhub_event_for_date(date_str):
     """Return the event label whose date range contains date_str (YYYY-MM-DD)."""
     if not date_str:
         return None
-    for band in MHUB_EVENT_BANDS:
+    for band in _mhub_dynamic_bands():
         if band["start"] <= date_str <= band["end"]:
             return band["label"]
     return None

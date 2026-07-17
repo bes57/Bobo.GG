@@ -517,13 +517,39 @@ def _parse_match_html(soup, url, region_tag):
     return map_rows, series_rows, display
 
 
+def _et_walltime_to_utc(ts):
+    """VLR's `data-utc-ts` attribute is mislabeled: its value is actually the
+    match's US/Eastern WALL-CLOCK time (verified — its HH:MM always equals the
+    page's own displayed "H:MM PM EDT/EST" text digit-for-digit; a true-UTC
+    value 4-5h earlier would NOT match). Treating it as literal UTC (as an
+    earlier version of this code did) double-shifts every displayed time by
+    the ET offset. This converts the ET wall-clock string to the TRUE UTC
+    instant (DST-aware via zoneinfo, correct for any date) so downstream
+    'Z'-suffixed ISO consumers (the browser's local-time formatter) get a
+    genuinely correct instant. Returns "YYYY-MM-DD HH:MM:SS" UTC, or the input
+    unchanged if parsing fails."""
+    try:
+        from zoneinfo import ZoneInfo
+        naive = datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+        et = naive.replace(tzinfo=ZoneInfo("America/New_York"))
+        return et.astimezone(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception:
+        return ts
+
+
 def _scrape_date(mid):
+    """Return the match's raw VLR timestamp, "YYYY-MM-DD HH:MM:SS" — this is
+    US/Eastern wall-clock time despite VLR's "data-utc-ts" name (see
+    _et_walltime_to_utc). Callers slice [:10] for the date-only
+    match_dates.json (ET calendar day — matches VLR's own day-bucketing, so
+    left as-is) and must pass the FULL string through _et_walltime_to_utc
+    before storing/displaying it as a time. None if not found."""
     soup = _fetch(f"https://www.vlr.gg/{mid}/", retries=2)
     if soup is None:
         return None
     el = soup.find("div", class_="moment-tz-convert", attrs={"data-utc-ts": True})
     if el:
-        return el["data-utc-ts"][:10]
+        return el["data-utc-ts"]
     return None
 
 
@@ -570,7 +596,8 @@ def _scrape_upcoming_for(vlr_id, slug, region, event_label):
                 continue
 
             ts_el = a.select_one(".moment-tz-convert")
-            match_date = ts_el["data-utc-ts"][:10] if (ts_el and ts_el.get("data-utc-ts")) else current_date
+            utc_ts = ts_el["data-utc-ts"] if (ts_el and ts_el.get("data-utc-ts")) else ""
+            match_date = utc_ts[:10] if utc_ts else current_date
             if not match_date:
                 continue
             try:
@@ -600,10 +627,12 @@ def _scrape_upcoming_for(vlr_id, slug, region, event_label):
             stage_raw = stage_el.get_text(" ", strip=True) if stage_el else ""
 
             out.append({
+                "match_id": _match_id_from_url(a.get("href", "")) or "",
                 "team_a": team_a, "team_b": team_b,
                 "org_a":  _VLR_NAME_TO_ORG_CI.get(team_a.lower(), team_a),
                 "org_b":  _VLR_NAME_TO_ORG_CI.get(team_b.lower(), team_b),
                 "date":   match_date,
+                "datetime": (_et_walltime_to_utc(utc_ts) if utc_ts else ""),   # true UTC, for local-time display
                 "region": region,
                 "event":  f"{event_label} — {region}" if region != "International" else event_label,
                 "format": fmt,
@@ -862,6 +891,42 @@ def main():
             continue
         seen.add(key)
         deduped.append(m)
+
+    # Exact UTC start times for the SOONEST upcoming matches. The matches-list
+    # page only shows a bare "5:00 PM" (no timezone), so pull the authoritative
+    # data-utc-ts from each match's own page — bounded to the next ~10 days and
+    # cached in match_times.json so each match is fetched at most once.
+    _times_path = os.path.join(ROOT, "data", "match_times.json")
+    try:
+        with open(_times_path) as f:
+            _upc_times = json.load(f)
+    except Exception:
+        _upc_times = {}
+    _soon_cut = (datetime.date.today() + datetime.timedelta(days=10)).isoformat()
+    _t_fetched = 0
+    for _m in deduped:
+        if _m.get("datetime") or _m.get("date", "") > _soon_cut:
+            continue
+        _mid = str(_m.get("match_id") or "")
+        if not _mid:
+            continue
+        if _mid in _upc_times:
+            _m["datetime"] = _upc_times[_mid]
+        elif _t_fetched < 40:
+            _ts = _scrape_date(_mid)   # raw ET wall-clock
+            _t_fetched += 1
+            if _ts:
+                _utc = _et_walltime_to_utc(_ts)
+                _m["datetime"] = _utc
+                _upc_times[_mid] = _utc
+            time.sleep(0.15)
+    if _t_fetched:
+        try:
+            with open(_times_path, "w") as f:
+                json.dump(_upc_times, f, indent=2)
+        except Exception:
+            pass
+
     out_upc = os.path.join(ROOT, "data", "upcoming_matches.json")
     try:
         with open(out_upc, "w") as f:
@@ -964,34 +1029,56 @@ def main():
     except Exception as e:
         _write("scraping_dates", 75, "Could not read match_results.csv", error=str(e))
         all_ids = []
-    out_path = os.path.join(ROOT, "data", "match_dates.json")
-    existing_dates = {}
-    if os.path.exists(out_path):
-        try:
-            with open(out_path) as f:
-                existing_dates = json.load(f)
-        except Exception:
-            existing_dates = {}
-    to_fetch = [m for m in all_ids if m not in existing_dates]
-    print(f"  {len(to_fetch)} new match dates to fetch", flush=True)
+    out_path   = os.path.join(ROOT, "data", "match_dates.json")
+    times_path = os.path.join(ROOT, "data", "match_times.json")
 
-    for i, mid in enumerate(to_fetch, 1):
-        d = _scrape_date(mid)
-        if d:
-            existing_dates[mid] = d
-        pct = 75 + int(i / max(len(to_fetch), 1) * 12)
-        _write("scraping_dates", min(pct, 87),
-               f"Fetching dates… ({i}/{len(to_fetch)})")
-        if i % 10 == 0:
+    def _load_json(p):
+        if os.path.exists(p):
+            try:
+                with open(p) as f:
+                    return json.load(f)
+            except Exception:
+                return {}
+        return {}
+
+    existing_dates = _load_json(out_path)    # MatchID -> "YYYY-MM-DD" (unchanged format)
+    existing_times = _load_json(times_path)  # MatchID -> "YYYY-MM-DD HH:MM:SS" (UTC)
+
+    # New matches get date + time in one fetch (VLR serves both in data-utc-ts).
+    to_fetch = [m for m in all_ids if m not in existing_dates]
+    # Backfill exact UTC times for recent matches that predate this feature
+    # (times weren't stored before). Bounded to the last ~45 days so the
+    # page-load scrape stays fast; older matches keep date-only.
+    _recent_cut = (datetime.date.today() - datetime.timedelta(days=45)).isoformat()
+    to_fetch_times = [m for m in all_ids
+                      if m not in to_fetch and m not in existing_times
+                      and str(existing_dates.get(m, "")) >= _recent_cut]
+    fetch_all = to_fetch + to_fetch_times
+    print(f"  {len(to_fetch)} new match dates, {len(to_fetch_times)} recent times to fetch",
+          flush=True)
+
+    def _dump_dates_times():
+        try:
             with open(out_path, "w") as f:
-                json.dump(existing_dates, f)
+                json.dump(existing_dates, f, indent=2)
+            with open(times_path, "w") as f:
+                json.dump(existing_times, f, indent=2)
+        except Exception as e:
+            _write("scraping_dates", 87, "match_dates/times write failed", error=str(e))
+
+    for i, mid in enumerate(fetch_all, 1):
+        ts = _scrape_date(mid)   # raw ET wall-clock "YYYY-MM-DD HH:MM:SS" or None
+        if ts:
+            existing_dates[mid] = ts[:10]                       # ET calendar day (unchanged semantics)
+            existing_times[mid] = _et_walltime_to_utc(ts)        # true UTC instant, for display
+        pct = 75 + int(i / max(len(fetch_all), 1) * 12)
+        _write("scraping_dates", min(pct, 87),
+               f"Fetching dates/times… ({i}/{len(fetch_all)})")
+        if i % 10 == 0:
+            _dump_dates_times()
         time.sleep(0.15)  # was 0.45
 
-    try:
-        with open(out_path, "w") as f:
-            json.dump(existing_dates, f, indent=2)
-    except Exception as e:
-        _write("scraping_dates", 87, "match_dates write failed", error=str(e))
+    _dump_dates_times()
 
     # ── Step 5b: Catch up map veto sequences ────────────────────────────────
     # Veto scraper is incremental (skips already-scraped MatchIDs). The veto
