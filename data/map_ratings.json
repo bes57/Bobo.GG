@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated": "2026-06-23",
+    "generated": "2026-07-17",
     "train_events": [
       "2023_lock_in",
       "2023_league",
@@ -16,10 +16,10 @@
       "2024_china_stage2",
       "2024_champions",
       "2025_kickoff",
-      "2025_china_kickoff"
+      "2025_china_kickoff",
+      "2025_masters_bangkok"
     ],
     "test_events": [
-      "2025_masters_bangkok",
       "2025_stage1",
       "2025_china_stage1",
       "2025_masters_toronto",
@@ -44,7 +44,7 @@
     "logloss_train": 0.66832,
     "logloss_test": 0.69324,
     "n_train": 0,
-    "n_test": 886
+    "n_test": 939
   },
   "lambda_grid": [
     {
@@ -46232,6 +46232,3287 @@
             }
           },
           "label": "After Masters London"
+        },
+        "after_stage2": {
+          "n_games": 939,
+          "beta": 0.3274,
+          "ref_date": "2026-09-06",
+          "teams": {
+            "PRX": {
+              "overall_rating": 3.254,
+              "w": 53,
+              "l": 30,
+              "win_pct": 0.639,
+              "effective_games": 8.46,
+              "maps": {
+                "Abyss": {
+                  "rating": 2.07,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": 3.117,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Bind": {
+                  "rating": 2.431,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Breeze": {
+                  "rating": 3.11,
+                  "w": 11,
+                  "l": 5,
+                  "win_pct": 0.688
+                },
+                "Corrode": {
+                  "rating": 2.024,
+                  "w": 4,
+                  "l": 4,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": 3.917,
+                  "w": 5,
+                  "l": 1,
+                  "win_pct": 0.833
+                },
+                "Haven": {
+                  "rating": 3.098,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Lotus": {
+                  "rating": 3.138,
+                  "w": 6,
+                  "l": 2,
+                  "win_pct": 0.75
+                },
+                "Pearl": {
+                  "rating": 2.731,
+                  "w": 5,
+                  "l": 5,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": 3.138,
+                  "w": 13,
+                  "l": 4,
+                  "win_pct": 0.765
+                }
+              }
+            },
+            "EF": {
+              "overall_rating": 3.223,
+              "w": 17,
+              "l": 8,
+              "win_pct": 0.68,
+              "effective_games": 4.89,
+              "maps": {
+                "Ascent": {
+                  "rating": 2.896,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Bind": {
+                  "rating": 2.89,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Breeze": {
+                  "rating": 3.015,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": 2.343,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Lotus": {
+                  "rating": 3.711,
+                  "w": 6,
+                  "l": 1,
+                  "win_pct": 0.857
+                },
+                "Pearl": {
+                  "rating": 3.435,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": 2.862,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                }
+              }
+            },
+            "LEV": {
+              "overall_rating": 2.966,
+              "w": 38,
+              "l": 25,
+              "win_pct": 0.603,
+              "effective_games": 12.05,
+              "maps": {
+                "Ascent": {
+                  "rating": 2.916,
+                  "w": 6,
+                  "l": 1,
+                  "win_pct": 0.857
+                },
+                "Bind": {
+                  "rating": 3.652,
+                  "w": 5,
+                  "l": 2,
+                  "win_pct": 0.714
+                },
+                "Breeze": {
+                  "rating": 1.866,
+                  "w": 0,
+                  "l": 6,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": 2.747,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 0.975,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Haven": {
+                  "rating": 2.898,
+                  "w": 5,
+                  "l": 2,
+                  "win_pct": 0.714
+                },
+                "Lotus": {
+                  "rating": 3.017,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": 3.149,
+                  "w": 5,
+                  "l": 4,
+                  "win_pct": 0.556
+                },
+                "Split": {
+                  "rating": 3.831,
+                  "w": 11,
+                  "l": 3,
+                  "win_pct": 0.786
+                },
+                "Sunset": {
+                  "rating": 2.088,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "G2": {
+              "overall_rating": 2.351,
+              "w": 39,
+              "l": 23,
+              "win_pct": 0.629,
+              "effective_games": 6.34,
+              "maps": {
+                "Abyss": {
+                  "rating": 3.302,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Ascent": {
+                  "rating": 1.596,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Bind": {
+                  "rating": 2.529,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Breeze": {
+                  "rating": 2.296,
+                  "w": 5,
+                  "l": 2,
+                  "win_pct": 0.714
+                },
+                "Corrode": {
+                  "rating": -0.268,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Fracture": {
+                  "rating": 2.202,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Haven": {
+                  "rating": 2.485,
+                  "w": 7,
+                  "l": 2,
+                  "win_pct": 0.778
+                },
+                "Lotus": {
+                  "rating": 2.545,
+                  "w": 6,
+                  "l": 2,
+                  "win_pct": 0.75
+                },
+                "Pearl": {
+                  "rating": 3.906,
+                  "w": 6,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": 2.09,
+                  "w": 5,
+                  "l": 7,
+                  "win_pct": 0.417
+                }
+              }
+            },
+            "VIT": {
+              "overall_rating": 2.29,
+              "w": 29,
+              "l": 23,
+              "win_pct": 0.558,
+              "effective_games": 7.01,
+              "maps": {
+                "Abyss": {
+                  "rating": 2.029,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Ascent": {
+                  "rating": 2.078,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Bind": {
+                  "rating": 1.39,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": 2.266,
+                  "w": 7,
+                  "l": 4,
+                  "win_pct": 0.636
+                },
+                "Corrode": {
+                  "rating": 2.596,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 2.086,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": 1.788,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Lotus": {
+                  "rating": 2.414,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Pearl": {
+                  "rating": 2.726,
+                  "w": 5,
+                  "l": 1,
+                  "win_pct": 0.833
+                },
+                "Split": {
+                  "rating": 2.208,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                }
+              }
+            },
+            "NRG": {
+              "overall_rating": 2.202,
+              "w": 38,
+              "l": 27,
+              "win_pct": 0.585,
+              "effective_games": 6.86,
+              "maps": {
+                "Abyss": {
+                  "rating": 2.679,
+                  "w": 5,
+                  "l": 2,
+                  "win_pct": 0.714
+                },
+                "Ascent": {
+                  "rating": 1.814,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": 1.645,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": 2.453,
+                  "w": 6,
+                  "l": 3,
+                  "win_pct": 0.667
+                },
+                "Corrode": {
+                  "rating": 0.531,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Fracture": {
+                  "rating": 1.875,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Haven": {
+                  "rating": 2.409,
+                  "w": 6,
+                  "l": 2,
+                  "win_pct": 0.75
+                },
+                "Lotus": {
+                  "rating": 2.494,
+                  "w": 6,
+                  "l": 2,
+                  "win_pct": 0.75
+                },
+                "Pearl": {
+                  "rating": 1.85,
+                  "w": 8,
+                  "l": 5,
+                  "win_pct": 0.615
+                },
+                "Split": {
+                  "rating": 1.853,
+                  "w": 2,
+                  "l": 6,
+                  "win_pct": 0.25
+                }
+              }
+            },
+            "TH": {
+              "overall_rating": 2.116,
+              "w": 28,
+              "l": 23,
+              "win_pct": 0.549,
+              "effective_games": 6.07,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.966,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": 2.057,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Bind": {
+                  "rating": 0.424,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Breeze": {
+                  "rating": 2.054,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Corrode": {
+                  "rating": 2.045,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 2.67,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Haven": {
+                  "rating": 1.986,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Lotus": {
+                  "rating": 2.306,
+                  "w": 7,
+                  "l": 4,
+                  "win_pct": 0.636
+                },
+                "Pearl": {
+                  "rating": 1.136,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Split": {
+                  "rating": 2.032,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                }
+              }
+            },
+            "FNC": {
+              "overall_rating": 1.992,
+              "w": 23,
+              "l": 16,
+              "win_pct": 0.59,
+              "effective_games": 4.5,
+              "maps": {
+                "Abyss": {
+                  "rating": 2.196,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Ascent": {
+                  "rating": 1.735,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 1.451,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": 1.771,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": 1.366,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": 2.517,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Haven": {
+                  "rating": 1.673,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Lotus": {
+                  "rating": 2.006,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Split": {
+                  "rating": 1.966,
+                  "w": 5,
+                  "l": 1,
+                  "win_pct": 0.833
+                },
+                "Sunset": {
+                  "rating": 1.991,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "T1": {
+              "overall_rating": 1.873,
+              "w": 27,
+              "l": 14,
+              "win_pct": 0.659,
+              "effective_games": 3.15,
+              "maps": {
+                "Abyss": {
+                  "rating": 1.974,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Ascent": {
+                  "rating": 1.895,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": 2.123,
+                  "w": 5,
+                  "l": 1,
+                  "win_pct": 0.833
+                },
+                "Breeze": {
+                  "rating": 1.675,
+                  "w": 4,
+                  "l": 4,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": 1.604,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": 1.877,
+                  "w": 5,
+                  "l": 2,
+                  "win_pct": 0.714
+                },
+                "Lotus": {
+                  "rating": 1.68,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": 2.19,
+                  "w": 6,
+                  "l": 2,
+                  "win_pct": 0.75
+                },
+                "Split": {
+                  "rating": 1.767,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                }
+              }
+            },
+            "NS": {
+              "overall_rating": 1.794,
+              "w": 26,
+              "l": 13,
+              "win_pct": 0.667,
+              "effective_games": 2.66,
+              "maps": {
+                "Abyss": {
+                  "rating": 1.862,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 2.388,
+                  "w": 4,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Breeze": {
+                  "rating": 1.752,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Corrode": {
+                  "rating": 2.119,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Fracture": {
+                  "rating": 1.715,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Haven": {
+                  "rating": 1.62,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Lotus": {
+                  "rating": 1.655,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": 1.99,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": 1.647,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                }
+              }
+            },
+            "NAVI": {
+              "overall_rating": 1.675,
+              "w": 13,
+              "l": 14,
+              "win_pct": 0.481,
+              "effective_games": 3.44,
+              "maps": {
+                "Abyss": {
+                  "rating": 1.353,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": 1.87,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": 0.63,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": 1.649,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Fracture": {
+                  "rating": 1.77,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Haven": {
+                  "rating": 1.648,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Lotus": {
+                  "rating": 1.482,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": 1.066,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": 1.757,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                }
+              }
+            },
+            "100T": {
+              "overall_rating": 1.319,
+              "w": 22,
+              "l": 19,
+              "win_pct": 0.537,
+              "effective_games": 3.57,
+              "maps": {
+                "Abyss": {
+                  "rating": 1.263,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 2.027,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Breeze": {
+                  "rating": 1.556,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Corrode": {
+                  "rating": 0.885,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Fracture": {
+                  "rating": 1.107,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": 1.125,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": 1.183,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": 1.127,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Split": {
+                  "rating": 1.32,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                }
+              }
+            },
+            "GE": {
+              "overall_rating": 1.08,
+              "w": 23,
+              "l": 23,
+              "win_pct": 0.5,
+              "effective_games": 5.62,
+              "maps": {
+                "Abyss": {
+                  "rating": 1.525,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Ascent": {
+                  "rating": 1.028,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": 0.88,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": 1.194,
+                  "w": 6,
+                  "l": 4,
+                  "win_pct": 0.6
+                },
+                "Corrode": {
+                  "rating": 0.802,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -0.025,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": 0.984,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Lotus": {
+                  "rating": 0.644,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Pearl": {
+                  "rating": 2.847,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Split": {
+                  "rating": 0.879,
+                  "w": 4,
+                  "l": 6,
+                  "win_pct": 0.4
+                }
+              }
+            },
+            "FUT": {
+              "overall_rating": 0.977,
+              "w": 22,
+              "l": 26,
+              "win_pct": 0.458,
+              "effective_games": 8.72,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.378,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": 0.61,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 1.974,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Breeze": {
+                  "rating": 0.843,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": 1.021,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 0.962,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Haven": {
+                  "rating": 1.841,
+                  "w": 7,
+                  "l": 2,
+                  "win_pct": 0.778
+                },
+                "Lotus": {
+                  "rating": 0.774,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Pearl": {
+                  "rating": -0.097,
+                  "w": 0,
+                  "l": 6,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": 0.445,
+                  "w": 3,
+                  "l": 5,
+                  "win_pct": 0.375
+                }
+              }
+            },
+            "FUR": {
+              "overall_rating": 0.912,
+              "w": 20,
+              "l": 20,
+              "win_pct": 0.5,
+              "effective_games": 5.55,
+              "maps": {
+                "Abyss": {
+                  "rating": 2.149,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Bind": {
+                  "rating": 0.565,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": 0.644,
+                  "w": 4,
+                  "l": 4,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": 0.144,
+                  "w": 3,
+                  "l": 6,
+                  "win_pct": 0.333
+                },
+                "Lotus": {
+                  "rating": 0.731,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Pearl": {
+                  "rating": 1.21,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Split": {
+                  "rating": 0.974,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Sunset": {
+                  "rating": 1.251,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "KRX": {
+              "overall_rating": 0.757,
+              "w": 19,
+              "l": 17,
+              "win_pct": 0.528,
+              "effective_games": 2.95,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.86,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Ascent": {
+                  "rating": 0.691,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": 0.576,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": 0.876,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": 1.47,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Fracture": {
+                  "rating": 0.272,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": 0.846,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Lotus": {
+                  "rating": 0.663,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": 0.688,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": 0.711,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                }
+              }
+            },
+            "FS": {
+              "overall_rating": 0.72,
+              "w": 20,
+              "l": 18,
+              "win_pct": 0.526,
+              "effective_games": 4.32,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.472,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": 1.425,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Breeze": {
+                  "rating": 0.557,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Corrode": {
+                  "rating": 0.535,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": 0.234,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Haven": {
+                  "rating": 0.526,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Lotus": {
+                  "rating": 0.846,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Pearl": {
+                  "rating": 1.198,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Split": {
+                  "rating": 0.945,
+                  "w": 5,
+                  "l": 2,
+                  "win_pct": 0.714
+                }
+              }
+            },
+            "M8": {
+              "overall_rating": 0.493,
+              "w": 25,
+              "l": 20,
+              "win_pct": 0.556,
+              "effective_games": 5.93,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.655,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Ascent": {
+                  "rating": 0.635,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Bind": {
+                  "rating": 0.575,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Corrode": {
+                  "rating": -0.258,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": 0.61,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Haven": {
+                  "rating": 0.394,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": 0.407,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Pearl": {
+                  "rating": 0.991,
+                  "w": 7,
+                  "l": 1,
+                  "win_pct": 0.875
+                },
+                "Split": {
+                  "rating": -0.647,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Sunset": {
+                  "rating": 0.882,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "KR\u00dc": {
+              "overall_rating": 0.422,
+              "w": 11,
+              "l": 13,
+              "win_pct": 0.458,
+              "effective_games": 2.41,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.13,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 0.12,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": 0.246,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Haven": {
+                  "rating": 0.317,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": 0.733,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Pearl": {
+                  "rating": 0.394,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": 0.385,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                }
+              }
+            },
+            "SEN": {
+              "overall_rating": 0.377,
+              "w": 10,
+              "l": 13,
+              "win_pct": 0.435,
+              "effective_games": 4.31,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.621,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": 0.339,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": 0.449,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": -0.212,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": 0.23,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": 0.012,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": 0.218,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Pearl": {
+                  "rating": 0.377,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": 0.297,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Summit": {
+                  "rating": 0.814,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "TL": {
+              "overall_rating": 0.303,
+              "w": 26,
+              "l": 21,
+              "win_pct": 0.553,
+              "effective_games": 4.79,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.026,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Ascent": {
+                  "rating": 0.292,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 0.71,
+                  "w": 6,
+                  "l": 1,
+                  "win_pct": 0.857
+                },
+                "Breeze": {
+                  "rating": 0.334,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Corrode": {
+                  "rating": 0.023,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Fracture": {
+                  "rating": -0.174,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": 0.375,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": 0.104,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": 0.24,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Split": {
+                  "rating": -0.14,
+                  "w": 4,
+                  "l": 4,
+                  "win_pct": 0.5
+                }
+              }
+            },
+            "MIBR": {
+              "overall_rating": 0.197,
+              "w": 15,
+              "l": 18,
+              "win_pct": 0.455,
+              "effective_games": 2.63,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.467,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Ascent": {
+                  "rating": 0.158,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -0.272,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Breeze": {
+                  "rating": 0.127,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": -0.157,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Fracture": {
+                  "rating": 0.288,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": 0.151,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Lotus": {
+                  "rating": 0.266,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": 0.238,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                }
+              }
+            },
+            "EDG": {
+              "overall_rating": 0.161,
+              "w": 38,
+              "l": 28,
+              "win_pct": 0.576,
+              "effective_games": 8.56,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.911,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Bind": {
+                  "rating": 0.073,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": 1.737,
+                  "w": 7,
+                  "l": 2,
+                  "win_pct": 0.778
+                },
+                "Corrode": {
+                  "rating": 1.543,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 1.328,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Haven": {
+                  "rating": -0.258,
+                  "w": 5,
+                  "l": 7,
+                  "win_pct": 0.417
+                },
+                "Lotus": {
+                  "rating": 0.216,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Pearl": {
+                  "rating": 0.279,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Split": {
+                  "rating": 0.491,
+                  "w": 6,
+                  "l": 5,
+                  "win_pct": 0.545
+                },
+                "Sunset": {
+                  "rating": -0.048,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "BBL": {
+              "overall_rating": 0.097,
+              "w": 17,
+              "l": 17,
+              "win_pct": 0.5,
+              "effective_games": 2.33,
+              "maps": {
+                "Abyss": {
+                  "rating": 2.012,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Ascent": {
+                  "rating": 0.074,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": 0.123,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Corrode": {
+                  "rating": 0.245,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 0.012,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": 0.004,
+                  "w": 4,
+                  "l": 4,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": 0.108,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": 0.035,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": -0.03,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                }
+              }
+            },
+            "RRQ": {
+              "overall_rating": 0.076,
+              "w": 18,
+              "l": 19,
+              "win_pct": 0.486,
+              "effective_games": 3.06,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.355,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Ascent": {
+                  "rating": 0.028,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": 0.232,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": -0.269,
+                  "w": 1,
+                  "l": 5,
+                  "win_pct": 0.167
+                },
+                "Corrode": {
+                  "rating": 1.081,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": 0.788,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Haven": {
+                  "rating": -0.088,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Lotus": {
+                  "rating": 0.303,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Pearl": {
+                  "rating": -0.084,
+                  "w": 1,
+                  "l": 5,
+                  "win_pct": 0.167
+                },
+                "Split": {
+                  "rating": 0.055,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                }
+              }
+            },
+            "XLG": {
+              "overall_rating": 0.049,
+              "w": 40,
+              "l": 30,
+              "win_pct": 0.571,
+              "effective_games": 11.43,
+              "maps": {
+                "Abyss": {
+                  "rating": 0.224,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Ascent": {
+                  "rating": 0.498,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": 1.74,
+                  "w": 7,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Breeze": {
+                  "rating": 0.381,
+                  "w": 5,
+                  "l": 5,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": 0.843,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Haven": {
+                  "rating": -0.199,
+                  "w": 4,
+                  "l": 7,
+                  "win_pct": 0.364
+                },
+                "Lotus": {
+                  "rating": 0.566,
+                  "w": 8,
+                  "l": 6,
+                  "win_pct": 0.571
+                },
+                "Pearl": {
+                  "rating": -0.549,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": 0.263,
+                  "w": 7,
+                  "l": 4,
+                  "win_pct": 0.636
+                },
+                "Summit": {
+                  "rating": -0.142,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "GEN": {
+              "overall_rating": -0.659,
+              "w": 10,
+              "l": 16,
+              "win_pct": 0.385,
+              "effective_games": 2.36,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.77,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": -0.447,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -1.007,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -0.716,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Fracture": {
+                  "rating": -0.71,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -0.47,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Lotus": {
+                  "rating": -0.529,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Pearl": {
+                  "rating": -0.979,
+                  "w": 0,
+                  "l": 4,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": -0.746,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Sunset": {
+                  "rating": -0.515,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "ENVY": {
+              "overall_rating": -0.82,
+              "w": 10,
+              "l": 15,
+              "win_pct": 0.4,
+              "effective_games": 1.94,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.004,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -0.181,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Breeze": {
+                  "rating": -0.791,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Corrode": {
+                  "rating": -1.224,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Fracture": {
+                  "rating": -1.177,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -0.581,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Lotus": {
+                  "rating": -0.756,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": -0.608,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Split": {
+                  "rating": -0.817,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "ULF": {
+              "overall_rating": -0.834,
+              "w": 3,
+              "l": 6,
+              "win_pct": 0.333,
+              "effective_games": 0.21,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.495,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -0.916,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -0.844,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -0.948,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -0.833,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -0.835,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": -0.814,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "TYL": {
+              "overall_rating": -0.861,
+              "w": 29,
+              "l": 19,
+              "win_pct": 0.604,
+              "effective_games": 7.28,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.927,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": 0.09,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Breeze": {
+                  "rating": 0.281,
+                  "w": 5,
+                  "l": 1,
+                  "win_pct": 0.833
+                },
+                "Corrode": {
+                  "rating": -0.363,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": -0.051,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Haven": {
+                  "rating": -0.908,
+                  "w": 4,
+                  "l": 4,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": -0.043,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Pearl": {
+                  "rating": -1.684,
+                  "w": 1,
+                  "l": 5,
+                  "win_pct": 0.167
+                },
+                "Split": {
+                  "rating": -0.576,
+                  "w": 5,
+                  "l": 3,
+                  "win_pct": 0.625
+                },
+                "Sunset": {
+                  "rating": 0.191,
+                  "w": 3,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "DFM": {
+              "overall_rating": -0.876,
+              "w": 14,
+              "l": 18,
+              "win_pct": 0.438,
+              "effective_games": 2.19,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.598,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Ascent": {
+                  "rating": -0.801,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -1.053,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": -0.985,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -0.921,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -0.782,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -0.879,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Lotus": {
+                  "rating": -0.87,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Pearl": {
+                  "rating": -0.674,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Split": {
+                  "rating": -0.833,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                }
+              }
+            },
+            "GX": {
+              "overall_rating": -1.022,
+              "w": 10,
+              "l": 17,
+              "win_pct": 0.37,
+              "effective_games": 3.59,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.861,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Ascent": {
+                  "rating": -1.17,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -1.529,
+                  "w": 0,
+                  "l": 4,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -1.147,
+                  "w": 0,
+                  "l": 4,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -0.781,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Lotus": {
+                  "rating": -1.04,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -1.145,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Split": {
+                  "rating": -0.879,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Sunset": {
+                  "rating": -1.176,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "AG": {
+              "overall_rating": -1.345,
+              "w": 28,
+              "l": 23,
+              "win_pct": 0.549,
+              "effective_games": 6.93,
+              "maps": {
+                "Abyss": {
+                  "rating": -1.009,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Ascent": {
+                  "rating": -0.882,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -0.996,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Breeze": {
+                  "rating": -1.295,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": -0.777,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": -0.71,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -1.056,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Lotus": {
+                  "rating": -0.973,
+                  "w": 6,
+                  "l": 2,
+                  "win_pct": 0.75
+                },
+                "Pearl": {
+                  "rating": -1.605,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Split": {
+                  "rating": -1.037,
+                  "w": 7,
+                  "l": 4,
+                  "win_pct": 0.636
+                },
+                "Summit": {
+                  "rating": -1.359,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Sunset": {
+                  "rating": -1.418,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "KC": {
+              "overall_rating": -1.355,
+              "w": 7,
+              "l": 17,
+              "win_pct": 0.292,
+              "effective_games": 1.68,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.518,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -1.297,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -1.366,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -1.344,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -1.458,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -0.937,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Lotus": {
+                  "rating": -1.469,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -1.47,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Split": {
+                  "rating": -1.358,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "C9": {
+              "overall_rating": -1.444,
+              "w": 14,
+              "l": 17,
+              "win_pct": 0.452,
+              "effective_games": 4.57,
+              "maps": {
+                "Abyss": {
+                  "rating": -1.753,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Bind": {
+                  "rating": -1.05,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": -1.329,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Corrode": {
+                  "rating": -1.711,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -1.051,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": -1.843,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -1.52,
+                  "w": 2,
+                  "l": 4,
+                  "win_pct": 0.333
+                },
+                "Split": {
+                  "rating": -1.102,
+                  "w": 6,
+                  "l": 1,
+                  "win_pct": 0.857
+                },
+                "Summit": {
+                  "rating": -1.704,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "LOUD": {
+              "overall_rating": -1.588,
+              "w": 7,
+              "l": 15,
+              "win_pct": 0.318,
+              "effective_games": 2.21,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.068,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -1.733,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -1.223,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Haven": {
+                  "rating": -1.504,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Lotus": {
+                  "rating": -1.491,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": -1.153,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Split": {
+                  "rating": -1.727,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "DRG": {
+              "overall_rating": -1.819,
+              "w": 26,
+              "l": 29,
+              "win_pct": 0.473,
+              "effective_games": 9.0,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.37,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": -1.724,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -1.234,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": -1.317,
+                  "w": 5,
+                  "l": 5,
+                  "win_pct": 0.5
+                },
+                "Corrode": {
+                  "rating": -0.932,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": -1.728,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -1.123,
+                  "w": 6,
+                  "l": 3,
+                  "win_pct": 0.667
+                },
+                "Lotus": {
+                  "rating": -1.204,
+                  "w": 7,
+                  "l": 5,
+                  "win_pct": 0.583
+                },
+                "Pearl": {
+                  "rating": -1.868,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Split": {
+                  "rating": -1.854,
+                  "w": 2,
+                  "l": 6,
+                  "win_pct": 0.25
+                },
+                "Sunset": {
+                  "rating": -1.443,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "EG": {
+              "overall_rating": -2.017,
+              "w": 7,
+              "l": 16,
+              "win_pct": 0.304,
+              "effective_games": 1.88,
+              "maps": {
+                "Abyss": {
+                  "rating": -1.758,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Bind": {
+                  "rating": -2.525,
+                  "w": 0,
+                  "l": 4,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -2.011,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -1.748,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": -2.045,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -1.905,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": -1.992,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -2.068,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                }
+              }
+            },
+            "VL": {
+              "overall_rating": -2.278,
+              "w": 6,
+              "l": 17,
+              "win_pct": 0.261,
+              "effective_games": 2.64,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.229,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -1.943,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Breeze": {
+                  "rating": -2.264,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -1.686,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": -2.491,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -2.269,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Lotus": {
+                  "rating": -2.243,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -2.23,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": -2.024,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Summit": {
+                  "rating": -1.947,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "PCF": {
+              "overall_rating": -2.287,
+              "w": 5,
+              "l": 18,
+              "win_pct": 0.217,
+              "effective_games": 4.49,
+              "maps": {
+                "Abyss": {
+                  "rating": -1.697,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Ascent": {
+                  "rating": -2.61,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -2.214,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Breeze": {
+                  "rating": -2.279,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -2.271,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -2.291,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Lotus": {
+                  "rating": -2.224,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -2.125,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Split": {
+                  "rating": -1.789,
+                  "w": 2,
+                  "l": 6,
+                  "win_pct": 0.25
+                },
+                "Sunset": {
+                  "rating": -2.377,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "BLG": {
+              "overall_rating": -2.328,
+              "w": 21,
+              "l": 20,
+              "win_pct": 0.512,
+              "effective_games": 6.42,
+              "maps": {
+                "Abyss": {
+                  "rating": -0.903,
+                  "w": 4,
+                  "l": 2,
+                  "win_pct": 0.667
+                },
+                "Bind": {
+                  "rating": -2.608,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Breeze": {
+                  "rating": -2.153,
+                  "w": 3,
+                  "l": 2,
+                  "win_pct": 0.6
+                },
+                "Fracture": {
+                  "rating": -2.126,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Haven": {
+                  "rating": -2.387,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Lotus": {
+                  "rating": -2.129,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Pearl": {
+                  "rating": -1.212,
+                  "w": 5,
+                  "l": 1,
+                  "win_pct": 0.833
+                },
+                "Split": {
+                  "rating": -2.412,
+                  "w": 1,
+                  "l": 4,
+                  "win_pct": 0.2
+                },
+                "Summit": {
+                  "rating": -1.118,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Sunset": {
+                  "rating": -1.779,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "NOVA": {
+              "overall_rating": -2.772,
+              "w": 5,
+              "l": 14,
+              "win_pct": 0.263,
+              "effective_games": 2.13,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.327,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -2.442,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -2.753,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -2.841,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -2.464,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -2.78,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Lotus": {
+                  "rating": -2.398,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Pearl": {
+                  "rating": -2.73,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": -2.742,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Sunset": {
+                  "rating": -2.092,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "TS": {
+              "overall_rating": -2.807,
+              "w": 5,
+              "l": 17,
+              "win_pct": 0.227,
+              "effective_games": 2.62,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.738,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -2.61,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": -2.657,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Fracture": {
+                  "rating": -2.384,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -2.436,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": -2.776,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -2.898,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": -2.878,
+                  "w": 1,
+                  "l": 6,
+                  "win_pct": 0.143
+                },
+                "Summit": {
+                  "rating": -2.662,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "ZETA": {
+              "overall_rating": -2.959,
+              "w": 7,
+              "l": 18,
+              "win_pct": 0.28,
+              "effective_games": 2.34,
+              "maps": {
+                "Abyss": {
+                  "rating": -2.48,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Ascent": {
+                  "rating": -2.892,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -2.449,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": -2.849,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Corrode": {
+                  "rating": -3.064,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -2.808,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Haven": {
+                  "rating": -2.933,
+                  "w": 0,
+                  "l": 4,
+                  "win_pct": 0.0
+                },
+                "Lotus": {
+                  "rating": -2.958,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -2.989,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": -2.814,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Sunset": {
+                  "rating": -2.824,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "FPX": {
+              "overall_rating": -3.114,
+              "w": 11,
+              "l": 15,
+              "win_pct": 0.423,
+              "effective_games": 4.72,
+              "maps": {
+                "Ascent": {
+                  "rating": -2.512,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Bind": {
+                  "rating": -3.35,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Breeze": {
+                  "rating": -2.287,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": -2.928,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -3.1,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Lotus": {
+                  "rating": -3.3,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -2.523,
+                  "w": 4,
+                  "l": 3,
+                  "win_pct": 0.571
+                },
+                "Split": {
+                  "rating": -2.942,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Summit": {
+                  "rating": -2.592,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Sunset": {
+                  "rating": -2.492,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                }
+              }
+            },
+            "TEC": {
+              "overall_rating": -3.95,
+              "w": 15,
+              "l": 24,
+              "win_pct": 0.385,
+              "effective_games": 6.61,
+              "maps": {
+                "Abyss": {
+                  "rating": -3.858,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Ascent": {
+                  "rating": -3.704,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -2.986,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Breeze": {
+                  "rating": -2.8,
+                  "w": 3,
+                  "l": 5,
+                  "win_pct": 0.375
+                },
+                "Corrode": {
+                  "rating": -3.422,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Fracture": {
+                  "rating": -2.785,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -3.016,
+                  "w": 3,
+                  "l": 3,
+                  "win_pct": 0.5
+                },
+                "Lotus": {
+                  "rating": -3.882,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -3.481,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": -3.749,
+                  "w": 1,
+                  "l": 5,
+                  "win_pct": 0.167
+                },
+                "Summit": {
+                  "rating": -3.233,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Sunset": {
+                  "rating": -3.928,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "WOL": {
+              "overall_rating": -4.316,
+              "w": 11,
+              "l": 22,
+              "win_pct": 0.333,
+              "effective_games": 5.15,
+              "maps": {
+                "Abyss": {
+                  "rating": -4.213,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Ascent": {
+                  "rating": -4.145,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -3.239,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Breeze": {
+                  "rating": -4.276,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Fracture": {
+                  "rating": -3.672,
+                  "w": 1,
+                  "l": 2,
+                  "win_pct": 0.333
+                },
+                "Haven": {
+                  "rating": -3.574,
+                  "w": 3,
+                  "l": 1,
+                  "win_pct": 0.75
+                },
+                "Lotus": {
+                  "rating": -4.37,
+                  "w": 0,
+                  "l": 7,
+                  "win_pct": 0.0
+                },
+                "Pearl": {
+                  "rating": -3.851,
+                  "w": 2,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Split": {
+                  "rating": -3.665,
+                  "w": 1,
+                  "l": 1,
+                  "win_pct": 0.5
+                },
+                "Summit": {
+                  "rating": -3.968,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Sunset": {
+                  "rating": -3.813,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                }
+              }
+            },
+            "JDG": {
+              "overall_rating": -4.632,
+              "w": 18,
+              "l": 25,
+              "win_pct": 0.419,
+              "effective_games": 4.99,
+              "maps": {
+                "Abyss": {
+                  "rating": -3.798,
+                  "w": 2,
+                  "l": 1,
+                  "win_pct": 0.667
+                },
+                "Ascent": {
+                  "rating": -4.302,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -3.437,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Breeze": {
+                  "rating": -4.29,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                },
+                "Corrode": {
+                  "rating": -3.547,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Fracture": {
+                  "rating": -3.612,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Haven": {
+                  "rating": -3.948,
+                  "w": 6,
+                  "l": 5,
+                  "win_pct": 0.545
+                },
+                "Lotus": {
+                  "rating": -4.552,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Pearl": {
+                  "rating": -4.343,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Split": {
+                  "rating": -4.258,
+                  "w": 2,
+                  "l": 2,
+                  "win_pct": 0.5
+                },
+                "Sunset": {
+                  "rating": -4.36,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                }
+              }
+            },
+            "TE": {
+              "overall_rating": -5.572,
+              "w": 13,
+              "l": 23,
+              "win_pct": 0.361,
+              "effective_games": 4.32,
+              "maps": {
+                "Abyss": {
+                  "rating": -4.789,
+                  "w": 1,
+                  "l": 3,
+                  "win_pct": 0.25
+                },
+                "Ascent": {
+                  "rating": -5.459,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Bind": {
+                  "rating": -3.782,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Breeze": {
+                  "rating": -4.772,
+                  "w": 2,
+                  "l": 3,
+                  "win_pct": 0.4
+                },
+                "Corrode": {
+                  "rating": -4.765,
+                  "w": 1,
+                  "l": 0,
+                  "win_pct": 1.0
+                },
+                "Fracture": {
+                  "rating": -5.395,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Haven": {
+                  "rating": -5.466,
+                  "w": 0,
+                  "l": 3,
+                  "win_pct": 0.0
+                },
+                "Lotus": {
+                  "rating": -5.093,
+                  "w": 3,
+                  "l": 4,
+                  "win_pct": 0.429
+                },
+                "Pearl": {
+                  "rating": -5.526,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Split": {
+                  "rating": -5.165,
+                  "w": 4,
+                  "l": 1,
+                  "win_pct": 0.8
+                },
+                "Summit": {
+                  "rating": -5.178,
+                  "w": 0,
+                  "l": 1,
+                  "win_pct": 0.0
+                },
+                "Sunset": {
+                  "rating": -5.302,
+                  "w": 0,
+                  "l": 2,
+                  "win_pct": 0.0
+                }
+              }
+            }
+          },
+          "label": "Live"
         }
       }
     }

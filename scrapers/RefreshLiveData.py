@@ -404,23 +404,43 @@ def _scrape_match_page_with_retry(url, region_tag, max_attempts=3):
 
 
 def _parse_match_html(soup, url, region_tag):
-    """Pure parsing — no fetch, no retry. Split out so retry can call it."""
-    fmt_el  = soup.select_one(".match-header-vs-note")
-    fmt_raw = fmt_el.get_text(strip=True).lower() if fmt_el else ""
-    series_fmt = "bo5" if ("bo5" in fmt_raw or "best of 5" in fmt_raw) else (
-                  "bo1" if ("bo1" in fmt_raw or "best of 1" in fmt_raw) else "bo3")
+    """Pure parsing — no fetch, no retry. Split out so retry can call it.
+
+    VLR migrated the per-map stats from a `table.wf-table-inset.mod-overview`
+    layout to a `div.ovw-*` grid (~mid-2026): each `div.vm-stats-game` now holds
+    two `.ovw-table` blocks (team A then team B) of `.ovw-row`s; every stat sits
+    in a `.ovw-cell`, and K/D/A collapsed into one `.ovw-cell.mod-kda` cell whose
+    kills/deaths/assists live in `.ovw-kda-stat[data-col=…]`. Combined
+    (attack+defense) values are still the `span.mod-both` inside each cell — but
+    the class is now `side mod-both` (matched by token, so it still resolves).
+    """
+    # Series format: the score block adds a "final" note, so scan every
+    # `.match-header-vs-note` for the Bo token rather than trusting the first.
+    notes = " ".join(n.get_text(" ", strip=True).lower()
+                     for n in soup.select(".match-header-vs-note"))
+    series_fmt = "bo5" if ("bo5" in notes or "best of 5" in notes) else (
+                  "bo1" if ("bo1" in notes or "best of 1" in notes) else "bo3")
 
     mid = _match_id_from_url(url) or ""
 
     teams_el = soup.select(".match-header-link-name .wf-title-med")
     team_a = teams_el[0].get_text(strip=True) if len(teams_el) > 0 else "?"
     team_b = teams_el[1].get_text(strip=True) if len(teams_el) > 1 else "?"
-    scores_el = soup.select(".match-header-vs-score .js-spoiler")
-    score_a = scores_el[0].get_text(strip=True) if len(scores_el) > 0 else "?"
-    score_b = scores_el[1].get_text(strip=True) if len(scores_el) > 1 else "?"
-    display = f"{team_a} {score_a}–{score_b} {team_b}"
+
+    def _both(el):
+        """Combined (atk+def) value: prefer a `mod-both` span, else raw text."""
+        if el is None:
+            return ""
+        sp = el.find("span", class_=lambda c: c and "mod-both" in c.split())
+        return sp.get_text(strip=True) if sp else el.get_text(" ", strip=True)
+
+    def _kda(kda_cell, col):
+        if kda_cell is None:
+            return ""
+        return _both(kda_cell.select_one(f'.ovw-kda-stat[data-col="{col}"]'))
 
     map_rows, series_rows = [], []
+    a_wins = b_wins = 0
 
     for game_div in soup.select("div.vm-stats-game"):
         game_id = game_div.get("data-game-id", "")
@@ -432,55 +452,67 @@ def _parse_match_html(soup, url, region_tag):
                 fd = hdr.find("div")
                 if fd:
                     map_name = fd.get_text(strip=True)
+            # Tally an oriented series score from each map's winner (the
+            # `.score.mod-win` span) for the progress-log display string.
+            gh = game_div.select_one(".vm-stats-game-header")
+            scs = gh.select(".score") if gh else []
+            if len(scs) >= 2:
+                a_wins += 1 if "mod-win" in (scs[0].get("class") or []) else 0
+                b_wins += 1 if "mod-win" in (scs[1].get("class") or []) else 0
 
-        for table in game_div.select("table.wf-table-inset.mod-overview"):
-            tbody = table.find("tbody")
-            if not tbody:
+        for prow in game_div.select(".ovw-row"):
+            pcell = prow.select_one(".ovw-cell.mod-player") or prow.select_one(".mod-player")
+            if pcell is None:
+                continue  # header row / non-player row
+            pname = pcell.select_one(".text-of")
+            porg  = pcell.select_one(".ge-text-light")
+            pa    = pcell.find("a", href=True)
+            player = pname.get_text(strip=True) if pname else ""
+            org    = porg.get_text(strip=True)  if porg  else ""
+            if not player:
                 continue
-            for tr in tbody.find_all("tr"):
-                tds = tr.find_all("td")
-                if len(tds) < 10:
-                    continue
-                ptd    = tds[0]
-                pname  = ptd.select_one(".text-of")
-                porg   = ptd.select_one(".ge-text-light")
-                pa     = ptd.find("a", href=True)
-                player = pname.get_text(strip=True) if pname else ""
-                org    = porg.get_text(strip=True)  if porg  else ""
-                if not player:
-                    continue
 
-                def _s(td):
-                    sp = td.find("span", class_=lambda c: c and "mod-both" in c.split())
-                    return sp.get_text(strip=True) if sp else td.get_text(strip=True)
+            cells = prow.select(".ovw-cell")
+            # Anchor every column on the KDA cell so leading-column changes
+            # (icons, +/- toggles) can't shift the stat mapping.
+            kda_i = next((i for i, c in enumerate(cells)
+                          if "mod-kda" in (c.get("class") or [])), 3)
+            kda_cell = cells[kda_i] if kda_i < len(cells) else None
 
-                row = {
-                    "Player":       player,
-                    "Org":          org,
-                    "ProfileURL":   ("https://www.vlr.gg" + pa["href"]) if pa else "",
-                    "Region":       region_tag,
-                    "MatchID":      mid,
-                    "MapNum":       game_id,
-                    "MapName":      map_name,
-                    "SeriesFormat": series_fmt,
-                    "R2.0":   _s(tds[2]) if len(tds) > 2  else "",
-                    "ACS":    _s(tds[3]) if len(tds) > 3  else "",
-                    "K":      _s(tds[4]) if len(tds) > 4  else "",
-                    "D":      _s(tds[5]) if len(tds) > 5  else "",
-                    "A":      _s(tds[6]) if len(tds) > 6  else "",
-                    "KAST":   _s(tds[8]) if len(tds) > 8  else "",
-                    "ADR":    _s(tds[9]) if len(tds) > 9  else "",
-                    "HS%":    _s(tds[10]) if len(tds) > 10 else "",
-                    "FK":     _s(tds[11]) if len(tds) > 11 else "",
-                    "FD":     _s(tds[12]) if len(tds) > 12 else "",
-                }
-                try:
-                    k_i, d_i = int(row["K"]), int(row["D"])
-                    row["K:D"] = round(k_i / d_i, 2) if d_i else float(k_i)
-                except Exception:
-                    row["K:D"] = ""
+            def _at(idx):
+                return _both(cells[idx]) if 0 <= idx < len(cells) else ""
 
-                (series_rows if is_all else map_rows).append(row)
+            row = {
+                "Player":       player,
+                "Org":          org,
+                "ProfileURL":   ("https://www.vlr.gg" + pa["href"]) if pa else "",
+                "Region":       region_tag,
+                "MatchID":      mid,
+                "MapNum":       game_id,
+                "MapName":      map_name,
+                "SeriesFormat": series_fmt,
+                "R2.0":   _at(kda_i - 2),   # rating
+                "ACS":    _at(kda_i - 1),
+                "K":      _kda(kda_cell, "kills"),
+                "D":      _kda(kda_cell, "deaths"),
+                "A":      _kda(kda_cell, "assists"),
+                "KAST":   _at(kda_i + 2),   # skip the +/- cell at kda_i+1
+                "ADR":    _at(kda_i + 3),
+                "HS%":    _at(kda_i + 4),
+                "FK":     _at(kda_i + 5),
+                "FD":     _at(kda_i + 6),
+            }
+            try:
+                k_i, d_i = int(row["K"]), int(row["D"])
+                row["K:D"] = round(k_i / d_i, 2) if d_i else float(k_i)
+            except Exception:
+                row["K:D"] = ""
+
+            (series_rows if is_all else map_rows).append(row)
+
+    sa = str(a_wins) if (a_wins or b_wins) else "?"
+    sb = str(b_wins) if (a_wins or b_wins) else "?"
+    display = f"{team_a} {sa}–{sb} {team_b}"
 
     return map_rows, series_rows, display
 

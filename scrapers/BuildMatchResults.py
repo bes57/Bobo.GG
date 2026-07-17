@@ -25,6 +25,14 @@ MAPS_DIR     = os.path.join(DATA_DIR, "maps")
 SERIES_DIR   = os.path.join(DATA_DIR, "series")
 RESULTS_FILE = os.path.join(DATA_DIR, "match_results.csv")
 
+# Prefer the live pipeline's Cloudflare-aware fetch (curl_cffi Chrome
+# impersonation) so this works on Render's datacenter IPs; fall back to plain
+# requests locally if it can't be imported.
+try:
+    from RefreshLiveData import _fetch as _bypass_fetch
+except Exception:
+    _bypass_fetch = None
+
 
 def collect_match_ids():
     ids = set()
@@ -43,14 +51,17 @@ def collect_match_ids():
 
 
 def _first_org(table):
-    tbody = table.find("tbody")
-    if not tbody:
-        return None
-    for tr in tbody.find_all("tr"):
-        tds = tr.find_all("td")
-        if not tds:
+    """First player's org from an `.ovw-table` (VLR's div-grid stats layout).
+
+    VLR migrated match-page stats off `<table>` markup to `div.ovw-*` in
+    mid-2026; org now lives in each player row's `.ovw-cell.mod-player
+    .ge-text-light`.
+    """
+    for row in table.select(".ovw-row"):
+        pcell = row.select_one(".ovw-cell.mod-player") or row.select_one(".mod-player")
+        if pcell is None:
             continue
-        porg = tds[0].select_one(".ge-text-light")
+        porg = pcell.select_one(".ge-text-light")
         if porg:
             return porg.get_text(strip=True)
     return None
@@ -58,12 +69,19 @@ def _first_org(table):
 
 def scrape_match_results(match_id):
     url = f"https://www.vlr.gg/{match_id}/"
-    try:
-        res = requests.get(url, headers=HEADERS, timeout=20)
-        soup = BeautifulSoup(res.text, "html.parser")
-    except Exception as e:
-        print(f"    fetch failed {match_id}: {e}")
-        return []
+    soup = None
+    if _bypass_fetch is not None:
+        try:
+            soup = _bypass_fetch(url)   # curl_cffi impersonation → BeautifulSoup
+        except Exception:
+            soup = None
+    if soup is None:
+        try:
+            res = requests.get(url, headers=HEADERS, timeout=20)
+            soup = BeautifulSoup(res.text, "html.parser")
+        except Exception as e:
+            print(f"    fetch failed {match_id}: {e}")
+            return []
 
     # Match name from stage/round label e.g. "Playoffs: Grand Final"
     match_name = ""
@@ -79,7 +97,7 @@ def scrape_match_results(match_id):
         if game_id == "all":
             continue
 
-        tables = game_div.select("table.wf-table-inset.mod-overview")
+        tables = game_div.select(".ovw-table")
         if len(tables) < 2:
             continue
 

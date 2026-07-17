@@ -1,203 +1,5 @@
 [
   {
-    "team_a": "Wolves Esports",
-    "team_b": "Titan Esports Club",
-    "org_a": "WOL",
-    "org_b": "TEC",
-    "date": "2026-07-09",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Dragon Ranger Gaming",
-    "team_b": "Bilibili Gaming",
-    "org_a": "DRG",
-    "org_b": "BLG",
-    "date": "2026-07-09",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "FunPlus Phoenix",
-    "team_b": "Trace Esports",
-    "org_a": "FPX",
-    "org_b": "TE",
-    "date": "2026-07-10",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "JDG Esports",
-    "team_b": "TYLOO",
-    "org_a": "JDG",
-    "org_b": "TYL",
-    "date": "2026-07-10",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Dragon Ranger Gaming",
-    "team_b": "Titan Esports Club",
-    "org_a": "DRG",
-    "org_b": "TEC",
-    "date": "2026-07-11",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Bilibili Gaming",
-    "team_b": "Wolves Esports",
-    "org_a": "BLG",
-    "org_b": "WOL",
-    "date": "2026-07-11",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Nova Esports",
-    "team_b": "FunPlus Phoenix",
-    "org_a": "NOVA",
-    "org_b": "FPX",
-    "date": "2026-07-12",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "TYLOO",
-    "team_b": "Trace Esports",
-    "org_a": "TYL",
-    "org_b": "TE",
-    "date": "2026-07-12",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Wolves Esports",
-    "team_b": "All Gamers",
-    "org_a": "WOL",
-    "org_b": "AG",
-    "date": "2026-07-14",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 2 Group Stage"
-  },
-  {
-    "team_a": "Xi Lai Gaming",
-    "team_b": "Titan Esports Club",
-    "org_a": "XLG",
-    "org_b": "TEC",
-    "date": "2026-07-14",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 2 Group Stage"
-  },
-  {
-    "team_a": "JDG Esports",
-    "team_b": "FunPlus Phoenix",
-    "org_a": "JDG",
-    "org_b": "FPX",
-    "date": "2026-07-15",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 2 Group Stage"
-  },
-  {
-    "team_a": "EDward Gaming",
-    "team_b": "TYLOO",
-    "org_a": "EDG",
-    "org_b": "TYL",
-    "date": "2026-07-15",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 2 Group Stage"
-  },
-  {
-    "team_a": "LEVIAT\u00c1N",
-    "team_b": "FURIA",
-    "org_a": "LEV",
-    "org_b": "FUR",
-    "date": "2026-07-16",
-    "region": "Americas",
-    "event": "2026 Stage 2 \u2014 Americas",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Sentinels",
-    "team_b": "Cloud9",
-    "org_a": "SEN",
-    "org_b": "C9",
-    "date": "2026-07-16",
-    "region": "Americas",
-    "event": "2026 Stage 2 \u2014 Americas",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Gen.G",
-    "team_b": "ZETA DIVISION",
-    "org_a": "GEN",
-    "org_b": "ZETA",
-    "date": "2026-07-16",
-    "region": "Pacific",
-    "event": "2026 Stage 2 \u2014 Pacific",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "Team Secret",
-    "team_b": "VARREL",
-    "org_a": "TS",
-    "org_b": "VL",
-    "date": "2026-07-16",
-    "region": "Pacific",
-    "event": "2026 Stage 2 \u2014 Pacific",
-    "format": "bo3",
-    "match_name": "Week 1 Group Stage"
-  },
-  {
-    "team_a": "All Gamers",
-    "team_b": "Bilibili Gaming",
-    "org_a": "AG",
-    "org_b": "BLG",
-    "date": "2026-07-16",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 2 Group Stage"
-  },
-  {
-    "team_a": "Xi Lai Gaming",
-    "team_b": "Dragon Ranger Gaming",
-    "org_a": "XLG",
-    "org_b": "DRG",
-    "date": "2026-07-16",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Week 2 Group Stage"
-  },
-  {
     "team_a": "ENVY",
     "team_b": "Evil Geniuses",
     "org_a": "ENVY",
@@ -216,6 +18,28 @@
     "date": "2026-07-17",
     "region": "Americas",
     "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "Karmine Corp",
+    "team_b": "Eternal Fire",
+    "org_a": "KC",
+    "org_b": "EF",
+    "date": "2026-07-17",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "Team Vitality",
+    "team_b": "Natus Vincere",
+    "org_a": "VIT",
+    "org_b": "NAVI",
+    "date": "2026-07-17",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
     "format": "bo3",
     "match_name": "Week 1 Group Stage"
   },
@@ -297,6 +121,28 @@
     "match_name": "Week 1 Group Stage"
   },
   {
+    "team_a": "Gentle Mates",
+    "team_b": "FUT Esports",
+    "org_a": "M8",
+    "org_b": "FUT",
+    "date": "2026-07-18",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "Team Heretics",
+    "team_b": "Team Liquid",
+    "org_a": "TH",
+    "org_b": "TL",
+    "date": "2026-07-18",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
     "team_a": "Rex Regum Qeon",
     "team_b": "Global Esports",
     "org_a": "RRQ",
@@ -339,6 +185,28 @@
     "event": "2026 Stage 2 \u2014 CN",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "GIANTX",
+    "team_b": "Karmine Corp",
+    "org_a": "GX",
+    "org_b": "KC",
+    "date": "2026-07-19",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
+  },
+  {
+    "team_a": "Team Vitality",
+    "team_b": "BBL Esports",
+    "org_a": "VIT",
+    "org_b": "BBL",
+    "date": "2026-07-19",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 1 Group Stage"
   },
   {
     "team_a": "Nongshim RedForce",
@@ -440,6 +308,28 @@
     "match_name": "Week 3 Group Stage"
   },
   {
+    "team_a": "FUT Esports",
+    "team_b": "PCIFIC Esports",
+    "org_a": "FUT",
+    "org_b": "PCF",
+    "date": "2026-07-22",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "FNATIC",
+    "team_b": "Karmine Corp",
+    "org_a": "FNC",
+    "org_b": "KC",
+    "date": "2026-07-22",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
     "team_a": "Xi Lai Gaming",
     "team_b": "Wolves Esports",
     "org_a": "XLG",
@@ -480,6 +370,28 @@
     "date": "2026-07-23",
     "region": "Americas",
     "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Eternal Fire",
+    "team_b": "Team Heretics",
+    "org_a": "EF",
+    "org_b": "TH",
+    "date": "2026-07-23",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Gentle Mates",
+    "team_b": "Natus Vincere",
+    "org_a": "M8",
+    "org_b": "NAVI",
+    "date": "2026-07-23",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
   },
@@ -550,6 +462,28 @@
     "match_name": "Week 2 Group Stage"
   },
   {
+    "team_a": "FUT Esports",
+    "team_b": "BBL Esports",
+    "org_a": "FUT",
+    "org_b": "BBL",
+    "date": "2026-07-24",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Team Liquid",
+    "team_b": "FNATIC",
+    "org_a": "TL",
+    "org_b": "FNC",
+    "date": "2026-07-24",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
     "team_a": "Rex Regum Qeon",
     "team_b": "ZETA DIVISION",
     "org_a": "RRQ",
@@ -590,6 +524,28 @@
     "date": "2026-07-25",
     "region": "Americas",
     "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "PCIFIC Esports",
+    "team_b": "Team Vitality",
+    "org_a": "PCF",
+    "org_b": "VIT",
+    "date": "2026-07-25",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Eternal Fire",
+    "team_b": "GIANTX",
+    "org_a": "EF",
+    "org_b": "GX",
+    "date": "2026-07-25",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
   },
@@ -638,6 +594,28 @@
     "match_name": "Week 2 Group Stage"
   },
   {
+    "team_a": "BBL Esports",
+    "team_b": "Natus Vincere",
+    "org_a": "BBL",
+    "org_b": "NAVI",
+    "date": "2026-07-26",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "Team Heretics",
+    "team_b": "Karmine Corp",
+    "org_a": "TH",
+    "org_b": "KC",
+    "date": "2026-07-26",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 2 Group Stage"
+  },
+  {
     "team_a": "Paper Rex",
     "team_b": "KIWOOM DRX",
     "org_a": "PRX",
@@ -658,6 +636,28 @@
     "event": "2026 Stage 2 \u2014 Pacific",
     "format": "bo3",
     "match_name": "Week 2 Group Stage"
+  },
+  {
+    "team_a": "GIANTX",
+    "team_b": "Team Liquid",
+    "org_a": "GX",
+    "org_b": "TL",
+    "date": "2026-07-29",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Gentle Mates",
+    "team_b": "Team Vitality",
+    "org_a": "M8",
+    "org_b": "VIT",
+    "date": "2026-07-29",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
   },
   {
     "team_a": "KR\u00dc Esports",
@@ -682,6 +682,28 @@
     "match_name": "Week 3 Group Stage"
   },
   {
+    "team_a": "Natus Vincere",
+    "team_b": "PCIFIC Esports",
+    "org_a": "NAVI",
+    "org_b": "PCF",
+    "date": "2026-07-30",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Eternal Fire",
+    "team_b": "FNATIC",
+    "org_a": "EF",
+    "org_b": "FNC",
+    "date": "2026-07-30",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
     "team_a": "VARREL",
     "team_b": "DetonatioN FocusMe",
     "org_a": "VL",
@@ -702,5 +724,357 @@
     "event": "2026 Stage 2 \u2014 Pacific",
     "format": "bo3",
     "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Cloud9",
+    "team_b": "LOUD",
+    "org_a": "C9",
+    "org_b": "LOUD",
+    "date": "2026-07-31",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Evil Geniuses",
+    "team_b": "MIBR",
+    "org_a": "EG",
+    "org_b": "MIBR",
+    "date": "2026-07-31",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "BBL Esports",
+    "team_b": "Gentle Mates",
+    "org_a": "BBL",
+    "org_b": "M8",
+    "date": "2026-07-31",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "GIANTX",
+    "team_b": "Team Heretics",
+    "org_a": "GX",
+    "org_b": "TH",
+    "date": "2026-07-31",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Team Secret",
+    "team_b": "Paper Rex",
+    "org_a": "TS",
+    "org_b": "PRX",
+    "date": "2026-07-31",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Global Esports",
+    "team_b": "Gen.G",
+    "org_a": "GE",
+    "org_b": "GEN",
+    "date": "2026-07-31",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "ENVY",
+    "team_b": "FURIA",
+    "org_a": "ENVY",
+    "org_b": "FUR",
+    "date": "2026-08-01",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "LEVIAT\u00c1N",
+    "team_b": "NRG",
+    "org_a": "LEV",
+    "org_b": "NRG",
+    "date": "2026-08-01",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "FUT Esports",
+    "team_b": "Team Vitality",
+    "org_a": "FUT",
+    "org_b": "VIT",
+    "date": "2026-08-01",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Karmine Corp",
+    "team_b": "Team Liquid",
+    "org_a": "KC",
+    "org_b": "TL",
+    "date": "2026-08-01",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "T1",
+    "team_b": "DetonatioN FocusMe",
+    "org_a": "T1",
+    "org_b": "DFM",
+    "date": "2026-08-01",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "FULL SENSE",
+    "team_b": "Rex Regum Qeon",
+    "org_a": "FS",
+    "org_b": "RRQ",
+    "date": "2026-08-01",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Cloud9",
+    "team_b": "KR\u00dc Esports",
+    "org_a": "C9",
+    "org_b": "KR\u00dc",
+    "date": "2026-08-02",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "G2 Esports",
+    "team_b": "Sentinels",
+    "org_a": "G2",
+    "org_b": "SEN",
+    "date": "2026-08-02",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "BBL Esports",
+    "team_b": "PCIFIC Esports",
+    "org_a": "BBL",
+    "org_b": "PCF",
+    "date": "2026-08-02",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "FNATIC",
+    "team_b": "Team Heretics",
+    "org_a": "FNC",
+    "org_b": "TH",
+    "date": "2026-08-02",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "VARREL",
+    "team_b": "KIWOOM DRX",
+    "org_a": "VL",
+    "org_b": "KRX",
+    "date": "2026-08-02",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "ZETA DIVISION",
+    "team_b": "Nongshim RedForce",
+    "org_a": "ZETA",
+    "org_b": "NS",
+    "date": "2026-08-02",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 3 Group Stage"
+  },
+  {
+    "team_a": "Evil Geniuses",
+    "team_b": "FURIA",
+    "org_a": "EG",
+    "org_b": "FUR",
+    "date": "2026-08-06",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "ENVY",
+    "team_b": "NRG",
+    "org_a": "ENVY",
+    "org_b": "NRG",
+    "date": "2026-08-06",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "100 Thieves",
+    "team_b": "Cloud9",
+    "org_a": "100T",
+    "org_b": "C9",
+    "date": "2026-08-07",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "G2 Esports",
+    "team_b": "LOUD",
+    "org_a": "G2",
+    "org_b": "LOUD",
+    "date": "2026-08-07",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "Team Secret",
+    "team_b": "DetonatioN FocusMe",
+    "org_a": "TS",
+    "org_b": "DFM",
+    "date": "2026-08-07",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "Gen.G",
+    "team_b": "FULL SENSE",
+    "org_a": "GEN",
+    "org_b": "FS",
+    "date": "2026-08-07",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "KR\u00dc Esports",
+    "team_b": "Sentinels",
+    "org_a": "KR\u00dc",
+    "org_b": "SEN",
+    "date": "2026-08-08",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "LEVIAT\u00c1N",
+    "team_b": "MIBR",
+    "org_a": "LEV",
+    "org_b": "MIBR",
+    "date": "2026-08-08",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "KIWOOM DRX",
+    "team_b": "T1",
+    "org_a": "KRX",
+    "org_b": "T1",
+    "date": "2026-08-08",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "Global Esports",
+    "team_b": "ZETA DIVISION",
+    "org_a": "GE",
+    "org_b": "ZETA",
+    "date": "2026-08-08",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "Evil Geniuses",
+    "team_b": "NRG",
+    "org_a": "EG",
+    "org_b": "NRG",
+    "date": "2026-08-09",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "LOUD",
+    "team_b": "100 Thieves",
+    "org_a": "LOUD",
+    "org_b": "100T",
+    "date": "2026-08-09",
+    "region": "Americas",
+    "event": "2026 Stage 2 \u2014 Americas",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "VARREL",
+    "team_b": "Paper Rex",
+    "org_a": "VL",
+    "org_b": "PRX",
+    "date": "2026-08-09",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
+  },
+  {
+    "team_a": "Nongshim RedForce",
+    "team_b": "Rex Regum Qeon",
+    "org_a": "NS",
+    "org_b": "RRQ",
+    "date": "2026-08-09",
+    "region": "Pacific",
+    "event": "2026 Stage 2 \u2014 Pacific",
+    "format": "bo3",
+    "match_name": "Week 4 Group Stage"
   }
 ]
