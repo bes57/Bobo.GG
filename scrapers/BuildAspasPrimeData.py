@@ -148,7 +148,7 @@ def main():
         return [dict(rank=i, **row(p, p[key], fmt(p[key]))) for i, p in enumerate(s[:n], 1)]
 
     out = {}
-    out["counts"] = dict(total=663, qualifying=qualifying,
+    out["counts"] = dict(total=total, qualifying=qualifying,
                          qualifying_rated=qualifying_rated, rated_pool=len(pool))
     out["rating_top10"] = leaderboard("r20", 10, lambda v: "%.2f" % v, lambda x: x["kd"])
     out["kd_top10"] = leaderboard("kd", 10, lambda v: "%.2f" % v, lambda x: x["r20"])
