@@ -259,7 +259,12 @@
       // Player cards use the compact /vct/-modal size; team profiles use the big card.
       card.classList.toggle('tm-narrow', href.indexOf('/vct/player') === 0);
       load.style.display = 'flex';
-      frame.src = href;
+      // Force a genuine reload every time, even reopening the SAME team/player:
+      // setting .src to its current value is a no-op in most browsers (no
+      // navigation, no refetch), which can leave a stale DOM/JS iframe showing
+      // after a server-side data or layout change until the page is hard-refreshed.
+      frame.src = 'about:blank';
+      requestAnimationFrame(function () { frame.src = href; });
       ov.classList.add('on');
       document.documentElement.style.overflow = 'hidden';
     }

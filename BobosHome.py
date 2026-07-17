@@ -120,12 +120,14 @@ def _build_alpha_data():
 
     # Recent matches — already carry pre-match (morning-of) series odds + result.
     recent = []
+    # Sort by full timestamp when known so same-day matches order by actual
+    # kickoff time (not match_id, which doesn't reliably track start time).
     _past_sorted = sorted((hub.get("past_matches") or []),
-                          key=lambda x: ((x.get("date") or ""), x.get("match_id") or 0),
+                          key=lambda x: (x.get("time") or x.get("date") or "", x.get("match_id") or 0),
                           reverse=True)
     for m in _past_sorted[:140]:
         recent.append({k: m.get(k) for k in (
-            "org_a", "org_b", "date", "event", "format", "region",
+            "org_a", "org_b", "date", "time", "event", "format", "region",
             "rating_a", "rating_b",
             "win_prob_a", "win_prob_b", "actual_winner", "actual_score", "gf_upper")})
 
@@ -152,14 +154,14 @@ def _build_alpha_data():
                 else (p**2 * (3 - 2*p))
         upcoming.append({
             "org_a": m.get("org_a"), "org_b": m.get("org_b"),
-            "date": m.get("date"), "time": m.get("time"),
+            "date": m.get("date"), "datetime": m.get("datetime"),
             "event": m.get("event"), "format": m.get("format"),
             "region": m.get("region"),
             "rating_a": ra, "rating_b": rb,
             "win_prob_a": round(wp, 3) if wp is not None else None,
             "match_name": m.get("match_name"),
         })
-    upcoming.sort(key=lambda x: ((x.get("date") or "9999"), x.get("time") or ""))
+    upcoming.sort(key=lambda x: ((x.get("date") or "9999"), x.get("datetime") or ""))
 
     # International events (Masters/Champions) span every region, so their matches
     # shouldn't inherit a single team's region — tag them "International".
@@ -195,9 +197,17 @@ def _build_alpha_data():
     player_stats, players_event, players_event_id = [], None, None
     try:
         from EventLeaderboards import (load_event, _most_recent_event_with_data,
-                                       get_all, _ensure_headshots_loaded)
+                                       get_all, _ensure_headshots_loaded,
+                                       _live_split_has_data, LIVE_EVENT_ID)
+        from MoreTestingMaybeFiles import ALL_EVENTS as _ALL_EVENTS
         _ensure_headshots_loaded()
-        ev = _most_recent_event_with_data()
+        # Focus the leaders on the current/live split once it has scraped data;
+        # otherwise fall back to the most recent completed event.
+        ev = None
+        if _live_split_has_data():
+            ev = next((e for e in _ALL_EVENTS if e["id"] == LIVE_EVENT_ID), None)
+        if ev is None:
+            ev = _most_recent_event_with_data()
         cache = load_event(ev)
 
         def _rnd(p):
@@ -210,7 +220,7 @@ def _build_alpha_data():
                              ("HS%", "Headshot %"), ("FIWR", "First Duel Win %")):
             try:
                 allp = get_all(cache, _col)
-                picked = [p for p in allp if _rnd(p) >= 80][:5] or allp[:5]
+                picked = [p for p in allp if _rnd(p) >= 50][:5] or allp[:5]
                 leaders = [{"name": p.get("Player"), "org": p.get("Org", ""),
                             "region": p.get("Region", ""),
                             "headshot": p.get("HeadshotURL", ""),
@@ -329,9 +339,34 @@ def _build_team_profile(org):
                 "start": e.get("start", ""), "end": e.get("end", ""),
             })
     season_events.sort(key=lambda x: x.get("start", ""))
-    # Colors/logos for this team + every opponent it has faced
+    # Upcoming matches for this org (compact left-rail list) — same Modern Hub
+    # source the alpha dashboard uses. Projected series win % is the closed-form
+    # morning-ratings prob for THIS team (β = 0.17, per-map sigmoid → series).
+    upcoming = []
+    for m in (hub.get("upcoming") or []):
+        a, b = m.get("org_a"), m.get("org_b")
+        if org not in (a, b):
+            continue
+        is_a = (a == org)
+        opp = b if is_a else a
+        ra, rb = m.get("rating_a"), m.get("rating_b")
+        wp = None
+        if ra is not None and rb is not None:
+            rme, rop = (ra, rb) if is_a else (rb, ra)
+            p = 1.0 / (1.0 + _math.exp(-0.17 * (rme - rop)))
+            fmt = m.get("format", "bo3")
+            wp = (p**3 * (1 + 3*(1-p) + 6*(1-p)**2)) if fmt in ("bo5", "bo5_gf") \
+                else (p**2 * (3 - 2*p))
+        upcoming.append({
+            "opponent": opp, "date": m.get("date"), "time": m.get("datetime"),
+            "event": m.get("event"), "region": m.get("region"),
+            "format": m.get("format"),
+            "win_prob": round(wp, 3) if wp is not None else None,
+        })
+    upcoming.sort(key=lambda x: ((x.get("date") or "9999"), x.get("time") or ""))
+    # Colors/logos for this team + every opponent it has faced or will face
     orgs = ({org} | {m.get("opponent") for m in (t.get("recent_matches") or [])}
-            | opp_orgs)
+            | opp_orgs | {u["opponent"] for u in upcoming})
     return {
         "org": org, "region": t.get("region", ""),
         "rating": round(t.get("rating", 0.0), 2), "rank": t.get("rank"),
@@ -342,6 +377,7 @@ def _build_team_profile(org):
         "best_maps": (t.get("best_maps") or [])[:3],
         "worst_maps": (t.get("worst_maps") or [])[:3],
         "recent": (t.get("recent_matches") or [])[:4],
+        "upcoming": upcoming,
         "form": (t.get("recent_matches") or [])[:5],
         "roster": (t.get("roster") or [])[:6],
         "traj": traj,
@@ -766,6 +802,21 @@ ALPHA_HTML = """
   .mc-res.win{background:#e7f6ec;color:var(--good)}
   .mc-res.upset{background:#fdeaea;color:var(--bad)}
   .mc-final{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:800}
+  /* ── Recent-card redesign: result is the focal point, pre-match odds sink to the bottom ── */
+  .mc-result{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin:4px 0 2px}
+  .mc-rteam{display:flex;align-items:center;gap:9px;min-width:0;color:inherit;text-decoration:none;border-radius:9px;padding:3px 6px;margin:-3px -6px;transition:background .15s;justify-self:start}
+  .mc-rteam:hover{background:rgba(124,77,214,.09)}
+  .mc-rteam.b{flex-direction:row-reverse;text-align:right;justify-self:end}
+  .mc-wl{flex:0 0 auto;font-size:.78rem;font-weight:800;letter-spacing:.03em;padding:3px 9px;border-radius:6px}
+  .mc-wl.w{background:#e7f6ec;color:var(--good)}
+  .mc-wl.l{background:#fdeaea;color:var(--bad)}
+  .mc-rname{font-weight:800;font-size:1.02rem;letter-spacing:-.01em;line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mc-rscore{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.72rem;line-height:1;letter-spacing:-.02em;text-align:center;white-space:nowrap}
+  .mc-pre{border-top:1px solid var(--line);margin-top:11px;padding-top:9px}
+  .mc-pre-lbl{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:800;margin-bottom:6px;text-align:center}
+  .mc-prow{display:flex;align-items:center;gap:9px}
+  .mc-prow .mc-bar{flex:1;margin:0}
+  .mc-prat{font-size:.72rem;font-weight:800;color:var(--soft);font-family:'Plus Jakarta Sans',sans-serif;min-width:44px;text-align:center}
   .empty{padding:26px 12px;text-align:center;color:var(--faint);font-size:.86rem;font-weight:600;line-height:1.7}
   /* match-body fade cap so the panel never grows too tall when a card expands */
   #match-body{overflow-y:auto;scrollbar-width:thin}
@@ -1011,7 +1062,7 @@ ALPHA_HTML = """
   </div>
 
   <div class="panel players" id="players-panel">
-    <div class="phead"><div class="ptitle">Player Leaders</div><a class="plink" href="/vct/">Full Leaderboards &rarr;</a></div>
+    <div class="phead"><div class="ptitle">Player Leaders</div><a class="plink" id="players-full-link" href="/vct/">Full Leaderboards &rarr;</a></div>
     <div class="psub" id="players-sub"></div>
     <div id="players-body"></div>
   </div>
@@ -1036,7 +1087,6 @@ ALPHA_HTML = """
       <a class="dbtile" href="/vct/"><div class="dt">Event Leaderboards</div><div class="dd">Per-event player leaderboards, percentiles, and best matches.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/mapelo/pythagorean/"><div class="dt">VCT Pythagorean</div><div class="dd">A Pythagorean win% model hand-tuned for VCT's domestic strength.</div><div class="darrow">Open &rarr;</div></a>
       <a class="dbtile" href="/match-data/"><div class="dt">Match Data Explorer</div><div class="dd">Round-by-round outcomes, economy, clutches, and kill matrices from VLR match pages.</div><div class="darrow">Open &rarr;</div></a>
-      <a class="dbtile" href="/mapelo/"><div class="dt">BenPom</div><div class="dd">A statistical rating system for VCT teams, past and present.</div><div class="darrow">Open &rarr;</div></a>
     </div>
   </div>
 
@@ -1120,19 +1170,49 @@ function teamSide(org,rating,side,link){
   var inner=logoOrInit(org,'mc-logo','mc-init')+'<div><div class="mc-name">'+esc(org)+'</div><div class="mc-rat">'+fmtR(rating)+'</div></div>';
   if(link)return '<a class="mc-team '+side+'" href="'+TEAM_HREF(org)+'" title="'+esc(org)+' profile">'+inner+'</a>';
   return '<div class="mc-team '+side+'">'+inner+'</div>';}   // non-link (upcoming card expands instead)
+function _scoreParts(s){var g=String(s==null?'':s).match(/(\\d+)\\D+(\\d+)/);return g?[+g[1],+g[2]]:null;}
+// UTC "YYYY-MM-DD HH:MM:SS" -> viewer's local time with tz label, e.g. "1:00 PM EDT".
+function fmtLocalTime(utc){
+  if(!utc)return '';
+  var iso=String(utc).trim().replace(' ','T');
+  if(!/[zZ]|[+-]\\d\\d:?\\d\\d$/.test(iso))iso+='Z';
+  var d=new Date(iso);
+  if(isNaN(d.getTime()))return '';
+  return d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',timeZoneName:'short'});
+}
+function _resTeam(org,side,win,wcol){
+  var nm='<span class="mc-rname">'+esc(org)+'</span>';   // names stay default (black); winner shown via weight, loser dimmed
+  var wl='<span class="mc-wl '+(win?'w':'l')+'">'+(win?'W':'L')+'</span>';
+  // DOM order stays [logo, name, badge] for both sides — .mc-rteam.b's
+  // existing flex-direction:row-reverse mirrors it visually (same pattern
+  // teamSide() already relies on), so the badge lands on the outer edge.
+  return '<a class="mc-rteam '+side+(win?' win':'')+'" href="'+TEAM_HREF(org)+'" title="'+esc(org)+' profile">'
+    +logoOrInit(org,'mc-logo','mc-init')+nm+wl+'</a>';}
 function recentCard(m){
-  var pa=m.win_prob_a||0, aWon=m.actual_winner==='a', favA=pa>=0.5;
-  var favWon=(favA&&aWon)||(!favA&&!aWon), resCls=favWon?'win':'upset', resTxt=favWon?'Result':'Upset';
-  return '<div class="mcard">'
-    +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span><span>&middot;</span><span>'+shortDate(m.date)+'</span></div>'
-    +'<div class="mc-row">'+teamSide(m.org_a,m.rating_a,'a',true)
-    +'<div class="mc-win"><span class="mc-vs">VS</span><span class="vs">PRE-MATCH</span></div>'
-    +teamSide(m.org_b,m.rating_b,'b',true)+'</div>'+probBar(pa)
-    +'<div class="mc-foot"><span class="mc-final">Final</span><span class="mc-score">'+esc(m.org_a)+' '+esc(m.actual_score||'')+' '+esc(m.org_b)+'</span><span class="mc-res '+resCls+'">'+resTxt+'</span></div></div>';}
+  var pa=(m.win_prob_a!=null?m.win_prob_a:0), aWon=m.actual_winner==='a', favA=pa>=0.5;
+  var favWon=(favA&&aWon)||(!favA&&!aWon), resCls=favWon?'win':'upset', resTxt=favWon?'Final':'Upset';
+  // Winner first: the completed result is the focal point of the card.
+  var wOrg=aWon?m.org_a:m.org_b, lOrg=aWon?m.org_b:m.org_a, wCol=col(wOrg);
+  var sp=_scoreParts(m.actual_score);
+  var scoreTxt=sp?(Math.max(sp[0],sp[1])+'&ndash;'+Math.min(sp[0],sp[1])):esc(m.actual_score||'');
+  // Pre-match ratings/odds must follow the SAME winner-left ordering as the
+  // result row above — swap them (and the win-prob) whenever org_b won,
+  // otherwise the numbers below silently belong to the opposite team from
+  // what's shown on top.
+  var wRat=aWon?m.rating_a:m.rating_b, lRat=aWon?m.rating_b:m.rating_a;
+  var wProb=aWon?pa:(1-pa);
+  return '<div class="mcard rec">'
+    +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span><span>&middot;</span><span>'+shortDate(m.date)+'</span>'+(m.time?'<span>&middot;</span><span>'+fmtLocalTime(m.time)+'</span>':'')
+    +'<span class="mc-res '+resCls+'" style="margin-left:auto">'+resTxt+'</span></div>'
+    +'<div class="mc-result">'+_resTeam(wOrg,'a',true,wCol)
+    +'<div class="mc-rscore">'+scoreTxt+'</div>'
+    +_resTeam(lOrg,'b',false,wCol)+'</div>'
+    +'<div class="mc-pre"><div class="mc-pre-lbl">Pre-match &middot; '+esc(wOrg)+' vs '+esc(lOrg)+'</div>'
+    +'<div class="mc-prow"><span class="mc-prat">'+fmtR(wRat)+'</span>'+probBar(wProb)+'<span class="mc-prat">'+fmtR(lRat)+'</span></div></div></div>';}
 function upcomingCard(m,i){
   var pa=m.win_prob_a;
   return '<div class="mcard upc" data-ua="'+esc(m.org_a)+'" data-ub="'+esc(m.org_b)+'" data-up="'+(pa!=null?pa:'')+'" data-fmt="'+esc(m.format||'')+'" data-i="'+i+'">'
-    +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span>'+(m.date?'<span>&middot;</span><span>'+shortDate(m.date)+'</span>':'')+'</div>'
+    +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span>'+(m.date?'<span>&middot;</span><span>'+shortDate(m.date)+'</span>':'')+(m.datetime?'<span>&middot;</span><span>'+fmtLocalTime(m.datetime)+'</span>':'')+'</div>'
     +'<div class="mc-row">'+teamSide(m.org_a,m.rating_a,'a',true)
     +'<div class="mc-win"><span class="mc-vs">'+(pa!=null?'VS':'–')+'</span><span class="vs">PROJ</span></div>'
     +teamSide(m.org_b,m.rating_b,'b',true)+'</div>'+(pa!=null?probBar(pa):'')
@@ -1306,6 +1386,8 @@ function plRow(p,i,stat){
     +'<span class="plr-val">'+esc(p.value)+'</span></a>';}
 function renderPlayers(){
   document.getElementById('players-sub').textContent=DATA.players_event?('Leaders · '+DATA.players_event):'';
+  var pfl=document.getElementById('players-full-link');
+  if(pfl)pfl.href='/vct/'+(DATA.players_event_id?('?event='+encodeURIComponent(DATA.players_event_id)):'');
   var ss=DATA.player_stats||[];
   document.getElementById('players-body').innerHTML = ss.length
     ? '<div class="pl-grid">'+ss.map(function(s){
@@ -1720,8 +1802,10 @@ TEAM_PROFILE_HTML = """
   .tp-spark svg{display:block}
   .tp-spark-k{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a8296}
 
-  /* ── two equal columns ── */
+  /* ── columns: 2 by default (Recent | right stack); 3 when the team has upcoming
+     matches (Upcoming | Recent | right stack) ── */
   .tp-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;align-items:stretch}
+  .tp-cols.with-up{grid-template-columns:minmax(230px,.94fr) 1fr 1fr}
   /* Recent panel keeps its natural height — only the right column stretches to
      fill when it is shorter; expanding a map must NOT extend recent matches. */
   .tp-cols > .panel{align-self:start}
@@ -1731,6 +1815,22 @@ TEAM_PROFILE_HTML = """
   .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px 14px;box-shadow:0 4px 22px #0000000a}
   .ptitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:13px;display:flex;align-items:baseline;gap:9px}
   .ptit-sub{font-family:'DM Sans',sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+
+  /* upcoming matches (left rail) — JS (syncUpcomingHeights) stretches each
+     card to match its same-row .rm recent-match card exactly; box-sizing so
+     the JS-set height includes padding/border like getBoundingClientRect(). */
+  .uc{box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:11px;border:1px solid var(--line);border-left:4px solid var(--tc,#7c4dd6);border-radius:11px;padding:14px 15px;margin-bottom:10px;transition:box-shadow .15s,border-color .15s}
+  .uc:hover{box-shadow:0 3px 14px #0000000a;border-color:#d6cce8}
+  .uc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.66rem;color:var(--faint);font-weight:700}
+  .uc-date{white-space:nowrap;flex:0 0 auto}
+  .uc-evt{background:#f3eefb;color:#6a4caf;padding:2px 7px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .uc-opp{display:flex;align-items:center;gap:10px;min-width:0}
+  .uc-logo{width:30px;height:30px;object-fit:contain;border-radius:6px;background:#f6f4fa;flex:0 0 auto}
+  .uc-ph{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:800;color:#fff;flex:0 0 auto}
+  .uc-nm{font-weight:700;font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .uc-wp{margin-left:auto;flex:0 0 auto;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.95rem;color:var(--soft)}
+  .uc-wp.fav{color:var(--good)}
+  .uc-wp small{display:block;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:right;line-height:1;margin-top:1px}
 
   /* recent matches (expandable + filterable) */
   .rm{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:10px 13px;margin-bottom:10px;transition:box-shadow .15s}
@@ -1832,7 +1932,9 @@ TEAM_PROFILE_HTML = """
   #tpop .tp-maps td{font-size:.66rem;padding:3px 2px;border-top:1px solid #ffffff14;color:#cdbfe6}
   #tpop .tp-ms{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
   #tpop .tp-ms.mw{color:#41f59a}#tpop .tp-ms.ml{color:#ff8b8b}
-  @media (max-width:780px){.tp-cols{grid-template-columns:1fr}.tp-hero{gap:16px}.tp-hr{gap:16px}}
+  /* mid widths: Upcoming | Recent on top, right stack spans full width below */
+  @media (max-width:960px){.tp-cols.with-up{grid-template-columns:minmax(180px,.72fr) 1fr}.tp-cols.with-up > .tp-right{grid-column:1 / -1}}
+  @media (max-width:780px){.tp-cols,.tp-cols.with-up{grid-template-columns:1fr}.tp-hero{gap:16px}.tp-hr{gap:16px}}
 </style>
 </head>
 <body>
@@ -1961,6 +2063,26 @@ function recentCard(m){
     +'<div class="rm-board" style="--gtc:'+gtc+'">'+head+teamRow(D.org,aWins,won)+teamRow(opp,bWins,!won)+'</div>'
     +'</div>';
 }
+// UTC "YYYY-MM-DD HH:MM:SS" -> viewer-local time + tz label, e.g. "1:00 PM EDT".
+function tlocal(utc){
+  if(!utc)return '';
+  var iso=String(utc).trim().replace(' ','T');
+  if(!/[zZ]|[+-]\\d\\d:?\\d\\d$/.test(iso))iso+='Z';
+  var d=new Date(iso);
+  return isNaN(d.getTime())?'':d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit',timeZoneName:'short'});
+}
+// Compact upcoming-match row: opponent (logo), date, event, projected win%.
+// Links to the opponent's profile (upcoming feed carries no VLR id).
+function upcomingRow(u){
+  var wp=(u.win_prob!=null)?Math.round(u.win_prob*100):null;
+  return '<a class="uc" href="/team/'+encodeURIComponent(u.opponent)+'" title="'+esc(u.opponent)+' profile">'
+    +'<div class="uc-top"><span class="uc-date">'+esc(sd(u.date))+(u.time?' &middot; '+tlocal(u.time):'')+'</span>'
+    +(u.event?'<span class="uc-evt">'+esc(u.event)+'</span>':'')+'</div>'
+    +'<div class="uc-opp">'+logo(u.opponent,'uc-logo','uc-ph','')
+    +'<span class="uc-nm">vs '+esc(u.opponent)+'</span>'
+    +(wp!=null?'<span class="uc-wp'+(wp>=50?' fav':'')+'">'+wp+'%<small>win proj</small></span>':'')
+    +'</div></a>';
+}
 function mapBar(mp,maxAbs){
   var r=mp.rating, frac=Math.min(1,Math.abs(r)/(maxAbs||1)), pos=r>=0, w=(frac*46).toFixed(1);
   var seg=pos?('<span class="mb-seg pos" style="left:50%;width:'+w+'%"></span>')
@@ -2034,15 +2156,51 @@ function playerCard(p){
   var maxAbs=maps.reduce(function(a,m){return Math.max(a,Math.abs(m.rating));},0)||1;
   var mapsHTML=maps.length?maps.map(function(m){return mapBar(m,maxAbs);}).join(''):'<div class="empty">No map data yet.</div>';
   var rosterHTML=(D.roster&&D.roster.length)?D.roster.map(playerCard).join(''):'<div class="empty">No roster data.</div>';
+  // Upcoming matches sit to the LEFT of Recent — but only when the team actually
+  // has some, so off-season profiles fall back to the original 2-column layout.
+  var hasUp=D.upcoming&&D.upcoming.length;
+  var upcomingPanel=hasUp
+    ?'<section class="panel"><div class="ptitle">Upcoming matches <span class="ptit-sub">proj. series win</span></div><div id="upcoming">'+D.upcoming.map(upcomingRow).join('')+'</div></section>'
+    :'';
 
   root.innerHTML=hero
-    +'<div class="tp-cols">'
+    +'<div class="tp-cols'+(hasUp?' with-up':'')+'">'
+    +upcomingPanel
     +'<section class="panel"><div class="ptitle">Recent matches</div><div id="recent">'+recentHTML+'</div></section>'
     +'<div class="tp-right">'
     +'<section class="panel mapwrap"><div class="ptitle">Map performance <span class="ptit-sub">net rating &middot; click a map for its games</span></div><div id="maps">'+mapsHTML+'</div></section>'
     +'<section class="panel"><div class="ptitle">Roster</div><div class="roster">'+rosterHTML+'</div></section>'
     +'</div>'
     +'</div>';
+
+  // Upcoming cards must match Recent cards' height row-by-row — Recent's
+  // per-map scoreboard grid makes it inherently taller than a CSS min-height
+  // guess can track. Measure each rendered .rm card and stretch the
+  // same-index .uc card to match (post-layout, so fonts/logos are accounted
+  // for); re-measure on resize since wrapping can change card heights.
+  function syncUpcomingHeights(){
+    var ups=document.querySelectorAll('#upcoming .uc');
+    var recs=document.querySelectorAll('#recent .rm');
+    if(!ups.length||!recs.length)return;
+    ups.forEach(function(u,i){
+      u.style.height='';
+      var r=recs[i]||recs[recs.length-1];
+      var h=r.getBoundingClientRect().height;
+      if(h)u.style.height=h+'px';
+    });
+  }
+  if(hasUp){
+    syncUpcomingHeights();
+    // Re-sync once web fonts finish swapping in (a font-metric shift after the
+    // first measurement is the only thing that can still throw the two
+    // columns off by a few px) and once more next frame for full precision.
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(syncUpcomingHeights).catch(function(){});
+    requestAnimationFrame(function(){requestAnimationFrame(syncUpcomingHeights);});
+    if(!window._tpHeightSync){
+      window._tpHeightSync=true;
+      window.addEventListener('resize',function(){clearTimeout(window._tpHSt);window._tpHSt=setTimeout(syncUpcomingHeights,120);});
+    }
+  }
 
   // Click a map → expand the game-by-game breakdown underneath it (lazy-built).
   document.getElementById('maps').addEventListener('click',function(e){
