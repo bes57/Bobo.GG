@@ -510,26 +510,42 @@ def _fetch_agents_from_match(match_id, profile_url):
     """Fetch one match page and return all unique agents the player used across maps."""
     from urllib.parse import urlparse
     profile_path = urlparse(profile_url).path
-    try:
-        res = requests.get(f"https://www.vlr.gg/{match_id}", headers=HEADERS, timeout=15)
-        soup = BeautifulSoup(res.text, "html.parser")
-    except Exception:
-        return []
+    url = f"https://www.vlr.gg/{match_id}"
+    soup = None
+    if _bypass_fetch is not None:
+        try:
+            soup = _bypass_fetch(url)   # curl_cffi impersonation → BeautifulSoup
+        except Exception:
+            soup = None
+    if soup is None:
+        try:
+            res = requests.get(url, headers=HEADERS, timeout=15)
+            soup = BeautifulSoup(res.text, "html.parser")
+        except Exception:
+            return []
 
     seen = []
-    # Iterate individual map divs (numeric data-game-id), skip "all"
-    for game_div in soup.find_all("div", attrs={"data-game-id": True}):
+    # Iterate individual map stat panels (numeric data-game-id), skip "all".
+    # VLR's 2026 redesign moved per-map stats off <table> onto a div grid
+    # (see project_vlr_match_page_div_migration memory) — rows are
+    # div.ovw-row, the player cell is div.ovw-cell.mod-player, and the
+    # agent icon(s) live in .ovw-agents img[alt] within that cell.
+    for game_div in soup.find_all("div", class_="vm-stats-game", attrs={"data-game-id": True}):
         if game_div["data-game-id"] == "all":
             continue
-        for tr in game_div.find_all("tr"):
-            if tr.find("a", href=lambda h: h and profile_path in (h or "")):
-                tds = tr.find_all("td")
-                if len(tds) > 1:
-                    for img in tds[1].find_all("img"):
-                        name = img.get("alt", "").capitalize()
-                        if name and name not in seen:
-                            seen.append(name)
-                break  # found the player in this map, move to next map
+        for row in game_div.find_all(class_="ovw-row"):
+            player_cell = row.find(class_="mod-player")
+            if not player_cell:
+                continue
+            if not player_cell.find("a", href=lambda h: h and profile_path in (h or "")):
+                continue
+            agents_cell = row.find(class_="ovw-agents")
+            if agents_cell:
+                for img in agents_cell.find_all("img"):
+                    name = img.get("alt", "").capitalize()
+                    if name and name not in seen:
+                        seen.append(name)
+            break  # found the player in this map, move to next map
     return seen
 
 

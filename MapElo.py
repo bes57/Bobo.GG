@@ -7909,7 +7909,14 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .tab-bar{display:flex;gap:8px;justify-content:center;margin-bottom:16px;transition:opacity .5s}
 .tab{padding:9px 28px;border-radius:100px;border:2px solid #c8a8e8;background:transparent;color:#444;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:all .2s}
 .tab.active{background:#3d1a6e;border-color:#3d1a6e;color:#fff}
-.tab:hover:not(.active){border-color:#9c6ec8;color:#000}
+.tab:hover:not(.active):not(.tab-disabled){border-color:#9c6ec8;color:#000}
+/* Upcoming/Recent/Simulator are disabled until the backend reports
+   status:"ready" — clicking them mid-build used to run a full render (incl.
+   the Upcoming tab's per-match Monte-Carlo sims) against a still-refreshing
+   dataset and froze the page. Greyed out + inert-looking but NOT
+   pointer-events:none, so the title tooltip still shows on hover. */
+.tab.tab-disabled{opacity:.4;cursor:not-allowed;border-color:#e0d4ec}
+.tab.tab-disabled:hover{border-color:#e0d4ec;color:#444}
 
 .panels-outer{overflow:hidden;transition:height .55s cubic-bezier(.22,1,.36,1)}
 /* Slide curve = ease-out-quint. Snappier finish than the symmetric ease,
@@ -8063,7 +8070,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-row:hover{background:rgba(61,26,110,.05)}
 .lb-row.selected{background:rgba(61,26,110,.08)}
 .lb-rank{color:#aaa;font-size:.78rem;font-weight:600;text-align:center}
-.lb-team{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;color:inherit;cursor:pointer}
+.lb-team{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;color:inherit;cursor:pointer;width:max-content;justify-self:center}
 .lb-team:hover .lb-name{text-decoration:underline;text-underline-offset:2px}
 .lb-team img{width:30px;height:30px;object-fit:contain;flex-shrink:0}
 .lb-name{font-weight:700;font-size:.92rem;color:#111}
@@ -8335,9 +8342,9 @@ body:has(.flying)::after{animation-play-state:paused}
 
   <div class="tab-bar" id="tabBar" style="opacity:0">
     <button class="tab active" data-panel="a">BenPom Ratings</button>
-    <button class="tab" data-panel="b">Upcoming Matches</button>
-    <button class="tab" data-panel="c">Recent Matches</button>
-    <button class="tab" data-panel="d">Simulator</button>
+    <button class="tab tab-disabled" data-panel="b" title="Available once data finishes loading">Upcoming Matches</button>
+    <button class="tab tab-disabled" data-panel="c" title="Available once data finishes loading">Recent Matches</button>
+    <button class="tab tab-disabled" data-panel="d" title="Available once data finishes loading">Simulator</button>
   </div>
 
   <div class="region-pills" id="regionPills" style="opacity:0">
@@ -8712,6 +8719,13 @@ let activeRegion = 'All';
 let expandedOrg  = null;
 let activePanel  = 'a';
 
+// A #team= or #panel= hash means we're about to jump straight to a specific
+// team/match (deep-linked from elsewhere on the site) — skip the decorative
+// title fly-in + chart slide-in/line-draw animations so that jump happens
+// immediately instead of after several seconds of intro the user never
+// asked to watch, and go straight to the final rendered state.
+const SKIP_INTRO = /(?:^|[#&])(team=|panel=)/i.test(location.hash);
+
 // The 4 panels live side-by-side in a 400%-wide .panel-track that's positioned
 // purely by translateX. Off-screen panels are still in the DOM and focusable —
 // so pressing Tab eventually moves focus INTO an off-screen panel (e.g. the
@@ -8736,6 +8750,10 @@ updatePanelInert();
 // ── Tab switching ────────────────────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
+    // Upcoming/Recent/Simulator stay disabled until the backend reports
+    // status:"ready" (see enableHubTabs()) — ignore clicks on them until
+    // then instead of rendering against a still-building dataset.
+    if (btn.classList.contains('tab-disabled')) return;
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activePanel = btn.dataset.panel;
@@ -8816,6 +8834,13 @@ async function introAnimation() {
   const title = document.getElementById('hubTitle');
   const text  = 'VCT Hub 2026';
 
+  if (SKIP_INTRO) {
+    title.style.opacity = '1';
+    title.textContent = text;
+    fadeIn('tabBar', 0.1);
+    return;
+  }
+
   // Staggered per-letter reveal — each char rises up, un-blurs and settles
   // into place one after another (replaces the old typewriter effect).
   const STEP = 55;   // ms between letters
@@ -8872,6 +8897,16 @@ function updateProgress(prog) {
   if (entries.length > 4) {
     for (let i = 0; i < entries.length - 4; i++) entries[i].remove();
   }
+}
+
+// Upcoming/Recent/Simulator are inert until the backend finishes building —
+// see the tab-disabled styling/guard in the tab-bar markup + click handler
+// above. Called once init() confirms status:"ready".
+function enableHubTabs() {
+  document.querySelectorAll('.tab.tab-disabled').forEach(b => {
+    b.classList.remove('tab-disabled');
+    b.removeAttribute('title');
+  });
 }
 
 async function pollUntilReady() {
@@ -9880,7 +9915,7 @@ async function resetZoom() {
 }
 
 // ── Chart section reveal ─────────────────────────────────────────────────────
-async function showChartAndLeaderboard(data) {
+async function showChartAndLeaderboard(data, fast) {
   // Initialize veto simulation globals from hub data
   VETO_HUB       = data.veto_model   || {teams:{}, snap_pools:{}};
   ORG_REGIONS_HUB = data.org_regions || {};
@@ -9896,6 +9931,21 @@ async function showChartAndLeaderboard(data) {
   setAsOf(data);
 
   _computeGlobalYRange(data);
+
+  if (fast) {
+    // Deep-linking straight to a team/match (see SKIP_INTRO) — skip the
+    // slide-in + curtain-sweep line-draw entirely and just show the final
+    // chart/table state immediately, so the caller's deep-link jump (to the
+    // team row or the Upcoming Matches card) isn't stuck waiting behind
+    // several seconds of decorative animation nobody asked to watch.
+    buildChart(data);
+    _initCanvasListeners();
+    showEl('chartSection');
+    showEl('lbCard');
+    renderLeaderboard(data, {animate: false});
+    fadeIn('regionPills', 0.1);
+    return;
+  }
 
   // Build chart without lines so shading/axes are visible during slide-in
   buildChart(data, true);
@@ -9953,7 +10003,10 @@ async function init() {
   }
   hubData = data;
 
-  // Always show real progress — poll until backend says ready
+  // Always show real progress — poll until backend says ready. This runs
+  // for deep-links too (SKIP_INTRO only skips the DECORATIVE animations
+  // below, not the actual build/verify wait) — if the backend genuinely
+  // needs to rebuild, the user should still see that happening.
   showEl('progressSection');
   // Scroll to the top so the user sees the progress bar / "Loading…" state
   // as soon as the backend says it's building. Without this, if the user
@@ -9961,25 +10014,32 @@ async function init() {
   window.scrollTo({top: 0, behavior: 'smooth'});
   if (data.progress) updateProgress(data.progress);
   await pollUntilReady();
+  enableHubTabs();
 
-  // Bar done — flash white, then glitch-exit the card
-  const fill = document.getElementById('progressFill');
-  if (fill) fill.classList.add('done');
-  const pLabel = document.querySelector('.progress-label');
-  if (pLabel) pLabel.textContent = 'Ready';
-  await sleep(520);
-  const pSec = document.getElementById('progressSection');
-  if (pSec) pSec.style.overflow = 'visible';
-  const pOuter = document.querySelector('.panels-outer');
-  if (pOuter) pOuter.style.overflow = 'visible';
-  const pCard = document.querySelector('.progress-card');
-  if (pCard) pCard.classList.add('exiting');
-  await sleep(560);
-  document.getElementById('progressSection').classList.add('hidden');
-  // Restore overflow:hidden so the chart card clips correctly during slide-in
-  if (pOuter) pOuter.style.overflow = '';
+  if (SKIP_INTRO) {
+    // Deep-linking straight to a team/match — skip the "flash white, glitch
+    // exit" progress-bar flourish, just drop straight to the final view.
+    document.getElementById('progressSection').classList.add('hidden');
+  } else {
+    // Bar done — flash white, then glitch-exit the card
+    const fill = document.getElementById('progressFill');
+    if (fill) fill.classList.add('done');
+    const pLabel = document.querySelector('.progress-label');
+    if (pLabel) pLabel.textContent = 'Ready';
+    await sleep(520);
+    const pSec = document.getElementById('progressSection');
+    if (pSec) pSec.style.overflow = 'visible';
+    const pOuter = document.querySelector('.panels-outer');
+    if (pOuter) pOuter.style.overflow = 'visible';
+    const pCard = document.querySelector('.progress-card');
+    if (pCard) pCard.classList.add('exiting');
+    await sleep(560);
+    document.getElementById('progressSection').classList.add('hidden');
+    // Restore overflow:hidden so the chart card clips correctly during slide-in
+    if (pOuter) pOuter.style.overflow = '';
+  }
 
-  await showChartAndLeaderboard(hubData);
+  await showChartAndLeaderboard(hubData, SKIP_INTRO);
 
   // Pin .panels-outer to the active panel's height so we don't inherit the
   // simulator iframe's height (which used to leave a giant blank gap below
@@ -10387,7 +10447,13 @@ function renderUpcoming(data) {
 
   var REGION_CLS = {'EMEA':'rgn-emea','Americas':'rgn-americas','Pacific':'rgn-pacific','CN':'rgn-cn'};
 
-  var cardHtmlArr = upcoming.map(function(m) {
+  // Each call runs a 20k-sim MC for one match — expensive. Built as a named
+  // function (not an inline .map() callback) so the progressive-render loop
+  // below can invoke it one match at a time via setTimeout, instead of the
+  // old approach of running all matches' sims back-to-back synchronously in
+  // a single call stack (which blocked the main thread for the whole tab
+  // switch — see renderPast's identical pattern/comment for why).
+  function buildCard(m) {
     var orgA = m.org_a || m.team_a;
     var orgB = m.org_b || m.team_b;
     var matchFmt = m.format || 'bo3';
@@ -10538,7 +10604,7 @@ function renderUpcoming(data) {
     var rtgB = '<span class="upc-rtg">'+(ratingB>=0?'+':'')+ratingB.toFixed(2)+'</span>';
     var fmtLabel = matchFmt==='bo5_gf'?'Bo5 GF':matchFmt==='bo5'?'Bo5':matchFmt==='bo1'?'Bo1':'Bo3';
 
-    return '<div class="upc-card '+rgnCls+'">'+
+    return '<div class="upc-card '+rgnCls+'" data-org-a="'+orgA+'" data-org-b="'+orgB+'" data-date="'+(m.date||'')+'">'+
       '<div class="upc-header">'+
         '<div class="upc-team-a">'+
           '<img class="upc-logo" src="/static/logos/'+orgA+'.png" onerror="this.style.opacity=\\'0\\'">'+
@@ -10571,9 +10637,17 @@ function renderUpcoming(data) {
       '</div>'+
       '<div class="upc-expand-hint">▸ expand</div>'+
     '</div>';
-  });
+  }
 
-  // Group by date and render
+  // ── Progressive render ─────────────────────────────────────────────────
+  // Build the day-group frames synchronously (cheap — no MC), so the tab
+  // switch itself is instant, then process each match's 20k-sim MC one at a
+  // time via setTimeout. Each card is inserted + slides in as its sim
+  // completes, yielding to the browser between matches so the main thread
+  // never blocks for the whole list at once. Mirrors renderPast() below,
+  // which already used this pattern — renderUpcoming previously ran every
+  // match's sim back-to-back in a single synchronous .map(), which is what
+  // caused the freeze/stutter when opening or switching to this tab.
   var groups = [];
   var curDate = null;
   upcoming.forEach(function(m, i) {
@@ -10581,24 +10655,58 @@ function renderUpcoming(data) {
     if (d !== curDate) { groups.push({date: d, indices: []}); curDate = d; }
     groups[groups.length-1].indices.push(i);
   });
+  function _groupId(d) { return 'upc-group-' + (d || 'undated').replace(/[^a-zA-Z0-9_-]/g, '_'); }
   var groupedHtml = groups.map(function(g) {
     var dateLabel = g.date ? new Date(g.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) : '';
-    return '<div class="upc-day-group">'+
+    return '<div class="upc-day-group" id="'+_groupId(g.date)+'">'+
       '<div class="upc-day-label">'+dateLabel+'</div>'+
-      g.indices.map(function(i){ return cardHtmlArr[i]; }).join('')+
+      '<div class="upc-day-cards"></div>'+
     '</div>';
   }).join('');
   body.innerHTML = '<div class="upc-list">'+groupedHtml+'</div>';
 
-  body.querySelectorAll('.upc-card').forEach(function(card) {
+  // Heading fly-in fires immediately (cheap, no MC). The list-level fly-in is
+  // skipped — cards reveal individually via the progressive-load path below.
+  triggerUpcomingFlyIn();
+
+  function _attachCardHandler(card) {
     card.addEventListener('click', function() {
       card.classList.toggle('open');
       var hint = card.querySelector('.upc-expand-hint');
       if (hint) hint.textContent = card.classList.contains('open') ? '▾ collapse' : '▸ expand';
     });
-  });
+  }
 
-  triggerUpcomingFlyIn();
+  function processMatch(idx) {
+    if (idx >= upcoming.length) return;
+    var m = upcoming[idx];
+    var cardHtml = buildCard(m);  // 20k sims for this one match
+    var groupEl = document.getElementById(_groupId(m.date || ''));
+    if (groupEl) {
+      var container = groupEl.querySelector('.upc-day-cards');
+      if (container) {
+        var wrap = document.createElement('div');
+        wrap.innerHTML = cardHtml;
+        var newCard = wrap.firstElementChild;
+        if (newCard) {
+          container.appendChild(newCard);
+          _attachCardHandler(newCard);
+          // Trigger slide-in on the next frame (after the browser sees the
+          // initial opacity:0 / translateX(80) state). The double-rAF avoids
+          // races where the class is added before the initial state paints.
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              newCard.classList.add('card-loaded');
+            });
+          });
+        }
+      }
+    }
+    // Yield to the browser before kicking off the next match's sim, so the
+    // slide-in animation actually paints and the UI stays responsive.
+    setTimeout(function(){ processMatch(idx + 1); }, 0);
+  }
+  processMatch(0);
 }
 
 // ── Past matches ─────────────────────────────────────────────────────────────
@@ -11149,7 +11257,10 @@ function _flyInPanel(panelSel, headingSel, subSel, opts) {
   }, totalDur);
 }
 function triggerUpcomingFlyIn() {
-  _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub');
+  // skipList: cards no longer fly in as one batch — each reveals individually
+  // via .card-loaded as its own MC sim completes (see renderUpcoming's
+  // progressive render loop), same as triggerPastFlyIn's cards.
+  _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub', {skipList: true});
 }
 function triggerPastFlyIn() {
   // Recent Matches heading + subtitle render statically (no letter fly-in) —
@@ -11182,6 +11293,64 @@ init();
           var sel = document.querySelector('#lbBody .lb-row.selected');
           if (sel) sel.scrollIntoView({behavior:'smooth', block:'center'});
         }, 400);
+      }
+    } catch (e) { /* keep polling until ready */ }
+    if (tries > 80) clearInterval(iv);
+  }, 250);
+})();
+
+// Deep-link: /mapelo/modern/#panel=b&a=ORG_A&b=ORG_B&date=YYYY-MM-DD opens
+// the Upcoming Matches tab and expands that specific match's card once the
+// hub is ready (the home page's "Full veto sim & per-map odds" link on each
+// upcoming-match analysis points here). Mirrors the #team= deep-link above:
+// same init()-reveal readiness signal (leaderboard rows rendered), same
+// poll-until-ready loop, then switch tabs the same way a real tab click
+// would and click the matching card the same way a real card click would.
+(function(){
+  var hp;
+  try { hp = new URLSearchParams((location.hash || '').replace(/^#/, '')); } catch (e) { return; }
+  if (hp.get('panel') !== 'b') return;
+  var wantA = (hp.get('a') || '').toUpperCase();
+  var wantB = (hp.get('b') || '').toUpperCase();
+  var wantDate = hp.get('date') || '';
+  if (!wantA || !wantB) return;
+
+  function findMatchCard() {
+    var cards = document.querySelectorAll('#upcomingBody .upc-card');
+    var teamOnly = null, teamAndDate = null;
+    cards.forEach(function(card){
+      var a = (card.dataset.orgA || '').toUpperCase();
+      var b = (card.dataset.orgB || '').toUpperCase();
+      var same = (a === wantA && b === wantB) || (a === wantB && b === wantA);
+      if (!same) return;
+      if (!teamOnly) teamOnly = card;
+      if (wantDate && card.dataset.date === wantDate) teamAndDate = teamAndDate || card;
+    });
+    return teamAndDate || teamOnly;
+  }
+
+  var switchedTab = false;
+  var tries = 0;
+  var iv = setInterval(function(){
+    tries++;
+    try {
+      var ready = (typeof hubData !== 'undefined') && hubData && Array.isArray(hubData.upcoming)
+                  && document.querySelectorAll('#lbBody .lb-row').length;
+      if (ready) {
+        if (!switchedTab) {
+          switchedTab = true;
+          var tabBtn = document.querySelector('.tab[data-panel="b"]');
+          if (tabBtn && !tabBtn.classList.contains('active')) tabBtn.click();
+          else if (typeof renderUpcoming === 'function') renderUpcoming(hubData);
+        }
+        var target = findMatchCard();
+        if (target) {
+          clearInterval(iv);
+          if (!target.classList.contains('open')) target.click();
+          setTimeout(function(){
+            target.scrollIntoView({behavior:'smooth', block:'center'});
+          }, 400);
+        }
       }
     } catch (e) { /* keep polling until ready */ }
     if (tries > 80) clearInterval(iv);

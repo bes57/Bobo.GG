@@ -1211,7 +1211,7 @@ function recentCard(m){
     +'<div class="mc-prow"><span class="mc-prat">'+fmtR(wRat)+'</span>'+probBar(wProb)+'<span class="mc-prat">'+fmtR(lRat)+'</span></div></div></div>';}
 function upcomingCard(m,i){
   var pa=m.win_prob_a;
-  return '<div class="mcard upc" data-ua="'+esc(m.org_a)+'" data-ub="'+esc(m.org_b)+'" data-up="'+(pa!=null?pa:'')+'" data-fmt="'+esc(m.format||'')+'" data-i="'+i+'">'
+  return '<div class="mcard upc" data-ua="'+esc(m.org_a)+'" data-ub="'+esc(m.org_b)+'" data-up="'+(pa!=null?pa:'')+'" data-fmt="'+esc(m.format||'')+'" data-i="'+i+'" data-date="'+esc(m.date||'')+'">'
     +'<div class="mc-meta"><span class="mtag">'+esc(m.event||'')+'</span><span>'+fmtFmt(m.format)+'</span>'+(m.date?'<span>&middot;</span><span>'+shortDate(m.date)+'</span>':'')+(m.datetime?'<span>&middot;</span><span>'+fmtLocalTime(m.datetime)+'</span>':'')+'</div>'
     +'<div class="mc-row">'+teamSide(m.org_a,m.rating_a,'a',true)
     +'<div class="mc-win"><span class="mc-vs">'+(pa!=null?'VS':'–')+'</span><span class="vs">PROJ</span></div>'
@@ -1269,14 +1269,18 @@ function _h2hCol(t,org,side){
     +'<div class="h2h-form">'+formDots(t.form)+'</div>'
     +'<div class="h2h-mtitle">Best maps</div>'+best+'</div>';
 }
-function renderH2H(id,org_a,org_b,pa){
+function renderH2H(id,org_a,org_b,pa,date){
   var el=document.getElementById(id); if(!el)return;
   el.innerHTML='<div class="h2h-load">Loading analysis…</div>';
+  // Deep-link straight to this match's card on the Modern Hub's Upcoming
+  // Matches tab — see the matching #panel=b deep-link IIFE at the bottom of
+  // MapElo.py's Modern Hub <script> block.
+  var simHref='/mapelo/modern/#panel=b&a='+encodeURIComponent(org_a)+'&b='+encodeURIComponent(org_b)+(date?'&date='+encodeURIComponent(date):'');
   Promise.all([_fetchTeam(org_a),_fetchTeam(org_b)]).then(function(res){
     var A=res[0],B=res[1], pct=(pa!=null)?Math.round(pa*100):null;
     el.innerHTML=(pct!=null?'<div class="h2h-head"><b>'+esc(org_a)+'</b> '+pct+'%&nbsp;&middot;&nbsp;'+(100-pct)+'% <b>'+esc(org_b)+'</b><div class="h2h-sub">projected series win</div></div>':'')
       +'<div class="h2h-grid">'+_h2hCol(A,org_a,'a')+'<div class="h2h-vs">VS</div>'+_h2hCol(B,org_b,'b')+'</div>'
-      +'<a class="h2h-simlink" href="/mapelo/modern/">Full veto sim &amp; per-map odds &rarr;</a>';
+      +'<a class="h2h-simlink" href="'+simHref+'">Full veto sim &amp; per-map odds &rarr;</a>';
     // Make the form dots interactable like Power Rankings (hover = BenPom match card).
     el.addEventListener('mouseover',function(e){var d=e.target.closest&&e.target.closest('.fdot[data-mi]');if(d)_showDotTip(d);});
     el.addEventListener('mouseout',function(e){var d=e.target.closest&&e.target.closest('.fdot[data-mi]');if(d)_hideDotTip();});
@@ -1290,7 +1294,7 @@ function _onMatchClick(e){
   if(hint)hint.innerHTML=open?'&#9662; close analysis':'&#9656; tap for analysis';
   if(open && !card.dataset.loaded){
     card.dataset.loaded='1';
-    var up=card.dataset.up; renderH2H(card.querySelector('.mc-details-inner').id, card.dataset.ua, card.dataset.ub, up!==''?parseFloat(up):null);
+    var up=card.dataset.up; renderH2H(card.querySelector('.mc-details-inner').id, card.dataset.ua, card.dataset.ub, up!==''?parseFloat(up):null, card.dataset.date);
   }
   if(open)setTimeout(function(){card.scrollIntoView({block:'nearest',behavior:'smooth'});},60);
   setTimeout(_updateMatchCap,380);   // cap + fade only while expanded
@@ -1804,8 +1808,8 @@ TEAM_PROFILE_HTML = """
 
   /* ── columns: 2 by default (Recent | right stack); 3 when the team has upcoming
      matches (Upcoming | Recent | right stack) ── */
-  .tp-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px;align-items:stretch}
-  .tp-cols.with-up{grid-template-columns:minmax(230px,.94fr) 1fr 1fr}
+  .tp-cols{display:grid;grid-template-columns:minmax(390px,1fr) minmax(0,1.1fr);gap:18px;margin-top:18px;align-items:stretch}
+  .tp-cols.with-up{grid-template-columns:minmax(230px,.82fr) minmax(390px,1fr) minmax(0,1.2fr)}
   /* Recent panel keeps its natural height — only the right column stretches to
      fill when it is shorter; expanding a map must NOT extend recent matches. */
   .tp-cols > .panel{align-self:start}
@@ -1843,7 +1847,7 @@ TEAM_PROFILE_HTML = """
   .rm-wl.w{background:var(--good)}.rm-wl.l{background:var(--bad)}
   /* VLR-style scoreboard: ONE grid shared by the header + both team rows (rows
      are display:contents) so every map column lines up exactly. */
-  .rm-board{display:grid;grid-template-columns:var(--gtc);gap:6px 10px;align-items:center;margin-top:7px}
+  .rm-board{display:grid;grid-template-columns:var(--gtc);gap:6px 10px;align-items:center;margin-top:7px;overflow-x:auto}
   .rb-row{display:contents}
   .rb-head{font-size:.6rem;color:var(--faint);font-weight:700;letter-spacing:.01em}
   .rb-team{display:flex;align-items:center;gap:8px;min-width:0}
@@ -2052,7 +2056,8 @@ function recentCard(m){
   var n=maps.length;
   if(!n){ var raw=String(m.score||'0-0').split('-'), ws=+raw[0]||0, ls=+raw[1]||0; aWins=won?ws:ls; bWins=won?ls:ws; }
   var evt=EL[m.event_id]||m.event_id||'';
-  var gtc='minmax(74px,auto) 26px 1fr '+new Array(n+1).join('52px ');
+  var mw=n>3?Math.max(28,Math.min(52,Math.floor((305-74-26-(n+2)*10)/n))):52;
+  var gtc='minmax(74px,auto) 26px 1fr '+new Array(n+1).join(mw+'px ');
   function teamRow(org,tot,winner){
     var cells=maps.map(function(mp){ var w=(mp.winner===org); return '<div class="rb-c'+(w?' win':'')+'">'+(w?mp.wr:mp.lr)+'</div>'; }).join('');
     return '<div class="rb-row'+(winner?' wn':'')+'"><div class="rb-team">'+logo(org,'rb-logo','rb-ph','')+'<span class="rb-nm">'+esc(org)+'</span></div><div class="rb-tot">'+tot+'</div><div></div>'+cells+'</div>';
@@ -2438,7 +2443,11 @@ def _inject_alpha_nav(resp):
         if "text/html" not in resp.headers.get("Content-Type", ""):
             return resp
         body = resp.get_data(as_text=True)
-        if "alpha-nav.js" in body:
+        # Match the actual injected <script> tag, not a bare substring — pages
+        # that mention "alpha-nav.js" in their own inline-script comments (e.g.
+        # MatchDataExplorer.py) were tripping this as a false positive and
+        # silently skipping injection, so the nav bar never appeared on them.
+        if 'src="/static/alpha-nav.js' in body:
             return resp
         # Run the bar builder at the TOP of <body> (not deferred at the end) so the
         # bar is in place before the page's content renders. Deferred-at-end meant
