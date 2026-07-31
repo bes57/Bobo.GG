@@ -1634,7 +1634,11 @@ function _rfSet(pct,msg,log){
   var es=logEl.querySelectorAll('.ple');
   for(var i=0;i<es.length-4;i++) es[i].remove();
 }
+var _manualRefreshing=false;   // suppresses the "new matches" pill while the
+                               // bottom-button refresh runs (it reloads anyway)
 function startRefresh(){
+  _manualRefreshing=true;
+  var old=document.getElementById('updatePill'); if(old) old.remove();
   var btn=document.getElementById('refreshBtn'); btn.disabled=true;
   _rfSeen={};
   var card=document.getElementById('rfpCard');
@@ -1680,6 +1684,7 @@ function _rfPoll(n){
   }).catch(function(){ setTimeout(function(){ _rfPoll(n+1); }, 2500); });
 }
 function _rfFail(msg){
+  _manualRefreshing=false;   // refresh ended without a reload — pill may resume
   document.getElementById('rfpCard').classList.add('err');
   document.getElementById('rfpLabel').textContent='Refresh failed';
   document.getElementById('rfpMsg').textContent=msg;
@@ -1710,6 +1715,7 @@ function _rfFail(msg){
   }, 2200);
 })();
 function _showUpdatePill(){
+  if(_manualRefreshing) return;   // user is already refreshing via the button
   if(document.getElementById('updatePill')) return;
   var pill=document.createElement('button');
   pill.id='updatePill'; pill.className='update-pill'; pill.type='button';
