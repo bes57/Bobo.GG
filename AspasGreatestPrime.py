@@ -176,7 +176,11 @@ PAGE_HTML = """
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  .toc { position:fixed; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:230px; }
+  /* Anchored to the CONTENT COLUMN, not the viewport edge: left = 50% +
+     half the 860px article + a gutter. Width flexes down before the hide
+     breakpoint so intermediate zooms/resolutions never overlap the text.
+     Hidden only when there is genuinely no room beside the column. */
+  .toc { position:fixed; top:32px; left:calc(50% + 450px); right:auto; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; width:max-content; max-width:min(240px, calc(50vw - 450px - 20px)); }
   .toc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
@@ -185,7 +189,7 @@ PAGE_HTML = """
   /* When the Alpha nav bar is injected (fixed at top), drop the Sections box
      below it so they don't overlap. Classic mode (no bar) keeps top:32px. */
   .alpha-navbar ~ .toc { top:72px; }
-  @media(max-width:1000px) { .toc { display:none; } }
+  @media(max-width:1200px) { .toc { display:none; } }
   .article { max-width:860px; width:100%; }
   .label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; text-align:center; }
   h1 { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2.2rem,5vw,3.52rem); font-weight:800; letter-spacing:-1px; line-height:1.1; margin-bottom:24px; text-align:center; }

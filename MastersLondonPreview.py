@@ -39,7 +39,8 @@ PAGE_HTML = """
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  .toc { position:fixed; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; max-width:240px; }
+  /* Column-anchored + room-gated (see AspasGreatestPrime.py note). */
+  .toc { position:fixed; top:32px; left:calc(50% + 450px); right:auto; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; width:max-content; max-width:min(240px, calc(50vw - 450px - 20px)); }
   .toc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
@@ -47,7 +48,7 @@ PAGE_HTML = """
   .toc a.toc-sub { padding-left:16px; font-size:.74rem; border-left:2px solid #ede5f3; margin-left:4px; }
   .toc a.toc-sub.active { border-left-color:#7c3aed; color:var(--ink); font-weight:600; }
   .alpha-navbar ~ .toc { top:72px; }
-  @media(max-width:1180px) { .toc { display:none; } }
+  @media(max-width:1200px) { .toc { display:none; } }
   .page { position:relative; z-index:1; flex:1; display:flex; flex-direction:column; align-items:center; padding:60px 32px 80px; }
   .article { max-width:860px; width:100%; }
   .label { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--soft); margin-bottom:16px; text-align:center; }

@@ -5724,6 +5724,7 @@ MAPELO_PYTH_HTML = """
         <p class="intro-p">The Pythagorean Rating formula originates from baseball statistician Bill James, who crafted a formula that settles the discrepancy between how many games a team <em>should</em> win vs. how many they actually won by using a team&rsquo;s margins of victory over a season. Specifically, it looks like:</p>
         <div class="intro-formula-block">
           <div id="baseball-formula"></div>
+          <div class="formula-caption" id="baseball-caption"></div>
         </div>
         <p class="intro-p">For instance, the 2023 Baltimore Orioles finished 101&ndash;61, the best record in the American League, but their margins were not quite as great as their record. They scored 807 runs and allowed 678, which works out to a Pythagorean record of just 94&ndash;68, seven full wins below their actual mark. This overperformance was immediately realized in the playoffs, where they were first-round exits.</p>
         <p class="intro-p">The brilliance of this framework is that it can be applied to any sport, so long as the exponent is tuned to minimize the MSE. For instance, basketball uses a team&rsquo;s point margins and has an exponent tuned to 13.91. Hockey uses a team&rsquo;s goal margins and has an exponent tuned to 2.15. In this school of thought, I personally tuned Bill James&rsquo; formula to VCT by using round-differentials.</p>
@@ -5789,6 +5790,11 @@ document.addEventListener('DOMContentLoaded', function() {
   katex.render('\\\\text{Pyth\\\\%} \\\\approx \\\\dfrac{RW^k}{RW^k + RL^k}',
     document.getElementById('pyth-formula'),
     { throwOnError: false, displayMode: true });
+  var bcap = document.getElementById('baseball-caption');
+  bcap.innerHTML =
+    katex.renderToString('RS', {throwOnError:false}) + " = runs scored  |  " +
+    katex.renderToString('RA', {throwOnError:false}) + " = runs allowed  |  " +
+    katex.renderToString('1.83', {throwOnError:false}) + " = Bill James' baseball exponent";
   var cap = document.getElementById('pyth-caption');
   cap.innerHTML =
     katex.renderToString('RW', {throwOnError:false}) + ' = rounds won  |  ' +
