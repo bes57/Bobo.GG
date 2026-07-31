@@ -1,0 +1,801 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>v8 Lab — power, mechanisms &amp; the adversarial audit</title>
+<link rel="icon" href="/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --badbg:#fbeaea;
+         --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:940px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 18px; flex-wrap:wrap; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ .banner { background:#fbeaea; border:1px solid #f0c7c7; border-left:6px solid var(--bad);
+   border-radius:14px; padding:14px 20px; margin:0 0 18px; font-size:.92rem; }
+ .banner b { color:var(--bad); letter-spacing:.4px; }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.72rem; min-width:24px;
+        height:24px; padding:0 4px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ h3 { font-size:.93rem; font-weight:700; margin:16px 0 6px; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); } .good { color:var(--good); } .bad { color:var(--bad); }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:12px 0; }
+ .card { border:1px solid var(--line); border-radius:14px; padding:13px 15px; }
+ .card .lbl { font-size:.68rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--dim); }
+ .card .big { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.35rem; margin:2px 0; }
+ .card .sub { font-size:.76rem; color:var(--dim); }
+ table { width:100%; border-collapse:collapse; font-size:.84rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+ tr:last-child td { border-bottom:0; }
+ .verd { font-weight:700; border-radius:999px; padding:2px 9px; font-size:.68rem; white-space:nowrap; }
+ .verd.hold { background:#f1f0f4; color:var(--dim); }
+ .verd.dead { background:var(--badbg); color:var(--bad); }
+ .verd.floor { background:var(--warnbg); color:var(--warn); }
+ .verd.lead { background:var(--goodbg); color:var(--good); }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg);
+            border-radius:0 12px 12px 0; padding:11px 15px; margin:10px 0; font-size:.88rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ .callout.bad { border-color:var(--bad); background:var(--badbg); }
+ canvas { max-height:340px; }
+ .chartbox { margin:14px 0 2px; }
+ .chartbox.tall { height:640px; } .chartbox.tall canvas { max-height:none; height:100% !important; }
+ .chartbox.mid { height:420px; } .chartbox.mid canvas { max-height:none; height:100% !important; }
+ .dl { display:block; text-align:right; font-size:.72rem; margin:2px 0 10px; }
+ .dl a { color:var(--acc); text-decoration:none; font-weight:700; }
+ .dl a:hover { text-decoration:underline; }
+ .cap { font-size:.78rem; color:var(--dim); margin:4px 0 8px; }
+ code { font-family:'JetBrains Mono',monospace; font-size:.8em; background:#f4f2f8;
+        border:1px solid var(--line); border-radius:6px; padding:1px 6px; }
+ ul, ol { font-size:.9rem; margin:8px 0 8px 20px; } li { margin:5px 0; }
+ .adv { border:2px solid var(--bad); border-radius:14px; padding:18px 20px; margin:14px 0;
+        background:#fffdfd; }
+ .adv .advhead { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:var(--bad);
+        font-size:.95rem; margin-bottom:8px; }
+ .adv pre { white-space:pre-wrap; font-family:'JetBrains Mono',monospace; font-size:.76rem;
+        line-height:1.6; color:var(--ink); }
+ .scroll { overflow-x:auto; }
+ @media (max-width:640px) { section { padding:18px 14px; } }
+</style></head>
+<body><div class="wrap">
+<h1>v8 Lab — power, mechanisms &amp; the adversarial audit</h1>
+<div class="tagline">One-day sole-researcher program, 2026-07-28 · expanded frame
+(n=1217 holdout series, +335 corpus additions) ·
+every number on this page reads from <code>testing_lab/v8/stats/</code> ·
+verdicts as amended by the independent adversary (§8)</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab">Favorites Lab</a>
+<a href="/testing/report/final_model">Final Model</a>
+<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v8_lab" class="on">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a>
+</div>
+
+<div class="banner"><b>THE HOLDOUT IS SPENT.</b> 398 holdout
+numbers are recorded on disk (163 primary candidate looks,
+227 sweep checkpoints, 8 iteration
+diagnostics — <code>compose_looks.json</code>), including per-grid-point holdout LLs for entire sweeps.
+This wave's selections were verifiably train-only, but any <i>future</i> "train-only" claim on this frame
+is unfalsifiable with those menus published. Anything new on the 2025-26 frame is exploratory by
+definition; confirmatory power now requires fresh series (§10: what data next).</div>
+
+<section>
+<h2><span class="n">0</span>Verdict — adversary-amended, and final</h2>
+<div class="callout"><b>v6 stands. No stack cleared the promotion gate.</b> All three preregistered
+compose stacks scored HOLD (+1.958m /
+-0.140m /
+-7.874m), every gate clause failed on every
+stack, and the independent adversary reproduced all three verdicts exactly under his own engine and
+bootstrap reimplementation — "v6 stands" is co-signed, not self-graded.</div>
+<div class="callout warn"><b>CORRECTION over Phase 0's prose.</b> Phase 0 published "0/23 v7 configs
+distinguishable". Under the program's own cross-family floor (5.889m) and its own block
+bootstraps, four v7 configs — <code>sym_6</code> (-10.32m),
+<code>surprise_12_20</code> (-7.37m),
+<code>sym_8</code> (-6.24m),
+<code>boxexp_c3</code> (-6.00m) — WERE
+distinguishable, <i>as losses</i>. Phase 0 quietly used per-pair MDE₈₀, a laxer standard than the one every
+later agent was held to (adversary finding F1, CONFIRMED-FLAW). The near-ties
+(<code>sym_20</code> -1.65m,
+<code>consist_16_10</code> -0.39m) remain
+unresolved. The §1 ladder is re-plotted accordingly.</div>
+<div class="callout bad"><b>Demoted by adversarial review</b> — published here as noise-floor leads, not wins:
+(1) 3e stand-in shrink's EWC bucket (+3.46m at n=291 — inside the
+3.63m bucket floor, flips to -2.96m under drop-top-5%, and the falsifier dummy beats it on the legacy bucket
++3.34m vs +1.26m);
+(2) event-class fade's "positive in all subpops" (subpops overlap up to 97.7% of the holdout —
+five signs, one observation; negative on its own EWC target rows);
+(3) 5d's 7.4-vs-24.8-game half-life contrast (profile CIs overlap enormously; DL pooling τ²=0 — a hypothesis, not a finding);
+(4) compose S1's gated gain (nongated delta exactly 0; gated +13.39m inside a
+~15m bucket floor; overall flips to -3.96m under drop-top-5%).</div>
+<div class="callout good"><b>The one surviving lead: cold starts.</b> H3's state-space model on rows where
+either team has &lt;10 prior maps: <b>+71.70m</b> at n=39 (bucket floor
+32.9m; drop-top-5% +53.13m; event-jackknife min
++66.02m) — the only positive cell that survived the adversary's fragility attacks.
+Caveats stay attached: 4 events supply the rows, and the parent model loses overall
+(-5.32m). This is a lead that has earned a test on new data — not a promotion.</div>
+<div class="cards">
+ <div class="card"><div class="lbl">v6 on the expanded frame</div>
+  <div class="big">0.64216</div>
+  <div class="sub">holdout log-loss · β=0.1152 · n=1217 · unchanged in production</div></div>
+ <div class="card"><div class="lbl">Stacks promoted</div>
+  <div class="big">0 of 3</div>
+  <div class="sub">all HOLD · gate clauses G1/G2/G3 all failed · co-signed by the adversary</div></div>
+ <div class="card"><div class="lbl">Instrument floor</div>
+  <div class="big">1.773 / 5.889m</div>
+  <div class="sub">MDE₈₀ within / cross family at n=1217 · nothing below it is decidable</div></div>
+ <div class="card"><div class="lbl">Surviving lead</div>
+  <div class="big good">+71.70m</div>
+  <div class="sub">cold-start rows (&lt;10 prior maps), n=39 · floor 32.9m · survives drop-5% + jackknife</div></div>
+ <div class="card"><div class="lbl">max|team bias|</div>
+  <div class="big">14.8pp</div>
+  <div class="sub">v6 · best candidate 12.6pp (1b) but mean|bias| worsens
+  4.73→5.22pp</div></div>
+ <div class="card"><div class="lbl">Live week (autopsy)</div>
+  <div class="big bad">−$308.69</div>
+  <div class="sub">realized, 719 fills · not noise (p&lt;0.00025) · blame: config ≈60–70%, model ≈25%</div></div>
+ <div class="card"><div class="lbl">Holdout numbers recorded</div>
+  <div class="big bad">398</div>
+  <div class="sub">163 primary looks · Bonferroni α at K=163 is 0.000307</div></div>
+</div>
+</section>
+
+<section>
+<h2><span class="n">1</span>Power — what this program can actually see</h2>
+<p>Phase 0 measured the instrument before anyone used it: MDE₈₀ on paired per-series loss differences,
+verified by simulation on the CRN streams. At n=1007 the old frame could not 80%-reliably
+distinguish two same-family variants closer than 1.921m or two
+structurally different models closer than 6.377m; the corpus
+expansion buys ~8%: <b>1.773m within / 5.889m cross at n=1217</b>
+(composition-adjusted, preregistered rule). Adjudicating a 2m cross-family effect at 80% power needs
+n ≈ 10,552 series — ~10× the holdout.</p>
+<div class="chartbox"><canvas id="c_mde"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_mde_curve.json" download>&#8681; page_mde_curve.json</a></div>
+<h3>The v7 ladder, re-adjudicated — with the adversary's correction plotted</h3>
+<div class="chartbox tall"><canvas id="c_lad"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_v7_ladder.json" download>&#8681; page_v7_ladder.json</a></div>
+<p class="cap">Shaded band = program-standard cross-family floor (±5.889m).
+<span style="color:#c0392b;font-weight:700">Red bars</span> = the four configs the adversary showed are
+distinguishable-as-losses under that floor + block-CI significance (F1) — the CORRECTED verdict.
+Purple outline = the motivating near-ties (sym_20, consist_16_10): still unresolved; the "−1.65m rejection"
+of sym_20 was a coin flip then and stays one now. Hover any bar for its pair MDE and block CI.</p>
+<h3>Ledger re-classification — 5 refuted · 27 unresolved · 0 confirmed</h3>
+<p>27 of 32 historical "rejected" entries were statements about noise
+— the decisions were defensible ("no reason to switch"), the <i>negatives</i> were not established. Nothing
+was found that should have been promoted (0 CONFIRMED overturns). Standing
+consequence: a ledger entry bars re-testing only with a power annotation; UNRESOLVED entries are
+re-openable by design (§10 lists them).</p>
+<div class="scroll"><table>
+<tr><th>id</th><th>idea</th><th>Δ at test</th><th>n</th><th>MDE then</th><th>status</th></tr>
+<tr><td class='mono'>1</td><td>Shorter calendar half-lives (4-5w)</td><td class='mono'>-2.65m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>2</td><td>Power-law / box+exp / linear calendar decay</td><td class='mono'>-0.15m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>3</td><td>Calendar envelope over games decay</td><td class='mono'>-0.14m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>4</td><td>Series-counted decay (age in series, not maps)</td><td class='mono'>-0.02m</td><td class='mono'>999</td><td class='mono'>6.4</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>5</td><td>Plain win/loss asymmetric decay (W20/L12)</td><td class='mono'>-0.50m</td><td class='mono'>1007</td><td class='mono'>1.92</td><td><span class='verd dead'>REFUTED</span></td></tr><tr><td class='mono'>6</td><td>Reversed asymmetry (losses persist)</td><td class='mono'>-2.92m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>7</td><td>Lineup-overlap roster reweighting (3 schemes)</td><td class='mono'>-1.94m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>8</td><td>Roster-instability prediction shrink</td><td class='mono'>-0.54m</td><td class='mono'>890</td><td class='mono'>2.05</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>9</td><td>Player-carryover priors (new signings import prior-org rating)</td><td class='mono'>-0.43m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>10</td><td>Post-break gap dampener</td><td class='mono'>-3.89m</td><td class='mono'>890</td><td class='mono'>2.05</td><td><span class='verd dead'>REFUTED</span></td></tr><tr><td class='mono'>11</td><td>Favorite blowout-margin discount ('don't try hard')</td><td class='mono'>-1.71m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>12</td><td>Residual margin (credit only surprise)</td><td class='mono'>-0.50m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>13</td><td>Upset margin boost</td><td class='mono'>+0.29m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>14</td><td>Win-only ratings / margin-win blends in the solve</td><td class='mono'>-0.63m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>15</td><td>Rolling / per-stage beta refits</td><td class='mono'>-1.26m</td><td class='mono'>1324</td><td class='mono'>1.68</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>16</td><td>Piecewise beta (small vs large gaps)</td><td class='mono'>+0.03m</td><td class='mono'>999</td><td class='mono'>1.93</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>17</td><td>tanh saturating link</td><td class='mono'>+0.00m</td><td class='mono'>890</td><td class='mono'>2.05</td><td><span class='verd dead'>REFUTED</span></td></tr><tr><td class='mono'>18</td><td>Convex link (extra slope beyond gap threshold)</td><td class='mono'>-0.96m</td><td class='mono'>999</td><td class='mono'>1.93</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>19</td><td>Margin-derived probability links (empirical CDF, probit)</td><td class='mono'>-9.03m</td><td class='mono'>2287</td><td class='mono'>4.23</td><td><span class='verd dead'>REFUTED</span></td></tr><tr><td class='mono'>20</td><td>Soft/mixed margin-label beta fits, Rao-Blackwell retro targets</td><td class='mono'>-0.48m</td><td class='mono'>999</td><td class='mono'>6.4</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>21</td><td>Margin-fitted cross-region offsets</td><td class='mono'>-14.00m</td><td class='mono'>115</td><td class='mono'>20.12</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>22</td><td>Margin-residual momentum feature</td><td class='mono'>-0.17m</td><td class='mono'>999</td><td class='mono'>1.93</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>23</td><td>Decayed-winrate additive feature</td><td class='mono'>-0.77m</td><td class='mono'>999</td><td class='mono'>1.93</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>24</td><td>Veto rate shrinkage toward global</td><td class='mono'>unrecoverable</td><td class='mono'>5322</td><td class='mono'>—</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>25</td><td>Per-map rating splits stacked with pick bonus</td><td class='mono'>+0.02m</td><td class='mono'>2287</td><td class='mono'>4.23</td><td><span class='verd dead'>REFUTED</span></td></tr><tr><td class='mono'>26</td><td>Closed-form x veto-MC ensemble</td><td class='mono'>-1.76m</td><td class='mono'>999</td><td class='mono'>6.4</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>27</td><td>Intra-series momentum correlation in the MC</td><td class='mono'>-2.77m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>28</td><td>Intl-experience offset (+0.40)</td><td class='mono'>unrecoverable</td><td class='mono'>—</td><td class='mono'>—</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>29</td><td>Recency-weighted cross-region offsets</td><td class='mono'>unrecoverable</td><td class='mono'>—</td><td class='mono'>—</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>30</td><td>Head-to-head / rematch term</td><td class='mono'>unrecoverable</td><td class='mono'>—</td><td class='mono'>—</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>31</td><td>Bo1 down-weighting / intl margin reweighting</td><td class='mono'>+0.23m</td><td class='mono'>890</td><td class='mono'>6.78</td><td><span class='verd floor'>UNRESOLVED</span></td></tr><tr><td class='mono'>32</td><td>Rolling Platt / cubic recalibration layers</td><td class='mono'>-0.67m</td><td class='mono'>999</td><td class='mono'>1.93</td><td><span class='verd floor'>UNRESOLVED</span></td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/ledger_reclass.json" download>&#8681; ledger_reclass.json</a></div>
+<h3>Per-bucket floors (the promotion rule's blind spots)</h3>
+<p class="cap">"No major bucket regression" is unenforceable as stated for any bucket under n≈200 — the
+floors below are what a bucket claim must clear. Quote them or don't make the claim.</p>
+<div class="scroll"><table>
+<tr><th>bucket</th><th>n</th><th>within (m)</th><th>cross (m)</th></tr>
+<tr><td>format bo3</td><td class='mono'>939</td><td class='mono'>1.97</td><td class='mono'>6.44</td></tr><tr><td>format bo5</td><td class='mono'>45</td><td class='mono'>11.16</td><td class='mono'>45.12</td></tr><tr><td>format bo5_gf</td><td class='mono'>23</td><td class='mono'>11.92</td><td class='mono'>36.55</td></tr><tr><td>stage groups</td><td class='mono'>502</td><td class='mono'>2.75</td><td class='mono'>8.63</td></tr><tr><td>stage playoffs</td><td class='mono'>438</td><td class='mono'>2.88</td><td class='mono'>10.31</td></tr><tr><td>stage grand_final</td><td class='mono'>26</td><td class='mono'>11.42</td><td class='mono'>33.04</td></tr><tr><td>international</td><td class='mono'>122</td><td class='mono'>5.94</td><td class='mono'>18.26</td></tr><tr><td>domestic</td><td class='mono'>885</td><td class='mono'>2.03</td><td class='mono'>6.81</td></tr><tr><td>EWC-class events</td><td class='mono'>109</td><td class='mono'>6.39</td><td class='mono'>21.36</td></tr><tr><td>CN involved</td><td class='mono'>297</td><td class='mono'>3.85</td><td class='mono'>11.81</td></tr><tr><td>cross-region</td><td class='mono'>131</td><td class='mono'>6.18</td><td class='mono'>18.84</td></tr><tr><td>domestic Americas</td><td class='mono'>205</td><td class='mono'>3.93</td><td class='mono'>11.71</td></tr><tr><td>domestic EMEA</td><td class='mono'>213</td><td class='mono'>3.58</td><td class='mono'>13.93</td></tr><tr><td>domestic Pacific</td><td class='mono'>210</td><td class='mono'>4.22</td><td class='mono'>15.35</td></tr><tr><td>domestic CN</td><td class='mono'>248</td><td class='mono'>4.19</td><td class='mono'>12.92</td></tr><tr><td>fav band [.5,.6)</td><td class='mono'>467</td><td class='mono'>2.81</td><td class='mono'>9.16</td></tr><tr><td>fav band [.6,.7)</td><td class='mono'>335</td><td class='mono'>3.6</td><td class='mono'>11.92</td></tr><tr><td>fav band [.7,.8)</td><td class='mono'>161</td><td class='mono'>4.36</td><td class='mono'>15.55</td></tr><tr><td>fav band [.8,.9)</td><td class='mono'>42</td><td class='mono'>5.77</td><td class='mono'>26.78</td></tr><tr><td>fav band [.9,1]</td><td class='mono'>2</td><td class='mono'>3.06</td><td class='mono'>16.69</td></tr><tr><td>gap <1.5</td><td class='mono'>352</td><td class='mono'>3.25</td><td class='mono'>10.18</td></tr><tr><td>gap [1.5,4)</td><td class='mono'>408</td><td class='mono'>3.16</td><td class='mono'>10.87</td></tr><tr><td>gap [4,7)</td><td class='mono'>203</td><td class='mono'>4.15</td><td class='mono'>13.93</td></tr><tr><td>gap 7+</td><td class='mono'>44</td><td class='mono'>5.58</td><td class='mono'>25.53</td></tr><tr><td>post-break (rest>45d)</td><td class='mono'>145</td><td class='mono'>4.93</td><td class='mono'>15.41</td></tr><tr><td>elite vs floor</td><td class='mono'>26</td><td class='mono'>7.94</td><td class='mono'>39.46</td></tr><tr><td>form shift</td><td class='mono'>121</td><td class='mono'>6.71</td><td class='mono'>21.34</td></tr><tr><td>roster change <=3 matches ago (either team)</td><td class='mono'>598</td><td class='mono'>2.52</td><td class='mono'>7.81</td></tr><tr><td>roster change 4-10 matches ago</td><td class='mono'>304</td><td class='mono'>3.37</td><td class='mono'>12.41</td></tr><tr><td>roster stable (>10 matches since change)</td><td class='mono'>105</td><td class='mono'>6.22</td><td class='mono'>21.84</td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/power_mde.json" download>&#8681; power_mde.json</a></div>
+<h3>Variance reduction — measured, not hoped</h3>
+<table>
+<tr><th>design</th><th>effective-n multiplier</th><th>reading</th></tr>
+<tr><td>Pairing (in use)</td><td class="mono">33× cross / 377× within</td>
+<td>the program's single biggest asset</td></tr>
+<tr><td>Control variate l_v6 (CUPED)</td><td class="mono">1.18× cross / 1.01× within</td>
+<td>adopted in referee.py for cross-family tests; nil within-family (the preregistered ≥1.5× trigger did NOT fire — 1.18× is the honest number)</td></tr>
+<tr><td>Multivariate CV</td><td class="mono">1.19× / 1.01×</td>
+<td>negligible increment over l_v6 alone</td></tr>
+<tr><td>Block-by-event vs iid</td><td class="mono">DEFF median 0.61</td>
+<td>iid CIs are <i>conservative</i> here (the DEFF&gt;1.3 alarm did not fire); caveat: only 18 events</td></tr>
+</table><div class="dl"><a href="/testing/v8/stats/variance_reduction.json" download>&#8681; variance_reduction.json</a></div>
+</section>
+
+<section>
+<h2><span class="n">2</span>Corpus — what was added, and how it was checked</h2>
+<div class="cards">
+ <div class="card"><div class="lbl">Series backfilled (2023–26)</div><div class="big">335</div>
+  <div class="sub">25 new registry events · holdout grew 1007→1217 scoreable</div></div>
+ <div class="card"><div class="lbl">Maps checked</div><div class="big">1134</div>
+  <div class="sub">mechanical re-verification: 490/490 series, 0 failures</div></div>
+ <div class="card"><div class="lbl">Live sample re-fetch</div><div class="big">278/278</div>
+  <div class="sub">seeded re-scrape vs recorded winner+score, all 31 events</div></div>
+ <div class="card"><div class="lbl">Prefranchise (held separate)</div><div class="big">155</div>
+  <div class="sub">6 intl LANs 2021-22 · 194 regional events DEFERRED (several thousand series — the big power lever, untouched)</div></div>
+</div>
+<div class="chartbox"><canvas id="c_corpus"></canvas></div><div class="dl"><a href="/testing/v8/stats/corpus_blocks.json" download>&#8681; corpus_blocks.json</a></div>
+<h3>Archive sweep — every VLR event row, decided</h3>
+<div class="scroll"><table>
+<tr><th>year</th><th>rows reviewed</th><th>already registered</th><th>added</th><th>prefranchise candidate</th><th>excluded (tier-3/community)</th></tr>
+<tr><td class='mono'>2021</td><td class='mono'>164</td><td class='mono'>0</td><td class='mono'>0</td><td class='mono'>143</td><td class='mono'>21</td></tr><tr><td class='mono'>2022</td><td class='mono'>99</td><td class='mono'>0</td><td class='mono'>0</td><td class='mono'>60</td><td class='mono'>39</td></tr><tr><td class='mono'>2023</td><td class='mono'>139</td><td class='mono'>6</td><td class='mono'>9</td><td class='mono'>0</td><td class='mono'>124</td></tr><tr><td class='mono'>2024</td><td class='mono'>168</td><td class='mono'>15</td><td class='mono'>5</td><td class='mono'>0</td><td class='mono'>148</td></tr><tr><td class='mono'>2025</td><td class='mono'>167</td><td class='mono'>15</td><td class='mono'>11</td><td class='mono'>0</td><td class='mono'>141</td></tr><tr><td class='mono'>2026</td><td class='mono'>124</td><td class='mono'>16</td><td class='mono'>1</td><td class='mono'>0</td><td class='mono'>107</td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/corpus_diff.json" download>&#8681; corpus_diff.json</a></div>
+<div class="callout warn"><b>Verification limit, stated plainly (adversary structural note):</b>
+fetch-independent, parser-DEPENDENT: a systematic selector bug passes both checks. Registry/org/series-score cross-constraints bound gross errors; a consistent subtle parse bias (e.g. map-winner attribution on a layout variant) would not be caught. Not evidence of error — a limit of the verification design, stated plainly</div>
+<p class="cap">Class map hazard logged for the rebuild owner: 2023_china_champions_qual, 2024_shanghai_masters, 2025_shanghai_masters, 2025_super_champions_cup
+are off-season invitationals whose ids contain "masters"/"champions" — the harness substring rule will
+class them INTERNATIONAL at rebuild. Flagged in phase0 §addendum before any timeline regeneration.</p>
+</section>
+
+<section>
+<h2><span class="n">3</span>Event context — incentives, preparation, seriousness</h2>
+<p>Every solve-side lever failed in-sample or failed walk-forward; the operator's "down-weight EWC"
+intuition is unsupported in every parameterization tried — in-sample the pull is <i>upward</i>.</p>
+<table>
+<tr><th>#</th><th>mechanism</th><th>result</th><th>verdict</th></tr>
+<tr><td class='mono'>3a</td><td>Lineup-conditioned EWC solve weight</td><td>train argmin w0*=1.0 = B0; monotone worse toward 0</td><td><span class='verd dead'>DEAD</span></td></tr><tr><td class='mono'>3a′</td><td>Blanket EWC solve weight</td><td>-0.05m · train argmin at the 1.2 UP-weight edge</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>3b-a</td><td>Footage/prep exposure term</td><td>-0.28m · EWC bucket -10.91m</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>3b-b</td><td>Form-vs-exposure decomposition</td><td>see the quotable below — the deliverable of this mechanism</td><td><span class='verd lead'>ANSWERED</span></td></tr><tr><td class='mono'>3c</td><td>Elimination stakes (solve + variance)</td><td>-0.54m / -0.37m · train argmin at the 0.7 edge — wants elim DOWN-weighted</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>3d</td><td>Learned event-class solve weights</td><td>-5.74m · iid CI [-10.005, -1.209]m</td><td><span class='verd dead'>DEAD</span></td></tr><tr><td class='mono'>3e</td><td>Stand-in confidence shrink (X1)</td><td>-0.40m overall · EWC class +3.46m — see the adversary's demotion in §0</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr>
+</table>
+<h3>Fitted event-class weights vs the hand-set marks</h3>
+<div class="chartbox"><canvas id="c_w"></canvas></div><div class="dl"><a href="/testing/v8/stats/context_weights.json" download>&#8681; context_weights.json</a></div>
+<p class="cap">Fitted {vct_playoffs 0.7341, champions 0.0007, masters 1.8803, ewc_offseason 1.0182} improves train by
+4.2m and loses -5.74m on holdout — in-sample
+regime memorization (the champions collapse to 0.0007 is even "identified" in-sample and still
+anti-validates). Fitted EWC weight 1.0182 with CI
+[0.4, 3.4] ⊇ 1.0. Hand-set marks (black) win; weights are weakly identified at n_train=827.</p>
+<h3>Exposure vs form — the decomposition</h3>
+<div class="chartbox"><canvas id="c_fx"></canvas></div><div class="dl"><a href="/testing/v8/stats/context_exposure.json" download>&#8681; context_exposure.json</a></div>
+<div class="callout"><b>The quotable:</b> With footage-exposure controls, the v7 form coefficient collapses from -0.130 to +0.012 at HL5 (109% absorbed; HL3 -0.118 to -0.049, 58%): at HL5 'form is mean-reverting' was scouting/exposure in disguise, at HL3 about half of it was - and neither the form term nor the exposure term survives the expanded holdout anyway (all INSIDE the 1.773m floor).</div>
+<h3>Seriousness observables (lineups agent)</h3>
+<p>EWC-class rows really are different in observables: stand-in rate vs 30-day modal lineup
+<b>23.3%</b> (n=210) vs
+<b>6.7%</b> on VCT rows (n=2793) —
+and none of it converts into a solve-weight or shrink gain that clears the floor (3a/3e above).
+Coverage bar: 3466/3466 engine sides matched
+(100.0%).</p>
+<div class="callout warn"><b>Adjacency honesty panel:</b> deep-run → next-intl slump is UNTESTABLE at this n:
+57 both-attended series across 7 Masters→next-intl pairs;
+c = +0.0213, CRN boot CI [-0.0876, +0.1374] spans zero
+with the sign <i>opposite</i> the fatigue story. Published as untestable, not as a null win.</div>
+</section>
+
+<section>
+<h2><span class="n">4</span>Decay — recency &amp; asymmetry, re-raced at 2-4× the old resolution</h2>
+<div class="chartbox"><canvas id="c_wg"></canvas></div><div class="dl"><a href="/testing/v8/stats/decay_curves.json" download>&#8681; decay_curves.json</a></div>
+<p class="cap">Solve weight vs map-games ago. Black = the v6 pair (consistent HL20, anomalous dashed);
+orange = sym_20, which lies <i>exactly on</i> the v6 consistent curve — the symmetric variant simply applies
+HL20 to anomalous games too, so the whole philosophical dispute is the gap between the black solid and black
+dashed lines; blue = event-class fade's EWC pair (its VCT pair is identical to v6 and omitted); purple ramp =
+lineup-continuity conditioning at roster overlap 1.0→0.4 (ordinal, one hue).</p>
+<h3>The near-ties, re-raced (CV-adjusted)</h3>
+<div class="scroll"><table>
+<tr><th>cand vs v6</th><th>n</th><th>Δ</th><th>pair MDE raw→CV</th><th>iid CI (m)</th><th>p iid/block</th><th>verdict</th></tr>
+<tr><td class='mono'>consist_16_10</td><td class='mono'>1217</td><td class='mono'>-0.53m</td><td class='mono'>1.674→1.659m</td><td class='mono'>[-1.70, +0.61]</td><td class='mono'>0.192 / 0.126</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>sym_20</td><td class='mono'>1217</td><td class='mono'>-2.17m</td><td class='mono'>3.897→3.392m</td><td class='mono'>[-4.84, +0.53]</td><td class='mono'>0.056 / 0.058</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>sym_24</td><td class='mono'>1217</td><td class='mono'>-2.42m</td><td class='mono'>4.314→3.61m</td><td class='mono'>[-5.42, +0.55]</td><td class='mono'>0.058 / 0.076</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>sym_16</td><td class='mono'>1217</td><td class='mono'>-2.33m</td><td class='mono'>3.939→3.66m</td><td class='mono'>[-5.11, +0.41]</td><td class='mono'>0.047 / 0.015</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/decay_rerace.json" download>&#8681; decay_rerace.json</a></div>
+<p class="cap">The answer is <b>ties</b>, in those words — pre-committed wording: "unresolved either way at
+n=1217: asymmetry is not demonstrably needed, nor demonstrably better." The uniform −2 to −2.8m lean of
+five independent symmetric configs is the evidence that currently exists for keeping consistency conditioning.</p>
+<h3>Five new conditioning axes</h3>
+<table>
+<tr><th>axis</th><th>selected (train)</th><th>holdout vs v6</th><th>verdict</th></tr>
+<tr><td>a — lineup continuity (sym)</td><td class='mono'>lineup_h24_g2.0</td><td class='mono'>-2.82m (pair MDE 8.288m)</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td>b — opp quality of anomaly</td><td class='mono'>oppq_m1.67</td><td class='mono'>-0.85m (pair MDE 2.476m)</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td>c — anomaly margin</td><td class='mono'>amargin_k1.0</td><td class='mono'>-0.55m (pair MDE 2.887m)</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td>d — event-class fade (sym)</td><td class='mono'>eclass_h20_m0.8</td><td class='mono'>-1.90m (pair MDE 3.841m) · on-v6 addon +0.24m (p 0.75/0.68)</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td>e — patch/map-pool fade (sym)</td><td class='mono'>rot_h24_g0.7</td><td class='mono'>-5.51m (pair MDE 8.031m) · on-v6 addon -5.46m (p 0.02/0.00)</td><td><span class='verd dead'>FALSIFIER FIRED</span></td></tr>
+</table><div class="dl"><a href="/testing/v8/stats/decay_axes.json" download>&#8681; decay_axes.json</a></div>
+<h3>Performance-defined form — all of it inside the floor, all of it negative</h3>
+<div class="scroll"><table>
+<tr><th>definition</th><th>b_form (train)</th><th>train gain</th><th>holdout vs v6</th></tr>
+<tr><td class='mono'>form_wr3</td><td class='mono'>-0.1176</td><td class='mono'>+0.09m</td><td class='mono'>-0.66m (MDE 1.234m)</td></tr><tr><td class='mono'>form_wr5</td><td class='mono'>-0.1300</td><td class='mono'>+0.04m</td><td class='mono'>-0.31m (MDE 0.81m)</td></tr><tr><td class='mono'>form_wr8</td><td class='mono'>-0.3082</td><td class='mono'>+0.06m</td><td class='mono'>-0.27m (MDE 1.006m)</td></tr><tr><td class='mono'>form_rd3</td><td class='mono'>-0.0059</td><td class='mono'>+0.08m</td><td class='mono'>-0.82m (MDE 1.198m)</td></tr><tr><td class='mono'>form_rd5</td><td class='mono'>-0.0064</td><td class='mono'>+0.03m</td><td class='mono'>-0.43m (MDE 0.777m)</td></tr><tr><td class='mono'>form_rd8</td><td class='mono'>-0.0143</td><td class='mono'>+0.05m</td><td class='mono'>-0.40m (MDE 0.905m)</td></tr><tr><td class='mono'>form_side5</td><td class='mono'>-0.5663</td><td class='mono'>+0.25m</td><td class='mono'>-0.98m (MDE 2.378m)</td></tr><tr><td class='mono'>form_player5</td><td class='mono'>-2.6810</td><td class='mono'>+2.09m</td><td class='mono'>-5.24m (MDE 6.042m)</td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/decay_form.json" download>&#8681; decay_form.json</a></div>
+<h3>Subpopulation panel</h3>
+<div class="scroll"><table>
+<tr><th>config</th><th>all holdout <span class='mono'>n=1217</span></th><th>S1 post roster change le3 <span class='mono'>n=731</span></th><th>S2 post patch 21d <span class='mono'>n=730</span></th><th>S3 post break 45d <span class='mono'>n=130</span></th><th>S4 within event day2plus <span class='mono'>n=1118</span></th><th>S5 quoted band 20 55c <span class='mono'>n=1189</span></th></tr>
+<tr><td class='mono'>eclass_on_v6_m0.8</td><td class='mono' style='background:#f4f2f8'>+0.24</td><td class='mono' style='background:#f4f2f8'>+0.65</td><td class='mono' style='background:#f4f2f8'>+0.52</td><td class='mono' style='background:#f4f2f8'>+1.02</td><td class='mono' style='background:#f4f2f8'>+0.37</td><td class='mono' style='background:#f4f2f8'>+0.27</td></tr><tr><td class='mono'>sym_20</td><td class='mono' style='background:#f4f2f8'>-2.17</td><td class='mono' style='background:#f4f2f8'>-1.70</td><td class='mono' style='background:#f4f2f8'>-0.98</td><td class='mono' style='background:#f4f2f8'>+1.46</td><td class='mono' style='background:#f4f2f8'>-2.36</td><td class='mono' style='background:#f4f2f8'>-1.97</td></tr><tr><td class='mono'>sym_24</td><td class='mono' style='background:#f4f2f8'>-2.42</td><td class='mono' style='background:#f4f2f8'>-2.22</td><td class='mono' style='background:#f4f2f8'>-1.01</td><td class='mono' style='background:#f4f2f8'>+2.14</td><td class='mono' style='background:#f4f2f8'>-2.37</td><td class='mono' style='background:#f4f2f8'>-2.20</td></tr><tr><td class='mono'>consist_16_10</td><td class='mono' style='background:#f4f2f8'>-0.53</td><td class='mono' style='background:#f4f2f8'>-0.09</td><td class='mono' style='background:#f4f2f8'>-0.57</td><td class='mono' style='background:#f4f2f8'>-0.44</td><td class='mono' style='background:#f4f2f8'>-0.72</td><td class='mono' style='background:#f4f2f8'>-0.52</td></tr><tr><td class='mono'>rot_on_v6_g0.7</td><td class='mono' style='background:var(--badbg)'>-5.46</td><td class='mono' style='background:var(--badbg)'>-3.44</td><td class='mono' style='background:var(--badbg)'>-4.82</td><td class='mono' style='background:var(--badbg)'>-6.44</td><td class='mono' style='background:var(--badbg)'>-5.42</td><td class='mono' style='background:var(--badbg)'>-4.97</td></tr><tr><td class='mono'>form_player5</td><td class='mono' style='background:var(--badbg)'>-5.24</td><td class='mono' style='background:var(--badbg)'>-6.37</td><td class='mono' style='background:var(--badbg)'>-4.46</td><td class='mono' style='background:#f4f2f8'>-3.86</td><td class='mono' style='background:var(--badbg)'>-4.36</td><td class='mono' style='background:var(--badbg)'>-5.33</td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/decay_subpops.json" download>&#8681; decay_subpops.json</a></div>
+<p class="cap"><b>Caveat (adversary, F3):</b> the subpops are not independent evidence — S4∩S5 covers
+89.6% of the holdout and S5 alone
+97.7%; five positive signs on eclass_on_v6 are one observation
+wearing five hats, and the effect is negative on its own EWC-class target rows
+(-0.06m on n=115).
+Gray shading = inside the bucket's scaled noise floor (which is nearly everywhere). Instrument note from the
+phase: the red cells on rot_on_v6 and form_player5 overstate resolution — those rating-perturbing addons have
+cross-family-sized empirical pair σ; both keep headline verdict INSIDE NOISE FLOOR.</p>
+</section>
+
+<section>
+<h2><span class="n">5</span>Bias mechanisms — four hypotheses for one distortion</h2>
+<p>The target: elite compression — max|bias| 14.8pp on the expanded frame
+(PRX -10.2pp at one end, TS +14.8pp at the other). Four mechanisms
+went in; the caterpillar shows what came out. Toggle candidates via the legend.</p>
+<div class="chartbox tall"><canvas id="c_cat"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_caterpillar.json" download>&#8681; page_caterpillar.json</a></div>
+<h3>H1 — margin censoring: DEAD at the premise</h3>
+<p>The corpus barely touches the 13-0 cap: 12 of 5140
+maps (0.23%), density <i>falling</i> toward the bound — the opposite of
+censoring pile-up. Cap-share ratio Q4/mid = 0.995 (preregistered premise needed ≥2).
+Tobit: -0.46m (inside floor, elite bias unmoved). Round-level BT:
+-0.22m — a dead tie; and the "order of magnitude more data" intuition is
+refuted by measurement: k_eff ≈ 1.25 (Fisher) /
+0.8 (cluster bootstrap; the preregistered k&lt;7 falsifier
+fired) — budget no future power on rounds.</p>
+<div class="dl"><a href="/testing/v8/stats/h1_censor_diag.json" download>&#8681; h1_censor_diag.json</a></div>
+<h3>H2 — schedule connectivity: DEAD at the gate</h3>
+<div class="chartbox"><canvas id="c_h2"></canvas></div><div class="dl"><a href="/testing/v8/stats/h2_centrality.json" download>&#8681; h2_centrality.json</a></div>
+<div class="scroll"><table>
+<tr><th>target</th><th>feature</th><th>Spearman [95% CI]</th><th>Pearson</th></tr>
+<tr><td class='mono'>bias</td><td class='mono'>eig_centrality</td><td class='mono'>-0.304 [-0.566, +0.005]</td><td class='mono'>-0.277</td></tr><tr><td class='mono'>bias</td><td class='mono'>opp_count</td><td class='mono'>-0.314 [-0.575, -0.007]</td><td class='mono'>-0.345</td></tr><tr><td class='mono'>bias</td><td class='mono'>opp_diversity</td><td class='mono'>-0.076 [-0.379, +0.249]</td><td class='mono'>-0.133</td></tr><tr><td class='mono'>bias</td><td class='mono'>xregion_share</td><td class='mono'>-0.431 [-0.640, -0.157]</td><td class='mono'>-0.420</td></tr><tr><td class='mono'>abs_bias</td><td class='mono'>eig_centrality</td><td class='mono'>-0.077 [-0.421, +0.281]</td><td class='mono'>-0.139</td></tr><tr><td class='mono'>abs_bias</td><td class='mono'>opp_count</td><td class='mono'>-0.043 [-0.316, +0.263]</td><td class='mono'>-0.072</td></tr><tr><td class='mono'>abs_bias</td><td class='mono'>opp_diversity</td><td class='mono'>-0.009 [-0.335, +0.335]</td><td class='mono'>-0.037</td></tr><tr><td class='mono'>abs_bias</td><td class='mono'>xregion_share</td><td class='mono'>+0.052 [-0.254, +0.367]</td><td class='mono'>-0.053</td></tr>
+</table></div>
+<p class="cap">The mechanistically decisive row is |bias| ~ centrality: as null as it gets at n=43. The signed
+correlations that do light up are composition, not connectivity — teams that travel are disproportionately
+elite (and under-rated); insular teams are disproportionately floor (and over-rated). PRX has the
+<i>highest</i> centrality of the named teams and is the <i>most</i> under-rated. Gate stopped E2/E3; no rescue fits.</p>
+<h3>H3 — rating uncertainty: loses overall, wins the cold tail</h3>
+<div class="scroll"><table>
+<tr><th>pair</th><th>Δ</th><th>MDE</th><th>p iid/block</th><th>verdict</th></tr>
+<tr><td>PRIMARY (train-selected core) vs v6</td><td class='mono'>-11.75m</td><td class='mono'>5.889m</td><td class='mono'>0.001 / 0.001</td><td><span class='verd dead'>LOSS</span></td></tr><tr><td>plain core vs v6 (secondary)</td><td class='mono'>-8.87m</td><td class='mono'>5.889m</td><td class='mono'>0.001 / 0.003</td><td><span class='verd dead'>LOSS</span></td></tr><tr><td>debut-prior core vs v6 (secondary)</td><td class='mono'>-9.09m</td><td class='mono'>5.889m</td><td class='mono'>0.001 / 0.002</td><td><span class='verd dead'>LOSS</span></td></tr><tr><td>5d roster-typed q vs v6</td><td class='mono'>-5.32m</td><td class='mono'>5.889m</td><td class='mono'>0.041 / 0.050</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td>5d roster-typed q vs plain core (within-family)</td><td class='mono'>+3.55m</td><td class='mono'>1.773m</td><td class='mono'>0.946 / 0.979</td><td><span class='verd lead'>WIN</span></td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/h3_statespace.json" download>&#8681; h3_statespace.json</a></div>
+<div class="chartbox"><canvas id="c_hl"></canvas></div><div class="dl"><a href="/testing/v8/stats/h3_process_noise.json" download>&#8681; h3_process_noise.json</a></div>
+<p class="cap"><b>Demoted (adversary F4):</b> the 7.4-vs-24.8-game half-life contrast is a point ordering whose
+profile CIs overlap enormously and whose DerSimonian–Laird pooling returns τ²=0 — all cells shrink to one
+pooled HL ≈ 8.01 games. The supporting 5d-vs-core "+3.55m WIN" has iid
+p_better 0.94625 &lt; .95 and flips to -6.34m
+under drop-top-5% — a hypothesis to test on new data, not a finding. Org-age axis REVERSED (left-censoring
+artifact); volatility flat. The formal inference, preregistered wording: heterogeneity unsupported at this n.</p>
+<div class="chartbox"><canvas id="c_cold"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_adversary_fragility.json" download>&#8681; page_adversary_fragility.json</a></div>
+<p class="cap">The cold buckets under attack: bars = 5d Δ vs v6; red line = each bucket's noise floor; diamonds =
+drop-top-5%; triangles = event-jackknife minimum. Only cold(&lt;10) clears its floor under every attack —
+debut (n=10) halves on one series and thin (n=117) falls below floor
+under drop-5%. n_eff telemetry for confidence-aware sizing is emitted for all rows
+(<code>h3_neff.json</code>; corr(pair n_eff, |ΔLL vs v6|) =
+-0.093 — low-confidence rows are
+where the models disagree most).</p>
+<h3>H4 — iid series aggregation: premise inverted</h3>
+<div class="chartbox"><canvas id="c_h4"></canvas></div><div class="dl"><a href="/testing/v8/stats/h4_dispersion_diag.json" download>&#8681; h4_dispersion_diag.json</a></div>
+<table>
+<tr><th>link</th><th>σ_u</th><th>β refit</th><th>holdout Δ</th><th>verdict</th></tr>
+<tr><td class='mono'>L1_sigma_global</td><td class='mono'>0.7209</td><td class='mono'>β 0.1407</td><td class='mono'>-0.05m</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr><tr><td class='mono'>L2_sigma_depth</td><td class='mono'>{'a': 0.009, 'b_depth': -0.4354, 'b_dept</td><td class='mono'>β 0.1401</td><td class='mono'>+0.21m</td><td><span class='verd floor'>INSIDE NOISE FLOOR</span></td></tr>
+</table><div class="dl"><a href="/testing/v8/stats/h4_series_link.json" download>&#8681; h4_series_link.json</a></div>
+<p class="cap">Maps are OVER-dispersed (shared series effect σ̂_u = 0.72), not
+under-dispersed — H4's "iid understates elite bo5 favorites" is refuted in sign, and v6's train-fit β has been
+implicitly paying the correction all along (β_iid/β_σ ≈ 0.1152/0.1407). P(bo5) for strong favorites
+<i>falls</i> under the corrected link. Both links inside the floor; v6 aggregation stands.</p>
+<h3>Reliability, favorite frame (holdout)</h3>
+<div class="chartbox"><canvas id="c_rel"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_reliability.json" download>&#8681; page_reliability.json</a></div>
+<p class="cap">The uncertainty models buy their cold-tail gains by shrinking toward 0.5 — visible here as the
+flattening at high predicted probabilities vs v6. Hover for bin n and Wilson 95% interval; sparse bins
+(n&lt;15) merged.</p>
+</section>
+
+<section>
+<h2><span class="n">6</span>Buckets — where the stacks move, and where that is meaningless</h2>
+<div class="scroll"><table>
+<tr><th>stack</th><th>overall Δ</th><th>family MDE</th><th>gate clauses</th><th>verdict</th></tr>
+<tr><td class='mono'>S1_gate5d</td><td class='mono'>+1.958m</td><td class='mono'>5.889m (cross)</td><td style='font-size:.78rem'>G1 ✗ · G2 ✗ · G3 ✗</td><td><span class='verd hold'>HOLD</span></td></tr><tr><td class='mono'>S2_fade_shrink</td><td class='mono'>-0.140m</td><td class='mono'>1.773m (within)</td><td style='font-size:.78rem'>G1 ✗ · G2 ✗ · G3 ✗</td><td><span class='verd hold'>HOLD</span></td></tr><tr><td class='mono'>S3_full</td><td class='mono'>-7.874m</td><td class='mono'>5.889m (cross)</td><td style='font-size:.78rem'>G1 ✗ · G2 ✗ · G3 ✗</td><td><span class='verd hold'>HOLD</span></td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/compose_gate.json" download>&#8681; compose_gate.json</a></div>
+<div class="chartbox tall"><canvas id="c_bk"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_buckets.json" download>&#8681; page_buckets.json</a></div>
+<p class="cap">Faded bars sit inside their bucket's scaled noise floor (family MDE · √(N/n) — the preregistered
+rule); only solid bars carry color as polarity. <b>The negative buckets, explained:</b> S1's huge-gap bucket
+(-8.86m on n=56) sits inside
+its scaled floor here, yet fails the gate's stricter fixed-threshold G3 clause
+(<span class='mono'>G3 no major bucket regression (&lt;= -4.0m @n&gt;=100, &lt;= -8.0m @30&lt;=n&lt;100)</span>) — the gated 5d rows shrink
+some runaway favorites that v6 prices well; it is why S1 would not be promotable even above the floor. S2's
+domestic-EMEA and favorite-[0.7,0.8) regressions are its G3 failures. S3 (toggle it on) regresses
+10 buckets beyond even the scaled
+floors — the anti-synergy wipeout. EWC-class rows under S1: gated split +13.39m on
+n=178 gated vs exactly 0.0 elsewhere.</p>
+<p>The unexplained residual, named for future work: <b>PRX/NRG under-rating persists under every stack</b>
+(v6 -10.1pp / -9.3pp under S1 — unmoved). Whatever drives it is not stand-in
+load, not event-class recency, not rating uncertainty: all excluded by this program.</p>
+</section>
+
+<section>
+<h2><span class="n">7</span>Live P&amp;L autopsy — the operator's implementation memo</h2>
+<div class="callout warn"><b>Scope guard (README rule 9):</b> market data is diagnostic, never a fitting
+target. This section is an implementation memo for the operator, not an input to the solve — and it is a
+<b>one-week sample</b> (28 settled events): every number below carries that caveat at full
+strength. Model selection ran on match outcomes only.</div>
+<div class="callout bad"><b>Verdict:</b> not noise, not fees, not microstructure — the bot is down
+$308.69 realized because its flat 5¢ edge floor
+let it accumulate every model–market disagreement, and in this window the market, not v6, was right.
+CRN bootstrap under the flat-floor edge hypothesis: p(cum ≤ -315.75) =
+0/4000 (&lt;0.00025). Blame: config ≈60–70%, model ≈25%,
+everything else exonerated.</div>
+<div class="chartbox"><canvas id="c_wf"></canvas></div><div class="dl"><a href="/testing/v8/stats/autopsy_pnl.json" download>&#8681; autopsy_pnl.json</a></div>
+<h3>Adverse selection — where fills fail (frozen v6, contract-weighted)</h3>
+<div class="cards">
+ <div class="card"><div class="lbl">Fill-conditional gap</div><div class="big bad">-4.5pp</div>
+ <div class="sub">realized − predicted NO-pay on 664 settled fills</div></div>
+ <div class="card"><div class="lbl">Unconditional benchmark</div><div class="big">+3.9pp</div>
+ <div class="sub">v6 NO-on-favorite, all 38 settled events</div></div>
+ <div class="card"><div class="lbl">Adverse selection</div><div class="big bad">-8.5pp</div>
+ <div class="sub">≈ -8.5¢/contract · sharpest: side-1 -15.8pp</div></div>
+ <div class="card"><div class="lbl">Toxic window</div><div class="big">6–24h</div>
+ <div class="sub">-10.3pp on 2697 contracts — the "size late" zone, not the final 2h</div></div>
+</div>
+<div class="chartbox"><canvas id="c_fc"></canvas></div><div class="dl"><a href="/testing/v8/stats/autopsy_fill_calib.json" download>&#8681; autopsy_fill_calib.json</a></div>
+<h3>Micro markouts are clean — the selection is match/side-level</h3>
+<div class="chartbox"><canvas id="c_mk"></canvas></div><div class="dl"><a href="/testing/v8/stats/autopsy_markouts.json" download>&#8681; autopsy_markouts.json</a></div>
+<p class="cap">Positive maker P&amp;L at every horizon with tape coverage (start−5m has
+13% coverage — read with care). The market did not pick us off tick-by-tick;
+it knew the resolutions. Fees verified $0 (maker schedule; taker counterfactual
+$154.29).</p>
+<h3>Config gap ladder</h3>
+<div class="scroll"><table>
+<tr><th>knob</th><th>live</th><th>recommended</th><th>evidence (this week's fills)</th><th>status</th></tr>
+<tr><td>side-1 min edge</td><td class='mono'>flat 5c (hard_min_edge_cents=5)</td><td class='mono'>logit +0.5..+0.6 (FINDINGS 4; ~14c@50c, 8c@85c)</td><td style='font-size:.78rem'>logit+0.6 keeps $133 at +92%, refuses $1500 at -36.6%</td><td><span class="verd dead">GAP</span></td></tr><tr><td>skip NO on model-p&lt;45% sides</td><td class='mono'>ABSENT (code-verified: no threshold in quotes.py/engine.py)</td><td class='mono'>skip (FINDINGS 4 refinement; pocket -5.7% in sim)</td><td style='font-size:.78rem'>our pocket: 83 fills, $709, -14.9%</td><td><span class="verd dead">GAP</span></td></tr><tr><td>order expiry</td><td class='mono'>start-2h</td><td class='mono'>start-2h (Rule 5)</td><td style='font-size:.78rem'></td><td><span class="verd lead">IMPLEMENTED</span></td></tr><tr><td>hedge margin</td><td class='mono'>2c</td><td class='mono'>2c must clear fees+adverse; fees=0 verified</td><td style='font-size:.78rem'>realized 1.66¢/pair</td><td><span class="verd lead">IMPLEMENTED</span></td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/autopsy_config_gap.json" download>&#8681; autopsy_config_gap.json</a></div>
+<p class="cap">Vintage slices exonerate the 2026-07-23 snapshot-drift incident: drifted-vm fills calibrate
++7.8pp (n=28).
+Gaps: VM code provenance unverifiable (no .git); unconditional benchmark is n=38 events (wide CI).</p>
+</section>
+
+<section>
+<h2><span class="n">8</span>Research log — preregistration vs outcome, and the hostile review</h2>
+<p>Every experimental agent wrote numeric predictions BEFORE running (per-file discipline, quotes verified at
+build time against the preregister files). Here is how the predictions did:</p>
+<div class="chartbox"><canvas id="c_ps"></canvas></div><div class="dl"><a href="/testing/v8/stats/page_prereg_scatter.json" download>&#8681; page_prereg_scatter.json</a></div>
+<p class="cap">Points on the diagonal were called correctly; red diamonds left the band (or fired their
+falsifier — which is the system working, recorded at the same resolution as wins). Non-milli predictions:</p>
+<div class="scroll"><table>
+<tr><th>agent</th><th>prediction</th><th>predicted</th><th>realized</th><th>outcome</th></tr>
+<tr><td class='mono'>context</td><td>3a integrity down-weight w0*</td><td class='mono'>~0.5</td><td class='mono'>1.0 (train falsifier fired; monotone worse toward 0)</td><td><span class='verd dead'>miss</span></td></tr><tr><td class='mono'>context</td><td>3a blanket EWC weight w_e*</td><td class='mono'>~0.8</td><td class='mono'>1.2 grid edge (train wants UP-weight); holdout −0.05m</td><td><span class='verd dead'>direction wrong</span></td></tr><tr><td class='mono'>context</td><td>3b-b form coef shrink under exposure controls</td><td class='mono'>&lt;30%</td><td class='mono'>109% at HL5 (sign flip to ~0); 58% at HL3</td><td><span class='verd dead'>miss — scouting in disguise</span></td></tr><tr><td class='mono'>context</td><td>3c-A elimination solve weight w_elim*</td><td class='mono'>1.0–1.15</td><td class='mono'>0.7 grid edge (train wants elim DOWN-weighted)</td><td><span class='verd dead'>direction wrong</span></td></tr><tr><td class='mono'>context</td><td>3d fitted EWC-class weight</td><td class='mono'>~0.6</td><td class='mono'>1.018, CI [0.4,3.4] ⊇ 1.0 — falsifier fired</td><td><span class='verd dead'>miss</span></td></tr><tr><td class='mono'>context</td><td>3e stand-in shrink k1</td><td class='mono'>&gt; 0 small</td><td class='mono'>+0.347</td><td><span class='verd lead'>held</span></td></tr><tr><td class='mono'>bias_h1</td><td>E3 cap-share ratio Q4 / mid</td><td class='mono'>2.5–4×</td><td class='mono'>1.00× (premise dead)</td><td><span class='verd dead'>miss</span></td></tr><tr><td class='mono'>bias_h1</td><td>E2 round-level effective-sample k_eff</td><td class='mono'>2.5–4.5× (brief said ~10×)</td><td class='mono'>1.25× Fisher / 0.80× cluster-boot</td><td><span class='verd dead'>falsifier fired</span></td></tr><tr><td class='mono'>bias_h2</td><td>Spearman(bias, centrality)</td><td class='mono'>≈ −0.30</td><td class='mono'>−0.304 — but CI spans 0 → gate FAIL</td><td><span class='verd lead'>point held, gate failed</span></td></tr><tr><td class='mono'>bias_h2</td><td>Spearman(|bias|, centrality)</td><td class='mono'>≈ −0.35</td><td class='mono'>−0.077, CI [−0.42,+0.28] — null</td><td><span class='verd dead'>miss</span></td></tr><tr><td class='mono'>bias_h3</td><td>Exp2 roster q(change)/q(stable)</td><td class='mono'>≥ 2×</td><td class='mono'>≈11× point MLEs — but DL τ²=0: unsupported at this n</td><td><span class='verd lead'>point held, pooling null</span></td></tr><tr><td class='mono'>bias_h4</td><td>E1 sweep excess D_sweep</td><td class='mono'>+1..+3</td><td class='mono'>+5.09 [+1.81,+8.53] — sign right, larger (OVER-dispersed)</td><td><span class='verd dead'>above band</span></td></tr><tr><td class='mono'>bias_h4</td><td>E2 shared-effect σ_u</td><td class='mono'>0.2–0.6</td><td class='mono'>0.72 [0.38,1.00]</td><td><span class='verd dead'>above band</span></td></tr>
+</table></div>
+<h3>Session timeline — 2026-07-28</h3>
+<div class="scroll"><table>
+<tr><th>wave</th><th>agent</th><th>journal span</th><th>what happened</th></tr>
+<tr><td class='mono'>W1</td><td class='mono'>lineups</td><td class='mono'>18:29–18:34</td><td style='font-size:.82rem'>every engine side matched to a lineup; stand-in observables emitted for context/compose</td></tr><tr><td class='mono'>W1</td><td class='mono'>referee</td><td class='mono'>18:30–18:30</td><td style='font-size:.82rem'>metric suite upgraded (CRN boots, CUPED CV, per-team bias, expected-ROI unit); self-test green vs published numbers</td></tr><tr><td class='mono'>W1</td><td class='mono'>corpus</td><td class='mono'>18:42–18:59</td><td style='font-size:.82rem'>31 events backfilled; verification passed in full; prefranchise corpus scraped separately, regional 2021-22 deferred</td></tr><tr><td class='mono'>W1</td><td class='mono'>autopsy</td><td class='mono'>22:21–22:37</td><td style='font-size:.82rem'>live P&amp;L decomposed; verdict: config first, model second, microstructure/fees/noise exonerated</td></tr><tr><td class='mono'>W1</td><td class='mono'>power</td><td class='mono'>—–—</td><td style='font-size:.82rem'>the instrument was measured before it was used: MDE floors, v7 ladder re-adjudication, ledger reclassification</td></tr><tr><td class='mono'>W2</td><td class='mono'>decay</td><td class='mono'>21:57–22:18</td><td style='font-size:.82rem'>re-race says ties; five new axes inside the floor; patch fade falsifier fired; performance form adds nothing</td></tr><tr><td class='mono'>W2</td><td class='mono'>bias_h1</td><td class='mono'>21:58–22:15</td><td style='font-size:.82rem'>censoring premise empirically false; Tobit and round-BT leave the elite bias intact; round-level power play refuted</td></tr><tr><td class='mono'>W2</td><td class='mono'>context</td><td class='mono'>22:03–22:03</td><td style='font-size:.82rem'>event context carries ~no extra probability signal; learned class weights anti-validate; stand-in shrink is a bucket lead only</td></tr><tr><td class='mono'>W2</td><td class='mono'>bias_h4</td><td class='mono'>22:05–22:13</td><td style='font-size:.82rem'>premise inverted: maps are OVER-dispersed; β already pays the correction; links inside the floor</td></tr><tr><td class='mono'>W2</td><td class='mono'>bias_h3</td><td class='mono'>22:0x–22:0x</td><td style='font-size:.82rem'>state-space loses overall, wins the cold tail exactly as preregistered; heterogeneity unsupported at this n</td></tr><tr><td class='mono'>W2</td><td class='mono'>bias_h2</td><td class='mono'>—–—</td><td style='font-size:.82rem'>bias does not live on the schedule graph; gate stopped the program before any candidate fit</td></tr><tr><td class='mono'>W3</td><td class='mono'>adversary</td><td class='mono'>02:27–22:5x</td><td style='font-size:.82rem'>independent hostile recompute: negatives reproduce to the last digit; positive residue cut down to one lead</td></tr><tr><td class='mono'>W3</td><td class='mono'>compose</td><td class='mono'>22:36–22:40</td><td style='font-size:.82rem'>three preregistered stacks, three HOLDs; S3 anti-synergy falsifier fired; v6 stands</td></tr><tr><td class='mono'>W3</td><td class='mono'>page</td><td class='mono'>22:50–22:54</td><td style='font-size:.82rem'>this page: adversary-amended verdicts published; holdout declared spent</td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/page_timeline.json" download>&#8681; page_timeline.json</a></div>
+<div class="adv">
+<div class="advhead">THE ADVERSARY'S REPORT — published verbatim, including the parts that overturn program claims</div>
+<pre># Adversary report — BenPom v8, Wave 3 (publishes verbatim)
+
+Independent hostile review. Everything below was recomputed with my own code
+(`scratch/adversary/recompute_{core,3e,eclass_cold,compose}.py`): my own engine
+runs from raw inputs, my own loss math, my own re-implementation of both CRN
+bootstrap recipes from the `crn.json` text. I imported nothing from
+`referee.py`. Machine-readable findings: `stats/adversary_report.json`.
+
+## What survived my attacks (and I attest to)
+
+- **Integrity.** Frame sha256 matches crn.json; all 1695 frozen rows survive in
+  the expanded frame with 0 column mismatches; holdout_order hash and the 1007
+  npz-era ids verify. The B0 baseline (β 0.1152, 0.64823 train / 0.64216
+  holdout, n 827/1217) reproduces **bit-for-bit** from raw inputs, and the
+  stored baselines of bias_h1/h2/h3/h4, context and compose all match my run to
+  0.0. My independent bootstrap implementation reproduces every CI and p I
+  checked to the last digit. No leakage found on any path I traced.
+- **Honest gates.** All five decay axes selected the train argmin while the
+  holdout argmin was a *different* config in 5/5 cases — selection demonstrably
+  did not peek. h3's train-selected ensemble then lost holdout by −12.2m;
+  context's train-fitted class weights lost by −5.7m. Falsifiers carry numeric
+  bars written before runs, and fired falsifiers (h4 premise, decay axis-e,
+  compose S3 anti-synergy) are documented at full resolution.
+- **Every Wave-2 kill.** h1, h2, h4, the decay axes and form redefinitions,
+  context 3a–3d: reproduced or audited, all sound.
+- **All three compose HOLDs.** S1 +1.958m, S2 −0.14m, S3 −7.874m reproduce
+  exactly under my independent reconstruction (own gate build, own (β,k)
+  refits). "v6 stands" is correct.
+- **H3 cold(&lt;10 prior maps): +71.7m at n=39** — the one positive cell that
+  survives everything I threw at it (bucket floor 32.9m; drop-top-5% → +53.1m;
+  event jackknife min +66.0m). Caveats: 4 events, and the parent model loses
+  overall (−5.3m).
+- **compose_looks.json is honest**: 163 primary / 398 recorded holdout numbers,
+  *larger* than my independent tally (~130 configs; 301 holdout-LL quotes in
+  stats/*.json).
+
+## What I would NOT sign
+
+1. **"0/23 v7 configs distinguishable" (Phase 0).** Under the program's own
+   Wave-2 floor (5.889m cross) and its own block bootstraps, sym_6 (−10.3m,
+   p .0032), surprise_12_20 (−7.4m), sym_8 (−6.2m) and boxexp_c3 (−6.0m) are
+   distinguishable-as-worse. Phase 0 quietly used per-pair MDE80 (up to 12.4m,
+   inflated by each pair's own sd) — a different, laxer standard than the one
+   every later agent was held to. The claim as published is wrong by the
+   program's own rules.
+2. **3e stand-in shrink, "EWC bucket +3.46m" (n=291).** The delivered bucket is
+   not the preregistered one (prereg froze "full ewc_offseason holdout bucket
+   (n≈278)"; the shipped n=291 folds in Shanghai Masters and Super Champions
+   Cup, which agent:power's frozen class map calls *intl*). No bucket-level MDE
+   is quoted; by the program's own scaling rule the floor at n=291 is 3.63m —
+   **the +3.46m is inside its own noise floor**, and at the preregistered 278
+   rows it is 3.80m vs a 3.71m floor: knife-edge either way. Drop the top 5% of
+   contributing series (15 of 291) and it flips to −2.96m. The falsifier dummy
+   *beats* the mechanism on the legacy-2026 bucket (+3.34m vs +1.26m). And
+   stand-in load is not even concentrated in the bucket (X1 mean 0.357 inside
+   vs 0.349 outside), so the mechanism story has no compositional support.
+   Noise-compatible; not a lead I would carry.
+3. **Event-class fade "+0.24m, positive in all subpops".** The subpops overlap
+   90–98% of the holdout (S5 alone covers 97.7%) — five positive signs are one
+   observation wearing five hats. The effect is 13% of the within-family floor,
+   flips under drop-top-5% (−1.24m) and under single-event jackknife, and is
+   **negative on its own target population** (−0.06m on the 115 EWC-class rows;
+   the entire gain comes from non-EWC rows). The "all-subpop positivity"
+   framing overstates a null.
+4. **The 5d half-life table (7.4 vs 24.8 games).** The program's own profile
+   CIs overlap enormously ([3.9, 18.5] vs [5.3, 300.2]) and its own
+   DerSimonian–Laird pooling returns τ²=0 — all cells shrink to one pooled HL
+   of 8 games. The middle cell sits non-monotonically at the q→0 boundary. The
+   supporting "WIN" (5d vs core, +3.55m) has an iid CI that includes zero
+   (p_better .946 &lt; .95), flips to −6.34m under drop-top-5%, and is one of 163
+   primary holdout looks — it survives no family-wise correction. Point
+   ordering is a hypothesis to test on new data, not a finding.
+5. **Any residue of compose S1 as "a real effect below the bar".** Its active
+   surface was pre-screened on holdout: the 5d component and its n_eff gate
+   family were chosen after Wave 2 published 5d's holdout cold-row wins, and 68
+   of the 178 gated rows are those same thin rows. The nongated delta is
+   exactly 0.000; the gated +13.39m (n=178) is inside its own 15.4m bucket
+   floor; overall +1.958m flips to −3.96m under drop-top-5% and already fails
+   block bootstrap (p .888). HOLD is not just the gate's verdict — it is the
+   evidence's verdict.
+6. **Debut/thin cold buckets.** debut (n=10, +58m) is inside its own 65m floor
+   and halves on removing one series; thin (n=117, +28m) falls below its floor
+   under drop-top-5%. Only cold(&lt;10) survives (see above).
+
+## Structural notes
+
+- **Corpus verification is fetch-independent but parser-dependent**: the sample
+  check re-fetches live pages yet parses them with the same parser that built
+  the corpus. A systematic selector bug would pass both layers. No error found;
+  the limit should be stated wherever the corpus is called "verified".
+- **The holdout is spent.** 398 recorded holdout numbers exist on disk,
+  including per-grid-point holdout LLs published for entire sweeps. This wave's
+  selections were verifiably train-only, but any future "train-only" claim on
+  this frame is unfalsifiable with those menus published. Confirmatory power
+  now requires fresh series.
+- Minor: h1's cluster bootstrap used a preregistered *derived* seed stream
+  rather than crn mc_seeds; h2/context reused the iid seed for non-holdout
+  designs. Documented, low impact.
+
+## Bottom line
+
+The program's negative results are excellent: reproducible to the last digit,
+honestly gated, honestly preregistered. Its positive residue is weaker than
+published — of every surviving positive claim, only H3's cold(&lt;10) cell
+withstands its own program's floors plus my fragility attacks. I would sign
+exactly this sentence: **"v6 stands; nothing is promotable; cold-start
+handling is the one lead that has earned a test on new data."**
+
+— agent:adversary
+</pre>
+</div><div class="dl"><a href="/testing/v8/stats/adversary_report.json" download>&#8681; adversary_report.json</a></div>
+</section>
+
+<section>
+<h2><span class="n">9</span>Slate — v6 snapshot prices (no v8 column)</h2>
+<div class="callout">No v8 column: no candidate was promoted by this program (all three compose stacks HOLD; v6 stands). The flag rule stays for the future: when a promoted candidate exists, this table carries its column plus a divergence flag on every match where |candidate − v6| ≥ 5 pts.</div>
+<div class="scroll"><table>
+<tr><th>date</th><th>match (P of first team)</th><th>fmt</th><th>v6</th></tr>
+<tr><td class='mono'>2026-07-29</td><td>GIANTX vs Team Liquid <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>29.5%</b></td></tr><tr><td class='mono'>2026-07-29</td><td>Gentle Mates vs Team Vitality <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>47.3%</b></td></tr><tr><td class='mono'>2026-07-30</td><td>KRÜ Esports vs G2 Esports <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>28.9%</b></td></tr><tr><td class='mono'>2026-07-30</td><td>100 Thieves vs Sentinels <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>72.5%</b></td></tr><tr><td class='mono'>2026-07-30</td><td>Natus Vincere vs PCIFIC Esports <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>76.1%</b></td></tr><tr><td class='mono'>2026-07-30</td><td>Eternal Fire vs FNATIC <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>49.7%</b></td></tr><tr><td class='mono'>2026-07-30</td><td>VARREL vs DetonatioN FocusMe <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>50.3%</b></td></tr><tr><td class='mono'>2026-07-30</td><td>FULL SENSE vs ZETA DIVISION <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>72.2%</b></td></tr><tr><td class='mono'>2026-07-31</td><td>Cloud9 vs LOUD <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>43.8%</b></td></tr><tr><td class='mono'>2026-07-31</td><td>Evil Geniuses vs MIBR <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>37.2%</b></td></tr><tr><td class='mono'>2026-07-31</td><td>BBL Esports vs Gentle Mates <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>57.3%</b></td></tr><tr><td class='mono'>2026-07-31</td><td>GIANTX vs Team Heretics <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>26.8%</b></td></tr><tr><td class='mono'>2026-07-31</td><td>Team Secret vs Paper Rex <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>22.2%</b></td></tr><tr><td class='mono'>2026-07-31</td><td>Global Esports vs Gen.G <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>41.5%</b></td></tr><tr><td class='mono'>2026-08-01</td><td>ENVY vs FURIA <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>38.5%</b></td></tr><tr><td class='mono'>2026-08-01</td><td>LEVIATÁN vs NRG <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>44.6%</b></td></tr><tr><td class='mono'>2026-08-01</td><td>FUT Esports vs Team Vitality <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>37.8%</b></td></tr><tr><td class='mono'>2026-08-01</td><td>Karmine Corp vs Team Liquid <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>51.2%</b></td></tr><tr><td class='mono'>2026-08-01</td><td>T1 vs DetonatioN FocusMe <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>71.1%</b></td></tr><tr><td class='mono'>2026-08-01</td><td>FULL SENSE vs Rex Regum Qeon <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>56.1%</b></td></tr><tr><td class='mono'>2026-08-02</td><td>Cloud9 vs KRÜ Esports <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>46.8%</b></td></tr><tr><td class='mono'>2026-08-02</td><td>G2 Esports vs Sentinels <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>59.2%</b></td></tr><tr><td class='mono'>2026-08-02</td><td>BBL Esports vs PCIFIC Esports <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>82.7%</b></td></tr><tr><td class='mono'>2026-08-02</td><td>FNATIC vs Team Heretics <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — EMEA)</span></td><td class='mono'>bo3</td><td class='mono'><b>50.9%</b></td></tr><tr><td class='mono'>2026-08-02</td><td>VARREL vs KIWOOM DRX <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>35.1%</b></td></tr><tr><td class='mono'>2026-08-02</td><td>ZETA DIVISION vs Nongshim RedForce <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>14.8%</b></td></tr><tr><td class='mono'>2026-08-06</td><td>Evil Geniuses vs FURIA <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>47.2%</b></td></tr><tr><td class='mono'>2026-08-06</td><td>ENVY vs NRG <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>18.2%</b></td></tr><tr><td class='mono'>2026-08-06</td><td>FunPlus Phoenix vs JDG Esports <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — CN)</span></td><td class='mono'>bo3</td><td class='mono'><b>59.4%</b></td></tr><tr><td class='mono'>2026-08-06</td><td>Wolves Esports vs Dragon Ranger Gaming <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — CN)</span></td><td class='mono'>bo3</td><td class='mono'><b>46.7%</b></td></tr><tr><td class='mono'>2026-08-07</td><td>100 Thieves vs Cloud9 <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>83.8%</b></td></tr><tr><td class='mono'>2026-08-07</td><td>G2 Esports vs LOUD <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>68.4%</b></td></tr><tr><td class='mono'>2026-08-07</td><td>Team Secret vs DetonatioN FocusMe <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>55.8%</b></td></tr><tr><td class='mono'>2026-08-07</td><td>Gen.G vs FULL SENSE <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>58.6%</b></td></tr><tr><td class='mono'>2026-08-08</td><td>KRÜ Esports vs Sentinels <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>37.3%</b></td></tr><tr><td class='mono'>2026-08-08</td><td>LEVIATÁN vs MIBR <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>59.4%</b></td></tr><tr><td class='mono'>2026-08-08</td><td>KIWOOM DRX vs T1 <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>43.4%</b></td></tr><tr><td class='mono'>2026-08-08</td><td>Global Esports vs ZETA DIVISION <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>72.3%</b></td></tr><tr><td class='mono'>2026-08-09</td><td>Evil Geniuses vs NRG <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>24.4%</b></td></tr><tr><td class='mono'>2026-08-09</td><td>LOUD vs 100 Thieves <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Americas)</span></td><td class='mono'>bo3</td><td class='mono'><b>20.1%</b></td></tr><tr><td class='mono'>2026-08-09</td><td>VARREL vs Paper Rex <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>18.5%</b></td></tr><tr><td class='mono'>2026-08-09</td><td>Nongshim RedForce vs Rex Regum Qeon <span class='dim' style='font-size:.78rem'>(2026 Stage 2 — Pacific)</span></td><td class='mono'>bo3</td><td class='mono'><b>73.4%</b></td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/page_slate.json" download>&#8681; page_slate.json</a></div>
+<p class="cap">Priced from the frozen <code>benpom-v6-2026-07-22</code> snapshot via
+<code>trading_model/predict.py</code>, generated 2026-07-28 23:24.</p>
+</section>
+
+<section>
+<h2><span class="n">10</span>Tripwires &amp; ledger updates</h2>
+<h3>Concrete thresholds — what would reopen each conclusion</h3>
+<div class="scroll"><table>
+<tr><th>conclusion</th><th>tripwire threshold</th><th>window</th></tr>
+<tr><td>v6 stands (no stack promotable)</td><td style='font-size:.8rem'>any candidate clearing the full gate — Δ ≥ family MDE AND p ≥ 0.95 in BOTH CRN modes AND no bias/bucket regression — on data dated after 2026-07-28</td><td style='font-size:.8rem'>next confirmatory frame (see 'what data next')</td></tr><tr><td>H3 cold-start lead (+71.7m at n=39)</td><td style='font-size:.8rem'>score the FROZEN 5d spec (stats/compose_spec.json) vs v6 on fresh series where either team has &lt;10 prior maps; promote to candidate status if Δ ≥ that bucket's scaled MDE</td><td style='font-size:.8rem'>when ≥40 fresh cold rows exist (prospective logger + new events; at n=40 the scaled cross floor is ≈32m)</td></tr><tr><td>event-class fade / 3e stand-in shrink demoted to noise-floor leads</td><td style='font-size:.8rem'>re-test ONLY at the next corpus expansion of ≥300 fresh holdout series; verdicts at the then-current family MDE, preregistered bucket definitions fixed in advance</td><td style='font-size:.8rem'>next expansion (2026 S2/Champions settle, or prefranchise regionals)</td></tr><tr><td>v6 live favorite calibration (autopsy in-window −3.9pp, n.s.)</td><td style='font-size:.8rem'>unconditional favorite gap beyond ±5pp with n ≥ 100 settled linked events</td><td style='font-size:.8rem'>rolling, prospective logger</td></tr><tr><td>PRX/NRG under-rating residual (≈−10pp, untouched by every stack)</td><td style='font-size:.8rem'>either team's rolling bias worse than −12pp on its trailing 60 scored series → dedicated hypothesis wave (not stand-in load, not event-class recency, not rating uncertainty — all excluded here)</td><td style='font-size:.8rem'>rolling 60 series per team</td></tr><tr><td>bucket gates unenforceable under n≈200 (phase 0)</td><td style='font-size:.8rem'>any future bucket claim must quote the bucket MDE from stats/power_mde.json; buckets under n=200 are advisory-only</td><td style='font-size:.8rem'>standing rule</td></tr><tr><td>autopsy config gap (flat 5¢ floor; skip-NO&lt;45% absent) — operator implementation memo, NOT model input</td><td style='font-size:.8rem'>if the live config stays unchanged: realized &lt; −$150 over the next 28 settled events triggers a mandatory config review against FINDINGS §4</td><td style='font-size:.8rem'>next 28 settled events (one-week-scale sample, same caveat as this one)</td></tr>
+</table></div>
+<h3>Do-not-retest additions from this program (each with its kill evidence)</h3>
+<div class="scroll"><table>
+<tr><th>idea (stays dead)</th><th>kill numbers</th><th>why, and where the evidence lives</th></tr>
+<tr><td>H1: bounded margins censor dominant teams (Tobit/censoring likelihood)</td><td class='mono' style='font-size:.74rem'>{"cap_share": 0.00194, "cap_ratio_Q4_over_mid": 0.995, "caps_total": 12, "games": 5140, "tobit_dll_milli": -0.462}</td><td style='font-size:.78rem'>premise empirically false (no pile-up at the cap; ratio ≈1 vs preregistered ≥2); Tobit inside floor, negative, elite bias unmoved <span class='mono dim'>[stats/h1_censor_diag.json, stats/h1_tobit.json]</span></td></tr><tr><td>H1 corollary: round-level evaluation as a power play</td><td class='mono' style='font-size:.74rem'>{"k_eff_fisher_median": 1.25, "k_eff_cluster_boot": 0.8}</td><td style='font-size:.78rem'>rounds within a match are correlated; nominal binomial information does not survive match-level resampling <span class='mono dim'>[stats/h1_roundbt.json]</span></td></tr><tr><td>H2: per-team bias explained by opponent-graph connectivity</td><td class='mono' style='font-size:.74rem'>{"spearman_absbias_eig": -0.0766, "ci": [-0.4211, 0.2814]}</td><td style='font-size:.78rem'>|bias| ~ centrality is null; signed correlations are composition (elite travel, floor stays home); gate stopped E2/E3 <span class='mono dim'>[stats/h2_centrality.json]</span></td></tr><tr><td>H4: iid aggregation under-disperses deep-pool favorites (premise + both links)</td><td class='mono' style='font-size:.74rem'>{"D_sweep_pp": 5.09, "ci": [1.81, 8.53], "L1_dll_milli": -0.048, "L2_dll_milli": 0.213}</td><td style='font-size:.78rem'>premise inverted — maps are OVER-dispersed (σ_u≈0.72) and train-fit β already absorbs it; both links inside the floor <span class='mono dim'>[stats/h4_dispersion_diag.json, stats/h4_series_link.json]</span></td></tr><tr><td>Learned event-class solve weights (replacing hand-set 1.6/2.0)</td><td class='mono' style='font-size:.74rem'>{"dll_milli": -5.737, "iid_ci": [-10.005, -1.209], "fitted": {"vct_playoffs": 0.7341, "champions": 0.0007, "masters": 1.8803, "ewc_offseason": 1.0182}}</td><td style='font-size:.78rem'>in-sample regime memorization (champions weight collapses to ~0) that anti-validates; hand-set weights win <span class='mono dim'>[stats/context_weights.json]</span></td></tr><tr><td>Patch/map-pool fade axis (γ ≤ 0.7)</td><td class='mono' style='font-size:.74rem'>{"dll_on_v6_milli": -5.458, "p_iid": 0.02175, "p_block": 0.0015}</td><td style='font-size:.78rem'>sharpest train→holdout reversal of the wave (best train LL of any config); preregistered falsifier fired <span class='mono dim'>[stats/decay_axes.json]</span></td></tr><tr><td>Performance-defined form terms (wr / rd-margin / side / player R2.0 / combined)</td><td class='mono' style='font-size:.74rem'>{"player5_train_gain_milli": 2.0915, "player5_holdout_milli": -5.244}</td><td style='font-size:.78rem'>every definition fits mean-reverting on train and scores ≤ v6 on holdout; richest feature overfits hardest <span class='mono dim'>[stats/decay_form.json]</span></td></tr><tr><td>Lineup-conditioned EWC solve down-weight (3a integrity)</td><td class='mono' style='font-size:.74rem'>{"train_argmin_w0": 1.0}</td><td style='font-size:.78rem'>train NLL monotone worse as stand-in games are down-weighted; falsifier fired before holdout was touched <span class='mono dim'>[stats/context_seriousness.json]</span></td></tr><tr><td>Calendar-time process noise (state-space 1b, breaks add drift)</td><td class='mono' style='font-size:.74rem'>{"dll_milli": -11.752, "p_iid": 0.00125}</td><td style='font-size:.78rem'>best train config of its family, worst holdout — breaks do not add real drift once games-counted noise exists <span class='mono dim'>[stats/h3_statespace.json]</span></td></tr><tr><td>S3 fitting shape: (β,k) refit on non-gated train rows under a hard gate</td><td class='mono' style='font-size:.74rem'>{"dll_milli": -7.874, "k_runaway": 1.8695, "train_nll": 0.6446890909035504}</td><td style='font-size:.78rem'>anti-synergy falsifier fired: best composite train NLL of the wave, worst holdout; k driven to ~1.87 <span class='mono dim'>[stats/compose_stacks.json, stats/page_adversary_fragility.json]</span></td></tr>
+</table></div>
+<h3>Re-openable: the 27 rejected→unresolved ledger entries</h3>
+<p class="cap">a ledger entry bars re-testing only with a power annotation attached; UNRESOLVED entries are re-openable by design (new data, variance reduction, or a bigger claimed effect) — agent:power, phase0 §4</p>
+<div class="scroll"><table>
+<tr><th>id</th><th>idea</th><th>Δ at test</th><th>MDE then</th></tr>
+<tr><td class='mono'>1</td><td>Shorter calendar half-lives (4-5w)</td><td class='mono'>-2.65m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>2</td><td>Power-law / box+exp / linear calendar decay</td><td class='mono'>-0.15m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>3</td><td>Calendar envelope over games decay</td><td class='mono'>-0.14m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>4</td><td>Series-counted decay (age in series, not maps)</td><td class='mono'>-0.02m</td><td class='mono'>6.4</td></tr><tr><td class='mono'>6</td><td>Reversed asymmetry (losses persist)</td><td class='mono'>-2.92m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>7</td><td>Lineup-overlap roster reweighting (3 schemes)</td><td class='mono'>-1.94m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>8</td><td>Roster-instability prediction shrink</td><td class='mono'>-0.54m</td><td class='mono'>2.05</td></tr><tr><td class='mono'>9</td><td>Player-carryover priors (new signings import prior-org rating)</td><td class='mono'>-0.43m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>11</td><td>Favorite blowout-margin discount ('don't try hard')</td><td class='mono'>-1.71m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>12</td><td>Residual margin (credit only surprise)</td><td class='mono'>-0.50m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>13</td><td>Upset margin boost</td><td class='mono'>+0.29m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>14</td><td>Win-only ratings / margin-win blends in the solve</td><td class='mono'>-0.63m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>15</td><td>Rolling / per-stage beta refits</td><td class='mono'>-1.26m</td><td class='mono'>1.68</td></tr><tr><td class='mono'>16</td><td>Piecewise beta (small vs large gaps)</td><td class='mono'>+0.03m</td><td class='mono'>1.93</td></tr><tr><td class='mono'>18</td><td>Convex link (extra slope beyond gap threshold)</td><td class='mono'>-0.96m</td><td class='mono'>1.93</td></tr><tr><td class='mono'>20</td><td>Soft/mixed margin-label beta fits, Rao-Blackwell retro targets</td><td class='mono'>-0.48m</td><td class='mono'>6.4</td></tr><tr><td class='mono'>21</td><td>Margin-fitted cross-region offsets</td><td class='mono'>-14.00m</td><td class='mono'>20.12</td></tr><tr><td class='mono'>22</td><td>Margin-residual momentum feature</td><td class='mono'>-0.17m</td><td class='mono'>1.93</td></tr><tr><td class='mono'>23</td><td>Decayed-winrate additive feature</td><td class='mono'>-0.77m</td><td class='mono'>1.93</td></tr><tr><td class='mono'>24</td><td>Veto rate shrinkage toward global</td><td class='mono'>unrecoverable</td><td class='mono'>—</td></tr><tr><td class='mono'>26</td><td>Closed-form x veto-MC ensemble</td><td class='mono'>-1.76m</td><td class='mono'>6.4</td></tr><tr><td class='mono'>27</td><td>Intra-series momentum correlation in the MC</td><td class='mono'>-2.77m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>28</td><td>Intl-experience offset (+0.40)</td><td class='mono'>unrecoverable</td><td class='mono'>—</td></tr><tr><td class='mono'>29</td><td>Recency-weighted cross-region offsets</td><td class='mono'>unrecoverable</td><td class='mono'>—</td></tr><tr><td class='mono'>30</td><td>Head-to-head / rematch term</td><td class='mono'>unrecoverable</td><td class='mono'>—</td></tr><tr><td class='mono'>31</td><td>Bo1 down-weighting / intl margin reweighting</td><td class='mono'>+0.23m</td><td class='mono'>6.78</td></tr><tr><td class='mono'>32</td><td>Rolling Platt / cubic recalibration layers</td><td class='mono'>-0.67m</td><td class='mono'>1.93</td></tr>
+</table></div><div class="dl"><a href="/testing/v8/stats/ledger_v8_updates.json" download>&#8681; ledger_v8_updates.json</a></div>
+<h3>What data next (the holdout being spent)</h3>
+<ul><li>prospective prediction-logger accumulation (every quoted probability, timestamped, model-versioned)</li><li>the deferred prefranchise regional corpus (194 regional 2021-22 events, several thousand series)</li><li>2026 Stage 2 / Champions as they settle (organic holdout growth)</li></ul>
+</section>
+
+<p class="dim" style="text-align:center">v8 Lab · program run 2026-07-28 · engine:
+testing_lab walk-forward Massey replica on the sha-verified expanded frame · CRN referee throughout ·
+v6 remains the champion and the trading_model snapshot is unchanged · adversary-amended verdicts are final</p>
+</div>
+<script>
+
+const PAL = {"v6": "#6f6a7c", "s1": "#7c4dd6", "d5": "#c96a2a", "a1": "#3a90cc", "tob": "#6b8f1f", "rbt": "#2b6f9e", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b", "warn": "#b3541e", "ink": "#16121d"};
+const floorBand = { id:'floorBand', beforeDatasetsDraw(c, a, o) {
+  const fb = c.options.plugins.floorBand; if (!fb) return;
+  const ax = fb.axis === 'y' ? c.scales.y : c.scales.x, ctx = c.ctx, ca = c.chartArea;
+  const p0 = ax.getPixelForValue(fb.lo), p1 = ax.getPixelForValue(fb.hi);
+  ctx.save(); ctx.fillStyle = 'rgba(154,147,166,0.16)';
+  if (fb.axis === 'y') ctx.fillRect(ca.left, Math.min(p0,p1), ca.right-ca.left, Math.abs(p1-p0));
+  else ctx.fillRect(Math.min(p0,p1), ca.top, Math.abs(p1-p0), ca.bottom-ca.top);
+  ctx.restore(); } };
+Chart.register(floorBand);
+Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
+Chart.defaults.color = '#6b6478';
+
+new Chart(document.getElementById('c_mde'), { type:'line', data:{ labels:[200, 300, 400, 600, 800, 1007, 1217, 1600, 2000, 3000, 4500, 6500, 9000, 12000], datasets:[
+ {label:'cross-family', data:[14.527, 11.861, 10.272, 8.387, 7.263, 6.474, 5.889, 5.136, 4.594, 3.751, 3.063, 2.548, 2.166, 1.875], borderColor:PAL.s1, backgroundColor:PAL.s1, pointRadius:3, tension:.3},
+ {label:'within-family', data:[4.372, 3.57, 3.092, 2.524, 2.186, 1.948, 1.772, 1.546, 1.383, 1.129, 0.922, 0.767, 0.652, 0.564], borderColor:PAL.d5, backgroundColor:PAL.d5, pointRadius:3, tension:.3}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ title:i=>'n = '+i[0].label,
+   label:i=>i.dataset.label+': MDE '+i.parsed.y.toFixed(2)+'m' } } },
+ scales:{ y:{ title:{display:true,text:'MDE\u2088\u2080 (milli-LL)'}, min:0 },
+          x:{ title:{display:true,text:'holdout series n'} } } } });
+
+const LAD = {"labels": ["sym_6", "surprise_12_20", "sym_8", "boxexp_c3_hl8", "surprise_16_24", "power_t6_a15", "boxexp_c5_hl10", "sym_10", "sym_12", "sym_20+form8", "sym_20+form5", "sym_24", "sym_14", "consist_12_8", "sym_20+form3", "sym_16", "sym_20", "consist_14_8", "v5_asym_W20L12", "consist_16_10", "v6_consist_20_12+form3", "v6_consist_20_12+form5", "v6_consist_20_12+form8"], "delta": [-10.316, -7.369, -6.236, -6.003, -4.974, -4.515, -4.107, -3.931, -2.65, -2.126, -2.07, -1.999, -1.976, -1.819, -1.792, -1.671, -1.654, -1.128, -0.497, -0.392, -0.247, -0.017, -0.001], "amended": [true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], "near": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, true, false, false, false], "mde": [12.422, 10.083, 9.447, 8.868, 7.984, 9.918, 6.797, 7.373, 5.957, 4.95, 4.727, 4.763, 5.049, 4.633, 4.441, 4.545, 4.372, 3.5, 4.752, 1.921, 1.015, 0.168, 0.092], "ci": ["-15.595, -3.629", "-11.968, -1.628", "-10.235, -1.463", "-9.786, -1.49", "-8.763, -0.064", "-9.547, 2.357", "-7.113, -0.432", "-7.046, -0.176", "-5.212, 0.38", "-4.909, 0.653", "-4.438, 0.586", "-4.47, 1.165", "-4.199, 0.734", "-4.031, 1.015", "-3.91, 0.872", "-3.707, 0.889", "-3.774, 1.022", "-3.013, 1.22", "-3.211, 2.169", "-1.379, 0.854", "-1.06, 0.414", "-0.152, 0.085", "-0.077, 0.056"], "floor": 5.889};
+new Chart(document.getElementById('c_lad'), { type:'bar', data:{ labels: LAD.labels, datasets:[
+ {label:'\u0394 vs v6 (milli)', data: LAD.delta,
+  backgroundColor: LAD.amended.map(a=>a?PAL.bad:PAL.gray),
+  borderColor: LAD.near.map(nt=>nt?PAL.s1:'transparent'), borderWidth: LAD.near.map(nt=>nt?2:0) }
+]}, options:{ indexAxis:'y', maintainAspectRatio:false,
+ plugins:{ legend:{display:false}, floorBand:{axis:'x', lo:-LAD.floor, hi:LAD.floor},
+  tooltip:{ callbacks:{ label:i=>i.parsed.x.toFixed(2)+'m \u00b7 pair MDE '+LAD.mde[i.dataIndex]+'m \u00b7 block CI ['+LAD.ci[i.dataIndex]+']'
+   +(LAD.amended[i.dataIndex]?' \u00b7 AMENDED: distinguishable loss':' \u00b7 unresolved') } } },
+ scales:{ x:{ title:{display:true,text:'holdout \u0394LL vs v6 (milli) \u00b7 shaded = program cross floor'} },
+          y:{ ticks:{ autoSkip:false, font:{size:10} } } } } });
+
+const CB = {"labels": ["ewc_2025_chain", "prefranchise_2022", "cn_evolution_family", "prefranchise_2021", "offseason_2025", "offseason_2024", "vct_2023_qualifiers", "offseason_2023"], "matches": [89, 82, 80, 73, 56, 48, 38, 24], "maps": [192, 212, 205, 178, 92, 98, 110, 47], "span": ["2025-05-08 \u2192 2025-07-13", "2022-04-10 \u2192 2022-09-18", "2023-09-07 \u2192 2026-03-22", "2021-05-24 \u2192 2021-12-12", "2025-05-14 \u2192 2025-12-21", "2024-09-29 \u2192 2024-12-07", "2023-06-03 \u2192 2023-07-23", "2023-10-07 \u2192 2023-12-17"], "pre": [false, true, false, true, false, false, false, false]};
+new Chart(document.getElementById('c_corpus'), { type:'bar', data:{ labels: CB.labels, datasets:[
+ {label:'series added', data: CB.matches, backgroundColor: CB.pre.map(p=>p?PAL.gray:PAL.s1)}
+]}, options:{ indexAxis:'y', plugins:{ legend:{display:false},
+  tooltip:{ callbacks:{ label:i=>CB.matches[i.dataIndex]+' series \u00b7 '+CB.maps[i.dataIndex]+' maps \u00b7 '+CB.span[i.dataIndex] } } },
+ scales:{ x:{ title:{display:true,text:'series backfilled (gray = prefranchise, held separate)'} } } } });
+
+const CW = {"labels": ["vct_playoffs", "champions", "masters", "ewc_offseason"], "fit": [0.7341, 0.0007, 1.8803, 1.0182], "ci": [[0.25, 3.4], [0.25, 3.4], [0.8, 3.4], [0.4, 3.4]], "hand": [1.6, 2.0, 1.0, 1.0], "ntrain": 827};
+new Chart(document.getElementById('c_w'), { data:{ labels: CW.labels, datasets:[
+ {type:'bar', label:'95% CI (profile)', data: CW.ci, backgroundColor:'#7c4dd633', borderRadius:4},
+ {type:'scatter', label:'fitted', data: CW.fit.map((v,i)=>({x:i,y:v})), backgroundColor:PAL.s1, pointRadius:6},
+ {type:'scatter', label:'v6 hand-set', data: CW.hand.map((v,i)=>({x:i,y:v})), backgroundColor:PAL.ink,
+  pointStyle:'line', pointRadius:14, borderColor:PAL.ink, borderWidth:3}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ label:i=> i.datasetIndex===0
+   ? 'CI ['+CW.ci[i.dataIndex][0]+', '+CW.ci[i.dataIndex][1]+']'
+   : i.dataset.label+' '+(i.parsed.y??i.parsed._custom) } } },
+ scales:{ y:{ title:{display:true,text:'solve weight (train-fit, n='+CW.ntrain+')'}, min:0 } } } });
+
+const FX = {"labels": ["b_form (HL5) alone", "b_form (HL5) + exposure", "b_form (HL3) alone", "b_form (HL3) + exposure", "published v7 old-frame HL5", "published v7 old-frame HL3"], "coef": [-0.13, 0.012, -0.1176, -0.0492, -0.0242, -0.0872]};
+new Chart(document.getElementById('c_fx'), { type:'bar', data:{ labels: FX.labels, datasets:[
+ {label:'fitted b_form', data: FX.coef, backgroundColor: FX.coef.map(v=>v<0?PAL.d5:PAL.s1)}
+]}, options:{ indexAxis:'y', plugins:{ legend:{display:false} },
+ scales:{ x:{ title:{display:true,text:'train-fit form coefficient (orange = mean-reverting sign)'} },
+          y:{ ticks:{autoSkip:false, font:{size:11}} } } } });
+
+const WG = {"g": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60], "ds": [{"label": "v6 consistent (HL20)", "data": [1.0, 0.96594, 0.93303, 0.90125, 0.87055, 0.8409, 0.81225, 0.78458, 0.75786, 0.73204, 0.70711, 0.68302, 0.65975, 0.63728, 0.61557, 0.5946, 0.57435, 0.55478, 0.53589, 0.51763, 0.5, 0.48297, 0.46652, 0.45063, 0.43528, 0.42045, 0.40613, 0.39229, 0.37893, 0.36602, 0.35355, 0.34151, 0.32988, 0.31864, 0.30779, 0.2973, 0.28717, 0.27739, 0.26794, 0.25882, 0.25, 0.24148, 0.23326, 0.22531, 0.21764, 0.21022, 0.20306, 0.19615, 0.18946, 0.18301, 0.17678, 0.17076, 0.16494, 0.15932, 0.15389, 0.14865, 0.14359, 0.1387, 0.13397, 0.12941, 0.125], "borderColor": "#16121d", "borderDash": [], "borderWidth": 2.2, "pointRadius": 0}, {"label": "v6 anomalous (HL12)", "data": [1.0, 0.94387, 0.8909, 0.8409, 0.7937, 0.74915, 0.70711, 0.66742, 0.62996, 0.5946, 0.56123, 0.52973, 0.5, 0.47194, 0.44545, 0.42045, 0.39685, 0.37458, 0.35355, 0.33371, 0.31498, 0.2973, 0.28062, 0.26487, 0.25, 0.23597, 0.22272, 0.21022, 0.19843, 0.18729, 0.17678, 0.16685, 0.15749, 0.14865, 0.14031, 0.13243, 0.125, 0.11798, 0.11136, 0.10511, 0.09921, 0.09364, 0.08839, 0.08343, 0.07875, 0.07433, 0.07015, 0.06622, 0.0625, 0.05899, 0.05568, 0.05256, 0.04961, 0.04682, 0.04419, 0.04171, 0.03937, 0.03716, 0.03508, 0.03311, 0.03125], "borderColor": "#16121d", "borderDash": [6, 4], "borderWidth": 2.2, "pointRadius": 0}, {"label": "sym_20", "data": [1.0, 0.96594, 0.93303, 0.90125, 0.87055, 0.8409, 0.81225, 0.78458, 0.75786, 0.73204, 0.70711, 0.68302, 0.65975, 0.63728, 0.61557, 0.5946, 0.57435, 0.55478, 0.53589, 0.51763, 0.5, 0.48297, 0.46652, 0.45063, 0.43528, 0.42045, 0.40613, 0.39229, 0.37893, 0.36602, 0.35355, 0.34151, 0.32988, 0.31864, 0.30779, 0.2973, 0.28717, 0.27739, 0.26794, 0.25882, 0.25, 0.24148, 0.23326, 0.22531, 0.21764, 0.21022, 0.20306, 0.19615, 0.18946, 0.18301, 0.17678, 0.17076, 0.16494, 0.15932, 0.15389, 0.14865, 0.14359, 0.1387, 0.13397, 0.12941, 0.125], "borderColor": "#c96a2a", "borderDash": [], "borderWidth": 2, "pointRadius": 0}, {"label": "lineup h24 g2 \u00b7 overlap 1.0", "data": [1.0, 0.97153, 0.94387, 0.917, 0.8909, 0.86554, 0.8409, 0.81696, 0.7937, 0.77111, 0.74915, 0.72783, 0.70711, 0.68698, 0.66742, 0.64842, 0.62996, 0.61203, 0.5946, 0.57768, 0.56123, 0.54525, 0.52973, 0.51465, 0.5, 0.48577, 0.47194, 0.4585, 0.44545, 0.43277, 0.42045, 0.40848, 0.39685, 0.38555, 0.37458, 0.36391, 0.35355, 0.34349, 0.33371, 0.32421, 0.31498, 0.30601, 0.2973, 0.28884, 0.28062, 0.27263, 0.26487, 0.25733, 0.25, 0.24288, 0.23597, 0.22925, 0.22272, 0.21638, 0.21022, 0.20424, 0.19843, 0.19278, 0.18729, 0.18196, 0.17678], "borderColor": "#7c4dd6f2", "borderDash": [], "borderWidth": 1.5, "pointRadius": 0}, {"label": "lineup h24 g2 \u00b7 overlap 0.8", "data": [0.64, 0.62178, 0.60408, 0.58688, 0.57018, 0.55394, 0.53817, 0.52285, 0.50797, 0.49351, 0.47946, 0.46581, 0.45255, 0.43967, 0.42715, 0.41499, 0.40317, 0.3917, 0.38055, 0.36971, 0.35919, 0.34896, 0.33903, 0.32938, 0.32, 0.31089, 0.30204, 0.29344, 0.28509, 0.27697, 0.26909, 0.26143, 0.25398, 0.24675, 0.23973, 0.2329, 0.22627, 0.21983, 0.21357, 0.20749, 0.20159, 0.19585, 0.19027, 0.18486, 0.17959, 0.17448, 0.16951, 0.16469, 0.16, 0.15545, 0.15102, 0.14672, 0.14254, 0.13849, 0.13454, 0.13071, 0.12699, 0.12338, 0.11986, 0.11645, 0.11314], "borderColor": "#7c4dd6a5", "borderDash": [], "borderWidth": 1.5, "pointRadius": 0}, {"label": "lineup h24 g2 \u00b7 overlap 0.6", "data": [0.36, 0.34975, 0.33979, 0.33012, 0.32072, 0.31159, 0.30272, 0.2941, 0.28573, 0.2776, 0.2697, 0.26202, 0.25456, 0.24731, 0.24027, 0.23343, 0.22679, 0.22033, 0.21406, 0.20796, 0.20204, 0.19629, 0.1907, 0.18527, 0.18, 0.17488, 0.1699, 0.16506, 0.16036, 0.1558, 0.15136, 0.14705, 0.14287, 0.1388, 0.13485, 0.13101, 0.12728, 0.12366, 0.12014, 0.11672, 0.11339, 0.11016, 0.10703, 0.10398, 0.10102, 0.09815, 0.09535, 0.09264, 0.09, 0.08744, 0.08495, 0.08253, 0.08018, 0.0779, 0.07568, 0.07353, 0.07143, 0.0694, 0.06742, 0.0655, 0.06364], "borderColor": "#7c4dd672", "borderDash": [], "borderWidth": 1.5, "pointRadius": 0}, {"label": "lineup h24 g2 \u00b7 overlap 0.4", "data": [0.16, 0.15545, 0.15102, 0.14672, 0.14254, 0.13849, 0.13454, 0.13071, 0.12699, 0.12338, 0.11986, 0.11645, 0.11314, 0.10992, 0.10679, 0.10375, 0.10079, 0.09792, 0.09514, 0.09243, 0.0898, 0.08724, 0.08476, 0.08234, 0.08, 0.07772, 0.07551, 0.07336, 0.07127, 0.06924, 0.06727, 0.06536, 0.0635, 0.06169, 0.05993, 0.05823, 0.05657, 0.05496, 0.05339, 0.05187, 0.0504, 0.04896, 0.04757, 0.04621, 0.0449, 0.04362, 0.04238, 0.04117, 0.04, 0.03886, 0.03775, 0.03668, 0.03564, 0.03462, 0.03364, 0.03268, 0.03175, 0.03084, 0.02997, 0.02911, 0.02828], "borderColor": "#7c4dd647", "borderDash": [], "borderWidth": 1.5, "pointRadius": 0}, {"label": "eclass-on-v6 \u00b7 ewc consistent (HL16)", "data": [1.0, 0.9576, 0.917, 0.87813, 0.8409, 0.80525, 0.77111, 0.73841, 0.70711, 0.67713, 0.64842, 0.62093, 0.5946, 0.56939, 0.54525, 0.52214, 0.5, 0.4788, 0.4585, 0.43906, 0.42045, 0.40262, 0.38555, 0.36921, 0.35355, 0.33856, 0.32421, 0.31046, 0.2973, 0.2847, 0.27263, 0.26107, 0.25, 0.2394, 0.22925, 0.21953, 0.21022, 0.20131, 0.19278, 0.1846, 0.17678, 0.16928, 0.1621, 0.15523, 0.14865, 0.14235, 0.13631, 0.13053, 0.125, 0.1197, 0.11463, 0.10977, 0.10511, 0.10066, 0.09639, 0.0923, 0.08839, 0.08464, 0.08105, 0.07762, 0.07433], "borderColor": "#3a90cc", "borderDash": [], "borderWidth": 2, "pointRadius": 0}, {"label": "eclass-on-v6 \u00b7 ewc anomalous (HL9.6)", "data": [1.0, 0.93034, 0.86554, 0.80525, 0.74915, 0.69697, 0.64842, 0.60325, 0.56123, 0.52214, 0.48577, 0.45193, 0.42045, 0.39116, 0.36391, 0.33856, 0.31498, 0.29304, 0.27263, 0.25364, 0.23597, 0.21953, 0.20424, 0.19001, 0.17678, 0.16446, 0.15301, 0.14235, 0.13243, 0.12321, 0.11463, 0.10664, 0.09921, 0.0923, 0.08587, 0.07989, 0.07433, 0.06915, 0.06433, 0.05985, 0.05568, 0.0518, 0.04819, 0.04484, 0.04171, 0.03881, 0.0361, 0.03359, 0.03125, 0.02907, 0.02705, 0.02516, 0.02341, 0.02178, 0.02026, 0.01885, 0.01754, 0.01632, 0.01518, 0.01412, 0.01314], "borderColor": "#3a90cc", "borderDash": [6, 4], "borderWidth": 2, "pointRadius": 0}]};
+new Chart(document.getElementById('c_wg'), { type:'line',
+ data:{ labels: WG.g, datasets: WG.ds },
+ options:{ plugins:{ legend:{ labels:{ font:{size:10} } },
+  tooltip:{ callbacks:{ title:i=>i[0].label+' games ago' } } },
+ scales:{ y:{ title:{display:true,text:'solve weight w(g)'} , min:0, max:1.02 },
+          x:{ title:{display:true,text:'map-games ago'}, ticks:{ maxTicksLimit:13 } } } } });
+
+const CAT = {"teams": [{"team": "PRX", "n": 86, "v6": -0.1016, "tobit": -0.1008, "roundbt": -0.1086, "ss_1a": -0.1125, "ss_5d": -0.1008, "s1": -0.1011}, {"team": "NRG", "n": 75, "v6": -0.0914, "tobit": -0.0929, "roundbt": -0.0931, "ss_1a": -0.0936, "ss_5d": -0.0975, "s1": -0.0927}, {"team": "BBL", "n": 53, "v6": -0.0866, "tobit": -0.0867, "roundbt": -0.0806, "ss_1a": -0.0841, "ss_5d": -0.0787, "s1": -0.0829}, {"team": "100T", "n": 53, "v6": -0.0707, "tobit": -0.0741, "roundbt": -0.076, "ss_1a": -0.0748, "ss_5d": -0.089, "s1": -0.0713}, {"team": "FNC", "n": 63, "v6": -0.0651, "tobit": -0.0658, "roundbt": -0.0786, "ss_1a": -0.0828, "ss_5d": -0.0898, "s1": -0.0643}, {"team": "NS", "n": 54, "v6": -0.0631, "tobit": -0.065, "roundbt": -0.0653, "ss_1a": -0.0703, "ss_5d": -0.0702, "s1": -0.0654}, {"team": "TL", "n": 60, "v6": -0.0617, "tobit": -0.0656, "roundbt": -0.0681, "ss_1a": -0.0734, "ss_5d": -0.0537, "s1": -0.0572}, {"team": "MIBR", "n": 52, "v6": -0.0587, "tobit": -0.0581, "roundbt": -0.0537, "ss_1a": -0.0171, "ss_5d": -0.0105, "s1": -0.0565}, {"team": "LEV", "n": 51, "v6": -0.0501, "tobit": -0.052, "roundbt": -0.0458, "ss_1a": -0.0478, "ss_5d": -0.0684, "s1": -0.0539}, {"team": "XLG", "n": 69, "v6": -0.0494, "tobit": -0.047, "roundbt": -0.0412, "ss_1a": -0.0449, "ss_5d": -0.0433, "s1": -0.0496}, {"team": "G2", "n": 80, "v6": -0.0469, "tobit": -0.0445, "roundbt": -0.0524, "ss_1a": -0.0543, "ss_5d": -0.0499, "s1": -0.0481}, {"team": "NOVA", "n": 52, "v6": -0.0416, "tobit": -0.0402, "roundbt": -0.0727, "ss_1a": -0.0308, "ss_5d": -0.0289, "s1": -0.0437}, {"team": "TH", "n": 63, "v6": -0.0402, "tobit": -0.043, "roundbt": -0.0383, "ss_1a": -0.0437, "ss_5d": -0.061, "s1": -0.0393}, {"team": "KRX", "n": 71, "v6": -0.0398, "tobit": -0.0445, "roundbt": -0.0454, "ss_1a": -0.0626, "ss_5d": -0.0608, "s1": -0.0454}, {"team": "T1", "n": 60, "v6": -0.0271, "tobit": -0.0231, "roundbt": -0.0288, "ss_1a": -0.0252, "ss_5d": 0.0072, "s1": -0.0209}, {"team": "AG", "n": 53, "v6": -0.0174, "tobit": -0.0207, "roundbt": -0.0119, "ss_1a": -0.0149, "ss_5d": -0.0119, "s1": -0.0175}, {"team": "EDG", "n": 79, "v6": -0.0154, "tobit": -0.0148, "roundbt": -0.0118, "ss_1a": -0.0479, "ss_5d": -0.0526, "s1": -0.0216}, {"team": "VIT", "n": 50, "v6": -0.013, "tobit": -0.012, "roundbt": -0.0022, "ss_1a": -0.0255, "ss_5d": -0.0208, "s1": -0.0136}, {"team": "SEN", "n": 56, "v6": -0.0113, "tobit": -0.0092, "roundbt": -0.009, "ss_1a": -0.0185, "ss_5d": -0.0099, "s1": -0.0134}, {"team": "FPX", "n": 55, "v6": -0.0104, "tobit": -0.0107, "roundbt": -0.0134, "ss_1a": -0.0011, "ss_5d": 0.0114, "s1": -0.01}, {"team": "DRG", "n": 54, "v6": -0.0086, "tobit": -0.0086, "roundbt": -0.0036, "ss_1a": 0.004, "ss_5d": 0.0012, "s1": -0.0059}, {"team": "BLG", "n": 73, "v6": -0.0077, "tobit": -0.0062, "roundbt": 0.003, "ss_1a": -0.0133, "ss_5d": -0.008, "s1": -0.0077}, {"team": "GX", "n": 43, "v6": -0.0062, "tobit": -0.007, "roundbt": -0.0033, "ss_1a": 0.0303, "ss_5d": 0.0224, "s1": 0.0024}, {"team": "RRQ", "n": 54, "v6": -0.0061, "tobit": -0.0061, "roundbt": 0.0019, "ss_1a": 0.016, "ss_5d": 0.0048, "s1": -0.0047}, {"team": "KC", "n": 46, "v6": -0.0045, "tobit": -0.0095, "roundbt": 0.0094, "ss_1a": 0.0093, "ss_5d": -0.0046, "s1": -0.0052}, {"team": "NAVI", "n": 44, "v6": -0.0012, "tobit": 0.0051, "roundbt": 0.0007, "ss_1a": -0.0026, "ss_5d": 0.0048, "s1": -0.0018}, {"team": "FUT", "n": 47, "v6": -0.0002, "tobit": 0.0004, "roundbt": -0.002, "ss_1a": -0.0143, "ss_5d": -0.003, "s1": 0.0016}, {"team": "GEN", "n": 56, "v6": 0.0051, "tobit": 0.0076, "roundbt": 0.0075, "ss_1a": -0.0233, "ss_5d": -0.0079, "s1": 0.0028}, {"team": "M8", "n": 42, "v6": 0.0057, "tobit": 0.0068, "roundbt": 0.0006, "ss_1a": -0.0006, "ss_5d": -0.002, "s1": 0.0071}, {"team": "GE", "n": 42, "v6": 0.006, "tobit": 0.0098, "roundbt": 0.0067, "ss_1a": 0.0158, "ss_5d": 0.0056, "s1": 0.0089}, {"team": "TYL", "n": 51, "v6": 0.0118, "tobit": 0.0111, "roundbt": 0.011, "ss_1a": 0.0137, "ss_5d": 0.0148, "s1": 0.0146}, {"team": "TEC", "n": 53, "v6": 0.0393, "tobit": 0.0389, "roundbt": 0.0436, "ss_1a": 0.0752, "ss_5d": 0.065, "s1": 0.0403}, {"team": "DFM", "n": 32, "v6": 0.0456, "tobit": 0.042, "roundbt": 0.0397, "ss_1a": 0.0801, "ss_5d": 0.0777, "s1": 0.0466}, {"team": "ZETA", "n": 30, "v6": 0.0546, "tobit": 0.0536, "roundbt": 0.0575, "ss_1a": 0.0937, "ss_5d": 0.0717, "s1": 0.0623}, {"team": "EG", "n": 34, "v6": 0.06, "tobit": 0.0569, "roundbt": 0.0631, "ss_1a": 0.0743, "ss_5d": 0.0963, "s1": 0.0697}, {"team": "KR\u00dc", "n": 35, "v6": 0.0665, "tobit": 0.0683, "roundbt": 0.0738, "ss_1a": 0.0668, "ss_5d": 0.0826, "s1": 0.0604}, {"team": "TE", "n": 55, "v6": 0.0721, "tobit": 0.0743, "roundbt": 0.0862, "ss_1a": 0.0667, "ss_5d": 0.0599, "s1": 0.0737}, {"team": "LOUD", "n": 29, "v6": 0.0881, "tobit": 0.089, "roundbt": 0.0885, "ss_1a": 0.1156, "ss_5d": 0.105, "s1": 0.0925}, {"team": "WOL", "n": 60, "v6": 0.0941, "tobit": 0.0957, "roundbt": 0.0946, "ss_1a": 0.0832, "ss_5d": 0.0854, "s1": 0.0961}, {"team": "JDG", "n": 51, "v6": 0.1058, "tobit": 0.1046, "roundbt": 0.0893, "ss_1a": 0.0837, "ss_5d": 0.0897, "s1": 0.1061}, {"team": "C9", "n": 41, "v6": 0.1172, "tobit": 0.1135, "roundbt": 0.1115, "ss_1a": 0.1073, "ss_5d": 0.0945, "s1": 0.1115}, {"team": "FUR", "n": 33, "v6": 0.12, "tobit": 0.1204, "roundbt": 0.1108, "ss_1a": 0.1095, "ss_5d": 0.1122, "s1": 0.1261}, {"team": "TS", "n": 30, "v6": 0.1478, "tobit": 0.1492, "roundbt": 0.1515, "ss_1a": 0.144, "ss_5d": 0.1328, "s1": 0.1491}]};
+function catds(key,label,color,hidden){ return { label:label,
+  data: CAT.teams.map((t,i)=>({x:+(t[key]*100).toFixed(2), y:i})),
+  backgroundColor:color, borderColor:color, pointRadius:3.5, showLine:false, hidden:hidden }; }
+new Chart(document.getElementById('c_cat'), { type:'scatter', data:{ datasets:[
+ catds('v6','v6 baseline',PAL.v6,false), catds('ss_5d','SS 5d roster',PAL.d5,false),
+ catds('s1','S1 gate5d',PAL.s1,false), catds('ss_1a','SS core (1a)',PAL.a1,true),
+ catds('tobit','Tobit',PAL.tob,true), catds('roundbt','round-BT',PAL.rbt,true)
+]}, options:{ maintainAspectRatio:false,
+ plugins:{ tooltip:{ callbacks:{ label:i=>CAT.teams[i.parsed.y].team+' \u00b7 '+i.dataset.label+' '
+    +i.parsed.x.toFixed(1)+'pp \u00b7 n='+CAT.teams[i.parsed.y].n } } },
+ scales:{ y:{ min:-1, max:CAT.teams.length, ticks:{ autoSkip:false, stepSize:1, font:{size:9},
+    callback:v=>(CAT.teams[v]||{}).team||'' } },
+   x:{ title:{display:true,text:'per-team bias (prob-pts; negative = under-rated)'} } } } });
+
+const H2 = {"pts": [{"x": 0.8939, "y": -10.16, "t": "PRX", "n": 86}, {"x": 0.407, "y": -9.14, "t": "NRG", "n": 75}, {"x": 0.2345, "y": -8.66, "t": "BBL", "n": 53}, {"x": 0.3229, "y": -7.07, "t": "100T", "n": 53}, {"x": 0.5627, "y": -6.51, "t": "FNC", "n": 63}, {"x": 0.2579, "y": -6.31, "t": "NS", "n": 54}, {"x": 0.3479, "y": -6.17, "t": "TL", "n": 60}, {"x": 0.3011, "y": -5.87, "t": "MIBR", "n": 52}, {"x": 0.3333, "y": -5.01, "t": "LEV", "n": 51}, {"x": 0.5983, "y": -4.94, "t": "XLG", "n": 69}, {"x": 0.6544, "y": -4.69, "t": "G2", "n": 80}, {"x": 0.456, "y": -4.16, "t": "NOVA", "n": 52}, {"x": 0.4961, "y": -4.02, "t": "TH", "n": 63}, {"x": 0.8166, "y": -3.98, "t": "KRX", "n": 71}, {"x": 0.6342, "y": -2.71, "t": "T1", "n": 60}, {"x": 0.4767, "y": -1.74, "t": "AG", "n": 53}, {"x": 0.8704, "y": -1.54, "t": "EDG", "n": 79}, {"x": 0.2815, "y": -1.3, "t": "VIT", "n": 50}, {"x": 0.4969, "y": -1.13, "t": "SEN", "n": 56}, {"x": 0.6171, "y": -1.04, "t": "FPX", "n": 55}, {"x": 0.5258, "y": -0.86, "t": "DRG", "n": 54}, {"x": 0.7695, "y": -0.77, "t": "BLG", "n": 73}, {"x": 0.2246, "y": -0.62, "t": "GX", "n": 43}, {"x": 0.5189, "y": -0.61, "t": "RRQ", "n": 54}, {"x": 0.2463, "y": -0.45, "t": "KC", "n": 46}, {"x": 0.2049, "y": -0.12, "t": "NAVI", "n": 44}, {"x": 0.2827, "y": -0.02, "t": "FUT", "n": 47}, {"x": 0.7203, "y": 0.51, "t": "GEN", "n": 56}, {"x": 0.1827, "y": 0.57, "t": "M8", "n": 42}, {"x": 0.2521, "y": 0.6, "t": "GE", "n": 42}, {"x": 0.4833, "y": 1.18, "t": "TYL", "n": 51}, {"x": 0.4756, "y": 3.93, "t": "TEC", "n": 53}, {"x": 0.3377, "y": 4.56, "t": "DFM", "n": 32}, {"x": 0.2691, "y": 5.46, "t": "ZETA", "n": 30}, {"x": 0.1873, "y": 6.0, "t": "EG", "n": 34}, {"x": 0.2392, "y": 6.65, "t": "KR\u00dc", "n": 35}, {"x": 0.7077, "y": 7.21, "t": "TE", "n": 55}, {"x": 0.2008, "y": 8.81, "t": "LOUD", "n": 29}, {"x": 0.5738, "y": 9.41, "t": "WOL", "n": 60}, {"x": 0.5006, "y": 10.58, "t": "JDG", "n": 51}, {"x": 0.3013, "y": 11.72, "t": "C9", "n": 41}, {"x": 0.1749, "y": 12.0, "t": "FUR", "n": 33}, {"x": 0.2458, "y": 14.78, "t": "TS", "n": 30}]};
+new Chart(document.getElementById('c_h2'), { type:'scatter', data:{ datasets:[
+ {label:'teams (n=43)', data:H2.pts, backgroundColor:PAL.s1, pointRadius:4}
+]}, options:{ plugins:{ legend:{display:false},
+  tooltip:{ callbacks:{ label:i=>H2.pts[i.dataIndex].t+' \u00b7 centrality '
+    +i.parsed.x.toFixed(2)+' \u00b7 bias '+(i.parsed.y).toFixed(1)+'pp \u00b7 n='+H2.pts[i.dataIndex].n } } },
+ scales:{ x:{ title:{display:true,text:'eigenvector centrality (max-normalized)'} },
+          y:{ title:{display:true,text:'signed bias (prob-pts)'} } } } });
+
+const HL5 = {"cells": ["change-adjacent (msc<=3)", "settling (4<=msc<=10)", "stable (msc>10)"], "mle": [7.41, 328.6, 24.76], "ci": [[3.94, 18.46], [41.3, 347.57], [5.27, 300.24]], "pooled": [8.01, 8.01, 8.01], "n": [4303, 3273, 2704]};
+new Chart(document.getElementById('c_hl'), { data:{ labels: HL5.cells, datasets:[
+ {type:'bar', label:'95% profile CI', data: HL5.ci, backgroundColor:'#c96a2a33', borderRadius:4},
+ {type:'scatter', label:'MLE half-life', data: HL5.mle.map((v,i)=>({x:i,y:v})),
+  backgroundColor:PAL.d5, pointRadius:6},
+ {type:'scatter', label:'DL pooled (\u03c4\u00b2=0)', data: HL5.pooled.map((v,i)=>({x:i,y:v})),
+  pointStyle:'line', pointRadius:14, borderColor:PAL.v6, borderWidth:3, backgroundColor:PAL.v6}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ label:i=> i.datasetIndex===0
+  ? 'CI ['+HL5.ci[i.dataIndex][0]+', '+HL5.ci[i.dataIndex][1]+'] games'
+  : i.dataset.label+': '+(i.parsed.y)+' games \u00b7 '+HL5.n[i.dataIndex]+' games/cell' } } },
+ scales:{ y:{ type:'logarithmic', title:{display:true,text:'implied half-life (games, log scale)'} } } } });
+
+const CO = {"labels": ["debut(either0)", "cold(<10)", "thin(<30)"], "dll": [58.17, 71.7, 28.03], "drop5": [29.47, 53.13, 12.7], "jack": [-18.16, 66.02, 21.03], "floor": [65.0, 32.9, 19.0], "n": [10, 39, 117], "nev": [3, 4, 9], "survives": [false, true, false]};
+new Chart(document.getElementById('c_cold'), { data:{ labels: CO.labels, datasets:[
+ {type:'bar', label:'5d \u0394 vs v6 (milli)', data: CO.dll,
+  backgroundColor: CO.survives.map(s=>s?PAL.d5:'#c96a2a55')},
+ {type:'scatter', label:'drop-top-5%', data: CO.drop5.map((v,i)=>({x:i,y:v})),
+  backgroundColor:PAL.ink, pointStyle:'rectRot', pointRadius:5},
+ {type:'scatter', label:'jackknife min', data: CO.jack.map((v,i)=>({x:i,y:v})),
+  backgroundColor:PAL.rbt, pointStyle:'triangle', pointRadius:5},
+ {type:'scatter', label:'bucket noise floor', data: CO.floor.map((v,i)=>({x:i,y:v})),
+  pointStyle:'line', pointRadius:16, borderColor:PAL.bad, borderWidth:2.5, backgroundColor:PAL.bad}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ footer:i=>'n='+CO.n[i[0].dataIndex]+' \u00b7 '+CO.nev[i[0].dataIndex]+' events' } } },
+ scales:{ y:{ title:{display:true,text:'\u0394LL (milli) \u2014 only cold(<10) clears its floor under attack'} } } } });
+
+const H4D = {"labels": ["overall", "fmt_bo3", "fmt_bo5", "depth_T1", "depth_T2", "depth_T3", "depth_T3_fav070"], "d": [5.09, 5.68, -1.95, 8.24, 3.79, 3.0, -4.46], "ci": [[1.81, 8.53], [2.05, 9.17], [-12.61, 9.32], [2.39, 14.02], [-2.08, 9.68], [-2.91, 9.06], [-33.96, 24.92]], "n": [794, 733, 61, 276, 273, 245, 10]};
+new Chart(document.getElementById('c_h4'), { data:{ labels: H4D.labels, datasets:[
+ {type:'bar', label:'95% CI', data: H4D.ci, backgroundColor:'#3a90cc33', borderRadius:4},
+ {type:'scatter', label:'D_sweep (pp)', data: H4D.d.map((v,i)=>({x:i,y:v})), backgroundColor:PAL.a1, pointRadius:6}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ footer:i=>'n='+H4D.n[i[0].dataIndex] } } },
+ scales:{ y:{ title:{display:true,text:'sweep excess vs iid (pp) \u2014 >0 = OVER-dispersed'} },
+          x:{ ticks:{ font:{size:10} } } } } });
+
+const REL = {"v6": [{"n": 348, "pred_mean": 0.5232, "emp": 0.5259, "wilson_lo": 0.4734, "wilson_hi": 0.5778, "range": [0.5, 0.55]}, {"n": 306, "pred_mean": 0.5762, "emp": 0.6078, "wilson_lo": 0.5521, "wilson_hi": 0.6609, "range": [0.55, 0.6]}, {"n": 227, "pred_mean": 0.6226, "emp": 0.6344, "wilson_lo": 0.57, "wilson_hi": 0.6943, "range": [0.6, 0.65]}, {"n": 161, "pred_mean": 0.6728, "emp": 0.6398, "wilson_lo": 0.5631, "wilson_hi": 0.7099, "range": [0.65, 0.7]}, {"n": 96, "pred_mean": 0.7236, "emp": 0.8229, "wilson_lo": 0.7346, "wilson_hi": 0.8864, "range": [0.7, 0.75]}, {"n": 49, "pred_mean": 0.7719, "emp": 0.8776, "wilson_lo": 0.7576, "wilson_hi": 0.9427, "range": [0.75, 0.8]}, {"n": 28, "pred_mean": 0.8308, "emp": 0.8571, "wilson_lo": 0.6851, "wilson_hi": 0.943, "range": [0.8, 1.0001]}], "ss_1a": [{"n": 357, "pred_mean": 0.5239, "emp": 0.4958, "wilson_lo": 0.4443, "wilson_hi": 0.5474, "range": [0.5, 0.55]}, {"n": 323, "pred_mean": 0.5738, "emp": 0.6161, "wilson_lo": 0.562, "wilson_hi": 0.6675, "range": [0.55, 0.6]}, {"n": 227, "pred_mean": 0.6246, "emp": 0.6035, "wilson_lo": 0.5387, "wilson_hi": 0.6649, "range": [0.6, 0.65]}, {"n": 141, "pred_mean": 0.6723, "emp": 0.6809, "wilson_lo": 0.6, "wilson_hi": 0.7521, "range": [0.65, 0.7]}, {"n": 86, "pred_mean": 0.7227, "emp": 0.7558, "wilson_lo": 0.6554, "wilson_hi": 0.8344, "range": [0.7, 0.75]}, {"n": 52, "pred_mean": 0.7733, "emp": 0.8269, "wilson_lo": 0.7027, "wilson_hi": 0.9062, "range": [0.75, 0.8]}, {"n": 31, "pred_mean": 0.8286, "emp": 0.8387, "wilson_lo": 0.6737, "wilson_hi": 0.9291, "range": [0.8, 1.0001]}], "ss_5d": [{"n": 361, "pred_mean": 0.5251, "emp": 0.5208, "wilson_lo": 0.4693, "wilson_hi": 0.5718, "range": [0.5, 0.55]}, {"n": 323, "pred_mean": 0.5744, "emp": 0.6006, "wilson_lo": 0.5463, "wilson_hi": 0.6525, "range": [0.55, 0.6]}, {"n": 228, "pred_mean": 0.6222, "emp": 0.6096, "wilson_lo": 0.545, "wilson_hi": 0.6707, "range": [0.6, 0.65]}, {"n": 149, "pred_mean": 0.6708, "emp": 0.6913, "wilson_lo": 0.6131, "wilson_hi": 0.7599, "range": [0.65, 0.7]}, {"n": 74, "pred_mean": 0.7224, "emp": 0.7568, "wilson_lo": 0.6479, "wilson_hi": 0.8402, "range": [0.7, 0.75]}, {"n": 50, "pred_mean": 0.7707, "emp": 0.86, "wilson_lo": 0.7381, "wilson_hi": 0.9305, "range": [0.75, 0.8]}, {"n": 32, "pred_mean": 0.8286, "emp": 0.8438, "wilson_lo": 0.6825, "wilson_hi": 0.9314, "range": [0.8, 1.0001]}]};
+function reld(key,label,color){ const b=REL[key]; return [
+ {label:label, data:b.map(x=>({x:x.pred_mean,y:x.emp})), borderColor:color, backgroundColor:color,
+  pointRadius:4, showLine:true, tension:.2},
+ {label:label+' CI', data:b.map(x=>({x:x.pred_mean,y:x.wilson_lo})), showLine:false, pointRadius:0},
+ {label:label+' CIh', data:b.map(x=>({x:x.pred_mean,y:x.wilson_hi})), showLine:false, pointRadius:0}]; }
+new Chart(document.getElementById('c_rel'), { type:'scatter', data:{ datasets:[
+ {label:'perfect calibration', data:[{x:.5,y:.5},{x:1,y:1}], borderColor:PAL.gray, borderDash:[6,4],
+  pointRadius:0, showLine:true},
+ ...reld('v6','v6',PAL.v6), ...reld('ss_1a','SS core (1a)',PAL.a1), ...reld('ss_5d','SS 5d',PAL.d5)
+]}, options:{ plugins:{ legend:{ labels:{ filter: it=>it.text.indexOf('CI')<0 } },
+  tooltip:{ callbacks:{ label:i=>{ const m=i.dataset.label, k=m==='v6'?'v6':(m.indexOf('1a')>=0?'ss_1a':'ss_5d');
+    const b=REL[k]&&REL[k][i.dataIndex]; return b? m+': pred '+(100*b.pred_mean).toFixed(1)+'% \u00b7 emp '
+    +(100*b.emp).toFixed(1)+'% ['+(100*b.wilson_lo).toFixed(1)+', '+(100*b.wilson_hi).toFixed(1)+'] \u00b7 n='+b.n : m; } } } },
+ scales:{ x:{ min:.5, max:1, title:{display:true,text:'predicted favorite probability'} },
+          y:{ min:.3, max:1, title:{display:true,text:'empirical favorite win rate'} } } } });
+
+const BK = {"S1_gate5d": [{"name": "year 2025", "n": 674, "delta_milli": 0.94, "bucket_mde_milli": 7.91, "inside_floor": true}, {"name": "year 2026", "n": 543, "delta_milli": 3.23, "bucket_mde_milli": 8.82, "inside_floor": true}, {"name": "format bo1", "n": 55, "delta_milli": -3.04, "bucket_mde_milli": 27.7, "inside_floor": true}, {"name": "format bo3", "n": 1074, "delta_milli": 2.38, "bucket_mde_milli": 6.27, "inside_floor": true}, {"name": "format bo5", "n": 53, "delta_milli": 0.0, "bucket_mde_milli": 28.22, "inside_floor": true}, {"name": "format bo5_gf", "n": 35, "delta_milli": 0.0, "bucket_mde_milli": 34.73, "inside_floor": true}, {"name": "stage groups", "n": 568, "delta_milli": 0.12, "bucket_mde_milli": 8.62, "inside_floor": true}, {"name": "stage playoffs", "n": 541, "delta_milli": 2.03, "bucket_mde_milli": 8.83, "inside_floor": true}, {"name": "stage grand_final", "n": 39, "delta_milli": 0.0, "bucket_mde_milli": 32.9, "inside_floor": true}, {"name": "international", "n": 122, "delta_milli": -0.27, "bucket_mde_milli": 18.6, "inside_floor": true}, {"name": "domestic", "n": 1095, "delta_milli": 2.21, "bucket_mde_milli": 6.21, "inside_floor": true}, {"name": "CN involved", "n": 394, "delta_milli": -1.79, "bucket_mde_milli": 10.35, "inside_floor": true}, {"name": "cross-region", "n": 194, "delta_milli": -0.17, "bucket_mde_milli": 14.75, "inside_floor": true}, {"name": "domestic Americas", "n": 233, "delta_milli": 1.74, "bucket_mde_milli": 13.46, "inside_floor": true}, {"name": "domestic EMEA", "n": 242, "delta_milli": 7.09, "bucket_mde_milli": 13.21, "inside_floor": true}, {"name": "domestic Pacific", "n": 237, "delta_milli": 4.08, "bucket_mde_milli": 13.34, "inside_floor": true}, {"name": "domestic CN", "n": 311, "delta_milli": -2.16, "bucket_mde_milli": 11.65, "inside_floor": true}, {"name": "close matchups (gap<1.5)", "n": 433, "delta_milli": 0.59, "bucket_mde_milli": 9.87, "inside_floor": true}, {"name": "mid gap [1.5,4)", "n": 505, "delta_milli": 4.83, "bucket_mde_milli": 9.14, "inside_floor": true}, {"name": "big gap [4,7)", "n": 223, "delta_milli": 0.85, "bucket_mde_milli": 13.76, "inside_floor": true}, {"name": "huge gap (7+)", "n": 56, "delta_milli": -8.86, "bucket_mde_milli": 27.45, "inside_floor": true}, {"name": "post-break (rest>45d)", "n": 130, "delta_milli": 4.33, "bucket_mde_milli": 18.02, "inside_floor": true}, {"name": "elite vs floor", "n": 29, "delta_milli": -5.39, "bucket_mde_milli": 38.15, "inside_floor": true}, {"name": "form shift", "n": 168, "delta_milli": -0.9, "bucket_mde_milli": 15.85, "inside_floor": true}, {"name": "EWC-class events", "n": 115, "delta_milli": 1.67, "bucket_mde_milli": 19.16, "inside_floor": true}, {"name": "favorite [0.5,0.6)", "n": 664, "delta_milli": 1.59, "bucket_mde_milli": 7.97, "inside_floor": true}, {"name": "favorite [0.6,0.7)", "n": 385, "delta_milli": 3.03, "bucket_mde_milli": 10.47, "inside_floor": true}, {"name": "favorite [0.7,0.8)", "n": 138, "delta_milli": 1.61, "bucket_mde_milli": 17.49, "inside_floor": true}, {"name": "favorite [0.8,0.9)", "n": 29, "delta_milli": -1.95, "bucket_mde_milli": 38.15, "inside_floor": true}], "S2_fade_shrink": [{"name": "year 2025", "n": 674, "delta_milli": 0.17, "bucket_mde_milli": 2.38, "inside_floor": true}, {"name": "year 2026", "n": 543, "delta_milli": -0.52, "bucket_mde_milli": 2.65, "inside_floor": true}, {"name": "format bo1", "n": 55, "delta_milli": 0.15, "bucket_mde_milli": 8.34, "inside_floor": true}, {"name": "format bo3", "n": 1074, "delta_milli": -0.2, "bucket_mde_milli": 1.89, "inside_floor": true}, {"name": "format bo5", "n": 53, "delta_milli": -4.18, "bucket_mde_milli": 8.5, "inside_floor": true}, {"name": "format bo5_gf", "n": 35, "delta_milli": 7.48, "bucket_mde_milli": 10.45, "inside_floor": true}, {"name": "stage groups", "n": 568, "delta_milli": -2.27, "bucket_mde_milli": 2.6, "inside_floor": true}, {"name": "stage playoffs", "n": 541, "delta_milli": 1.87, "bucket_mde_milli": 2.66, "inside_floor": true}, {"name": "stage grand_final", "n": 39, "delta_milli": 6.54, "bucket_mde_milli": 9.9, "inside_floor": true}, {"name": "international", "n": 122, "delta_milli": -3.5, "bucket_mde_milli": 5.6, "inside_floor": true}, {"name": "domestic", "n": 1095, "delta_milli": 0.24, "bucket_mde_milli": 1.87, "inside_floor": true}, {"name": "CN involved", "n": 394, "delta_milli": 2.7, "bucket_mde_milli": 3.12, "inside_floor": true}, {"name": "cross-region", "n": 194, "delta_milli": -1.43, "bucket_mde_milli": 4.44, "inside_floor": true}, {"name": "domestic Americas", "n": 233, "delta_milli": -1.57, "bucket_mde_milli": 4.05, "inside_floor": true}, {"name": "domestic EMEA", "n": 242, "delta_milli": -4.41, "bucket_mde_milli": 3.98, "inside_floor": false}, {"name": "domestic Pacific", "n": 237, "delta_milli": 0.83, "bucket_mde_milli": 4.02, "inside_floor": true}, {"name": "domestic CN", "n": 311, "delta_milli": 4.33, "bucket_mde_milli": 3.51, "inside_floor": false}, {"name": "close matchups (gap<1.5)", "n": 433, "delta_milli": 1.98, "bucket_mde_milli": 2.97, "inside_floor": true}, {"name": "mid gap [1.5,4)", "n": 505, "delta_milli": -1.23, "bucket_mde_milli": 2.75, "inside_floor": true}, {"name": "big gap [4,7)", "n": 223, "delta_milli": -1.32, "bucket_mde_milli": 4.14, "inside_floor": true}, {"name": "huge gap (7+)", "n": 56, "delta_milli": -1.93, "bucket_mde_milli": 8.27, "inside_floor": true}, {"name": "post-break (rest>45d)", "n": 130, "delta_milli": 2.0, "bucket_mde_milli": 5.42, "inside_floor": true}, {"name": "elite vs floor", "n": 29, "delta_milli": -5.41, "bucket_mde_milli": 11.49, "inside_floor": true}, {"name": "form shift", "n": 168, "delta_milli": -0.05, "bucket_mde_milli": 4.77, "inside_floor": true}, {"name": "EWC-class events", "n": 115, "delta_milli": 1.19, "bucket_mde_milli": 5.77, "inside_floor": true}, {"name": "favorite [0.5,0.6)", "n": 683, "delta_milli": 0.75, "bucket_mde_milli": 2.37, "inside_floor": true}, {"name": "favorite [0.6,0.7)", "n": 370, "delta_milli": 1.62, "bucket_mde_milli": 3.22, "inside_floor": true}, {"name": "favorite [0.7,0.8)", "n": 137, "delta_milli": -7.63, "bucket_mde_milli": 5.28, "inside_floor": false}, {"name": "favorite [0.8,0.9)", "n": 25, "delta_milli": -9.57, "bucket_mde_milli": 12.37, "inside_floor": true}], "S3_full": [{"name": "year 2025", "n": 674, "delta_milli": -9.09, "bucket_mde_milli": 7.91, "inside_floor": false}, {"name": "year 2026", "n": 543, "delta_milli": -6.36, "bucket_mde_milli": 8.82, "inside_floor": true}, {"name": "format bo1", "n": 55, "delta_milli": -15.98, "bucket_mde_milli": 27.7, "inside_floor": true}, {"name": "format bo3", "n": 1074, "delta_milli": -7.47, "bucket_mde_milli": 6.27, "inside_floor": false}, {"name": "format bo5", "n": 53, "delta_milli": -16.42, "bucket_mde_milli": 28.22, "inside_floor": true}, {"name": "format bo5_gf", "n": 35, "delta_milli": 5.54, "bucket_mde_milli": 34.73, "inside_floor": true}, {"name": "stage groups", "n": 568, "delta_milli": -19.83, "bucket_mde_milli": 8.62, "inside_floor": false}, {"name": "stage playoffs", "n": 541, "delta_milli": 3.42, "bucket_mde_milli": 8.83, "inside_floor": true}, {"name": "stage grand_final", "n": 39, "delta_milli": 5.65, "bucket_mde_milli": 32.9, "inside_floor": true}, {"name": "international", "n": 122, "delta_milli": -11.02, "bucket_mde_milli": 18.6, "inside_floor": true}, {"name": "domestic", "n": 1095, "delta_milli": -7.52, "bucket_mde_milli": 6.21, "inside_floor": false}, {"name": "CN involved", "n": 394, "delta_milli": -11.92, "bucket_mde_milli": 10.35, "inside_floor": false}, {"name": "cross-region", "n": 194, "delta_milli": -13.03, "bucket_mde_milli": 14.75, "inside_floor": true}, {"name": "domestic Americas", "n": 233, "delta_milli": -14.16, "bucket_mde_milli": 13.46, "inside_floor": false}, {"name": "domestic EMEA", "n": 242, "delta_milli": -11.43, "bucket_mde_milli": 13.21, "inside_floor": true}, {"name": "domestic Pacific", "n": 237, "delta_milli": 3.14, "bucket_mde_milli": 13.34, "inside_floor": true}, {"name": "domestic CN", "n": 311, "delta_milli": -5.57, "bucket_mde_milli": 11.65, "inside_floor": true}, {"name": "close matchups (gap<1.5)", "n": 433, "delta_milli": 2.19, "bucket_mde_milli": 9.87, "inside_floor": true}, {"name": "mid gap [1.5,4)", "n": 505, "delta_milli": -3.56, "bucket_mde_milli": 9.14, "inside_floor": true}, {"name": "big gap [4,7)", "n": 223, "delta_milli": -25.11, "bucket_mde_milli": 13.76, "inside_floor": false}, {"name": "huge gap (7+)", "n": 56, "delta_milli": -55.89, "bucket_mde_milli": 27.45, "inside_floor": false}, {"name": "post-break (rest>45d)", "n": 130, "delta_milli": -14.09, "bucket_mde_milli": 18.02, "inside_floor": true}, {"name": "elite vs floor", "n": 29, "delta_milli": -59.25, "bucket_mde_milli": 38.15, "inside_floor": false}, {"name": "form shift", "n": 168, "delta_milli": -2.31, "bucket_mde_milli": 15.85, "inside_floor": true}, {"name": "EWC-class events", "n": 115, "delta_milli": 5.17, "bucket_mde_milli": 19.16, "inside_floor": true}, {"name": "favorite [0.5,0.6)", "n": 865, "delta_milli": -5.25, "bucket_mde_milli": 6.99, "inside_floor": true}, {"name": "favorite [0.6,0.7)", "n": 264, "delta_milli": -19.29, "bucket_mde_milli": 12.64, "inside_floor": false}, {"name": "favorite [0.7,0.8)", "n": 68, "delta_milli": 1.49, "bucket_mde_milli": 24.91, "inside_floor": true}, {"name": "favorite [0.8,0.9)", "n": 19, "delta_milli": -2.77, "bucket_mde_milli": 47.13, "inside_floor": true}]};
+function bkds(key,label,color,hidden){ const rows=BK[key];
+ return { label:label, data: rows.map(r=>r.delta_milli),
+  backgroundColor: rows.map(r=> (r.inside_floor? color+'55' : (r.delta_milli>=0?PAL.good:PAL.bad))),
+  hidden:hidden }; }
+new Chart(document.getElementById('c_bk'), { type:'bar',
+ data:{ labels: BK.S1_gate5d.map(r=>r.name), datasets:[
+  bkds('S1_gate5d','S1 gate5d', PAL.s1, false),
+  bkds('S2_fade_shrink','S2 fade+shrink', PAL.a1, true),
+  bkds('S3_full','S3 full', PAL.d5, true) ]},
+ options:{ indexAxis:'y', maintainAspectRatio:false,
+ plugins:{ tooltip:{ callbacks:{ label:i=>{ const r=BK[['S1_gate5d','S2_fade_shrink','S3_full'][i.datasetIndex]][i.dataIndex];
+   return i.dataset.label+': '+r.delta_milli.toFixed(2)+'m \u00b7 n='+r.n+' \u00b7 bucket floor '+r.bucket_mde_milli
+   +'m'+(r.inside_floor?' \u00b7 INSIDE NOISE FLOOR':''); } } } },
+ scales:{ x:{ title:{display:true,text:'\u0394LL vs v6 (milli) \u00b7 faded = inside bucket noise floor; solid green/red = clears it'} },
+          y:{ ticks:{ autoSkip:false, font:{size:10} } } } } });
+
+const WF = [{"label": "locked-pair margin", "range": [0.0, 53.98], "kind": "pos"}, {"label": "unhedged settled", "range": [53.98, -308.69], "kind": "neg"}, {"label": "fees", "range": [-308.69, -308.69], "kind": "pos"}, {"label": "realized", "range": [0, -308.69], "kind": "total"}, {"label": "open-inventory mark", "range": [-308.69, -313.36], "kind": "neg"}, {"label": "total incl. mark", "range": [0, -313.35], "kind": "total"}];
+new Chart(document.getElementById('c_wf'), { type:'bar', data:{ labels: WF.map(b=>b.label), datasets:[
+ {label:'$', data: WF.map(b=>b.range),
+  backgroundColor: WF.map(b=> b.kind==='total' ? PAL.ink : (b.kind==='pos'?PAL.good:PAL.bad)) }
+]}, options:{ plugins:{ legend:{display:false},
+  tooltip:{ callbacks:{ label:i=>{ const r=WF[i.dataIndex].range; return '$'+(r[1]-r[0]===0?r[1]:(r[1]-r[0])).toFixed(2)+' (to $'+r[1].toFixed(2)+')'; } } } },
+ scales:{ y:{ title:{display:true,text:'US$ (settled per Kalshi; fees verified $0 maker)'} } } } });
+
+const FC = {"labels": ["0-20\u00a2", "20-40\u00a2", "40-60\u00a2", "60-80\u00a2", "80-100\u00a2"], "pred": [0.3007, 0.3238, 0.5175, 0.6414, 0.5806], "real": [0.1751, 0.2083, 0.3975, 0.7459, 0.7575], "wl": [0.0897, 0.1642, 0.3299, 0.664, 0.5997], "wh": [0.3138, 0.2607, 0.4692, 0.8134, 0.867], "n": [43, 270, 186, 128, 37], "ctr": [793.7, 2121.5, 2163.9, 1638.4, 573.3]};
+new Chart(document.getElementById('c_fc'), { data:{ labels: FC.labels, datasets:[
+ {type:'bar', label:'predicted NO-pay (frozen v6)', data: FC.pred, backgroundColor: PAL.v6},
+ {type:'bar', label:'realized NO-pay', data: FC.real, backgroundColor: PAL.s1},
+ {type:'scatter', label:'Wilson 95% (realized)', data: FC.wl.map((v,i)=>({x:i+0.15,y:v})),
+  pointStyle:'line', rotation:90, pointRadius:8, borderColor:PAL.ink, borderWidth:2, backgroundColor:PAL.ink},
+ {type:'scatter', label:'hide', data: FC.wh.map((v,i)=>({x:i+0.15,y:v})),
+  pointStyle:'line', rotation:90, pointRadius:8, borderColor:PAL.ink, borderWidth:2, backgroundColor:PAL.ink}
+]}, options:{ plugins:{ legend:{ labels:{ filter:it=>it.text!=='hide' } },
+  tooltip:{ callbacks:{ footer:i=>'n='+FC.n[i[0].dataIndex]+' fills \u00b7 '+FC.ctr[i[0].dataIndex]+' contracts' } } },
+ scales:{ y:{ min:0, max:1, title:{display:true,text:'P(NO pays) \u2014 fills are NO buys'} } } } });
+
+const MK = {"labels": ["spread capture", "+5m", "+30m", "+2h", "start\u22125m"], "all": [0.57, 0.35, 0.42, 0.86, -0.57], "s1": [0.61, 0.43, 0.53, 1.14, 1.84], "s2": [0.52, 0.26, 0.27, 0.51, -3.04], "cov": ["at fill", "95% of tape", "84% of tape", "69% of tape", "13% of tape"]};
+new Chart(document.getElementById('c_mk'), { type:'bar', data:{ labels: MK.labels, datasets:[
+ {label:'all fills', data: MK.all, backgroundColor: PAL.s1},
+ {label:'side-1', data: MK.s1, backgroundColor: PAL.d5},
+ {label:'side-2 (hedge)', data: MK.s2, backgroundColor: PAL.a1}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ footer:i=>'coverage: '+MK.cov[i[0].dataIndex] } } },
+ scales:{ y:{ title:{display:true,text:'maker P&L per contract (\u00a2, NO-holder terms)'} } } } });
+
+const PS = [{"agent": "decay", "item": "5a consist_16_10 vs v6", "unit": "milli", "pred_lo": -1.5, "pred_hi": 0.5, "realized_milli": -0.531, "outcome": "held", "source_file": "preregister.decay.md", "source_quote": "consist_16_10 \u22120.53m (predicted [\u22121.5,+0.5])", "mid": -0.5, "ok": true}, {"agent": "decay", "item": "5a sym_20 vs v6", "unit": "milli", "pred_lo": -4, "pred_hi": 0, "realized_milli": -2.17, "outcome": "held", "source_file": "preregister.decay.md", "source_quote": "sym_20 \u22122.17m (predicted [\u22124,0])", "mid": -2.0, "ok": true}, {"agent": "decay", "item": "5a sym_24 vs v6", "unit": "milli", "pred_lo": -4, "pred_hi": 1, "realized_milli": -2.42, "outcome": "held", "source_file": "preregister.decay.md", "source_quote": "sym_24 \u22122.42m (predicted [\u22124,+1])", "mid": -1.5, "ok": true}, {"agent": "decay", "item": "5b-a lineup continuity vs v6", "unit": "milli", "pred_lo": -2, "pred_hi": 2, "realized_milli": -2.82, "outcome": "miss", "source_file": "preregister.decay.md", "source_quote": "predicted [\u22122,+2] vs v6 \u2192 measured", "mid": 0.0, "ok": false}, {"agent": "decay", "item": "5b-a lineup continuity vs own control", "unit": "milli", "pred_lo": 0.5, "pred_hi": 3, "realized_milli": 1.68, "outcome": "held", "source_file": "preregister.decay.md", "source_quote": "predicted +0.5..+3 vs own control \u2192 measured +1.68m", "mid": 1.75, "ok": true}, {"agent": "decay", "item": "5b-b opponent quality of anomaly", "unit": "milli", "pred_lo": 0, "pred_hi": 1.5, "realized_milli": -0.85, "outcome": "sign wrong", "source_file": "preregister.decay.md", "source_quote": "predicted +0..+1.5 \u2192 measured \u22120.85m (SIGN WRONG,", "mid": 0.75, "ok": false}, {"agent": "decay", "item": "5b-c anomaly margin", "unit": "milli", "pred_lo": 0, "pred_hi": 1.5, "realized_milli": -0.55, "outcome": "sign wrong", "source_file": "preregister.decay.md", "source_quote": "predicted +0..+1.5 \u2192 measured \u22120.55m (SIGN WRONG, inside", "mid": 0.75, "ok": false}, {"agent": "decay", "item": "5b-d event-class fade vs sym control", "unit": "milli", "pred_lo": 0.5, "pred_hi": 2, "realized_milli": 0.27, "outcome": "under band", "source_file": "preregister.decay.md", "source_quote": "predicted +0.5..+2 vs sym control \u2192 measured +0.27m", "mid": 1.25, "ok": false}, {"agent": "decay", "item": "5b-e patch fade vs sym control", "unit": "milli", "pred_lo": 0, "pred_hi": 2, "realized_milli": -3.09, "outcome": "falsifier fired", "source_file": "preregister.decay.md", "source_quote": "predicted +0..+2 vs sym control \u2192 measured \u22123.09m", "mid": 1.0, "ok": false}, {"agent": "context", "item": "3b-a exposure term vs B0", "unit": "milli", "pred_lo": -1.773, "pred_hi": 1.773, "realized_milli": -0.28, "outcome": "held", "source_file": "preregister.context.md", "source_quote": "Predicted: all c ~ 0, |\u0394| inside 1.773m floor", "mid": 0.0, "ok": true}, {"agent": "context", "item": "3d learned class weights vs B0", "unit": "milli", "pred_lo": -1.773, "pred_hi": 1.773, "realized_milli": -5.737, "outcome": "miss", "source_file": "preregister.context.md", "source_quote": "holdout \u0394 vs B0 inside the floor (hand-set weights", "mid": 0.0, "ok": false}, {"agent": "bias_h1", "item": "E1 Tobit vs v6", "unit": "milli", "pred_lo": 0.3, "pred_hi": 1.5, "realized_milli": -0.462, "outcome": "miss", "source_file": "preregister.bias_h1.md", "source_quote": "Predicted +0.3..+1.5m, elite +1..+3 pts toward 0", "mid": 0.9, "ok": false}, {"agent": "bias_h1", "item": "E2 round-BT vs v6", "unit": "milli", "pred_lo": -2, "pred_hi": 2, "realized_milli": -0.222, "outcome": "held", "source_file": "preregister.bias_h1.md", "source_quote": "Predicted \u0394LL \u22122..+2m: measured", "mid": 0.0, "ok": true}, {"agent": "bias_h3", "item": "Exp1 SS core vs v6", "unit": "milli", "pred_lo": 0, "pred_hi": 3, "realized_milli": -8.87, "outcome": "miss", "source_file": "preregister.bias_h3.md", "source_quote": "predicted +0 to +3m", "mid": 1.5, "ok": false}, {"agent": "bias_h3", "item": "Exp2 5d vs SS core", "unit": "milli", "pred_lo": 0, "pred_hi": 2, "realized_milli": 3.55, "outcome": "above band", "source_file": "preregister.bias_h3.md", "source_quote": "predicted +0 to +2m", "mid": 1.0, "ok": false}, {"agent": "bias_h4", "item": "E2 L1 global \u03c3 link vs v6", "unit": "milli", "pred_lo": -1, "pred_hi": 1, "realized_milli": -0.048, "outcome": "held", "source_file": "preregister.bias_h4.md", "source_quote": "Predicted L1/L2 holdout \u0394 \u2208 (\u22121,+1) milli, INSIDE NOISE FLOOR: CONFIRMED", "mid": 0.0, "ok": true}, {"agent": "bias_h4", "item": "E2 L2 depth \u03c3 link vs v6", "unit": "milli", "pred_lo": -1, "pred_hi": 1, "realized_milli": 0.213, "outcome": "held", "source_file": "preregister.bias_h4.md", "source_quote": "Predicted L1/L2 holdout \u0394 \u2208 (\u22121,+1) milli, INSIDE NOISE FLOOR: CONFIRMED", "mid": 0.0, "ok": true}, {"agent": "compose", "item": "S1 gate5d vs v6", "unit": "milli", "pred_lo": 0.5, "pred_hi": 2.5, "realized_milli": 1.958, "outcome": "held", "source_file": "preregister.compose.md", "source_quote": "predicted effect +0.5..+2.5m overall", "mid": 1.5, "ok": true}, {"agent": "compose", "item": "S2 fade+shrink vs v6", "unit": "milli", "pred_lo": -0.2, "pred_hi": 0.8, "realized_milli": -0.14, "outcome": "held (low end)", "source_file": "preregister.compose.md", "source_quote": "effect \u22120.2..+0.8m overall", "mid": 0.3, "ok": true}, {"agent": "compose", "item": "S3 full stack vs v6", "unit": "milli", "pred_lo": 0.5, "pred_hi": 3.0, "realized_milli": -7.874, "outcome": "falsifier fired", "source_file": "preregister.compose.md", "source_quote": "predicted effect \u2248 additive: +0.5..+3.0m", "mid": 1.75, "ok": false}];
+const psx = PS.map(r=>r.mid), pslo = Math.min(...psx)-0.8, pshi = Math.max(...psx)+0.8;
+new Chart(document.getElementById('c_ps'), { type:'scatter', data:{ datasets:[
+ {label:'y = x', data:[{x:pslo,y:pslo},{x:pshi,y:pshi}], borderColor:PAL.gray, borderDash:[6,4], pointRadius:0, showLine:true},
+ {label:'held (inside preregistered band)', data: PS.filter(r=>r.ok).map(r=>({x:r.mid,y:r.realized_milli})),
+  backgroundColor:PAL.s1, pointRadius:5},
+ {label:'outside band / falsifier fired', data: PS.filter(r=>!r.ok).map(r=>({x:r.mid,y:r.realized_milli})),
+  backgroundColor:PAL.bad, pointStyle:'rectRot', pointRadius:6}
+]}, options:{ plugins:{ tooltip:{ callbacks:{ label:i=>{ const rows=PS.filter(r=>r.ok===(i.datasetIndex===1));
+   const r=rows[i.dataIndex]; return r? r.agent+' \u00b7 '+r.item+' \u00b7 predicted ['+r.pred_lo+', '+r.pred_hi+'] \u2192 '+r.realized_milli+'m ('+r.outcome+')':''; } } } },
+ scales:{ x:{ title:{display:true,text:'preregistered band midpoint (milli)'} },
+          y:{ title:{display:true,text:'realized holdout \u0394 (milli)'} } } } });
+
+</script>
+</body></html>

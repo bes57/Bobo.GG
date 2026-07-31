@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roster-Change Adaptation — BenPom v8</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --badbg:#fbeaea;
+         --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:940px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 18px; flex-wrap:wrap; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ .banner { background:var(--warnbg); border:1px solid #f0d9c7; border-left:6px solid var(--warn);
+   border-radius:14px; padding:14px 20px; margin:0 0 18px; font-size:.92rem; }
+ .banner b { color:var(--warn); letter-spacing:.4px; }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.72rem; min-width:24px;
+        height:24px; padding:0 4px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ h3 { font-size:.93rem; font-weight:700; margin:16px 0 6px; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); } .good { color:var(--good); } .bad { color:var(--bad); }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ .badge { font-weight:800; border-radius:999px; padding:2px 10px; font-size:.66rem;
+          letter-spacing:.6px; background:var(--warnbg); color:var(--warn);
+          border:1px solid #eccdb2; white-space:nowrap; }
+ .badge.desc { background:#eef3f8; color:#2b6f9e; border-color:#cfe0ee; }
+ .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:12px 0; }
+ .card { border:1px solid var(--line); border-radius:14px; padding:13px 15px; }
+ .card .lbl { font-size:.68rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--dim); }
+ .card .big { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.3rem; margin:2px 0; }
+ .card .sub { font-size:.76rem; color:var(--dim); }
+ table { width:100%; border-collapse:collapse; font-size:.84rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+ tr:last-child td { border-bottom:0; }
+ .verd { font-weight:700; border-radius:999px; padding:2px 9px; font-size:.68rem; white-space:nowrap; }
+ .verd.dead { background:var(--badbg); color:var(--bad); }
+ .verd.floor { background:var(--warnbg); color:var(--warn); }
+ .verd.hold { background:#f1f0f4; color:var(--dim); }
+ .verd.lead { background:var(--goodbg); color:var(--good); }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg);
+            border-radius:0 12px 12px 0; padding:11px 15px; margin:10px 0; font-size:.88rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ .callout.bad { border-color:var(--bad); background:var(--badbg); }
+ canvas { max-height:340px; }
+ .chartbox { margin:14px 0 2px; }
+ .dl { display:block; text-align:right; font-size:.72rem; margin:2px 0 10px; }
+ .dl a { color:var(--acc); text-decoration:none; font-weight:700; }
+ .dl a:hover { text-decoration:underline; }
+ .cap { font-size:.78rem; color:var(--dim); margin:4px 0 8px; }
+ code { font-family:'JetBrains Mono',monospace; font-size:.8em; background:#f4f2f8;
+        border:1px solid var(--line); border-radius:6px; padding:1px 6px; }
+ ul, ol { font-size:.9rem; margin:8px 0 8px 20px; } li { margin:5px 0; }
+ .adv { border:2px solid var(--bad); border-radius:14px; padding:18px 20px; margin:14px 0;
+        background:#fffdfd; }
+ .adv .advhead { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:var(--bad);
+        font-size:.95rem; margin-bottom:8px; }
+ .adv pre { white-space:pre-wrap; font-family:'JetBrains Mono',monospace; font-size:.76rem;
+        line-height:1.6; color:var(--ink); }
+ .scroll { overflow-x:auto; }
+ @media (max-width:640px) { section { padding:18px 14px; } }
+</style></head><body><div class="wrap">
+<h1>Roster-Change Adaptation</h1>
+<div class="tagline">How should BenPom react when a team changes players mid-season? —
+operator-requested report · agent:roster · 2026-07-28 23:57:58</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab">Favorites Lab</a>
+<a href="/testing/report/final_model">Final Model</a>
+<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v8_lab">v8 Lab</a>
+<a href="/testing/report/roster_adaptation" class="on">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a>
+</div>
+
+<div class="banner"><b>EXPLORATORY ONLY.</b> The 2025-26 holdout is <b>spent</b> —
+398 recorded holdout looks existed before this report
+(adversary finding); this report adds 5 preregistered exploratory reads
+(grand total 403, tallied in <span class="mono">roster_looks.json</span>).
+Nothing on this page is confirmatory or promotable. Adjudication requires the
+preregistered prospective test on fresh series (&sect;7).</div>
+
+<div class="banner" style="border-color:#7c4dd6;background:#f5f1fd">
+<b>THE ANSWER, UP FRONT (SPEC RUN, headline read: shipped config p1w8c5 a=28.0 tau=13.0 s=0.7):</b> <b>v6 does not gain a roster subsystem — the deployed model IS v6.</b> The activation gate FIRED on train (inner-CV +6.42m vs SE 5.34m; &acirc;=28, &tau;=13, s=0.7, policy p1w8c5), and the corpus-wide exploratory read then fired the preregistered falsifier: <b>-11.60m</b> vs v6 (iid CI [-19.0, -4.4]m; block [-18.2, -5.2]m; MDE 1.77m; n=1217) — a distinguishable loss, worst exactly where the subsystem aims (k&le;2 rebuilds -18.65m). The sub-heavy slice was neutral (+0.56m) — the damage is the a=28 solve deformation, not the sub down-weight. A train-fired gate failing out of sample is the run&rsquo;s headline lesson: mean&gt;SE at K=5 folds did not stop the 2023-24 &rarr; 2025-26 non-transfer. Spec conformance held everywhere: fixtures 54/54 passed, ablation zero-gates exactly 0.0 for ENVY/LEV/SEN, P2 correctly NOT RUN (region-prior recursion breaks retraction identity), and the shipped answer honors &sect;3.5: no evidence, no subsystem. Prospective arm H_specrun stays frozen for the fresh-data test.
+</div>
+
+<section><h2><span class="n">1</span> The question, and what v6 does today</h2>
+<p>The production model's only roster mechanism is <b>year-boundary continuity</b>
+(carry-over weight 0.3 scaled by the January roster overlap). Every mid-season change —
+ENVY's three 2026 swaps included — is <b>invisible to the solve</b>: the team keeps its
+full rating as if nothing happened. This report measures what that costs, forensically
+and population-wide, and takes three preregistered exploratory shots at fixing it.</p>
+<p class="dim">Change definition (preregistered before computing): a rotation-guarded
+lineup-set change vs the previous match; <b>sustained</b> = the new five holds &ge;3
+consecutive matches (or is censored by the data edge); magnitude = lineup overlap
+|A&cap;B|/max(|A|,|B|,5) — the engine's own formula. Verified to reproduce the lineups
+agent's <span class="mono">matches_since_change</span> on all 489-episode
+corpus with 0 mismatches.</p>
+<div class="cards">
+<div class="card"><div class="lbl">sustained changes 2023-26</div><div class="big">333</div>
+<div class="sub">+156 transient (stand-in/revert); 55 censored at data edge</div></div>
+<div class="card"><div class="lbl">by magnitude</div><div class="big">205 / 75 / 53</div>
+<div class="sub">keep-4 / keep-3 / overhaul (&le;2 kept)</div></div>
+<div class="card"><div class="lbl">churn by region</div><div class="big">102 CN</div>
+<div class="sub">87 Pacific · 76 Americas · 65 EMEA</div></div>
+<div class="card"><div class="lbl">2026 alone</div><div class="big">95</div>
+<div class="sub">sustained changes — roster churn is the norm, not the exception</div></div>
+</div><div class="dl"><a href="/testing/v8/stats/roster_population.json" download>&#8681; roster_population.json</a></div></section>
+
+<section><h2><span class="n">2</span> The ENVY case, forensically
+<span class="badge desc">DESCRIPTIVE</span></h2>
+<p>The operator flagged ENVY's Stage 1 &rarr; Stage 2 anomaly. The lineups data shows it is a
+<b>chained pair of one-out swaps</b> — by Stage 2 the fielded five keeps
+<b>3/5</b> of the Stage-1 five
+(demon1, keznit, rossy; out: eggsterr, p0ppin;
+in: glyph, nightz).</p>
+<div class="scroll"><table><tr><th>date</th><th>event</th><th>out</th><th>in</th><th>kept</th><th>run</th></tr>
+<tr><td class='mono'>2026-02-06</td><td>2026_kickoff</td><td class='bad'>inspire</td><td class='good'>demon1</td><td>4/5</td><td>6</td></tr><tr><td class='mono'>2026-05-12</td><td>2026_ewc_qual</td><td class='bad'>eggsterr</td><td class='good'>nightz</td><td>4/5</td><td>3</td></tr><tr><td class='mono'>2026-07-17</td><td>2026_stage2</td><td class='bad'>p0ppin</td><td class='good'>glyph</td><td>4/5</td><td>3 (censored)</td></tr></table></div>
+<div class="cards">
+<div class="card"><div class="lbl">S1&rarr;S2 overlap</div><div class="big">0.6</div>
+<div class="sub">3/5 of the Stage-1 core survived to Stage 2</div></div>
+<div class="card"><div class="lbl">carryover cost after 2026-05-12</div>
+<div class="big bad">+24.3pp</div>
+<div class="sub">mean(p_v6 &minus; won) per match, first 6 matches
+(pre-change bias +7.4pp)</div></div>
+<div class="card"><div class="lbl">cost after S2 swap 2026-07-17</div>
+<div class="big bad">+32.2pp</div>
+<div class="sub">first 3 S2 matches (censored — Stage 2 ongoing)</div></div>
+<div class="card"><div class="lbl">rating stabilization</div><div class="big">5 matches</div>
+<div class="sub">after the 2026-05-12 chain start (frozen definition, prereg &sect;2)</div></div>
+</div>
+<h3>ENVY 2026: v6 rating vs the phase-reset filter <span class="badge">EXPLORATORY overlay</span></h3>
+<div class="chartbox" style="height:300px"><canvas id="envyChart"></canvas></div>
+<p class="cap">Same model: the dashed line is v6 with the subsystem enabled for ENVY only
+(per-team ablation run), identical to solid v6 until each red vertical (labelled k/5 retained),
+and every point of separation after a vertical is ENVY&rsquo;s own adaptation. Chart = ablation;
+accuracy numbers = the corpus-wide run in &sect;5 — never mixed.</p>
+<h3>Every ENVY match of 2026</h3>
+<div class="scroll"><table><tr><th>date</th><th>event</th><th>opp</th><th>result</th>
+<th>p_v6 (ENVY)</th><th>msc</th><th>fielded five</th></tr><tr><td class='mono'>2026-01-15</td><td>2026_kickoff</td><td>EG</td><td>W 2-1</td><td class='mono'>0.631</td><td>0</td><td class='dim' style='font-size:.76rem'>eggsterr, inspire, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-01-17</td><td>2026_kickoff</td><td>MIBR</td><td>L 0-2</td><td class='mono'>0.355</td><td>1</td><td class='dim' style='font-size:.76rem'>eggsterr, inspire, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-01-24</td><td>2026_kickoff</td><td>KRÜ</td><td>W 2-1</td><td class='mono'>0.420</td><td>2</td><td class='dim' style='font-size:.76rem'>eggsterr, inspire, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-01-25</td><td>2026_kickoff</td><td>C9</td><td>L 1-2</td><td class='mono'>0.430</td><td>3</td><td class='dim' style='font-size:.76rem'>eggsterr, inspire, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-02-06</td><td>2026_kickoff</td><td>EG</td><td>L 0-2</td><td class='mono'>0.575</td><td>0</td><td class='dim' style='font-size:.76rem'>demon1, eggsterr, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-04-11</td><td>2026_stage1</td><td>LOUD</td><td>L 1-2</td><td class='mono'>0.611</td><td>1</td><td class='dim' style='font-size:.76rem'>demon1, eggsterr, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-04-17</td><td>2026_stage1</td><td>C9</td><td>W 2-1</td><td class='mono'>0.365</td><td>2</td><td class='dim' style='font-size:.76rem'>demon1, eggsterr, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-04-24</td><td>2026_stage1</td><td>LEV</td><td>L 0-2</td><td class='mono'>0.364</td><td>3</td><td class='dim' style='font-size:.76rem'>demon1, eggsterr, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-05-03</td><td>2026_stage1</td><td>G2</td><td>L 0-2</td><td class='mono'>0.227</td><td>4</td><td class='dim' style='font-size:.76rem'>demon1, eggsterr, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-05-09</td><td>2026_stage1</td><td>MIBR</td><td>W 2-0</td><td class='mono'>0.305</td><td>5</td><td class='dim' style='font-size:.76rem'>demon1, eggsterr, keznit, p0ppin, rossy</td></tr><tr><td class='mono'>2026-05-12</td><td>2026_ewc_qual</td><td>C9</td><td>W 2-1</td><td class='mono'>0.491</td><td>0</td><td class='dim' style='font-size:.76rem'>demon1, keznit, nightz, p0ppin, rossy</td></tr><tr><td class='mono'>2026-05-13</td><td>2026_ewc_qual</td><td>EG</td><td>L 1-2</td><td class='mono'>0.564</td><td>1</td><td class='dim' style='font-size:.76rem'>demon1, keznit, nightz, p0ppin, rossy</td></tr><tr><td class='mono'>2026-05-19</td><td>2026_ewc_qual</td><td>SEN</td><td>L 0-2</td><td class='mono'>0.433</td><td>2</td><td class='dim' style='font-size:.76rem'>demon1, keznit, nightz, p0ppin, rossy</td></tr><tr><td class='mono'>2026-07-17</td><td>2026_stage2</td><td>EG</td><td>L 0-2</td><td class='mono'>0.479</td><td>0</td><td class='dim' style='font-size:.76rem'>demon1, glyph, keznit, nightz, rossy</td></tr><tr><td class='mono'>2026-07-23</td><td>2026_stage2</td><td>MIBR</td><td>L 0-2</td><td class='mono'>0.317</td><td>1</td><td class='dim' style='font-size:.76rem'>demon1, glyph, keznit, nightz, rossy</td></tr><tr><td class='mono'>2026-07-26</td><td>2026_stage2</td><td>LEV</td><td>L 0-2</td><td class='mono'>0.171</td><td>2</td><td class='dim' style='font-size:.76rem'>demon1, glyph, keznit, nightz, rossy</td></tr></table></div>
+<div class="dl"><a href="/testing/v8/stats/roster_case_envy.json" download>&#8681; roster_case_envy.json</a></div></section>
+
+<section><h2><span class="n">3</span> Named cases + the biggest overhauls
+<span class="badge desc">DESCRIPTIVE</span></h2>
+<p>The operator named two canonical cases; both verified from lineups data (never memory):</p>
+<div class="cards">
+<div class="card"><div class="lbl">improvement — LEV gains Neon</div>
+<div class="big good">-14.7pp/match</div>
+<div class="sub">2025-11-29: 2/5 kept (out tex, c0m, okeanos;
+in blowz, spike, neon). Negative cost = v6 <b>under</b>-priced the upgraded roster
+for 6 matches; stabilization 10 matches.</div></div>
+<div class="card"><div class="lbl">degradation — ENVY loses inspire</div>
+<div class="big bad">+7.4pp/match</div>
+<div class="sub">2026-02-06: 4/5 kept
+(out inspire; in demon1).
+Positive cost = v6 <b>over</b>-priced ENVY; stabilization 9 matches.</div></div>
+</div>
+<h3>LEV window: v6 vs phase-reset <span class="badge">EXPLORATORY overlay</span></h3>
+<div class="chartbox" style="height:300px"><canvas id="levChart"></canvas></div>
+<p class="cap">Same model: dashed = v6 with the subsystem enabled for LEV only (ablation),
+identical to solid v6 until LEV&rsquo;s boundary vertical; separation after it is LEV&rsquo;s own
+adaptation to the Neon-era five. Chart = ablation; accuracy = corpus-wide run (&sect;5).</p>
+<h3>SEN window: a substitution is not a change <span class="badge desc">SPEC &sect;2.5 FIXTURE</span></h3><div class="chartbox" style="height:260px"><canvas id="senChart"></canvas></div><p class="cap">SEN&rsquo;s one-match deviation (the Marved game) creates no phase boundary: no vertical is drawn, the subsystem never activates, and the two lines are identical everywhere — asserted by the generator&rsquo;s zero-gate, not eyeballed.</p>
+<h3>Gallery: the four largest sustained overhauls (full rebuilds, 0/5 kept)</h3>
+<div class="scroll"><table><tr><th>org</th><th>date</th><th>event</th><th>kept</th>
+<th>out</th><th>in</th><th>stab.</th><th>cost/match</th></tr><tr><td><b>GE</b></td><td class='mono'>2025-01-19</td><td>2025_kickoff</td><td>0/5 (ov 0.0)</td><td class='bad'>russ, blazek1ng, polvi, lightningfast, benkai</td><td class='good'>papi, udotan, kr1stal, kellys, deryeon</td><td>9</td><td class='mono'>+12.8pp</td></tr><tr><td><b>EDG</b></td><td class='mono'>2025-11-29</td><td>2025_super_champions_cup</td><td>0/5 (ov 0.0)</td><td class='bad'>p1n, anjing, youngx, moonlight, ggd</td><td class='good'>chichoo, nobody, cb, smoggy, jieni7</td><td>10</td><td class='mono'>-1.8pp</td></tr><tr><td><b>FUR</b></td><td class='mono'>2026-01-16</td><td>2026_kickoff</td><td>0/5 (ov 0.0)</td><td class='bad'>palla, tuyz, adverso, urango, heat</td><td class='good'>koalanoob, alym, artzin, nerve, eeiu</td><td>9</td><td class='mono'>-16.1pp</td></tr><tr><td><b>KRÜ</b></td><td class='mono'>2026-01-16</td><td>2026_kickoff</td><td>0/5 (ov 0.0)</td><td class='bad'>melser, shyy, keznit, dantedeu5, mazino</td><td class='good'>nagz, mta, beng, governor, infiltrator</td><td>10</td><td class='mono'>-8.9pp</td></tr></table></div>
+<p class="cap">Cost = mean(p_v6 &minus; won) over the first 6 post-change matches; negative =
+the new roster beat the carried rating. Sign varies case-by-case — the error is
+<b>direction-agnostic at the case level</b>, which motivated the operator's variance-spike shape.</p>
+<div class="dl"><a href="/testing/v8/stats/roster_case_gallery.json" download>&#8681; roster_case_gallery.json</a></div></section>
+
+<section><h2><span class="n">4</span> Population atlas: the adaptation curve
+<span class="badge desc">DESCRIPTIVE</span></h2>
+<p>Across every sustained change 2023-26, how wrong is the carried v6 rating in the first
+matches after a change? Positive = post-change teams <b>outperform</b> the carried rating.</p>
+<div class="chartbox" style="height:280px"><canvas id="atlasPooled"></canvas></div>
+<p class="cap">First 3 matches after a sustained change, pooled, vs the stable reference
+(&gt;10 matches on the same five). Whiskers = 95% CI (team-observations).</p>
+<div class="scroll"><table><tr><th>class</th><th>bias (first 3)</th><th>95% CI</th><th>n team-obs</th></tr>
+<tr><td><span style='color:#3a90cc'>&#9632;</span> keep4</td><td class='mono'>+4.37pp</td><td class='mono dim'>[0.65, 8.09]</td><td>611</td></tr><tr><td><span style='color:#c96a2a'>&#9632;</span> keep3</td><td class='mono'>+5.63pp</td><td class='mono dim'>[-0.55, 11.80]</td><td>224</td></tr><tr><td><span style='color:#7c4dd6'>&#9632;</span> overhaul</td><td class='mono'>+4.80pp</td><td class='mono dim'>[-2.99, 12.59]</td><td>152</td></tr><tr><td><span style='color:#6f6a7c'>&#9632;</span> stable reference (&gt;10)</td><td class='mono'>+0.73pp</td><td class='mono dim'>[-2.02, 3.47]</td><td>1168</td></tr></table></div>
+<div class="callout">Post-change teams beat v6's carried rating by <b>+4&ndash;6pp per match</b>
+in their first three matches — the keep-4 class alone is
++4.37pp with a CI excluding zero. The operator's
+"new phase" intuition is directionally right <b>in the data</b>. Changes skew toward
+improvement on average (teams change rosters because they are underperforming), which is
+why a symmetric mean-blend toward a prior cannot capture it and why the year-only
+mechanism misses it entirely.</div>
+<div class="chartbox" style="height:300px"><canvas id="atlasCurve"></canvas></div>
+<p class="cap">Per-match adaptation curve by magnitude (gray band = stable-reference 95% CI).
+Per-point CIs are wide — cell-level values and CIs are in the JSON download.
+Power context: the post-change (&le;3) bucket floor is 2.52m
+within-family at its frozen n=598 — and even that is exploratory-only
+on this spent frame.</p>
+<div class="dl"><a href="/testing/v8/stats/roster_population.json" download>&#8681; roster_population.json</a></div></section>
+
+<section><h2><span class="n">5</span> Three treatments, three exploratory reads
+<span class="badge">EXPLORATORY</span></h2>
+<p>All preregistered (specs, predictions, falsifiers) before any run — including the
+operator-specified <b>phase-reset filter</b> (addendum, ordering disclosed in the log):
+keep the rating mean as the reference point, inject state variance
+&Delta;q&nbsp;=&nbsp;g&middot;(1&minus;k/5)&middot;R at the change, and let the elevated Kalman
+gain over-react to the first post-change results in whichever direction they point.
+Train-only selection; &beta; refit per config; CRN paired bootstrap (iid + event-block);
+baseline = stored v6 (holdout LL 0.64216, n=1217).
+Floors: within-family 1.773m, cross 5.889m; post-change bucket
+2.52m / 7.81m (frozen n=598).</p>
+<div class="chartbox" style="height:230px"><canvas id="treatChart"></canvas></div>
+<div class="scroll"><table><tr><th>treatment (EXPLORATORY read)</th><th>&Delta; overall</th>
+<th>&Delta; post-change &le;3</th><th>&approx;ROI &Delta;</th><th>verdict on this frame</th></tr>
+<tr><td><b>(b) graded change-point continuity</b><br><span class='dim mono' style='font-size:.72rem'>train-selected &gamma;=2.0</span></td><td class='mono'>-3.89m<br><span class='dim' style='font-size:.72rem'>iid [-8.46, 0.35]<br>block [-7.77, -0.26]</span></td><td class='mono'>-4.95m<br><span class='dim' style='font-size:.72rem'>[-11.72, 1.55] n=731</span></td><td class='mono'>-0.32pp</td><td><span class='verd dead'>DEAD ON FRAME</span><br><span class='dim' style='font-size:.72rem'>falsifier FIRED (overall beyond within floor; block CI excludes 0)</span></td></tr><tr><td><b>(c) change-triggered partial cold start</b><br><span class='dim mono' style='font-size:.72rem'>train-selected a0=1.0, M=6</span></td><td class='mono'>-1.42m<br><span class='dim' style='font-size:.72rem'>iid [-3.54, 0.75]<br>block [-5.17, 1.78]</span></td><td class='mono'>-2.83m<br><span class='dim' style='font-size:.72rem'>[-6.36, 0.58] n=731</span></td><td class='mono'>-0.12pp</td><td><span class='verd floor'>NO SUPPORT</span><br><span class='dim' style='font-size:.72rem'>INSIDE NOISE FLOOR — no support, falsifier not fired</span></td></tr><tr><td><b>(d) phase-reset filter (operator-specified)</b><br><span class='dim mono' style='font-size:.72rem'>train-selected g=0.5</span></td><td class='mono'>-19.27m<br><span class='dim' style='font-size:.72rem'>iid [-29.33, -9.40]<br>block [-26.88, -12.43]</span></td><td class='mono'>-23.79m<br><span class='dim' style='font-size:.72rem'>[-38.13, -9.09] n=731</span></td><td class='mono'>-1.60pp</td><td><span class='verd dead'>DEAD ON FRAME</span><br><span class='dim' style='font-size:.72rem'>falsifier FIRED (post-change CI excludes 0; loses to own base)</span></td></tr></table></div>
+<p class="cap">ROI = referee quote-margin translation, symmetric first-order reading
+(the ladder is defined for improvements; negative &Delta;LL clamps at the operating point —
+both conventions in the JSON). All three predicted-positive treatments came back negative.</p>
+<div class="callout bad"><b>The operator's contrast prediction is REVERSED.</b> Preregistered:
+variance-spike (d) beats mean-blend (c) on improvement cases. Measured (d&nbsp;&minus;&nbsp;c on
+improvement rows): <b>-38.32m</b>
+[-68.25, -9.17] —
+the mean-blend wins on the very rows the over-reaction was designed for. The injection also
+loses to its own no-injection filter base
+(-7.52m
+[-12.08, -3.34]):
+single-map results are too noisy for a one-shot gain spike — the filter over-trusts
+exactly the evidence the atlas shows is thin.</div>
+<div class="scroll"><table><tr><th>d vs c contrast slice</th><th>d &minus; c</th><th>95% CI</th><th>n</th></tr>
+<tr><td>improvement cases</td><td class='mono'>-38.32m</td><td class='mono dim'>[-68.25, -9.17]</td><td>202</td></tr><tr><td>degradation cases</td><td class='mono'>-18.73m</td><td class='mono dim'>[-48.16, 10.77]</td><td>155</td></tr><tr><td>post-change &lt;=3 (all)</td><td class='mono'>-20.96m</td><td class='mono dim'>[-36.20, -6.10]</td><td>731</td></tr></table></div>
+<h3>Effective learning rate after a change (operator chart) <span class="badge desc">DESCRIPTIVE telemetry</span></h3>
+<div class="chartbox" style="height:300px"><canvas id="gainChart"></canvas></div>
+<p class="cap">Mean Kalman gain per map update vs matches-since-change at the train-selected
+injection (g=0.5): the filter learns
+&approx;3.3&times;
+faster than the stable reference (0.09) right after a full overhaul, decaying back
+within ~5 matches — exactly the operator's "overreact a bit, scaled by continuity" shape.
+The shape renders correctly; on this frame it just doesn't pay.</p>
+<h3>Per-bucket panel (all three reads)</h3>
+<div class="scroll"><table><tr><th>bucket</th><th>(b) continuity</th><th>(c) cold start</th>
+<th>(d) phase-reset</th></tr><tr><td>post-change &lt;=3 (either team, power def)<br><span class='dim' style='font-size:.7rem'>n=731</span></td><td class='mono'>-5.0 <span class='dim' style='font-size:.7rem'>[-11.7, 1.6]</span></td><td class='mono'>-2.8 <span class='dim' style='font-size:.7rem'>[-6.4, 0.6]</span></td><td class='mono'>-23.8 <span class='dim' style='font-size:.7rem'>[-38.1, -9.1]</span></td></tr><tr><td>post-change &lt;=3 · keep4<br><span class='dim' style='font-size:.7rem'>n=375</span></td><td class='mono'>-0.6 <span class='dim' style='font-size:.7rem'>[-7.3, 6.4]</span></td><td class='mono'>+0.8 <span class='dim' style='font-size:.7rem'>[-1.8, 3.5]</span></td><td class='mono'>-27.2 <span class='dim' style='font-size:.7rem'>[-45.6, -8.4]</span></td></tr><tr><td>post-change &lt;=3 · keep3<br><span class='dim' style='font-size:.7rem'>n=112</span></td><td class='mono'>-6.2 <span class='dim' style='font-size:.7rem'>[-22.1, 8.6]</span></td><td class='mono'>-8.9 <span class='dim' style='font-size:.7rem'>[-18.0, 0.2]</span></td><td class='mono'>-11.2 <span class='dim' style='font-size:.7rem'>[-48.1, 22.0]</span></td></tr><tr><td>post-change &lt;=3 · overhaul<br><span class='dim' style='font-size:.7rem'>n=67</span></td><td class='mono'>-14.5 <span class='dim' style='font-size:.7rem'>[-57.9, 23.1]</span></td><td class='mono'>-2.4 <span class='dim' style='font-size:.7rem'>[-24.7, 21.7]</span></td><td class='mono'>-35.2 <span class='dim' style='font-size:.7rem'>[-94.4, 20.0]</span></td></tr><tr><td>post-change 4-10<br><span class='dim' style='font-size:.7rem'>n=352</span></td><td class='mono'>-3.1 <span class='dim' style='font-size:.7rem'>[-8.5, 2.3]</span></td><td class='mono'>+0.9 <span class='dim' style='font-size:.7rem'>[-0.7, 2.6]</span></td><td class='mono'>-13.6 <span class='dim' style='font-size:.7rem'>[-28.0, 0.5]</span></td></tr><tr><td>stable (&gt;10)<br><span class='dim' style='font-size:.7rem'>n=134</span></td><td class='mono'>-0.1 <span class='dim' style='font-size:.7rem'>[-5.3, 5.3]</span></td><td class='mono'>+0.1 <span class='dim' style='font-size:.7rem'>[-1.5, 1.6]</span></td><td class='mono'>-9.6 <span class='dim' style='font-size:.7rem'>[-32.3, 12.9]</span></td></tr><tr><td>gated (first-3 of sustained ov&lt;=0.6 change)<br><span class='dim' style='font-size:.7rem'>n=202</span></td><td class='mono'>-1.7 <span class='dim' style='font-size:.7rem'>[-18.5, 13.8]</span></td><td class='mono'>-6.6 <span class='dim' style='font-size:.7rem'>[-16.4, 3.7]</span></td><td class='mono'>-9.6 <span class='dim' style='font-size:.7rem'>[-39.9, 19.1]</span></td></tr><tr><td>improvement cases (retrospective slice)<br><span class='dim' style='font-size:.7rem'>n=202</span></td><td class='mono'>-8.9 <span class='dim' style='font-size:.7rem'>[-21.4, 3.7]</span></td><td class='mono'>-4.4 <span class='dim' style='font-size:.7rem'>[-10.8, 2.0]</span></td><td class='mono'>-42.7 <span class='dim' style='font-size:.7rem'>[-72.8, -14.1]</span></td></tr><tr><td>degradation cases (retrospective slice)<br><span class='dim' style='font-size:.7rem'>n=155</span></td><td class='mono'>-6.3 <span class='dim' style='font-size:.7rem'>[-19.2, 5.7]</span></td><td class='mono'>-3.4 <span class='dim' style='font-size:.7rem'>[-10.6, 3.5]</span></td><td class='mono'>-22.1 <span class='dim' style='font-size:.7rem'>[-50.5, 5.5]</span></td></tr></table></div>
+<p class="cap">&Delta; milli-LL vs v6, iid CRN CIs; improvement/degradation slices are
+retrospective diagnostics of already-counted vectors, not additional looks.</p>
+<div class="dl"><a href="/testing/v8/stats/roster_treatments.json" download>&#8681; roster_treatments.json</a></div><div class="dl"><a href="/testing/v8/stats/roster_looks.json" download>&#8681; roster_looks.json</a></div></section>
+
+<section><h2><span class="n">6</span> Where this sits in Wave 2 (adversary-amended)</h2>
+<ul>
+<li><b>Ledger re-open is legitimate:</b> "Lineup-overlap roster reweighting (3 schemes)" and
+"Roster-instability prediction shrink" were rejected pre-v8 on coarse year-boundary heuristics and
+reclassified UNRESOLVED by Phase 0 — per-match lineups are a new data source. This report is
+that re-open; its answer on this frame is negative.</li>
+<li><b>Decay 5b-a</b> (lineup continuity): real but redundant with year mode, inside the
+noise floor — consistent with read (b)'s failure to beat year continuity.</li>
+<li><b>H3 5d half-life table</b> (change-adjacent 7.4 vs stable 24.8 games): DEMOTED by the
+adversary to "a hypothesis to test on new data" — quoted here only as such.</li>
+<li><b>H3 cold-start &lt;10 maps</b>: the one adversary-robust lead. Read (c) tried its
+point-estimate form on change rows and found nothing — the lead stays a cold-start
+(rating-absence) story, not a roster-change story, on current evidence.</li>
+<li><b>Compose S1</b>: HOLD — "the evidence's verdict" per the adversary; the original
+change-scoped gate idea was withdrawn unread when the operator's phase-reset replaced it.</li>
+</ul>
+<div class="adv"><div class="advhead">Adversary excerpts this report must respect (verbatim)</div>
+<pre>- **H3 cold(&lt;10 prior maps): +71.7m at n=39** — the one positive cell that
+  survives everything I threw at it (bucket floor 32.9m; drop-top-5% → +53.1m;
+  event jackknife min +66.0m). Caveats: 4 events, and the parent model loses
+  overall (−5.3m).
+4. **The 5d half-life table (7.4 vs 24.8 games).** The program's own profile
+   CIs overlap enormously ([3.9, 18.5] vs [5.3, 300.2]) and its own
+   DerSimonian–Laird pooling returns τ²=0 — all cells shrink to one pooled HL
+   of 8 games. The middle cell sits non-monotonically at the q→0 boundary. The
+   supporting "WIN" (5d vs core, +3.55m) has an iid CI that includes zero
+   (p_better .946 &lt; .95), flips to −6.34m under drop-top-5%, and is one of 163
+   primary holdout looks — it survives no family-wise correction. Point
+   ordering is a hypothesis to test on new data, not a finding.
+5. **Any residue of compose S1 as "a real effect below the bar".** Its active
+   surface was pre-screened on holdout: the 5d component and its n_eff gate
+   family were chosen after Wave 2 published 5d's holdout cold-row wins, and 68
+   of the 178 gated rows are those same thin rows. The nongated delta is
+   exactly 0.000; the gated +13.39m (n=178) is inside its own 15.4m bucket
+   floor; overall +1.958m flips to −3.96m under drop-top-5% and already fails
+   block bootstrap (p .888). HOLD is not just the gate's verdict — it is the
+   evidence's verdict.</pre></div>
+<div class="dl"><a href="/testing/v8/stats/adversary_report.json" download>&#8681; adversary_report.json</a></div><div class="dl"><a href="/testing/v8/stats/ledger_reclass.json" download>&#8681; ledger_reclass.json</a></div></section>
+
+<section><h2><span class="n">7</span> Bot integration + the prospective plan</h2>
+<h3>Tier 1 — sizing only <span class="verd lead">RECOMMENDED NOW</span></h3>
+<p>build_model_snapshot adds a per-team roster_flag block; the bot sizes down / widens quotes on fresh rosters. Zero fair-value risk: the model's probabilities are untouched.</p>
+<ul><li class="mono" style="font-size:.82rem">matches_since_change &lt;= 2 AND overlap_vs_prev &lt;= 0.6 -&gt; quarter-size, widen quote by one tick</li><li class="mono" style="font-size:.82rem">matches_since_change &lt;= 2 AND overlap_vs_prev == 0.8 -&gt; half-size</li><li class="mono" style="font-size:.82rem">matches_since_change &gt;= 3 -&gt; normal sizing</li></ul>
+<p class="dim">Basis: the atlas's elevated, directional post-change error and the case
+evidence (ENVY +24.3pp,
+LEV -14.7pp per match). Sizing down on
+elevated-uncertainty rows needs no directional model claim and zero fair-value risk.
+Snapshot fields + data path in the JSON.</p>
+<h3>Tier 2 — fair-value change <span class="verd hold">NOT RECOMMENDED NOW</span></h3>
+<p>all three exploratory reads were negative on the (spent) holdout: (b) -3.889m (falsifier fired), (c) -1.423m (inside the 1.77m floor, no support), (d) phase-reset -19.275m vs v6 and -7.524m vs its own filter base (falsifier fired; contrast prediction reversed). v6's year-boundary continuity 0.3 remains the champion roster mechanism.</p>
+<h3>Player-identity mean shift (design note only)</h3>
+<p class="dim">at a change event, shift the reference-point mean by a walk-forward estimate of (incoming - outgoing) player quality (e.g. decayed per-map rating share or PTD-style contribution from data/enriched/player_map_advanced.csv), scaled by (1 - ov). Directional where the phase-reset was agnostic: Neon-in would shift LEV UP, inspire-out ENVY DOWN. No holdout
+read was spent on it (operator addendum).</p>
+<h3>The preregistered prospective test (the only path to adjudication)</h3>
+<div class="scroll"><table><tr><th>arm</th><th>frozen spec</th></tr><tr><td class='mono'>A_v6</td><td>champion (reference)</td></tr><tr><td class='mono'>B_continuity</td><td>read-1 spec, gamma=2.0 (exploratory read was -3.889m; expectation LOW)</td></tr><tr><td class='mono'>C_coldstart</td><td>read-2 spec, a0=1.0 M=6 (exploratory -1.423m, inside floor)</td></tr><tr><td class='mono'>D_phase_reset</td><td>read-3' spec, g=0.5 on h3-1b base (operator shape; exploratory read NEGATIVE with falsifier fired — carried prospectively because the frame evidence is exploratory-only, expectation LOW)</td></tr><tr><td class='mono'>E_atlas_replication</td><td>NON-MODEL check: does the +4-6pp first-3-matches post-change outperformance replicate? (mean(won - p_v6) on post-change team-observations, msc&lt;=2, sustained episodes)</td></tr><tr><td class='mono'>F_v6_overreact</td><td>read-4 spec, a=2.0 tau=5.0 on v6 (operator-directed clean mechanism test; exploratory read -0.395m)</td></tr><tr><td class='mono'>H_specrun</td><td>SPEC RUN gate-selected config, FROZEN: P1 W=8 c=5, a=28.0 tau=13.0 s=0.7 n_min=3 cap=1.5 (lambda_hat=0 by inner-CV; gate fired +6.42m CV vs 5.34m SE). Exploratory holdout read: -11.595m [-18.99,-4.39] — FALSIFIER FIRED on the spent frame; expectations LOW; carried for prospective adjudication per spec 6 (decision rule unchanged: dLL &gt;= MDE80 at realized n AND p_better &gt;= .95 both CRN modes AND no G3 regression).</td></tr></table></div>
+<p class="dim">an arm is promoted to Wave-3 candidate iff dLL &gt;= MDE80 at the realized n AND p_better &gt;= 0.95 in BOTH CRN modes AND no G3 major bucket regression (referee.promotion_gate bars). Arm E 'replicates' iff the pooled first-3 bias is positive with 95% CI excluding 0.</p>
+<div class="scroll"><table><tr><th>fresh n</th><th>MDE80 overall (within)</th>
+<th>MDE80 post-change bucket</th></tr><tr><td class='mono'>50</td><td class='mono'>8.74m</td><td class='mono'>8.71m</td></tr><tr><td class='mono'>75</td><td class='mono'>7.14m</td><td class='mono'>7.11m</td></tr><tr><td class='mono'>100</td><td class='mono'>6.18m</td><td class='mono'>6.16m</td></tr><tr><td class='mono'>150</td><td class='mono'>5.05m</td><td class='mono'>5.03m</td></tr><tr><td class='mono'>200</td><td class='mono'>4.37m</td><td class='mono'>4.36m</td></tr><tr><td class='mono'>300</td><td class='mono'>3.57m</td><td class='mono'>3.56m</td></tr></table></div>
+<p class="cap">at a realistic first checkpoint (~100 fresh series, ~60 in the post-change bucket) the floors are ~6.2m overall / ~8.0m bucket — only large effects are adjudicable soon; plan to re-check after Champions.</p>
+<div class="dl"><a href="/testing/v8/stats/roster_integration.json" download>&#8681; roster_integration.json</a></div></section>
+
+<section><h2><span class="n">8</span> Looks accounting</h2>
+<p>Prior recorded holdout numbers: <b>398</b>
+(compose tally at Wave 3 close). This report: <b>5</b> new
+EXPLORATORY reads (one per treatment, train-selected params only; non-selected grid points
+were evaluated on train only, with engine/filter holdout numbers scrubbed before recording —
+see the log). Reserve read: unused (no train tie). Grand total now
+<b>403</b>. Stored reuses (v6 baseline; h3 1b base) are not new looks.</p>
+<p class="dim">Verdict, in the program's own words: v6 stands. The roster signal is real in
+the data (atlas &sect;4) but none of the three preregistered mechanisms monetized it on this
+frame — the honest deliverables are the Tier-1 sizing flag and the prospective test.</p>
+<div class="dl"><a href="/testing/v8/stats/roster_looks.json" download>&#8681; roster_looks.json</a></div></section>
+
+<p class="dim" style="text-align:center;font-size:.78rem">agent:roster · preregistered in
+<span class="mono">preregister.roster.md</span> (+ operator addendum, ordering disclosed) ·
+every number from <span class="mono">/testing/v8/stats/roster_*.json</span> · CRN per
+<span class="mono">crn.json</span> · frame sha verified</p>
+</div><script>
+const PAL = {"keep4": "#3a90cc", "keep3": "#c96a2a", "overhaul": "#7c4dd6", "v6": "#6f6a7c", "filt": "#c96a2a", "b": "#3a90cc", "c": "#6b8f1f", "d": "#c96a2a", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b"};
+Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
+Chart.defaults.color = '#6b6478';
+Chart.defaults.animation = false;
+const floorBand = { id:'floorBand', beforeDatasetsDraw(c) {
+  const fb = c.options.plugins.floorBand; if (!fb || fb.lo === undefined) return;
+  const ax = fb.axis === 'x' ? c.scales.x : c.scales.y, ctx = c.ctx, ca = c.chartArea;
+  const p0 = ax.getPixelForValue(fb.lo), p1 = ax.getPixelForValue(fb.hi);
+  ctx.save(); ctx.fillStyle = 'rgba(154,147,166,0.16)';
+  if (fb.axis === 'x') ctx.fillRect(Math.min(p0,p1), ca.top, Math.abs(p1-p0), ca.bottom-ca.top);
+  else ctx.fillRect(ca.left, Math.min(p0,p1), ca.right-ca.left, Math.abs(p1-p0));
+  ctx.restore(); } };
+const ciBars = { id:'ciBars', afterDatasetsDraw(c) {
+  const cb = c.options.plugins.ciBars; if (!cb || !cb.lo) return;
+  const ctx = c.ctx; ctx.save(); ctx.strokeStyle = '#16121d'; ctx.lineWidth = 1.4;
+  const horiz = cb.horizontal;
+  const meta = c.getDatasetMeta(cb.dsIndex || 0);
+  meta.data.forEach((el, i) => {
+    const lo = cb.lo[i], hi = cb.hi[i]; if (lo == null) return;
+    if (horiz) { const y = el.y, x0 = c.scales.x.getPixelForValue(lo), x1 = c.scales.x.getPixelForValue(hi);
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y);
+      ctx.moveTo(x0, y-4); ctx.lineTo(x0, y+4); ctx.moveTo(x1, y-4); ctx.lineTo(x1, y+4); ctx.stroke();
+    } else { const x = el.x, y0 = c.scales.y.getPixelForValue(lo), y1 = c.scales.y.getPixelForValue(hi);
+      ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1);
+      ctx.moveTo(x-4, y0); ctx.lineTo(x+4, y0); ctx.moveTo(x-4, y1); ctx.lineTo(x+4, y1); ctx.stroke(); } });
+  ctx.restore(); } };
+const vLines = { id:'vLines', afterDatasetsDraw(c) {
+  const vl = c.options.plugins.vLines; if (!vl || (!vl.dates && !vl.marks)) return;
+  const marks = vl.marks || (vl.dates || []).map(d => ({d:d, t:'change'}));
+  const ctx = c.ctx, ca = c.chartArea; ctx.save();
+  ctx.strokeStyle = '#c0392b'; ctx.setLineDash([4,3]); ctx.lineWidth = 1.2;
+  ctx.fillStyle = '#c0392b'; ctx.font = '10px DM Sans';
+  marks.forEach(m => { const i = vl.labels.indexOf(m.d); if (i < 0) return;
+    const x = c.scales.x.getPixelForValue(i);
+    ctx.beginPath(); ctx.moveTo(x, ca.top); ctx.lineTo(x, ca.bottom); ctx.stroke();
+    ctx.fillText(m.t, x + 3, ca.top + 10); });
+  ctx.restore(); } };
+Chart.register(floorBand, ciBars, vLines);
+
+function lineChart(id, labels, datasets, opts) {
+  new Chart(document.getElementById(id), { type:'line',
+    data:{ labels, datasets },
+    options: Object.assign({ responsive:true, maintainAspectRatio:false,
+      spanGaps:true, interaction:{mode:'index', intersect:false},
+      plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}} },
+      elements:{ point:{radius:0, hoverRadius:5, hitRadius:8}, line:{borderWidth:2, tension:.25} },
+      scales:{ x:{grid:{display:false}, ticks:{maxTicksLimit:9, autoSkip:true}},
+               y:{grid:{color:'#eceef2'}} } }, opts || {}) });
+}
+
+// ENVY overlay
+lineChart('envyChart', ["2025-11-08", "2025-11-09", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-16", "2025-11-29", "2025-11-30", "2025-12-04", "2025-12-05", "2025-12-18", "2025-12-19", "2025-12-20", "2025-12-21", "2026-01-15", "2026-01-16", "2026-01-17", "2026-01-18", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-24", "2026-01-25", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-01-31", "2026-02-01", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-07", "2026-02-08", "2026-02-09", "2026-02-12", "2026-02-13", "2026-02-14", "2026-02-15", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-22", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16", "2026-05-17", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-19", "2026-06-20", "2026-06-21", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26"], [
+  { label:'v6 (steps at ENVY matches)', data:[0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.51, 0.51, -0.5701, -0.5701, -0.5701, -0.5701, -0.5701, -0.5701, 0.2533, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -1.9783, -1.9783, -1.9783, -1.9783, -1.9783, -0.8987, -0.8987, -0.8987, -0.8987, -0.8987, -1.5337, -1.5337, -1.5337, -1.5337, -1.5337, -1.5337, -1.5337, -2.0987, -2.0987, -2.0987, -2.0987, -2.0987, -0.3977, -0.3977, -0.3977, 0.4682, -0.4818, -0.4818, -0.4818, -0.4818, -0.4818, -0.4818, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0074, -2.0062, -2.0062, -2.0062, -2.0062, -2.0062, -2.0062, -3.361, -3.361, -3.361, -3.6234], borderColor:PAL.v6, backgroundColor:PAL.v6, stepped:'after', tension:0 },
+  { label:'v6 + subsystem, THIS TEAM ONLY (ablation)', data:[0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.4797, 0.51, 0.51, -0.5701, -0.5701, -0.5701, -0.5701, -0.5701, -0.5701, 0.2533, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, 0.5879, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -0.7501, -1.9783, -1.9783, -1.9783, -1.9783, -1.9783, -0.8987, -0.8987, -0.8987, -0.8987, -0.8987, -3.3925, -3.3925, -3.3925, -3.3925, -3.3925, -3.3925, -3.3925, -4.0918, -4.0918, -4.0918, -4.0918, -4.0918, -1.4148, -1.4148, -1.4148, -0.727, -1.0539, -1.0539, -1.0539, -1.0539, -1.0539, -1.0539, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.6185, -2.2151, -2.2151, -2.2151, -2.2151, -2.2151, -2.2151, -4.4469, -4.4469, -4.4469, -4.6578], borderColor:PAL.overhaul,
+    backgroundColor:PAL.overhaul, borderDash:[8,4], stepped:'after', tension:0 } ],
+  { plugins:{ vLines:{marks:[{"d": "2026-02-06", "t": "4/5"}, {"d": "2026-05-12", "t": "3/5"}], labels:["2025-11-08", "2025-11-09", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-16", "2025-11-29", "2025-11-30", "2025-12-04", "2025-12-05", "2025-12-18", "2025-12-19", "2025-12-20", "2025-12-21", "2026-01-15", "2026-01-16", "2026-01-17", "2026-01-18", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-24", "2026-01-25", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-01-31", "2026-02-01", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-07", "2026-02-08", "2026-02-09", "2026-02-12", "2026-02-13", "2026-02-14", "2026-02-15", "2026-02-28", "2026-03-01", "2026-03-02", "2026-03-03", "2026-03-04", "2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-13", "2026-03-14", "2026-03-15", "2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20", "2026-03-22", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", "2026-04-04", "2026-04-05", "2026-04-07", "2026-04-08", "2026-04-09", "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18", "2026-04-19", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-29", "2026-04-30", "2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16", "2026-05-17", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-19", "2026-06-20", "2026-06-21", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26"]},
+              legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}} },
+    scales:{ x:{grid:{display:false}, ticks:{maxTicksLimit:8}}, y:{grid:{color:'#eceef2'},
+             title:{display:true, text:'rating (transformed round-margin units)'} } } });
+
+// LEV overlay
+lineChart('levChart', ["2025-08-01", "2025-08-02", "2025-08-03", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-09", "2025-08-10", "2025-08-13", "2025-08-14", "2025-08-15", "2025-08-16", "2025-08-17", "2025-08-20", "2025-08-21", "2025-08-22", "2025-08-23", "2025-08-24", "2025-08-28", "2025-08-29", "2025-08-30", "2025-08-31", "2025-09-05", "2025-09-06", "2025-09-07", "2025-09-12", "2025-09-13", "2025-09-14", "2025-09-15", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-20", "2025-09-21", "2025-09-22", "2025-09-25", "2025-09-26", "2025-09-27", "2025-09-28", "2025-09-29", "2025-10-03", "2025-10-04", "2025-10-05", "2025-11-08", "2025-11-09", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-16", "2025-11-29", "2025-11-30", "2025-12-04", "2025-12-05", "2025-12-18", "2025-12-19", "2025-12-20", "2025-12-21", "2026-01-15", "2026-01-16", "2026-01-17", "2026-01-18", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-24", "2026-01-25", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-01-31", "2026-02-01", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-07", "2026-02-08", "2026-02-09", "2026-02-12", "2026-02-13", "2026-02-14", "2026-02-15", "2026-02-28", "2026-03-01"], [
+  { label:'v6 (steps at LEV matches)', data:[-0.7669, -0.7669, -0.7669, -0.7669, -0.7669, -0.7669, -0.7822, -0.7822, -0.7822, -0.7822, -0.0214, -0.0214, -0.0214, -0.0214, -0.3471, -0.3471, -0.3758, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, 2.2813, 3.3277, 3.3277, 3.3277, 3.3277, 3.3277, 3.3277, 3.3277, 3.3277, 2.6292, 2.6292, 2.6292, 2.6292, 2.6292, 2.6292, 2.6292, 1.6031, 1.6031, 1.6031, 1.6031, 1.6031, 1.6031, 2.2707, 2.2707, 2.2707, 2.2707, 2.2707, 2.5144, 1.3679, 1.3679, 1.3679, 1.3679, 1.3679, 1.3679, 1.3679, 1.3679, 1.3679], borderColor:PAL.v6, backgroundColor:PAL.v6, stepped:'after', tension:0 },
+  { label:'v6 + subsystem, THIS TEAM ONLY (ablation)', data:[-0.7669, -0.7669, -0.7669, -0.7669, -0.7669, -0.7669, -0.7822, -0.7822, -0.7822, -0.7822, -0.0214, -0.0214, -0.0214, -0.0214, -0.3471, -0.3471, -0.3758, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, -1.6526, 2.2813, 6.8665, 6.8665, 6.8665, 6.8665, 6.8665, 6.8665, 6.8665, 6.8665, 5.9385, 5.9385, 5.9385, 5.9385, 5.9385, 5.9385, 5.9385, 4.0165, 4.0165, 4.0165, 4.0165, 4.0165, 4.0165, 4.5399, 4.5399, 4.5399, 4.5399, 4.5399, 4.6444, 4.1436, 4.1436, 4.1436, 4.1436, 4.1436, 4.1436, 4.1436, 4.1436, 4.1436], borderColor:PAL.overhaul,
+    backgroundColor:PAL.overhaul, borderDash:[8,4], stepped:'after', tension:0 } ],
+  { plugins:{ vLines:{marks:[{"d": "2025-11-29", "t": "2/5"}], labels:["2025-08-01", "2025-08-02", "2025-08-03", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-09", "2025-08-10", "2025-08-13", "2025-08-14", "2025-08-15", "2025-08-16", "2025-08-17", "2025-08-20", "2025-08-21", "2025-08-22", "2025-08-23", "2025-08-24", "2025-08-28", "2025-08-29", "2025-08-30", "2025-08-31", "2025-09-05", "2025-09-06", "2025-09-07", "2025-09-12", "2025-09-13", "2025-09-14", "2025-09-15", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-20", "2025-09-21", "2025-09-22", "2025-09-25", "2025-09-26", "2025-09-27", "2025-09-28", "2025-09-29", "2025-10-03", "2025-10-04", "2025-10-05", "2025-11-08", "2025-11-09", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-16", "2025-11-29", "2025-11-30", "2025-12-04", "2025-12-05", "2025-12-18", "2025-12-19", "2025-12-20", "2025-12-21", "2026-01-15", "2026-01-16", "2026-01-17", "2026-01-18", "2026-01-20", "2026-01-21", "2026-01-22", "2026-01-23", "2026-01-24", "2026-01-25", "2026-01-27", "2026-01-28", "2026-01-29", "2026-01-30", "2026-01-31", "2026-02-01", "2026-02-03", "2026-02-04", "2026-02-05", "2026-02-06", "2026-02-07", "2026-02-08", "2026-02-09", "2026-02-12", "2026-02-13", "2026-02-14", "2026-02-15", "2026-02-28", "2026-03-01"]},
+              legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}} },
+    scales:{ x:{grid:{display:false}, ticks:{maxTicksLimit:8}}, y:{grid:{color:'#eceef2'},
+             title:{display:true, text:'rating (transformed round-margin units)'} } } });
+lineChart('senChart', ["2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16", "2026-05-17", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-19", "2026-06-20", "2026-06-21", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26"], [{ label:'v6 (steps at SEN matches)', data:[1.1038, 0.7384, 0.7384, 0.7384, 0.7384, 0.7384, 0.7384, 0.7384, 0.6993, 0.6993, 0.0044, 0.8093, 0.8093, 0.8093, 0.8093, 0.8093, 0.8093, 1.4705, 1.8385, 1.8385, 1.8385, 1.8385, 1.8385, 1.8385, 1.8385, 1.3364, 1.0783, 1.0783, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.0172, 1.0172], borderColor:PAL.v6, backgroundColor:PAL.v6, stepped:'after', tension:0 },{ label:'v6 + subsystem, THIS TEAM ONLY (ablation)', data:[1.1038, 0.7384, 0.7384, 0.7384, 0.7384, 0.7384, 0.7384, 0.7384, 0.6993, 0.6993, 0.0044, 0.8093, 0.8093, 0.8093, 0.8093, 0.8093, 0.8093, 1.4705, 1.8385, 1.8385, 1.8385, 1.8385, 1.8385, 1.8385, 1.8385, 1.3364, 1.0783, 1.0783, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 0.4883, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.1738, 1.0172, 1.0172], borderColor:PAL.overhaul, backgroundColor:PAL.overhaul, borderDash:[8,4], stepped:'after', tension:0 } ],{ plugins:{ vLines:{marks:[], labels:["2026-05-01", "2026-05-02", "2026-05-03", "2026-05-04", "2026-05-05", "2026-05-07", "2026-05-08", "2026-05-09", "2026-05-10", "2026-05-11", "2026-05-12", "2026-05-13", "2026-05-14", "2026-05-15", "2026-05-16", "2026-05-17", "2026-05-18", "2026-05-19", "2026-05-20", "2026-05-21", "2026-05-22", "2026-05-23", "2026-05-24", "2026-05-25", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-31", "2026-06-06", "2026-06-07", "2026-06-08", "2026-06-09", "2026-06-10", "2026-06-12", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-19", "2026-06-20", "2026-06-21", "2026-07-02", "2026-07-03", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-07", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-12", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17", "2026-07-18", "2026-07-19", "2026-07-20", "2026-07-21", "2026-07-22", "2026-07-23", "2026-07-24", "2026-07-25", "2026-07-26"]},legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}} },scales:{ x:{grid:{display:false}, ticks:{maxTicksLimit:8}}, y:{grid:{color:'#eceef2'},title:{display:true, text:'rating (transformed round-margin units)'} } } });
+
+// atlas pooled bar + CI
+new Chart(document.getElementById('atlasPooled'), { type:'bar',
+  data:{ labels:["keep4 (4/5 kept)", "keep3 (3/5)", "overhaul (\u22642/5)", "stable ref"], datasets:[{ data:[4.37, 5.63, 4.8, 0.73],
+    backgroundColor:["#3a90cc", "#c96a2a", "#7c4dd6", "#6f6a7c"], borderRadius:4, maxBarThickness:46,
+    borderSkipped:'bottom' }] },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, ciBars:{lo:[0.65, -0.55, -2.99, -2.02], hi:[8.09, 11.8, 12.59, 3.47]},
+      tooltip:{callbacks:{label:(t)=>t.parsed.y.toFixed(2)+'pp  CI ['+[0.65, -0.55, -2.99, -2.02][t.dataIndex]+', '+[8.09, 11.8, 12.59, 3.47][t.dataIndex]+']'}} },
+    scales:{ x:{grid:{display:false}}, y:{grid:{color:'#eceef2'},
+      title:{display:true, text:'mean(won − p_v6), pp — first 3 matches'} } } } });
+
+// atlas curve
+lineChart('atlasCurve', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [{"label": "keep4", "data": [8.57, 2.66, 1.14, 3.06, 2.0, 4.63, 7.65, 5.62, -1.3, 4.49], "borderColor": "#3a90cc", "backgroundColor": "#3a90cc"}, {"label": "keep3", "data": [4.35, 5.39, 7.44, -0.38, -1.39, -18.24, -6.5, -0.1, -16.76, 10.69], "borderColor": "#c96a2a", "backgroundColor": "#c96a2a"}, {"label": "overhaul", "data": [14.46, -3.63, -2.08, 2.69, -3.09, 7.49, 15.14, -12.79, -10.3, -14.32], "borderColor": "#7c4dd6", "backgroundColor": "#7c4dd6"}],
+  { plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}},
+      floorBand:{axis:'y', lo:-2.02, hi:3.47} },
+    scales:{ x:{grid:{display:false}, title:{display:true, text:'matches since change'}},
+             y:{grid:{color:'#eceef2'}, title:{display:true, text:'bias pp (won − p_v6)'} } } });
+
+// treatments deltas (horizontal) + CI + floor band
+new Chart(document.getElementById('treatChart'), { type:'bar',
+  data:{ labels:["(b) continuity", "(c) cold start", "(d) phase-reset"], datasets:[{ data:[-3.889, -1.423, -19.275],
+    backgroundColor:["#3a90cc", "#6b8f1f", "#c96a2a"], borderRadius:4, maxBarThickness:34 }] },
+  options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false},
+      floorBand:{axis:'x', lo:-1.773, hi:1.773},
+      ciBars:{horizontal:true, lo:[-8.46, -3.54, -29.33], hi:[0.35, 0.75, -9.4]},
+      tooltip:{callbacks:{label:(t)=>t.parsed.x.toFixed(2)+'m  iid CI ['+[-8.46, -3.54, -29.33][t.dataIndex]+', '+[0.35, 0.75, -9.4][t.dataIndex]+']'}} },
+    scales:{ x:{grid:{color:'#eceef2'}, title:{display:true,
+        text:'Δ log-loss vs v6, milli (holdout n=1217; >0 = better; gray band = ±within-family floor)'}},
+      y:{grid:{display:false}, ticks:{font:{size:11}}} } } });
+
+// learning-rate curve
+lineChart('gainChart', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [{"label": "keep4", "data": [0.1767, 0.1364, 0.1176, 0.1085, 0.0991, 0.1018, 0.1001, 0.0961, 0.0938, 0.092], "borderColor": "#3a90cc", "backgroundColor": "#3a90cc"}, {"label": "keep3", "data": [0.2341, 0.1693, 0.1329, 0.1116, 0.1008, 0.1035, 0.1012, 0.0963, 0.0945, 0.0952], "borderColor": "#c96a2a", "backgroundColor": "#c96a2a"}, {"label": "overhaul", "data": [0.294, 0.2069, 0.1606, 0.1296, 0.1126, 0.1059, 0.0958, 0.0961, 0.0944, 0.0893], "borderColor": "#7c4dd6", "backgroundColor": "#7c4dd6"}, {"label": "stable reference", "data": [0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09, 0.09], "borderColor": "#6f6a7c", "backgroundColor": "#6f6a7c", "borderDash": [4, 4], "pointRadius": 0}],
+  { plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}} },
+    scales:{ x:{grid:{display:false}, title:{display:true, text:'matches since change'}},
+             y:{grid:{color:'#eceef2'}, title:{display:true, text:'mean Kalman gain per map update'} } } });
+</script></body></html>

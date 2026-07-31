@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Favorites Lab — who's right at 75–90¢?</title>
+<link rel="icon" href="/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --badbg:#fbeaea;
+         --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:880px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 24px; flex-wrap:wrap; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.78rem; width:24px;
+        height:24px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ table { width:100%; border-collapse:collapse; font-size:.85rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:7px 9px; border-bottom:1px solid var(--line); }
+ tr:last-child td { border-bottom:0; }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg); border-radius:0 12px 12px 0;
+            padding:12px 16px; margin:10px 0; font-size:.89rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ canvas { max-height:320px; }
+ .chartbox { margin:12px 0 4px; }
+ ul { font-size:.9rem; margin:8px 0 8px 20px; } li { margin:5px 0; }
+</style></head>
+<body><div class="wrap">
+<h1>Favorites Lab</h1>
+<div class="tagline">Deep research: the market priced clear favorites 10–16 points above
+the model. Answer: partly both sides — a real model bug (found &amp; fixed → v6) plus residual
+market favorite-bias · updated 2026-07-22 after the v6 correction</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab" class="on">Favorites Lab</a>
+<a href="/testing/report/final_model">Final Model</a>
+<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a>
+</div>
+
+<section>
+<h2><span class="n">0</span>Verdict up front</h2>
+<div class="callout warn"><b>Correction — the operator was right, and the first version of
+this page was wrong.</b> The initial verdict leaned on band calibration, which cannot see a
+subpopulation bias. Case forensics found a real defect: the asymmetric decay (losses fade
+faster than wins) systematically <u>erased bad teams' evidence of badness</u> — EG, a 14-20
+team with one series win, carried MORE decayed win-evidence than loss-evidence (ratio 1.38
+vs a true 0.83) and rated as league-average. Every elite-vs-floor gap was compressed.
+Aggregate metrics hid it because mid-table matches dominate every band.</div>
+<div class="callout good"><b>The fix — consistency-conditioned decay — is deployed (v6).</b>
+Principle: results consistent with a team's level persist (HL 20 games: a good team's wins,
+a bad team's losses); anomalies fade (HL 12: a stumble, a fluke win). It beats the flawed
+asymmetry on overall holdout LL (0.64126 vs 0.64182) AND moves every slate case toward the
+market by 2–7 points. The remaining model-vs-market gap (~5–11 pts on these matches) is the
+part the historical evidence still assigns to market favorite-bias: at 75–85¢, market
+favorites won 72.7% (n=22), and fading them was ROI-positive — but with the floor-team bug
+now fixed, that residual claim should be re-measured as new matches settle.</div>
+<div class="callout warn"><b>But respect the exception:</b> divergences of <b>15+ points where
+the market is the confident side</b> are the one shape where the market has repeatedly known
+something (the May fades: roster surges, stand-ins). Two matches on today's slate are in that
+zone — see §1. Quarter-size there per Playbook Rule 4, and check rosters manually before
+trusting the model's number.</div>
+</section>
+
+<section>
+<h2><span class="n">1</span>The trigger: today's slate (bot is already serving the new model)</h2>
+<p>Verified: the terminal's BenPom numbers match the private v5 snapshot to the decimal —
+the bot is on the new model. These gaps are v5-vs-market, not old-model artifacts:</p>
+<table>
+<tr><th>Match</th><th>Market</th><th>v5 (buggy)</th><th>v6 (fixed)</th><th>Fix moved</th><th>Gap to market</th></tr>
+<tr><td>RRQ vs ZETA</td><td class='mono'>80¢</td><td class='mono'>65.8%</td><td class='mono good'>67.0%</td><td class='mono'>+1.2</td><td class='mono'>+12.5</td></tr><tr><td>T1 vs VL</td><td class='mono'>82¢</td><td class='mono'>66.2%</td><td class='mono good'>70.8%</td><td class='mono'>+4.6</td><td class='mono'>+11.7</td></tr><tr><td>EDG vs FPX</td><td class='mono'>72¢</td><td class='mono'>57.0%</td><td class='mono good'>61.2%</td><td class='mono'>+4.2</td><td class='mono'>+11.3</td></tr><tr><td>TH vs EF</td><td class='mono'>60¢</td><td class='mono'>50.5%</td><td class='mono good'>50.2%</td><td class='mono'>-0.3</td><td class='mono'>+9.3</td></tr><tr><td>MIBR vs ENVY</td><td class='mono'>80¢</td><td class='mono'>67.5%</td><td class='mono good'>71.0%</td><td class='mono'>+3.4</td><td class='mono'>+8.6</td></tr><tr><td>LEV vs EG</td><td class='mono'>80¢</td><td class='mono'>69.6%</td><td class='mono good'>71.4%</td><td class='mono'>+1.7</td><td class='mono'>+8.1</td></tr><tr><td>PRX vs DFM</td><td class='mono'>88¢</td><td class='mono'>74.3%</td><td class='mono good'>81.7%</td><td class='mono'>+7.4</td><td class='mono'>+6.8</td></tr><tr><td>NRG vs FUR</td><td class='mono'>78¢</td><td class='mono'>67.2%</td><td class='mono good'>73.4%</td><td class='mono'>+6.3</td><td class='mono'>+5.1</td></tr><tr><td>NOVA vs TYL</td><td class='mono'>50¢</td><td class='mono'>51.7%</td><td class='mono good'>48.7%</td><td class='mono'>-3.1</td><td class='mono'>+0.8</td></tr><tr><td>M8 vs NAVI</td><td class='mono'>52¢</td><td class='mono'>53.0%</td><td class='mono good'>51.9%</td><td class='mono'>-1.1</td><td class='mono'>-0.4</td></tr><tr><td>TEC vs TE</td><td class='mono'>55¢</td><td class='mono'>58.4%</td><td class='mono good'>57.8%</td><td class='mono'>-0.5</td><td class='mono'>-2.8</td></tr><tr><td>BBL vs FUT</td><td class='mono'>58¢</td><td class='mono'>58.1%</td><td class='mono good'>66.5%</td><td class='mono'>+8.3</td><td class='mono'>-8.0</td></tr>
+</table>
+<p class="dim">⚠ = 15+ point divergence with the market more confident — the information-risk
+shape. T1–VARREL and EDG–FunPlus Phoenix qualify today: verify lineups/stand-ins before full
+size; the other favorites (LEV, MIBR, RRQ, NRG, PRX at 9–14 pts) sit in the historically
+profitable fade zone.</p>
+</section>
+
+<section>
+<h2><span class="n">1.5</span>The bug the aggregates hid — anatomy</h2>
+<p>Decayed evidence mass per team (sum of decay weights on wins vs losses). Under the old
+asymmetric decay, chronic losers' losses — their true signal — evaporated:</p>
+<table>
+<tr><th>Team (2026 maps W-L)</th><th>asym W-mass</th><th>asym L-mass</th><th>ratio</th>
+<th>symmetric ratio</th></tr>
+<tr><td>EG (14-20, one series win)</td><td class="mono">13.2</td><td class="mono">9.5</td>
+<td class="mono" style="color:#c0392b"><b>1.38</b></td><td class="mono">0.83</td></tr>
+<tr><td>ZETA (7-22)</td><td class="mono">8.4</td><td class="mono">13.3</td>
+<td class="mono" style="color:#c0392b"><b>0.63</b></td><td class="mono">0.38</td></tr>
+<tr><td>ENVY (13-22)</td><td class="mono">7.2</td><td class="mono">10.3</td>
+<td class="mono" style="color:#c0392b"><b>0.70</b></td><td class="mono">0.52</td></tr>
+<tr><td>LEV (40-31, Masters winners)</td><td class="mono">17.7</td><td class="mono">6.3</td>
+<td class="mono">2.80</td><td class="mono">1.63</td></tr>
+</table>
+<p>A 14-20 team presenting a winning evidence profile is how EG reached a −0.12 rating
+(league average) and how LEV−EG priced at 69.6%. The consistency rule keeps the top-team
+benefit that made asymmetric decay win originally (LEV's rare losses still fade) while
+letting a floor team's losses persist as the signal they are. Also tested and rejected here:
+a decayed-winrate additive feature (redundant once decay is fixed) and removing the
+region-prior ridge (it was not the culprit — best at 1.5 under the new decay too).</p>
+</section>
+
+<section>
+<h2><span class="n">2</span>Measurement 1 — band calibration (v5), and why it fooled this page</h2>
+<p>Full 2025–26 holdout (~1,000 series), model-referenced favorite bands, computed under the
+<b>buggy v5</b>. Kept for the record as the exhibit of the failure mode:</p>
+<table>
+<tr><th>Model band</th><th>n</th><th>Predicted</th><th>Won</th><th>95% CI</th></tr>
+<tr><td class='mono'>[0.6,0.7)</td><td class='mono'>307</td><td class='mono'>0.647</td><td class='mono'><b>0.674</b></td><td class='mono dim'>[0.62,0.72]</td></tr><tr><td class='mono'>[0.7,0.8)</td><td class='mono'>149</td><td class='mono'>0.743</td><td class='mono'><b>0.745</b></td><td class='mono dim'>[0.67,0.81]</td></tr><tr><td class='mono'>[0.8,0.9)</td><td class='mono'>46</td><td class='mono'>0.839</td><td class='mono'><b>0.826</b></td><td class='mono dim'>[0.69,0.91]</td></tr>
+</table>
+<p><b>These numbers look perfect — and were still hiding the bug.</b> Band averages mix
+heterogeneous matchups: over-priced coin flips and under-priced elite-vs-floor stomps cancel
+inside the same band. Lesson now encoded in lab practice: aggregate calibration can never
+clear a model of a subpopulation bias — concrete case anomalies (the operator's LEV–EG
+example) get case-level forensics first. v6's own bands will be re-measured as results
+settle.</p>
+</section>
+
+<section>
+<h2><span class="n">3</span>Measurement 2 — is the MARKET calibrated at its price bands?</h2>
+<p>Market-referenced favorite bands, clean pre-match prices (n=168 overlap):</p>
+<div class="chartbox"><canvas id="mktcal"></canvas></div>
+<table>
+<tr><th>Market band</th><th>n</th><th>Market said</th><th>Model said</th><th>Favorite won</th><th>95% CI</th></tr>
+<tr><td class='mono'>[0.55,0.65)</td><td class='mono'>74</td><td class='mono'>0.599</td><td class='mono'>0.573</td><td class='mono'><b>0.500</b></td><td class='mono dim'>[0.39,0.61]</td></tr><tr><td class='mono'>[0.65,0.75)</td><td class='mono'>43</td><td class='mono'>0.683</td><td class='mono'>0.647</td><td class='mono'><b>0.721</b></td><td class='mono dim'>[0.57,0.83]</td></tr><tr><td class='mono'>[0.75,0.85)</td><td class='mono'>22</td><td class='mono'>0.798</td><td class='mono'>0.713</td><td class='mono'><b>0.727</b></td><td class='mono dim'>[0.52,0.87]</td></tr>
+</table>
+<p><b>The market shows favorite-bias on this sample</b> — at 75–85¢ its favorites won
+72.7% (overpaying ~7 points); at 55–65¢ they were coin flips. <b>But read the model column
+as v5</b>: part of its apparent accuracy came from the floor bug dragging favorite prices
+down into what happened to be the right neighborhood. Under v6 these model numbers rise 2–7
+points; whether the market remains the overconfident side is an open question this page
+re-measures as matches settle — tonight's slate alone adds seven cases.</p>
+</section>
+
+<section>
+<h2><span class="n">4</span>Measurement 3 — the large-gap link, and the fix that failed</h2>
+<table>
+<tr><th>Rating gap</th><th>n</th><th>Model link</th><th>Higher-rated won</th><th>95% CI</th></tr>
+<tr><td class='mono'>[3,4.5)</td><td class='mono'>292</td><td class='mono'>0.674</td><td class='mono'><b>0.661</b></td><td class='mono dim'>[0.60,0.71]</td></tr><tr><td class='mono'>[4.5,6)</td><td class='mono'>181</td><td class='mono'>0.731</td><td class='mono'><b>0.707</b></td><td class='mono dim'>[0.64,0.77]</td></tr><tr><td class='mono'>[6,8)</td><td class='mono'>97</td><td class='mono'>0.789</td><td class='mono'><b>0.866</b></td><td class='mono dim'>[0.78,0.92]</td></tr><tr><td class='mono'>[8,20)</td><td class='mono'>64</td><td class='mono'>0.862</td><td class='mono'><b>0.844</b></td><td class='mono dim'>[0.74,0.91]</td></tr>
+</table>
+<p>One band — gap [6,8) — showed empirical above the link (0.866 vs 0.789). A convex
+link correction was fit and <b>rejected on holdout</b> — correctly so, because the anomaly
+was never a link problem: <b>the floor bug was compressing measured gaps</b>, so true
+8-gap matchups sat in the [6,8) bucket outperforming it. The consistency-decay fix widens
+those gaps at the source; the link stays logistic-linear (fifth tail family tested, all
+five rejected — the defect was in the ratings' evidence accounting, never the link).</p>
+</section>
+
+<section>
+<h2><span class="n">5</span>The fade ledger — was disagreeing with big favorites profitable?</h2>
+<p>Historical rule: when the model sits ≥X points under the market on a favorite, buy the
+underdog at the market price:</p>
+<table>
+<tr><th>Rule</th><th>n</th><th>ROI</th><th>95% CI</th></tr>
+<tr><td class='mono'>div≥5pts · mkt 65-85c</td><td class='mono'>34</td><td class='mono'>+10.8%</td><td class='mono dim'>[-46%, +72%]</td></tr><tr><td class='mono'>div≥5pts · mkt 75-90c</td><td class='mono'>16</td><td class='mono'>+34.8%</td><td class='mono dim'>[-67%, +157%]</td></tr><tr><td class='mono'>div≥8pts · mkt 65-85c</td><td class='mono'>24</td><td class='mono'>+12.4%</td><td class='mono dim'>[-53%, +89%]</td></tr><tr><td class='mono'>div≥8pts · mkt 75-90c</td><td class='mono'>13</td><td class='mono'>+24.5%</td><td class='mono dim'>[-100%, +157%]</td></tr>
+</table>
+<p class="dim">Every point estimate positive; every CI wide (n=13–34) — <b>and every
+trade was selected using buggy-v5 divergences</b>, which over-triggered against
+elite-vs-floor favorites. Treat these ROIs as provisional upper bounds; v6 will generate
+fewer and smaller favorite-fades, which is exactly the correction the operator called
+for.</p>
+</section>
+
+<section>
+<h2><span class="n">6</span>Findings &amp; operational conclusions (post-correction)</h2>
+<ul>
+<li><b>Finding 1 — a real favorite-suppressing bug, now fixed.</b> Asymmetric decay let
+losing teams' losses evaporate; floor teams rated far too high; elite-vs-floor favorites
+were underpriced 2–7 points. v6 (consistency-conditioned decay) fixes the mechanism AND
+improves overall holdout accuracy (0.64126 vs 0.64182). Deployed to the trading snapshot —
+the bot's caps on these favorites move up automatically.</li>
+<li><b>Finding 2 — the market still shows favorite-bias on the historical sample</b>
+(75–85¢ favorites won 72.7%), but that evidence is entangled with the bug and downgraded to
+provisional. Re-measure monthly; tonight's seven favorites are the first clean v6 test.</li>
+<li><b>Finding 3 — the exception rule survives both stories:</b> 15+ point divergences with
+the market confident remain information-risk (roster news, stand-ins, surges) —
+quarter-size and check lineups. Under v6 far fewer matches trigger it.</li>
+<li><b>Finding 4 — five tail-modification families are tested and dead</b> (tanh,
+piecewise β, margin links, convex hinge, soft labels). The favorite problem was never in
+the link. Stop bending the link.</li>
+<li><b>Process finding — operator anomaly reports beat aggregate dashboards.</b> Band
+calibration validated a broken model; three named matchups exposed it in twenty minutes.
+Standing practice: every concrete "this number looks wrong" gets evidence-mass forensics
+before any statistical defense.</li>
+</ul>
+</section>
+
+<section>
+<h2><span class="n">7</span>Latest findings — the quoting margin (how much edge to demand)</h2>
+<p>Follow-up research (full detail: Playbook §9). Maker-fill simulation of the bot's actual
+mechanism — NO bids resting on both sides of all 155 events at (model NO value − margin),
+filled only when a real trade printed at/through the level inside the true quoting window
+(listing → start−2h), settled at results, priced from <b>v6</b>:</p>
+<table>
+<tr><th>Margin rule</th><th>Fills</th><th>Total profit</th><th>ROI</th><th>95% CI</th></tr>
+<tr><td class="mono">flat 1¢ (≈ current bot config)</td><td class="mono">221</td>
+<td class="mono" style="color:#c0392b">−0.68u</td>
+<td class="mono" style="color:#c0392b">−0.6%</td><td class="mono dim">[−13%, +12%]</td></tr>
+<tr><td class="mono">flat 5¢</td><td class="mono">168</td><td class="mono">+5.27u</td>
+<td class="mono">+6.7%</td><td class="mono dim">[−9%, +23%]</td></tr>
+<tr><td class="mono">flat 11¢ (best flat)</td><td class="mono">100</td><td class="mono">+8.07u</td>
+<td class="mono">+19.2%</td><td class="mono dim">[−4%, +44%]</td></tr>
+<tr><td class="mono"><b>logit +0.6 — winner</b></td><td class="mono">74</td>
+<td class="mono" style="color:#1e7a4f"><b>+8.12u</b></td>
+<td class="mono" style="color:#1e7a4f"><b>+29.1%</b></td>
+<td class="mono" style="color:#1e7a4f">[+1%, +61%] — only CI above zero</td></tr>
+</table>
+<div class="callout good"><b>The margin should live in logit space, not cents.</b> A logit
+shift of +0.5–0.6 auto-scales the demanded edge to the price: ≈14¢ at a 50¢ book, ≈12¢ at
+65¢, ≈10¢ at 75¢, ≈8¢ at 85¢, ≈5¢ at 92¢. It demands the most where small divergences are
+noise (coin flips — see the edge grid in the Playbook) and less at the extremes where every
+cent is worth more. At equal fill counts, logit beat flat cents in every comparison. The
+bot's current flat-1¢ edge earned nothing over the whole history.</div>
+<p><b>Triple-tested:</b> positive in both time halves (+10.8% / +62.7%), under conservative
+1¢-trade-through fills (+26.1%), with this page's exception rules applied (<b>+52.6%</b> —
+its best configuration), and with the quote window extended to start−5m (+36.9%). The fill
+breakdown independently reproduced this page's central result: NO bids resting at 30–50¢
+(selling modestly overpriced favorites) made <b>+56.5%</b>; the one negative pocket was
+NO quotes against teams the model prices below ~45% (−5.7%) — the optional refinement is to
+skip posting that side entirely.</p>
+<p class="dim">Caveats: fills inferred from 1-minute trade prints (no queue position or
+partial fills modeled), maker fees assumed zero, ten weeks of one season. The telemetry
+spec's markout logging converts this simulation into live measurement.</p>
+</section>
+</div>
+<script>
+const MB = [{"band": "[0.55,0.65)", "n": 74, "market": 0.599, "model": 0.573, "emp": 0.5, "ci": [0.389, 0.611]}, {"band": "[0.65,0.75)", "n": 43, "market": 0.683, "model": 0.647, "emp": 0.721, "ci": [0.573, 0.833]}, {"band": "[0.75,0.85)", "n": 22, "market": 0.798, "model": 0.713, "emp": 0.727, "ci": [0.518, 0.868]}];
+new Chart(document.getElementById('mktcal'), {
+ type: 'bar',
+ data: { labels: MB.map(b => 'market ' + b.band), datasets: [
+  { label: 'market price', data: MB.map(b => b.market), backgroundColor: '#9a93a655' },
+  { label: 'model', data: MB.map(b => b.model), backgroundColor: '#7c4dd6aa' },
+  { label: 'actually won', data: MB.map(b => b.emp), backgroundColor: '#1e7a4fcc' } ] },
+ options: { scales: { y: { min: 0.4, max: 1.0,
+    title: { display: true, text: 'favorite win probability' } } },
+  plugins: { tooltip: { callbacks: {
+    afterBody: items => 'n=' + MB[items[0].dataIndex].n } } } }
+});
+</script>
+</body></html>
