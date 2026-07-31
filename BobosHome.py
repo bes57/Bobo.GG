@@ -1006,7 +1006,7 @@ ALPHA_HTML = """
   .rec-tlogo{height:15px;width:auto;object-fit:contain;flex:0 0 auto}
   .rec-tinit{height:15px;min-width:15px;padding:0 3px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800;color:#fff;flex:0 0 auto}
   .rec-desc{font-size:.74rem;font-weight:700;color:#7c4dd6;margin-top:2px;line-height:1.3}
-  .rec-foot{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin-top:4px}
+  .rec-foot{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin-top:4px;font-size:.7rem;color:var(--soft);font-weight:600}
   .rec-foot .rec-vs{display:inline-flex;align-items:center;gap:4px}
   .rec-foot .rec-vs img{height:13px;width:auto}
   .rec-date{color:var(--soft);font-size:.68rem;font-weight:600;white-space:nowrap}
