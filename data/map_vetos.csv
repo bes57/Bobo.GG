@@ -13847,3 +13847,17 @@ MatchID,step,team,action,map
 712827,5,EF,ban,Ascent
 712827,6,FNC,ban,Lotus
 712827,7,,remains,Sunset
+706364,1,KRÜ,ban,Sunset
+706364,2,G2,ban,Summit
+706364,3,KRÜ,pick,Breeze
+706364,4,G2,pick,Lotus
+706364,5,KRÜ,ban,Ascent
+706364,6,G2,ban,Haven
+706364,7,,remains,Split
+706365,1,100T,ban,Lotus
+706365,2,SEN,ban,Haven
+706365,3,100T,pick,Sunset
+706365,4,SEN,pick,Ascent
+706365,5,100T,ban,Summit
+706365,6,SEN,ban,Split
+706365,7,,remains,Breeze

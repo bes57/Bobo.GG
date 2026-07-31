@@ -1,18 +1,5 @@
 [
   {
-    "match_id": "706365",
-    "team_a": "100 Thieves",
-    "team_b": "Sentinels",
-    "org_a": "100T",
-    "org_b": "SEN",
-    "date": "2026-07-30",
-    "datetime": "2026-07-31 00:00:00",
-    "region": "Americas",
-    "event": "2026 Stage 2 \u2014 Americas",
-    "format": "bo3",
-    "match_name": "Week 3 Group Stage"
-  },
-  {
     "match_id": "706366",
     "team_a": "Cloud9",
     "team_b": "LOUD",
