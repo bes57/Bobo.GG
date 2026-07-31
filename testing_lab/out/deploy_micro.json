@@ -1,0 +1,33 @@
+{
+ "n_markets": 155,
+ "48h-24h": {
+  "spread_c": 3.0,
+  "vol_share_pct": 4.5,
+  "drift_c": 3.0,
+  "n": 113
+ },
+ "24h-12h": {
+  "spread_c": 2.0,
+  "vol_share_pct": 8.5,
+  "drift_c": 2.0,
+  "n": 150
+ },
+ "12h-6h": {
+  "spread_c": 1.0,
+  "vol_share_pct": 15.4,
+  "drift_c": 1.5,
+  "n": 151
+ },
+ "6h-2h": {
+  "spread_c": 1.0,
+  "vol_share_pct": 28.5,
+  "drift_c": 1.0,
+  "n": 155
+ },
+ "2h-0h": {
+  "spread_c": 1.0,
+  "vol_share_pct": 43.3,
+  "drift_c": 0.5,
+  "n": 155
+ }
+}

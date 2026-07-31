@@ -1,0 +1,15 @@
+{
+ "vct_only": {
+  "n": 86,
+  "model": 0.64931,
+  "kalshi": 0.6457,
+  "dLL": -0.00361,
+  "p_model_better": 0.415
+ },
+ "vct_stage2": {
+  "n": 49,
+  "model": 0.65037,
+  "kalshi": 0.66065,
+  "p_model_better": 0.649
+ }
+}

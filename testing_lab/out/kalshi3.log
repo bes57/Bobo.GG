@@ -1,0 +1,35 @@
+joined uniquely: 86
+anchors: real=73 fallback=13 dropped=0; final n=86
+
+BenPom: {'logloss': 0.68052, 'brier': 0.24319}
+Kalshi pre-match: {'logloss': 0.6457, 'brier': 0.22658}
+boot (kalshi better?): {'mean_delta': 0.03482304020582741, 'ci_lo': -0.001437653203637312, 'ci_hi': 0.07311690751526641, 'p_better': 0.9695}
+real-anchor only: {'n': 73, 'benpom_ll': 0.70078, 'kalshi_ll': 0.66406} {'mean_delta': 0.036727220753460944, 'ci_lo': -0.0032450836687656914, 'ci_hi': 0.07807645088991876, 'p_better': 0.96625}
+high_vol {'n': 43, 'benpom_ll': 0.70634, 'kalshi_ll': 0.70839}
+low_vol {'n': 43, 'benpom_ll': 0.6547, 'kalshi_ll': 0.583}
+
+fav bands:
+  {'band': '[0.5,0.6)', 'n': 48, 'benpom': 0.558, 'kalshi': 0.5937, 'emp': 0.5833}
+  {'band': '[0.6,0.7)', 'n': 28, 'benpom': 0.644, 'kalshi': 0.6682, 'emp': 0.6786}
+  {'band': '[0.7,0.8)', 'n': 10, 'benpom': 0.739, 'kalshi': 0.7572, 'emp': 0.6}
+blend: w_benpom=0.0 ll=0.6457
+
+TOP DIVERGENCES:
+  2026-07-17 KC bt EF [groups,real]: benpom 0.25 kalshi 0.51
+  2026-07-16 GEN bt ZETA [groups,real]: benpom 0.60 kalshi 0.77
+  2026-07-17 NOVA bt JDG [groups,real]: benpom 0.57 kalshi 0.74
+  2026-05-16 PRX bt GE [playoffs,fallback]: benpom 0.59 kalshi 0.75
+  2026-05-24 G2 bt LEV [grand_final,fallback]: benpom 0.65 kalshi 0.50
+  2026-07-16 FNC bt GX [groups,real]: benpom 0.63 kalshi 0.78
+  2026-06-13 EDG bt FUT [playoffs,real]: benpom 0.31 kalshi 0.44
+  2026-07-18 FUT bt M8 [groups,real]: benpom 0.53 kalshi 0.41
+  2026-07-16 M8 bt PCF [groups,real]: benpom 0.67 kalshi 0.79
+  2026-07-14 AG bt WOL [groups,real]: benpom 0.62 kalshi 0.74
+  2026-06-14 LEV bt TH [playoffs,real]: benpom 0.40 kalshi 0.52
+  2026-07-17 KRX bt DFM [groups,real]: benpom 0.64 kalshi 0.75
+  2026-05-23 G2 bt NRG [playoffs,fallback]: benpom 0.53 kalshi 0.65
+  2026-07-12 NOVA bt FPX [groups,real]: benpom 0.34 kalshi 0.45
+  2026-07-17 VIT bt NAVI [groups,real]: benpom 0.54 kalshi 0.65
+
+divergences>0.15: 5 — market closer on 4, benpom closer on 1
+saved out/kalshi_compare3.json

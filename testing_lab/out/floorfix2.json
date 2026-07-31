@@ -1,0 +1,30 @@
+{
+ "consist_rr0.0": {
+  "beta": 0.1064,
+  "ll_test": 0.64204
+ },
+ "consist_rr0.8": {
+  "beta": 0.1205,
+  "ll_test": 0.64134
+ },
+ "consist_rr1.5": {
+  "beta": 0.1299,
+  "ll_test": 0.64126
+ },
+ "wrfeat_c0.0": {
+  "beta": 0.1299,
+  "ll_test": 0.64126
+ },
+ "wrfeat_c2.0": {
+  "beta": 0.1195,
+  "ll_test": 0.64203
+ },
+ "wrfeat_c4.0": {
+  "beta": 0.1103,
+  "ll_test": 0.64283
+ },
+ "wrfeat_c6.0": {
+  "beta": 0.1021,
+  "ll_test": 0.64363
+ }
+}

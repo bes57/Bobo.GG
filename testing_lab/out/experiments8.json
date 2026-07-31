@@ -1,0 +1,65 @@
+{
+ "g16_exp (ref)": {
+  "beta": 0.1088,
+  "ll_test": 0.64252
+ },
+ "gpower_t6_a1.2": {
+  "beta": 0.1109,
+  "ll_test": 0.64299
+ },
+ "gpower_t8_a1.5": {
+  "beta": 0.1092,
+  "ll_test": 0.64332
+ },
+ "gpower_t10_a1.0": {
+  "beta": 0.1125,
+  "ll_test": 0.64329
+ },
+ "gpower_t12_a1.5": {
+  "beta": 0.1107,
+  "ll_test": 0.64263
+ },
+ "gbox_c4_hl12": {
+  "beta": 0.1061,
+  "ll_test": 0.64327
+ },
+ "gbox_c6_hl12": {
+  "beta": 0.1053,
+  "ll_test": 0.64356
+ },
+ "gbox_c8_hl16": {
+  "beta": 0.1067,
+  "ll_test": 0.64336
+ },
+ "g16_env30w": {
+  "beta": 0.11,
+  "ll_test": 0.64342
+ },
+ "g16_env45w": {
+  "beta": 0.1099,
+  "ll_test": 0.64289
+ },
+ "g16_env65w": {
+  "beta": 0.1097,
+  "ll_test": 0.64266
+ },
+ "gasym_w20_l12": {
+  "beta": 0.1069,
+  "ll_test": 0.64078
+ },
+ "gasym_w12_l20": {
+  "beta": 0.1093,
+  "ll_test": 0.64544
+ },
+ "gasym_w16_l10": {
+  "beta": 0.1058,
+  "ll_test": 0.64122
+ },
+ "_boot_top_vs_ref": {
+  "top": "gasym_w20_l12",
+  "mean_delta": 0.0017410257255768592,
+  "ci_lo": -7.593649237835247e-05,
+  "ci_hi": 0.0035088393141035064,
+  "p_better": 0.9685
+ }
+}

@@ -1,0 +1,94 @@
+[
+ {
+  "date": "2026-07-22",
+  "text": "<b>Phase 1 + optimization rounds 1\u20134 complete (overnight run).</b> Walk-forward harness built on the rating-timeline match events (1,578 series 2023\u201326, leak-free); fast Massey engine (0.989 corr replica) swept decay families, roster modes, margin transforms, offsets, veto shrinkage. Headline: production forgets too fast \u2014 HL 6\u219213w + margin^0.75 improves all 19 holdout buckets (+5.3 milli-LL, p\u22480.97) and fixes 2026 overconfidence (slope 0.80\u21921.05). Kalshi pre-match beat production BenPom on the 2026 overlap (LL 0.646 vs 0.681, n=86). Rejected with evidence: favorite-margin discounts, roster fine-graining (3 schemes), rolling \u03b2, per-stage \u03b2, veto shrinkage, win-only ratings. Full details in the State of BenPom report. Nothing deployed \u2014 candidate awaits sign-off."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Map-level + post-break analyses added.</b> Candidate also wins on the map-level surface (+4.3m); per-map rating deviations are nearly all noise \u2014 shrinkage optimum is k\u2192\u221e, production's SHRINK_K=5 measurably worse than overall-only (recommend 5\u219215-20 at promotion, pending series-MC check). Kalshi's 2026 edge is concentrated in post-break matches (LL 0.62 vs BenPom 0.71 on n=23); in normal weeks BenPom is near market parity (0.66 vs 0.65). Leads: scrape roster moves during breaks; bot should quote cautiously in post-break weeks."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Series-level veto-MC validation done \u2014 full candidate package confirmed on the traded surface.</b> HL13 + margin^0.75 + SHRINK_K 5\u219220 gains +8.6 milli-LL/series over production (0.6463 vs 0.6549, n=890, 2k-sim MC). k=20 beats both k=5 and no-map-splits. Candidate spec updated in the report; still nothing deployed \u2014 awaiting sign-off."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 2 (rounds 5\u20137): half-life objection resolved \u2014 decay by GAMES, not weeks.</b> Games-played decay (HL\u224816 team-games \u2248 6\u20138 in-season weeks) beats calendar-13w: the defect was calendar decay burning info across breaks, not short memory per se. New stacking adds: playoff \u00d71.6 solve weighting, cold-start region priors, monthly-refit cross-region offsets. <b>Candidate v2: LL 0.64209 = +8.1 milli vs production, p=0.988 \u2014 passes the promotion bar.</b> Veto pick model: opponent-weakness factor lifts top-1 40.1%\u219241.5%. Rejected: tanh link, MC momentum correlation, Bo1 down-weight, ridge-instead-of-memory, roster removal (matters more under games decay). Report updated with full round 5\u20137 section. Still nothing deployed."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 3 (round 8): decay function settled, 50-50 belt resolved.</b> Exponential-in-games confirmed as the right family (power-law/box/calendar-envelopes all rejected); one refinement wins: ASYMMETRIC memory \u2014 losses fade ~1.7x faster than wins (W20/L12, +1.7m, p=0.968, reversed sign clearly worse). Belt: candidate surface's global calibration slope is 0.999 \u2014 recalibration layers (Platt/cubic/rolling) all lose walk-forward; the 0.7-0.8 favorite band half-closes structurally under asym decay (residual ~1.3\u03c3, monitor only). vs Kalshi, favorite pricing now within ~1.5pts of market in every band. <b>Candidate v3: LL 0.63981 = +10.4 milli vs production, p=0.999.</b> Nothing deployed."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 4: found the market's information source \u2014 82 missing matches.</b> BenPom's data was missing the EWC regional qualifiers (all regions), China Evolution Series Act 2, some late Stage-1 playoffs, and EWC itself \u2014 the mid-break matches behind the market's post-break edge. Scraped all 82 from VLR (testing-only patch, 82/82 validated). Also caught+fixed an anchor trap (late-settling markets made post-match 0.99s look like pre-match prices, flattering the market). <b>Candidate v4 (v3+patch): holdout 0.6367, +13.5m vs production, p>0.9999. Kalshi VCT overlap: production 0.6805 \u2192 v4 0.6493 vs market 0.6457 (parity); VCT Stage 2: v4 AHEAD 0.6504 vs 0.6607.</b> 50/50 blend beats both (0.6439). Rejected: player-carryover priors, post-break dampener. Decisions needed: production backfill of the 82 matches + v4 promotion."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 5: EWC implemented in production, everything rebuilt and revalidated.</b> Six events added to the registry (ratings_only + vct_only flags), full scrape chain run (109 matches / 292 maps \u2014 full coverage beyond the 82 test targets), timelines (2026: 392\u2192501 events), map ratings and veto model rebuilt; site healthy; model constants unchanged. Fixed along the way: ScrapeMatchData's pre-July table selectors (now delegates to the ovw-grid parser) and a testing-engine import trap (VCTMM's vendored stale registry shadowing the live one). Native revalidation: candidate stack +10.6m vs production (p=0.998); EWC data alone worth +4.5m. <b>Kalshi: BenPom now AHEAD on VCT matches (0.6441 vs 0.6457) and clearly ahead on Stage 2 (0.6418 vs 0.6607)</b> \u2014 from \u221235m behind at production baseline. Constants promotion still awaiting sign-off."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 6: the 'same as Kalshi' question answered with money math.</b> Correlation with the market is only 0.78 \u2014 independent signal \u2014 and simulated trading (taking BenPom's side at market prices) returns <b>+30.9% ROI on 5+pt divergences (n=88, CI +4% to +59%)</b>. Headline cards now pull live from revalidate/trade-sim JSONs (can't go stale again). Traded-surface package finalized: overall-rating MC + opp-aware picks + walk-forward pick-side bonus (b_pick\u2248+0.09 in 2026, effect growing) = 0.64497, best variant; per-map splits and pick bonus double-count \u2014 keep the bonus. London autopsy: deficit is same-region rematches + CN underpricing, not cross-region; rematch term and recency offsets tested and rejected. Prospective prediction logger built and seeded (71 upcoming matches logged)."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 7 (one-hour push): region-prior ridge adopted \u2192 candidate v5 = 0.64132.</b> Massey solve now regularizes teams toward their region's trailing mean instead of global zero (ridge 1.5; +0.7m stacked). Retired with evidence: OT-margin reduction, rounds-ratio margins, series-counted decay (map-counting confirmed), piecewise \u03b2 (link is linear), and the closed-form \u00d7 MC ensemble (MC adds no series-level info \u2014 original 'per-map MC rejected' reconfirmed at the new baseline). Cumulative: production 0.65262 \u2192 v5 0.64132 on native holdout (n\u22481000)."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Deployment playbook published (new report: 'When to Deploy the Bot').</b> ROI by circumstance (n=90 trades, v5 vs pre-match market): best pocket = regular-season windows, model-backed sides at 30-45c, 5-10pt divergences (+35-41%, CIs exclude 0); favorites near-fair (+6%); 10-20pt divergences worse than 5-10 (+15% vs +35% \u2014 big gaps = market information); London the only negative window (-12%); edge LARGER in liquid markets (+36% vs +20%). Microstructure (155 markets): spreads 3c at 24-48h out with 3c of drift remaining but only 5% of volume; 72% of volume in final 6h at 1c spreads \u2192 quote early small, size up 12h\u21922h. Checklist + worked examples on the page."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Deployment Playbook promoted to a first-class page.</b> New top-nav entry ('Playbook', right of Testing, same password gate) \u2192 /testing/playbook. Full rewrite: executive summary cards, historical-evidence section, the complete season ledger with an equity-curve chart (+10.25u on 35.8 staked, 46W/44L, monthly P&L incl. the June/London drawdown), full ROI slicing with annotated tables + bar chart, microstructure research with dual-axis chart, 7 numbered operating rules, and an honest risks section. All three testing pages now share a nav strip (Lab | State of BenPom | Playbook)."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Edge anatomy added to the Playbook (\u00a76):</b> pricing \u00d7 divergence interaction across all 168 matches. Edge-by-price curve (model sides beat their price by +12pts at 35\u201345\u00a2, UNDER-perform at coin flips, fair above 55\u00a2), interactive ROI heatmap (the 2\u20135pt divergence row is red at every price \u2014 the 5pt threshold is empirical; golden cells 35\u201365\u00a2 \u00d7 5\u201310pts at +51%; deep dogs need 10+pts and hit only 25%), and a full trade scatter with the threshold line. Risks renumbered to \u00a77."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Telemetry spec added to the Playbook (\u00a78):</b> what VCTMM should record so future model improvement has irreplaceable data. Tier 1: book snapshots at fixed pre-match horizons with OWN ORDERS FLAGGED (depth is never published historically; solves the echo-chamber problem), FV + full input provenance per quote decision (auto-A/B across promotions), quote lifecycle + post-fill markouts (+5m/+30m/+2h \u2014 spread capture vs adverse selection). Tier 2: roster observations during breaks (the post-break blind spot), scheduled-vs-actual start/settlement times, dead-rubber/context flags. Tier 3: aggressor-side tape, veto auto-scoring, n_eff per FV. Spec only \u2014 VCTMM implementation is user-side per the hands-off rule."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Decision: v5 stays OFF the website \u2014 packaged as the private trading model.</b> New folder <span style='font-family:monospace'>trading_model/</span> in PythonTest: build_model_snapshot.py (solves current v5 ratings + region priors + x-region offsets + pick bonus into model_snapshot.json; rerun after each data refresh), predict.py (reference pricing: closed-form series FV, pick-aware map FV, GF handling, unknown-org region priors), and README.md (model card, validation record, 8 integration rules for the trading terminal, playbook + telemetry pointers). Bobo.gg keeps the production model; the bot gets pointed at the folder by the user."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Session 9: margin-outcome proposal ('BenPom v3') investigated to the bottom \u2014 rejected, with two salvages.</b> Seven constructions (margin links, soft/mixed losses, momentum features, calibrated retrospective targets, margin-fit offsets) all lose walk-forward. Root cause is a domain fact: margins UNDERSTATE win probability (better teams win the close maps; every OT margin is 2), so margin-derived probs under-rate favorites; ratings already consume margins optimally via the Massey target. Salvaged: (1) margin-MSE adopted as permanent secondary metric \u2014 champion beats production there too (43.1 vs 45.4); (2) premise check: the champion is NO LONGER timid at high probs \u2014 it prices [0.7,0.8) favorites ABOVE the market now. v5 remains champion; trading_model/ unchanged."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Favorites Lab published (4th page) \u2014 the favorite-pricing question researched to a verdict.</b> Discovery: the terminal's numbers match the v5 snapshot exactly \u2014 the bot is already on the new model, so the 10-16pt gaps vs market favorites are v5-vs-market. Three measurements: (1) v5 is calibrated in its own bands on ~1,000 holdout series (0.743\u21920.745 at [0.7,0.8)); (2) market-referenced calibration: 75-85c favorites won only 72.7% \u2014 model (71.3) closer than market (79.8); market favorites at 55-65c were coin flips; (3) fading these favorites was ROI-positive in every band tested (wide CIs). Convex tail link: fit positive on train, LOSES on holdout \u2014 4th tail fix rejected. Verdict: don't chase market favorite prices; quarter-size only the 15+pt market-confident shapes (today: T1-VL, EDG-FPX \u2014 check rosters)."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>OPERATOR-CAUGHT BUG \u2192 v6 deployed to the trading snapshot.</b> The user rejected the Favorites Lab verdict with concrete cases (LEV 69.6% over a 1-win EG; PRX 74.3% over a 5-loss-streak DFM) and was RIGHT: asymmetric decay (losses fade faster) was erasing floor teams' evidence of badness \u2014 EG carried MORE win-evidence than loss-evidence (ratio 1.38) and rated league-average. Band calibration couldn't see the subpopulation bias. Fix: consistency-conditioned decay (results matching team level persist HL20, anomalies fade HL12) \u2014 beats the asymmetry overall (0.64126 vs 0.64182) AND moves every slate case 2-7pts toward the market (PRX-DFM 74.3\u219281.7, NRG-FUR 67.2\u219273.4, LEV-EG 69.6\u219271.4). Winrate feature and ridge removal tested and rejected. Snapshot rebuilt as benpom-v6; Favorites Lab page corrected with the bug anatomy. Lesson recorded: aggregate calibration hides subpopulation bias \u2014 always case-check operator-flagged anomalies."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Quoting-margin research (Playbook \u00a79): the answer is a logit-space edge of +0.5 to +0.6, not flat cents.</b> Maker-fill sim over 310 markets (real trade prints, listing\u2192start\u22122h window, v6 fair values): flat 1\u00a2 (\u2248current config) earned \u22120.6%; profit peaks at logit+0.6 (+8.12u, +29.1% ROI, the only CI excluding zero). Logit beats flat at every equal fill count (auto-scales: ~14\u00a2 demanded at coin flips, ~8\u00a2 at 85\u00a2). Survived: time split-half, 1\u00a2 trade-through fills, playbook exclusions (+52.6%), extended window. Fill decomposition re-confirms the 30-50\u00a2 golden zone (+56.5%) and flags NO-quotes against model-underdogs as the one negative pocket. Config recommendation: per-price cent table in the playbook."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Final Model page published (5th tab, after Favorites Lab).</b> The development playbook for BenPom v6: complete component spec with rationale (solve, consistency decay, weights, roster, cold-start, x-region, link, aggregation, pick bonus), the six-model journey table (production\u2192v1\u2192v3\u2192v4\u2192v5\u2192v6 with each insight), the consolidated 33-entry rejected-ideas ledger with re-open triggers, the operations manual (rebuild cadence, \u03b2 discipline incl. the 0.1299\u21920.1256 reconciliation note, monthly tripwires, change control), trading parameters, and the v7 leads."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Final Model page: performance profile added (\u00a71, 'Where it does best \u2014 and worst').</b> Full v6-vs-production bucket chart (21 of 23 buckets improved; Pacific \u22123.1m and the tiny elite-floor bucket the only negatives), easiest/hardest match types (sharpest: huge gaps 0.44, grand finals; noisiest: EWC-class events 0.69, coin flips, playoffs), v6 self-calibration bands (all inside CIs), and the per-team bias watchlist \u2014 KEY residual: elite teams still ~6-8pts UNDER-rated at team level (T1 \u22127.6, PRX \u22127.3, 100T, NRG, TL) with TS/JDG/TE over-rated; band calibration hides it because biases cancel. Flagged as the #1 v7 target + quoting note."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Final Model page now carries the complete chart suite</b> (same as the Playbook): equity curve + monthly P&L, ROI-slicing bar chart + tables, microstructure dual-axis chart, edge-by-pricing curve, the price\u00d7divergence ROI heatmap, the full trade scatter with the 5-pt threshold line, and the quoting-margin table \u2014 alongside the v6 bucket chart, easiest/hardest tables, self-calibration bands, and the per-team bias watchlist. One page = the whole picture."
+ },
+ {
+  "date": "2026-07-22",
+  "text": "<b>Full handoff bundle prepared in trading_model/ for the bot.</b> Added FINDINGS.md (complete research digest: v6 spec, 7 deployment rules, quoting-margin config change, edge anatomy, team-bias watchlist, telemetry spec, 33-entry do-not-retest ledger, monitoring tripwires), docs/ (all four report pages with charts), stats/ (9 raw JSONs). Bundle = snapshot + predict.py + builder + README + FINDINGS + docs + stats \u2014 everything the VCTMM-side agent needs, self-contained."
+ },
+ {
+  "date": "2026-07-28",
+  "text": "v8 program (one day, 14 agents): power floors measured (1.773m/5.889m), corpus +335 series (verified), four bias mechanisms + decay/context waves run preregistered, three compose stacks all HOLD \u2014 v6 stands, co-signed by an independent adversary whose report publishes verbatim. One surviving lead: cold-start (+71.7m, n=39). THE HOLDOUT IS SPENT (398 recorded looks). Full write-up: the new <a href=\"/testing/report/v8_lab\">v8 Lab</a> tab."
+ }
+]

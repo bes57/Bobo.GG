@@ -1,0 +1,10 @@
+  Loaded 1697 match dates from match_dates.json
+b_pick by test year (freq-based, walk-forward): {2025: 0.0433, 2026: 0.0889}
+overall_only       ll=0.64639 (n=999)
+k20_hl16           ll=0.64760 (n=999)
+k20_hl8            ll=0.64696 (n=999)
+k40_hl8            ll=0.64596 (n=999)
+k20_hl8_opp        ll=0.64616 (n=999)
+k20_hl8_opp_pb     ll=0.64767 (n=999)
+overall_opp_pb     ll=0.64497 (n=999)
+saved out/series_mc3.json

@@ -1,0 +1,42 @@
+{
+ "a_slope": 0.5929,
+ "resid_sd": 8.71,
+ "beta_binary": 0.1272,
+ "ll_test_logistic": 0.67272,
+ "ll_test_marginlink": 0.68175,
+ "ll_test_probit": 0.67303,
+ "beta_soft": 0.0877,
+ "ll_test_softbeta": 0.6745,
+ "bands": {
+  "logistic": [
+   {
+    "band": "[0.6,0.7)",
+    "n": 701,
+    "pred": 0.639,
+    "emp": 0.635
+   },
+   {
+    "band": "[0.7,0.8)",
+    "n": 121,
+    "pred": 0.739,
+    "emp": 0.736
+   }
+  ],
+  "margin-link": [
+   {
+    "band": "[0.6,0.7)",
+    "n": 85,
+    "pred": 0.636,
+    "emp": 0.706
+   }
+  ],
+  "soft-beta": [
+   {
+    "band": "[0.6,0.7)",
+    "n": 379,
+    "pred": 0.632,
+    "emp": 0.707
+   }
+  ]
+ }
+}

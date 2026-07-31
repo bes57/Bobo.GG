@@ -1,0 +1,9 @@
+stage-2 bases: ['v6_consist_20_12', 'sym_20'] (best_sym=sym_20, best_overall=v6_consist_20_12)
+  Loaded 1705 match dates from match_dates.json
+v6_consist_20_12+form3       b_form=-0.087 ll=0.64120 FS=0.66800 EF=0.46262 boot d=-0.25m p=0.257
+v6_consist_20_12+form5       b_form=-0.024 ll=0.64097 FS=0.66767 EF=0.46131 boot d=-0.02m p=0.390
+v6_consist_20_12+form8       b_form=-0.024 ll=0.64096 FS=0.66764 EF=0.46117 boot d=-0.00m p=0.485
+sym_20+form3                 b_form=-0.050 ll=0.64275 FS=0.67223 EF=0.46018 boot d=-1.79m p=0.125
+sym_20+form5                 b_form=-0.266 ll=0.64302 FS=0.67229 EF=0.46293 boot d=-2.07m p=0.105
+sym_20+form8                 b_form=-0.710 ll=0.64308 FS=0.67183 EF=0.46411 boot d=-2.13m p=0.112
+saved out/v7_stage2.json

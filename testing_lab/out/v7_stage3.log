@@ -1,0 +1,9 @@
+  Loaded 1705 match dates from match_dates.json
+slumping favorite [gap2_streak2] n=109: emp 0.688 | v6 pred 0.698 ll 0.6060 | sym_20 pred 0.687 ll 0.6097 | v6+form5 pred 0.699 ll 0.6060
+slumping favorite [gap2.5_streak2] n=90: emp 0.711 | v6 pred 0.718 ll 0.5904 | sym_20 pred 0.706 ll 0.5932 | v6+form5 pred 0.718 ll 0.5905
+slumping favorite [gap2_streak1] n=261: emp 0.690 | v6 pred 0.687 ll 0.6031 | sym_20 pred 0.674 ll 0.6033 | v6+form5 pred 0.688 ll 0.6032
+slate[v6]: EG-LEV 28.7%, ENVY-MIBR 29.3%, M8-NAVI 52.3%, FUR-NRG 26.7%, 100T-KRÜ 81.8%, FUT-BBL 33.6%
+slate[sym_20]: EG-LEV 29.1%, ENVY-MIBR 30.4%, M8-NAVI 54.4%, FUR-NRG 32.8%, 100T-KRÜ 79.6%, FUT-BBL 41.1%
+slate[v6+form5]: EG-LEV 28.6%, ENVY-MIBR 29.3%, M8-NAVI 52.4%, FUR-NRG 26.7%, 100T-KRÜ 81.8%, FUT-BBL 33.5%
+kalshi overlap: {'n': 168, 'market_t2h': 0.66155, 'v6': 0.66174, 'v6_vs_market': {'mean_delta': -0.00019, 'ci_lo': -0.07407, 'ci_hi': 0.07423, 'p_better': 0.49275}, 'sym_20': 0.66065, 'sym_20_vs_market': {'mean_delta': 0.0009, 'ci_lo': -0.07081, 'ci_hi': 0.0738, 'p_better': 0.50625}, 'v6+form5': 0.66202, 'v6+form5_vs_market': {'mean_delta': -0.00047, 'ci_lo': -0.07438, 'ci_hi': 0.07397, 'p_better': 0.48975}}
+saved out/v7_stage3.json

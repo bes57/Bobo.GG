@@ -1,0 +1,38 @@
+  Loaded 1705 match dates from match_dates.json
+buckets: elite-floor holdout n=26, form-shift holdout n=121
+v6_consist_20_12     ll=0.64095 26=0.65132 EF=0.46106 FS=0.66764 mover pred/emp 0.482/0.471 b=0.1294
+v5_asym_W20L12       ll=0.64145 26=0.65330 EF=0.46413 FS=0.67573 mover pred/emp 0.491/0.471 b=0.1313
+sym_6                ll=0.65127 26=0.66043 EF=0.48204 FS=0.69324 mover pred/emp 0.552/0.471 b=0.1274
+sym_8                ll=0.64719 26=0.65730 EF=0.47135 FS=0.68712 mover pred/emp 0.533/0.471 b=0.1312
+sym_10               ll=0.64489 26=0.65549 EF=0.46562 FS=0.68253 mover pred/emp 0.518/0.471 b=0.1329
+sym_12               ll=0.64360 26=0.65442 EF=0.46244 FS=0.67908 mover pred/emp 0.508/0.471 b=0.1337
+sym_14               ll=0.64293 26=0.65379 EF=0.46069 FS=0.67650 mover pred/emp 0.500/0.471 b=0.1339
+sym_16               ll=0.64262 26=0.65344 EF=0.45975 FS=0.67457 mover pred/emp 0.494/0.471 b=0.1339
+sym_20               ll=0.64261 26=0.65322 EF=0.45907 FS=0.67207 mover pred/emp 0.486/0.471 b=0.1336
+sym_24               ll=0.64295 26=0.65334 EF=0.45902 FS=0.67071 mover pred/emp 0.480/0.471 b=0.1331
+consist_16_10        ll=0.64135 26=0.65183 EF=0.46286 FS=0.66960 mover pred/emp 0.491/0.471 b=0.1301
+consist_14_8         ll=0.64208 26=0.65250 EF=0.46587 FS=0.66964 mover pred/emp 0.497/0.471 b=0.1291
+consist_12_8         ll=0.64277 26=0.65319 EF=0.46676 FS=0.67329 mover pred/emp 0.506/0.471 b=0.1303
+surprise_12_20       ll=0.64832 26=0.65984 EF=0.46236 FS=0.68663 mover pred/emp 0.512/0.471 b=0.1361
+surprise_16_24       ll=0.64593 26=0.65714 EF=0.46026 FS=0.67913 mover pred/emp 0.498/0.471 b=0.1358
+boxexp_c3_hl8        ll=0.64696 26=0.65844 EF=0.46979 FS=0.68635 mover pred/emp 0.525/0.471 b=0.1274
+boxexp_c5_hl10       ll=0.64506 26=0.65715 EF=0.46328 FS=0.68149 mover pred/emp 0.507/0.471 b=0.1278
+power_t6_a15         ll=0.64547 26=0.65234 EF=0.47191 FS=0.68403 mover pred/emp 0.540/0.471 b=0.1428
+boot v5_asym_W20L12       vs v6: delta=-0.50m p_better=0.372
+boot sym_6                vs v6: delta=-10.32m p_better=0.010
+boot sym_8                vs v6: delta=-6.24m p_better=0.033
+boot sym_10               vs v6: delta=-3.93m p_better=0.068
+boot sym_12               vs v6: delta=-2.65m p_better=0.102
+boot sym_14               vs v6: delta=-1.98m p_better=0.133
+boot sym_16               vs v6: delta=-1.67m p_better=0.149
+boot sym_20               vs v6: delta=-1.65m p_better=0.142
+boot sym_24               vs v6: delta=-2.00m p_better=0.121
+boot consist_16_10        vs v6: delta=-0.39m p_better=0.285
+boot consist_14_8         vs v6: delta=-1.13m p_better=0.186
+boot consist_12_8         vs v6: delta=-1.82m p_better=0.137
+boot surprise_12_20       vs v6: delta=-7.37m p_better=0.022
+boot surprise_16_24       vs v6: delta=-4.97m p_better=0.037
+boot boxexp_c3_hl8        vs v6: delta=-6.00m p_better=0.027
+boot boxexp_c5_hl10       vs v6: delta=-4.11m p_better=0.042
+boot power_t6_a15         vs v6: delta=-4.52m p_better=0.099
+saved out/v7_stage1.json + out/v7_probs.npz

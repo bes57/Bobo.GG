@@ -1,0 +1,46 @@
+{
+ "base_asym": {
+  "beta": 0.1069,
+  "ll_test": 0.64286
+ },
+ "ot_margin_1.0": {
+  "beta": 0.1083,
+  "ll_test": 0.64305
+ },
+ "ot_margin_1.5": {
+  "beta": 0.1077,
+  "ll_test": 0.64293
+ },
+ "rounds_ratio": {
+  "beta": 0.089,
+  "ll_test": 0.6431
+ },
+ "region_ridge_0.3": {
+  "beta": 0.1131,
+  "ll_test": 0.64239
+ },
+ "region_ridge_0.8": {
+  "beta": 0.1214,
+  "ll_test": 0.642
+ },
+ "series_cnt_w8l5": {
+  "beta": 0.1083,
+  "ll_test": 0.64288
+ },
+ "series_cnt_w10l6": {
+  "beta": 0.1088,
+  "ll_test": 0.64307
+ },
+ "piecewise_beta": {
+  "b_small": 0.1094,
+  "b_large": 0.1067,
+  "ll_test": 0.64283
+ },
+ "_boot_best": {
+  "best": "region_ridge_0.8",
+  "mean_delta": 0.0008639566076999255,
+  "ci_lo": -0.0006047600684817972,
+  "ci_hi": 0.0023526037615403655,
+  "p_better": 0.8775
+ }
+}

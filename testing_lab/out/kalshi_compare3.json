@@ -1,0 +1,252 @@
+{
+ "n": 86,
+ "n_real_anchor": 73,
+ "n_fallback": 13,
+ "benpom": {
+  "logloss": 0.68052,
+  "brier": 0.24319
+ },
+ "kalshi_pre": {
+  "logloss": 0.6457,
+  "brier": 0.22658
+ },
+ "boot": {
+  "mean_delta": 0.03482304020582741,
+  "ci_lo": -0.001437653203637312,
+  "ci_hi": 0.07311690751526641,
+  "p_better": 0.9695
+ },
+ "real_only": {
+  "n": 73,
+  "benpom_ll": 0.70078,
+  "kalshi_ll": 0.66406
+ },
+ "boot_real_only": {
+  "mean_delta": 0.036727220753460944,
+  "ci_lo": -0.0032450836687656914,
+  "ci_hi": 0.07807645088991876,
+  "p_better": 0.96625
+ },
+ "high_vol": {
+  "n": 43,
+  "benpom_ll": 0.70634,
+  "kalshi_ll": 0.70839
+ },
+ "low_vol": {
+  "n": 43,
+  "benpom_ll": 0.6547,
+  "kalshi_ll": 0.583
+ },
+ "fav_shift": [
+  {
+   "band": "[0.5,0.6)",
+   "n": 48,
+   "benpom": 0.558,
+   "kalshi": 0.5937,
+   "emp": 0.5833
+  },
+  {
+   "band": "[0.6,0.7)",
+   "n": 28,
+   "benpom": 0.644,
+   "kalshi": 0.6682,
+   "emp": 0.6786
+  },
+  {
+   "band": "[0.7,0.8)",
+   "n": 10,
+   "benpom": 0.739,
+   "kalshi": 0.7572,
+   "emp": 0.6
+  }
+ ],
+ "blend_w_benpom": 0.0,
+ "blend_ll": 0.6457,
+ "top_divergences": [
+  {
+   "date": "2026-07-17",
+   "winner": "KC",
+   "loser": "EF",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.25489553736248755,
+   "pk_pre": 0.51,
+   "div": 0.25510446263751246,
+   "volume": 169796.61
+  },
+  {
+   "date": "2026-07-16",
+   "winner": "GEN",
+   "loser": "ZETA",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.6003466420812076,
+   "pk_pre": 0.77,
+   "div": 0.16965335791879244,
+   "volume": 52208.99
+  },
+  {
+   "date": "2026-07-17",
+   "winner": "NOVA",
+   "loser": "JDG",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.5712029508907227,
+   "pk_pre": 0.74,
+   "div": 0.1687970491092773,
+   "volume": 163447.58
+  },
+  {
+   "date": "2026-05-16",
+   "winner": "PRX",
+   "loser": "GE",
+   "stage": "playoffs",
+   "event_id": "2026_stage1",
+   "anchor": "fallback",
+   "p_benpom": 0.5861278910517194,
+   "pk_pre": 0.7525,
+   "div": 0.16637210894828058,
+   "volume": 27136.76
+  },
+  {
+   "date": "2026-05-24",
+   "winner": "G2",
+   "loser": "LEV",
+   "stage": "grand_final",
+   "event_id": "2026_stage1",
+   "anchor": "fallback",
+   "p_benpom": 0.6535662776143903,
+   "pk_pre": 0.4975,
+   "div": 0.15606627761439035,
+   "volume": 1102251.84
+  },
+  {
+   "date": "2026-07-16",
+   "winner": "FNC",
+   "loser": "GX",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.6328510221033576,
+   "pk_pre": 0.7825,
+   "div": 0.14964897789664233,
+   "volume": 147339.54
+  },
+  {
+   "date": "2026-06-13",
+   "winner": "EDG",
+   "loser": "FUT",
+   "stage": "playoffs",
+   "event_id": "2026_masters_london",
+   "anchor": "real",
+   "p_benpom": 0.3116311213023383,
+   "pk_pre": 0.44499999999999995,
+   "div": 0.13336887869766167,
+   "volume": 492445.51
+  },
+  {
+   "date": "2026-07-18",
+   "winner": "FUT",
+   "loser": "M8",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.5349353233406965,
+   "pk_pre": 0.41000000000000003,
+   "div": 0.12493532334069646,
+   "volume": 262187.81
+  },
+  {
+   "date": "2026-07-16",
+   "winner": "M8",
+   "loser": "PCF",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.6714814397771144,
+   "pk_pre": 0.7949999999999999,
+   "div": 0.12351856022288554,
+   "volume": 197098.96
+  },
+  {
+   "date": "2026-07-14",
+   "winner": "AG",
+   "loser": "WOL",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.6201092866653897,
+   "pk_pre": 0.7424999999999999,
+   "div": 0.12239071333461027,
+   "volume": 72725.89
+  },
+  {
+   "date": "2026-06-14",
+   "winner": "LEV",
+   "loser": "TH",
+   "stage": "playoffs",
+   "event_id": "2026_masters_london",
+   "anchor": "real",
+   "p_benpom": 0.40269291614150793,
+   "pk_pre": 0.5225,
+   "div": 0.11980708385849204,
+   "volume": 596291.47
+  },
+  {
+   "date": "2026-07-17",
+   "winner": "KRX",
+   "loser": "DFM",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.6359519334390139,
+   "pk_pre": 0.7525,
+   "div": 0.11654806656098604,
+   "volume": 82374.04
+  },
+  {
+   "date": "2026-05-23",
+   "winner": "G2",
+   "loser": "NRG",
+   "stage": "playoffs",
+   "event_id": "2026_stage1",
+   "anchor": "fallback",
+   "p_benpom": 0.5340214838193441,
+   "pk_pre": 0.65,
+   "div": 0.11597851618065591,
+   "volume": 914888.68
+  },
+  {
+   "date": "2026-07-12",
+   "winner": "NOVA",
+   "loser": "FPX",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.33818452232411617,
+   "pk_pre": 0.4525,
+   "div": 0.11431547767588385,
+   "volume": 33144.72
+  },
+  {
+   "date": "2026-07-17",
+   "winner": "VIT",
+   "loser": "NAVI",
+   "stage": "groups",
+   "event_id": "2026_stage2",
+   "anchor": "real",
+   "p_benpom": 0.5368073389777188,
+   "pk_pre": 0.65,
+   "div": 0.1131926610222812,
+   "volume": 599702.56
+  }
+ ],
+ "div_gt15": {
+  "n": 5,
+  "kalshi_right": 4,
+  "benpom_right": 1
+ }
+}

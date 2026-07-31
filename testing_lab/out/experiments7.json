@@ -1,0 +1,45 @@
+{
+ "g16_base": {
+  "beta": 0.1106,
+  "ll_test": 0.64383
+ },
+ "stake_bo1w0.5": {
+  "beta": 0.1106,
+  "ll_test": 0.64383
+ },
+ "stake_bo1w0.7": {
+  "beta": 0.1106,
+  "ll_test": 0.64383
+ },
+ "stake_po1.3": {
+  "beta": 0.1099,
+  "ll_test": 0.64297
+ },
+ "stake_po1.6": {
+  "beta": 0.1088,
+  "ll_test": 0.64252
+ },
+ "stake_both": {
+  "beta": 0.1099,
+  "ll_test": 0.64297
+ },
+ "g16_roster_none": {
+  "beta": 0.1051,
+  "ll_test": 0.6468
+ },
+ "intl_w0.8": {
+  "beta": 0.1116,
+  "ll_test": 0.6436
+ },
+ "intl_w1.2": {
+  "beta": 0.1094,
+  "ll_test": 0.64419
+ },
+ "_boot_best_vs_base": {
+  "best": "stake_po1.6",
+  "mean_delta": 0.001316761753619686,
+  "ci_lo": -0.0009765260148652679,
+  "ci_hi": 0.003696635746462482,
+  "p_better": 0.86975
+ }
+}

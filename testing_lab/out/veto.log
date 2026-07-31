@@ -1,0 +1,8 @@
+veto rows: 10988, matches: 1579
+decision points: 9408
+test decisions (2025+): 5322
+K=0.0: top1=0.4649 top3=0.8619
+K=2.0: top1=0.4613 top3=0.8525
+K=4.0: top1=0.4607 top3=0.8504
+K=8.0: top1=0.4463 top3=0.8450
+saved out/veto_eval.json

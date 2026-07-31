@@ -1,0 +1,9 @@
+  Loaded 1588 match dates from match_dates.json
+pick decisions 2025+: 1872
+current (own^2)      top1=0.4006 top3=0.8184
+own^1.5              top1=0.3985 top3=0.8162
+own^2.5              top1=0.4028 top3=0.8216
+own^2 x opp^0.5      top1=0.4049 top3=0.8232
+own^2 x opp^1        top1=0.4145 top3=0.8237
+diff (own-opp)       top1=0.4071 top3=0.8269
+saved out/veto_eval2.json

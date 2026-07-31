@@ -87,7 +87,18 @@ def _chart_payload():
 #    breakdown = predicted/display, exactly like the Modern Hub upcoming card) ──
 import math as _math
 
-_BETA = 0.170
+# v6 site model (data/site_model.json) — single source of truth for the
+# bracket-card probabilities (β, cross-region offsets, gf_upper_logit,
+# b_pick); reference math = trading_model/predict.py. The article PROSE is
+# frozen, but these cards always recomputed from live ratings, so they track
+# the deployed model.
+_SITE_MODEL_PATH = os.path.join(_ROOT, 'data', 'site_model.json')
+
+def _site_model():
+    return json.load(open(_SITE_MODEL_PATH))
+
+# Article region labels use 'China'; the model's offset keys use 'CN'.
+_REGION_KEY = {'China': 'CN'}
 _VETO_STEPS = {
     'bo3': [('A', 'ban'), ('B', 'ban'), ('A', 'pick'), ('B', 'pick'), ('A', 'ban'), ('B', 'ban')],
     'bo5': [('A', 'ban'), ('B', 'ban'), ('A', 'pick'), ('B', 'pick'), ('A', 'pick'), ('B', 'pick')],
@@ -132,11 +143,7 @@ def _bracket_cards():
     pool = (vm.get('snap_pools') or {}).get(snap) or []
     mteams = mr['ratings']['2026']['snapshots']['after_london']['teams']
     ovr = max(tl['checkpoints'], key=lambda c: c['date'])['ratings']
-
-    def maprat(org, m):
-        t = mteams.get(org, {})
-        mm = (t.get('maps') or {}).get(m)
-        return mm['rating'] if mm and mm.get('rating') is not None else t.get('overall_rating', 0.0)
+    sm = _site_model()
 
     def map_winpct(org, m):  # opponent-agnostic strength on map, for veto scoring
         mm = (mteams.get(org, {}).get('maps') or {}).get(m)
@@ -150,14 +157,21 @@ def _bracket_cards():
         sc = {m: ((patt or {}).get('picks', {}).get(m, 0) + 0.02) * ((0.3 + map_winpct(own, m)) ** 2) for m in rem}
         return max(sc, key=sc.get)
 
+    def xadj(a, b):
+        # v6 cross-region adjustment (predict.py): off[reg_a] − off[reg_b],
+        # 0 same-region. Replaces the old intl_exp/cn_dog logit shifts.
+        ra = _REGION_KEY.get(_TEAM_REGION.get(a, ''), _TEAM_REGION.get(a, ''))
+        rb = _REGION_KEY.get(_TEAM_REGION.get(b, ''), _TEAM_REGION.get(b, ''))
+        if not ra or not rb or ra == rb:
+            return 0.0
+        off = sm.get('xregion_offsets') or {}
+        return off.get(ra, 0.0) - off.get(rb, 0.0)
+
     def winprob_a(a, b, fmt, gfu):
-        p = _series_p(_sig(_BETA * (ovr[a] - ovr[b])), fmt)
+        # v6 closed form (predict.py series_probability).
+        p = _series_p(_sig(sm['beta'] * (ovr[a] - ovr[b] + xadj(a, b))), fmt)
         if gfu:
-            p = _sig(_logit(p) + (0.25 if gfu == a else -0.25))
-        fav, dog = (a, b) if p >= 0.5 else (b, a)
-        _cn = ('CN', 'China')
-        if _TEAM_REGION[dog] in _cn and _TEAM_REGION[fav] not in _cn:
-            p = _sig(_logit(p) + (0.35 if fav == a else -0.35))
+            p = _sig(_logit(p) + (sm['gf_upper_logit'] if gfu == a else -sm['gf_upper_logit']))
         return p
 
     out = {}
@@ -176,10 +190,15 @@ def _bracket_cards():
         if rem:
             seq.append({'side': '', 'action': 'dec', 'map': rem[0]})
         maps = []
+        z_base = sm['beta'] * (ovr[a] - ovr[b] + xadj(a, b))
         for s in seq:
             if s['action'] in ('pick', 'dec'):
                 m = s['map']
-                wp = _sig(_BETA * (maprat(a, m) - maprat(b, m)))
+                # v6 map prob (predict.py map_probability): overall ratings +
+                # xregion + the pick logit toward the picker (decider: none).
+                z = z_base + (sm['b_pick'] if s['side'] == 'A' else
+                              (-sm['b_pick'] if s['side'] == 'B' else 0.0))
+                wp = _sig(z)
                 maps.append({'map': m, 'wp_a': round(wp, 3), 'fate': s['action'] + s['side']})
         out[mid] = {'a': a, 'b': b, 'fmt': fmt, 'pa': round(pa, 3),
                     'winner': a if pa >= 0.5 else b, 'veto': seq, 'maps': maps}
@@ -1281,21 +1300,20 @@ document.addEventListener('click', function(e) {
 <div id="mcPop" class="mc-pop"></div>
 <script>
 // ===================================================================
-// Modern-Hub prediction engine, ported VERBATIM from MapElo.py so the
-// bracket match cards use the identical 20k-sim per-map MC veto model
-// (and the same intl/CN-dog offsets) as the Hub's Upcoming Matches.
-// The cards are therefore byte-consistent with the live upcoming bars.
+// Modern-Hub prediction engine, ported from MapElo.py so the bracket
+// match cards use the identical MC veto model AND the identical v6
+// closed-form win probabilities (SITE_MODEL from data.site_model =
+// data/site_model.json; reference math trading_model/predict.py) as
+// the Hub's Upcoming Matches. Cards stay consistent with the live bars.
 // ===================================================================
 var MATCH_CARDS = {};
 var _cardsReady = false;
-var VETO_HUB={teams:{},snap_pools:{}}, ORG_REGIONS_HUB={}, INTL_HUB={}, SNAP_TEAMS={}, INTL_ATTENDANCE_2026={};
-var SNAP_BETA=0.170, SNAP_KEY='after_santiago';
-var INTL_EVENTS_HUB={'2024_masters_madrid':1,'2024_masters_shanghai':1,'2024_champions':1,'2025_masters_bangkok':1,'2025_masters_toronto':1,'2025_champions':1,'2026_masters_santiago':1,'2026_masters_london':1,'2026_champions':1};
-var INTL_EXP_BONUS=0.40, CN_DOG_OFFSET=0.35;
+var VETO_HUB={teams:{},snap_pools:{}}, ORG_REGIONS_HUB={}, SNAP_TEAMS={};
+var SITE_MODEL={}, SNAP_BETA=0, XREGION_OFFSETS={}, GF_UPPER_LOGIT=0, B_PICK=0;
+var SNAP_KEY='after_santiago';
 function shiftSeriesProb(p,delta){ if(!delta) return p; var ps=Math.max(Math.min(p,1-1e-9),1e-9); return 1.0/(1.0+Math.exp(-(Math.log(ps/(1-ps))+delta))); }
-function intlAndCnLogitDelta(eventId,favOrg,dogOrg,attendedFn){ if(!INTL_EVENTS_HUB[eventId]) return 0; var delta=0; if(attendedFn){ var favExp=attendedFn(favOrg)?1:0, dogExp=attendedFn(dogOrg)?1:0; delta+=INTL_EXP_BONUS*(favExp-dogExp); } var favReg=(ORG_REGIONS_HUB||{})[favOrg], dogReg=(ORG_REGIONS_HUB||{})[dogOrg]; if(dogReg==='CN'&&favReg!=='CN') delta+=CN_DOG_OFFSET; return delta; }
-function _intlAttendedBefore(beforeDate){ return function(org){ var d=INTL_ATTENDANCE_2026[org]; return !!(d&&(!beforeDate||d<beforeDate)); }; }
-function applyIntlOffsetsToA(pA,eventId,orgA,orgB,matchDate){ if(!INTL_EVENTS_HUB[eventId]) return pA; var attendedFn=_intlAttendedBefore(matchDate); var aIsFav=pA>=0.5; var favOrg=aIsFav?orgA:orgB, dogOrg=aIsFav?orgB:orgA; var delta=intlAndCnLogitDelta(eventId,favOrg,dogOrg,attendedFn); if(!delta) return pA; var pFav=aIsFav?pA:(1-pA); var pFavNew=shiftSeriesProb(pFav,delta); return aIsFav?pFavNew:(1-pFavNew); }
+function xregionAdjHUB(orgA,orgB){ var ra=(ORG_REGIONS_HUB||{})[orgA], rb=(ORG_REGIONS_HUB||{})[orgB]; if(!ra||!rb||ra===rb) return 0; return (XREGION_OFFSETS[ra]||0)-(XREGION_OFFSETS[rb]||0); }
+function v6SeriesProbHUB(rA,rB,orgA,orgB,fmt,gfUpperOrg){ var p=1/(1+Math.exp(-SNAP_BETA*(rA-rB+xregionAdjHUB(orgA,orgB)))); var ps; if(fmt==='bo1') ps=p; else if(fmt==='bo5'||fmt==='bo5_gf'){ var q=1-p; ps=p*p*p*(1+3*q+6*q*q); } else ps=p*p*(3-2*p); if(fmt==='bo5_gf'&&(gfUpperOrg===orgA||gfUpperOrg===orgB)) ps=shiftSeriesProb(ps,gfUpperOrg===orgA?GF_UPPER_LOGIT:-GF_UPPER_LOGIT); return ps; }
 var VETO_STEPS_HUB={
   bo1:[{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'ban'},{side:'B',action:'ban'}],
   bo3:[{side:'A',action:'ban'},{side:'B',action:'ban'},{side:'A',action:'pick'},{side:'B',action:'pick'},{side:'A',action:'ban'},{side:'B',action:'ban'}],
@@ -1303,7 +1321,6 @@ var VETO_STEPS_HUB={
   bo5_gf:[{side:'A',action:'ban'},{side:'A',action:'ban'},{side:'A',action:'pick'},{side:'B',action:'pick'},{side:'A',action:'pick'},{side:'B',action:'pick'}]
 };
 var SERIES_THRESH_HUB={bo1:1,bo3:2,bo5:3,bo5_gf:3};
-function getGlobalRatingHUB(org,snapKey,domesticRating){ var cal=INTL_HUB[snapKey]||{}; var region=ORG_REGIONS_HUB[org]||''; var regOff=(cal.regional_offsets||{})[region]||0; var indBonus=(cal.individual_bonuses||{})[org]||0; return domesticRating+regOff+indBonus; }
 function getActivePoolHUB(snap){ var key='2026_'+snap; var cp=(VETO_HUB.computed_pools||{})[key]; if(cp&&cp.length>=7) return cp; return (VETO_HUB.snap_pools||{})[key]||null; }
 function getBanProbsHUB(patt,oppTeam,rem){ var scores={}; rem.forEach(function(m){ var rate=(patt&&patt.bans&&patt.bans[m]!=null)?patt.bans[m]:0; var oppWin=(oppTeam&&oppTeam.maps&&oppTeam.maps[m])?(oppTeam.maps[m].win_pct||0.5):0.5; scores[m]=(rate+0.02)*(0.75+oppWin); }); var tot=rem.reduce(function(s,m){return s+scores[m];},0); if(tot===0) rem.forEach(function(m){scores[m]=1/rem.length;}); else rem.forEach(function(m){scores[m]/=tot;}); return scores; }
 function getPickProbsHUB(patt,rem,ownTeam){ var scores={}; rem.forEach(function(m){ var rate=(patt&&patt.picks&&patt.picks[m]!=null)?patt.picks[m]:0; var base=rate+0.02; var ownWin=(ownTeam&&ownTeam.maps&&ownTeam.maps[m])?(ownTeam.maps[m].win_pct||0.5):0.5; var ownF=ownTeam?Math.pow(0.3+ownWin,2.0):1.0; scores[m]=base*ownF; }); var tot=rem.reduce(function(s,m){return s+scores[m];},0); if(tot===0) rem.forEach(function(m){scores[m]=1/rem.length;}); else rem.forEach(function(m){scores[m]/=tot;}); return scores; }
@@ -1319,35 +1336,35 @@ function _getTeamObjBC(org,lbTeams,liveMapStats){ var lb=lbTeams[org]; var overa
 // computation, so each card's win % matches the live Upcoming bars.
 function computeCard(ctx, orgA, orgB, fmt, mDate){
   var pool=ctx.pool, lbTeams=ctx.lbTeams, liveMapStats=ctx.liveMapStats, snapKey=ctx.snapKey, vetoSnapKey=ctx.vetoSnapKey;
-  var matchThresh=SERIES_THRESH_HUB[fmt]||2;
   var tA=_getTeamObjBC(orgA,lbTeams,liveMapStats), tB=_getTeamObjBC(orgB,lbTeams,liveMapStats);
   var lbA=lbTeams[orgA], lbB=lbTeams[orgB];
   var ratingA=lbA?lbA.rating:(tA?(tA.overall_rating||0):0);
   var ratingB=lbB?lbB.rating:(tB?(tB.overall_rating||0):0);
-  var eventId='2026_masters_london', nSims=20000;
-  var seriesWins=0, mapWins={}, mapPlays={};
+  var nSims=20000;
+  var mapWins={}, mapPlays={};
   pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
   if(tA&&tB){
+    // v6 map-level inputs: overall ratings + cross-region adjustment + the
+    // pick logit (±B_PICK) by veto fate (predict.py map_probability) — the
+    // MC is the veto/map-breakdown engine, not the headline win chance.
+    var zBase=SNAP_BETA*((tA.overall_rating||ratingA)-(tB.overall_rating||ratingB)+xregionAdjHUB(orgA,orgB));
     _withSeededRand(_matchSeed(orgA,orgB,fmt,mDate),function(){
       for(var s=0;s<nSims;s++){
         var fm=simulateVetoHUB(tA,tB,orgA,orgB,pool,snapKey,fmt);
-        var sw=0;
         pool.forEach(function(mp){
           var fc=fm[mp]||'banA';
           if(fc==='pickA'||fc==='pickB'||fc==='dec'){
             mapPlays[mp]++;
-            var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
-            var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
-            var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
-            if(Math.random()<1/(1+Math.exp(-SNAP_BETA*(gA-gB)))){ sw++; mapWins[mp]++; }
+            var z=zBase+(fc==='pickA'?B_PICK:(fc==='pickB'?-B_PICK:0));
+            if(Math.random()<1/(1+Math.exp(-z))){ mapWins[mp]++; }
           }
         });
-        if(sw>=matchThresh) seriesWins++;
       }
     });
   }
-  var pAraw=(tA&&tB)?(seriesWins/nSims):(1/(1+Math.exp(-SNAP_BETA*(ratingA-ratingB))));
-  var pA=applyIntlOffsetsToA(pAraw,eventId,orgA,orgB,mDate);
+  // Headline win prob = the v6 closed form on overall ratings (predict.py
+  // series_probability; for bo5_gf side A is the upper-bracket team).
+  var pA=v6SeriesProbHUB(ratingA,ratingB,orgA,orgB,fmt,fmt==='bo5_gf'?orgA:'');
   var topSeqs=(tA&&tB&&pool.length)?topVetoHUB(tA,tB,orgA,orgB,pool,snapKey,fmt,1):[];
   var veto=topSeqs.length?topSeqs[0].seq.map(function(step){ return {side:step.side,action:step.action,map:step.map}; }):[];
   var maps=pool.filter(function(mp){return mapPlays[mp]>0;}).sort(function(a,b){return mapPlays[b]-mapPlays[a];})
@@ -1415,9 +1432,13 @@ function _initBracketCards(retries){
     if(data&&data.leaderboard&&data.leaderboard.teams&&data.leaderboard.teams.length){
       VETO_HUB=data.veto_model||{teams:{},snap_pools:{}};
       ORG_REGIONS_HUB=data.org_regions||{};
-      INTL_HUB=data.intl_calib||{};
       SNAP_TEAMS=data.snap_teams||{};
-      INTL_ATTENDANCE_2026=data.intl_attendance_2026||{};
+      // v6 model constants from the hub payload (data/site_model.json)
+      SITE_MODEL=data.site_model||{};
+      SNAP_BETA=SITE_MODEL.beta||0;
+      XREGION_OFFSETS=SITE_MODEL.xregion_offsets||{};
+      GF_UPPER_LOGIT=SITE_MODEL.gf_upper_logit||0;
+      B_PICK=SITE_MODEL.b_pick||0;
       SNAP_KEY=data.snap_key||'after_santiago';
       setTimeout(function(){ try{ var C=simulateAndBuild(data); renderPredictionBracket(C); _cardsReady=true; }catch(e){ console.error('bracket sim failed',e); } },0);
     } else if((retries||0)<150){

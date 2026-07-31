@@ -1,0 +1,42 @@
+{
+ "ewc0.0": {
+  "beta": 0.1031,
+  "ll_test": 0.63697
+ },
+ "ewc0.6": {
+  "beta": 0.1031,
+  "ll_test": 0.63677
+ },
+ "ewc1.0": {
+  "beta": 0.1031,
+  "ll_test": 0.63672
+ },
+ "overlap": {
+  "n": 168,
+  "model_ll": 0.6704,
+  "kalshi_ll": 0.65887
+ },
+ "overlap_boot": {
+  "mean_delta": -0.011536414812780962,
+  "ci_lo": -0.0422329234486333,
+  "ci_hi": 0.01729286932057339,
+  "p_better": 0.22675
+ },
+ "overlap_windows": {
+  "London": {
+   "n": 24,
+   "model": 0.69674,
+   "kalshi": 0.671
+  },
+  "Stage1/lateplayoffs": {
+   "n": 73,
+   "model": 0.6776,
+   "kalshi": 0.64556
+  },
+  "Stage2+EWC": {
+   "n": 71,
+   "model": 0.65411,
+   "kalshi": 0.66845
+  }
+ }
+}

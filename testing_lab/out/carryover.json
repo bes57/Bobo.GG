@@ -1,0 +1,35 @@
+{
+ "v3_base": {
+  "beta": 0.1069,
+  "ll_test": 0.64078,
+  "ll_postbreak": 0.62607
+ },
+ "n_postbreak_test": 146,
+ "carry_M6": {
+  "beta": 0.129,
+  "ll_test": 0.64121,
+  "ll_postbreak": 0.6271
+ },
+ "carry_M10": {
+  "beta": 0.1392,
+  "ll_test": 0.64408,
+  "ll_postbreak": 0.63191
+ },
+ "carry_M14": {
+  "beta": 0.1433,
+  "ll_test": 0.64583,
+  "ll_postbreak": 0.63312
+ },
+ "gamma_fit": 1.4,
+ "carry_damp": {
+  "beta": 0.1347,
+  "ll_test": 0.64467,
+  "ll_postbreak": 0.63638
+ },
+ "boot_carry_vs_v3": {
+  "mean_delta": -0.0033026706005494233,
+  "ci_lo": -0.012146968185824584,
+  "ci_hi": 0.00559951951838802,
+  "p_better": 0.2405
+ }
+}

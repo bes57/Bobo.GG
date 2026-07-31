@@ -1,0 +1,6 @@
+  Loaded 1588 match dates from match_dates.json
+g16_k5             ll=0.65181 (n=890)
+g16_k20            ll=0.64809 (n=890)
+g16_overall        ll=0.64641 (n=890)
+g16_k20_corr07     ll=0.65086 (n=890)
+saved out/series_mc2.json

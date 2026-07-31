@@ -1,0 +1,18 @@
+{
+ "prod_k5": {
+  "ll_series_mc": 0.65486,
+  "n": 890
+ },
+ "cand_k5": {
+  "ll_series_mc": 0.64739,
+  "n": 890
+ },
+ "cand_k20": {
+  "ll_series_mc": 0.64628,
+  "n": 890
+ },
+ "cand_overall": {
+  "ll_series_mc": 0.64729,
+  "n": 890
+ }
+}

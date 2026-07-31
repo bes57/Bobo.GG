@@ -1,0 +1,30 @@
+  Loaded 1588 match dates from match_dates.json
+best_r2                        b=0.116 ll=0.64484 (1s)
+prod_baseline                  b=0.177 ll=0.65018 (1s)
+favdisc_g1.0_c0.3              b=0.141 ll=0.64748 (1s)
+favdisc_g1.0_c0.5              b=0.146 ll=0.65091 (1s)
+favdisc_g2.0_c0.3              b=0.136 ll=0.64655 (1s)
+favdisc_g2.0_c0.5              b=0.141 ll=0.64870 (1s)
+favdisc_g3.0_c0.5              b=0.137 ll=0.64679 (1s)
+residual_k0.15                 b=0.125 ll=0.64534 (1s)
+residual_k0.3                  b=0.131 ll=0.64716 (1s)
+residual_k0.5                  b=0.131 ll=0.65296 (1s)
+upsboost_1.2                   b=0.117 ll=0.64455 (1s)
+upsboost_1.4                   b=0.115 ll=0.64576 (1s)
+  Loaded 1588 match dates from match_dates.json
+lineup_step                    b=0.116 ll=0.64678 (1s)
+
+== vs best_r2 ==
+  prod_baseline                dLL=-0.00534 p_better=0.037
+  favdisc_g1.0_c0.3            dLL=-0.00264 p_better=0.109
+  favdisc_g1.0_c0.5            dLL=-0.00607 p_better=0.035
+  favdisc_g2.0_c0.3            dLL=-0.00171 p_better=0.162
+  favdisc_g2.0_c0.5            dLL=-0.00386 p_better=0.073
+  favdisc_g3.0_c0.5            dLL=-0.00195 p_better=0.155
+  residual_k0.15               dLL=-0.00050 p_better=0.282
+  residual_k0.3                dLL=-0.00232 p_better=0.111
+  residual_k0.5                dLL=-0.00812 p_better=0.015
+  upsboost_1.2                 dLL=+0.00029 p_better=0.624
+  upsboost_1.4                 dLL=-0.00092 p_better=0.348
+  lineup_step                  dLL=-0.00194 p_better=0.203
+saved out/experiments3.json

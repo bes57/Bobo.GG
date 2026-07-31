@@ -1,0 +1,23 @@
+  Loaded 1588 match dates from match_dates.json
+g16_base                     b=0.111 ll=0.64383
+stake_bo1w0.5                b=0.111 ll=0.64383
+stake_bo1w0.7                b=0.111 ll=0.64383
+stake_po1.3                  b=0.110 ll=0.64297
+stake_po1.6                  b=0.109 ll=0.64252
+stake_both                   b=0.110 ll=0.64297
+g16_roster_none              b=0.105 ll=0.64680
+intl_w0.8                    b=0.112 ll=0.64360
+intl_w1.2                    b=0.109 ll=0.64419
+
+== LEADERBOARD ==
+  0.64252  stake_po1.6
+  0.64297  stake_po1.3
+  0.64297  stake_both
+  0.64360  intl_w0.8
+  0.64383  g16_base
+  0.64383  stake_bo1w0.5
+  0.64383  stake_bo1w0.7
+  0.64419  intl_w1.2
+  0.64680  g16_roster_none
+boot best vs g16_base: {'best': 'stake_po1.6', 'mean_delta': 0.001316761753619686, 'ci_lo': -0.0009765260148652679, 'ci_hi': 0.003696635746462482, 'p_better': 0.86975}
+saved out/experiments7.json

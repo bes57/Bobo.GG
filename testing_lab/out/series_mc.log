@@ -1,0 +1,7 @@
+  Loaded 1588 match dates from match_dates.json
+series to simulate: 890 x 2000 sims x 4 configs
+prod_k5        series-MC ll=0.65486 (n=890)
+cand_k5        series-MC ll=0.64739 (n=890)
+cand_k20       series-MC ll=0.64628 (n=890)
+cand_overall   series-MC ll=0.64729 (n=890)
+saved out/series_mc.json

@@ -1,0 +1,33 @@
+  Loaded 1588 match dates from match_dates.json
+g16_exp (ref)                  b=0.109 ll=0.64252
+gpower_t6_a1.2                 b=0.111 ll=0.64299
+gpower_t8_a1.5                 b=0.109 ll=0.64332
+gpower_t10_a1.0                b=0.112 ll=0.64329
+gpower_t12_a1.5                b=0.111 ll=0.64263
+gbox_c4_hl12                   b=0.106 ll=0.64327
+gbox_c6_hl12                   b=0.105 ll=0.64356
+gbox_c8_hl16                   b=0.107 ll=0.64336
+g16_env30w                     b=0.110 ll=0.64342
+g16_env45w                     b=0.110 ll=0.64289
+g16_env65w                     b=0.110 ll=0.64266
+gasym_w20_l12                  b=0.107 ll=0.64078
+gasym_w12_l20                  b=0.109 ll=0.64544
+gasym_w16_l10                  b=0.106 ll=0.64122
+
+== LEADERBOARD ==
+  0.64078  gasym_w20_l12
+  0.64122  gasym_w16_l10
+  0.64252  g16_exp (ref)
+  0.64263  gpower_t12_a1.5
+  0.64266  g16_env65w
+  0.64289  g16_env45w
+  0.64299  gpower_t6_a1.2
+  0.64327  gbox_c4_hl12
+  0.64329  gpower_t10_a1.0
+  0.64332  gpower_t8_a1.5
+  0.64336  gbox_c8_hl16
+  0.64342  g16_env30w
+  0.64356  gbox_c6_hl12
+  0.64544  gasym_w12_l20
+boot top vs g16_exp: {'top': 'gasym_w20_l12', 'mean_delta': 0.0017410257255768592, 'ci_lo': -7.593649237835247e-05, 'ci_hi': 0.0035088393141035064, 'p_better': 0.9685}
+saved out/experiments8.json

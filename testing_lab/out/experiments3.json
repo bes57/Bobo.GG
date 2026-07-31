@@ -1,0 +1,115 @@
+{
+ "best_r2": {
+  "beta": 0.1164,
+  "ll_test": 0.64484,
+  "brier_test": 0.22708
+ },
+ "prod_baseline": {
+  "beta": 0.177,
+  "ll_test": 0.65018,
+  "brier_test": 0.22941,
+  "vs_best": {
+   "mean_delta": -0.005338874939663018,
+   "p_better": 0.0375
+  }
+ },
+ "favdisc_g1.0_c0.3": {
+  "beta": 0.1409,
+  "ll_test": 0.64748,
+  "brier_test": 0.22823,
+  "vs_best": {
+   "mean_delta": -0.002641647183477205,
+   "p_better": 0.109
+  }
+ },
+ "favdisc_g1.0_c0.5": {
+  "beta": 0.1459,
+  "ll_test": 0.65091,
+  "brier_test": 0.22976,
+  "vs_best": {
+   "mean_delta": -0.006071296976068673,
+   "p_better": 0.0355
+  }
+ },
+ "favdisc_g2.0_c0.3": {
+  "beta": 0.1363,
+  "ll_test": 0.64655,
+  "brier_test": 0.22783,
+  "vs_best": {
+   "mean_delta": -0.001705088514046213,
+   "p_better": 0.162
+  }
+ },
+ "favdisc_g2.0_c0.5": {
+  "beta": 0.1413,
+  "ll_test": 0.6487,
+  "brier_test": 0.22878,
+  "vs_best": {
+   "mean_delta": -0.0038578568331491293,
+   "p_better": 0.073
+  }
+ },
+ "favdisc_g3.0_c0.5": {
+  "beta": 0.1367,
+  "ll_test": 0.64679,
+  "brier_test": 0.22795,
+  "vs_best": {
+   "mean_delta": -0.0019535518150268255,
+   "p_better": 0.155
+  }
+ },
+ "residual_k0.15": {
+  "beta": 0.125,
+  "ll_test": 0.64534,
+  "brier_test": 0.2273,
+  "vs_best": {
+   "mean_delta": -0.0005021576209537593,
+   "p_better": 0.2825
+  }
+ },
+ "residual_k0.3": {
+  "beta": 0.1311,
+  "ll_test": 0.64716,
+  "brier_test": 0.22812,
+  "vs_best": {
+   "mean_delta": -0.0023231703268423304,
+   "p_better": 0.1105
+  }
+ },
+ "residual_k0.5": {
+  "beta": 0.1307,
+  "ll_test": 0.65296,
+  "brier_test": 0.23078,
+  "vs_best": {
+   "mean_delta": -0.008115082770814573,
+   "p_better": 0.015
+  }
+ },
+ "upsboost_1.2": {
+  "beta": 0.1169,
+  "ll_test": 0.64455,
+  "brier_test": 0.22688,
+  "vs_best": {
+   "mean_delta": 0.00028766724742214226,
+   "p_better": 0.624
+  }
+ },
+ "upsboost_1.4": {
+  "beta": 0.1147,
+  "ll_test": 0.64576,
+  "brier_test": 0.22738,
+  "vs_best": {
+   "mean_delta": -0.0009226518160695495,
+   "p_better": 0.3485
+  }
+ },
+ "lineup_step": {
+  "beta": 0.1155,
+  "ll_test": 0.64678,
+  "brier_test": 0.2279,
+  "vs_best": {
+   "mean_delta": -0.0019365911220205494,
+   "p_better": 0.2035
+  }
+ }
+}

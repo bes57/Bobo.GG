@@ -1,0 +1,83 @@
+ticker,target_idx,date,org_a,org_b,winner,mid,slug,vlr_date,vlr_t1,vlr_t2,vlr_s1,vlr_s2,vlr_winner_org,event_tag
+KXVALORANTGAME-26MAY160500FPXXLG,0,2026-05-16,FPX,XLG,XLG,675346,xi-lai-gaming-vs-funplus-phoenix-esports-world-cup-2026-china-qualifier-stage-2-ubqf,2026-05-16,Xi Lai Gaming,FunPlus Phoenix,2,1,XLG,2026_stage1_late
+KXVALORANTGAME-26MAY160500JDGTYLOO,1,2026-05-16,JDG,TYL,TYL,675347,tyloo-vs-jdg-esports-esports-world-cup-2026-china-qualifier-stage-2-ubqf,2026-05-16,TYLOO,JDG Esports,2,1,TYL,2026_stage1_late
+KXVALORANTGAME-26MAY160500TEAG,2,2026-05-16,AG,TE,TE,675348,all-gamers-vs-trace-esports-esports-world-cup-2026-china-qualifier-stage-2-ubqf,2026-05-16,All Gamers,Trace Esports,1,2,TE,2026_stage1_late
+KXVALORANTGAME-26MAY170500AGDRG,3,2026-05-17,AG,DRG,AG,675354,all-gamers-vs-dragon-ranger-gaming-esports-world-cup-2026-china-qualifier-stage-2-lr1,2026-05-17,All Gamers,Dragon Ranger Gaming,2,0,AG,2026_stage1_late
+KXVALORANTGAME-26MAY170500TYLOOXLG,4,2026-05-17,TYL,XLG,XLG,675350,xi-lai-gaming-vs-tyloo-esports-world-cup-2026-china-qualifier-stage-2-ubsf,2026-05-17,Xi Lai Gaming,TYLOO,2,1,XLG,2026_stage1_late
+KXVALORANTGAME-26MAY170500JDGFPX,5,2026-05-17,FPX,JDG,FPX,675353,funplus-phoenix-vs-jdg-esports-esports-world-cup-2026-china-qualifier-stage-2-lr1,2026-05-17,FunPlus Phoenix,JDG Esports,2,1,FPX,2026_stage1_late
+KXVALORANTGAME-26MAY170500TETEC,6,2026-05-17,TE,TEC,TEC,675351,trace-esports-vs-titan-esports-club-esports-world-cup-2026-china-qualifier-stage-2-ubsf,2026-05-17,Trace Esports,Titan Esports Club,0,2,TEC,2026_stage1_late
+KXVALORANTGAME-26MAY180400TSGENG,7,2026-05-18,GEN,TS,GEN,673534,team-secret-vs-gen-g-esports-world-cup-2026-pacific-qualifier-stage-1-lbf,2026-05-18,Team Secret,Gen.G,0,2,GEN,2026_stage1_late
+KXVALORANTGAME-26MAY180500FPXTE,8,2026-05-18,FPX,TE,FPX,675355,trace-esports-vs-funplus-phoenix-esports-world-cup-2026-china-qualifier-stage-2-lr2,2026-05-18,Trace Esports,FunPlus Phoenix,0,2,FPX,2026_stage1_late
+KXVALORANTGAME-26MAY180500TECXLG,9,2026-05-18,TEC,XLG,XLG,675352,xi-lai-gaming-vs-titan-esports-club-esports-world-cup-2026-china-qualifier-stage-2-ubf,2026-05-18,Xi Lai Gaming,Titan Esports Club,3,0,XLG,2026_stage1_late
+KXVALORANTGAME-26MAY180500TYLOOAG,10,2026-05-18,AG,TYL,AG,675356,tyloo-vs-all-gamers-esports-world-cup-2026-china-qualifier-stage-2-lr2,2026-05-18,TYLOO,All Gamers,1,2,AG,2026_stage1_late
+KXVALORANTGAME-26MAY190400GENGVAR,11,2026-05-19,GEN,VL,GEN,673532,varrel-vs-gen-g-esports-world-cup-2026-pacific-qualifier-stage-1-gf,2026-05-19,VARREL,Gen.G,0,2,GEN,2026_stage1_late
+KXVALORANTGAME-26MAY190500AGFPX,12,2026-05-19,AG,FPX,AG,675357,funplus-phoenix-vs-all-gamers-esports-world-cup-2026-china-qualifier-stage-2-lr3,2026-05-19,FunPlus Phoenix,All Gamers,0,2,AG,2026_stage1_late
+KXVALORANTGAME-26MAY200500AGTEC,13,2026-05-20,AG,TEC,AG,675358,titan-esports-club-vs-all-gamers-esports-world-cup-2026-china-qualifier-stage-2-lbf,2026-05-20,Titan Esports Club,All Gamers,0,3,AG,2026_stage1_late
+KXVALORANTGAME-26MAY202000SENEG,14,2026-05-21,EG,SEN,SEN,674841,evil-geniuses-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-1-gf,2026-05-20,Evil Geniuses,Sentinels,1,2,SEN,2026_stage1_late
+KXVALORANTGAME-26MAY210500DRGAG,15,2026-05-21,AG,DRG,AG,681009,all-gamers-vs-dragon-ranger-gaming-china-evolution-series-2026-act-2-ro16,2026-05-21,All Gamers,Dragon Ranger Gaming,2,0,AG,2026_stage1_late
+KXVALORANTGAME-26MAY210700WOLFPX,16,2026-05-21,FPX,WOL,FPX,681010,funplus-phoenix-vs-wolves-esports-china-evolution-series-2026-act-2-ro16,2026-05-21,FunPlus Phoenix,Wolves Esports,2,0,FPX,2026_stage1_late
+KXVALORANTGAME-26MAY220400GEDFM,17,2026-05-22,DFM,GE,GE,675204,detonation-focusme-vs-global-esports-esports-world-cup-2026-pacific-qualifier-stage-2-ubqf,2026-05-22,DetonatioN FocusMe,Global Esports,0,2,GE,2026_stage1_late
+KXVALORANTGAME-26MAY220400DRXRRQ,18,2026-05-22,KRX,RRQ,RRQ,675202,rex-regum-qeon-vs-kiwoom-drx-esports-world-cup-2026-pacific-qualifier-stage-2-ubqf,2026-05-22,Rex Regum Qeon,KIWOOM DRX,2,0,RRQ,2026_stage1_late
+KXVALORANTGAME-26MAY220400NST1,19,2026-05-22,NS,T1,NS,675203,t1-vs-nongshim-redforce-esports-world-cup-2026-pacific-qualifier-stage-2-ubqf,2026-05-22,T1,Nongshim RedForce,0,2,NS,2026_stage1_late
+KXVALORANTGAME-26MAY220400GENGFS,20,2026-05-22,FS,GEN,GEN,675201,full-sense-vs-gen-g-esports-world-cup-2026-pacific-qualifier-stage-2-ubqf,2026-05-22,FULL SENSE,Gen.G,1,2,GEN,2026_stage1_late
+KXVALORANTGAME-26MAY221100BBLFNC,21,2026-05-22,BBL,FNC,FNC,674856,fnatic-vs-bbl-esports-esports-world-cup-2026-emea-qualifier-stage-2-ubqf,2026-05-22,FNATIC,BBL Esports,2,0,FNC,2026_stage1_late
+KXVALORANTGAME-26MAY221100GMTL,22,2026-05-22,M8,TL,M8,674855,team-liquid-vs-gentle-mates-esports-world-cup-2026-emea-qualifier-stage-2-ubqf,2026-05-22,Team Liquid,Gentle Mates,0,2,M8,2026_stage1_late
+KXVALORANTGAME-26MAY221100NAVIFUT,23,2026-05-22,FUT,NAVI,FUT,674854,fut-esports-vs-natus-vincere-esports-world-cup-2026-emea-qualifier-stage-2-ubqf,2026-05-22,FUT Esports,Natus Vincere,2,0,FUT,2026_stage1_late
+KXVALORANTGAME-26MAY221100EFKC,24,2026-05-22,EF,KC,KC,674857,karmine-corp-vs-eternal-fire-esports-world-cup-2026-emea-qualifier-stage-2-ubqf,2026-05-22,Karmine Corp,Eternal Fire,2,1,KC,2026_stage1_late
+KXVALORANTGAME-26MAY230400FSDRX,25,2026-05-23,FS,KRX,KRX,675207,full-sense-vs-kiwoom-drx-esports-world-cup-2026-pacific-qualifier-stage-2-lr1,2026-05-23,FULL SENSE,KIWOOM DRX,1,2,KRX,2026_stage1_late
+KXVALORANTGAME-26MAY230500XLGJDG,26,2026-05-23,JDG,XLG,JDG,681013,jdg-esports-vs-xi-lai-gaming-china-evolution-series-2026-act-2-ro16,2026-05-23,JDG Esports,Xi Lai Gaming,2,1,JDG,2026_stage1_late
+KXVALORANTGAME-26MAY231100NAVITL,27,2026-05-23,NAVI,TL,NAVI,674860,natus-vincere-vs-team-liquid-esports-world-cup-2026-emea-qualifier-stage-2-lr1,2026-05-23,Natus Vincere,Team Liquid,2,0,NAVI,2026_stage1_late
+KXVALORANTGAME-26MAY231100FUTGM,28,2026-05-23,FUT,M8,M8,674858,fut-esports-vs-gentle-mates-esports-world-cup-2026-emea-qualifier-stage-2-ubsf,2026-05-23,FUT Esports,Gentle Mates,0,3,M8,2026_stage1_late
+KXVALORANTGAME-26MAY230400GENGRRQ,29,2026-05-23,GEN,RRQ,RRQ,675205,gen-g-vs-rex-regum-qeon-esports-world-cup-2026-pacific-qualifier-stage-2-ubsf,2026-05-23,Gen.G,Rex Regum Qeon,2,3,RRQ,2026_stage1_late
+KXVALORANTGAME-26MAY240500EDGTYLOO,30,2026-05-24,EDG,TYL,TYL,681015,tyloo-vs-edward-gaming-china-evolution-series-2026-act-2-ro16,2026-05-24,TYLOO,EDward Gaming,2,0,TYL,2026_stage1_late
+KXVALORANTGAME-26MAY230400T1DFM,31,2026-05-24,DFM,T1,T1,675208,t1-vs-detonation-focusme-esports-world-cup-2026-pacific-qualifier-stage-2-lr1,2026-05-24,T1,DetonatioN FocusMe,2,1,T1,2026_stage1_late
+KXVALORANTGAME-26MAY230400NSGE,32,2026-05-24,GE,NS,GE,675206,nongshim-redforce-vs-global-esports-esports-world-cup-2026-pacific-qualifier-stage-2-ubsf,2026-05-24,Nongshim RedForce,Global Esports,2,3,GE,2026_stage1_late
+KXVALORANTGAME-26MAY241100EFBBL,33,2026-05-24,BBL,EF,BBL,674861,bbl-esports-vs-eternal-fire-esports-world-cup-2026-emea-qualifier-stage-2-lr1,2026-05-24,BBL Esports,Eternal Fire,2,0,BBL,2026_stage1_late
+KXVALORANTGAME-26MAY241100KCFNC,34,2026-05-24,FNC,KC,KC,674859,fnatic-vs-karmine-corp-esports-world-cup-2026-emea-qualifier-stage-2-ubsf,2026-05-24,FNATIC,Karmine Corp,2,3,KC,2026_stage1_late
+KXVALORANTGAME-26MAY250500FPXAG,35,2026-05-25,AG,FPX,AG,681017,all-gamers-vs-funplus-phoenix-china-evolution-series-2026-act-2-qf,2026-05-25,All Gamers,FunPlus Phoenix,2,0,AG,2026_stage1_late
+KXVALORANTGAME-26MAY250700TECTE,36,2026-05-25,TE,TEC,TEC,681018,trace-esports-vs-titan-esports-club-china-evolution-series-2026-act-2-qf,2026-05-25,Trace Esports,Titan Esports Club,0,2,TEC,2026_stage1_late
+KXVALORANTGAME-26MAY260500NOVAJDG,37,2026-05-26,JDG,NOVA,NOVA,681019,jdg-esports-vs-nova-esports-china-evolution-series-2026-act-2-qf,2026-05-26,JDG Esports,Nova Esports,0,2,NOVA,2026_stage1_late
+KXVALORANTGAME-26MAY260700BLGTYLOO,38,2026-05-26,BLG,TYL,TYL,681020,tyloo-vs-bilibili-gaming-china-evolution-series-2026-act-2-qf,2026-05-26,TYLOO,Bilibili Gaming,2,0,TYL,2026_stage1_late
+KXVALORANTGAME-26MAY272000FUR100T,39,2026-05-28,100T,FUR,100T,681330,100-thieves-vs-furia-esports-world-cup-2026-americas-qualifier-stage-2-ubqf,2026-05-27,100 Thieves,FURIA,2,0,100T,2026_stage1_late
+KXVALORANTGAME-26MAY272000NRGLOUD,40,2026-05-28,LOUD,NRG,LOUD,681331,loud-vs-nrg-esports-world-cup-2026-americas-qualifier-stage-2-ubqf,2026-05-27,LOUD,NRG,2,0,LOUD,2026_stage1_late
+KXVALORANTGAME-26MAY272000KRUMIBR,41,2026-05-28,KRÜ,MIBR,MIBR,681329,mibr-vs-kr-esports-esports-world-cup-2026-americas-qualifier-stage-2-ubqf,2026-05-27,MIBR,KRÜ Esports,2,0,MIBR,2026_stage1_late
+KXVALORANTGAME-26MAY272000SENLEV,42,2026-05-28,LEV,SEN,LEV,681328,leviat-n-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-2-ubqf,2026-05-27,LEVIATÁN,Sentinels,2,1,LEV,2026_stage1_late
+KXVALORANTGAME-26MAY282000LEVMIBR,43,2026-05-29,LEV,MIBR,MIBR,681332,leviat-n-vs-mibr-esports-world-cup-2026-americas-qualifier-stage-2-ubsf,2026-05-28,LEVIATÁN,MIBR,0,3,MIBR,2026_stage1_late
+KXVALORANTGAME-26MAY282000SENKRU,44,2026-05-29,KRÜ,SEN,SEN,681334,sentinels-vs-kr-esports-esports-world-cup-2026-americas-qualifier-stage-2-lr1,2026-05-28,Sentinels,KRÜ Esports,2,1,SEN,2026_stage1_late
+KXVALORANTGAME-26MAY290500TECAG,45,2026-05-29,AG,TEC,TEC,681021,all-gamers-vs-titan-esports-club-china-evolution-series-2026-act-2-sf,2026-05-29,All Gamers,Titan Esports Club,1,2,TEC,2026_stage1_late
+KXVALORANTGAME-26MAY290700TYLOONOVA,46,2026-05-29,NOVA,TYL,NOVA,681022,nova-esports-vs-tyloo-china-evolution-series-2026-act-2-sf,2026-05-29,Nova Esports,TYLOO,2,0,NOVA,2026_stage1_late
+KXVALORANTGAME-26MAY282000NRGFUR,47,2026-05-30,FUR,NRG,NRG,681335,furia-vs-nrg-esports-world-cup-2026-americas-qualifier-stage-2-lr1,2026-05-29,FURIA,NRG,0,2,NRG,2026_stage1_late
+KXVALORANTGAME-26MAY282000LOUD100T,48,2026-05-30,100T,LOUD,100T,681333,100-thieves-vs-loud-esports-world-cup-2026-americas-qualifier-stage-2-ubsf,2026-05-29,100 Thieves,LOUD,3,0,100T,2026_stage1_late
+KXVALORANTGAME-26MAY300400NSDRX,49,2026-05-30,KRX,NS,NS,675209,nongshim-redforce-vs-kiwoom-drx-esports-world-cup-2026-pacific-qualifier-stage-2-lr2,2026-05-30,Nongshim RedForce,KIWOOM DRX,2,0,NS,2026_stage1_late
+KXVALORANTGAME-26MAY300700T1GENG,50,2026-05-30,GEN,T1,GEN,675210,gen-g-vs-t1-esports-world-cup-2026-pacific-qualifier-stage-2-lr2,2026-05-30,Gen.G,T1,2,0,GEN,2026_stage1_late
+KXVALORANTGAME-26MAY300500TYLOOAG,51,2026-05-30,AG,TYL,AG,681024,all-gamers-vs-tyloo-china-evolution-series-2026-act-2-cf,2026-05-30,All Gamers,TYLOO,3,2,AG,2026_stage1_late
+KXVALORANTGAME-26MAY301100FNCNAVI,52,2026-05-30,FNC,NAVI,NAVI,674862,fnatic-vs-natus-vincere-esports-world-cup-2026-emea-qualifier-stage-2-lr2,2026-05-30,FNATIC,Natus Vincere,1,2,NAVI,2026_stage1_late
+KXVALORANTGAME-26MAY301100BBLFUT,53,2026-05-30,BBL,FUT,BBL,674863,fut-esports-vs-bbl-esports-esports-world-cup-2026-emea-qualifier-stage-2-lr2,2026-05-30,FUT Esports,BBL Esports,1,2,BBL,2026_stage1_late
+KXVALORANTGAME-26MAY302000LOUDSEN,54,2026-05-31,LOUD,SEN,LOUD,681336,loud-vs-sentinels-esports-world-cup-2026-americas-qualifier-stage-2-lr2,2026-05-30,LOUD,Sentinels,2,1,LOUD,2026_stage1_late
+KXVALORANTGAME-26MAY302000NRGLEV,55,2026-05-31,LEV,NRG,NRG,681337,leviat-n-vs-nrg-esports-world-cup-2026-americas-qualifier-stage-2-lr2,2026-05-30,LEVIATÁN,NRG,0,2,NRG,2026_stage1_late
+KXVALORANTGAME-26MAY310400GENGNS,56,2026-05-31,GEN,NS,NS,675211,nongshim-redforce-vs-gen-g-esports-world-cup-2026-pacific-qualifier-stage-2-lbf,2026-05-31,Nongshim RedForce,Gen.G,3,1,NS,2026_stage1_late
+KXVALORANTGAME-26MAY310500NOVATEC,57,2026-05-31,NOVA,TEC,NOVA,681023,titan-esports-club-vs-nova-esports-china-evolution-series-2026-act-2-gf,2026-05-31,Titan Esports Club,Nova Esports,2,3,NOVA,2026_stage1_late
+KXVALORANTGAME-26MAY311100BBLNAVI,58,2026-05-31,BBL,NAVI,BBL,674864,natus-vincere-vs-bbl-esports-esports-world-cup-2026-emea-qualifier-stage-2-lbf,2026-05-31,Natus Vincere,BBL Esports,0,3,BBL,2026_stage1_late
+KXVALORANTGAME-26MAY312000NRGLOUD,59,2026-06-01,LOUD,NRG,NRG,681338,loud-vs-nrg-esports-world-cup-2026-americas-qualifier-stage-2-lbf,2026-05-31,LOUD,NRG,0,3,NRG,2026_stage1_late
+KXVALORANTGAME-26JUL020700BBLEDG,60,2026-07-02,BBL,EDG,BBL,706755,bbl-esports-vs-edward-gaming-esports-world-cup-2026-opening-a,2026-07-02,BBL Esports,EDward Gaming,2,1,BBL,2026_ewc
+KXVALORANTGAME-26JUL020700100TRRQ,61,2026-07-02,100T,RRQ,100T,706754,rex-regum-qeon-vs-100-thieves-esports-world-cup-2026-opening-a,2026-07-02,Rex Regum Qeon,100 Thieves,0,2,100T,2026_ewc
+KXVALORANTGAME-26JUL020945KCVIT,62,2026-07-02,KC,VIT,VIT,706759,team-vitality-vs-karmine-corp-esports-world-cup-2026-opening-b,2026-07-02,Team Vitality,Karmine Corp,2,0,VIT,2026_ewc
+KXVALORANTGAME-26JUL020945NRGPR,63,2026-07-02,NRG,PRX,NRG,706760,nrg-vs-paper-rex-esports-world-cup-2026-opening-b,2026-07-02,NRG,Paper Rex,2,1,NRG,2026_ewc
+KXVALORANTGAME-26JUL030945XLGGM,64,2026-07-03,M8,XLG,M8,706764,gentle-mates-vs-xi-lai-gaming-esports-world-cup-2026-opening-c,2026-07-03,Gentle Mates,Xi Lai Gaming,2,1,M8,2026_ewc
+KXVALORANTGAME-26JUL030945NSG2,65,2026-07-03,G2,NS,NS,706765,nongshim-redforce-vs-g2-esports-esports-world-cup-2026-opening-c,2026-07-03,Nongshim RedForce,G2 Esports,2,1,NS,2026_ewc
+KXVALORANTGAME-26JUL040700RRQEDG,66,2026-07-04,EDG,RRQ,EDG,706757,rex-regum-qeon-vs-edward-gaming-esports-world-cup-2026-elim-a,2026-07-04,Rex Regum Qeon,EDward Gaming,0,2,EDG,2026_ewc
+KXVALORANTGAME-26JUL040700100TBBL,67,2026-07-04,100T,BBL,100T,706756,100-thieves-vs-bbl-esports-esports-world-cup-2026-winners-a,2026-07-04,100 Thieves,BBL Esports,2,1,100T,2026_ewc
+KXVALORANTGAME-26JUL040945NRGVIT,68,2026-07-04,NRG,VIT,VIT,706761,team-vitality-vs-nrg-esports-world-cup-2026-winners-b,2026-07-04,Team Vitality,NRG,2,1,VIT,2026_ewc
+KXVALORANTGAME-26JUL040945PRKC,69,2026-07-04,KC,PRX,KC,706762,karmine-corp-vs-paper-rex-esports-world-cup-2026-elim-b,2026-07-04,Karmine Corp,Paper Rex,2,1,KC,2026_ewc
+KXVALORANTGAME-26JUL050945G2XLG,70,2026-07-05,G2,XLG,G2,706767,xi-lai-gaming-vs-g2-esports-esports-world-cup-2026-elim-c,2026-07-05,Xi Lai Gaming,G2 Esports,0,2,G2,2026_ewc
+KXVALORANTGAME-26JUL050945NSGM,71,2026-07-05,M8,NS,M8,706766,gentle-mates-vs-nongshim-redforce-esports-world-cup-2026-winners-c,2026-07-05,Gentle Mates,Nongshim RedForce,2,1,M8,2026_ewc
+KXVALORANTGAME-26JUL060700BBLEDG,72,2026-07-06,BBL,EDG,BBL,706758,bbl-esports-vs-edward-gaming-esports-world-cup-2026-decider-a,2026-07-06,BBL Esports,EDward Gaming,2,0,BBL,2026_ewc
+KXVALORANTGAME-26JUL060945KCNRG,73,2026-07-06,KC,NRG,NRG,706763,nrg-vs-karmine-corp-esports-world-cup-2026-decider-b,2026-07-06,NRG,Karmine Corp,2,1,NRG,2026_ewc
+KXVALORANTGAME-26JUL070945NSG2,74,2026-07-07,G2,NS,NS,706768,nongshim-redforce-vs-g2-esports-esports-world-cup-2026-decider-c,2026-07-07,Nongshim RedForce,G2 Esports,2,1,NS,2026_ewc
+KXVALORANTGAME-26JUL090700BBLTH,75,2026-07-09,BBL,TH,BBL,708422,team-heretics-vs-bbl-esports-esports-world-cup-2026-qf,2026-07-09,Team Heretics,BBL Esports,1,2,BBL,2026_ewc
+KXVALORANTGAME-26JUL090945NRGGM,76,2026-07-09,M8,NRG,NRG,708423,gentle-mates-vs-nrg-esports-world-cup-2026-qf,2026-07-09,Gentle Mates,NRG,1,2,NRG,2026_ewc
+KXVALORANTGAME-26JUL100700NSVIT,77,2026-07-10,NS,VIT,NS,708421,team-vitality-vs-nongshim-redforce-esports-world-cup-2026-qf,2026-07-10,Team Vitality,Nongshim RedForce,1,2,NS,2026_ewc
+KXVALORANTGAME-26JUL110700100TNS,78,2026-07-11,100T,NS,100T,708424,100-thieves-vs-nongshim-redforce-esports-world-cup-2026-sf,2026-07-11,100 Thieves,Nongshim RedForce,2,1,100T,2026_ewc
+KXVALORANTGAME-26JUL110945NRGBBL,79,2026-07-11,BBL,NRG,NRG,708425,bbl-esports-vs-nrg-esports-world-cup-2026-sf,2026-07-11,BBL Esports,NRG,1,2,NRG,2026_ewc
+KXVALORANTGAME-26JUL120700BBLNS,80,2026-07-12,BBL,NS,NS,708427,nongshim-redforce-vs-bbl-esports-esports-world-cup-2026-cf,2026-07-12,Nongshim RedForce,BBL Esports,2,0,NS,2026_ewc
+KXVALORANTGAME-26JUL120945NRG100T,81,2026-07-12,100T,NRG,100T,708426,100-thieves-vs-nrg-esports-world-cup-2026-gf,2026-07-12,100 Thieves,NRG,3,1,100T,2026_ewc

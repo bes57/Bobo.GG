@@ -1,0 +1,12 @@
+{
+ "beta_only": 0.1047,
+ "beta_with_pick": 0.1047,
+ "b_pick": 0.0467,
+ "pick_edge_pct_at_even": 1.17,
+ "ll_map_test_nopick": 0.67289,
+ "ll_map_test_pick": 0.67185,
+ "b_pick_2023": 0.0722,
+ "b_pick_2024": 0.0339,
+ "b_pick_2025": 0.158,
+ "b_pick_2026": 0.1244
+}

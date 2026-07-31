@@ -76,6 +76,8 @@ def _alltime_event_filter(alltime_id):
     def keep(e):
         if list(e["regions"].keys()) == ["CN"]:
             return False
+        if e.get("ratings_only"):
+            return False
         # Keep the live/in-progress split out of All-Time aggregates — its
         # partial per-map data shouldn't dilute all-time rankings. It re-enters
         # automatically once it completes (top-level CSV) and LIVE_EVENT_ID moves on.
@@ -112,6 +114,10 @@ def get_events_by_year():
         # CN-only events feed BenPom (team ratings) but are hidden from the
         # event-leaderboard dropdown — user wants CN scoped to team stats, not players.
         if list(e["regions"].keys()) == ["CN"]:
+            continue
+        # ratings_only events (EWC qualifiers, EWC, China Evolution Series)
+        # likewise feed ratings but never surface in player UIs.
+        if e.get("ratings_only"):
             continue
         # Hide events with no data yet (haven't started, or pre-scrape). The
         # live/in-progress split has no top-level CSV until first accessed, so

@@ -1,0 +1,151 @@
+{
+ "beta_cand": 0.1164,
+ "beta_prod": 0.177,
+ "overall": {
+  "n": 890,
+  "cand": 0.64484,
+  "prod": 0.65018
+ },
+ "boot": {
+  "mean_delta": 0.005337249287261891,
+  "ci_lo": -0.0003270443759307424,
+  "ci_hi": 0.011032754222672093,
+  "p_better": 0.96775
+ },
+ "buckets": [
+  {
+   "name": "year 2025",
+   "n": 498,
+   "cand": 0.63785,
+   "prod": 0.64346,
+   "delta": 0.00561
+  },
+  {
+   "name": "year 2026",
+   "n": 392,
+   "cand": 0.65372,
+   "prod": 0.65871,
+   "delta": 0.00499
+  },
+  {
+   "name": "format bo3",
+   "n": 836,
+   "cand": 0.64469,
+   "prod": 0.64982,
+   "delta": 0.00513
+  },
+  {
+   "name": "format bo5",
+   "n": 33,
+   "cand": 0.67064,
+   "prod": 0.68452,
+   "delta": 0.01387
+  },
+  {
+   "name": "format bo5_gf",
+   "n": 21,
+   "cand": 0.6102,
+   "prod": 0.61057,
+   "delta": 0.00037
+  },
+  {
+   "name": "stage groups",
+   "n": 474,
+   "cand": 0.62267,
+   "prod": 0.62745,
+   "delta": 0.00478
+  },
+  {
+   "name": "stage playoffs",
+   "n": 359,
+   "cand": 0.67982,
+   "prod": 0.68786,
+   "delta": 0.00804
+  },
+  {
+   "name": "stage grand_final",
+   "n": 21,
+   "cand": 0.6102,
+   "prod": 0.61057,
+   "delta": 0.00037
+  },
+  {
+   "name": "international",
+   "n": 122,
+   "cand": 0.67276,
+   "prod": 0.67509,
+   "delta": 0.00233
+  },
+  {
+   "name": "domestic",
+   "n": 768,
+   "cand": 0.64041,
+   "prod": 0.64622,
+   "delta": 0.00581
+  },
+  {
+   "name": "CN involved",
+   "n": 254,
+   "cand": 0.63865,
+   "prod": 0.64469,
+   "delta": 0.00604
+  },
+  {
+   "name": "cross-region",
+   "n": 107,
+   "cand": 0.67444,
+   "prod": 0.67667,
+   "delta": 0.00223
+  },
+  {
+   "name": "domestic Americas",
+   "n": 186,
+   "cand": 0.62718,
+   "prod": 0.63408,
+   "delta": 0.0069
+  },
+  {
+   "name": "domestic EMEA",
+   "n": 193,
+   "cand": 0.64399,
+   "prod": 0.6539,
+   "delta": 0.00991
+  },
+  {
+   "name": "domestic Pacific",
+   "n": 191,
+   "cand": 0.65299,
+   "prod": 0.65375,
+   "delta": 0.00076
+  },
+  {
+   "name": "domestic CN",
+   "n": 213,
+   "cand": 0.63886,
+   "prod": 0.64436,
+   "delta": 0.0055
+  },
+  {
+   "name": "close matchups (<1.5)",
+   "n": 332,
+   "cand": 0.68896,
+   "prod": 0.69172,
+   "delta": 0.00277
+  },
+  {
+   "name": "mid gap [1.5,4)",
+   "n": 362,
+   "cand": 0.65918,
+   "prod": 0.66459,
+   "delta": 0.00541
+  },
+  {
+   "name": "large gap (>=4)",
+   "n": 196,
+   "cand": 0.54364,
+   "prod": 0.55319,
+   "delta": 0.00955
+  }
+ ],
+ "n_buckets_worse": 0
+}

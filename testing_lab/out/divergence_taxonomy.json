@@ -1,0 +1,218 @@
+[
+ {
+  "date": "2026-07-17",
+  "match": "KC bt EF",
+  "benpom": 0.2548955373624875,
+  "kalshi": 0.51,
+  "ctx": {
+   "KC": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "2/5",
+    "days_since_last": 78
+   },
+   "EF": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "4/5",
+    "days_since_last": 2
+   }
+  }
+ },
+ {
+  "date": "2026-07-16",
+  "match": "GEN bt ZETA",
+  "benpom": 0.6003466420812076,
+  "kalshi": 0.77,
+  "ctx": {
+   "GEN": {
+    "lineup_overlap_last4": 4,
+    "recent_form_maps": "2/5",
+    "days_since_last": 76
+   },
+   "ZETA": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "2/5",
+    "days_since_last": 76
+   }
+  }
+ },
+ {
+  "date": "2026-07-17",
+  "match": "NOVA bt JDG",
+  "benpom": 0.5712029508907227,
+  "kalshi": 0.74,
+  "ctx": {
+   "NOVA": {
+    "lineup_overlap_last4": 4,
+    "recent_form_maps": "2/5",
+    "days_since_last": 5
+   },
+   "JDG": {
+    "lineup_overlap_last4": 3,
+    "recent_form_maps": "1/5",
+    "days_since_last": 2
+   }
+  }
+ },
+ {
+  "date": "2026-05-16",
+  "match": "PRX bt GE",
+  "benpom": 0.5861278910517194,
+  "kalshi": 0.7525,
+  "ctx": {
+   "PRX": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "4/5",
+    "days_since_last": 1
+   },
+   "GE": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "3/5",
+    "days_since_last": 1
+   }
+  }
+ },
+ {
+  "date": "2026-05-24",
+  "match": "G2 bt LEV",
+  "benpom": 0.6535662776143903,
+  "kalshi": 0.4975,
+  "ctx": {
+   "G2": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "4/5",
+    "days_since_last": 1
+   },
+   "LEV": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "3/5",
+    "days_since_last": 2
+   }
+  }
+ },
+ {
+  "date": "2026-07-16",
+  "match": "FNC bt GX",
+  "benpom": 0.6328510221033576,
+  "kalshi": 0.7825,
+  "ctx": {
+   "FNC": {
+    "lineup_overlap_last4": 4,
+    "recent_form_maps": "3/5",
+    "days_since_last": 67
+   },
+   "GX": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "3/5",
+    "days_since_last": 76
+   }
+  }
+ },
+ {
+  "date": "2026-06-13",
+  "match": "EDG bt FUT",
+  "benpom": 0.3116311213023383,
+  "kalshi": 0.4449999999999999,
+  "ctx": {
+   "EDG": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "2/5",
+    "days_since_last": 34
+   },
+   "FUT": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "2/5",
+    "days_since_last": 3
+   }
+  }
+ },
+ {
+  "date": "2026-07-18",
+  "match": "FUT bt M8",
+  "benpom": 0.5349353233406965,
+  "kalshi": 0.41,
+  "ctx": {
+   "FUT": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "2/5",
+    "days_since_last": 3
+   },
+   "M8": {
+    "lineup_overlap_last4": 4,
+    "recent_form_maps": "0/5",
+    "days_since_last": 2
+   }
+  }
+ },
+ {
+  "date": "2026-07-16",
+  "match": "M8 bt PCF",
+  "benpom": 0.6714814397771144,
+  "kalshi": 0.7949999999999999,
+  "ctx": {
+   "M8": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "1/5",
+    "days_since_last": 67
+   },
+   "PCF": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "1/5",
+    "days_since_last": 78
+   }
+  }
+ },
+ {
+  "date": "2026-07-14",
+  "match": "AG bt WOL",
+  "benpom": 0.6201092866653897,
+  "kalshi": 0.7424999999999999,
+  "ctx": {
+   "AG": {
+    "lineup_overlap_last4": 4,
+    "recent_form_maps": "3/5",
+    "days_since_last": 67
+   },
+   "WOL": {
+    "lineup_overlap_last4": 3,
+    "recent_form_maps": "2/5",
+    "days_since_last": 3
+   }
+  }
+ },
+ {
+  "date": "2026-06-14",
+  "match": "LEV bt TH",
+  "benpom": 0.4026929161415079,
+  "kalshi": 0.5225,
+  "ctx": {
+   "LEV": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "2/5",
+    "days_since_last": 2
+   },
+   "TH": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "0/5",
+    "days_since_last": 2
+   }
+  }
+ },
+ {
+  "date": "2026-07-17",
+  "match": "KRX bt DFM",
+  "benpom": 0.6359519334390139,
+  "kalshi": 0.7525,
+  "ctx": {
+   "KRX": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "0/5",
+    "days_since_last": 68
+   },
+   "DFM": {
+    "lineup_overlap_last4": 5,
+    "recent_form_maps": "3/5",
+    "days_since_last": 69
+   }
+  }
+ }
+]

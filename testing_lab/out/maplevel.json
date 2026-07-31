@@ -1,0 +1,52 @@
+{
+ "prod_kov": {
+  "beta_map": 0.1669,
+  "ll_map_test": 0.67802,
+  "n": 2287
+ },
+ "prod_k3": {
+  "beta_map": 0.1358,
+  "ll_map_test": 0.67934,
+  "n": 2287
+ },
+ "prod_k5": {
+  "beta_map": 0.1497,
+  "ll_map_test": 0.6784,
+  "n": 2287
+ },
+ "prod_k10": {
+  "beta_map": 0.1609,
+  "ll_map_test": 0.67787,
+  "n": 2287
+ },
+ "prod_k20": {
+  "beta_map": 0.1654,
+  "ll_map_test": 0.6778,
+  "n": 2287
+ },
+ "cand_kov": {
+  "beta_map": 0.1129,
+  "ll_map_test": 0.67347,
+  "n": 2287
+ },
+ "cand_k3": {
+  "beta_map": 0.0885,
+  "ll_map_test": 0.67724,
+  "n": 2287
+ },
+ "cand_k5": {
+  "beta_map": 0.0988,
+  "ll_map_test": 0.67546,
+  "n": 2287
+ },
+ "cand_k10": {
+  "beta_map": 0.1081,
+  "ll_map_test": 0.67399,
+  "n": 2287
+ },
+ "cand_k20": {
+  "beta_map": 0.1121,
+  "ll_map_test": 0.67345,
+  "n": 2287
+ }
+}
