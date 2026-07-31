@@ -2,14 +2,30 @@
 
 A **self-contained** pipeline that pulls the deeper per-map data VLR.gg shows on
 individual match pages but does **not** expose in the event stat tables the main
-site already scrapes. Built as a foundation for **new projects** — it is not
-wired into the Flask app and does not modify any existing file.
+site already scrapes. It backs the Match Data Explorer (`/match-data/`).
 
 ## Isolation guarantees
 - **Reads** only `data/match_results.csv` and `data/match_dates.json` (read-only).
 - **Writes** only under `data/enriched/`.
-- **Not imported** by `BobosHome` or any site module. Running it cannot affect
-  the live website.
+- **Not imported** by `BobosHome` or any site module — the only automated entry
+  point is `scrapers/EnrichNewMatches.py` (below), spawned as its own detached
+  process. A failure there cannot break a refresh or the live website.
+
+## Staying current (automated)
+`scrapers/EnrichNewMatches.py` runs an incremental pass of both collectors.
+`RefreshLiveData` spawns it, detached, right after it finishes — so the
+enrichment tracks the same match list as everything else on the site without
+adding its 3-4 extra VLR fetches per match to the refresh the user is watching.
+`/match-data/` caches key off the enriched file count, so new files are picked up
+with no cache-busting.
+
+It is time-budgeted (`--budget`, default 420 s, split between the two passes) and
+`flock`'d, so a backlog drains over several refreshes instead of pinning one
+process, and overlapping refreshes can't stack passes on VLR. Matches finished
+within the last few days are **never** tombstoned/blanked and are re-checked if
+only part of the series' stats have been published — VLR posts round, economy and
+agent data some time after a match ends. Last-pass counts land in
+`data/enriched/_last_run.json`; the log is `data/enriched/_enrich.log`.
 
 ## What it collects (per map)
 - **Round-by-round outcomes** — winning team, side (`attack`/`defense`), and win
@@ -38,10 +54,16 @@ python -m scrapers.enriched.enrich --rebuild-csv   # rebuild flat CSVs only
 
 It is **incremental and resumable**: matches already enriched are skipped, and
 matches with no round data (forfeits / very old) are tombstoned so they aren't
-retried. To keep it current, run it right after the site's own scrape step —
-it will pick up only the newly-added matches. Anti-bot handling mirrors the main
-site (curl_cffi Chrome impersonation → cloudscraper fallback, polite delays,
-bounded retries).
+retried. Keeping it current is automatic (see above); these commands are for
+backfills and one-offs. Anti-bot handling mirrors the main site (curl_cffi Chrome
+impersonation → cloudscraper fallback, polite delays, bounded retries).
+
+**Parsing note:** VLR migrated match pages from `table.wf-table-inset.mod-overview`
+(`td.mod-player`, `td.mod-agents`) to a `div.ovw-table` grid (`.ovw-cell.mod-player`,
+with the agent icon now inside the player cell as `.ovw-agents img`) around
+mid-2026. `parse.py` and `agents.py` match both shapes. If team orgs, map scores
+or comps ever come back empty for new matches, that selector pair is the first
+thing to check.
 
 ## Outputs
 ### Source of truth — one JSON per match

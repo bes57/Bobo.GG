@@ -40,8 +40,18 @@ def _int(text) -> int:
     return int(m.group()) if m else 0
 
 
+def _player_cells(container):
+    """Every player cell in a map container, in DOM order.
+
+    VLR migrated the overview stats from `table.wf-table-inset.mod-overview`
+    (rows of `td.mod-player`) to a `div.ovw-table` grid (rows of
+    `.ovw-cell.mod-player`) ~mid-2026. Both are matched so the current layout
+    and any archived HTML parse identically."""
+    return container.select(".ovw-cell.mod-player, td.mod-player")
+
+
 def _player_cell(el):
-    """From an overview .mod-player cell -> (name, org, player_id)."""
+    """From an overview player cell -> (name, org, player_id)."""
     if el is None:
         return None, None, None
     name_el = el.select_one(".text-of")
@@ -81,11 +91,16 @@ def _perf_val(cell):
 
 
 def _team_orgs(container):
-    """(team1_org, team2_org) from the two per-team overview tables in a map."""
-    tables = container.select("table.wf-table-inset.mod-overview")
+    """(team1_org, team2_org) from the two per-team overview blocks in a map.
+
+    Post-migration each block is a `div.ovw-table`; before it, a
+    `table.wf-table-inset.mod-overview`. Either way the first player's tag gives
+    the block's org."""
+    blocks = (container.select("div.ovw-table")
+              or container.select("table.wf-table-inset.mod-overview"))
     orgs = []
-    for t in tables[:2]:
-        cell = t.select_one("td.mod-player")
+    for b in blocks[:2]:
+        cell = b.select_one(".ovw-cell.mod-player, td.mod-player")
         _, org, _ = _player_cell(cell)
         orgs.append(org)
     while len(orgs) < 2:
@@ -268,7 +283,7 @@ def parse_match(match_id, overview_html, economy_html, performance_html, *,
             players, matrix = parse_performance(pf_by_gid[gid])
             # player_id only exists on the overview page — join it in by name
             ov_pids = {}
-            for pc in g.select("td.mod-player"):
+            for pc in _player_cells(g):
                 nm, _org, pid = _player_cell(pc)
                 if nm and pid:
                     ov_pids[nm] = pid

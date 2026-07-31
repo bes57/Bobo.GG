@@ -24,7 +24,7 @@ import csv
 import json
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import vlr_client as C
@@ -67,15 +67,24 @@ def _save_json(path: Path, obj):
 
 
 def load_match_list():
-    """Distinct MatchIDs from the existing results file, newest-first by date."""
+    """Distinct MatchIDs from the existing results file, newest-first by date.
+
+    `n_maps` is how many maps the site already has for the match — the automated
+    path uses it to spot a series whose stats VLR has only half-published."""
     dates = _load_json(MATCH_DATES, {})
     seen = {}
     with MATCH_RESULTS.open() as f:
         for row in csv.DictReader(f):
             mid = (row.get("MatchID") or "").strip()
-            if mid and mid not in seen:
-                seen[mid] = {"match_id": mid, "date": dates.get(mid)}
-    matches = list(seen.values())
+            if not mid:
+                continue
+            e = seen.setdefault(mid, {"match_id": mid, "date": dates.get(mid),
+                                      "_maps": set()})
+            mapnum = (row.get("MapNum") or "").strip()
+            if mapnum and mapnum != "all":   # "all" is the series aggregate row
+                e["_maps"].add(mapnum)
+    matches = [{"match_id": e["match_id"], "date": e["date"],
+                "n_maps": len(e["_maps"])} for e in seen.values()]
     matches.sort(key=lambda m: (m["date"] or "0000-00-00"), reverse=True)
     return matches
 
@@ -96,7 +105,26 @@ def enrich_one(match_id: str, date=None):
     return rec if rec["n_maps"] > 0 else None
 
 
-def run(limit=None, only=None, refresh=False, event=None):
+def _is_recent(date, days):
+    """True if `date` ("YYYY-MM-DD") is within the last `days` days."""
+    if not date or not days:
+        return False
+    cut = (datetime.now(timezone.utc).date() - timedelta(days=days)).isoformat()
+    return str(date) >= cut
+
+
+def run(limit=None, only=None, refresh=False, event=None,
+        deadline=None, defer_recent_days=0):
+    """Enrich matches that have no JSON yet, newest-first.
+
+    deadline           — time.monotonic() value to stop at (None = no limit).
+                         Lets the automated runner cap how long a pass takes.
+    defer_recent_days  — matches this recent whose pages have no round data yet
+                         are LEFT ALONE instead of tombstoned. VLR publishes
+                         round/economy data minutes-to-hours after a match ends,
+                         so tombstoning on the automated path would permanently
+                         drop matches that simply weren't ready.
+    """
     VLR_DIR.mkdir(parents=True, exist_ok=True)
     index = _load_json(INDEX_PATH, {})
     tombstones = _load_json(TOMB_PATH, {})
@@ -118,15 +146,30 @@ def run(limit=None, only=None, refresh=False, event=None):
     print(f"[enrich] {total} match(es) to process "
           f"(refresh={refresh}{', only='+str(only) if only else ''})")
 
-    done = fail = tomb = 0
+    done = fail = tomb = defer = 0
     for n, m in enumerate(todo, 1):
         mid = m["match_id"]
+        if deadline is not None and time.monotonic() >= deadline:
+            print(f"[enrich] time budget reached — stopping at {n - 1}/{total}")
+            break
         try:
             rec = enrich_one(mid, date=m["date"])
             if rec is None:
-                tombstones[mid] = {"reason": "no round data", "at": _now()}
-                tomb += 1
-                print(f"  [{n}/{total}] {mid}  · tombstoned (no rounds)")
+                if _is_recent(m["date"], defer_recent_days):
+                    defer += 1
+                    print(f"  [{n}/{total}] {mid}  · no rounds yet — will retry")
+                else:
+                    tombstones[mid] = {"reason": "no round data", "at": _now()}
+                    tomb += 1
+                    print(f"  [{n}/{total}] {mid}  · tombstoned (no rounds)")
+            elif (_is_recent(m["date"], defer_recent_days)
+                  and m.get("n_maps") and rec["n_maps"] < m["n_maps"]):
+                # VLR has published only part of the series' per-map stats. Save
+                # nothing — a short record would look complete forever, since the
+                # incremental pass skips any match that already has a file.
+                defer += 1
+                print(f"  [{n}/{total}] {mid}  · only {rec['n_maps']}/{m['n_maps']} "
+                      f"maps published — will retry")
             else:
                 _save_json(VLR_DIR / f"{mid}.json", rec)
                 index[mid] = {
@@ -150,7 +193,8 @@ def run(limit=None, only=None, refresh=False, event=None):
 
     _save_json(INDEX_PATH, index)
     _save_json(TOMB_PATH, tombstones)
-    print(f"[enrich] done: {done} enriched, {tomb} tombstoned, {fail} failed")
+    print(f"[enrich] done: {done} enriched, {tomb} tombstoned, "
+          f"{defer} deferred, {fail} failed")
     return done, tomb, fail
 
 

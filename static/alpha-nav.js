@@ -53,7 +53,8 @@
       ['/mapelo/matchup/', 'Matchup Simulator']
     ]},
     ['/mapelo/pythagorean/', 'Pythagorean Ratings'],
-    ['/match-data/', 'Match Data']
+    ['/match-data/', 'Match Data'],
+    ['/testing/', 'Testing']
   ];
 
   // Active = the entry (or dropdown child) whose base path is the LONGEST prefix

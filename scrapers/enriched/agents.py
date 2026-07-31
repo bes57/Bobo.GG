@@ -24,7 +24,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 from . import vlr_client as C
-from .enrich import DATA, load_match_list, _save_json, _load_json
+from .enrich import DATA, load_match_list, _is_recent, _save_json, _load_json
 from .parse import _game_containers, _map_name, _player_cell
 
 COMPS_DIR = DATA / "enriched" / "comps"
@@ -32,14 +32,23 @@ SLEEP = 0.6
 
 
 def parse_comps(overview_html: str):
+    """{map_num: {org: [agent, …]}} from the overview page.
+
+    VLR's ~mid-2026 grid migration moved the agent icon out of its own
+    `td.mod-agents` column and into the player cell itself (`.ovw-agents img`),
+    so scan from the player cell and accept either shape. Missing it silently
+    yields empty comps — which is why the collector defers recent matches rather
+    than writing an empty record."""
     soup = BeautifulSoup(overview_html, "html.parser")
     maps = []
     for gid, g in _game_containers(soup):
         comps = {}
-        for tr in g.select("tr"):
-            pcell = tr.select_one("td.mod-player")
-            agimg = tr.select_one("td.mod-agents img")
-            if not pcell or not agimg:
+        for pcell in g.select(".ovw-cell.mod-player, td.mod-player"):
+            agimg = pcell.select_one(".ovw-agents img")
+            if agimg is None:
+                row = pcell.find_parent("tr")
+                agimg = row.select_one("td.mod-agents img") if row else None
+            if agimg is None:
                 continue
             _name, org, _pid = _player_cell(pcell)
             m = re.search(r"/agents/([^./]+)", agimg.get("src", ""))
@@ -57,7 +66,13 @@ def collect_one(match_id: str):
     return {"match_id": str(match_id), "maps": maps} if maps else None
 
 
-def run(limit=None):
+def run(limit=None, deadline=None, defer_recent_days=0):
+    """Collect comps for matches with no file yet, newest-first.
+
+    deadline           — time.monotonic() value to stop at (None = no limit), so
+                         the automated runner can cap how long a pass takes.
+    defer_recent_days  — matches this recent with no agent table yet are skipped
+                         rather than written as empty, so they get retried."""
     COMPS_DIR.mkdir(parents=True, exist_ok=True)
     todo = [m for m in load_match_list()
             if not (COMPS_DIR / f"{m['match_id']}.json").exists()]
@@ -67,6 +82,9 @@ def run(limit=None):
     done = fail = 0
     for n, m in enumerate(todo, 1):
         mid = m["match_id"]
+        if deadline is not None and time.monotonic() >= deadline:
+            print(f"[comps] time budget reached — stopping at {n - 1}/{len(todo)}")
+            break
         try:
             rec = collect_one(mid)
             if rec:
@@ -74,6 +92,10 @@ def run(limit=None):
                 done += 1
                 if n % 25 == 0:
                     print(f"  [{n}/{len(todo)}] {mid} · {len(rec['maps'])} maps")
+            elif _is_recent(m["date"], defer_recent_days):
+                # VLR hadn't published the stat table yet — leave no file so the
+                # next pass retries instead of freezing an empty record in place.
+                print(f"  [{n}/{len(todo)}] {mid} · no agents yet — will retry")
             else:
                 _save_json(COMPS_DIR / f"{mid}.json", {"match_id": mid, "maps": []})
         except KeyboardInterrupt:
@@ -83,6 +105,7 @@ def run(limit=None):
             print(f"  [{n}/{len(todo)}] {mid} · FAILED {type(e).__name__}: {e}")
         time.sleep(SLEEP)
     print(f"[comps] done: {done} collected, {fail} failed")
+    return done
 
 
 def status():

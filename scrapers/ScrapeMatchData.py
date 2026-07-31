@@ -100,6 +100,21 @@ def scrape_match(match_url, region_tag, region_map):
         print(f"    fetch failed: {e}")
         return [], []
 
+    # VLR moved per-map stats from tables to a div.ovw-* grid (~mid-2026).
+    # Delegate to the live pipeline's fixed parser (identical row schema);
+    # fall through to the legacy table parsing only if it yields nothing.
+    try:
+        from RefreshLiveData import _parse_match_html
+        _mrows, _srows, _ = _parse_match_html(soup, match_url, region_tag or "")
+        if _mrows or _srows:
+            if region_tag is None:
+                for _r in _mrows + _srows:
+                    if not _r.get("Region"):
+                        _r["Region"] = region_map.get(_r.get("ProfileURL", ""), "")
+            return _mrows, _srows
+    except Exception as _e:
+        print(f"    ovw parser unavailable ({_e}); using legacy tables")
+
     fmt_el  = soup.select_one(".match-header-vs-note")
     fmt_raw = fmt_el.get_text(strip=True).lower() if fmt_el else ""
     if "5" in fmt_raw:
@@ -222,6 +237,16 @@ def scrape_event(event, region_map):
         for i, murl in enumerate(match_urls, 1):
             print(f"    [{i}/{len(match_urls)}] {murl}")
             mrows, srows = scrape_match(murl, region_tag, region_map)
+            if event.get("vct_only") and mrows:
+                # keep only matches where BOTH sides are known VCT orgs
+                # (EWC-class events include tier-2 guests we don't rate)
+                from BuildMapRatings import TEAM_REGIONS as _VCT
+                orgs = {r["Org"] for r in mrows if r.get("Org")}
+                unknown = {o for o in orgs if o not in _VCT and o != "TYLOO"}
+                if unknown or len(orgs) < 2:
+                    print(f"      skipped (non-VCT participant: {sorted(unknown)})")
+                    time.sleep(0.75)
+                    continue
             all_map_rows.extend(mrows)
             all_series_rows.extend(srows)
             time.sleep(0.75)

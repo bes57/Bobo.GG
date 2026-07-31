@@ -798,6 +798,34 @@ def _upcoming_lookahead_targets(live_targets):
     return out
 
 
+def _spawn_match_data_enrichment():
+    """Hand the Match Data (/match-data/) enrichment off to its own process.
+
+    Everything else on the site reads data/maps|series/*.csv, which this pipeline
+    has already rebuilt by now. Match Data reads data/enriched/, which needs 3-4
+    extra VLR page fetches per match — far too slow to sit inside the refresh the
+    user is watching. Detaching it means the refresh finishes (and the page
+    reloads) immediately while the enrichment continues; /match-data/ picks the
+    new files up on its own since its caches key off the enriched file count.
+
+    Fire-and-forget: EnrichNewMatches is flock'd and time-budgeted itself, so
+    repeated refreshes can't stack passes."""
+    try:
+        script = os.path.join(ROOT, "scrapers", "EnrichNewMatches.py")
+        if not os.path.exists(script):
+            return
+        log_path = os.path.join(ROOT, "data", "enriched", "_enrich.log")
+        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        log = open(log_path, "w")
+        # -u so the log is readable while the pass is still running.
+        subprocess.Popen([sys.executable, "-u", script], cwd=ROOT,
+                         stdout=log, stderr=subprocess.STDOUT,
+                         start_new_session=True)
+        log.close()
+    except Exception as e:
+        print(f"  (match-data enrichment not started: {e})", flush=True)
+
+
 def main():
     import pandas as pd
 
@@ -820,6 +848,9 @@ def main():
         _write("done", 100, "No live VCT events configured for today.",
                ["No event in ALL_EVENTS matched today's date window (URLs auto-resolve from VLR's season page when blank).",
                 "To onboard a new event, add an entry with start/end + region keys to MoreTestingMaybeFiles.ALL_EVENTS."])
+        # Still hand off — an offseason load is a good time to drain any
+        # Match Data enrichment backlog left over from the last event.
+        _spawn_match_data_enrichment()
         print("\nNo live events. Done.", flush=True)
         return
 
@@ -942,6 +973,10 @@ def main():
         _write("done", 100,
                f"All match data current through {last_date}",
                [f"✓ No new completed matches — ratings up to date"])
+        # Hand off even with nothing new: this is the common path, and it's how
+        # matches the enricher deferred (VLR hadn't published their per-map
+        # stats yet) get retried, plus how any backlog drains.
+        _spawn_match_data_enrichment()
         print("\nNo new completed matches. Done.", flush=True)
         return
 
@@ -1148,6 +1183,10 @@ def main():
            f"Ratings updated through {new_last}",
            [f"✓ Scraped {total_new} new match(es) across {len(by_event_maps)} event(s)",
             f"✓ Ratings rebuilt through {new_last}"])
+
+    # ── Step 8: Match Data enrichment, detached (see docstring) ─────────────
+    _spawn_match_data_enrichment()
+
     print(f"\nDone! {total_new} new matches, ratings through {new_last}", flush=True)
 
 

@@ -15,6 +15,7 @@ from AspasGreatestPrime import article_aspas_prime_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 from MatchDataExplorer import match_data_bp
+from TestingLab import testing_bp
 
 app = Flask(__name__)
 Compress(app)
@@ -28,6 +29,7 @@ app.register_blueprint(article_aspas_prime_bp, url_prefix="/articles/greatest-pr
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 app.register_blueprint(match_data_bp, url_prefix="/match-data")
+app.register_blueprint(testing_bp, url_prefix="/testing")
 
 # ── Alpha UI data layer ──────────────────────────────────────────────────────
 # The alpha dashboard reuses the Modern Hub's read-only data builder
@@ -57,6 +59,48 @@ try:
     ALPHA_LOGOS = _json.load(open(os.path.join(_BASE, "static", "logos", "logos.json")))
 except Exception:
     ALPHA_LOGOS = {}
+
+# ── v6 site model (data/site_model.json) ─────────────────────────────────────
+# Import-light mtime-cached loader — the single source of truth for every
+# probability this file renders (β, cross-region offsets, region priors,
+# gf_upper_logit). Reference math: trading_model/predict.py.
+_SITE_MODEL_PATH = os.path.join(_BASE, "data", "site_model.json")
+_site_model_state = {"m": None, "mtime": 0.0}
+
+
+def _site_model():
+    try:
+        mt = os.path.getmtime(_SITE_MODEL_PATH)
+    except OSError:
+        mt = 0.0
+    if _site_model_state["m"] is None or mt > _site_model_state["mtime"]:
+        with open(_SITE_MODEL_PATH) as f:
+            _site_model_state["m"] = _json.load(f)
+        _site_model_state["mtime"] = mt
+    return _site_model_state["m"]
+
+
+def _v6_series_wp(model, r_a, r_b, reg_a, reg_b, fmt, upper_is_a=None):
+    """predict.py series_probability on explicit ratings/regions — fallback
+    only; the primary path consumes the hub payload's precomputed win_prob_a
+    (MapElo._mhub_load, same snapshot)."""
+    adj = 0.0
+    if reg_a and reg_b and reg_a != reg_b:
+        off = model.get("xregion_offsets") or {}
+        adj = off.get(reg_a, 0.0) - off.get(reg_b, 0.0)
+    p = 1.0 / (1.0 + _math.exp(-model["beta"] * (r_a - r_b + adj)))
+    if fmt == "bo1":
+        ps = p
+    elif fmt in ("bo5", "bo5_gf"):
+        q = 1.0 - p
+        ps = p ** 3 * (1 + 3 * q + 6 * q * q)
+    else:
+        ps = p * p * (3 - 2 * p)
+    if fmt == "bo5_gf" and upper_is_a is not None:
+        delta = model["gf_upper_logit"] if upper_is_a else -model["gf_upper_logit"]
+        ps = min(max(ps, 1e-9), 1 - 1e-9)
+        ps = 1.0 / (1.0 + _math.exp(-(_math.log(ps / (1 - ps)) + delta)))
+    return ps
 
 
 def _alpha_days_between(a, b):
@@ -96,13 +140,15 @@ def _build_alpha_data():
     from MapElo import _mhub_load
     hub = _mhub_load()
     lb = hub.get("leaderboard") or {}
-    beta = lb.get("beta") or 0.33
+    # v6 site-model β (the hub payload carries it; fall back to reading
+    # data/site_model.json directly).
+    beta = lb.get("beta") or _site_model()["beta"]
     teams = lb.get("teams", [])
     today = _datetime.date.today().isoformat()
 
     # Power rankings — rating + an intuitive "expected map win vs an average
-    # VCT team" percentage (sigmoid of the snapshot-calibrated rating), region,
-    # and last-5 form.
+    # VCT team" percentage (v6 β sigmoid of the rating), region, and last-5
+    # form.
     rankings = []
     for t in teams:
         rating = t.get("rating", 0.0)
@@ -132,26 +178,33 @@ def _build_alpha_data():
             "win_prob_a", "win_prob_b", "actual_winner", "actual_score", "gf_upper")})
 
     # Upcoming matches — show everything scheduled within ~a month ahead
-    # (soonest first, no count cap). Closed-form series win prob from morning
-    # ratings (β = 0.17, same per-map sigmoid the rest of the model uses). The
-    # Modern Hub's MC veto sim is authoritative; cards link there for the full
-    # picture.
+    # (soonest first, no count cap). Series win prob = the hub payload's
+    # precomputed v6 closed form (win_prob_a from data/site_model.json —
+    # snapshot β + cross-region offsets + gf_upper_logit; computed in
+    # MapElo._mhub_load's upcoming loop). Cards link to the Modern Hub for
+    # the veto/map breakdown.
     try:
         _horizon = (_datetime.date.fromisoformat(today) + _datetime.timedelta(days=31)).isoformat()
     except Exception:
         _horizon = "9999-12-31"
+    try:
+        from MapElo import ORG_REGIONS as _OREG
+    except Exception:
+        _OREG = {}
     upcoming = []
     for m in (hub.get("upcoming") or []):
         md = m.get("date") or ""
         if md and md > _horizon:        # beyond the one-month window
             continue
         ra, rb = m.get("rating_a"), m.get("rating_b")
-        wp = None
-        if ra is not None and rb is not None:
-            p = 1.0 / (1.0 + _math.exp(-0.17 * (ra - rb)))
-            fmt = m.get("format", "bo3")
-            wp = (p**3 * (1 + 3*(1-p) + 6*(1-p)**2)) if fmt in ("bo5", "bo5_gf") \
-                else (p**2 * (3 - 2*p))
+        wp = m.get("win_prob_a")
+        if wp is None and ra is not None and rb is not None:
+            fmt = m.get("format") or "bo3"
+            wp = _v6_series_wp(
+                _site_model(), ra, rb,
+                _OREG.get(m.get("org_a", "")), _OREG.get(m.get("org_b", "")),
+                fmt,
+                True if (fmt == "bo5_gf" and m.get("gf_upper")) else None)
         upcoming.append({
             "org_a": m.get("org_a"), "org_b": m.get("org_b"),
             "date": m.get("date"), "datetime": m.get("datetime"),
@@ -216,16 +269,18 @@ def _build_alpha_data():
             except Exception:
                 return 0
         # Top players across a few different stats (mini-leaderboard each).
+        # Ship a deep sorted list (with round counts) instead of a pre-filtered
+        # top 5, so the min-rounds slider can re-filter client-side instantly.
         for _col, _label in (("R2.0", "VLR Rating"), ("KAST", "KAST"),
                              ("HS%", "Headshot %"), ("FIWR", "First Duel Win %")):
             try:
                 allp = get_all(cache, _col)
-                picked = [p for p in allp if _rnd(p) >= 50][:5] or allp[:5]
                 leaders = [{"name": p.get("Player"), "org": p.get("Org", ""),
                             "region": p.get("Region", ""),
                             "headshot": p.get("HeadshotURL", ""),
                             "profile": p.get("ProfileURL", ""),
-                            "value": p.get(_col)} for p in picked]
+                            "value": p.get(_col),
+                            "rnd": _rnd(p)} for p in allp[:60]]
                 if leaders:
                     player_stats.append({"stat": _col, "label": _label, "leaders": leaders})
             except Exception:
@@ -340,8 +395,14 @@ def _build_team_profile(org):
             })
     season_events.sort(key=lambda x: x.get("start", ""))
     # Upcoming matches for this org (compact left-rail list) — same Modern Hub
-    # source the alpha dashboard uses. Projected series win % is the closed-form
-    # morning-ratings prob for THIS team (β = 0.17, per-map sigmoid → series).
+    # source the alpha dashboard uses. Projected series win % for THIS team =
+    # the hub payload's precomputed v6 closed form (win_prob_a from
+    # data/site_model.json, flipped when this org is slot B); local v6 closed
+    # form only as a fallback.
+    try:
+        from MapElo import ORG_REGIONS as _OREG
+    except Exception:
+        _OREG = {}
     upcoming = []
     for m in (hub.get("upcoming") or []):
         a, b = m.get("org_a"), m.get("org_b")
@@ -350,13 +411,17 @@ def _build_team_profile(org):
         is_a = (a == org)
         opp = b if is_a else a
         ra, rb = m.get("rating_a"), m.get("rating_b")
-        wp = None
-        if ra is not None and rb is not None:
+        wp = m.get("win_prob_a")
+        if wp is not None:
+            wp = wp if is_a else (1.0 - wp)
+        elif ra is not None and rb is not None:
             rme, rop = (ra, rb) if is_a else (rb, ra)
-            p = 1.0 / (1.0 + _math.exp(-0.17 * (rme - rop)))
-            fmt = m.get("format", "bo3")
-            wp = (p**3 * (1 + 3*(1-p) + 6*(1-p)**2)) if fmt in ("bo5", "bo5_gf") \
-                else (p**2 * (3 - 2*p))
+            fmt = m.get("format") or "bo3"
+            wp = _v6_series_wp(
+                _site_model(), rme, rop,
+                _OREG.get(org), _OREG.get(opp), fmt,
+                # slot A is the upper-bracket team for bo5_gf
+                is_a if (fmt == "bo5_gf" and m.get("gf_upper")) else None)
         upcoming.append({
             "opponent": opp, "date": m.get("date"), "time": m.get("datetime"),
             "event": m.get("event"), "region": m.get("region"),
@@ -372,7 +437,7 @@ def _build_team_profile(org):
         "rating": round(t.get("rating", 0.0), 2), "rank": t.get("rank"),
         "n_teams": len(teams), "w": t.get("w", 0), "l": t.get("l", 0),
         "season": (lb.get("as_of_date") or "")[:4],
-        "beta": lb.get("beta", 0.3237),
+        "beta": lb.get("beta") or _site_model()["beta"],
         "all_maps": t.get("all_maps") or [],
         "best_maps": (t.get("best_maps") or [])[:3],
         "worst_maps": (t.get("worst_maps") or [])[:3],
@@ -740,16 +805,19 @@ ALPHA_HTML = """
   .ebtn{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:700;padding:9px 15px;border-radius:11px;background:#fff;color:#241636;transition:opacity .2s}
   .ebtn:hover{opacity:.88}
   .ebtn.ghost{background:#ffffff1f;color:#fff}
-  .timeline{display:flex;align-items:flex-start;margin-top:22px;position:relative;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  /* Side padding is deliberate: a long single-word label (e.g. "Champions") is
+     wider than its node and spills a few px past the last node — the padding box
+     is the clip edge, so that spill renders instead of being cut off. */
+  .timeline{display:flex;align-items:flex-start;margin-top:22px;position:relative;overflow-x:auto;padding:0 8px 4px;scrollbar-width:none}
   .timeline::-webkit-scrollbar{display:none}
-  .tnode{flex:1 1 0;min-width:54px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+  .tnode{flex:1 1 0;min-width:44px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
   .tnode::before{content:'';position:absolute;top:8px;left:-50%;width:100%;height:2px;background:#ffffff22}
   .tnode:first-child::before{display:none}
   .tnode.done::before,.tnode.live::before{background:#a98bff}
   .tdot{width:17px;height:17px;border-radius:50%;background:#ffffff2e;z-index:1;display:flex;align-items:center;justify-content:center;font-size:.58rem;color:#3a1f55;font-weight:800}
   .tnode.done .tdot{background:#a98bff}
   .tnode.live .tdot,.tnode.next .tdot{background:#fff;box-shadow:0 0 0 4px #ffffff30}
-  .tlbl{margin-top:7px;font-size:.61rem;font-weight:700;color:#cdbfe6;line-height:1.18;width:100%;padding:0 4px;box-sizing:border-box}
+  .tlbl{margin-top:7px;font-size:.61rem;font-weight:700;color:#cdbfe6;line-height:1.18;width:100%;padding:0 2px;box-sizing:border-box}
   .tnode.next .tlbl,.tnode.live .tlbl{color:#fff}
   .tdate{font-size:.54rem;color:#9d8fbb;font-weight:600;margin-top:2px}
 
@@ -914,6 +982,13 @@ ALPHA_HTML = """
 
   /* ── Player leaders — one mini-leaderboard per stat ── */
   .players{margin-top:22px}
+  .pl-minrnd{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+  .pl-minrnd-lab{font-size:.66rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .pl-minrnd-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.8rem;color:var(--accent);min-width:36px;text-align:right;font-variant-numeric:tabular-nums}
+  #minRndSlider{-webkit-appearance:none;appearance:none;width:110px;height:5px;border-radius:99px;background:#e4d9f6;outline:none;cursor:pointer}
+  #minRndSlider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 5px rgba(124,77,214,.45);cursor:pointer}
+  #minRndSlider::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 5px rgba(124,77,214,.45);cursor:pointer}
+  @media (max-width:700px){.pl-minrnd-lab{display:none}#minRndSlider{width:80px}}
   .pl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
   .pl-card{border:1px solid var(--line);border-radius:15px;padding:13px 13px 9px;background:#fff}
   #records-panel{margin-top:22px}
@@ -1062,7 +1137,13 @@ ALPHA_HTML = """
   </div>
 
   <div class="panel players" id="players-panel">
-    <div class="phead"><div class="ptitle">Player Leaders</div><a class="plink" id="players-full-link" href="/vct/">Full Leaderboards &rarr;</a></div>
+    <div class="phead"><div class="ptitle">Player Leaders</div>
+      <div class="pl-minrnd" title="Minimum rounds played to qualify">
+        <span class="pl-minrnd-lab">Min rounds</span>
+        <input type="range" id="minRndSlider" min="0" max="200" step="10" value="50" aria-label="Minimum rounds played">
+        <span class="pl-minrnd-val" id="minRndVal">50+</span>
+      </div>
+      <a class="plink" id="players-full-link" href="/vct/">Full Leaderboards &rarr;</a></div>
     <div class="psub" id="players-sub"></div>
     <div id="players-body"></div>
   </div>
@@ -1388,6 +1469,7 @@ function plRow(p,i,stat){
     +'<span class="plr-n">'+(i+1)+'</span>'+avatar(p,'plr-av','plr-av-ph')
     +'<span class="plr-info"><span class="plr-name">'+esc(p.name)+'</span><span class="plr-meta">'+esc(p.org)+' &middot; '+esc(p.region)+'</span></span>'
     +'<span class="plr-val">'+esc(p.value)+'</span></a>';}
+var MIN_RND=50;   // min-rounds slider value; leaders re-filter client-side
 function renderPlayers(){
   document.getElementById('players-sub').textContent=DATA.players_event?('Leaders · '+DATA.players_event):'';
   var pfl=document.getElementById('players-full-link');
@@ -1397,11 +1479,25 @@ function renderPlayers(){
     ? '<div class="pl-grid">'+ss.map(function(s){
         var lbHref='/vct/ranking/'+encodeURIComponent(s.stat)
           +'?event='+encodeURIComponent(DATA.players_event_id||'')+'&region=All';
+        var all=s.leaders||[];
+        var picked=all.filter(function(p){return p.rnd==null||p.rnd>=MIN_RND;}).slice(0,5);
+        if(!picked.length)picked=all.slice(0,5);   // nobody qualifies yet — show unfiltered
         return '<div class="pl-card"><a class="pl-stat" href="'+lbHref+'" title="Full '+esc(s.label)+' leaderboard">'
           +esc(s.label)+'<span class="pl-arrow">&rarr;</span></a>'
-          +(s.leaders||[]).map(function(p,i){return plRow(p,i,s.stat);}).join('')+'</div>';
+          +picked.map(function(p,i){return plRow(p,i,s.stat);}).join('')+'</div>';
       }).join('')+'</div>'
     : '<div class="empty">No player data.</div>';}
+(function(){
+  var s=document.getElementById('minRndSlider'),v=document.getElementById('minRndVal');
+  if(!s)return;
+  function upd(){
+    MIN_RND=+s.value; v.textContent=s.value+'+';
+    var pct=(s.value-s.min)/(s.max-s.min)*100;
+    s.style.background='linear-gradient(90deg,#7c4dd6 '+pct+'%,#e4d9f6 '+pct+'%)';
+  }
+  s.addEventListener('input',function(){upd();renderPlayers();});
+  upd();
+})();
 function recHref(r){
   return '/highs/?direction='+encodeURIComponent(r.direction||'high')
     +'&stat='+encodeURIComponent(r.stat||'')
@@ -1956,7 +2052,7 @@ function logo(o,cls,phcls,big){var f=LOGOS[o];if(f)return '<img class="'+cls+'" 
 function fmtR(r){if(r==null)return '';var n=Number(r);return (n>=0?'+':'')+n.toFixed(2);}
 var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function sd(d){if(!d)return '';var p=String(d).split('-');if(p.length<3)return d;return MO[+p[1]-1]+' '+(+p[2]);}
-function winVsAvg(r){return Math.round(100/(1+Math.exp(-(D.beta||0.3237)*r)));}
+function winVsAvg(r){return Math.round(100/(1+Math.exp(-(D.beta||0)*r)));}
 function vlrUrl(id){return id?('https://www.vlr.gg/'+id):'';}
 
 function evAbbr(label){
