@@ -735,7 +735,7 @@ ALPHA_HTML = """
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bobo gg — Alpha</title>
+<title>Bobo gg</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
@@ -778,7 +778,6 @@ ALPHA_HTML = """
   .ahome{padding:16px 4px 22px;text-align:center}
   .ahome-brand{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:2.6rem;letter-spacing:-.03em;color:var(--ink);line-height:1}
   .ahome-logo{height:1.65em;width:auto;vertical-align:-0.2em;margin-left:-0.3em;margin-right:-0.2em;object-fit:contain}
-  .ahome-badge{display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--accent);padding:4px 9px;border-radius:7px;vertical-align:middle;margin-left:10px;transform:translateY(-3px)}
   @media (max-width:600px){.ahome{padding:10px 4px 16px}.ahome-brand{font-size:1.95rem}}
 
   /* ── Banner + season timeline ── */
@@ -808,7 +807,7 @@ ALPHA_HTML = """
   /* Side padding is deliberate: a long single-word label (e.g. "Champions") is
      wider than its node and spills a few px past the last node — the padding box
      is the clip edge, so that spill renders instead of being cut off. */
-  .timeline{display:flex;align-items:flex-start;margin-top:22px;position:relative;overflow-x:auto;padding:0 8px 4px;scrollbar-width:none}
+  .timeline{display:flex;align-items:flex-start;margin-top:22px;position:relative;overflow-x:auto;padding:5px 8px 4px;scrollbar-width:none}
   .timeline::-webkit-scrollbar{display:none}
   .tnode{flex:1 1 0;min-width:44px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
   .tnode::before{content:'';position:absolute;top:8px;left:-50%;width:100%;height:2px;background:#ffffff22}
@@ -1010,6 +1009,7 @@ ALPHA_HTML = """
   .rec-foot{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:4px;font-size:.7rem;color:var(--soft);font-weight:600}
   .rec-foot .rec-vs{display:inline-flex;align-items:center;gap:4px}
   .rec-foot .rec-vs img{height:13px;width:auto}
+  .rec-date{color:var(--soft);font-size:.68rem;font-weight:600;white-space:nowrap}
   .rec-ev{color:#9a93a6}
   .rec-map{background:#f0ecf4;border-radius:99px;padding:1px 8px;color:var(--soft)}
   .rec-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.32rem;color:var(--ink);flex:0 0 auto;padding-left:6px}
@@ -1106,7 +1106,7 @@ ALPHA_HTML = """
        string and would skip injection if it appeared in this page's body.) -->
 
   <header class="ahome">
-    <div class="ahome-brand"><img class="ahome-logo" src="/logo.svg" alt="B">obo gg <span class="ahome-badge">Alpha</span></div>
+    <div class="ahome-brand"><img class="ahome-logo" src="/logo.svg" alt="B">obo gg</div>
   </header>
 
   <div id="banner"></div>
@@ -1223,9 +1223,10 @@ function renderBanner(){
     var mark=s.status==='done'?'&#10003;':'';
     return '<div class="tnode '+s.status+'"><span class="tdot">'+mark+'</span><span class="tlbl">'+esc(s.label)+'</span><span class="tdate">'+shortDate(s.start)+'</span></div>';
   }).join('');
+  var pillHtml=(e && e.status==='live')?'':'<div class="epill '+pillCls+'"><span class="dot"></span>'+pillTxt+'</div>';
   document.getElementById('banner').innerHTML='<div class="ebanner">'
     +'<div class="ebanner-l">'
-    +'<div class="epill '+pillCls+'"><span class="dot"></span>'+pillTxt+'</div>'
+    +pillHtml
     +'<div class="etitle">'+esc(title)+'</div>'
     +'<div class="esub">'+sub+'</div>'
     +'<div class="ebtns"><a class="ebtn" href="/mapelo/modern/">Open live hub &rarr;</a></div>'
@@ -1510,13 +1511,14 @@ function recCard(r){
   var vs=r.opp?'<span class="rec-vs">vs '+logoOrInit(r.opp,'rec-tlogo','rec-tinit')+esc(r.opp)+'</span>':'';
   var mp=r.map_name?'<span class="rec-map">'+esc(r.map_name)+'</span>':'';
   var ev=r.event?'<span class="rec-ev">'+esc(r.event)+'</span>':'';
+  var dt=r.date?'<span class="rec-date">'+esc(shortDate(r.date))+'</span>':'';
   return '<a class="rec-card" href="'+esc(recHref(r))+'" target="_blank" rel="noopener" title="'+esc(r.player)+' — '+esc(r.desc)+'">'
     +'<span class="rec-rankbadge">#'+r.rank+'</span>'
     +avatar(pa,'rec-av','rec-av-ph')
     +'<span class="rec-info">'
       +'<span class="rec-name">'+esc(r.player)+(r.org?logoOrInit(r.org,'rec-tlogo','rec-tinit'):'')+'</span>'
       +'<span class="rec-desc">'+esc(r.desc)+'</span>'
-      +'<span class="rec-foot">'+vs+ev+mp+'</span>'
+      +'<span class="rec-foot">'+vs+ev+dt+mp+'</span>'
     +'</span>'
     +'<span class="rec-val">'+esc(r.value)+'</span>'
   +'</a>';}

@@ -6415,8 +6415,8 @@ def _event_bands_for_year(year):
     for e in ALL_EVENTS:
         if e.get('year') != year_int:
             continue
-        if e.get('ratings_only'):
-            continue  # EWC-class/off-season: not part of the season ribbon
+        if e.get('ratings_only') and e['id'] not in ('2025_ewc', '2026_ewc'):
+            continue  # off-season stays hidden; the EWC main event gets a band
         if list((e.get('regions') or {}).keys()) == ['CN']:
             continue
         start, end = _span_for(e)
@@ -7043,6 +7043,7 @@ MHUB_EVENT_BANDS = [
     {"id": "santiago",  "label": "Masters Santiago", "start": "2026-02-28", "end": "2026-03-15"},
     {"id": "stage1",    "label": "Stage 1",          "start": "2026-04-01", "end": "2026-05-25"},
     {"id": "london",    "label": "Masters London",   "start": "2026-06-05", "end": "2026-06-21"},
+    {"id": "ewc",       "label": "Esports World Cup", "start": "2026-07-02", "end": "2026-07-12"},
     {"id": "stage2",    "label": "Stage 2",          "start": "2026-07-15", "end": "2026-09-06"},
     {"id": "champions", "label": "Champions",        "start": "2026-09-24", "end": "2026-10-18"},
 ]

@@ -1108,6 +1108,12 @@ def build_recent_records(limit=8):
         pass
 
     recent = _recent_event_ids()
+    # MatchID -> YYYY-MM-DD, for the card's date chip
+    try:
+        with open(os.path.join(DATA_DIR, "match_dates.json")) as f:
+            _mdates = json.load(f)
+    except (OSError, ValueError):
+        _mdates = {}
     best = {}   # (profile, matchid, mapnum, stat, fmt) -> record (best rank framing)
     if recent:
         for stat in _REC_STATS:
@@ -1144,6 +1150,7 @@ def build_recent_records(limit=8):
                                 rank=rank, stat=stat, stat_label=stat, fmt=fmt,
                                 context=context, direction="high",
                                 scope=scope, matchid=mid, mapnum=mnum,
+                                date=_mdates.get(mid, ""),
                                 desc=f"{_ordinal(rank)}-{verb} {word} in {art} {scope} of all time")
 
     # Collapse to one headline per actual performance (best stat-rank), then
