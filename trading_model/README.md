@@ -36,8 +36,16 @@ pages with charts; `stats/` holds the raw JSONs behind every number.
 
 ## Files
 
-- `build_model_snapshot.py` — solves current ratings from PythonTest data and writes
-  `model_snapshot.json`. **Run after every data refresh** (same cadence as the site scrape).
+- `MODEL_EXPLAINED.md` — **start here**: the complete explanation of the model
+  (the solve, the decay, the pricing math, validation across v7/v8/v9, known
+  limits, the do-not-retest ledger, operating rules).
+- `ROSTER_FLAG.md` + `roster_flags.json` — the sizing-only roster-change
+  signal (fair value ignores mid-season changes by measured design; sizing
+  doesn't have to).
+- `build_model_snapshot.py` — since 2026-07-30 a thin REPACKAGER: the site's
+  refresh pipeline is the only solver (data/site_model.json + the timeline),
+  and this composes the bot snapshot from it with parity self-tests — one
+  model, no drift. **Run after every data refresh** (same cadence as the site scrape).
 - `model_snapshot.json` — everything needed to price a match: ratings, region priors,
   cross-region offsets, β, pick bonus, GF logit. Embeds `generated_utc` and
   `ratings_as_of` — apply the bot's staleness rules against these.
