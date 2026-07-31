@@ -1,0 +1,20 @@
+{
+ "model_version": "benpom-v6-site-2026-07-30",
+ "generated_utc": "2026-07-30 21:32:05",
+ "beta": 0.128461,
+ "xregion_offsets": {
+  "Americas": 2.0985,
+  "EMEA": 1.9062,
+  "Pacific": 2.45,
+  "CN": 0.0
+ },
+ "region_priors": {
+  "Americas": -2.0794,
+  "EMEA": 0.949,
+  "Pacific": -2.1947,
+  "CN": -3.6213
+ },
+ "gf_upper_logit": 0.25,
+ "b_pick": 0.0947,
+ "ratings_as_of": "2026-07-30"
+}

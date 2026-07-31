@@ -533,6 +533,77 @@ def get_intl_calibration():
             _intl_cache = json.load(f)
     return _intl_cache
 
+# ── v6 site model (data/site_model.json) ─────────────────────────────────────
+# The single source of truth for every displayed probability: β, cross-region
+# offsets, region priors, the Bo5-GF upper-bracket logit and the map-pick
+# logit. Reference math lives in trading_model/predict.py — the helpers below
+# mirror series_probability / map_probability exactly; do not re-derive or
+# hardcode model constants anywhere else in site code.
+_site_model_cache = None
+_site_model_mtime = 0.0
+_SITE_MODEL_PATH = os.path.join(ROOT, 'data', 'site_model.json')
+
+def get_site_model():
+    """Hot-reload data/site_model.json by mtime (same pattern as the other
+    data loaders) so a model redeploy is picked up without a server restart."""
+    global _site_model_cache, _site_model_mtime
+    try:
+        mtime = os.path.getmtime(_SITE_MODEL_PATH)
+    except OSError:
+        mtime = 0.0
+    if _site_model_cache is None or mtime > _site_model_mtime:
+        with open(_SITE_MODEL_PATH) as f:
+            _site_model_cache = json.load(f)
+        _site_model_mtime = mtime
+    return _site_model_cache
+
+def _v6_rating_region(model, ratings, org, region_hint=None):
+    """predict.py team_rating: known org → its rating + region; unknown/new
+    org → its region's prior (25th percentile) from the snapshot."""
+    if org in ratings:
+        return float(ratings[org]), ORG_REGIONS.get(org) or region_hint
+    reg = region_hint or ORG_REGIONS.get(org) or ""
+    return float((model.get("region_priors") or {}).get(reg, 0.0)), reg
+
+def _v6_series_prob_from_ratings(model, r_a, r_b, reg_a, reg_b, fmt,
+                                 upper_is_a=None):
+    """predict.py series_probability on explicit ratings/regions.
+    p_map = σ(β·(r_a − r_b + xadj)), xadj = off[reg_a] − off[reg_b] for
+    cross-region (0 same-region, applied at ALL matches — this replaced the
+    old intl-event-gated intl_exp/cn_dog shifts in v6); series closed form
+    bo1 p, bo3 p²(3−2p), bo5 p³(1+3q+6q²); bo5_gf shifts the series logit
+    ±gf_upper_logit toward the upper-bracket team (upper_is_a)."""
+    adj = 0.0
+    if reg_a and reg_b and reg_a != reg_b:
+        off = model.get("xregion_offsets") or {}
+        adj = off.get(reg_a, 0.0) - off.get(reg_b, 0.0)
+    import math as _m6
+    p = 1.0 / (1.0 + _m6.exp(-model["beta"] * (r_a - r_b + adj)))
+    if fmt == "bo1":
+        ps = p
+    elif fmt in ("bo5", "bo5_gf"):
+        q = 1.0 - p
+        ps = p ** 3 * (1 + 3 * q + 6 * q * q)
+    else:
+        ps = p * p * (3 - 2 * p)
+    if fmt == "bo5_gf" and upper_is_a is not None:
+        delta = model["gf_upper_logit"] if upper_is_a else -model["gf_upper_logit"]
+        ps = min(max(ps, 1e-9), 1 - 1e-9)
+        ps = 1.0 / (1.0 + _m6.exp(-(_m6.log(ps / (1 - ps)) + delta)))
+    return ps
+
+def _v6_series_prob(model, ratings, org_a, org_b, fmt="bo3", gf_upper=None,
+                    region_a=None, region_b=None):
+    """P(org_a beats org_b) — org-level wrapper, exactly predict.py's
+    series_probability with `m` built from site_model.json + `ratings`."""
+    r_a, reg_a = _v6_rating_region(model, ratings, org_a, region_a)
+    r_b, reg_b = _v6_rating_region(model, ratings, org_b, region_b)
+    upper_is_a = None
+    if fmt == "bo5_gf" and gf_upper in (org_a, org_b):
+        upper_is_a = (gf_upper == org_a)
+    return _v6_series_prob_from_ratings(model, r_a, r_b, reg_a, reg_b, fmt,
+                                        upper_is_a)
+
 # Active 2026 VCT league teams (48 total, 12 per region — EMEA + Americas + Pacific + CN).
 # Used as a display filter for the Modern Hub leaderboard. CN added 2026-05-13 —
 # user wants them visible in BenPom rankings (still excluded from upcoming/recent
@@ -4157,6 +4228,39 @@ var INTL = DATA.intl_calib || {};
 var INTL_PARAMS = DATA.intl_params || {};
 var ORG_REGIONS = DATA.org_regions || {};
 var LOCK_CURRENT = LOCK_CURRENT_FLAG;
+// ── v6 site model (server-injected from data/site_model.json) ────────────────
+// The single source of truth for every probability this page quotes;
+// reference math = trading_model/predict.py. No hardcoded model constants.
+var SITE_MODEL  = DATA.site_model || {};
+var V6_BETA     = SITE_MODEL.beta;
+var V6_XOFF     = SITE_MODEL.xregion_offsets || {};
+var V6_GF_LOGIT = SITE_MODEL.gf_upper_logit || 0;
+var V6_B_PICK   = SITE_MODEL.b_pick || 0;
+// Cross-region adjustment on the map logit (0 same-region / unknown) —
+// applied at ALL cross-region matchups, no event gating.
+function xregionAdjSim(orgA, orgB) {
+  var ra = ORG_REGIONS[orgA], rb = ORG_REGIONS[orgB];
+  if (!ra || !rb || ra === rb) return 0;
+  return (V6_XOFF[ra] || 0) - (V6_XOFF[rb] || 0);
+}
+function shiftLogitProb(p, delta) {
+  if (!delta) return p;
+  var ps = Math.max(Math.min(p, 1 - 1e-9), 1e-9);
+  return 1.0 / (1.0 + Math.exp(-(Math.log(ps / (1 - ps)) + delta)));
+}
+// v6 closed-form series probability for side A (predict.py
+// series_probability). upperIsA: true/false only for bo5_gf, else null.
+function v6SeriesProbSim(rA, rB, orgA, orgB, fmt, upperIsA) {
+  var p = 1 / (1 + Math.exp(-V6_BETA * (rA - rB + xregionAdjSim(orgA, orgB))));
+  var ps;
+  if (fmt === 'bo1') ps = p;
+  else if (fmt === 'bo5' || fmt === 'bo5_gf') { var q = 1 - p; ps = p*p*p*(1 + 3*q + 6*q*q); }
+  else ps = p*p*(3 - 2*p);
+  if (fmt === 'bo5_gf' && upperIsA != null) {
+    ps = shiftLogitProb(ps, upperIsA ? V6_GF_LOGIT : -V6_GF_LOGIT);
+  }
+  return ps;
+}
 // Historical simulator only: disambiguate a same-org matchup (e.g. PRX after
 // London vs PRX after Toronto) by appending each side's snapshot in parens:
 // "PRX (After London)". The Modern/live simulator (LOCK_CURRENT) keeps the bare
@@ -4814,17 +4918,9 @@ function simulate() {
   var sdA=getSnapData(yearA,snapA), sdB=getSnapData(yearB,snapB);
   var tA=(sdA.teams||{})[orgA], tB=(sdB.teams||{})[orgB];
   if(!tA||!tB) return null;
-  // β = 0.170 — re-tuned (2026-05-26) post v10 CN + GF veto + decay-veto algo.
-  // Backtest on 1,353 historical series: β=0.17 minimizes Brier (0.22536 vs
-  // 0.22632 at β=0.14). Tested 0.10–0.30 grid; 0.16–0.18 all tied within
-  // noise, 0.17 picked as stable middle. Bo5-only optimum is β=0.13–0.14
-  // but n=91 too small to differentiate from β=0.17 (within sample noise).
-  // Paired with RD_POWER=0.5, RD_SCALE=2.5, CN_PRIOR=-4.0. Together with
-  // the intl-experience offset (+0.22) and CN-as-dog floor (+0.47, both at
-  // intl events only — see AnalyzeProjectionCalibration.py), pool series
-  // Brier = 0.2306, Platt b = 0.993. Historical matchup predictor uses raw
-  // β only — context-specific offsets fire on Modern Hub upcoming/recent.
-  var beta = 0.170;
+  // v6 β from the server-injected SITE_MODEL (data/site_model.json) — the
+  // same snapshot every other surface uses. See trading_model/predict.py.
+  var beta = V6_BETA;
 
   var rdA = sdA.ref_date || (yearA + '-01-01');
   var rdB = sdB.ref_date || (yearB + '-01-01');
@@ -4839,28 +4935,34 @@ function simulate() {
   var thresh = SERIES_THRESH[fmt]||2;
   var snapKeyA = yearA+'_'+snapA, snapKeyB = yearB+'_'+snapB;
   var intlA = getIntlBreakdown(orgA, snapKeyA), intlB = getIntlBreakdown(orgB, snapKeyB);
-  var nSims=10000, seriesWins=0;
+  var nSims=10000;
   var fateCnt={banA:{},pickA:{},dec:{},pickB:{},banB:{}};
   var mapWins={}, mapPlays={};
   pool.forEach(function(m){ mapWins[m]=0; mapPlays[m]=0; Object.keys(fateCnt).forEach(function(fc){fateCnt[fc][m]=0;}); });
 
+  // v6 map-level inputs: overall ratings + cross-region adjustment, with the
+  // snapshot's pick logit (±V6_B_PICK) by veto fate — predict.py
+  // map_probability. Per-map split ratings remain display content only
+  // (stacking them WITH the pick bonus would double-count map strength).
+  var zBase = beta * ((tA.overall_rating||0) - (tB.overall_rating||0) + xregionAdjSim(orgA, orgB));
   for(var s=0;s<nSims;s++){
-    var fm=simulateVetoMC(tA,tB,orgA,orgB,pool,yearA,yearB,snapA,snapB,fmt), sw=0;
+    var fm=simulateVetoMC(tA,tB,orgA,orgB,pool,yearA,yearB,snapA,snapB,fmt);
     pool.forEach(function(m){
       var fc=fm[m]||'banA';
       if(fateCnt[fc]) fateCnt[fc][m]++;
       if(fc==='pickA'||fc==='pickB'||fc==='dec'){
         mapPlays[m]++;
-        var dA=(tA.maps[m]||{}).rating!=null?(tA.maps[m]||{}).rating:tA.overall_rating;
-        var dB=(tB.maps[m]||{}).rating!=null?(tB.maps[m]||{}).rating:tB.overall_rating;
-        var rA=getGlobalRating(orgA, snapKeyA, dA), rB=getGlobalRating(orgB, snapKeyB, dB);
-        if(Math.random()<1/(1+Math.exp(-beta*(rA-rB)))){ sw++; mapWins[m]++; }
+        var z = zBase + (fc==='pickA' ? V6_B_PICK : (fc==='pickB' ? -V6_B_PICK : 0));
+        if(Math.random()<1/(1+Math.exp(-z))){ mapWins[m]++; }
       }
     });
-    if(sw>=thresh) seriesWins++;
   }
 
-  var pA_=seriesWins/nSims, pctA=Math.round(pA_*100), pctB=100-pctA;
+  // Headline series probability = the v6 closed form on overall ratings
+  // (predict.py series_probability). For Bo5 GFs, side A is the upper-
+  // bracket team by construction (it takes both bans + first pick below).
+  var pA_ = v6SeriesProbSim(tA.overall_rating||0, tB.overall_rating||0, orgA, orgB, fmt, fmt==='bo5_gf' ? true : null);
+  var pctA=Math.round(pA_*100), pctB=100-pctA;
   var lblA=prettySnapLabel(((getSnapsFor(yearA)[snapA])||{}).label||snapA, yearA);
   var lblB=prettySnapLabel(((getSnapsFor(yearB)[snapB])||{}).label||snapB, yearB);
   var fmtLabel = fmt==='bo1'?'Map win prob.'
@@ -5226,10 +5328,12 @@ function revealMaps(R, seq, body){
     return p.then(function(){
       if(revealAbort) return;
       var m = step.map;
-      var dA=(R.tA.maps[m]||{}).rating!=null?(R.tA.maps[m]||{}).rating:R.tA.overall_rating;
-      var dB=(R.tB.maps[m]||{}).rating!=null?(R.tB.maps[m]||{}).rating:R.tB.overall_rating;
-      var rA=getGlobalRating(R.orgA, R.snapKeyA, dA), rB=getGlobalRating(R.orgB, R.snapKeyB, dB);
-      var pA = 1/(1+Math.exp(-R.beta*(rA-rB)));
+      // v6 map win prob: overall ratings + cross-region adjustment, with the
+      // pick logit signed toward whoever picked this map (decider: none) —
+      // predict.py map_probability.
+      var zRv = R.beta*((R.tA.overall_rating||0) - (R.tB.overall_rating||0) + xregionAdjSim(R.orgA, R.orgB))
+              + (step.action==='pick' ? (step.side==='A' ? V6_B_PICK : -V6_B_PICK) : 0);
+      var pA = 1/(1+Math.exp(-zRv));
       var winA = Math.random() < pA;
       if(winA) seriesA++; else seriesB++;
       var pickedBy = step.action==='dec' ? 'Decider' :
@@ -6525,6 +6629,9 @@ def mapelo_matchup():
         'intl_calib':  intl.get('calibration', {}),
         'intl_params': intl.get('params', {}),
         'org_regions': ORG_REGIONS,
+        # v6 model snapshot — the simulator's probability math reads β /
+        # xregion offsets / gf_upper_logit / b_pick from here only.
+        'site_model':  get_site_model(),
     }
     lock_current = _req.args.get('lockCurrent') == '1'
 
@@ -7000,7 +7107,8 @@ def _mhub_load():
         "status":      "ready",
         "event_bands": _mhub_dynamic_bands(),
         "chart":       {"checkpoints": [], "match_events": []},
-        "leaderboard": {"teams": [], "beta": 0.3237, "as_of_date": None},
+        "leaderboard": {"teams": [], "beta": get_site_model()["beta"],
+                        "as_of_date": None},
     }
 
     # ── Chart data ─────────────────────────────────────────────────────────────
@@ -7154,7 +7262,6 @@ def _mhub_load():
 
     teams_list = []
     if snap_data:
-        beta       = snap_data.get("beta", 0.3237)
         teams_raw  = snap_data.get("teams", {})
         for org, td in teams_raw.items():
             region   = ORG_REGIONS.get(org, "Unknown")
@@ -7202,7 +7309,9 @@ def _mhub_load():
             t["rank"] = i + 1
         result["leaderboard"] = {
             "teams":       teams_list,
-            "beta":        snap_data.get("beta", 0.3237),
+            # v6 site-model β — consumed by BobosHome's "win vs average team"
+            # displays; the per-snapshot in-sample MLE β is NOT a display β.
+            "beta":        get_site_model()["beta"],
             "snapshot":    snap_name,
             "as_of_date":  result.get("as_of_date"),
         }
@@ -7219,7 +7328,7 @@ def _mhub_load():
             })
         result["leaderboard"] = {
             "teams":    teams_list,
-            "beta":     0.3237,
+            "beta":     get_site_model()["beta"],
             "snapshot": "timeline",
             "as_of_date": result.get("as_of_date"),
         }
@@ -7235,28 +7344,14 @@ def _mhub_load():
     else:
         upcoming_raw = []
 
-    # Compute series win probs for past matches using the same CV-optimal β
-    # the upcoming-card sim, simulator iframe, and renderRecent JS sim use.
-    # NLL-fitting β on this timeline used to land near 0.28, which is in the
-    # overfit zone — a daily-rolling 2025 backtest of 1,922 leak-free per-map
-    # predictions showed 0.17 minimizes Brier (0.240 vs 0.246 at 0.28).
-    # Keeping all four prediction surfaces on the same β = same matchup,
-    # same probability, every surface.
+    # Every probability below comes from the v6 site model
+    # (data/site_model.json → get_site_model(); reference math =
+    # trading_model/predict.py). One snapshot, one β, every surface.
     if last_checkpoint_ratings and result["chart"]["match_events"]:
-        from scipy.special import expit as _expit
-        _tl_beta = 0.170   # re-tuned 2026-05-26; see SNAP_BETA comment
-
-        def _series_wp(p, fmt):
-            # bo5_gf shares Bo5's "win 3 of 5" series structure; the upper-team
-            # advantage lives in the veto's map-pool selection (handled by the
-            # frontend MC sim's bo5_gf veto sequence), not in the series math.
-            if fmt in ("bo5", "bo5_gf"):
-                return p**3 * (1 + 3*(1-p) + 6*(1-p)**2)
-            return p**2 * (3 - 2*p)  # bo3
+        _site_m = get_site_model()
 
         # Tag upcoming matches with the canonical intl event_id by label
-        # substring, so the frontend can apply the intl_exp/CN-dog logit
-        # shifts on Masters London / Champions cards once they appear.
+        # substring — used for pool lookups / deep links on the frontend.
         _UPC_INTL_LABEL_TO_ID = [
             ("santiago", "2026_masters_santiago"),
             ("london",   "2026_masters_london"),
@@ -7290,8 +7385,12 @@ def _mhub_load():
             _lf_recent_by_event = {}
 
         for _m in upcoming_raw:
-            _ra = last_checkpoint_ratings.get(_m.get("org_a", ""), 0.0)
-            _rb = last_checkpoint_ratings.get(_m.get("org_b", ""), 0.0)
+            # Unknown/new orgs get their region's prior from the snapshot
+            # (predict.py team_rating semantics), not a flat 0.0.
+            _ra, _ = _v6_rating_region(_site_m, last_checkpoint_ratings,
+                                       _m.get("org_a", ""))
+            _rb, _ = _v6_rating_region(_site_m, last_checkpoint_ratings,
+                                       _m.get("org_b", ""))
             _m["rating_a"]   = round(_ra, 3)
             _m["rating_b"]   = round(_rb, 3)
             _lbl = (_m.get("event") or "").lower()
@@ -7341,62 +7440,24 @@ def _mhub_load():
                             _m["rating_a"], _m["rating_b"] = _m["rating_b"], _m["rating_a"]
                         _m["format"] = "bo5_gf"
                         _m["gf_upper"] = _upper_team
-            # NOTE: win_prob_a is intentionally NOT pre-computed for upcoming
-            # matches. The frontend's per-map MC veto sim (in renderUpcoming)
-            # is the authoritative win prob — same model the simulator uses,
-            # so the two surfaces produce matching predictions. Pre-computing
-            # here with a LIVE-only sigmoid used a different β and skipped
-            # per-map info, giving the upcoming card a different answer than
-            # the simulator on the same matchup.
+            # Headline win prob = the v6 closed form on snapshot ratings
+            # (predict.py series_probability; slot A is the upper-bracket
+            # team for bo5_gf after the swap above). The frontend's per-map
+            # MC veto sim remains the veto/map-breakdown content engine, but
+            # every quoted win chance is this value — hub upcoming cards,
+            # the alpha home rail, and team profiles all read it from here.
+            _p_up = _v6_series_prob(
+                _site_m, last_checkpoint_ratings,
+                _m.get("org_a", ""), _m.get("org_b", ""),
+                _m.get("format") or "bo3", _m.get("gf_upper"))
+            _m["win_prob_a"] = round(_p_up, 4)
+            _m["win_prob_b"] = round(1.0 - _p_up, 4)
 
     result["upcoming"] = upcoming_raw
 
-    # ── Per-org intl-attendance lookup ───────────────────────────────────────
-    # Build {org: earliest_date} for every org that played at least one map at
-    # a 2026 international (Masters Santiago is the only one to date). The
-    # frontend uses this to compute intl_exp_diff for upcoming/recent matches
-    # at intl events: a team has "intl experience" if it attended a 2026 intl
-    # whose date < the candidate match's date.
-    _INTL_EVENT_IDS_2026 = {
-        "2026_masters_santiago", "2026_masters_london", "2026_champions",
-    }
-    intl_attendance_2026 = {}
-    _intl_event_earliest = {}
-    for _me in result["chart"]["match_events"]:
-        _eid = _me.get("event_id")
-        if _eid not in _INTL_EVENT_IDS_2026:
-            continue
-        _d = _me.get("date") or ""
-        if _d and (_eid not in _intl_event_earliest or _d < _intl_event_earliest[_eid]):
-            _intl_event_earliest[_eid] = _d
-        for _org in (_me.get("winner"), _me.get("loser")):
-            if not _org:
-                continue
-            if _org not in intl_attendance_2026 or _d < intl_attendance_2026[_org]:
-                intl_attendance_2026[_org] = _d
-
-    # A team that's AT an ongoing 2026 international but hasn't played a
-    # *completed* match yet (e.g. awaiting its playoff opener) would otherwise
-    # register zero intl experience, while a co-participant that already played
-    # a Swiss match registers as experienced — mis-firing intl_exp_diff and
-    # flipping the higher-rated team to underdog (e.g. TH vs VIT at Masters
-    # London). Register every upcoming-intl-match participant at that event's
-    # earliest completed-match date so co-attendees count as present.
-    from MoreTestingMaybeFiles import ALL_EVENTS as _ALL_EV_FOR_ATT
-    _label_to_id = {e.get("label"): e["id"] for e in _ALL_EV_FOR_ATT}
-    for _um in upcoming_raw:
-        if _um.get("region") != "International":
-            continue
-        _eid = _label_to_id.get(_um.get("event"))
-        _ed = _intl_event_earliest.get(_eid)
-        if not _ed:
-            continue
-        for _org in (_um.get("org_a"), _um.get("org_b")):
-            if not _org:
-                continue
-            if _org not in intl_attendance_2026 or _ed < intl_attendance_2026[_org]:
-                intl_attendance_2026[_org] = _ed
-    result["intl_attendance_2026"] = intl_attendance_2026
+    # (v6 removed the per-org intl-attendance lookup: the intl_exp/cn_dog
+    # logit shifts it fed are replaced by the snapshot's cross-region offsets,
+    # applied at ALL cross-region matches with no event gating.)
 
     # ── Past matches — replay each match with 12:01-AM ratings ───────────────
     # All matches on date X use the SAME rating snapshot: the checkpoint from
@@ -7454,9 +7515,19 @@ def _mhub_load():
 
             # Unbiased "12:01 AM of match day" ratings — same for every match
             # on the same date, regardless of earlier-same-day results.
+            # Fallback order: morning checkpoint → the event's own pre-match
+            # rating → the org's region prior from the v6 snapshot.
             _morning = _morning_ratings_for(_me["date"])
-            _r_win  = _morning.get(_winner, _me.get("winner_before", 0.0))
-            _r_lose = _morning.get(_loser,  _me.get("loser_before",  0.0))
+            _r_win = _morning.get(_winner)
+            if _r_win is None:
+                _r_win = _me.get("winner_before")
+            if _r_win is None:
+                _r_win = _v6_rating_region(_site_m, {}, _winner)[0]
+            _r_lose = _morning.get(_loser)
+            if _r_lose is None:
+                _r_lose = _me.get("loser_before")
+            if _r_lose is None:
+                _r_lose = _v6_rating_region(_site_m, {}, _loser)[0]
 
             _org_a, _org_b = sorted([_winner, _loser])
             if _org_a == _winner:
@@ -7496,52 +7567,15 @@ def _mhub_load():
             else:
                 _disp_score = f"{_ls}-{_ws}"
 
-            _p_map = float(_expit(_tl_beta * (_ra_p - _rb_p)))
-            _p_series = _series_wp(_p_map, _fmt)
-
-            # Grand Final empirical upper-bracket advantage. Calibrated from
-            # 21 analyzable historical GFs (2023-2026): upper-bracket teams
-            # won 57.1% vs the model's ratings-based prediction of 52.9% —
-            # a residual +4pp advantage from rest days, opponent study time,
-            # and strategic mismatch (Lower Final winners arrive fatigued).
-            # The MLE-optimal logit shift on the per-match prediction is
-            # +0.17, which closes the empirical gap. Same shape as the
-            # intl_exp_diff / cn_dog logit shifts already in the model.
-            # Applied to A (guaranteed upper after the earlier swap).
-            if _fmt == "bo5_gf" and _gf_upper_org:
-                import math as _math_gf
-                _GF_UPPER_LOGIT = 0.25  # re-tuned 2026-05-26 alongside β/intl/cn-dog
-                _ps = max(min(_p_series, 1 - 1e-9), 1e-9)
-                _logit = _math_gf.log(_ps / (1 - _ps)) + _GF_UPPER_LOGIT
-                _p_series = 1.0 / (1.0 + _math_gf.exp(-_logit))
-
-            # Apply intl_exp_diff (+0.22) and CN-dog (+0.47) logit shifts at
-            # internationals — same offsets the frontend bakes onto upcoming
-            # cards (see applyIntlOffsetsToA in MapElo.py JS). No-op for
-            # domestic matches; signed onto team A's series prob.
-            _eid_pm = _me.get("event_id", "")
-            if _eid_pm in _INTL_EVENT_IDS_2026:
-                _reg_a = ORG_REGIONS.get(_org_a)
-                _reg_b = ORG_REGIONS.get(_org_b)
-                _a_is_fav = _p_series >= 0.5
-                _fav_org, _dog_org = (_org_a, _org_b) if _a_is_fav else (_org_b, _org_a)
-                _fav_reg, _dog_reg = (_reg_a, _reg_b) if _a_is_fav else (_reg_b, _reg_a)
-                _delta = 0.0
-                _md_str = _me.get("date", "")
-                _fav_d = intl_attendance_2026.get(_fav_org)
-                _dog_d = intl_attendance_2026.get(_dog_org)
-                _fav_exp = 1 if (_fav_d and _fav_d < _md_str) else 0
-                _dog_exp = 1 if (_dog_d and _dog_d < _md_str) else 0
-                _delta += 0.40 * (_fav_exp - _dog_exp)   # intl_exp_diff re-tuned 2026-05-26
-                if _dog_reg == "CN" and _fav_reg != "CN":
-                    _delta += 0.35                       # cn_dog re-tuned 2026-05-26 (v10 CN model handles part of this now)
-                if _delta:
-                    _p_fav = _p_series if _a_is_fav else (1.0 - _p_series)
-                    _p_fav = max(min(_p_fav, 1 - 1e-9), 1e-9)
-                    import math as _math
-                    _logit = _math.log(_p_fav / (1 - _p_fav)) + _delta
-                    _p_fav_new = 1.0 / (1.0 + _math.exp(-_logit))
-                    _p_series = _p_fav_new if _a_is_fav else (1.0 - _p_fav_new)
+            # v6 closed-form series probability (predict.py math): snapshot β,
+            # cross-region offsets at ALL cross-region matches (no event
+            # gating — this replaced the intl_exp/cn_dog logit shifts), and
+            # the snapshot's gf_upper_logit toward slot A for Bo5 GFs (A is
+            # guaranteed the upper-bracket team after the earlier swap).
+            _p_series = _v6_series_prob_from_ratings(
+                _site_m, _ra_p, _rb_p,
+                ORG_REGIONS.get(_org_a), ORG_REGIONS.get(_org_b), _fmt,
+                True if (_fmt == "bo5_gf" and _gf_upper_org) else None)
 
             _region = ORG_REGIONS.get(_winner, ORG_REGIONS.get(_loser, "Unknown"))
             _evt_label = _event_label_by_id.get(_me.get("event_id", ""), _me.get("event_id", ""))
@@ -7663,8 +7697,15 @@ def _mhub_load():
     }
     result["org_regions"] = ORG_REGIONS
     result["snap_teams"]  = snap_data.get("teams", {}) if snap_data else {}
+    # Diagnostic only — per-snapshot in-sample MLE β. NOT a prediction β;
+    # every displayed probability uses site_model (below) / the injected
+    # SITE_MODEL constants.
     result["snap_beta"]   = snap_data.get("beta", 0.3237) if snap_data else 0.3237
     result["snap_key"]    = snap_name or "after_stage1"
+    # v6 model snapshot for data-endpoint consumers (e.g. the London playoffs
+    # article's bracket cards). The /modern/ page itself gets the same values
+    # template-injected at serve time.
+    result["site_model"]  = get_site_model()
     if os.path.exists(_MAP_RATINGS_PATH):
         try:
             with open(_MAP_RATINGS_PATH) as _mrf:
@@ -8501,80 +8542,52 @@ const LOGO_SCALES = {
 // Initialized once hubData is loaded (see showChartAndLeaderboard)
 var VETO_HUB   = {teams:{}, snap_pools:{}};
 var ORG_REGIONS_HUB = {};
-var INTL_HUB   = {};
 var SNAP_TEAMS = {};
-// {org: earliest_intl_date_2026} — populated from data.intl_attendance_2026.
-// Used by _intlAttendedBefore(date)(org) to compute intl_exp_diff at intl
-// events for upcoming/recent matches.
-var INTL_ATTENDANCE_2026 = {};
-// β = 0.140 — re-fit on current data (2024 → 2026 stage 1) via series MLE.
-// Combined with intl_exp_diff×0.22 and cn_dog_offset×0.47 (both applied only
-// at intl events, see applyIntlOffsetsHUB below), pool series Brier = 0.2306,
-// Platt b = 0.993. Hardcoded so all prediction surfaces share the same β.
-var SNAP_BETA  = 0.170;
+// ── v6 site model ────────────────────────────────────────────────────────────
+// Injected server-side from data/site_model.json (the single source of truth
+// for every displayed probability; reference math = trading_model/predict.py).
+// β, cross-region offsets, the Bo5-GF upper-bracket logit and the map-pick
+// logit all come from here — no model constants are hardcoded in this file.
+// (The old intl_exp/cn_dog intl-event shifts are gone: v6 replaces them with
+// the cross-region offsets, applied at ALL cross-region matchups.)
+var SITE_MODEL = __SITE_MODEL__;
+var SNAP_BETA        = SITE_MODEL.beta;
+var XREGION_OFFSETS  = SITE_MODEL.xregion_offsets || {};
+var GF_UPPER_LOGIT   = SITE_MODEL.gf_upper_logit || 0;
+var B_PICK           = SITE_MODEL.b_pick || 0;
 var SNAP_KEY   = 'after_santiago';
 
-// Internationals that the intl-experience offset and CN-as-dog floor key off.
-// Match the set in scrapers/AnalyzeProjectionCalibration.py:INTL_EVENTS.
-var INTL_EVENTS_HUB = {
-  '2024_masters_madrid':1, '2024_masters_shanghai':1, '2024_champions':1,
-  '2025_masters_bangkok':1, '2025_masters_toronto':1, '2025_champions':1,
-  '2026_masters_santiago':1, '2026_masters_london':1, '2026_champions':1,
-};
-var INTL_EXP_BONUS = 0.40;   // logit shift when fav has 2025/2026 intl exp and dog doesn't (re-tuned 2026-05-26)
-var CN_DOG_OFFSET  = 0.35;   // logit shift when dog is CN at an intl match (re-tuned 2026-05-26, lowered from 0.47 since v10 CN model already corrects more)
-
-// Shift a series probability in logit space by `delta`, then return the new
-// probability. Used by all prediction surfaces below — keeps the band-aid
-// math consistent with scrapers/AnalyzeProjectionCalibration.py.
+// Shift a series probability in logit space by `delta` (predict.py
+// _shift_logit) — used for the Bo5-GF upper-bracket advantage.
 function shiftSeriesProb(p, delta) {
   if (!delta) return p;
   var ps = Math.max(Math.min(p, 1 - 1e-9), 1e-9);
   return 1.0 / (1.0 + Math.exp(-(Math.log(ps / (1 - ps)) + delta)));
 }
 
-// Compute the optimized logit shift for a single series prediction, given
-// the match's event_id, the favorite/underdog orgs, and a function that says
-// whether a given org has played any intl event this calendar year STRICTLY
-// before the match date (or, for upcoming matches, before "now"). Returns
-// the total logit delta to apply to the bo3/bo5 closed-form series prob.
-function intlAndCnLogitDelta(eventId, favOrg, dogOrg, attendedFn) {
-  if (!INTL_EVENTS_HUB[eventId]) return 0;   // domestic — no offsets fire
-  var delta = 0;
-  if (attendedFn) {
-    var favExp = attendedFn(favOrg) ? 1 : 0;
-    var dogExp = attendedFn(dogOrg) ? 1 : 0;
-    delta += INTL_EXP_BONUS * (favExp - dogExp);
+// v6 cross-region adjustment on the map logit: offsets[regA] − offsets[regB],
+// 0 for same-region (or unknown-region) pairs. Applied at ALL cross-region
+// matchups — no event gating.
+function xregionAdjHUB(orgA, orgB) {
+  var ra = (ORG_REGIONS_HUB || {})[orgA], rb = (ORG_REGIONS_HUB || {})[orgB];
+  if (!ra || !rb || ra === rb) return 0;
+  return (XREGION_OFFSETS[ra] || 0) - (XREGION_OFFSETS[rb] || 0);
+}
+
+// v6 closed-form series probability for team A (predict.py
+// series_probability): p_map = σ(β·(rA−rB+xadj)); series bo1 p,
+// bo3 p²(3−2p), bo5 p³(1+3q+6q²); bo5_gf then shifts the series logit
+// ±gf_upper_logit toward the upper-bracket org.
+function v6SeriesProbHUB(rA, rB, orgA, orgB, fmt, gfUpperOrg) {
+  var p = 1 / (1 + Math.exp(-SNAP_BETA * (rA - rB + xregionAdjHUB(orgA, orgB))));
+  var ps;
+  if (fmt === 'bo1') ps = p;
+  else if (fmt === 'bo5' || fmt === 'bo5_gf') { var q = 1 - p; ps = p*p*p*(1 + 3*q + 6*q*q); }
+  else ps = p*p*(3 - 2*p);
+  if (fmt === 'bo5_gf' && (gfUpperOrg === orgA || gfUpperOrg === orgB)) {
+    ps = shiftSeriesProb(ps, gfUpperOrg === orgA ? GF_UPPER_LOGIT : -GF_UPPER_LOGIT);
   }
-  var favReg = (ORG_REGIONS_HUB || {})[favOrg];
-  var dogReg = (ORG_REGIONS_HUB || {})[dogOrg];
-  if (dogReg === 'CN' && favReg !== 'CN') delta += CN_DOG_OFFSET;
-  return delta;
-}
-
-// Curried "did this org play any 2026 intl event strictly before `beforeDate`?"
-function _intlAttendedBefore(beforeDate) {
-  return function(org) {
-    var d = INTL_ATTENDANCE_2026[org];
-    return !!(d && (!beforeDate || d < beforeDate));
-  };
-}
-
-// Given a *team-A perspective* series prob and the matchup metadata, apply
-// the optimized logit offsets and return the shifted prob for team A.
-// Picks favorite/dog from pA vs pB, asks intlAndCnLogitDelta for the favorite-
-// perspective delta, then signs it onto team A's prob.
-function applyIntlOffsetsToA(pA, eventId, orgA, orgB, matchDate) {
-  if (!INTL_EVENTS_HUB[eventId]) return pA;
-  var attendedFn = _intlAttendedBefore(matchDate);
-  var aIsFav = pA >= 0.5;
-  var favOrg = aIsFav ? orgA : orgB;
-  var dogOrg = aIsFav ? orgB : orgA;
-  var delta  = intlAndCnLogitDelta(eventId, favOrg, dogOrg, attendedFn);
-  if (!delta) return pA;
-  var pFav = aIsFav ? pA : (1 - pA);
-  var pFavNew = shiftSeriesProb(pFav, delta);
-  return aIsFav ? pFavNew : (1 - pFavNew);
+  return ps;
 }
 
 var VETO_STEPS_HUB = {
@@ -8587,13 +8600,6 @@ var VETO_STEPS_HUB = {
 var SERIES_THRESH_HUB = {bo1:1, bo3:2, bo5:3, bo5_gf:3};
 var ACTION_CLS = {banA:['step-lbl-banA','rv-act-banA'], banB:['step-lbl-banB','rv-act-banB'], pickA:['step-lbl-pickA','rv-act-pickA'], pickB:['step-lbl-pickB','rv-act-pickB'], dec:['step-lbl-dec','rv-act-dec']};
 
-function getGlobalRatingHUB(org, snapKey, domesticRating) {
-  var cal = INTL_HUB[snapKey] || {};
-  var region = ORG_REGIONS_HUB[org] || '';
-  var regOff = (cal.regional_offsets || {})[region] || 0;
-  var indBonus = (cal.individual_bonuses || {})[org] || 0;
-  return domesticRating + regOff + indBonus;
-}
 function getActivePoolHUB(snap) {
   var key = '2026_'+snap;
   var cp = (VETO_HUB.computed_pools||{})[key];
@@ -9919,12 +9925,10 @@ async function showChartAndLeaderboard(data, fast) {
   // Initialize veto simulation globals from hub data
   VETO_HUB       = data.veto_model   || {teams:{}, snap_pools:{}};
   ORG_REGIONS_HUB = data.org_regions || {};
-  INTL_HUB       = data.intl_calib   || {};
   SNAP_TEAMS     = data.snap_teams   || {};
-  INTL_ATTENDANCE_2026 = data.intl_attendance_2026 || {};
-  // Don't overwrite with data.snap_beta — that value (~0.7-1.0) is the
-  // per-snapshot fitted β (in-sample MLE), not the cross-validated β used
-  // for predictions. Keep the hardcoded SNAP_BETA=0.22 from above.
+  // Never overwrite the model constants with data.snap_beta — that value is
+  // the per-snapshot in-sample MLE β (diagnostic only). Every probability
+  // uses the server-injected SITE_MODEL (data/site_model.json) from above.
   SNAP_KEY       = data.snap_key     || 'after_santiago';
 
   await preloadLogos(data.leaderboard.teams || []);
@@ -10386,7 +10390,6 @@ function renderUpcoming(data) {
   (data.leaderboard.teams || []).forEach(function(t){ lbTeams[t.org] = t; });
 
   var snapKey = SNAP_KEY;
-  var beta = SNAP_BETA;
 
   // Upcoming matches always use the live current pool, not the historical snap pool
   var pool = (VETO_HUB.current_pool && VETO_HUB.current_pool.length >= 7)
@@ -10457,7 +10460,6 @@ function renderUpcoming(data) {
     var orgA = m.org_a || m.team_a;
     var orgB = m.org_b || m.team_b;
     var matchFmt = m.format || 'bo3';
-    var matchThresh = SERIES_THRESH_HUB[matchFmt] || 2;
     var tA = getTeamObj(orgA), tB = getTeamObj(orgB);
     var lbA = lbTeams[orgA], lbB = lbTeams[orgB];
     var ratingA = lbA ? lbA.rating : (tA ? (tA.overall_rating||0) : 0);
@@ -10465,41 +10467,41 @@ function renderUpcoming(data) {
     var region = m.region || (lbA ? lbA.region : '') || '';
     var rgnCls = REGION_CLS[region] || '';
 
-    var seriesWins=0;
     var mapWins={}, mapPlays={};
     pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
 
     if (tA && tB) {
-      // Seed the MC per matchup so the win prob shown for this pairing is
-      // identical on every page load (no jitter), while distinct matchups
+      // v6 map-level inputs: overall ratings + cross-region adjustment, with
+      // the snapshot's pick logit (±B_PICK) by veto fate — NOT per-map split
+      // ratings (splits stay display content; stacking them WITH the pick
+      // bonus would double-count map strength). predict.py map_probability.
+      var zBase = SNAP_BETA * ((tA.overall_rating||ratingA)
+                             - (tB.overall_rating||ratingB)
+                             + xregionAdjHUB(orgA, orgB));
+      // Seed the MC per matchup so the map breakdown shown for this pairing
+      // is identical on every page load (no jitter), while distinct matchups
       // still get independent draws.
       _withSeededRand(_matchSeed(orgA, orgB, matchFmt, m.date || ''), function(){
         for (var s=0; s<nSims; s++) {
           var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,snapKey,matchFmt);
-          var sw = 0;
           pool.forEach(function(mp){
             var fc = fm[mp] || 'banA';
             if (fc==='pickA'||fc==='pickB'||fc==='dec') {
               mapPlays[mp]++;
-              var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
-              var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
-              var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
-              if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
+              var z = zBase + (fc==='pickA' ? B_PICK : (fc==='pickB' ? -B_PICK : 0));
+              if (Math.random()<1/(1+Math.exp(-z))) { mapWins[mp]++; }
             }
           });
-          if (sw >= matchThresh) seriesWins++;
         }
       });
     }
 
-    // Always run the frontend MC sim — same model as the simulator iframe —
-    // so the two surfaces give matching win probs. Fall back to a sigmoid on
-    // live overalls only if a team isn't in the snap (no per-map data).
-    var pAraw = (tA&&tB) ? (seriesWins/nSims)
-                         : (1/(1+Math.exp(-beta*(ratingA-ratingB))));
-    // At intl events: layer intl_exp_diff (+0.22) and CN-dog (+0.47) logit
-    // shifts on top of the rating-driven prob. No-op for domestic matches.
-    var pA = applyIntlOffsetsToA(pAraw, m.event_id || '', orgA, orgB, m.date || '');
+    // Headline win prob = the v6 closed form on overall ratings. The backend
+    // pre-computes it (m.win_prob_a) from the same data/site_model.json; the
+    // injected-constants closed form below is a fallback only. The MC above
+    // is the veto/map-breakdown content engine, not the quoted win chance.
+    var pA = (m.win_prob_a != null) ? m.win_prob_a
+           : v6SeriesProbHUB(ratingA, ratingB, orgA, orgB, matchFmt, m.gf_upper || '');
     var pctA = (pA*100).toFixed(1);
     var pctB = ((1-pA)*100).toFixed(1);
     var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
@@ -10725,9 +10727,8 @@ function renderPast(data) {
   var snapKey   = data.snap_key || 'live';
   var lbTeams = {};
   ((data.leaderboard||{}).teams || []).forEach(function(t){ lbTeams[t.org] = t; });
-  // Same MLE-fit β as the upcoming-card and simulator sims — keep all three
-  // surfaces in sync so they produce identical win-prob predictions.
-  var beta = 0.170;
+  // Same injected v6 SITE_MODEL constants as the upcoming-card and simulator
+  // sims — every surface, same snapshot, same probability.
   var livePool = ((data.snapshots||{})[snapKey] || {}).current_pool
               || ['Abyss','Bind','Haven','Lotus','Split','Sunset','Ascent'];
   var liveMapStats = (typeof VETO_HUB!=='undefined' && VETO_HUB.live_map_stats) || {};
@@ -10792,7 +10793,6 @@ function renderPast(data) {
     var orgA = m.org_a || m.team_a;
     var orgB = m.org_b || m.team_b;
     var matchFmt = m.format || 'bo3';
-    var matchThresh = SERIES_THRESH_HUB[matchFmt] || 2;
     var tA = getTeamObj(orgA), tB = getTeamObj(orgB);
     var ratingA = (m.rating_a != null) ? m.rating_a : 0;
     var ratingB = (m.rating_b != null) ? m.rating_b : 0;
@@ -10805,40 +10805,38 @@ function renderPast(data) {
     var pool = getMatchPool(m);
     var vetoSnapKey = '2026_' + (data.snap_key || 'live');
 
-    var seriesWins=0;
     var mapWins={}, mapPlays={};
     pool.forEach(function(mp){ mapWins[mp]=0; mapPlays[mp]=0; });
 
-    // Per-map sim mirrors the historical matchup algorithm exactly: raw map
-    // rating → intl global rating → sigmoid with beta.
+    // v6 per-map sim: overall ratings + cross-region adjustment + the pick
+    // logit (±B_PICK) by veto fate — predict.py map_probability semantics
+    // (per-map split ratings stay display content only).
     if (tA && tB) {
+      var zBase = SNAP_BETA * ((tA.overall_rating||ratingA)
+                             - (tB.overall_rating||ratingB)
+                             + xregionAdjHUB(orgA, orgB));
       // Seed per matchup (incl. match_id + date) so the map projection for a
       // past match is stable across page visits instead of re-rolling each time.
       _withSeededRand(_matchSeed(orgA, orgB, matchFmt, m.date || '', m.match_id || ''), function(){
         for (var s=0; s<nSims; s++) {
           var fm = simulateVetoHUB(tA,tB,orgA,orgB,pool,vetoSnapKey,matchFmt);
-          var sw = 0;
           pool.forEach(function(mp){
             var fc = fm[mp] || 'banA';
             if (fc==='pickA'||fc==='pickB'||fc==='dec') {
               mapPlays[mp]++;
-              var dA=(tA.maps&&tA.maps[mp]&&tA.maps[mp].rating!=null)?tA.maps[mp].rating:(tA.overall_rating||ratingA);
-              var dB=(tB.maps&&tB.maps[mp]&&tB.maps[mp].rating!=null)?tB.maps[mp].rating:(tB.overall_rating||ratingB);
-              var gA=getGlobalRatingHUB(orgA,vetoSnapKey,dA), gB=getGlobalRatingHUB(orgB,vetoSnapKey,dB);
-              if (Math.random()<1/(1+Math.exp(-beta*(gA-gB)))) { sw++; mapWins[mp]++; }
+              var z = zBase + (fc==='pickA' ? B_PICK : (fc==='pickB' ? -B_PICK : 0));
+              if (Math.random()<1/(1+Math.exp(-z))) { mapWins[mp]++; }
             }
           });
-          if (sw >= matchThresh) seriesWins++;
         }
       });
     }
 
-    // Projected probabilities — use the morning-of value from backend
-    // (m.win_prob_a). For Bo5 Grand Finals the backend has already applied
-    // the empirically calibrated upper-bracket logit shift, so the value
-    // here reflects the GF advantage without further frontend math.
+    // Projected probabilities — the backend's morning-of v6 closed form
+    // (m.win_prob_a, from data/site_model.json; Bo5-GF upper-bracket logit
+    // already applied there). Local v6 closed form is a fallback only.
     var pctA = (m.win_prob_a != null) ? (m.win_prob_a*100).toFixed(1)
-             : (100/(1+Math.exp(-beta*(ratingA-ratingB)))).toFixed(1);
+             : (v6SeriesProbHUB(ratingA, ratingB, orgA, orgB, matchFmt, m.gf_upper || '')*100).toFixed(1);
     var pctB = (100 - parseFloat(pctA)).toFixed(1);
 
     var hasPatt = !!( ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgA] || ((VETO_HUB.teams||{})[vetoSnapKey]||{})[orgB] );
@@ -11364,7 +11362,11 @@ SHARED_FOOTER
 
 @mapelo_bp.route('/modern/')
 def mapelo_modern():
-    return MAPELO_MODERN_HTML
+    # Inject the v6 model snapshot (data/site_model.json) server-side — the
+    # page's SITE_MODEL constants are the only place JS probability math gets
+    # its parameters from. get_site_model() hot-reloads by mtime.
+    return MAPELO_MODERN_HTML.replace('__SITE_MODEL__',
+                                      json.dumps(get_site_model()))
 
 @mapelo_bp.route('/modern/data')
 def mapelo_modern_data():
