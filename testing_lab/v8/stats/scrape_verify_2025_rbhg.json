@@ -1,0 +1,282 @@
+{
+ "585447": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585447/t1-vs-sentinels-red-bull-home-ground-2025-ubqf",
+  "maps": {
+   "241503": [
+    "SEN",
+    "14-12"
+   ]
+  },
+  "series": [
+   "SEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2025-11-14 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "SEN",
+   "T1"
+  ]
+ },
+ "585448": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585448/fnatic-vs-cloud9-red-bull-home-ground-2025-ubqf",
+  "maps": {
+   "241504": [
+    "FNC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FNC",
+   "1-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2025-11-14 13:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "FNC"
+  ]
+ },
+ "585449": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585449/g2-esports-vs-zeta-division-red-bull-home-ground-2025-ubqf",
+  "maps": {
+   "241505": [
+    "ZETA",
+    "13-7"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "1-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2025-11-14 13:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "ZETA"
+  ]
+ },
+ "585450": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585450/nrg-vs-sentinels-red-bull-home-ground-2025-ubsf",
+  "maps": {
+   "241506": [
+    "NRG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "NRG",
+   "1-0"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2025-11-14 14:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "NRG",
+   "SEN"
+  ]
+ },
+ "585451": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585451/fnatic-vs-zeta-division-red-bull-home-ground-2025-ubsf",
+  "maps": {
+   "241507": [
+    "ZETA",
+    "13-1"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "1-0"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2025-11-14 14:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "ZETA"
+  ]
+ },
+ "585455": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585455/cloud9-vs-g2-esports-red-bull-home-ground-2025-lr1",
+  "maps": {
+   "241517": [
+    "G2",
+    "13-11"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2025-11-14 17:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "G2"
+  ]
+ },
+ "585456": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585456/fnatic-vs-t1-red-bull-home-ground-2025-lr2",
+  "maps": {
+   "241518": [
+    "FNC",
+    "13-5"
+   ]
+  },
+  "series": [
+   "FNC",
+   "1-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2025-11-14 18:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "T1"
+  ]
+ },
+ "585457": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585457/sentinels-vs-g2-esports-red-bull-home-ground-2025-lr2",
+  "maps": {
+   "241519": [
+    "G2",
+    "13-8"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2025-11-14 20:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "SEN"
+  ]
+ },
+ "585458": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585458/fnatic-vs-g2-esports-red-bull-home-ground-2025-lr3",
+  "maps": {
+   "241520": [
+    "G2",
+    "15-13"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2025-11-14 21:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "G2"
+  ]
+ },
+ "585452": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585452/nrg-vs-zeta-division-red-bull-home-ground-2025-ubf",
+  "maps": {
+   "241508": [
+    "NRG",
+    "13-6"
+   ],
+   "241509": [
+    "NRG",
+    "13-6"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Final",
+  "utc_ts": "2025-11-15 14:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NRG",
+   "ZETA"
+  ]
+ },
+ "585459": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585459/zeta-division-vs-g2-esports-red-bull-home-ground-2025-lbf",
+  "maps": {
+   "241521": [
+    "G2",
+    "13-4"
+   ],
+   "241782": [
+    "G2",
+    "13-3"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2025-11-15 18:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "ZETA"
+  ]
+ },
+ "585453": {
+  "event_id": "2025_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/585453/nrg-vs-g2-esports-red-bull-home-ground-2025-gf",
+  "maps": {
+   "241511": [
+    "G2",
+    "13-10"
+   ],
+   "241512": [
+    "G2",
+    "13-4"
+   ],
+   "241513": [
+    "G2",
+    "13-7"
+   ]
+  },
+  "series": [
+   "G2",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-11-16 15:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "NRG"
+  ]
+ }
+}

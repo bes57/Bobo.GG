@@ -1,0 +1,674 @@
+{
+ "84372": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84372/drx-vs-zeta-division-valorant-champions-tour-stage-1-masters-reykjav-k-opening-a",
+  "maps": {
+   "77017": [
+    "KRX",
+    "13-2"
+   ],
+   "77018": [
+    "KRX",
+    "13-3"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2022-04-10 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "ZETA"
+  ]
+ },
+ "84374": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84374/kr-esports-vs-team-liquid-valorant-champions-tour-stage-1-masters-reykjav-k-opening-b",
+  "maps": {
+   "77023": [
+    "TL",
+    "13-5"
+   ],
+   "77024": [
+    "TL",
+    "16-14"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2022-04-10 13:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "TL"
+  ]
+ },
+ "84373": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84373/optic-gaming-vs-xerxia-esports-valorant-champions-tour-stage-1-masters-reykjav-k-opening-b",
+  "maps": {
+   "77020": [
+    "XIA",
+    "13-10"
+   ],
+   "77021": [
+    "XIA",
+    "13-10"
+   ]
+  },
+  "series": [
+   "XIA",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2022-04-10 16:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "OPTC",
+   "XIA"
+  ]
+ },
+ "84371": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84371/fnatic-vs-ninjas-in-pyjamas-valorant-champions-tour-stage-1-masters-reykjav-k-opening-a",
+  "maps": {
+   "77014": [
+    "NIP",
+    "13-7"
+   ],
+   "77015": [
+    "NIP",
+    "13-8"
+   ]
+  },
+  "series": [
+   "NIP",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2022-04-11 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "NIP"
+  ]
+ },
+ "84647": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84647/xerxia-esports-vs-team-liquid-valorant-champions-tour-stage-1-masters-reykjav-k-winners-b",
+  "maps": {
+   "77234": [
+    "TL",
+    "13-7"
+   ],
+   "77235": [
+    "XIA",
+    "13-11"
+   ],
+   "77236": [
+    "TL",
+    "17-15"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (B)",
+  "utc_ts": "2022-04-11 15:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "TL",
+   "XIA"
+  ]
+ },
+ "84644": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84644/ninjas-in-pyjamas-vs-drx-valorant-champions-tour-stage-1-masters-reykjav-k-winners-a",
+  "maps": {
+   "77225": [
+    "KRX",
+    "13-4"
+   ],
+   "77226": [
+    "KRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (A)",
+  "utc_ts": "2022-04-12 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "NIP"
+  ]
+ },
+ "84648": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84648/optic-gaming-vs-kr-esports-valorant-champions-tour-stage-1-masters-reykjav-k-elimination-b",
+  "maps": {
+   "77237": [
+    "OPTC",
+    "13-5"
+   ],
+   "77238": [
+    "OPTC",
+    "13-10"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (B)",
+  "utc_ts": "2022-04-12 14:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "OPTC"
+  ]
+ },
+ "84645": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84645/fnatic-vs-zeta-division-valorant-champions-tour-stage-1-masters-reykjav-k-elimination-a",
+  "maps": {
+   "77228": [
+    "ZETA",
+    "13-7"
+   ],
+   "77229": [
+    "ZETA",
+    "13-11"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (A)",
+  "utc_ts": "2022-04-12 17:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "ZETA"
+  ]
+ },
+ "84649": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84649/xerxia-esports-vs-optic-gaming-valorant-champions-tour-stage-1-masters-reykjav-k-decider-b",
+  "maps": {
+   "77240": [
+    "OPTC",
+    "13-9"
+   ],
+   "77241": [
+    "OPTC",
+    "13-6"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (B)",
+  "utc_ts": "2022-04-13 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "OPTC",
+   "XIA"
+  ]
+ },
+ "84646": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/84646/ninjas-in-pyjamas-vs-zeta-division-valorant-champions-tour-stage-1-masters-reykjav-k-decider-a",
+  "maps": {
+   "77231": [
+    "NIP",
+    "13-6"
+   ],
+   "77233": [
+    "ZETA",
+    "14-12"
+   ],
+   "77715": [
+    "ZETA",
+    "13-10"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (A)",
+  "utc_ts": "2022-04-13 15:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "NIP",
+   "ZETA"
+  ]
+ },
+ "85523": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85523/g2-esports-vs-zeta-division-valorant-champions-tour-stage-1-masters-reykjav-k-ubqf",
+  "maps": {
+   "77482": [
+    "G2",
+    "13-7"
+   ],
+   "77483": [
+    "G2",
+    "13-10"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-04-14 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "ZETA"
+  ]
+ },
+ "85526": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85526/loud-vs-team-liquid-valorant-champions-tour-stage-1-masters-reykjav-k-ubqf",
+  "maps": {
+   "77491": [
+    "LOUD",
+    "13-10"
+   ],
+   "77492": [
+    "TL",
+    "13-3"
+   ],
+   "77493": [
+    "LOUD",
+    "13-10"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-04-14 15:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "TL"
+  ]
+ },
+ "85525": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85525/paper-rex-vs-drx-valorant-champions-tour-stage-1-masters-reykjav-k-ubqf",
+  "maps": {
+   "77488": [
+    "PRX",
+    "13-10"
+   ],
+   "77489": [
+    "KRX",
+    "13-8"
+   ],
+   "77490": [
+    "KRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-04-15 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "PRX"
+  ]
+ },
+ "85524": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85524/the-guard-vs-optic-gaming-valorant-champions-tour-stage-1-masters-reykjav-k-ubqf",
+  "maps": {
+   "77485": [
+    "OPTC",
+    "13-7"
+   ],
+   "77486": [
+    "TGRD",
+    "13-7"
+   ],
+   "77487": [
+    "OPTC",
+    "13-11"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-04-15 17:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "OPTC",
+   "TGRD"
+  ]
+ },
+ "85531": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85531/zeta-division-vs-team-liquid-valorant-champions-tour-stage-1-masters-reykjav-k-lr1",
+  "maps": {
+   "77508": [
+    "ZETA",
+    "13-7"
+   ],
+   "77509": [
+    "TL",
+    "13-4"
+   ],
+   "77510": [
+    "ZETA",
+    "13-7"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 1",
+  "utc_ts": "2022-04-16 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TL",
+   "ZETA"
+  ]
+ },
+ "85532": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85532/paper-rex-vs-the-guard-valorant-champions-tour-stage-1-masters-reykjav-k-lr1",
+  "maps": {
+   "77511": [
+    "PRX",
+    "13-10"
+   ],
+   "77512": [
+    "PRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Lower Round 1",
+  "utc_ts": "2022-04-16 16:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "TGRD"
+  ]
+ },
+ "85528": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85528/drx-vs-optic-gaming-valorant-champions-tour-stage-1-masters-reykjav-k-ubsf",
+  "maps": {
+   "77497": [
+    "KRX",
+    "13-8"
+   ],
+   "77498": [
+    "OPTC",
+    "13-11"
+   ],
+   "77499": [
+    "OPTC",
+    "15-13"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2022-04-17 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "OPTC"
+  ]
+ },
+ "85527": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85527/g2-esports-vs-loud-valorant-champions-tour-stage-1-masters-reykjav-k-ubsf",
+  "maps": {
+   "77494": [
+    "LOUD",
+    "13-5"
+   ],
+   "77495": [
+    "LOUD",
+    "13-11"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2022-04-17 17:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "LOUD"
+  ]
+ },
+ "85533": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85533/drx-vs-zeta-division-valorant-champions-tour-stage-1-masters-reykjav-k-lr2",
+  "maps": {
+   "77514": [
+    "ZETA",
+    "13-11"
+   ],
+   "77515": [
+    "KRX",
+    "13-10"
+   ],
+   "77516": [
+    "ZETA",
+    "13-4"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 2",
+  "utc_ts": "2022-04-18 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "ZETA"
+  ]
+ },
+ "85534": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85534/g2-esports-vs-paper-rex-valorant-champions-tour-stage-1-masters-reykjav-k-lr2",
+  "maps": {
+   "77517": [
+    "PRX",
+    "13-10"
+   ],
+   "77518": [
+    "PRX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Lower Round 2",
+  "utc_ts": "2022-04-18 17:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "PRX"
+  ]
+ },
+ "85529": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85529/loud-vs-optic-gaming-valorant-champions-tour-stage-1-masters-reykjav-k-ubf",
+  "maps": {
+   "77500": [
+    "OPTC",
+    "13-2"
+   ],
+   "77501": [
+    "LOUD",
+    "13-8"
+   ],
+   "77502": [
+    "LOUD",
+    "13-11"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Final",
+  "utc_ts": "2022-04-22 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "OPTC"
+  ]
+ },
+ "85535": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85535/zeta-division-vs-paper-rex-valorant-champions-tour-stage-1-masters-reykjav-k-lr3",
+  "maps": {
+   "77520": [
+    "PRX",
+    "13-6"
+   ],
+   "77521": [
+    "ZETA",
+    "13-2"
+   ],
+   "77522": [
+    "ZETA",
+    "13-10"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 3",
+  "utc_ts": "2022-04-22 16:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "ZETA"
+  ]
+ },
+ "85536": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85536/optic-gaming-vs-zeta-division-valorant-champions-tour-stage-1-masters-reykjav-k-lbf",
+  "maps": {
+   "77523": [
+    "OPTC",
+    "15-13"
+   ],
+   "77524": [
+    "OPTC",
+    "13-5"
+   ],
+   "77525": [
+    "OPTC",
+    "13-8"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Lower Final",
+  "utc_ts": "2022-04-23 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "OPTC",
+   "ZETA"
+  ]
+ },
+ "85530": {
+  "event_id": "2022_masters1_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/85530/loud-vs-optic-gaming-valorant-champions-tour-stage-1-masters-reykjav-k-gf",
+  "maps": {
+   "77503": [
+    "OPTC",
+    "13-9"
+   ],
+   "77504": [
+    "OPTC",
+    "14-12"
+   ],
+   "77505": [
+    "OPTC",
+    "15-13"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2022-04-24 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "OPTC"
+  ]
+ }
+}

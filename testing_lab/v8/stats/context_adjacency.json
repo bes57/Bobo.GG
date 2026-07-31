@@ -1,0 +1,56 @@
+{
+ "provenance": {
+  "agent": "context",
+  "written": "2026-07-28",
+  "frame": "v8/data/frame_expanded/series.csv sha256 ff772d41... (verified vs crn.json)",
+  "baseline_B0": {
+   "desc": "v6 champion replayed on expanded frame (consist 20/12, PO 1.6, champ x2, beta train-fit)",
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "n_test": 1217,
+   "n_train": 827
+  },
+  "mde_milli": {
+   "within": 1.773,
+   "cross": 5.889,
+   "source": "stats/power_mde_expanded.json"
+  },
+  "selection_rule": "train NLL only; holdout curves shown are transparency, never selection"
+ },
+ "preregistered": "preregister.context.md 3b-adjacency",
+ "pairs": {
+  "2023_champions": "2023_masters_tokyo",
+  "2024_masters_shanghai": "2024_masters_madrid",
+  "2024_champions": "2024_masters_shanghai",
+  "2025_masters_toronto": "2025_masters_bangkok",
+  "2025_ewc": "2025_masters_toronto",
+  "2026_masters_london": "2026_masters_santiago",
+  "2026_ewc": "2026_masters_london"
+ },
+ "n_series_bothattended": 57,
+ "per_next_event_n": {
+  "2023_champions": 21,
+  "2024_champions": 14,
+  "2025_ewc": 10,
+  "2024_masters_shanghai": 5,
+  "2026_masters_london": 4,
+  "2026_ewc": 3
+ },
+ "deep_run_measure": "n series at prev Masters, centered within event",
+ "beta0_frozen": 0.1152,
+ "c_hat": 0.0213,
+ "wald_se": 0.0524,
+ "wald_ci95": [
+  -0.0814,
+  0.124
+ ],
+ "crn_boot_ci95": [
+  -0.0876,
+  0.1374
+ ],
+ "crn_seed": 20260728,
+ "note": "inference only; nothing promoted from this",
+ "dll_equiv_if_used_milli": null,
+ "verdict": "UNTESTABLE AT THIS N (published as such): c_hat +0.021, 95% CIs [-0.081,+0.124] Wald / [-0.088,+0.137] CRN boot, n=57 series where both orgs attended the previous Masters. Point sign is OPPOSITE the deep-run-fatigue prediction; the CI comfortably spans zero."
+}

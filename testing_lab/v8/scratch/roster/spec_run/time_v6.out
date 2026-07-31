@@ -1,0 +1,3 @@
+  Loaded 2068 match dates from match_dates.json
+engine load 0.7s | v6 run 2.2s | beta 0.1152 (stored 0.1152) | max|dp| vs stored 0.00e+00 | ll_train 0.64823
+v6 reproduction guard OK

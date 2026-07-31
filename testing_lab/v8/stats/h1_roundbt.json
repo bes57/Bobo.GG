@@ -1,0 +1,1472 @@
+{
+ "written_by": "agent:bias_h1",
+ "preregistered": "preregister.bias_h1.md E2",
+ "model": "round BT: P(round)=sig(s_i-s_j+h*att); covered maps 2 binomial cells; uncovered maps race(Bin24) map-Bernoulli in same joint fit; v6 per-day weights (parity-gated 6.1e-12); lambda + 3lambda region ridge; beta train-only",
+ "coverage": {
+  "n_maps_covered": 4349,
+  "n_maps_fallback": 791,
+  "score_mismatch_demoted": 2,
+  "map_coverage_share": 0.8461,
+  "holdout_series_full_cov": 0.8348,
+  "per_event": [
+   {
+    "event_id": "2023_champions",
+    "map_cov": 1.0,
+    "n": 34
+   },
+   {
+    "event_id": "2023_china_champions_qual",
+    "map_cov": 0.0,
+    "n": 12
+   },
+   {
+    "event_id": "2023_china_evo_1",
+    "map_cov": 0.0,
+    "n": 13
+   },
+   {
+    "event_id": "2023_china_evo_3",
+    "map_cov": 0.0,
+    "n": 12
+   },
+   {
+    "event_id": "2023_convergence",
+    "map_cov": 0.0,
+    "n": 5
+   },
+   {
+    "event_id": "2023_lcq",
+    "map_cov": 0.0,
+    "n": 26
+   },
+   {
+    "event_id": "2023_league",
+    "map_cov": 1.0,
+    "n": 165
+   },
+   {
+    "event_id": "2023_lock_in",
+    "map_cov": 1.0,
+    "n": 31
+   },
+   {
+    "event_id": "2023_masters_tokyo",
+    "map_cov": 1.0,
+    "n": 24
+   },
+   {
+    "event_id": "2023_rbhg",
+    "map_cov": 0.0,
+    "n": 10
+   },
+   {
+    "event_id": "2023_ten_global",
+    "map_cov": 0.0,
+    "n": 9
+   },
+   {
+    "event_id": "2024_champions",
+    "map_cov": 1.0,
+    "n": 34
+   },
+   {
+    "event_id": "2024_china_kickoff",
+    "map_cov": 1.0,
+    "n": 19
+   },
+   {
+    "event_id": "2024_china_stage1",
+    "map_cov": 1.0,
+    "n": 38
+   },
+   {
+    "event_id": "2024_china_stage2",
+    "map_cov": 1.0,
+    "n": 33
+   },
+   {
+    "event_id": "2024_fgc_inv",
+    "map_cov": 0.0,
+    "n": 18
+   },
+   {
+    "event_id": "2024_kickoff",
+    "map_cov": 1.0,
+    "n": 57
+   },
+   {
+    "event_id": "2024_masters_madrid",
+    "map_cov": 1.0,
+    "n": 16
+   },
+   {
+    "event_id": "2024_masters_shanghai",
+    "map_cov": 1.0,
+    "n": 24
+   },
+   {
+    "event_id": "2024_radiant_asia",
+    "map_cov": 0.0,
+    "n": 16
+   },
+   {
+    "event_id": "2024_rbhg",
+    "map_cov": 0.0,
+    "n": 20
+   },
+   {
+    "event_id": "2024_shanghai_masters",
+    "map_cov": 0.0,
+    "n": 3
+   },
+   {
+    "event_id": "2024_stage1",
+    "map_cov": 1.0,
+    "n": 114
+   },
+   {
+    "event_id": "2024_stage2",
+    "map_cov": 1.0,
+    "n": 99
+   },
+   {
+    "event_id": "2024_ten_asia",
+    "map_cov": 0.0,
+    "n": 9
+   },
+   {
+    "event_id": "2025_acl",
+    "map_cov": 0.0,
+    "n": 7
+   },
+   {
+    "event_id": "2025_champions",
+    "map_cov": 0.985,
+    "n": 34
+   },
+   {
+    "event_id": "2025_china_evo_1",
+    "map_cov": 0.0,
+    "n": 12
+   },
+   {
+    "event_id": "2025_china_evo_2",
+    "map_cov": 0.0,
+    "n": 12
+   },
+   {
+    "event_id": "2025_china_evo_3",
+    "map_cov": 0.0,
+    "n": 12
+   },
+   {
+    "event_id": "2025_china_evo_epilogue",
+    "map_cov": 0.0,
+    "n": 7
+   },
+   {
+    "event_id": "2025_china_kickoff",
+    "map_cov": 1.0,
+    "n": 22
+   },
+   {
+    "event_id": "2025_china_stage1",
+    "map_cov": 1.0,
+    "n": 42
+   },
+   {
+    "event_id": "2025_china_stage2",
+    "map_cov": 1.0,
+    "n": 42
+   },
+   {
+    "event_id": "2025_ewc",
+    "map_cov": 0.0,
+    "n": 28
+   },
+   {
+    "event_id": "2025_ewc_qual",
+    "map_cov": 0.0,
+    "n": 49
+   },
+   {
+    "event_id": "2025_kickoff",
+    "map_cov": 1.0,
+    "n": 66
+   },
+   {
+    "event_id": "2025_masters_bangkok",
+    "map_cov": 1.0,
+    "n": 16
+   },
+   {
+    "event_id": "2025_masters_toronto",
+    "map_cov": 1.0,
+    "n": 24
+   },
+   {
+    "event_id": "2025_radiant_intl",
+    "map_cov": 0.0,
+    "n": 15
+   },
+   {
+    "event_id": "2025_rbhg",
+    "map_cov": 0.0,
+    "n": 12
+   },
+   {
+    "event_id": "2025_shanghai_masters",
+    "map_cov": 0.0,
+    "n": 3
+   },
+   {
+    "event_id": "2025_stage1",
+    "map_cov": 0.997,
+    "n": 126
+   },
+   {
+    "event_id": "2025_stage2",
+    "map_cov": 0.997,
+    "n": 126
+   },
+   {
+    "event_id": "2025_super_champions_cup",
+    "map_cov": 0.0,
+    "n": 10
+   },
+   {
+    "event_id": "2025_ten_global",
+    "map_cov": 0.0,
+    "n": 9
+   },
+   {
+    "event_id": "2026_china_evo_1",
+    "map_cov": 0.0,
+    "n": 6
+   },
+   {
+    "event_id": "2026_china_evo_2",
+    "map_cov": 1.0,
+    "n": 12
+   },
+   {
+    "event_id": "2026_china_kickoff",
+    "map_cov": 1.0,
+    "n": 30
+   },
+   {
+    "event_id": "2026_ewc",
+    "map_cov": 1.0,
+    "n": 28
+   },
+   {
+    "event_id": "2026_ewc_qual",
+    "map_cov": 0.768,
+    "n": 69
+   },
+   {
+    "event_id": "2026_kickoff",
+    "map_cov": 1.0,
+    "n": 90
+   },
+   {
+    "event_id": "2026_masters_london",
+    "map_cov": 1.0,
+    "n": 24
+   },
+   {
+    "event_id": "2026_masters_santiago",
+    "map_cov": 1.0,
+    "n": 24
+   },
+   {
+    "event_id": "2026_stage1",
+    "map_cov": 1.0,
+    "n": 174
+   },
+   {
+    "event_id": "2026_stage2",
+    "map_cov": 1.0,
+    "n": 86
+   }
+  ]
+ },
+ "lambda_selection": {
+  "grid": [
+   {
+    "lam": 0.02,
+    "beta": 1.2896,
+    "ll_train_wf": 0.65303,
+    "n": 827
+   },
+   {
+    "lam": 0.05,
+    "beta": 1.2536,
+    "ll_train_wf": 0.65509,
+    "n": 827
+   },
+   {
+    "lam": 0.1,
+    "beta": 1.3011,
+    "ll_train_wf": 0.6539,
+    "n": 827
+   },
+   {
+    "lam": 0.2,
+    "beta": 1.3594,
+    "ll_train_wf": 0.65268,
+    "n": 827
+   },
+   {
+    "lam": 0.5,
+    "beta": 1.463,
+    "ll_train_wf": 0.65113,
+    "n": 827
+   },
+   {
+    "lam": 1.0,
+    "beta": 1.5739,
+    "ll_train_wf": 0.65015,
+    "n": 827
+   },
+   {
+    "lam": 2.0,
+    "beta": 1.7325,
+    "ll_train_wf": 0.64957,
+    "n": 827
+   },
+   {
+    "lam": 4.0,
+    "beta": 1.9721,
+    "ll_train_wf": 0.64966,
+    "n": 827
+   },
+   {
+    "lam": 8.0,
+    "beta": 2.3546,
+    "ll_train_wf": 0.65072,
+    "n": 827
+   },
+   {
+    "lam": 16.0,
+    "beta": 2.9944,
+    "ll_train_wf": 0.65286,
+    "n": 827
+   },
+   {
+    "lam": 32.0,
+    "beta": 4.1041,
+    "ll_train_wf": 0.65588,
+    "n": 827
+   }
+  ],
+  "chosen": 2.0,
+  "rule": "train-only walk-forward series LL"
+ },
+ "attack_adv_h_final": 0.0352,
+ "beta": 1.7325,
+ "holdout": {
+  "n_joint": 1217,
+  "ll_v6": 0.64216,
+  "ll_roundbt": 0.64238,
+  "dll_milli_vs_v6": -0.222,
+  "boot_iid": {
+   "mean_delta": -0.000222189542611338,
+   "ci_lo": -0.0026155835671954897,
+   "ci_hi": 0.002112937814374453,
+   "p_better": 0.4405,
+   "mode": "iid",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260728,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "crn_verify": "not-applicable (subset n != holdout n)"
+  },
+  "boot_block": {
+   "mean_delta": -0.000222189542611338,
+   "ci_lo": -0.0024873992838036494,
+   "ci_hi": 0.0017207030801330782,
+   "p_better": 0.40825,
+   "mode": "block_event",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260729,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "n_events": 31,
+   "crn_verify": "not-applicable (subset events != crn events)"
+  },
+  "expected_roi": {
+   "dll": -0.000222189542611338,
+   "dll_milli": -0.222,
+   "mean_one_minus_p_ref": 0.4578,
+   "delta_logit_equiv": -0.0005,
+   "delta_op": 0.0,
+   "roi_at_op": 0.0021,
+   "roi_at_op_plus_equiv": 0.0021,
+   "expected_roi_delta": 0.0,
+   "roi_ci_at_op_plus_equiv": [
+    -0.119,
+    0.126
+   ],
+   "ladder_points": [
+    [
+     0.0,
+     0.0021
+    ],
+    [
+     0.1,
+     0.0402
+    ],
+    [
+     0.2,
+     0.0604
+    ],
+    [
+     0.3,
+     0.088
+    ],
+    [
+     0.4,
+     0.1498
+    ],
+    [
+     0.6,
+     0.2911
+    ]
+   ],
+   "ladder_source": "out/quote_margin.json",
+   "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+  },
+  "mde_quote": {
+   "within_milli": 1.773,
+   "cross_milli": 5.889,
+   "applicable": "cross-family (different likelihood family): 5.889"
+  }
+ },
+ "bias": {
+  "v6": {
+   "max_abs": 0.1478,
+   "mean_abs": 0.0473
+  },
+  "roundbt": {
+   "max_abs": 0.1515,
+   "mean_abs": 0.0478
+  },
+  "elite_five_v6": {
+   "T1": {
+    "team": "T1",
+    "n": 60,
+    "ll": 0.6295,
+    "bias": -0.0271
+   },
+   "PRX": {
+    "team": "PRX",
+    "n": 86,
+    "ll": 0.6057,
+    "bias": -0.1016
+   },
+   "100T": {
+    "team": "100T",
+    "n": 53,
+    "ll": 0.5715,
+    "bias": -0.0707
+   },
+   "NRG": {
+    "team": "NRG",
+    "n": 75,
+    "ll": 0.6246,
+    "bias": -0.0914
+   },
+   "TL": {
+    "team": "TL",
+    "n": 60,
+    "ll": 0.6602,
+    "bias": -0.0617
+   }
+  },
+  "elite_five_roundbt": {
+   "T1": {
+    "team": "T1",
+    "n": 60,
+    "ll": 0.6309,
+    "bias": -0.0288
+   },
+   "PRX": {
+    "team": "PRX",
+    "n": 86,
+    "ll": 0.6094,
+    "bias": -0.1086
+   },
+   "100T": {
+    "team": "100T",
+    "n": 53,
+    "ll": 0.5677,
+    "bias": -0.076
+   },
+   "NRG": {
+    "team": "NRG",
+    "n": 75,
+    "ll": 0.6321,
+    "bias": -0.0931
+   },
+   "TL": {
+    "team": "TL",
+    "n": 60,
+    "ll": 0.6548,
+    "bias": -0.0681
+   }
+  },
+  "weak_quartet_v6": {
+   "TS": {
+    "team": "TS",
+    "n": 30,
+    "ll": 0.6145,
+    "bias": 0.1478
+   },
+   "JDG": {
+    "team": "JDG",
+    "n": 51,
+    "ll": 0.6681,
+    "bias": 0.1058
+   },
+   "TE": {
+    "team": "TE",
+    "n": 55,
+    "ll": 0.6436,
+    "bias": 0.0721
+   },
+   "C9": {
+    "team": "C9",
+    "n": 41,
+    "ll": 0.6226,
+    "bias": 0.1172
+   }
+  },
+  "weak_quartet_roundbt": {
+   "TS": {
+    "team": "TS",
+    "n": 30,
+    "ll": 0.612,
+    "bias": 0.1515
+   },
+   "JDG": {
+    "team": "JDG",
+    "n": 51,
+    "ll": 0.6713,
+    "bias": 0.0893
+   },
+   "TE": {
+    "team": "TE",
+    "n": 55,
+    "ll": 0.6452,
+    "bias": 0.0862
+   },
+   "C9": {
+    "team": "C9",
+    "n": 41,
+    "ll": 0.6162,
+    "bias": 0.1115
+   }
+  }
+ },
+ "bias_tables": {
+  "v6": {
+   "teams": [
+    {
+     "team": "PRX",
+     "n": 86,
+     "ll": 0.6057,
+     "bias": -0.1016
+    },
+    {
+     "team": "NRG",
+     "n": 75,
+     "ll": 0.6246,
+     "bias": -0.0914
+    },
+    {
+     "team": "BBL",
+     "n": 53,
+     "ll": 0.689,
+     "bias": -0.0866
+    },
+    {
+     "team": "100T",
+     "n": 53,
+     "ll": 0.5715,
+     "bias": -0.0707
+    },
+    {
+     "team": "FNC",
+     "n": 63,
+     "ll": 0.6243,
+     "bias": -0.0651
+    },
+    {
+     "team": "NS",
+     "n": 54,
+     "ll": 0.7354,
+     "bias": -0.0631
+    },
+    {
+     "team": "TL",
+     "n": 60,
+     "ll": 0.6602,
+     "bias": -0.0617
+    },
+    {
+     "team": "MIBR",
+     "n": 52,
+     "ll": 0.6751,
+     "bias": -0.0587
+    },
+    {
+     "team": "LEV",
+     "n": 51,
+     "ll": 0.6839,
+     "bias": -0.0501
+    },
+    {
+     "team": "XLG",
+     "n": 69,
+     "ll": 0.6095,
+     "bias": -0.0494
+    },
+    {
+     "team": "G2",
+     "n": 80,
+     "ll": 0.6108,
+     "bias": -0.0469
+    },
+    {
+     "team": "NOVA",
+     "n": 52,
+     "ll": 0.7102,
+     "bias": -0.0416
+    },
+    {
+     "team": "TH",
+     "n": 63,
+     "ll": 0.6592,
+     "bias": -0.0402
+    },
+    {
+     "team": "KRX",
+     "n": 71,
+     "ll": 0.642,
+     "bias": -0.0398
+    },
+    {
+     "team": "T1",
+     "n": 60,
+     "ll": 0.6295,
+     "bias": -0.0271
+    },
+    {
+     "team": "AG",
+     "n": 53,
+     "ll": 0.6178,
+     "bias": -0.0174
+    },
+    {
+     "team": "EDG",
+     "n": 79,
+     "ll": 0.6019,
+     "bias": -0.0154
+    },
+    {
+     "team": "VIT",
+     "n": 50,
+     "ll": 0.6585,
+     "bias": -0.013
+    },
+    {
+     "team": "SEN",
+     "n": 56,
+     "ll": 0.589,
+     "bias": -0.0113
+    },
+    {
+     "team": "FPX",
+     "n": 55,
+     "ll": 0.664,
+     "bias": -0.0104
+    },
+    {
+     "team": "DRG",
+     "n": 54,
+     "ll": 0.6372,
+     "bias": -0.0086
+    },
+    {
+     "team": "BLG",
+     "n": 73,
+     "ll": 0.6872,
+     "bias": -0.0077
+    },
+    {
+     "team": "GX",
+     "n": 43,
+     "ll": 0.6505,
+     "bias": -0.0062
+    },
+    {
+     "team": "RRQ",
+     "n": 54,
+     "ll": 0.7021,
+     "bias": -0.0061
+    },
+    {
+     "team": "KC",
+     "n": 46,
+     "ll": 0.6528,
+     "bias": -0.0045
+    },
+    {
+     "team": "NAVI",
+     "n": 44,
+     "ll": 0.6436,
+     "bias": -0.0012
+    },
+    {
+     "team": "FUT",
+     "n": 47,
+     "ll": 0.7008,
+     "bias": -0.0002
+    },
+    {
+     "team": "GEN",
+     "n": 56,
+     "ll": 0.6946,
+     "bias": 0.0051
+    },
+    {
+     "team": "M8",
+     "n": 42,
+     "ll": 0.6653,
+     "bias": 0.0057
+    },
+    {
+     "team": "GE",
+     "n": 42,
+     "ll": 0.6461,
+     "bias": 0.006
+    },
+    {
+     "team": "TYL",
+     "n": 51,
+     "ll": 0.6353,
+     "bias": 0.0118
+    },
+    {
+     "team": "TEC",
+     "n": 53,
+     "ll": 0.6496,
+     "bias": 0.0393
+    },
+    {
+     "team": "DFM",
+     "n": 32,
+     "ll": 0.6021,
+     "bias": 0.0456
+    },
+    {
+     "team": "ZETA",
+     "n": 30,
+     "ll": 0.6111,
+     "bias": 0.0546
+    },
+    {
+     "team": "EG",
+     "n": 34,
+     "ll": 0.5599,
+     "bias": 0.06
+    },
+    {
+     "team": "KR\u00dc",
+     "n": 35,
+     "ll": 0.6629,
+     "bias": 0.0665
+    },
+    {
+     "team": "TE",
+     "n": 55,
+     "ll": 0.6436,
+     "bias": 0.0721
+    },
+    {
+     "team": "LOUD",
+     "n": 29,
+     "ll": 0.6854,
+     "bias": 0.0881
+    },
+    {
+     "team": "WOL",
+     "n": 60,
+     "ll": 0.6686,
+     "bias": 0.0941
+    },
+    {
+     "team": "JDG",
+     "n": 51,
+     "ll": 0.6681,
+     "bias": 0.1058
+    },
+    {
+     "team": "C9",
+     "n": 41,
+     "ll": 0.6226,
+     "bias": 0.1172
+    },
+    {
+     "team": "FUR",
+     "n": 33,
+     "ll": 0.4646,
+     "bias": 0.12
+    },
+    {
+     "team": "TS",
+     "n": 30,
+     "ll": 0.6145,
+     "bias": 0.1478
+    }
+   ],
+   "n_teams": 43,
+   "min_n": 25,
+   "max_abs_bias": 0.1478,
+   "mean_abs_bias": 0.0473
+  },
+  "roundbt": {
+   "teams": [
+    {
+     "team": "PRX",
+     "n": 86,
+     "ll": 0.6094,
+     "bias": -0.1086
+    },
+    {
+     "team": "NRG",
+     "n": 75,
+     "ll": 0.6321,
+     "bias": -0.0931
+    },
+    {
+     "team": "BBL",
+     "n": 53,
+     "ll": 0.6831,
+     "bias": -0.0806
+    },
+    {
+     "team": "FNC",
+     "n": 63,
+     "ll": 0.6233,
+     "bias": -0.0786
+    },
+    {
+     "team": "100T",
+     "n": 53,
+     "ll": 0.5677,
+     "bias": -0.076
+    },
+    {
+     "team": "NOVA",
+     "n": 52,
+     "ll": 0.7082,
+     "bias": -0.0727
+    },
+    {
+     "team": "TL",
+     "n": 60,
+     "ll": 0.6548,
+     "bias": -0.0681
+    },
+    {
+     "team": "NS",
+     "n": 54,
+     "ll": 0.7351,
+     "bias": -0.0653
+    },
+    {
+     "team": "MIBR",
+     "n": 52,
+     "ll": 0.6781,
+     "bias": -0.0537
+    },
+    {
+     "team": "G2",
+     "n": 80,
+     "ll": 0.6107,
+     "bias": -0.0524
+    },
+    {
+     "team": "LEV",
+     "n": 51,
+     "ll": 0.6854,
+     "bias": -0.0458
+    },
+    {
+     "team": "KRX",
+     "n": 71,
+     "ll": 0.6354,
+     "bias": -0.0454
+    },
+    {
+     "team": "XLG",
+     "n": 69,
+     "ll": 0.6196,
+     "bias": -0.0412
+    },
+    {
+     "team": "TH",
+     "n": 63,
+     "ll": 0.6625,
+     "bias": -0.0383
+    },
+    {
+     "team": "T1",
+     "n": 60,
+     "ll": 0.6309,
+     "bias": -0.0288
+    },
+    {
+     "team": "FPX",
+     "n": 55,
+     "ll": 0.6547,
+     "bias": -0.0134
+    },
+    {
+     "team": "AG",
+     "n": 53,
+     "ll": 0.623,
+     "bias": -0.0119
+    },
+    {
+     "team": "EDG",
+     "n": 79,
+     "ll": 0.6055,
+     "bias": -0.0118
+    },
+    {
+     "team": "SEN",
+     "n": 56,
+     "ll": 0.5856,
+     "bias": -0.009
+    },
+    {
+     "team": "DRG",
+     "n": 54,
+     "ll": 0.6344,
+     "bias": -0.0036
+    },
+    {
+     "team": "GX",
+     "n": 43,
+     "ll": 0.6508,
+     "bias": -0.0033
+    },
+    {
+     "team": "VIT",
+     "n": 50,
+     "ll": 0.657,
+     "bias": -0.0022
+    },
+    {
+     "team": "FUT",
+     "n": 47,
+     "ll": 0.6903,
+     "bias": -0.002
+    },
+    {
+     "team": "M8",
+     "n": 42,
+     "ll": 0.6628,
+     "bias": 0.0006
+    },
+    {
+     "team": "NAVI",
+     "n": 44,
+     "ll": 0.645,
+     "bias": 0.0007
+    },
+    {
+     "team": "RRQ",
+     "n": 54,
+     "ll": 0.7027,
+     "bias": 0.0019
+    },
+    {
+     "team": "BLG",
+     "n": 73,
+     "ll": 0.6873,
+     "bias": 0.003
+    },
+    {
+     "team": "GE",
+     "n": 42,
+     "ll": 0.6463,
+     "bias": 0.0067
+    },
+    {
+     "team": "GEN",
+     "n": 56,
+     "ll": 0.6925,
+     "bias": 0.0075
+    },
+    {
+     "team": "KC",
+     "n": 46,
+     "ll": 0.6515,
+     "bias": 0.0094
+    },
+    {
+     "team": "TYL",
+     "n": 51,
+     "ll": 0.6322,
+     "bias": 0.011
+    },
+    {
+     "team": "DFM",
+     "n": 32,
+     "ll": 0.6102,
+     "bias": 0.0397
+    },
+    {
+     "team": "TEC",
+     "n": 53,
+     "ll": 0.6482,
+     "bias": 0.0436
+    },
+    {
+     "team": "ZETA",
+     "n": 30,
+     "ll": 0.6084,
+     "bias": 0.0575
+    },
+    {
+     "team": "EG",
+     "n": 34,
+     "ll": 0.5572,
+     "bias": 0.0631
+    },
+    {
+     "team": "KR\u00dc",
+     "n": 35,
+     "ll": 0.6665,
+     "bias": 0.0738
+    },
+    {
+     "team": "TE",
+     "n": 55,
+     "ll": 0.6452,
+     "bias": 0.0862
+    },
+    {
+     "team": "LOUD",
+     "n": 29,
+     "ll": 0.6923,
+     "bias": 0.0885
+    },
+    {
+     "team": "JDG",
+     "n": 51,
+     "ll": 0.6713,
+     "bias": 0.0893
+    },
+    {
+     "team": "WOL",
+     "n": 60,
+     "ll": 0.6766,
+     "bias": 0.0946
+    },
+    {
+     "team": "FUR",
+     "n": 33,
+     "ll": 0.4563,
+     "bias": 0.1108
+    },
+    {
+     "team": "C9",
+     "n": 41,
+     "ll": 0.6162,
+     "bias": 0.1115
+    },
+    {
+     "team": "TS",
+     "n": 30,
+     "ll": 0.612,
+     "bias": 0.1515
+    }
+   ],
+   "n_teams": 43,
+   "min_n": 25,
+   "max_abs_bias": 0.1515,
+   "mean_abs_bias": 0.0478
+  }
+ },
+ "buckets": {
+  "buckets": [
+   {
+    "name": "year 2025",
+    "n": 674,
+    "ll": 0.6376,
+    "fav_acc": 0.617,
+    "ll_ref": 0.63796,
+    "delta_milli": 0.36
+   },
+   {
+    "name": "year 2026",
+    "n": 543,
+    "ll": 0.64832,
+    "fav_acc": 0.637,
+    "ll_ref": 0.64738,
+    "delta_milli": -0.94
+   },
+   {
+    "name": "format bo1",
+    "n": 55,
+    "ll": 0.65441,
+    "fav_acc": 0.618,
+    "ll_ref": 0.65327,
+    "delta_milli": -1.14
+   },
+   {
+    "name": "format bo3",
+    "n": 1074,
+    "ll": 0.64082,
+    "fav_acc": 0.626,
+    "ll_ref": 0.64095,
+    "delta_milli": 0.13
+   },
+   {
+    "name": "format bo5",
+    "n": 53,
+    "ll": 0.651,
+    "fav_acc": 0.604,
+    "ll_ref": 0.64835,
+    "delta_milli": -2.65
+   },
+   {
+    "name": "format bo5_gf",
+    "n": 35,
+    "ll": 0.6585,
+    "fav_acc": 0.686,
+    "ll_ref": 0.65258,
+    "delta_milli": -5.92
+   },
+   {
+    "name": "stage groups",
+    "n": 568,
+    "ll": 0.61005,
+    "fav_acc": 0.669,
+    "ll_ref": 0.61038,
+    "delta_milli": 0.33
+   },
+   {
+    "name": "stage playoffs",
+    "n": 541,
+    "ll": 0.6756,
+    "fav_acc": 0.58,
+    "ll_ref": 0.67447,
+    "delta_milli": -1.13
+   },
+   {
+    "name": "stage grand_final",
+    "n": 39,
+    "ll": 0.65968,
+    "fav_acc": 0.667,
+    "ll_ref": 0.65624,
+    "delta_milli": -3.44
+   },
+   {
+    "name": "international",
+    "n": 122,
+    "ll": 0.64659,
+    "fav_acc": 0.615,
+    "ll_ref": 0.64221,
+    "delta_milli": -4.38
+   },
+   {
+    "name": "domestic",
+    "n": 1095,
+    "ll": 0.64192,
+    "fav_acc": 0.627,
+    "ll_ref": 0.64216,
+    "delta_milli": 0.24
+   },
+   {
+    "name": "CN involved",
+    "n": 394,
+    "ll": 0.64302,
+    "fav_acc": 0.64,
+    "ll_ref": 0.6403,
+    "delta_milli": -2.72
+   },
+   {
+    "name": "cross-region",
+    "n": 194,
+    "ll": 0.64123,
+    "fav_acc": 0.639,
+    "ll_ref": 0.63812,
+    "delta_milli": -3.11
+   },
+   {
+    "name": "domestic Americas",
+    "n": 233,
+    "ll": 0.60187,
+    "fav_acc": 0.695,
+    "ll_ref": 0.60183,
+    "delta_milli": -0.04
+   },
+   {
+    "name": "domestic EMEA",
+    "n": 242,
+    "ll": 0.64706,
+    "fav_acc": 0.603,
+    "ll_ref": 0.64716,
+    "delta_milli": 0.1
+   },
+   {
+    "name": "domestic Pacific",
+    "n": 237,
+    "ll": 0.65871,
+    "fav_acc": 0.608,
+    "ll_ref": 0.65975,
+    "delta_milli": 1.04
+   },
+   {
+    "name": "domestic CN",
+    "n": 311,
+    "ll": 0.65738,
+    "fav_acc": 0.598,
+    "ll_ref": 0.65761,
+    "delta_milli": 0.23
+   },
+   {
+    "name": "close matchups (gap<1.5)",
+    "n": 1217,
+    "ll": 0.64238,
+    "fav_acc": 0.626,
+    "ll_ref": 0.64216,
+    "delta_milli": -0.22
+   },
+   {
+    "name": "post-break (rest>45d)",
+    "n": 130,
+    "ll": 0.64122,
+    "fav_acc": 0.608,
+    "ll_ref": 0.64343,
+    "delta_milli": 2.21
+   },
+   {
+    "name": "elite vs floor",
+    "n": 29,
+    "ll": 0.4681,
+    "fav_acc": 0.828,
+    "ll_ref": 0.4718,
+    "delta_milli": 3.7
+   },
+   {
+    "name": "form shift",
+    "n": 168,
+    "ll": 0.65395,
+    "fav_acc": 0.619,
+    "ll_ref": 0.6522,
+    "delta_milli": -1.75
+   },
+   {
+    "name": "EWC-class events",
+    "n": 115,
+    "ll": 0.68861,
+    "fav_acc": 0.609,
+    "ll_ref": 0.68633,
+    "delta_milli": -2.28
+   },
+   {
+    "name": "favorite [0.5,0.6)",
+    "n": 673,
+    "ll": 0.68312,
+    "fav_acc": 0.557,
+    "ll_ref": 0.68357,
+    "delta_milli": 0.45
+   },
+   {
+    "name": "favorite [0.6,0.7)",
+    "n": 373,
+    "ll": 0.64964,
+    "fav_acc": 0.654,
+    "ll_ref": 0.64973,
+    "delta_milli": 0.09
+   },
+   {
+    "name": "favorite [0.7,0.8)",
+    "n": 141,
+    "ll": 0.47229,
+    "fav_acc": 0.83,
+    "ll_ref": 0.46928,
+    "delta_milli": -3.01
+   },
+   {
+    "name": "favorite [0.8,0.9)",
+    "n": 26,
+    "ll": 0.44521,
+    "fav_acc": 0.846,
+    "ll_ref": 0.43245,
+    "delta_milli": -12.76
+   }
+  ],
+  "pending": [
+   "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+  ]
+ },
+ "effective_sample": {
+  "ref_day": "2025-01-01",
+  "k_eff_fisher_median": 1.25,
+  "k_eff_fisher_teams": [
+   {
+    "team": "MIBR",
+    "ratio": 1.37
+   },
+   {
+    "team": "MKOI",
+    "ratio": 1.34
+   },
+   {
+    "team": "TL",
+    "ratio": 1.34
+   },
+   {
+    "team": "KC",
+    "ratio": 1.33
+   },
+   {
+    "team": "NAVI",
+    "ratio": 1.31
+   },
+   {
+    "team": "EG",
+    "ratio": 1.31
+   },
+   {
+    "team": "FUR",
+    "ratio": 1.3
+   },
+   {
+    "team": "NRG",
+    "ratio": 1.3
+   },
+   {
+    "team": "LOUD",
+    "ratio": 1.3
+   },
+   {
+    "team": "VIT",
+    "ratio": 1.29
+   },
+   {
+    "team": "100T",
+    "ratio": 1.29
+   },
+   {
+    "team": "LEV",
+    "ratio": 1.28
+   },
+   {
+    "team": "DRG",
+    "ratio": 1.27
+   },
+   {
+    "team": "TS",
+    "ratio": 1.27
+   },
+   {
+    "team": "SEN",
+    "ratio": 1.26
+   },
+   {
+    "team": "FUT",
+    "ratio": 1.26
+   },
+   {
+    "team": "FNC",
+    "ratio": 1.25
+   },
+   {
+    "team": "TH",
+    "ratio": 1.25
+   },
+   {
+    "team": "KR\u00dc",
+    "ratio": 1.25
+   },
+   {
+    "team": "G2",
+    "ratio": 1.24
+   },
+   {
+    "team": "EDG",
+    "ratio": 1.22
+   },
+   {
+    "team": "GEN",
+    "ratio": 1.21
+   },
+   {
+    "team": "FPX",
+    "ratio": 1.21
+   },
+   {
+    "team": "T1",
+    "ratio": 1.18
+   },
+   {
+    "team": "ZETA",
+    "ratio": 1.17
+   },
+   {
+    "team": "RRQ",
+    "ratio": 1.17
+   },
+   {
+    "team": "C9",
+    "ratio": 1.17
+   },
+   {
+    "team": "TLN",
+    "ratio": 1.15
+   },
+   {
+    "team": "BLG",
+    "ratio": 1.15
+   },
+   {
+    "team": "PRX",
+    "ratio": 1.14
+   },
+   {
+    "team": "TE",
+    "ratio": 1.13
+   },
+   {
+    "team": "DFM",
+    "ratio": 1.08
+   },
+   {
+    "team": "GE",
+    "ratio": 1.0
+   }
+  ],
+  "k_eff_cluster_boot_median": 0.8,
+  "boot_B": 200,
+  "boot_rng": "default_rng([20260728, 774411]) \u2014 derived from crn bootstrap seed (preregistered)",
+  "per_map_info_ratio_mean": 1.44,
+  "per_map_info_ratio_median": 1.42,
+  "order_of_magnitude_claim": "FALSIFIED (k_eff < 7)",
+  "round_referee_mde_first_order": {
+   "within_milli": 1.98,
+   "cross_milli": 6.59,
+   "caveat": "first-order 1/sqrt(k) scaling of the series MDE using the cluster-bootstrap k; fit-side information gain, assumed to transfer to evaluation variance; covered subset only (83.7% of holdout series)"
+  }
+ }
+}

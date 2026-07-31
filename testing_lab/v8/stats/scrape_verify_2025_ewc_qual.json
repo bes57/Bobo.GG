@@ -1,0 +1,1300 @@
+{
+ "488003": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488003/100-thieves-vs-furia-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216920": [
+    "100T",
+    "13-2"
+   ],
+   "216921": [
+    "100T",
+    "13-7"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "FUR"
+  ]
+ },
+ "488004": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488004/leviat-n-vs-nrg-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216923": [
+    "NRG",
+    "15-13"
+   ],
+   "216924": [
+    "NRG",
+    "13-8"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LEV",
+   "NRG"
+  ]
+ },
+ "488005": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488005/cloud9-vs-2game-esports-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216926": [
+    "C9",
+    "13-5"
+   ],
+   "216927": [
+    "C9",
+    "14-12"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "2G",
+   "C9"
+  ]
+ },
+ "488007": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488007/100-thieves-vs-nrg-esports-world-cup-2025-ubsf",
+  "maps": {
+   "216932": [
+    "NRG",
+    "13-7"
+   ],
+   "216933": [
+    "100T",
+    "13-9"
+   ],
+   "216934": [
+    "100T",
+    "13-9"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-1"
+  ],
+  "match_name": "Americas Qualifier: Upper Semifinals",
+  "utc_ts": "2025-05-17 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "NRG"
+  ]
+ },
+ "488008": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488008/kr-esports-vs-cloud9-esports-world-cup-2025-ubsf",
+  "maps": {
+   "216935": [
+    "KR\u00dc",
+    "13-9"
+   ],
+   "216936": [
+    "C9",
+    "13-7"
+   ],
+   "216937": [
+    "C9",
+    "13-5"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-1"
+  ],
+  "match_name": "Americas Qualifier: Upper Semifinals",
+  "utc_ts": "2025-05-17 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "KR\u00dc"
+  ]
+ },
+ "488010": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488010/furia-vs-leviat-n-esports-world-cup-2025-lr1",
+  "maps": {
+   "216941": [
+    "LEV",
+    "13-7"
+   ],
+   "216942": [
+    "LEV",
+    "13-11"
+   ]
+  },
+  "series": [
+   "LEV",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Lower Round 1",
+  "utc_ts": "2025-05-17 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "LEV"
+  ]
+ },
+ "488009": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488009/100-thieves-vs-cloud9-esports-world-cup-2025-ubf",
+  "maps": {
+   "216938": [
+    "100T",
+    "13-9"
+   ],
+   "216939": [
+    "100T",
+    "13-8"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Upper Final",
+  "utc_ts": "2025-05-18 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "C9"
+  ]
+ },
+ "488012": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488012/kr-esports-vs-leviat-n-esports-world-cup-2025-lr2",
+  "maps": {
+   "216947": [
+    "KR\u00dc",
+    "14-12"
+   ],
+   "216948": [
+    "KR\u00dc",
+    "13-5"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Lower Round 2",
+  "utc_ts": "2025-05-18 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "LEV"
+  ]
+ },
+ "488013": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488013/nrg-vs-2game-esports-esports-world-cup-2025-lr2",
+  "maps": {
+   "216950": [
+    "NRG",
+    "13-4"
+   ],
+   "216951": [
+    "NRG",
+    "13-7"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Lower Round 2",
+  "utc_ts": "2025-05-18 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "2G",
+   "NRG"
+  ]
+ },
+ "488014": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488014/kr-esports-vs-nrg-esports-world-cup-2025-lr3",
+  "maps": {
+   "216953": [
+    "NRG",
+    "13-10"
+   ],
+   "216954": [
+    "NRG",
+    "13-4"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Lower Round 3",
+  "utc_ts": "2025-05-19 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "NRG"
+  ]
+ },
+ "488015": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488015/cloud9-vs-nrg-esports-world-cup-2025-lbf",
+  "maps": {
+   "216956": [
+    "NRG",
+    "13-9"
+   ],
+   "216957": [
+    "NRG",
+    "13-9"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Lower Final",
+  "utc_ts": "2025-05-20 21:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "NRG"
+  ]
+ },
+ "488016": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488016/mibr-vs-nrg-esports-world-cup-2025-opening",
+  "maps": {
+   "216959": [
+    "NRG",
+    "13-10"
+   ],
+   "216960": [
+    "NRG",
+    "15-13"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Opening",
+  "utc_ts": "2025-05-23 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "MIBR",
+   "NRG"
+  ]
+ },
+ "488017": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488017/evil-geniuses-vs-100-thieves-esports-world-cup-2025-opening",
+  "maps": {
+   "216962": [
+    "100T",
+    "15-13"
+   ],
+   "216963": [
+    "100T",
+    "13-5"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-0"
+  ],
+  "match_name": "Americas Qualifier: Opening",
+  "utc_ts": "2025-05-23 17:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "EG"
+  ]
+ },
+ "488018": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488018/nrg-vs-100-thieves-esports-world-cup-2025-winners",
+  "maps": {
+   "216965": [
+    "NRG",
+    "13-5"
+   ],
+   "216966": [
+    "100T",
+    "13-11"
+   ],
+   "216967": [
+    "NRG",
+    "13-11"
+   ],
+   "216968": [
+    "NRG",
+    "13-7"
+   ]
+  },
+  "series": [
+   "NRG",
+   "3-1"
+  ],
+  "match_name": "Americas Qualifier: Winner's",
+  "utc_ts": "2025-05-24 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "NRG"
+  ]
+ },
+ "488019": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488019/mibr-vs-evil-geniuses-esports-world-cup-2025-elim",
+  "maps": {
+   "216970": [
+    "EG",
+    "13-5"
+   ],
+   "216971": [
+    "MIBR",
+    "14-12"
+   ],
+   "216972": [
+    "MIBR",
+    "13-9"
+   ]
+  },
+  "series": [
+   "MIBR",
+   "2-1"
+  ],
+  "match_name": "Americas Qualifier: Elimination",
+  "utc_ts": "2025-05-24 19:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "EG",
+   "MIBR"
+  ]
+ },
+ "488020": {
+  "event_id": "2025_ewc_qual",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/488020/100-thieves-vs-mibr-esports-world-cup-2025-decider",
+  "maps": {
+   "216973": [
+    "MIBR",
+    "13-9"
+   ],
+   "216974": [
+    "MIBR",
+    "13-4"
+   ],
+   "216975": [
+    "100T",
+    "13-3"
+   ],
+   "216976": [
+    "100T",
+    "13-10"
+   ],
+   "216977": [
+    "100T",
+    "13-9"
+   ]
+  },
+  "series": [
+   "100T",
+   "3-2"
+  ],
+  "match_name": "Americas Qualifier: Decider",
+  "utc_ts": "2025-05-25 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "MIBR"
+  ]
+ },
+ "487985": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487985/fut-esports-vs-apeks-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216862": [
+    "FUT",
+    "13-11"
+   ],
+   "216863": [
+    "FUT",
+    "13-10"
+   ]
+  },
+  "series": [
+   "FUT",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "APK",
+   "FUT"
+  ]
+ },
+ "487986": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487986/team-vitality-vs-giantx-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216865": [
+    "VIT",
+    "13-7"
+   ],
+   "216866": [
+    "GX",
+    "13-8"
+   ],
+   "216867": [
+    "VIT",
+    "13-3"
+   ]
+  },
+  "series": [
+   "VIT",
+   "2-1"
+  ],
+  "match_name": "EMEA Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GX",
+   "VIT"
+  ]
+ },
+ "487987": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487987/natus-vincere-vs-gentle-mates-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216868": [
+    "NAVI",
+    "13-8"
+   ],
+   "216869": [
+    "NAVI",
+    "13-11"
+   ]
+  },
+  "series": [
+   "NAVI",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "M8",
+   "NAVI"
+  ]
+ },
+ "487988": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487988/karmine-corp-vs-koi-esports-world-cup-2025-ubqf",
+  "maps": {
+   "216871": [
+    "KC",
+    "17-15"
+   ],
+   "216872": [
+    "KC",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KC",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Upper Quarterfinals",
+  "utc_ts": "2025-05-16 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KC",
+   "MKOI"
+  ]
+ },
+ "487989": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487989/fut-esports-vs-team-vitality-esports-world-cup-2025-ubsf",
+  "maps": {
+   "216874": [
+    "FUT",
+    "13-6"
+   ],
+   "216875": [
+    "FUT",
+    "13-6"
+   ]
+  },
+  "series": [
+   "FUT",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Upper Semifinals",
+  "utc_ts": "2025-05-17 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "VIT"
+  ]
+ },
+ "487990": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487990/natus-vincere-vs-karmine-corp-esports-world-cup-2025-ubsf",
+  "maps": {
+   "216877": [
+    "KC",
+    "13-7"
+   ],
+   "216878": [
+    "KC",
+    "16-14"
+   ]
+  },
+  "series": [
+   "KC",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Upper Semifinals",
+  "utc_ts": "2025-05-17 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KC",
+   "NAVI"
+  ]
+ },
+ "487992": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487992/apeks-vs-giantx-esports-world-cup-2025-lr1",
+  "maps": {
+   "216883": [
+    "GX",
+    "13-8"
+   ],
+   "216884": [
+    "GX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "GX",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Lower Round 1",
+  "utc_ts": "2025-05-17 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "APK",
+   "GX"
+  ]
+ },
+ "487993": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487993/gentle-mates-vs-koi-esports-world-cup-2025-lr1",
+  "maps": {
+   "216886": [
+    "M8",
+    "13-8"
+   ],
+   "216887": [
+    "M8",
+    "13-10"
+   ]
+  },
+  "series": [
+   "M8",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Lower Round 1",
+  "utc_ts": "2025-05-17 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "M8",
+   "MKOI"
+  ]
+ },
+ "487991": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487991/fut-esports-vs-karmine-corp-esports-world-cup-2025-ubf",
+  "maps": {
+   "216880": [
+    "KC",
+    "13-11"
+   ],
+   "216881": [
+    "FUT",
+    "13-9"
+   ],
+   "216882": [
+    "KC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "KC",
+   "2-1"
+  ],
+  "match_name": "EMEA Qualifier: Upper Final",
+  "utc_ts": "2025-05-18 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "KC"
+  ]
+ },
+ "487994": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487994/natus-vincere-vs-giantx-esports-world-cup-2025-lr2",
+  "maps": {
+   "216889": [
+    "NAVI",
+    "13-7"
+   ],
+   "216890": [
+    "NAVI",
+    "13-8"
+   ]
+  },
+  "series": [
+   "NAVI",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Lower Round 2",
+  "utc_ts": "2025-05-18 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GX",
+   "NAVI"
+  ]
+ },
+ "487995": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487995/team-vitality-vs-gentle-mates-esports-world-cup-2025-lr2",
+  "maps": {
+   "216892": [
+    "M8",
+    "20-18"
+   ],
+   "216893": [
+    "VIT",
+    "13-6"
+   ],
+   "216894": [
+    "M8",
+    "13-5"
+   ]
+  },
+  "series": [
+   "M8",
+   "2-1"
+  ],
+  "match_name": "EMEA Qualifier: Lower Round 2",
+  "utc_ts": "2025-05-18 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "M8",
+   "VIT"
+  ]
+ },
+ "487996": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487996/natus-vincere-vs-gentle-mates-esports-world-cup-2025-lr3",
+  "maps": {
+   "216895": [
+    "M8",
+    "13-10"
+   ],
+   "216896": [
+    "NAVI",
+    "13-10"
+   ],
+   "216897": [
+    "NAVI",
+    "13-4"
+   ]
+  },
+  "series": [
+   "NAVI",
+   "2-1"
+  ],
+  "match_name": "EMEA Qualifier: Lower Round 3",
+  "utc_ts": "2025-05-19 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "M8",
+   "NAVI"
+  ]
+ },
+ "487997": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487997/fut-esports-vs-natus-vincere-esports-world-cup-2025-lbf",
+  "maps": {
+   "216898": [
+    "FUT",
+    "15-13"
+   ],
+   "216899": [
+    "FUT",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FUT",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Lower Final",
+  "utc_ts": "2025-05-20 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "NAVI"
+  ]
+ },
+ "487998": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487998/team-liquid-vs-fut-esports-esports-world-cup-2025-opening-p2",
+  "maps": {
+   "216901": [
+    "TL",
+    "13-6"
+   ],
+   "216902": [
+    "TL",
+    "13-9"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Opening (Phase 2)",
+  "utc_ts": "2025-05-23 06:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "TL"
+  ]
+ },
+ "487999": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/487999/bbl-esports-vs-karmine-corp-esports-world-cup-2025-opening-p2",
+  "maps": {
+   "216904": [
+    "BBL",
+    "13-9"
+   ],
+   "216905": [
+    "BBL",
+    "13-6"
+   ]
+  },
+  "series": [
+   "BBL",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Opening (Phase 2)",
+  "utc_ts": "2025-05-23 08:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "KC"
+  ]
+ },
+ "488000": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/488000/team-liquid-vs-bbl-esports-esports-world-cup-2025-winners-p2",
+  "maps": {
+   "216907": [
+    "BBL",
+    "13-11"
+   ],
+   "216908": [
+    "TL",
+    "13-6"
+   ],
+   "216909": [
+    "BBL",
+    "13-11"
+   ],
+   "216910": [
+    "BBL",
+    "13-11"
+   ]
+  },
+  "series": [
+   "BBL",
+   "3-1"
+  ],
+  "match_name": "EMEA Qualifier: Winner's (Phase 2)",
+  "utc_ts": "2025-05-24 06:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "TL"
+  ]
+ },
+ "488001": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/488001/fut-esports-vs-karmine-corp-esports-world-cup-2025-elim-p2",
+  "maps": {
+   "216912": [
+    "KC",
+    "13-10"
+   ],
+   "216913": [
+    "KC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "KC",
+   "2-0"
+  ],
+  "match_name": "EMEA Qualifier: Elimination (Phase 2)",
+  "utc_ts": "2025-05-24 10:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "KC"
+  ]
+ },
+ "488002": {
+  "event_id": "2025_ewc_qual",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/488002/team-liquid-vs-karmine-corp-esports-world-cup-2025-decider-p2",
+  "maps": {
+   "216915": [
+    "TL",
+    "13-7"
+   ],
+   "216916": [
+    "KC",
+    "13-5"
+   ],
+   "216917": [
+    "KC",
+    "13-10"
+   ],
+   "216918": [
+    "KC",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KC",
+   "3-1"
+  ],
+  "match_name": "EMEA Qualifier: Decider (Phase 2)",
+  "utc_ts": "2025-05-25 06:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KC",
+   "TL"
+  ]
+ },
+ "489422": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489422/paper-rex-vs-talon-esports-world-cup-2025-pacific-x-acl-qualifier-d1",
+  "maps": {
+   "217160": [
+    "PRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "PRX",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 1",
+  "utc_ts": "2025-05-22 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "TLN"
+  ]
+ },
+ "489423": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489423/t1-vs-global-esports-esports-world-cup-2025-pacific-x-acl-qualifier-d1",
+  "maps": {
+   "217161": [
+    "GE",
+    "13-7"
+   ]
+  },
+  "series": [
+   "GE",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 1",
+  "utc_ts": "2025-05-22 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GE",
+   "T1"
+  ]
+ },
+ "489424": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489424/paper-rex-vs-t1-esports-world-cup-2025-pacific-x-acl-qualifier-d1",
+  "maps": {
+   "217162": [
+    "PRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "PRX",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 1",
+  "utc_ts": "2025-05-22 03:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "T1"
+  ]
+ },
+ "489425": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489425/talon-vs-global-esports-esports-world-cup-2025-pacific-x-acl-qualifier-d1",
+  "maps": {
+   "217163": [
+    "GE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "GE",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 1",
+  "utc_ts": "2025-05-22 03:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "GE",
+   "TLN"
+  ]
+ },
+ "489426": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489426/paper-rex-vs-global-esports-esports-world-cup-2025-pacific-x-acl-qualifier-d1",
+  "maps": {
+   "217164": [
+    "PRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "PRX",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 1",
+  "utc_ts": "2025-05-22 04:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "GE",
+   "PRX"
+  ]
+ },
+ "489427": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489427/talon-vs-t1-esports-world-cup-2025-pacific-x-acl-qualifier-d1",
+  "maps": {
+   "217165": [
+    "T1",
+    "13-7"
+   ]
+  },
+  "series": [
+   "T1",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 1",
+  "utc_ts": "2025-05-22 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "T1",
+   "TLN"
+  ]
+ },
+ "489428": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489428/drx-vs-boom-esports-esports-world-cup-2025-pacific-x-acl-qualifier-d2",
+  "maps": {
+   "217166": [
+    "KRX",
+    "14-12"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 2",
+  "utc_ts": "2025-05-23 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BME",
+   "KRX"
+  ]
+ },
+ "489429": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489429/nongshim-redforce-vs-team-secret-esports-world-cup-2025-pacific-x-acl-qualifier-d2",
+  "maps": {
+   "217167": [
+    "TS",
+    "13-9"
+   ]
+  },
+  "series": [
+   "TS",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 2",
+  "utc_ts": "2025-05-23 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NS",
+   "TS"
+  ]
+ },
+ "489430": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489430/drx-vs-nongshim-redforce-esports-world-cup-2025-pacific-x-acl-qualifier-d2",
+  "maps": {
+   "217168": [
+    "NS",
+    "13-11"
+   ]
+  },
+  "series": [
+   "NS",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 2",
+  "utc_ts": "2025-05-23 03:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "NS"
+  ]
+ },
+ "489431": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489431/boom-esports-vs-team-secret-esports-world-cup-2025-pacific-x-acl-qualifier-d2",
+  "maps": {
+   "217169": [
+    "TS",
+    "13-11"
+   ]
+  },
+  "series": [
+   "TS",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 2",
+  "utc_ts": "2025-05-23 03:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "BME",
+   "TS"
+  ]
+ },
+ "489432": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489432/drx-vs-team-secret-esports-world-cup-2025-pacific-x-acl-qualifier-d2",
+  "maps": {
+   "217170": [
+    "KRX",
+    "13-4"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 2",
+  "utc_ts": "2025-05-23 04:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "TS"
+  ]
+ },
+ "489433": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489433/boom-esports-vs-nongshim-redforce-esports-world-cup-2025-pacific-x-acl-qualifier-d2",
+  "maps": {
+   "217171": [
+    "BME",
+    "13-6"
+   ]
+  },
+  "series": [
+   "BME",
+   "1-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Day 2",
+  "utc_ts": "2025-05-23 04:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "BME",
+   "NS"
+  ]
+ },
+ "489434": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489434/paper-rex-vs-team-secret-esports-world-cup-2025-pacific-x-acl-qualifier-sf",
+  "maps": {
+   "217172": [
+    "PRX",
+    "13-5"
+   ],
+   "217173": [
+    "PRX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Semifinals",
+  "utc_ts": "2025-05-24 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "TS"
+  ]
+ },
+ "489435": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489435/drx-vs-global-esports-esports-world-cup-2025-pacific-x-acl-qualifier-sf",
+  "maps": {
+   "217175": [
+    "KRX",
+    "13-10"
+   ],
+   "217176": [
+    "KRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Semifinals",
+  "utc_ts": "2025-05-24 04:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "GE",
+   "KRX"
+  ]
+ },
+ "489436": {
+  "event_id": "2025_ewc_qual",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/489436/paper-rex-vs-drx-esports-world-cup-2025-pacific-x-acl-qualifier-gf",
+  "maps": {
+   "217178": [
+    "KRX",
+    "13-8"
+   ],
+   "217179": [
+    "PRX",
+    "13-7"
+   ],
+   "217180": [
+    "PRX",
+    "13-11"
+   ],
+   "217181": [
+    "PRX",
+    "13-6"
+   ]
+  },
+  "series": [
+   "PRX",
+   "3-1"
+  ],
+  "match_name": "Pacific X Asian Champions League Qualifier: Grand Final",
+  "utc_ts": "2025-05-25 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "PRX"
+  ]
+ }
+}

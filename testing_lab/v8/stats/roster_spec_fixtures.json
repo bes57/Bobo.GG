@@ -1,0 +1,351 @@
+{
+ "written_by": "agent:roster-g (SPEC RUN)",
+ "preregistered": "preregister.roster.md ADDENDUM 4 (2026-07-29 01:37)",
+ "order": "fixtures ran BEFORE any train fitting (logs/roster.log)",
+ "assertions": [
+  {
+   "name": "F2 p1w3: zero boundaries",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F2 p1w5: zero boundaries",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F2 p1w8: zero boundaries",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F2 p3w5: frozen o flags exactly the one sub game",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "F2 p2: zero confirmed/open boundaries at corpus end",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F2 p2: provisional ACTIVE between dev and revert (knowable state)",
+   "expected": "[(5, True)]",
+   "got": "[(5, True)]",
+   "pass": true
+  },
+  {
+   "name": "F2 p1w5 mini-solve: max|dR| before/during/after == 0.0 exactly",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F2 p2 mini-solve: identical for D <= dev_date",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F2 p2 mini-solve: FINAL timeline identical (D > revert_date)",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F2 p2 mini-solve: provisional window shows the designed effect",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w3: exactly one detection",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w3: boundary index j == 5 (first new-five match)",
+   "expected": "5",
+   "got": "5",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w3: detected at match index 6, never earlier",
+   "expected": "'2024-02-15'",
+   "got": "'2024-02-15'",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w3: k == 3",
+   "expected": "3",
+   "got": "3",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w3: exactly one final boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: exactly one detection",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: boundary index j == 5 (first new-five match)",
+   "expected": "5",
+   "got": "5",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: detected at match index 7, never earlier",
+   "expected": "'2024-02-22'",
+   "got": "'2024-02-22'",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: k == 3",
+   "expected": "3",
+   "got": "3",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: exactly one final boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w8: exactly one detection",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w8: boundary index j == 5 (first new-five match)",
+   "expected": "5",
+   "got": "5",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w8: detected at match index 8, never earlier",
+   "expected": "'2024-03-01'",
+   "got": "'2024-03-01'",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w8: k == 3",
+   "expected": "3",
+   "got": "3",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w8: exactly one final boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "F3 p2: one confirmed boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "F3 p2: provisional (not confirmed) as of the day after the dev",
+   "expected": "[(5, True)]",
+   "got": "[(5, True)]",
+   "pass": true
+  },
+  {
+   "name": "F3 p2: confirmed once 3 non-reverting matches passed",
+   "expected": "[(5, False)]",
+   "got": "[(5, False)]",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: new-phase games o==1 (not penalized)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5: per-game n counts from the boundary (0 for the first)",
+   "expected": "[0, 1, 2, 3, 4, 5, 6]",
+   "got": "[0, 1, 2, 3, 4, 5, 6]",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5 mini-solve: ALL teams identical through detection date (no peeking)",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F3 p1w5 mini-solve: featured team moves after detection",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "F1 data: marved fielded in m706350 (2026-07-16)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "F1 data: johnqt back in m706360 (2026-07-25)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w3: no boundary at the marved match",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w3: zero boundaries in the case window (>= 2026-05-01)",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w5: no boundary at the marved match",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w5: zero boundaries in the case window (>= 2026-05-01)",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p3w5 (same window detector): no M-shift in window",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w5: marved game IS a deviation (o=0.8)",
+   "expected": "0.8",
+   "got": "0.8",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w8: no boundary at the marved match",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p1w8: zero boundaries in the case window (>= 2026-05-01)",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p2: zero surviving boundaries in window",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p2: provisional boundary LIVE between dev and reversion",
+   "expected": "[(99, True)]",
+   "got": "[(99, True)]",
+   "pass": true
+  },
+  {
+   "name": "F1 p2: retracted once the reversion is visible",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F1 p2 solve: SEN identical to the no-boundary run BEFORE the dev",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F1 p2 solve: provisional window moved SEN (designed behavior, max 0.0266)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "F1 p2 root-cause (i): post-retraction classifier boundaries identical",
+   "expected": "[(4, 4, False), (8, 4, False), (13, 3, False), (44, 3, False), (80, 2, False), (87, 3, False)]",
+   "got": "[(4, 4, False), (8, 4, False), (13, 3, False), (44, 3, False), (80, 2, False), (87, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "F1 p2 root-cause (i): post-retraction weight multipliers identical",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F1 p2 root-cause (ii): residue vanishes EXACTLY with the region-prior recursion off (diagnostic config, not v6)",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "F4 tier map: no csv-vct event matches the ewc pattern",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "F4 sanity: ewc_class deviation rate exceeds vct (P1-W5)",
+   "expected": "True",
+   "got": "True {'vct': 5.4, 'ewc_class': 14.08}",
+   "pass": true
+  },
+  {
+   "name": "F4: misclassification rule exposed with at least one shippable policy remaining",
+   "expected": "True",
+   "got": "True {'p1w3c0': True, 'p1w3c3': True, 'p1w3c5': False, 'p1w5c0': True, 'p1w5c3': True, 'p1w5c5': False, 'p1w8c0': True, 'p1w8c3': True, 'p1w8c5': False, 'p2m3c0': True, 'p2m3c3': True, 'p2m3c5': False, 'p3w5': False}",
+   "pass": true
+  },
+  {
+   "name": "NESTING (spec 3.5): EngineSpec at a=s=0 bit-identical to plain v6 (sha256 rdiff + sha256 stacked daily ratings) and <=1e-12 vs stored baseline p_all",
+   "expected": "sha equal x2, <=1e-12",
+   "got": "rdiff_sha_eq=True daily_sha_eq=True max_dp=0.00e+00",
+   "pass": true
+  }
+ ],
+ "f1_sen_p2_probe": {
+  "config": "P2 m=3 c=3, a=2, tau=5, s=0 (probe)",
+  "max_dr_pre": 0.0,
+  "max_dr_provisional_window": 0.026617058005002137,
+  "max_dr_after_retraction_v6prior": 0.00034738697264691254,
+  "max_dr_after_retraction_regionprior_off": 0.0
+ },
+ "P2_DECISION": {
+  "status": "NOT RUN (as a scoring/fitting policy)",
+  "reason": "The spec requires a retracted P2 boundary to leave a final rating timeline IDENTICAL to the no-boundary run. v6's region_prior_ridge (1.5) seeds each day's region prior with the PREVIOUS day's solved ratings, so the provisional week's solves leave a residue in the prior chain after retraction \u2014 measured max 3.47e-04 rating points on the SEN probe. Root cause proven: classifier state and weight multipliers are bit-identical post-retraction, and the residue is exactly 0.0 with the recursion disabled. Exact P2 semantics would need a full-chain re-solve per solve day (O(days^2)); per spec \u00a72.5, P2 is NOT RUN rather than run wrong. P2 classifier fixtures + census remain published (classifier-only).",
+  "classifier_fixtures": "PASSED",
+  "census": "included"
+ },
+ "status": "PASSED",
+ "n_pass": 54,
+ "n_fail": 0,
+ "nesting_checksums": {
+  "rdiff_sha256": "da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14",
+  "daily_sha256": "47f09871bfbb494a2d1ad2a6f3810d094a5c6e021a317aa47ae79d915a709f37"
+ }
+}

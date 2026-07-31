@@ -1,0 +1,57 @@
+{
+ "mode_i_restricted": {
+  "n_overlap": 3466,
+  "n_mismatch": 0,
+  "mismatches_first20": [],
+  "theirs_nan_rows": 73,
+  "nan_convention": "their NaN (no prior match) compared as 0 per spec '0 if ... no prior match'"
+ },
+ "mode_ii_full_corpus": {
+  "n_overlap_rows_differing": 779,
+  "explanation": "corpus-addition matches interleave org histories (expected, preregistered)",
+  "examples_first10": [
+   [
+    247100,
+    "NAVI"
+   ],
+   [
+    247086,
+    "FPX"
+   ],
+   [
+    247102,
+    "NAVI"
+   ],
+   [
+    247093,
+    "ZETA"
+   ],
+   [
+    247094,
+    "BLG"
+   ],
+   [
+    247075,
+    "KR\u00dc"
+   ],
+   [
+    247076,
+    "EDG"
+   ],
+   [
+    247076,
+    "GIA"
+   ],
+   [
+    247095,
+    "BLG"
+   ],
+   [
+    247077,
+    "EDG"
+   ]
+  ]
+ },
+ "full_rows": 4148,
+ "orgs": 85
+}

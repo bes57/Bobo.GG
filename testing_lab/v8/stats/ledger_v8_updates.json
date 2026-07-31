@@ -1,0 +1,412 @@
+{
+ "written_by": "agent:page (Wave 3), 2026-07-28",
+ "amended_headline": [
+  "v6 stands; no stack cleared the gate (compose_gate.json) \u2014 co-signed by the adversary",
+  "CORRECTION over Phase 0 prose: sym_6, sym_8, surprise_12_20, boxexp_c3 WERE distinguishable-as-losses under the program-standard 5.889m floor; sym_20 and consist_16_10 remain unresolved",
+  "Demoted to noise-floor leads by adversarial review: 3e stand-in shrink's EWC bucket; event-class fade's subpop positivity; 5d's 7.4-vs-24.8 half-life contrast; compose S1's gated gain",
+  "ONE surviving lead: H3 cold-start (<10 prior maps) +71.7m (n=39, floor 32.9m, drop-5% +53.13m, jackknife +66.02m) \u2014 4 events; parent model loses overall",
+  "THE HOLDOUT IS SPENT: 398 recorded holdout numbers; future train-only claims on this frame are unfalsifiable"
+ ],
+ "power_annotation_rule": "a ledger entry bars re-testing only with a power annotation attached; UNRESOLVED entries are re-openable by design (new data, variance reduction, or a bigger claimed effect) \u2014 agent:power, phase0 \u00a74",
+ "do_not_retest_additions": [
+  {
+   "idea": "H1: bounded margins censor dominant teams (Tobit/censoring likelihood)",
+   "kill": {
+    "cap_share": 0.00194,
+    "cap_ratio_Q4_over_mid": 0.995,
+    "caps_total": 12,
+    "games": 5140,
+    "tobit_dll_milli": -0.462
+   },
+   "evidence": [
+    "stats/h1_censor_diag.json",
+    "stats/h1_tobit.json"
+   ],
+   "note": "premise empirically false (no pile-up at the cap; ratio \u22481 vs preregistered \u22652); Tobit inside floor, negative, elite bias unmoved"
+  },
+  {
+   "idea": "H1 corollary: round-level evaluation as a power play",
+   "kill": {
+    "k_eff_fisher_median": 1.25,
+    "k_eff_cluster_boot": 0.8
+   },
+   "evidence": [
+    "stats/h1_roundbt.json"
+   ],
+   "note": "rounds within a match are correlated; nominal binomial information does not survive match-level resampling"
+  },
+  {
+   "idea": "H2: per-team bias explained by opponent-graph connectivity",
+   "kill": {
+    "spearman_absbias_eig": -0.0766,
+    "ci": [
+     -0.4211,
+     0.2814
+    ]
+   },
+   "evidence": [
+    "stats/h2_centrality.json"
+   ],
+   "note": "|bias| ~ centrality is null; signed correlations are composition (elite travel, floor stays home); gate stopped E2/E3"
+  },
+  {
+   "idea": "H4: iid aggregation under-disperses deep-pool favorites (premise + both links)",
+   "kill": {
+    "D_sweep_pp": 5.09,
+    "ci": [
+     1.81,
+     8.53
+    ],
+    "L1_dll_milli": -0.048,
+    "L2_dll_milli": 0.213
+   },
+   "evidence": [
+    "stats/h4_dispersion_diag.json",
+    "stats/h4_series_link.json"
+   ],
+   "note": "premise inverted \u2014 maps are OVER-dispersed (\u03c3_u\u22480.72) and train-fit \u03b2 already absorbs it; both links inside the floor"
+  },
+  {
+   "idea": "Learned event-class solve weights (replacing hand-set 1.6/2.0)",
+   "kill": {
+    "dll_milli": -5.737,
+    "iid_ci": [
+     -10.005,
+     -1.209
+    ],
+    "fitted": {
+     "vct_playoffs": 0.7341,
+     "champions": 0.0007,
+     "masters": 1.8803,
+     "ewc_offseason": 1.0182
+    }
+   },
+   "evidence": [
+    "stats/context_weights.json"
+   ],
+   "note": "in-sample regime memorization (champions weight collapses to ~0) that anti-validates; hand-set weights win"
+  },
+  {
+   "idea": "Patch/map-pool fade axis (\u03b3 \u2264 0.7)",
+   "kill": {
+    "dll_on_v6_milli": -5.458,
+    "p_iid": 0.02175,
+    "p_block": 0.0015
+   },
+   "evidence": [
+    "stats/decay_axes.json"
+   ],
+   "note": "sharpest train\u2192holdout reversal of the wave (best train LL of any config); preregistered falsifier fired"
+  },
+  {
+   "idea": "Performance-defined form terms (wr / rd-margin / side / player R2.0 / combined)",
+   "kill": {
+    "player5_train_gain_milli": 2.0915,
+    "player5_holdout_milli": -5.244
+   },
+   "evidence": [
+    "stats/decay_form.json"
+   ],
+   "note": "every definition fits mean-reverting on train and scores \u2264 v6 on holdout; richest feature overfits hardest"
+  },
+  {
+   "idea": "Lineup-conditioned EWC solve down-weight (3a integrity)",
+   "kill": {
+    "train_argmin_w0": 1.0
+   },
+   "evidence": [
+    "stats/context_seriousness.json"
+   ],
+   "note": "train NLL monotone worse as stand-in games are down-weighted; falsifier fired before holdout was touched"
+  },
+  {
+   "idea": "Calendar-time process noise (state-space 1b, breaks add drift)",
+   "kill": {
+    "dll_milli": -11.752,
+    "p_iid": 0.00125
+   },
+   "evidence": [
+    "stats/h3_statespace.json"
+   ],
+   "note": "best train config of its family, worst holdout \u2014 breaks do not add real drift once games-counted noise exists"
+  },
+  {
+   "idea": "S3 fitting shape: (\u03b2,k) refit on non-gated train rows under a hard gate",
+   "kill": {
+    "dll_milli": -7.874,
+    "k_runaway": 1.8695,
+    "train_nll": 0.6446890909035504
+   },
+   "evidence": [
+    "stats/compose_stacks.json",
+    "stats/page_adversary_fragility.json"
+   ],
+   "note": "anti-synergy falsifier fired: best composite train NLL of the wave, worst holdout; k driven to ~1.87"
+  }
+ ],
+ "reopened_unresolved": [
+  {
+   "id": 1,
+   "idea": "Shorter calendar half-lives (4-5w)",
+   "delta_milli": -2.65,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "hl4 was -6.59m (~at the cross MDE of 6.78m); the family's direction is consistent but no single variant clears the floor"
+  },
+  {
+   "id": 2,
+   "idea": "Power-law / box+exp / linear calendar decay",
+   "delta_milli": -0.15,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "a pure coin flip at this n; worst family member linear_W26 was -5.4m"
+  },
+  {
+   "id": 3,
+   "idea": "Calendar envelope over games decay",
+   "delta_milli": -0.14,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "sub-noise; direction not established"
+  },
+  {
+   "id": 4,
+   "idea": "Series-counted decay (age in series, not maps)",
+   "delta_milli": -0.02,
+   "mde_at_test_milli": 6.4,
+   "n_at_test": 999,
+   "note": "a literal tie; the verdict text asserts a mechanism story the data never had the power to confirm"
+  },
+  {
+   "id": 6,
+   "idea": "Reversed asymmetry (losses persist)",
+   "delta_milli": -2.92,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "'clearly worse' overstated: below the 6.78m cross MDE. v7 analog surprise_12_20 (-7.37m, block CI excludes 0) points the same way but is also below its pair MDE (10.08m). Direction consistently negative across two eras, never individually powered"
+  },
+  {
+   "id": 7,
+   "idea": "Lineup-overlap roster reweighting (3 schemes)",
+   "delta_milli": -1.94,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "continuous-overlap schemes were 4.5-7.5m worse (near/at the floor); the step scheme was a coin flip"
+  },
+  {
+   "id": 8,
+   "idea": "Roster-instability prediction shrink",
+   "delta_milli": -0.54,
+   "mde_at_test_milli": 2.05,
+   "n_at_test": 890,
+   "note": "on the unstable-roster bucket itself: -2.08m at n=230 (bucket MDE ~4m) \u2014 the premise refutation ('they predict better') is directional, not powered"
+  },
+  {
+   "id": 9,
+   "idea": "Player-carryover priors (new signings import prior-org rating)",
+   "delta_milli": -0.43,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "M10 boot: -3.30m p 0.24; consistent negative direction at all 3 horizons, none powered"
+  },
+  {
+   "id": 11,
+   "idea": "Favorite blowout-margin discount ('don't try hard')",
+   "delta_milli": -1.71,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "inside the floor under either regime sigma"
+  },
+  {
+   "id": 12,
+   "idea": "Residual margin (credit only surprise)",
+   "delta_milli": -0.5,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "the published verdict already said 'neutral' \u2014 honest"
+  },
+  {
+   "id": 13,
+   "idea": "Upset margin boost",
+   "delta_milli": 0.29,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "point estimate was actually POSITIVE (+0.29m, p_better 0.62); the published one-word verdict ('noise') is accurate"
+  },
+  {
+   "id": 14,
+   "idea": "Win-only ratings / margin-win blends in the solve",
+   "delta_milli": -0.63,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "win-only alone was -5.35m \u2014 large but still under the 6.78m cross MDE at n=890. 'Margins matter' was never established beyond the noise floor at series level; it IS separately supported by margin-MSE (43.1 vs 45.4) as a rating-quality argument"
+  },
+  {
+   "id": 15,
+   "idea": "Rolling / per-stage beta refits",
+   "delta_milli": -1.26,
+   "mde_at_test_milli": 1.68,
+   "n_at_test": 1324,
+   "note": "rolling_365 was -2.93m with iid CI excluding 0 (p 0.025) \u2014 that variant is beyond the within MDE (1.68m at n=1324); the best variant is not. Family verdict inside floor"
+  },
+  {
+   "id": 16,
+   "idea": "Piecewise beta (small vs large gaps)",
+   "delta_milli": 0.03,
+   "mde_at_test_milli": 1.93,
+   "n_at_test": 999,
+   "note": "fitted slopes 0.1094/0.1067 nearly collapse; effect ~0 \u2014 'adds nothing' is right, 'cannot help' was never testable"
+  },
+  {
+   "id": 18,
+   "idea": "Convex link (extra slope beyond gap threshold)",
+   "delta_milli": -0.96,
+   "mde_at_test_milli": 1.93,
+   "n_at_test": 999,
+   "note": "borderline (within MDE 1.93m); its motivating anomaly was later explained by the v5 decay bug and fixed in v6, so the idea's premise is gone even though the test itself was underpowered"
+  },
+  {
+   "id": 20,
+   "idea": "Soft/mixed margin-label beta fits, Rao-Blackwell retro targets",
+   "delta_milli": -0.48,
+   "mde_at_test_milli": 6.4,
+   "n_at_test": 999,
+   "note": "soft-beta was -1.78m map-level; mixed_w0.25 -0.54m; all inside their floors"
+  },
+  {
+   "id": 21,
+   "idea": "Margin-fitted cross-region offsets",
+   "delta_milli": -14.0,
+   "mde_at_test_milli": 20.12,
+   "n_at_test": 115,
+   "note": "the headline -14m is a BUCKET number: bucket MDE at n~115 with the measured cross-region sigma (0.077) is ~20m \u2014 the scariest-looking ledger magnitude was still inside its noise floor"
+  },
+  {
+   "id": 22,
+   "idea": "Margin-residual momentum feature",
+   "delta_milli": -0.17,
+   "mde_at_test_milli": 1.93,
+   "n_at_test": 999,
+   "note": "sub-noise"
+  },
+  {
+   "id": 23,
+   "idea": "Decayed-winrate additive feature",
+   "delta_milli": -0.77,
+   "mde_at_test_milli": 1.93,
+   "n_at_test": 999,
+   "note": "v7 stage-2 retested the form-DELTA construction on purpose: -0.02m (p 0.39) \u2014 also a tie"
+  },
+  {
+   "id": 24,
+   "idea": "Veto rate shrinkage toward global",
+   "delta_milli": null,
+   "mde_at_test_milli": null,
+   "n_at_test": 5322,
+   "note": "monotone dose-response supports the rejection, but the paired test needed to power the small-K comparisons is not recoverable \u2014 UNRESOLVED at K<=4, K8 likely real"
+  },
+  {
+   "id": 26,
+   "idea": "Closed-form x veto-MC ensemble",
+   "delta_milli": -1.76,
+   "mde_at_test_milli": 6.4,
+   "n_at_test": 999,
+   "note": "'at any blend weight' overstated \u2014 correct statement is 'no weight shown to help'; the fitted-weight ensemble result is inside the floor"
+  },
+  {
+   "id": 27,
+   "idea": "Intra-series momentum correlation in the MC",
+   "delta_milli": -2.77,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "below the 6.78m cross MDE"
+  },
+  {
+   "id": 28,
+   "idea": "Intl-experience offset (+0.40)",
+   "delta_milli": null,
+   "mde_at_test_milli": null,
+   "n_at_test": null,
+   "note": "redundancy once ratings carry long memory is plausible and v6's fitted cross-region offsets superseded it, but the retirement was never a powered holdout result"
+  },
+  {
+   "id": 29,
+   "idea": "Recency-weighted cross-region offsets",
+   "delta_milli": null,
+   "mde_at_test_milli": null,
+   "n_at_test": null,
+   "note": "magnitude unrecoverable from out/*.json \u2014 classified honestly as UNRESOLVED"
+  },
+  {
+   "id": 30,
+   "idea": "Head-to-head / rematch term",
+   "delta_milli": null,
+   "mde_at_test_milli": null,
+   "n_at_test": null,
+   "note": "a 0.6pt rate gap on an unrecorded n is uninterpretable \u2014 the verdict text sounds decisive but carries no measurable weight"
+  },
+  {
+   "id": 31,
+   "idea": "Bo1 down-weighting / intl margin reweighting",
+   "delta_milli": 0.23,
+   "mde_at_test_milli": 6.78,
+   "n_at_test": 890,
+   "note": "published verdict ('no effect / marginal') was already honest"
+  },
+  {
+   "id": 32,
+   "idea": "Rolling Platt / cubic recalibration layers",
+   "delta_milli": -0.67,
+   "mde_at_test_milli": 1.93,
+   "n_at_test": 999,
+   "note": "the slope~1.0 null ('surface is calibrated') is solid; the 'chase noise' half was inside the floor"
+  }
+ ],
+ "tripwires": [
+  {
+   "conclusion": "v6 stands (no stack promotable)",
+   "threshold": "any candidate clearing the full gate \u2014 \u0394 \u2265 family MDE AND p \u2265 0.95 in BOTH CRN modes AND no bias/bucket regression \u2014 on data dated after 2026-07-28",
+   "window": "next confirmatory frame (see 'what data next')"
+  },
+  {
+   "conclusion": "H3 cold-start lead (+71.7m at n=39)",
+   "threshold": "score the FROZEN 5d spec (stats/compose_spec.json) vs v6 on fresh series where either team has <10 prior maps; promote to candidate status if \u0394 \u2265 that bucket's scaled MDE",
+   "window": "when \u226540 fresh cold rows exist (prospective logger + new events; at n=40 the scaled cross floor is \u224832m)"
+  },
+  {
+   "conclusion": "event-class fade / 3e stand-in shrink demoted to noise-floor leads",
+   "threshold": "re-test ONLY at the next corpus expansion of \u2265300 fresh holdout series; verdicts at the then-current family MDE, preregistered bucket definitions fixed in advance",
+   "window": "next expansion (2026 S2/Champions settle, or prefranchise regionals)"
+  },
+  {
+   "conclusion": "v6 live favorite calibration (autopsy in-window \u22123.9pp, n.s.)",
+   "threshold": "unconditional favorite gap beyond \u00b15pp with n \u2265 100 settled linked events",
+   "window": "rolling, prospective logger"
+  },
+  {
+   "conclusion": "PRX/NRG under-rating residual (\u2248\u221210pp, untouched by every stack)",
+   "threshold": "either team's rolling bias worse than \u221212pp on its trailing 60 scored series \u2192 dedicated hypothesis wave (not stand-in load, not event-class recency, not rating uncertainty \u2014 all excluded here)",
+   "window": "rolling 60 series per team"
+  },
+  {
+   "conclusion": "bucket gates unenforceable under n\u2248200 (phase 0)",
+   "threshold": "any future bucket claim must quote the bucket MDE from stats/power_mde.json; buckets under n=200 are advisory-only",
+   "window": "standing rule"
+  },
+  {
+   "conclusion": "autopsy config gap (flat 5\u00a2 floor; skip-NO<45% absent) \u2014 operator implementation memo, NOT model input",
+   "threshold": "if the live config stays unchanged: realized < \u2212$150 over the next 28 settled events triggers a mandatory config review against FINDINGS \u00a74",
+   "window": "next 28 settled events (one-week-scale sample, same caveat as this one)"
+  }
+ ],
+ "what_data_next": [
+  "prospective prediction-logger accumulation (every quoted probability, timestamped, model-versioned)",
+  "the deferred prefranchise regional corpus (194 regional 2021-22 events, several thousand series)",
+  "2026 Stage 2 / Champions as they settle (organic holdout growth)"
+ ],
+ "floors": {
+  "rule": "preregistered: quote the composition-adjusted number",
+  "within_milli": 1.773,
+  "cross_milli": 5.889
+ }
+}

@@ -1,0 +1,1075 @@
+{
+ "written_by": "agent:bias-h3 (Phase 5 H3 experiment 1 + judging)",
+ "preregistered": "preregister.bias_h3.md (written before runs)",
+ "frame": "v8/data/frame_expanded/series.csv sha256-verified; holdout n=1217",
+ "v6_baseline": {
+  "beta": 0.1152,
+  "ll_train": 0.64823,
+  "ll_holdout": 0.64216,
+  "cfg": "consist(20,12) + PO1.6/champ2.0/region-prior, beta refit train on this frame"
+ },
+ "model_summaries": {
+  "ss_1a": {
+   "beta": 0.09172,
+   "ll_train": 0.648619,
+   "ll_holdout": 0.651033,
+   "cfg": {
+    "q_over_R": 0.005646216173286171,
+    "V0_over_R": 1.2715614432003977,
+    "beta": 0.09172,
+    "hl_games": 9.23
+   }
+  },
+  "ss_1b_qcal": {
+   "beta": 0.09356,
+   "ll_train": 0.644845,
+   "ll_holdout": 0.653913,
+   "cfg": {
+    "q_over_R": 0.0028231080866430855,
+    "V0_over_R": 1.7982594383647081,
+    "q_cal_week": 0.11293301971678328,
+    "beta": 0.09356,
+    "hl_games": 13.05
+   }
+  },
+  "ss_1c_debutprior": {
+   "beta": 0.09263,
+   "ll_train": 0.6473,
+   "ll_holdout": 0.651256,
+   "cfg": {
+    "q_over_R": 0.005646216173286171,
+    "V0_over_R": 1.2715614432003977,
+    "debut_region_prior": true,
+    "beta": 0.09263,
+    "hl_games": 9.23
+   }
+  },
+  "ss_5d_roster": {
+   "beta": 0.09503,
+   "ll_train": 0.646662,
+   "ll_holdout": 0.647483,
+   "cfg": {
+    "logqs": [
+     -2.312861649307084,
+     -11.750691252900392,
+     -4.727368385788215
+    ],
+    "V0": 14.360127353605192
+   }
+  }
+ },
+ "train_selection": {
+  "rule": "best TRAIN NLL among {1a,1b,1c} (preregistered)",
+  "selected": "ss_1b_qcal",
+  "note": "holdout numbers stored in sweep_core.json played no role in selection"
+ },
+ "pairwise_holdout": [
+  {
+   "pair": "ss_1b_qcal vs v6",
+   "label": "PRIMARY (train-selected core) vs v6",
+   "delta_milli": -11.752,
+   "mde_milli": 5.889,
+   "verdict": "LOSS",
+   "iid": {
+    "mean_delta": -0.011751667261893747,
+    "ci_lo": -0.01967857761856876,
+    "ci_hi": -0.004090489081180547,
+    "p_better": 0.00125,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "crn_verify": "not-applicable (subset n != holdout n)",
+    "n": 1217
+   },
+   "block_event": {
+    "mean_delta": -0.011751667261893747,
+    "ci_lo": -0.018929644075124274,
+    "ci_hi": -0.004702577308306956,
+    "p_better": 0.0005,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "n_events": 31
+   },
+   "expected_roi": {
+    "dll_milli": -11.752,
+    "delta_logit_equiv": -0.0257,
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ]
+   },
+   "ll_a": 0.65391,
+   "ll_b": 0.64216,
+   "n": 1217
+  },
+  {
+   "pair": "ss_1a vs v6",
+   "label": "plain core vs v6 (secondary)",
+   "delta_milli": -8.872,
+   "mde_milli": 5.889,
+   "verdict": "LOSS",
+   "iid": {
+    "mean_delta": -0.008871561551818875,
+    "ci_lo": -0.015152241752373174,
+    "ci_hi": -0.0026910155217061576,
+    "p_better": 0.00125,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "crn_verify": "not-applicable (subset n != holdout n)",
+    "n": 1217
+   },
+   "block_event": {
+    "mean_delta": -0.008871561551818875,
+    "ci_lo": -0.015013403386610643,
+    "ci_hi": -0.0025100646819417776,
+    "p_better": 0.00275,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "n_events": 31
+   },
+   "expected_roi": {
+    "dll_milli": -8.872,
+    "delta_logit_equiv": -0.0194,
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ]
+   },
+   "ll_a": 0.65103,
+   "ll_b": 0.64216,
+   "n": 1217
+  },
+  {
+   "pair": "ss_1c_debutprior vs v6",
+   "label": "debut-prior core vs v6 (secondary)",
+   "delta_milli": -9.094,
+   "mde_milli": 5.889,
+   "verdict": "LOSS",
+   "iid": {
+    "mean_delta": -0.00909423179096258,
+    "ci_lo": -0.01544282333009844,
+    "ci_hi": -0.0027964830030220607,
+    "p_better": 0.00125,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "crn_verify": "not-applicable (subset n != holdout n)",
+    "n": 1217
+   },
+   "block_event": {
+    "mean_delta": -0.00909423179096258,
+    "ci_lo": -0.015122661747854637,
+    "ci_hi": -0.0030234507970251425,
+    "p_better": 0.0015,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "n_events": 31
+   },
+   "expected_roi": {
+    "dll_milli": -9.094,
+    "delta_logit_equiv": -0.0199,
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ]
+   },
+   "ll_a": 0.65126,
+   "ll_b": 0.64216,
+   "n": 1217
+  },
+  {
+   "pair": "ss_5d_roster vs v6",
+   "label": "5d roster-typed q vs v6",
+   "delta_milli": -5.321,
+   "mde_milli": 5.889,
+   "verdict": "INSIDE NOISE FLOOR",
+   "iid": {
+    "mean_delta": -0.005321162531717668,
+    "ci_lo": -0.011405241260358686,
+    "ci_hi": 0.0006992222890610802,
+    "p_better": 0.0405,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "crn_verify": "not-applicable (subset n != holdout n)",
+    "n": 1217
+   },
+   "block_event": {
+    "mean_delta": -0.005321162531717668,
+    "ci_lo": -0.010772215297384148,
+    "ci_hi": 0.0012976887709441021,
+    "p_better": 0.0495,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "n_events": 31
+   },
+   "expected_roi": {
+    "dll_milli": -5.321,
+    "delta_logit_equiv": -0.0116,
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ]
+   },
+   "ll_a": 0.64748,
+   "ll_b": 0.64216,
+   "n": 1217
+  },
+  {
+   "pair": "ss_5d_roster vs ss_1a",
+   "label": "5d roster-typed q vs plain core (within-family)",
+   "delta_milli": 3.55,
+   "mde_milli": 1.773,
+   "verdict": "WIN",
+   "iid": {
+    "mean_delta": 0.003550399020101208,
+    "ci_lo": -0.0006628140114090356,
+    "ci_hi": 0.007843472949093778,
+    "p_better": 0.94625,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "crn_verify": "not-applicable (subset n != holdout n)",
+    "n": 1217
+   },
+   "block_event": {
+    "mean_delta": 0.003550399020101208,
+    "ci_lo": 0.00014388586245811172,
+    "ci_hi": 0.006738300491260698,
+    "p_better": 0.979,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "n_events": 31
+   },
+   "expected_roi": {
+    "dll_milli": 3.55,
+    "delta_logit_equiv": 0.0077,
+    "expected_roi_delta": 0.0029,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.005,
+    "roi_ci_at_op_plus_equiv": [
+     -0.117,
+     0.13
+    ]
+   },
+   "ll_a": 0.64748,
+   "ll_b": 0.65103,
+   "n": 1217
+  }
+ ],
+ "buckets_vs_v6": {
+  "ss_1a": {
+   "buckets": [
+    {
+     "name": "year 2025",
+     "n": 674,
+     "ll": 0.64386,
+     "fav_acc": 0.611,
+     "ll_ref": 0.63796,
+     "delta_milli": -5.9
+    },
+    {
+     "name": "year 2026",
+     "n": 543,
+     "ll": 0.65994,
+     "fav_acc": 0.61,
+     "ll_ref": 0.64738,
+     "delta_milli": -12.56
+    },
+    {
+     "name": "format bo1",
+     "n": 55,
+     "ll": 0.64609,
+     "fav_acc": 0.6,
+     "ll_ref": 0.65327,
+     "delta_milli": 7.18
+    },
+    {
+     "name": "format bo3",
+     "n": 1074,
+     "ll": 0.64914,
+     "fav_acc": 0.614,
+     "ll_ref": 0.64095,
+     "delta_milli": -8.19
+    },
+    {
+     "name": "format bo5",
+     "n": 53,
+     "ll": 0.66237,
+     "fav_acc": 0.604,
+     "ll_ref": 0.64835,
+     "delta_milli": -14.02
+    },
+    {
+     "name": "format bo5_gf",
+     "n": 35,
+     "ll": 0.69986,
+     "fav_acc": 0.543,
+     "ll_ref": 0.65258,
+     "delta_milli": -47.28
+    },
+    {
+     "name": "stage groups",
+     "n": 568,
+     "ll": 0.62024,
+     "fav_acc": 0.658,
+     "ll_ref": 0.61038,
+     "delta_milli": -9.86
+    },
+    {
+     "name": "stage playoffs",
+     "n": 541,
+     "ll": 0.68084,
+     "fav_acc": 0.571,
+     "ll_ref": 0.67447,
+     "delta_milli": -6.37
+    },
+    {
+     "name": "stage grand_final",
+     "n": 39,
+     "ll": 0.70246,
+     "fav_acc": 0.538,
+     "ll_ref": 0.65624,
+     "delta_milli": -46.22
+    },
+    {
+     "name": "international",
+     "n": 122,
+     "ll": 0.64854,
+     "fav_acc": 0.566,
+     "ll_ref": 0.64221,
+     "delta_milli": -6.33
+    },
+    {
+     "name": "domestic",
+     "n": 1095,
+     "ll": 0.65131,
+     "fav_acc": 0.616,
+     "ll_ref": 0.64216,
+     "delta_milli": -9.15
+    },
+    {
+     "name": "CN involved",
+     "n": 394,
+     "ll": 0.6502,
+     "fav_acc": 0.635,
+     "ll_ref": 0.6403,
+     "delta_milli": -9.9
+    },
+    {
+     "name": "cross-region",
+     "n": 194,
+     "ll": 0.64929,
+     "fav_acc": 0.598,
+     "ll_ref": 0.63812,
+     "delta_milli": -11.17
+    },
+    {
+     "name": "domestic Americas",
+     "n": 233,
+     "ll": 0.62307,
+     "fav_acc": 0.67,
+     "ll_ref": 0.60183,
+     "delta_milli": -21.24
+    },
+    {
+     "name": "domestic EMEA",
+     "n": 242,
+     "ll": 0.64765,
+     "fav_acc": 0.583,
+     "ll_ref": 0.64716,
+     "delta_milli": -0.49
+    },
+    {
+     "name": "domestic Pacific",
+     "n": 237,
+     "ll": 0.65983,
+     "fav_acc": 0.591,
+     "ll_ref": 0.65975,
+     "delta_milli": -0.08
+    },
+    {
+     "name": "domestic CN",
+     "n": 311,
+     "ll": 0.66901,
+     "fav_acc": 0.611,
+     "ll_ref": 0.65761,
+     "delta_milli": -11.4
+    },
+    {
+     "name": "close matchups (gap<1.5)",
+     "n": 433,
+     "ll": 0.70045,
+     "fav_acc": 0.513,
+     "ll_ref": 0.69076,
+     "delta_milli": -9.69
+    },
+    {
+     "name": "mid gap [1.5,4)",
+     "n": 505,
+     "ll": 0.66592,
+     "fav_acc": 0.612,
+     "ll_ref": 0.65852,
+     "delta_milli": -7.4
+    },
+    {
+     "name": "big gap [4,7)",
+     "n": 223,
+     "ll": 0.57345,
+     "fav_acc": 0.74,
+     "ll_ref": 0.56345,
+     "delta_milli": -10.0
+    },
+    {
+     "name": "huge gap (7+)",
+     "n": 56,
+     "ll": 0.44364,
+     "fav_acc": 0.839,
+     "ll_ref": 0.43237,
+     "delta_milli": -11.27
+    },
+    {
+     "name": "post-break (rest>45d)",
+     "n": 130,
+     "ll": 0.64785,
+     "fav_acc": 0.562,
+     "ll_ref": 0.64343,
+     "delta_milli": -4.42
+    },
+    {
+     "name": "elite vs floor",
+     "n": 29,
+     "ll": 0.49483,
+     "fav_acc": 0.793,
+     "ll_ref": 0.4718,
+     "delta_milli": -23.03
+    },
+    {
+     "name": "form shift",
+     "n": 168,
+     "ll": 0.67886,
+     "fav_acc": 0.589,
+     "ll_ref": 0.6522,
+     "delta_milli": -26.66
+    },
+    {
+     "name": "EWC-class events",
+     "n": 115,
+     "ll": 0.69846,
+     "fav_acc": 0.565,
+     "ll_ref": 0.68633,
+     "delta_milli": -12.13
+    },
+    {
+     "name": "favorite [0.5,0.6)",
+     "n": 680,
+     "ll": 0.68475,
+     "fav_acc": 0.553,
+     "ll_ref": 0.67808,
+     "delta_milli": -6.67
+    },
+    {
+     "name": "favorite [0.6,0.7)",
+     "n": 368,
+     "ll": 0.65431,
+     "fav_acc": 0.633,
+     "ll_ref": 0.64679,
+     "delta_milli": -7.52
+    },
+    {
+     "name": "favorite [0.7,0.8)",
+     "n": 138,
+     "ll": 0.5241,
+     "fav_acc": 0.783,
+     "ll_ref": 0.49546,
+     "delta_milli": -28.64
+    },
+    {
+     "name": "favorite [0.8,0.9)",
+     "n": 31,
+     "ll": 0.43759,
+     "fav_acc": 0.839,
+     "ll_ref": 0.45231,
+     "delta_milli": 14.72
+    }
+   ],
+   "pending": [
+    "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+   ]
+  },
+  "ss_1b_qcal": {
+   "buckets": [
+    {
+     "name": "year 2025",
+     "n": 674,
+     "ll": 0.64601,
+     "fav_acc": 0.599,
+     "ll_ref": 0.63796,
+     "delta_milli": -8.05
+    },
+    {
+     "name": "year 2026",
+     "n": 543,
+     "ll": 0.66373,
+     "fav_acc": 0.604,
+     "ll_ref": 0.64738,
+     "delta_milli": -16.35
+    },
+    {
+     "name": "format bo1",
+     "n": 55,
+     "ll": 0.64238,
+     "fav_acc": 0.618,
+     "ll_ref": 0.65327,
+     "delta_milli": 10.89
+    },
+    {
+     "name": "format bo3",
+     "n": 1074,
+     "ll": 0.65222,
+     "fav_acc": 0.606,
+     "ll_ref": 0.64095,
+     "delta_milli": -11.27
+    },
+    {
+     "name": "format bo5",
+     "n": 53,
+     "ll": 0.67319,
+     "fav_acc": 0.547,
+     "ll_ref": 0.64835,
+     "delta_milli": -24.84
+    },
+    {
+     "name": "format bo5_gf",
+     "n": 35,
+     "ll": 0.69472,
+     "fav_acc": 0.514,
+     "ll_ref": 0.65258,
+     "delta_milli": -42.14
+    },
+    {
+     "name": "stage groups",
+     "n": 568,
+     "ll": 0.62464,
+     "fav_acc": 0.65,
+     "ll_ref": 0.61038,
+     "delta_milli": -14.26
+    },
+    {
+     "name": "stage playoffs",
+     "n": 541,
+     "ll": 0.68396,
+     "fav_acc": 0.556,
+     "ll_ref": 0.67447,
+     "delta_milli": -9.49
+    },
+    {
+     "name": "stage grand_final",
+     "n": 39,
+     "ll": 0.69794,
+     "fav_acc": 0.513,
+     "ll_ref": 0.65624,
+     "delta_milli": -41.7
+    },
+    {
+     "name": "international",
+     "n": 122,
+     "ll": 0.65114,
+     "fav_acc": 0.598,
+     "ll_ref": 0.64221,
+     "delta_milli": -8.93
+    },
+    {
+     "name": "domestic",
+     "n": 1095,
+     "ll": 0.65422,
+     "fav_acc": 0.602,
+     "ll_ref": 0.64216,
+     "delta_milli": -12.06
+    },
+    {
+     "name": "CN involved",
+     "n": 394,
+     "ll": 0.65508,
+     "fav_acc": 0.614,
+     "ll_ref": 0.6403,
+     "delta_milli": -14.78
+    },
+    {
+     "name": "cross-region",
+     "n": 194,
+     "ll": 0.65857,
+     "fav_acc": 0.603,
+     "ll_ref": 0.63812,
+     "delta_milli": -20.45
+    },
+    {
+     "name": "domestic Americas",
+     "n": 233,
+     "ll": 0.62049,
+     "fav_acc": 0.665,
+     "ll_ref": 0.60183,
+     "delta_milli": -18.66
+    },
+    {
+     "name": "domestic EMEA",
+     "n": 242,
+     "ll": 0.64917,
+     "fav_acc": 0.595,
+     "ll_ref": 0.64716,
+     "delta_milli": -2.01
+    },
+    {
+     "name": "domestic Pacific",
+     "n": 237,
+     "ll": 0.66386,
+     "fav_acc": 0.561,
+     "ll_ref": 0.65975,
+     "delta_milli": -4.11
+    },
+    {
+     "name": "domestic CN",
+     "n": 311,
+     "ll": 0.67216,
+     "fav_acc": 0.588,
+     "ll_ref": 0.65761,
+     "delta_milli": -14.55
+    },
+    {
+     "name": "close matchups (gap<1.5)",
+     "n": 433,
+     "ll": 0.7023,
+     "fav_acc": 0.513,
+     "ll_ref": 0.69076,
+     "delta_milli": -11.54
+    },
+    {
+     "name": "mid gap [1.5,4)",
+     "n": 505,
+     "ll": 0.6705,
+     "fav_acc": 0.592,
+     "ll_ref": 0.65852,
+     "delta_milli": -11.98
+    },
+    {
+     "name": "big gap [4,7)",
+     "n": 223,
+     "ll": 0.57887,
+     "fav_acc": 0.735,
+     "ll_ref": 0.56345,
+     "delta_milli": -15.42
+    },
+    {
+     "name": "huge gap (7+)",
+     "n": 56,
+     "ll": 0.42902,
+     "fav_acc": 0.839,
+     "ll_ref": 0.43237,
+     "delta_milli": 3.35
+    },
+    {
+     "name": "post-break (rest>45d)",
+     "n": 130,
+     "ll": 0.65333,
+     "fav_acc": 0.562,
+     "ll_ref": 0.64343,
+     "delta_milli": -9.9
+    },
+    {
+     "name": "elite vs floor",
+     "n": 29,
+     "ll": 0.48341,
+     "fav_acc": 0.793,
+     "ll_ref": 0.4718,
+     "delta_milli": -11.61
+    },
+    {
+     "name": "form shift",
+     "n": 168,
+     "ll": 0.68656,
+     "fav_acc": 0.56,
+     "ll_ref": 0.6522,
+     "delta_milli": -34.36
+    },
+    {
+     "name": "EWC-class events",
+     "n": 115,
+     "ll": 0.70368,
+     "fav_acc": 0.557,
+     "ll_ref": 0.68633,
+     "delta_milli": -17.35
+    },
+    {
+     "name": "favorite [0.5,0.6)",
+     "n": 636,
+     "ll": 0.69022,
+     "fav_acc": 0.528,
+     "ll_ref": 0.68067,
+     "delta_milli": -9.55
+    },
+    {
+     "name": "favorite [0.6,0.7)",
+     "n": 384,
+     "ll": 0.6496,
+     "fav_acc": 0.643,
+     "ll_ref": 0.63922,
+     "delta_milli": -10.38
+    },
+    {
+     "name": "favorite [0.7,0.8)",
+     "n": 148,
+     "ll": 0.58312,
+     "fav_acc": 0.73,
+     "ll_ref": 0.55076,
+     "delta_milli": -32.36
+    },
+    {
+     "name": "favorite [0.8,0.9)",
+     "n": 48,
+     "ll": 0.43721,
+     "fav_acc": 0.833,
+     "ll_ref": 0.44728,
+     "delta_milli": 10.07
+    }
+   ],
+   "pending": [
+    "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+   ]
+  },
+  "ss_5d_roster": {
+   "buckets": [
+    {
+     "name": "year 2025",
+     "n": 674,
+     "ll": 0.64018,
+     "fav_acc": 0.622,
+     "ll_ref": 0.63796,
+     "delta_milli": -2.22
+    },
+    {
+     "name": "year 2026",
+     "n": 543,
+     "ll": 0.65654,
+     "fav_acc": 0.61,
+     "ll_ref": 0.64738,
+     "delta_milli": -9.16
+    },
+    {
+     "name": "format bo1",
+     "n": 55,
+     "ll": 0.65164,
+     "fav_acc": 0.636,
+     "ll_ref": 0.65327,
+     "delta_milli": 1.63
+    },
+    {
+     "name": "format bo3",
+     "n": 1074,
+     "ll": 0.64613,
+     "fav_acc": 0.614,
+     "ll_ref": 0.64095,
+     "delta_milli": -5.18
+    },
+    {
+     "name": "format bo5",
+     "n": 53,
+     "ll": 0.65379,
+     "fav_acc": 0.623,
+     "ll_ref": 0.64835,
+     "delta_milli": -5.44
+    },
+    {
+     "name": "format bo5_gf",
+     "n": 35,
+     "ll": 0.67291,
+     "fav_acc": 0.657,
+     "ll_ref": 0.65258,
+     "delta_milli": -20.33
+    },
+    {
+     "name": "stage groups",
+     "n": 568,
+     "ll": 0.6193,
+     "fav_acc": 0.657,
+     "ll_ref": 0.61038,
+     "delta_milli": -8.92
+    },
+    {
+     "name": "stage playoffs",
+     "n": 541,
+     "ll": 0.67693,
+     "fav_acc": 0.569,
+     "ll_ref": 0.67447,
+     "delta_milli": -2.46
+    },
+    {
+     "name": "stage grand_final",
+     "n": 39,
+     "ll": 0.6764,
+     "fav_acc": 0.667,
+     "ll_ref": 0.65624,
+     "delta_milli": -20.16
+    },
+    {
+     "name": "international",
+     "n": 122,
+     "ll": 0.64982,
+     "fav_acc": 0.566,
+     "ll_ref": 0.64221,
+     "delta_milli": -7.61
+    },
+    {
+     "name": "domestic",
+     "n": 1095,
+     "ll": 0.64722,
+     "fav_acc": 0.622,
+     "ll_ref": 0.64216,
+     "delta_milli": -5.06
+    },
+    {
+     "name": "CN involved",
+     "n": 394,
+     "ll": 0.64853,
+     "fav_acc": 0.617,
+     "ll_ref": 0.6403,
+     "delta_milli": -8.23
+    },
+    {
+     "name": "cross-region",
+     "n": 194,
+     "ll": 0.64722,
+     "fav_acc": 0.593,
+     "ll_ref": 0.63812,
+     "delta_milli": -9.1
+    },
+    {
+     "name": "domestic Americas",
+     "n": 233,
+     "ll": 0.62024,
+     "fav_acc": 0.687,
+     "ll_ref": 0.60183,
+     "delta_milli": -18.41
+    },
+    {
+     "name": "domestic EMEA",
+     "n": 242,
+     "ll": 0.64367,
+     "fav_acc": 0.603,
+     "ll_ref": 0.64716,
+     "delta_milli": 3.49
+    },
+    {
+     "name": "domestic Pacific",
+     "n": 237,
+     "ll": 0.65244,
+     "fav_acc": 0.624,
+     "ll_ref": 0.65975,
+     "delta_milli": 7.31
+    },
+    {
+     "name": "domestic CN",
+     "n": 311,
+     "ll": 0.66724,
+     "fav_acc": 0.582,
+     "ll_ref": 0.65761,
+     "delta_milli": -9.63
+    },
+    {
+     "name": "close matchups (gap<1.5)",
+     "n": 433,
+     "ll": 0.69957,
+     "fav_acc": 0.533,
+     "ll_ref": 0.69076,
+     "delta_milli": -8.81
+    },
+    {
+     "name": "mid gap [1.5,4)",
+     "n": 505,
+     "ll": 0.6603,
+     "fav_acc": 0.608,
+     "ll_ref": 0.65852,
+     "delta_milli": -1.78
+    },
+    {
+     "name": "big gap [4,7)",
+     "n": 223,
+     "ll": 0.56992,
+     "fav_acc": 0.74,
+     "ll_ref": 0.56345,
+     "delta_milli": -6.47
+    },
+    {
+     "name": "huge gap (7+)",
+     "n": 56,
+     "ll": 0.43805,
+     "fav_acc": 0.839,
+     "ll_ref": 0.43237,
+     "delta_milli": -5.68
+    },
+    {
+     "name": "post-break (rest>45d)",
+     "n": 130,
+     "ll": 0.65471,
+     "fav_acc": 0.577,
+     "ll_ref": 0.64343,
+     "delta_milli": -11.28
+    },
+    {
+     "name": "elite vs floor",
+     "n": 29,
+     "ll": 0.49581,
+     "fav_acc": 0.793,
+     "ll_ref": 0.4718,
+     "delta_milli": -24.01
+    },
+    {
+     "name": "form shift",
+     "n": 168,
+     "ll": 0.66736,
+     "fav_acc": 0.583,
+     "ll_ref": 0.6522,
+     "delta_milli": -15.16
+    },
+    {
+     "name": "EWC-class events",
+     "n": 115,
+     "ll": 0.69321,
+     "fav_acc": 0.583,
+     "ll_ref": 0.68633,
+     "delta_milli": -6.88
+    },
+    {
+     "name": "favorite [0.5,0.6)",
+     "n": 684,
+     "ll": 0.68338,
+     "fav_acc": 0.558,
+     "ll_ref": 0.68044,
+     "delta_milli": -2.94
+    },
+    {
+     "name": "favorite [0.6,0.7)",
+     "n": 377,
+     "ll": 0.6477,
+     "fav_acc": 0.642,
+     "ll_ref": 0.6411,
+     "delta_milli": -6.6
+    },
+    {
+     "name": "favorite [0.7,0.8)",
+     "n": 124,
+     "ll": 0.50447,
+     "fav_acc": 0.798,
+     "ll_ref": 0.48721,
+     "delta_milli": -17.26
+    },
+    {
+     "name": "favorite [0.8,0.9)",
+     "n": 32,
+     "ll": 0.43174,
+     "fav_acc": 0.844,
+     "ll_ref": 0.43694,
+     "delta_milli": 5.2
+    }
+   ],
+   "pending": [
+    "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+   ]
+  }
+ },
+ "cold_start_bucket": {
+  "reference_old_frame": {
+   "n": 57,
+   "ll": 0.70205,
+   "note": "old-frame reference from the brief"
+  },
+  "definition": "prior-map-count at prediction date (strictly earlier days)",
+  "models": {
+   "debut (either 0 prior maps)": {
+    "ss_1a": {
+     "n": 10,
+     "ll": 0.66611,
+     "ll_v6": 0.68888,
+     "delta_milli": 22.77
+    },
+    "ss_1b_qcal": {
+     "n": 10,
+     "ll": 0.65215,
+     "ll_v6": 0.68888,
+     "delta_milli": 36.73
+    },
+    "ss_5d_roster": {
+     "n": 10,
+     "ll": 0.6307,
+     "ll_v6": 0.68888,
+     "delta_milli": 58.17
+    }
+   },
+   "cold (either <10 prior maps)": {
+    "ss_1a": {
+     "n": 39,
+     "ll": 0.6002,
+     "ll_v6": 0.65011,
+     "delta_milli": 49.91
+    },
+    "ss_1b_qcal": {
+     "n": 39,
+     "ll": 0.60241,
+     "ll_v6": 0.65011,
+     "delta_milli": 47.71
+    },
+    "ss_5d_roster": {
+     "n": 39,
+     "ll": 0.57841,
+     "ll_v6": 0.65011,
+     "delta_milli": 71.7
+    }
+   },
+   "thin (either <30 prior maps)": {
+    "ss_1a": {
+     "n": 117,
+     "ll": 0.58983,
+     "ll_v6": 0.60635,
+     "delta_milli": 16.53
+    },
+    "ss_1b_qcal": {
+     "n": 117,
+     "ll": 0.59093,
+     "ll_v6": 0.60635,
+     "delta_milli": 15.42
+    },
+    "ss_5d_roster": {
+     "n": 117,
+     "ll": 0.57832,
+     "ll_v6": 0.60635,
+     "delta_milli": 28.03
+    }
+   },
+   "cold_eps_note": "referee COLD_EPS bucket is n=0 on engine ratings (region prior => no exact zeros); prior-map-count definitions used instead"
+  }
+ },
+ "gh_validation": {
+  "gh20_vs_gh40_max_abs_diff": 2.220446049250313e-16,
+  "gh20_vs_gh40_mean_abs_diff": 6.050122070539908e-17,
+  "gh_convergence_bar": 1e-06,
+  "gh_pass": true,
+  "mc_check": {
+   "max_abs_diff_gh20_vs_mc200k": 0.00025564461453442267,
+   "mc_se_approx": 0.0011,
+   "within_3se": true,
+   "mc_seed": 1949022022,
+   "note": "original 1e-4 bar was tighter than MC noise; GH20-vs-GH40 is the convergence test"
+  }
+ },
+ "mde_context": {
+  "within_family_milli": 1.773,
+  "cross_family_milli": 5.889
+ }
+}

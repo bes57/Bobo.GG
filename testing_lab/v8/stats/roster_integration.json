@@ -1,0 +1,1564 @@
+{
+ "written_by": "agent:roster",
+ "written": "2026-07-29 00:00:33",
+ "status": "DESIGN + PREREGISTERED PROSPECTIVE PLAN \u2014 no code changes made; VCTMM is hands-off (v8 README rule 5)",
+ "tier1_sizing_only": {
+  "recommendation": "RECOMMENDED NOW",
+  "what": "build_model_snapshot adds a per-team roster_flag block; the bot sizes down / widens quotes on fresh rosters. Zero fair-value risk: the model's probabilities are untouched.",
+  "snapshot_fields": {
+   "overlap_vs_prev": "overlap of the team's current lineup vs its pre-change lineup at the most recent rotation-guarded change event (engine formula |A\u2229B|/max(|A|,|B|,5))",
+   "matches_since_change": "lineups-agent definition (walk-forward)",
+   "run_len_alive": "consecutive matches on the current lineup",
+   "sustained_alive": "walk-forward sustained-at-day flag (confirmed >=3 or still alive)",
+   "change_date": "date of the most recent change event"
+  },
+  "data_path": "data/maps/<event>.csv player rows -> engine.load_match_lineups (already scraped per event; no new scraping); episode logic = preregister.roster.md \u00a71",
+  "playbook_rule_sketch": [
+   "matches_since_change <= 2 AND overlap_vs_prev <= 0.6 -> quarter-size, widen quote by one tick",
+   "matches_since_change <= 2 AND overlap_vs_prev == 0.8 -> half-size",
+   "matches_since_change >= 3 -> normal sizing"
+  ],
+  "evidence_basis": "atlas: post-change teams beat the carried rating by +4.4/+5.6/+4.8 pp (keep4/keep3/overhaul, first 3 matches, vs +0.7 stable) \u2014 model error is ELEVATED and DIRECTIONAL there; ENVY S1->S2 cost 24-32 pp/match, LEV/Neon -14.7 pp/match. Sizing down on |elevated-uncertainty| rows needs no directional model claim.",
+  "telemetry": "log roster_obs {overlap_vs_prev, matches_since_change} per quoted event (fits the existing telemetry spec) so the prospective test below can also be read off live quoting data"
+ },
+ "tier2_fair_value": {
+  "recommendation": "NOT RECOMMENDED NOW \u2014 no treatment earned it",
+  "why": "all three exploratory reads were negative on the (spent) holdout: (b) -3.889m (falsifier fired), (c) -1.423m (inside the 1.77m floor, no support), (d) phase-reset -19.275m vs v6 and -7.524m vs its own filter base (falsifier fired; contrast prediction reversed). v6's year-boundary continuity 0.3 remains the champion roster mechanism.",
+  "if_it_ever_earns_it": {
+   "constants_that_change_b": "engine roster structures: year_cont replaced by episode list {change_date, ov, sustained-at-day}; gamma; beta refit (scale-bound, README rule 8)",
+   "constants_that_change_c": "post-solve blend (a0, M, ov<=0.6 trigger, region-mean pull) inside build_model_snapshot after the daily solve; beta refit on adjusted rdiff",
+   "vendor_sync": [
+    "freeze spec + params in trading_model/ as a NEW snapshot version field (never edit the frozen v6 model_snapshot.json)",
+    "shadow-quote both surfaces >=2 weeks",
+    "promotion decision ONLY via the prospective test below on settled outcomes (never Kalshi agreement \u2014 README rule 9)"
+   ]
+  }
+ },
+ "player_identity_mean_shift_design_note": {
+  "status": "DESIGN NOTE ONLY (operator addendum) \u2014 no holdout read spent",
+  "idea": "at a change event, shift the reference-point mean by a walk-forward estimate of (incoming - outgoing) player quality (e.g. decayed per-map rating share or PTD-style contribution from data/enriched/player_map_advanced.csv), scaled by (1 - ov). Directional where the phase-reset was agnostic: Neon-in would shift LEV UP, inspire-out ENVY DOWN.",
+  "prior_evidence": "ledger row 6 'lineup-overlap roster reweighting' REJECTED pre-v8 but reclassified UNRESOLVED (stats/ledger_reclass.json) \u2014 that rejection was a solve-reweighting, not a mean shift; Phase 3's player-rating idea remains unused. CN events lack player enrichment (coverage audit required first).",
+  "cost": "walk-forward player table + train-fit shift scale; one prospective arm, zero holdout reads on this frame"
+ },
+ "prospective_validation_plan": {
+  "status": "PREREGISTERED NOW (this file + report page) \u2014 the only path to adjudication; the 2025-26 holdout is spent",
+  "population": "series dated > 2026-07-28 as they settle (Stage 2 remainder + Champions 2026 + any 2027 data at adjudication time), walk-forward, all params frozen as below, beta refit only on data dated <= 2026-07-28",
+  "arms_frozen": {
+   "A_v6": "champion (reference)",
+   "B_continuity": "read-1 spec, gamma=2.0 (exploratory read was -3.889m; expectation LOW)",
+   "C_coldstart": "read-2 spec, a0=1.0 M=6 (exploratory -1.423m, inside floor)",
+   "D_phase_reset": "read-3' spec, g=0.5 on h3-1b base (operator shape; exploratory read NEGATIVE with falsifier fired \u2014 carried prospectively because the frame evidence is exploratory-only, expectation LOW)",
+   "E_atlas_replication": "NON-MODEL check: does the +4-6pp first-3-matches post-change outperformance replicate? (mean(won - p_v6) on post-change team-observations, msc<=2, sustained episodes)",
+   "F_v6_overreact": "read-4 spec, a=2.0 tau=5.0 on v6 (operator-directed clean mechanism test; exploratory read -0.395m)",
+   "H_specrun": "SPEC RUN gate-selected config, FROZEN: P1 W=8 c=5, a=28.0 tau=13.0 s=0.7 n_min=3 cap=1.5 (lambda_hat=0 by inner-CV; gate fired +6.42m CV vs 5.34m SE). Exploratory holdout read: -11.595m [-18.99,-4.39] \u2014 FALSIFIER FIRED on the spent frame; expectations LOW; carried for prospective adjudication per spec 6 (decision rule unchanged: dLL >= MDE80 at realized n AND p_better >= .95 both CRN modes AND no G3 regression)."
+  },
+  "metrics": "mean paired dLL vs v6 (overall + post-change <=3 bucket), CRN-style paired bootstrap with NEW seeds registered in crn.json at adjudication time; both units via referee.expected_roi_of_dll",
+  "decision_rule": "an arm is promoted to Wave-3 candidate iff dLL >= MDE80 at the realized n AND p_better >= 0.95 in BOTH CRN modes AND no G3 major bucket regression (referee.promotion_gate bars). Arm E 'replicates' iff the pooled first-3 bias is positive with 95% CI excluding 0.",
+  "mde80_projection_milli": {
+   "formula": "2.8016 * sd / sqrt(n); sd_overall_within=0.02207 (power_mde_expanded sigma_adj), sd_post_change_le3=0.02199 (power_mde roster bucket)",
+   "by_n": {
+    "50": {
+     "overall_within_milli": 8.74,
+     "post_change_le3_within_milli": 8.71
+    },
+    "75": {
+     "overall_within_milli": 7.14,
+     "post_change_le3_within_milli": 7.11
+    },
+    "100": {
+     "overall_within_milli": 6.18,
+     "post_change_le3_within_milli": 6.16
+    },
+    "150": {
+     "overall_within_milli": 5.05,
+     "post_change_le3_within_milli": 5.03
+    },
+    "200": {
+     "overall_within_milli": 4.37,
+     "post_change_le3_within_milli": 4.36
+    },
+    "300": {
+     "overall_within_milli": 3.57,
+     "post_change_le3_within_milli": 3.56
+    }
+   },
+   "reading": "at a realistic first checkpoint (~100 fresh series, ~60 in the post-change bucket) the floors are ~6.2m overall / ~8.0m bucket \u2014 only large effects are adjudicable soon; plan to re-check after Champions."
+  }
+ },
+ "exploratory_reads_context": {
+  "read1_b_continuity": {
+   "delta_milli": -3.889,
+   "status": "EXPLORATORY"
+  },
+  "read2_c_coldstart": {
+   "delta_milli": -1.423,
+   "status": "EXPLORATORY"
+  },
+  "read3_d_phase_reset": {
+   "delta_milli": -19.275,
+   "status": "EXPLORATORY"
+  },
+  "read4_e_v6_overreact": {
+   "delta_milli": -0.395,
+   "status": "EXPLORATORY"
+  }
+ },
+ "spec_run_roster_flag_extension": {
+  "written_by": "agent:roster-g SPEC RUN",
+  "classifier": "P1 W=8 c=5 (gate-selected policy; walk-forward, ADDENDUM 4 definitions)",
+  "fields": [
+   "modal_five",
+   "last_match_deviated_from_modal",
+   "matches_since_confirmed_boundary",
+   "provisional_pending"
+  ],
+  "teams": {
+   "100T": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "asuna",
+     "bang",
+     "cryocells",
+     "timotino",
+     "vora"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 25,
+    "last_confirmed_boundary": {
+     "date": "2026-01-16",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "2G": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "gobera",
+     "lz",
+     "pryze",
+     "silentzz",
+     "spike"
+    ],
+    "last_match_date": "2025-08-16",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 4,
+    "last_confirmed_boundary": {
+     "date": "2025-07-19",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "AG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "bai",
+     "f4ngeer",
+     "iamgrq",
+     "k1ra",
+     "shr1mp"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 17,
+    "last_confirmed_boundary": {
+     "date": "2026-05-16",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "ALP": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "coreano",
+     "foolish",
+     "sacy",
+     "safiro",
+     "tinakitten"
+    ],
+    "last_match_date": "2025-08-30",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "APK": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "avova",
+     "batujnax",
+     "molsi",
+     "olizera",
+     "penny"
+    ],
+    "last_match_date": "2025-08-13",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 4,
+    "last_confirmed_boundary": {
+     "date": "2025-07-16",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "ASE": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "bunt",
+     "life",
+     "monk",
+     "zero1",
+     "zjc"
+    ],
+    "last_match_date": "2023-11-23",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 8,
+    "last_confirmed_boundary": {
+     "date": "2023-07-05",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "BBL": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "crewen",
+     "lar0k",
+     "loita",
+     "lovers-rock",
+     "ros"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 25,
+    "last_confirmed_boundary": {
+     "date": "2026-01-21",
+     "k": 0,
+     "k5": "0/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "BLD": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "crazyguy",
+     "deryeon",
+     "retla",
+     "sscary",
+     "zest"
+    ],
+    "last_match_date": "2024-07-08",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 3,
+    "last_confirmed_boundary": {
+     "date": "2024-06-15",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "BLG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "ft",
+     "knight",
+     "nephh",
+     "rushia",
+     "whzy"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-09",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "BME": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "berserx",
+     "dos9",
+     "famouz",
+     "ncslasher",
+     "shiro"
+    ],
+    "last_match_date": "2025-08-09",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "BNY": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "bunny",
+     "cgrs",
+     "clutch-fi",
+     "xffero",
+     "xnfri"
+    ],
+    "last_match_date": "2023-05-27",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "C9": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "fireballops",
+     "jackk",
+     "oxy",
+     "v1c",
+     "zellsis"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 1,
+    "last_confirmed_boundary": {
+     "date": "2026-07-16",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "CJMZ": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cb",
+     "haodong",
+     "life",
+     "lysoar",
+     "stew"
+    ],
+    "last_match_date": "2025-08-22",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "CN": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "lizhi"
+    ],
+    "last_match_date": "2024-06-09",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "DFM": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "akame",
+     "caedye",
+     "meiy",
+     "ssees",
+     "yatsuka"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 16,
+    "last_confirmed_boundary": {
+     "date": "2026-01-23",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "DRG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "life",
+     "nicc",
+     "spiritz1",
+     "verse",
+     "vo0kashu"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-09",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "EDG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "chichoo",
+     "jieni7",
+     "nobody",
+     "smoggy",
+     "zmjjkk"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 23,
+    "last_confirmed_boundary": {
+     "date": "2026-03-31",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "EF": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "audaz",
+     "echo",
+     "favian",
+     "izzy",
+     "nekky"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "EG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "bao",
+     "dgzin",
+     "paincakes",
+     "supamen",
+     "zerona"
+    ],
+    "last_match_date": "2026-07-23",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-05-08",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "EMEA": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cigdemt",
+     "harmii",
+     "kereme",
+     "mimi",
+     "pereira"
+    ],
+    "last_match_date": "2025-08-31",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "ENVY": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "demon1",
+     "glyph",
+     "keznit",
+     "nightz",
+     "rossy"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-05-12",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FNC": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "alfajer",
+     "boaster",
+     "crashies",
+     "cyvoph",
+     "kaajak"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 8,
+    "last_confirmed_boundary": {
+     "date": "2026-04-30",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FPX": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "aaaay",
+     "coconut",
+     "kovaq",
+     "setrod",
+     "xlele"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-10",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FRA": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "helydia",
+     "loupiote",
+     "marctylinho",
+     "rage",
+     "themisterch"
+    ],
+    "last_match_date": "2025-08-31",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FRTTT": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "frttt",
+     "pancada",
+     "skrossi",
+     "suygetsu",
+     "vela"
+    ],
+    "last_match_date": "2023-03-04",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FS": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "crws",
+     "jitboys",
+     "killua",
+     "leviathan",
+     "primmie"
+    ],
+    "last_match_date": "2026-07-23",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 14,
+    "last_confirmed_boundary": {
+     "date": "2026-04-04",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FUR": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "alym",
+     "artzin",
+     "eeiu",
+     "koalanoob",
+     "nerve"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 22,
+    "last_confirmed_boundary": {
+     "date": "2025-07-18",
+     "k": 0,
+     "k5": "0/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "FUT": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "krostaly",
+     "s0pp",
+     "sociablee",
+     "xeus",
+     "yetujey"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 28,
+    "last_confirmed_boundary": {
+     "date": "2025-07-17",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "G2": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "babybay",
+     "jawgemo",
+     "leaf",
+     "trent",
+     "valyn"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 39,
+    "last_confirmed_boundary": {
+     "date": "2025-11-14",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "GE": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "autumn",
+     "kr1stal",
+     "patmen",
+     "udotan",
+     "xavi8k"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 33,
+    "last_confirmed_boundary": {
+     "date": "2025-05-22",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "GEN": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "ash",
+     "karon",
+     "lakia",
+     "t3xture",
+     "zynx"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 24,
+    "last_confirmed_boundary": {
+     "date": "2025-12-18",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "GIA": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cloud",
+     "fit1nho",
+     "hoody",
+     "nukkye",
+     "rhyme"
+    ],
+    "last_match_date": "2023-08-13",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "GOA": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "jasper7se",
+     "pepper",
+     "surugamonkey",
+     "xnfri",
+     "zennakukin"
+    ],
+    "last_match_date": "2025-08-30",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "GX": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "ara",
+     "cloud",
+     "flickless",
+     "grubinho",
+     "westside"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 34,
+    "last_confirmed_boundary": {
+     "date": "2025-05-16",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "HS": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "aaaay",
+     "guang",
+     "kai",
+     "siufatbb",
+     "spring"
+    ],
+    "last_match_date": "2025-08-22",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "INTL": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "kyedae",
+     "mimi"
+    ],
+    "last_match_date": "2025-03-02",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "JDG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "berlin",
+     "crownfisher",
+     "jkuro",
+     "yuicaw",
+     "zhe"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-10",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "KC": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "avez",
+     "dos9",
+     "lewn",
+     "n4rrate",
+     "suygetsu"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 20,
+    "last_confirmed_boundary": {
+     "date": "2026-01-20",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "KRX": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "beyn",
+     "free1ng",
+     "hyunmin",
+     "mako",
+     "yong"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 13,
+    "last_confirmed_boundary": {
+     "date": "2026-04-05",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "KR\u00dc": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "dantedeu5",
+     "less",
+     "mwzera",
+     "saadhak",
+     "silentzz"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 13,
+    "last_confirmed_boundary": {
+     "date": "2026-01-16",
+     "k": 1,
+     "k5": "1/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "LEV": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "blowz",
+     "kingg",
+     "neon",
+     "sato",
+     "spike"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 31,
+    "last_confirmed_boundary": {
+     "date": "2025-11-29",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "LOUD": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cauanzin",
+     "darker",
+     "erde",
+     "lukxo",
+     "virtyy"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 19,
+    "last_confirmed_boundary": {
+     "date": "2025-07-18",
+     "k": 1,
+     "k5": "1/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "M8": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "bipo",
+     "marteen",
+     "minny",
+     "proxh",
+     "starxo"
+    ],
+    "last_match_date": "2026-07-23",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-03",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "MIBR": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "aspas",
+     "mazino",
+     "tex",
+     "verno",
+     "zekken"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 20,
+    "last_confirmed_boundary": {
+     "date": "2026-01-17",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "MKOI": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "baddyg",
+     "filu",
+     "flyuh",
+     "monsteerr",
+     "natank"
+    ],
+    "last_match_date": "2025-08-13",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 6,
+    "last_confirmed_boundary": {
+     "date": "2025-05-16",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "NAVI": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "chloric",
+     "cyvoph",
+     "exit",
+     "hiro",
+     "ruxic"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 3,
+    "last_confirmed_boundary": {
+     "date": "2026-07-15",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "NOVA": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cb",
+     "ezeir",
+     "guang",
+     "qiutian",
+     "swagzor"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-12",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "NRG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "brawk",
+     "ethan",
+     "keiko",
+     "mada",
+     "skuba"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 39,
+    "last_confirmed_boundary": {
+     "date": "2025-11-14",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "NS": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "dambi",
+     "francis",
+     "ivy",
+     "rb",
+     "xross"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 31,
+    "last_confirmed_boundary": {
+     "date": "2025-11-08",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "OME": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "f0rsaken",
+     "grim",
+     "sidsity",
+     "suga",
+     "vela"
+    ],
+    "last_match_date": "2025-08-30",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "PCF": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "al0rante",
+     "cned",
+     "ninja",
+     "qpert",
+     "seven"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "PRX": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "d4v41",
+     "f0rsaken",
+     "invy",
+     "jinggg",
+     "something"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 40,
+    "last_confirmed_boundary": {
+     "date": "2025-12-18",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "RRQ": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "crazyguy",
+     "jemkin",
+     "kushy",
+     "monyet",
+     "xffero"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 49,
+    "last_confirmed_boundary": {
+     "date": "2025-03-24",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "SEN": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cortezia",
+     "jerrwin",
+     "johnqt",
+     "jonahp",
+     "reduxx"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 12,
+    "last_confirmed_boundary": {
+     "date": "2026-04-19",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "SPB": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "crws",
+     "razziebinx",
+     "superbuss",
+     "t3xture",
+     "yurihana"
+    ],
+    "last_match_date": "2023-05-27",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "T1": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "buzz",
+     "izu",
+     "meteor",
+     "munchkin",
+     "stax"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 22,
+    "last_confirmed_boundary": {
+     "date": "2026-01-24",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TE": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "delb",
+     "fengf",
+     "fkey",
+     "kai",
+     "luok1ng"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 9,
+    "last_confirmed_boundary": {
+     "date": "2026-05-16",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TEC": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "coco",
+     "dynamite",
+     "haodong",
+     "lucas",
+     "spitfires"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 20,
+    "last_confirmed_boundary": {
+     "date": "2026-03-31",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TH": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "benjyfishy",
+     "boo",
+     "koshmaras",
+     "riens",
+     "wo0t"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 17,
+    "last_confirmed_boundary": {
+     "date": "2026-04-09",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "THAi": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cgrs",
+     "mintauka",
+     "primmie",
+     "superbuss"
+    ],
+    "last_match_date": "2025-03-02",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TL": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "kamo",
+     "miniboo",
+     "nats",
+     "purp0",
+     "wayne"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 21,
+    "last_confirmed_boundary": {
+     "date": "2026-01-27",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TLN": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "crws",
+     "jitboys",
+     "killua",
+     "primmie",
+     "thyy"
+    ],
+    "last_match_date": "2025-08-30",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 19,
+    "last_confirmed_boundary": {
+     "date": "2025-03-23",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TS": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "berserx",
+     "jessievash",
+     "kellys",
+     "sylvan",
+     "zeus"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 13,
+    "last_confirmed_boundary": {
+     "date": "2026-01-22",
+     "k": 1,
+     "k5": "1/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "TYL": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "erv",
+     "scales",
+     "siufatbb",
+     "slowly",
+     "splash"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 9,
+    "last_confirmed_boundary": {
+     "date": "2026-05-24",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "Team": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "blackelespanolito",
+     "hitboxking",
+     "leviathan",
+     "mixwell"
+    ],
+    "last_match_date": "2025-06-22",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "ULF": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "audaz",
+     "d3mur",
+     "favian",
+     "nekky",
+     "sturnn"
+    ],
+    "last_match_date": "2026-02-05",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "VIT": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "chronicle",
+     "derke",
+     "jamppi",
+     "profek",
+     "sayonara"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 20,
+    "last_confirmed_boundary": {
+     "date": "2026-04-02",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "VL": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "foxy9",
+     "klaus",
+     "oonzmlp",
+     "xuna",
+     "zexy"
+    ],
+    "last_match_date": "2026-07-23",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 4,
+    "last_confirmed_boundary": {
+     "date": "2026-05-11",
+     "k": 4,
+     "k5": "4/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "WOL": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "aluba",
+     "deryeon",
+     "glacier",
+     "spring",
+     "yosemite"
+    ],
+    "last_match_date": "2026-07-26",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 5,
+    "last_confirmed_boundary": {
+     "date": "2026-07-09",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "WOR": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "bunny",
+     "cgrs",
+     "suzu",
+     "tenz",
+     "xccurate"
+    ],
+    "last_match_date": "2025-08-30",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "XLG": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "happywei",
+     "lysoar",
+     "noman",
+     "rarga",
+     "wsleo"
+    ],
+    "last_match_date": "2026-07-25",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": 34,
+    "last_confirmed_boundary": {
+     "date": "2026-01-24",
+     "k": 3,
+     "k5": "3/5"
+    },
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "ZETA": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "absol",
+     "eko",
+     "sugarz3ro",
+     "syouta",
+     "xdll"
+    ],
+    "last_match_date": "2026-07-24",
+    "last_match_deviated_from_modal": false,
+    "matches_since_confirmed_boundary": 16,
+    "last_confirmed_boundary": {
+     "date": "2025-11-14",
+     "k": 2,
+     "k5": "2/5"
+    },
+    "provisional_pending": false,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   },
+   "tarik": {
+    "as_of": "2026-07-27",
+    "modal_five": [
+     "cned",
+     "mimi",
+     "paula",
+     "sirmaza",
+     "tarik"
+    ],
+    "last_match_date": "2025-06-22",
+    "last_match_deviated_from_modal": true,
+    "matches_since_confirmed_boundary": null,
+    "last_confirmed_boundary": null,
+    "provisional_pending": true,
+    "provisional_detail": null,
+    "sizing_note": "provisional/deviating state = sizing signal, not a fair-value change; quote smaller until it settles (spec 2.5)"
+   }
+  },
+  "note": "design artifact for Tier-1 sizing only; no bot writes; the fair-value subsystem itself did NOT earn deployment (see spec_run_verdict)"
+ },
+ "spec_run_verdict": {
+  "deployed_model": "v6 EXACTLY (subsystem not deployed)",
+  "gate": "FIRED on train inner-CV (+6.416m > SE 5.339m, p1w8c5) but the preregistered holdout falsifier fired (-11.595m <= -1.773m): the causal subsystem at the gate-selected config is dead on this frame; v6 stands.",
+  "gate_bar_lesson": "mean>SE at K=5 with lambda from the same inner-CV did not protect out-of-sample here; recorded as a first-class negative result for the 3.5 guarantee chain on this family."
+ }
+}

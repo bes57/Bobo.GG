@@ -1,0 +1,294 @@
+{
+ "written_by": "agent:bias-h3 (Phase 5 H3 / experiment 5d)",
+ "preregistered": "preregister.bias_h3.md experiment 2 (written before fits)",
+ "frame": "v8/data/frame_expanded/series.csv (sha256 verified vs crn.json)",
+ "model": {
+  "family": "state-space Kalman analog; per-team (rating, variance); observation per map y = sign(rd)|rd|^0.75*2.5; R fixed = Var(y) on train games (identification constant \u2014 all reported quantities depend only on q/R and are invariant to this choice); game weights champ x2 / playoffs x1.6 scale R_i = R/w_i; q per own map-game (no calendar accrual, in-family with v6 games-counted decay); strict-day walk-forward",
+  "R": 11.2933,
+  "base_core": {
+   "q": 0.06376,
+   "q_over_R": 0.005646216173286171,
+   "V0_over_R": 1.2715614432003977,
+   "half_life_games": 9.23,
+   "ll_train": 0.648619,
+   "ll_holdout": 0.651033
+  },
+  "fit_protocol": "per-axis K=3 free q_k (V0 frozen at core's fit), coordinate descent on log q, TRAIN series NLL only, beta refit train-only at every evaluation; profile-likelihood CIs (Delta total train NLL = 1.92); DerSimonian-Laird random-effects pooling on log q (no free per-team q anywhere)"
+ },
+ "v6_reference": {
+  "ll_train": 0.64823,
+  "ll_holdout": 0.64216,
+  "note": "consist(20,12) engine baseline on the same frame; v6 half-lives 20 (consistent) / 12 (anomalous) map-games for comparison"
+ },
+ "mde_context": {
+  "within_family_milli": 1.773,
+  "cross_family_milli": 5.889,
+  "source": "stats/power_mde_expanded.json"
+ },
+ "axes": {
+  "A_roster": {
+   "axis_definition": "roster stability (matches_since_change at the game's match; lineups-agent definition, full-corpus scratch top-up, implementation verified 0/3466 mismatches)",
+   "preregistered_prediction": "q(change-adjacent) > q(stable) by >=2x",
+   "cells": [
+    "change-adjacent (msc<=3)",
+    "settling (4<=msc<=10)",
+    "stable (msc>10)"
+   ],
+   "n_games_per_cell_side": [
+    4303,
+    3273,
+    2704
+   ],
+   "q_mle": [
+    0.098978,
+    8e-06,
+    0.00885
+   ],
+   "q_over_R_mle": [
+    0.008764,
+    1e-06,
+    0.000784
+   ],
+   "half_life_games_mle": [
+    7.41,
+    328.6,
+    24.76
+   ],
+   "half_life_games_ci95_profile": [
+    [
+     3.94,
+     18.46
+    ],
+    [
+     41.3,
+     347.57
+    ],
+    [
+     5.27,
+     300.24
+    ]
+   ],
+   "logq_ci95_profile": [
+    [
+     -4.14,
+     -1.05
+    ],
+    [
+     -17.901,
+     -5.751
+    ],
+    [
+     -10.727,
+     -1.633
+    ]
+   ],
+   "logq_se_curvature": [
+    0.698,
+    70.232,
+    2.652
+   ],
+   "partial_pooling_DL": {
+    "tau2_logq": 0.0,
+    "Q_heterogeneity": 0.7927,
+    "pooled_q": [
+     0.084572,
+     0.084572,
+     0.084572
+    ],
+    "pooled_half_life_games": [
+     8.01,
+     8.01,
+     8.01
+    ],
+    "shrink_fraction": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "beta_refit_train": 0.09503,
+   "ll_train": 0.646662,
+   "ll_holdout_record": 0.647483
+  },
+  "B_orgage": {
+   "axis_definition": "org age (days since org's first corpus game; LEFT-CENSORED at corpus start 2023 \u2014 pre-2023 history invisible)",
+   "preregistered_prediction": "q(young) > q(established)",
+   "cells": [
+    "young (<180d)",
+    "mid (180-540d)",
+    "established (>540d)"
+   ],
+   "n_games_per_cell_side": [
+    2064,
+    2671,
+    5545
+   ],
+   "q_mle": [
+    0.066864,
+    0.055977,
+    0.336906
+   ],
+   "q_over_R_mle": [
+    0.005921,
+    0.004957,
+    0.029832
+   ],
+   "half_life_games_mle": [
+    9.01,
+    9.85,
+    4.02
+   ],
+   "half_life_games_ci95_profile": [
+    [
+     3.57,
+     173.34
+    ],
+    [
+     3.95,
+     186.33
+    ],
+    [
+     1.09,
+     80.58
+    ]
+   ],
+   "logq_ci95_profile": [
+    [
+     -8.705,
+     -0.849
+    ],
+    [
+     -8.883,
+     -1.054
+    ],
+    [
+     -7.088,
+     1.556
+    ]
+   ],
+   "logq_se_curvature": [
+    1.18,
+    1.144,
+    1.772
+   ],
+   "partial_pooling_DL": {
+    "tau2_logq": 0.0,
+    "Q_heterogeneity": 0.7773,
+    "pooled_q": [
+     0.082538,
+     0.082538,
+     0.082538
+    ],
+    "pooled_half_life_games": [
+     8.11,
+     8.11,
+     8.11
+    ],
+    "shrink_fraction": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "beta_refit_train": 0.092,
+   "ll_train": 0.648397,
+   "ll_holdout_record": 0.665171
+  },
+  "C_volatility": {
+   "axis_definition": "trailing rating volatility (std of last 12 standardized innovations from the fitted plain core; train terciles; <6 prior innovations -> middle cell)",
+   "preregistered_prediction": "q(high vol) > q(low vol)",
+   "cells": [
+    "low vol",
+    "mid vol",
+    "high vol"
+   ],
+   "n_games_per_cell_side": [
+    2703,
+    3449,
+    4128
+   ],
+   "q_mle": [
+    0.068922,
+    0.044822,
+    0.06621
+   ],
+   "q_over_R_mle": [
+    0.006103,
+    0.003969,
+    0.005863
+   ],
+   "half_life_games_mle": [
+    8.87,
+    11.0,
+    9.05
+   ],
+   "half_life_games_ci95_profile": [
+    [
+     3.62,
+     171.15
+    ],
+    [
+     3.06,
+     202.76
+    ],
+    [
+     3.93,
+     174.05
+    ]
+   ],
+   "logq_ci95_profile": [
+    [
+     -8.675,
+     -0.881
+    ],
+    [
+     -9.105,
+     -0.539
+    ],
+    [
+     -8.715,
+     -1.044
+    ]
+   ],
+   "logq_se_curvature": [
+    1.32,
+    2.274,
+    1.069
+   ],
+   "partial_pooling_DL": {
+    "tau2_logq": 0.0,
+    "Q_heterogeneity": 0.0287,
+    "pooled_q": [
+     0.064133,
+     0.064133,
+     0.064133
+    ],
+    "pooled_half_life_games": [
+     9.2,
+     9.2,
+     9.2
+    ],
+    "shrink_fraction": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "beta_refit_train": 0.09253,
+   "ll_train": 0.648601,
+   "ll_holdout_record": 0.651004
+  }
+ },
+ "headline": {
+  "roster_axis_point_estimates": "change-adjacent HL 7.4 games vs stable 24.8 games (q ratio ~11x, predicted direction, >2x prereg bar); settling cell hits the q->0 boundary (HL unbounded) \u2014 non-monotone",
+  "pooling_verdict": "DL tau2 = 0 on ALL axes: between-cell spread is NOT resolvable against the train profile curvature at n_train=841 series (2095 train games) \u2014 cells fully shrink to the pooled q (~HL 8 games). Point ordering and the pooled null are BOTH the published result; the roster axis's holdout record (ll 0.64748 vs core 0.65103, ~+3.6m within-family) is independent evidence the structure generalizes \u2014 final paired-bootstrap adjudication in stats/h3_statespace.json",
+  "org_age_axis": "REVERSED vs prediction (established orgs fit the LARGEST q, HL ~4 games) and degrades holdout by ~14m \u2014 read as left-censoring artifact + small-cell overfit, prediction falsified",
+  "volatility_axis": "flat (HL 8.9-11.0 across terciles) \u2014 prediction falsified at this n"
+ },
+ "caveats": [
+  "cell-1 (settling) roster q sits on the search boundary (q -> 0); its profile CI upper end is well below the other cells' MLEs \u2014 treat the 329-game HL as 'indistinguishable from no drift', not a measurement",
+  "DL pooling treats the three log-q MLEs as independent Gaussians; cells interact through shared beta refits and opponent variances",
+  "org-age axis is left-censored at corpus start (2023) \u2014 'young' cannot be distinguished from 'newly visible'",
+  "R is an identification constant; q/R, half-lives and n_eff are invariant to its value"
+ ]
+}

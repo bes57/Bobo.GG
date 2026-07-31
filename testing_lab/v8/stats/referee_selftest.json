@@ -1,0 +1,225 @@
+{
+ "generated": "2026-07-28 18:45:57",
+ "module": "testing_lab/v8/referee.py",
+ "preregister": "testing_lab/v8/preregister.referee.md",
+ "canonical_baseline": {
+  "ll": 0.64095,
+  "n_test": 1007,
+  "artifact": "out/v7_stage1.json:results.v6_consist_20_12 (+ per-series probs in out/v7_probs.npz)",
+  "reconciliation": "0.6409 = same champion on the Jul-22 native frame (n=999, pooled 0.64085); 0.64126 = prose-hardcoded mid-favorites-session build. Both superseded by the Jul-23 frame."
+ },
+ "items": [
+  {
+   "id": "1",
+   "name": "npz v6_consist_20_12 holdout LL (n=1007)",
+   "target": 0.64095,
+   "got": 0.64095,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "2a",
+   "name": "npz v5_asym_W20L12 holdout LL (n=1007)",
+   "target": 0.64145,
+   "got": 0.64145,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "2b",
+   "name": "npz consist_16_10 holdout LL (n=1007)",
+   "target": 0.64135,
+   "got": 0.64135,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "2c",
+   "name": "npz sym_16 holdout LL (n=1007)",
+   "target": 0.64262,
+   "got": 0.64262,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "1b",
+   "name": "crn holdout_order == npz frame holdout match_ids",
+   "target": "identical (n=1007)",
+   "got": "match=True",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "3a",
+   "name": "native year 2025 LL",
+   "target": 0.63036,
+   "got": 0.63036,
+   "pass": true,
+   "note": "n=498"
+  },
+  {
+   "id": "3b",
+   "name": "native year 2026 LL",
+   "target": 0.65127,
+   "got": 0.65127,
+   "pass": true,
+   "note": "n=501"
+  },
+  {
+   "id": "4",
+   "name": "native pooled holdout LL (the '0.6409' report number)",
+   "target": 0.64085,
+   "got": 0.64085,
+   "pass": true,
+   "note": "gen_final_model displays 0.6409; canonical stays 0.64095 (item 1)"
+  },
+  {
+   "id": "5",
+   "name": "per-team bias table vs v6_profile.teams",
+   "target": "42/42 rows (bias, ll, n)",
+   "got": "42/42",
+   "pass": true,
+   "note": "bias = mean(P(team wins)) - winrate, holdout, min_n=25"
+  },
+  {
+   "id": "6",
+   "name": "max|team bias| (gate input)",
+   "target": 0.1634,
+   "got": 0.1634,
+   "pass": true,
+   "note": "TS +16.3 pts is the published extreme"
+  },
+  {
+   "id": "7a",
+   "name": "wr16/wr5 machinery == npz stored elite_floor/form_shift",
+   "target": "identical masks (1695 rows)",
+   "got": "match=True",
+   "pass": true,
+   "note": "games from load_timeline_games (artifact-true)"
+  },
+  {
+   "id": "7",
+   "name": "all v6_profile buckets (n + v6 LL)",
+   "target": "23/23",
+   "got": "23/23",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "7b",
+   "name": "stage-1 elite-floor / form-shift LLs (npz frame)",
+   "target": "0.46106 / 0.66764",
+   "got": "0.46106 / 0.66764",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "8",
+   "name": "favorite bands vs v6_profile.bands (tie-free)",
+   "target": "4/4 (n, pred, emp)",
+   "got": "4/4",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "9",
+   "name": "deep1 cold-start bucket (production surface, 1578-row frame)",
+   "target": "n=57, LL 0.70205",
+   "got": "n=57, LL 0.70205",
+   "pass": true,
+   "note": "frame=1578 rows (deep1 ran pre-native, 1578)"
+  },
+  {
+   "id": "10a",
+   "name": "reliability_emit == harness.reliability (identical input)",
+   "target": "identical bin tables",
+   "got": "identical=True",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "10b",
+   "name": "favorite_reliability vs deep1.reliability_fav_warm [upstream_data_drift finding]",
+   "target": "10 bins identical",
+   "got": "identical=False; 6/10 bins differ, max |dn|=3, max |d_emp|=0.0156",
+   "pass": false,
+   "note": "warm n and the 57-row cold set reproduce exactly; residual differences trace to timeline rating drift since Jul-22 (pre-dates last data commit dd0d81f). Emitter itself proven in 10a."
+  },
+  {
+   "id": "11",
+   "name": "margin_mse vs margin2.marginMSE_v5",
+   "target": "mse 43.095 corr 0.148 n 999",
+   "got": "mse 43.095 corr 0.148 n 999",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "12",
+   "name": "paired_bootstrap_crn raises when crn.json absent",
+   "target": "RuntimeError",
+   "got": "raised",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "13a",
+   "name": "CRN iid: sha256 verify + determinism",
+   "target": "verify ok + identical repeat",
+   "got": "verify=ok, det=True",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "13b",
+   "name": "CRN block_event: events + sha256 verify",
+   "target": "verify ok",
+   "got": "ok",
+   "pass": true,
+   "note": "n_events=18, CI [-2.17, +3.21]m vs iid [-2.67, +3.76]m"
+  },
+  {
+   "id": "13c",
+   "name": "legacy bootstrap reproduces v7_stage1 published boot",
+   "target": {
+    "mean_delta": -0.0004971827539473983,
+    "p_better": 0.3725
+   },
+   "got": {
+    "mean_delta": -0.000497,
+    "p_better": 0.3725
+   },
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "14",
+   "name": "pnl_weighted_ll: source labels + uniform-fallback identity",
+   "target": "FALLBACK label + ll=0.66733 + live source",
+   "got": "FALLBACK_uniform_20_55c ll=0.66733 live=v8/stats/quote_density.json",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "15",
+   "name": "expected-ROI ladder endpoints (flat_0c, logit_0.6)",
+   "target": "0.0021 / 0.2911",
+   "got": "0.0021 / 0.2911",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "16",
+   "name": "promotion_gate logic (dominator promotes, self holds)",
+   "target": "PROMOTE / HOLD",
+   "got": "PROMOTE / HOLD",
+   "pass": true,
+   "note": "dominator clauses: [True, True, True], self clauses: [False, False, True]"
+  }
+ ],
+ "all_pass": true,
+ "blockers": [],
+ "data_drift_findings": [
+  "[10b] favorite_reliability vs deep1.reliability_fav_warm [upstream_data_drift finding]: identical=False; 6/10 bins differ, max |dn|=3, max |d_emp|=0.0156 \u2014 warm n and the 57-row cold set reproduce exactly; residual differences trace to timeline rating drift since Jul-22 (pre-dates last data commit dd0d81f). Emitter itself proven in 10a.",
+  "engine.load_games_real_dates() TODAY is missing every EWC-class map (site registry moved these events to per-region files after Jul 23, uncommitted): stage-1-style reruns would see a different game set than the npz-era runs. Use referee.load_timeline_games() for artifact-true games."
+ ]
+}

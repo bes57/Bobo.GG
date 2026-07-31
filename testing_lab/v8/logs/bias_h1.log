@@ -1,0 +1,77 @@
+2026-07-28 21:58:07 [bias_h1] START. Read wave2_common, bias_h1 brief, README. sha256 frame_expanded verified ff772d41... OK vs crn.json. v6 cfg identified from run_v7_stage1.py BASE + consistency(20,12).
+2026-07-28 22:03:06 [bias_h1] frame loaded + sha verified (n=2058/841/1217)
+2026-07-28 22:03:07 [bias_h1] engine: 5140 games, 73 teams, 637 pred days
+2026-07-28 22:03:09 [bias_h1] v6 baseline run: 2.2s  beta=0.1152 ll_test=0.64216 n_test=1217 n_train=827
+2026-07-28 22:03:09 [bias_h1] baseline_v6.npz saved (incl. daily ratings)
+2026-07-28 22:03:09 [bias_h1] E3 sample: 2057 train maps with as-of ratings (no-rating skipped 34, junk 0, classes {'REG': 1866, 'OT': 222, 'CAP': 3})
+2026-07-28 22:03:09 [bias_h1] E3 done: cap Q4 0.0019 vs mid 0.0019 ratio 1.00 (P1=False); top-decile resid 5.187 CI [4.706, 5.669] (P2=False) -> SKIP_E1_PREMISE_WEAK
+2026-07-28 22:04:39 [bias_h1] E3 GATE: P1 FAIL (cap ratio 1.00, prereg needed >=2; falsifier <1.5 FIRED), P2 FAIL (top-decile resid +5.19, positive — NOTE: P2 operationalization flawed, winner-referenced y has positive floor; raw margin density shows NO pile-up at cap: 222/137/68/12 for m=10/11/12/13). Prereg gate -> SKIP_E1. DEVIATION (run-more direction, documented): E1 runs anyway as confirmatory kill — engine runs cost 2.2s (prereg assumed expensive), and OT interval-censoring touches 10.6% of maps (that premise half untested by P1). Premise-weak verdict stands regardless of E1 outcome.
+2026-07-28 22:05:19 [bias_h1] E1 sigma_hat = 4.5660 (train REG maps n=1836)
+2026-07-28 22:05:21 [bias_h1] E1[s1.0] iter 1: max|dT|=2.8172 beta=0.1161 ll_test=0.64266
+2026-07-28 22:05:23 [bias_h1] E1[s1.0] iter 2: max|dT|=0.0466 beta=0.1165 ll_test=0.64262
+2026-07-28 22:05:26 [bias_h1] E1[s0.8] iter 1: max|dT|=3.1090 beta=0.1163 ll_test=0.64263
+2026-07-28 22:05:28 [bias_h1] E1[s0.8] iter 2: max|dT|=0.1679 beta=0.1163 ll_test=0.64263
+2026-07-28 22:05:30 [bias_h1] E1[s0.8] iter 3: max|dT|=0.0028 beta=0.1163 ll_test=0.64263
+2026-07-28 22:05:32 [bias_h1] E1[s1.25] iter 1: max|dT|=2.7766 beta=0.1166 ll_test=0.64261
+2026-07-28 22:05:35 [bias_h1] E1[s1.25] iter 2: max|dT|=0.0711 beta=0.1166 ll_test=0.64261
+2026-07-28 22:05:37 [bias_h1] E1[s1.25] iter 3: max|dT|=0.0007 beta=0.1166 ll_test=0.64261
+2026-07-28 22:05:37 [bias_h1] E1[s1.0] dLL=-0.462m iid CI [-1.27,+0.37] maxbias=0.1492
+2026-07-28 22:05:37 [bias_h1] E1[s0.8] dLL=-0.470m iid CI [-1.31,+0.38] maxbias=0.1492
+2026-07-28 22:05:37 [bias_h1] E1[s1.25] dLL=-0.451m iid CI [-1.25,+0.37] maxbias=0.1492
+2026-07-28 22:05:37 [bias_h1] E1 written stats/h1_tobit.json
+2026-07-28 22:10:27 [bias_h1] E2 parity gate: max|rdiff gap| = 0.00e+00, same_valid=True (2.3s)
+2026-07-28 22:10:28 [bias_h1] E2 rows: covered maps 4349, fallback maps 791 (score-mismatch/junk demoted to fallback: 2), cells 8698
+2026-07-28 22:10:31 [bias_h1] E2 walkforward[lambda-grid/train] 312 days x 7 lambdas: 3s (h_last={0.02: np.float64(0.0625), 0.05: np.float64(0.0625), 0.1: np.float64(0.0625), 0.2: np.float64(0.0625), 0.5: np.float64(0.0625), 1.0: np.float64(0.0624), 2.0: np.float64(0.0623)})
+2026-07-28 22:10:31 [bias_h1] E2 lambda 0.02: train wf LL 0.66385 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 lambda 0.05: train wf LL 0.66487 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 lambda 0.1: train wf LL 0.66472 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 lambda 0.2: train wf LL 0.66473 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 lambda 0.5: train wf LL 0.66518 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 lambda 1.0: train wf LL 0.66604 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 lambda 2.0: train wf LL 0.66762 beta 0.6000 n 827
+2026-07-28 22:10:31 [bias_h1] E2 chosen lambda = 0.02 (train-only)
+2026-07-28 22:10:34 [bias_h1] E2 walkforward[final] 637 days x 1 lambdas: 3s (h_last={0.02: np.float64(0.0351)})
+2026-07-28 22:10:34 [bias_h1] E2 final: beta 0.6000 holdout LL 0.66443 n 1217
+2026-07-28 22:10:34 [bias_h1] E2 fit artifacts saved; judging + effective-sample in next step
+2026-07-28 22:12:40 [bias_h1] E2 BUGFIX before judging: fit_beta bounds (0.03,0.6) clipped BT beta at 0.6 (round-logit scale needs larger); widened to (0.03,40) for BT only; lambda grid rerun (its selection had used clipped beta). No holdout numbers were consumed pre-fix.
+2026-07-28 22:12:48 [bias_h1] E2 parity gate: max|rdiff gap| = 0.00e+00, same_valid=True (2.3s)
+2026-07-28 22:12:48 [bias_h1] E2 rows: covered maps 4349, fallback maps 791 (score-mismatch/junk demoted to fallback: 2), cells 8698
+2026-07-28 22:12:51 [bias_h1] E2 walkforward[lambda-grid/train] 312 days x 7 lambdas: 3s (h_last={0.02: np.float64(0.0625), 0.05: np.float64(0.0625), 0.1: np.float64(0.0625), 0.2: np.float64(0.0625), 0.5: np.float64(0.0625), 1.0: np.float64(0.0624), 2.0: np.float64(0.0623)})
+2026-07-28 22:12:51 [bias_h1] E2 lambda 0.02: train wf LL 0.65303 beta 1.2896 n 827
+2026-07-28 22:12:51 [bias_h1] E2 lambda 0.05: train wf LL 0.65509 beta 1.2536 n 827
+2026-07-28 22:12:51 [bias_h1] E2 lambda 0.1: train wf LL 0.65390 beta 1.3011 n 827
+2026-07-28 22:12:51 [bias_h1] E2 lambda 0.2: train wf LL 0.65268 beta 1.3594 n 827
+2026-07-28 22:12:51 [bias_h1] E2 lambda 0.5: train wf LL 0.65113 beta 1.4630 n 827
+2026-07-28 22:12:51 [bias_h1] E2 lambda 1.0: train wf LL 0.65015 beta 1.5739 n 827
+2026-07-28 22:12:51 [bias_h1] E2 lambda 2.0: train wf LL 0.64957 beta 1.7325 n 827
+2026-07-28 22:12:51 [bias_h1] E2 chosen lambda = 2.0 (train-only)
+2026-07-28 22:12:55 [bias_h1] E2 walkforward[final] 637 days x 1 lambdas: 3s (h_last={2.0: np.float64(0.0352)})
+2026-07-28 22:12:55 [bias_h1] E2 final: beta 1.7325 holdout LL 0.64238 n 1217
+2026-07-28 22:12:55 [bias_h1] E2 fit artifacts saved; judging + effective-sample in next step
+2026-07-28 22:13:10 [bias_h1] E2 DEVIATION (documented): preregistered lambda grid topped out at 2.0 but train-wf LL was still improving at the edge; grid extended {4,8,16,32} (train-only selection unchanged).
+2026-07-28 22:13:14 [bias_h1] E2 parity gate: max|rdiff gap| = 0.00e+00, same_valid=True (2.3s)
+2026-07-28 22:13:14 [bias_h1] E2 rows: covered maps 4349, fallback maps 791 (score-mismatch/junk demoted to fallback: 2), cells 8698
+2026-07-28 22:13:19 [bias_h1] E2 walkforward[lambda-grid/train] 312 days x 11 lambdas: 5s (h_last={0.02: np.float64(0.0625), 0.05: np.float64(0.0625), 0.1: np.float64(0.0625), 0.2: np.float64(0.0625), 0.5: np.float64(0.0625), 1.0: np.float64(0.0624), 2.0: np.float64(0.0623), 4.0: np.float64(0.0621), 8.0: np.float64(0.0618), 16.0: np.float64(0.0613), 32.0: np.float64(0.0608)})
+2026-07-28 22:13:19 [bias_h1] E2 lambda 0.02: train wf LL 0.65303 beta 1.2896 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 0.05: train wf LL 0.65509 beta 1.2536 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 0.1: train wf LL 0.65390 beta 1.3011 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 0.2: train wf LL 0.65268 beta 1.3594 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 0.5: train wf LL 0.65113 beta 1.4630 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 1.0: train wf LL 0.65015 beta 1.5739 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 2.0: train wf LL 0.64957 beta 1.7325 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 4.0: train wf LL 0.64966 beta 1.9721 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 8.0: train wf LL 0.65072 beta 2.3546 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 16.0: train wf LL 0.65286 beta 2.9944 n 827
+2026-07-28 22:13:19 [bias_h1] E2 lambda 32.0: train wf LL 0.65588 beta 4.1041 n 827
+2026-07-28 22:13:19 [bias_h1] E2 chosen lambda = 2.0 (train-only)
+2026-07-28 22:13:22 [bias_h1] E2 walkforward[final] 637 days x 1 lambdas: 3s (h_last={2.0: np.float64(0.0352)})
+2026-07-28 22:13:22 [bias_h1] E2 final: beta 1.7325 holdout LL 0.64238 n 1217
+2026-07-28 22:13:22 [bias_h1] E2 fit artifacts saved; judging + effective-sample in next step
+2026-07-28 22:13:38 [bias_h1] E2-judge: rebuilt cells (cov 4349 fb 791 mismatch 2)
+2026-07-28 22:13:38 [bias_h1] E2 judge: dLL=-0.222m iid[-2.62,+2.11] blk[-2.49,+1.72] maxbias 0.1515 (v6 0.1478)
+2026-07-28 22:13:38 [bias_h1] E2 k_eff (Fisher, median over 33 teams) = 1.25
+2026-07-28 22:13:38 [bias_h1] E2 per-map info ratio: mean 1.44 med 1.42
+2026-07-28 22:13:39 [bias_h1] E2 k_eff (cluster bootstrap B=200, 1s) = 0.80
+2026-07-28 22:13:39 [bias_h1] E2 written stats/h1_roundbt.json
+2026-07-28 22:13:39 [bias_h1] caterpillar written stats/h1_bias_caterpillar.json
+2026-07-28 22:15:37 [bias_h1] DONE. Deliverables: stats/h1_censor_diag.json, h1_tobit.json, h1_roundbt.json, h1_bias_caterpillar.json; phase5_h1.md; outcomes appended to preregister.bias_h1.md. Verdicts: E3 premise DEAD (cap ratio 1.00, 0.23% cap mass, no boundary pile-up); E1 Tobit KILL (-0.462m inside 1.77m floor, elite unmoved, maxbias up); E2 round-BT TIE (-0.222m inside 5.89m floor) and k_eff MEASURED 1.25 Fisher / 0.80 cluster-boot -> order-of-magnitude claim falsified.

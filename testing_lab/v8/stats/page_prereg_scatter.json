@@ -1,0 +1,358 @@
+{
+ "source": "preregister.*.md outcome sections (quotes verified verbatim at build)",
+ "note": "predictions were written BEFORE runs (per-file discipline); 'held' = realized inside the preregistered band",
+ "milli_rows": [
+  {
+   "agent": "decay",
+   "item": "5a consist_16_10 vs v6",
+   "unit": "milli",
+   "pred_lo": -1.5,
+   "pred_hi": 0.5,
+   "realized_milli": -0.531,
+   "outcome": "held",
+   "source_file": "preregister.decay.md",
+   "source_quote": "consist_16_10 \u22120.53m (predicted [\u22121.5,+0.5])"
+  },
+  {
+   "agent": "decay",
+   "item": "5a sym_20 vs v6",
+   "unit": "milli",
+   "pred_lo": -4,
+   "pred_hi": 0,
+   "realized_milli": -2.17,
+   "outcome": "held",
+   "source_file": "preregister.decay.md",
+   "source_quote": "sym_20 \u22122.17m (predicted [\u22124,0])"
+  },
+  {
+   "agent": "decay",
+   "item": "5a sym_24 vs v6",
+   "unit": "milli",
+   "pred_lo": -4,
+   "pred_hi": 1,
+   "realized_milli": -2.42,
+   "outcome": "held",
+   "source_file": "preregister.decay.md",
+   "source_quote": "sym_24 \u22122.42m (predicted [\u22124,+1])"
+  },
+  {
+   "agent": "decay",
+   "item": "5b-a lineup continuity vs v6",
+   "unit": "milli",
+   "pred_lo": -2,
+   "pred_hi": 2,
+   "realized_milli": -2.82,
+   "outcome": "miss",
+   "source_file": "preregister.decay.md",
+   "source_quote": "predicted [\u22122,+2] vs v6 \u2192 measured"
+  },
+  {
+   "agent": "decay",
+   "item": "5b-a lineup continuity vs own control",
+   "unit": "milli",
+   "pred_lo": 0.5,
+   "pred_hi": 3,
+   "realized_milli": 1.68,
+   "outcome": "held",
+   "source_file": "preregister.decay.md",
+   "source_quote": "predicted +0.5..+3 vs own control \u2192 measured +1.68m"
+  },
+  {
+   "agent": "decay",
+   "item": "5b-b opponent quality of anomaly",
+   "unit": "milli",
+   "pred_lo": 0,
+   "pred_hi": 1.5,
+   "realized_milli": -0.85,
+   "outcome": "sign wrong",
+   "source_file": "preregister.decay.md",
+   "source_quote": "predicted +0..+1.5 \u2192 measured \u22120.85m (SIGN WRONG,"
+  },
+  {
+   "agent": "decay",
+   "item": "5b-c anomaly margin",
+   "unit": "milli",
+   "pred_lo": 0,
+   "pred_hi": 1.5,
+   "realized_milli": -0.55,
+   "outcome": "sign wrong",
+   "source_file": "preregister.decay.md",
+   "source_quote": "predicted +0..+1.5 \u2192 measured \u22120.55m (SIGN WRONG, inside"
+  },
+  {
+   "agent": "decay",
+   "item": "5b-d event-class fade vs sym control",
+   "unit": "milli",
+   "pred_lo": 0.5,
+   "pred_hi": 2,
+   "realized_milli": 0.27,
+   "outcome": "under band",
+   "source_file": "preregister.decay.md",
+   "source_quote": "predicted +0.5..+2 vs sym control \u2192 measured +0.27m"
+  },
+  {
+   "agent": "decay",
+   "item": "5b-e patch fade vs sym control",
+   "unit": "milli",
+   "pred_lo": 0,
+   "pred_hi": 2,
+   "realized_milli": -3.09,
+   "outcome": "falsifier fired",
+   "source_file": "preregister.decay.md",
+   "source_quote": "predicted +0..+2 vs sym control \u2192 measured \u22123.09m"
+  },
+  {
+   "agent": "context",
+   "item": "3b-a exposure term vs B0",
+   "unit": "milli",
+   "pred_lo": -1.773,
+   "pred_hi": 1.773,
+   "realized_milli": -0.28,
+   "outcome": "held",
+   "source_file": "preregister.context.md",
+   "source_quote": "Predicted: all c ~ 0, |\u0394| inside 1.773m floor"
+  },
+  {
+   "agent": "context",
+   "item": "3d learned class weights vs B0",
+   "unit": "milli",
+   "pred_lo": -1.773,
+   "pred_hi": 1.773,
+   "realized_milli": -5.737,
+   "outcome": "miss",
+   "source_file": "preregister.context.md",
+   "source_quote": "holdout \u0394 vs B0 inside the floor (hand-set weights"
+  },
+  {
+   "agent": "bias_h1",
+   "item": "E1 Tobit vs v6",
+   "unit": "milli",
+   "pred_lo": 0.3,
+   "pred_hi": 1.5,
+   "realized_milli": -0.462,
+   "outcome": "miss",
+   "source_file": "preregister.bias_h1.md",
+   "source_quote": "Predicted +0.3..+1.5m, elite +1..+3 pts toward 0"
+  },
+  {
+   "agent": "bias_h1",
+   "item": "E2 round-BT vs v6",
+   "unit": "milli",
+   "pred_lo": -2,
+   "pred_hi": 2,
+   "realized_milli": -0.222,
+   "outcome": "held",
+   "source_file": "preregister.bias_h1.md",
+   "source_quote": "Predicted \u0394LL \u22122..+2m: measured"
+  },
+  {
+   "agent": "bias_h3",
+   "item": "Exp1 SS core vs v6",
+   "unit": "milli",
+   "pred_lo": 0,
+   "pred_hi": 3,
+   "realized_milli": -8.87,
+   "outcome": "miss",
+   "source_file": "preregister.bias_h3.md",
+   "source_quote": "predicted +0 to +3m"
+  },
+  {
+   "agent": "bias_h3",
+   "item": "Exp2 5d vs SS core",
+   "unit": "milli",
+   "pred_lo": 0,
+   "pred_hi": 2,
+   "realized_milli": 3.55,
+   "outcome": "above band",
+   "source_file": "preregister.bias_h3.md",
+   "source_quote": "predicted +0 to +2m"
+  },
+  {
+   "agent": "bias_h4",
+   "item": "E2 L1 global \u03c3 link vs v6",
+   "unit": "milli",
+   "pred_lo": -1,
+   "pred_hi": 1,
+   "realized_milli": -0.048,
+   "outcome": "held",
+   "source_file": "preregister.bias_h4.md",
+   "source_quote": "Predicted L1/L2 holdout \u0394 \u2208 (\u22121,+1) milli, INSIDE NOISE FLOOR: CONFIRMED"
+  },
+  {
+   "agent": "bias_h4",
+   "item": "E2 L2 depth \u03c3 link vs v6",
+   "unit": "milli",
+   "pred_lo": -1,
+   "pred_hi": 1,
+   "realized_milli": 0.213,
+   "outcome": "held",
+   "source_file": "preregister.bias_h4.md",
+   "source_quote": "Predicted L1/L2 holdout \u0394 \u2208 (\u22121,+1) milli, INSIDE NOISE FLOOR: CONFIRMED"
+  },
+  {
+   "agent": "compose",
+   "item": "S1 gate5d vs v6",
+   "unit": "milli",
+   "pred_lo": 0.5,
+   "pred_hi": 2.5,
+   "realized_milli": 1.958,
+   "outcome": "held",
+   "source_file": "preregister.compose.md",
+   "source_quote": "predicted effect +0.5..+2.5m overall"
+  },
+  {
+   "agent": "compose",
+   "item": "S2 fade+shrink vs v6",
+   "unit": "milli",
+   "pred_lo": -0.2,
+   "pred_hi": 0.8,
+   "realized_milli": -0.14,
+   "outcome": "held (low end)",
+   "source_file": "preregister.compose.md",
+   "source_quote": "effect \u22120.2..+0.8m overall"
+  },
+  {
+   "agent": "compose",
+   "item": "S3 full stack vs v6",
+   "unit": "milli",
+   "pred_lo": 0.5,
+   "pred_hi": 3.0,
+   "realized_milli": -7.874,
+   "outcome": "falsifier fired",
+   "source_file": "preregister.compose.md",
+   "source_quote": "predicted effect \u2248 additive: +0.5..+3.0m"
+  }
+ ],
+ "aux_rows": [
+  {
+   "agent": "context",
+   "item": "3a integrity down-weight w0*",
+   "unit": "solve weight",
+   "predicted": "~0.5",
+   "realized": "1.0 (train falsifier fired; monotone worse toward 0)",
+   "outcome": "miss",
+   "source_file": "preregister.context.md",
+   "source_quote": "measured train argmin w0* = 1.0"
+  },
+  {
+   "agent": "context",
+   "item": "3a blanket EWC weight w_e*",
+   "unit": "solve weight",
+   "predicted": "~0.8",
+   "realized": "1.2 grid edge (train wants UP-weight); holdout \u22120.05m",
+   "outcome": "direction wrong",
+   "source_file": "preregister.context.md",
+   "source_quote": "predicted w_e*~0.8; measured train argmin at the 1.2 grid"
+  },
+  {
+   "agent": "context",
+   "item": "3b-b form coef shrink under exposure controls",
+   "unit": "%",
+   "predicted": "<30%",
+   "realized": "109% at HL5 (sign flip to ~0); 58% at HL3",
+   "outcome": "miss \u2014 scouting in disguise",
+   "source_file": "preregister.context.md",
+   "source_quote": "Predicted <30% shrink \u2014 WRONG"
+  },
+  {
+   "agent": "context",
+   "item": "3c-A elimination solve weight w_elim*",
+   "unit": "solve weight",
+   "predicted": "1.0\u20131.15",
+   "realized": "0.7 grid edge (train wants elim DOWN-weighted)",
+   "outcome": "direction wrong",
+   "source_file": "preregister.context.md",
+   "source_quote": "predicted w_elim* \u2208"
+  },
+  {
+   "agent": "context",
+   "item": "3d fitted EWC-class weight",
+   "unit": "solve weight",
+   "predicted": "~0.6",
+   "realized": "1.018, CI [0.4,3.4] \u2287 1.0 \u2014 falsifier fired",
+   "outcome": "miss",
+   "source_file": "preregister.context.md",
+   "source_quote": "Predicted w_ewc ~0.6 \u2014 WRONG: fitted 1.018"
+  },
+  {
+   "agent": "context",
+   "item": "3e stand-in shrink k1",
+   "unit": "coef",
+   "predicted": "> 0 small",
+   "realized": "+0.347",
+   "outcome": "held",
+   "source_file": "preregister.context.md",
+   "source_quote": "k_standin = +0.347 (predicted >0 small \u2713)"
+  },
+  {
+   "agent": "bias_h1",
+   "item": "E3 cap-share ratio Q4 / mid",
+   "unit": "ratio",
+   "predicted": "2.5\u20134\u00d7",
+   "realized": "1.00\u00d7 (premise dead)",
+   "outcome": "miss",
+   "source_file": "preregister.bias_h1.md",
+   "source_quote": "cap-share(Q4) / cap-share(Q2\u222aQ3) \u2248 2.5\u20134\u00d7"
+  },
+  {
+   "agent": "bias_h1",
+   "item": "E2 round-level effective-sample k_eff",
+   "unit": "ratio",
+   "predicted": "2.5\u20134.5\u00d7 (brief said ~10\u00d7)",
+   "realized": "1.25\u00d7 Fisher / 0.80\u00d7 cluster-boot",
+   "outcome": "falsifier fired",
+   "source_file": "preregister.bias_h1.md",
+   "source_quote": "k_eff predicted 2.5\u20134.5 (claim ~10): measured Fisher-median"
+  },
+  {
+   "agent": "bias_h2",
+   "item": "Spearman(bias, centrality)",
+   "unit": "\u03c1",
+   "predicted": "\u2248 \u22120.30",
+   "realized": "\u22120.304 \u2014 but CI spans 0 \u2192 gate FAIL",
+   "outcome": "point held, gate failed",
+   "source_file": "preregister.bias_h2.md",
+   "source_quote": "Predicted Spearman(bias, eig) \u2248 \u22120.30: measured \u22120.304"
+  },
+  {
+   "agent": "bias_h2",
+   "item": "Spearman(|bias|, centrality)",
+   "unit": "\u03c1",
+   "predicted": "\u2248 \u22120.35",
+   "realized": "\u22120.077, CI [\u22120.42,+0.28] \u2014 null",
+   "outcome": "miss",
+   "source_file": "preregister.bias_h2.md",
+   "source_quote": "Predicted Spearman(|bias|, eig) \u2248 \u22120.35: measured \u22120.077"
+  },
+  {
+   "agent": "bias_h3",
+   "item": "Exp2 roster q(change)/q(stable)",
+   "unit": "ratio",
+   "predicted": "\u2265 2\u00d7",
+   "realized": "\u224811\u00d7 point MLEs \u2014 but DL \u03c4\u00b2=0: unsupported at this n",
+   "outcome": "point held, pooling null",
+   "source_file": "preregister.bias_h3.md",
+   "source_quote": "predicted q(change)>q(stable) \u22652\u00d7 \u21d2 CONFIRMED in"
+  },
+  {
+   "agent": "bias_h4",
+   "item": "E1 sweep excess D_sweep",
+   "unit": "pp",
+   "predicted": "+1..+3",
+   "realized": "+5.09 [+1.81,+8.53] \u2014 sign right, larger (OVER-dispersed)",
+   "outcome": "above band",
+   "source_file": "preregister.bias_h4.md",
+   "source_quote": "Predicted mild global over-dispersion +1..+3 pp: CONFIRMED in sign,"
+  },
+  {
+   "agent": "bias_h4",
+   "item": "E2 shared-effect \u03c3_u",
+   "unit": "\u03c3",
+   "predicted": "0.2\u20130.6",
+   "realized": "0.72 [0.38,1.00]",
+   "outcome": "above band",
+   "source_file": "preregister.bias_h4.md",
+   "source_quote": "Predicted \u03c3\u0302_u \u2208 [0.2,0.6]: actual 0.72"
+  }
+ ]
+}

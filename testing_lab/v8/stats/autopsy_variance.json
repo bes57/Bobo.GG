@@ -1,0 +1,21 @@
+{
+ "crn_source": "crn.json bootstrap block (numpy PCG64, seed 20260728, n_boot 4000, recipe rng=np.random.default_rng(seed))",
+ "note_earlier_run": "first run used fallback seed 780728 mislabeled as crn.json (crn.json was written by agent:power mid-run); superseded by this CRN-compliant run",
+ "B": 4000,
+ "unit": "settled event (n=28)",
+ "observed_realized": -315.75,
+ "H0": "per-event E[pnl]=6.7% of side-1 cost (flat-5c sim point edge, quote_margin.json)",
+ "H0_expected_total": 109.45,
+ "p_cum_le_observed": 0.0,
+ "sim_quantiles": {
+  "0.05": -84.5,
+  "0.25": 30.73,
+  "0.5": 112.99,
+  "0.75": 192.02,
+  "0.95": 298.84
+ },
+ "per_fill_sensitivity": "per-event unit is primary (fills within an event are one bet); per-fill run below",
+ "per_fill_p": 0.04125,
+ "per_fill_observed": -315.74,
+ "verdict": "real underperformance (p<0.05)"
+}

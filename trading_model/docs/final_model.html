@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Final Model — Development Playbook (BenPom v6)</title>
+<link rel="icon" href="/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:900px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 24px; flex-wrap:wrap; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.78rem; width:24px;
+        height:24px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ h3 { font-size:.94rem; font-weight:700; margin:13px 0 5px; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ table { width:100%; border-collapse:collapse; font-size:.84rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+ tr:last-child td { border-bottom:0; }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg); border-radius:0 12px 12px 0;
+            padding:12px 16px; margin:10px 0; font-size:.89rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ canvas { max-height:340px; }
+ .chartbox.tall { height:560px; } .chartbox.tall canvas { max-height:none; height:100% !important; }
+ .good { color:var(--good); font-weight:700; } .bad { color:var(--bad); font-weight:700; }
+ .heat { display:grid; grid-template-columns:70px repeat(5,1fr); gap:5px; margin:12px 0; }
+ .hcol { font-size:.72rem; font-weight:700; color:var(--dim); text-align:center;
+         text-transform:uppercase; letter-spacing:.4px; align-self:end; padding-bottom:2px; }
+ .hlab { font-size:.74rem; font-weight:700; color:var(--dim); align-self:center;
+         text-align:right; padding-right:6px; }
+ .hcell { border-radius:10px; padding:10px 4px; text-align:center; min-height:56px;
+          display:flex; flex-direction:column; justify-content:center; }
+ .hcell .hroi { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.02rem; }
+ .hcell .hn { font-size:.66rem; opacity:.75; }
+ .hcell.hna { background:#f1f0f4; color:var(--dim); }
+ .chartbox { height:560px; margin:12px 0 4px; }
+ .chartbox.short { height:300px; }
+ code { font-family:'JetBrains Mono',monospace; font-size:.8em; background:#f4f2f8;
+        border:1px solid var(--line); border-radius:6px; padding:1px 6px; }
+ ol, ul { font-size:.9rem; margin:8px 0 8px 20px; } li { margin:5px 0; }
+</style></head>
+<body><div class="wrap">
+<h1>Final Model — Development Playbook</h1>
+<div class="tagline">BenPom v6 · the private trading model: complete spec, how it got here,
+what was ruled out, and how to maintain it · generated 2026-07-22</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab">Favorites Lab</a>
+<a href="/testing/report/final_model" class="on">Final Model</a>
+</div>
+
+<section>
+<h2><span class="n">0</span>The final model at a glance</h2>
+<table>
+<tr><th>Component</th><th>Value</th><th>Why it exists</th></tr>
+<tr><td><b>Rating solve</b></td><td class="mono">Massey, target = sign(rd)·|rd|^0.75 · 2.5</td>
+<td>margins carry the signal; ^0.75 beat sqrt and raw in every grid</td></tr>
+<tr><td><b>Decay</b></td><td class="mono">games-counted, consistency-conditioned:
+HL 20 (result matches team level) / HL 12 (anomaly)</td>
+<td>information arrives per game, not per week (break-proof); consistency
+conditioning keeps elite wins AND floor losses as signal</td></tr>
+<tr><td><b>Solve weights</b></td><td class="mono">playoffs/GF ×1.6 · Champions ×2 ·
+ridge 0.5 · region-prior ridge 1.5</td>
+<td>high-stakes games more informative; teams regress to region context</td></tr>
+<tr><td><b>Roster</b></td><td class="mono">year-boundary continuity, persistence 0.3</td>
+<td>covers real rebuilds; every finer-grained scheme tested worse</td></tr>
+<tr><td><b>Cold start</b></td><td class="mono">region 25th percentile</td>
+<td>new orgs are below-average entrants, not league-average</td></tr>
+<tr><td><b>Cross-region</b></td><td class="mono">fitted additive offsets, CN pinned 0,
+refit each snapshot</td><td>replaces hand-tuned intl_exp/cn_dog entirely</td></tr>
+<tr><td><b>Link</b></td><td class="mono">logistic, β = 0.1299 (snapshot);
+canonical full-stack refit 0.1256 — reconcile at next rebuild</td>
+<td>five tail-modification families tested; the link was never the defect</td></tr>
+<tr><td><b>Series aggregation</b></td><td class="mono">closed form (bo1/bo3/bo5);
+GF: +0.25 logit to upper bracket</td>
+<td>the veto-MC adds no series-level information (tested at every blend)</td></tr>
+<tr><td><b>Map-level (optional)</b></td><td class="mono">overall rating + pick bonus
+b_pick = 0.0979 (refit each snapshot)</td>
+<td>picker advantage is real and growing; per-map splits double-count it</td></tr>
+</table>
+<div class="callout good"><b>Validation:</b> holdout 2025–26 log-loss <b>0.6409</b> vs
+production 0.6526 (+11.8 milli); at/above Kalshi pre-match parity on VCT matches; +29–31%
+simulated ROI on divergences and maker fills (logit+0.6 margin). Deployed as
+<code>benpom-v6-2026-07-22</code> in <code>trading_model/model_snapshot.json</code> —
+the bot reads it live. <b>Never deployed to bobo-gg</b> (operator decision: the site keeps
+the public production model).</div>
+</section>
+
+<section>
+<h2><span class="n">1</span>Where it does best — and worst</h2>
+<p>Everything below is the final model on the 2025–26 native holdout (~1,000 series),
+walk-forward.</p>
+<h3>Improvement over production, every bucket (milli-LL; positive = v6 better)</h3>
+<div class="chartbox tall"><canvas id="bk6"></canvas></div>
+<p class="dim">v6 improves 21 of 23 buckets. The two negatives: domestic Pacific (−3.1m,
+production got lucky on a coin-flip-heavy slate) and the tiny elite-vs-floor bucket (−5.1m,
+n=26 — see the team-bias table below for the real story there).</p>
+<h3>Easiest and hardest match types (absolute v6 log-loss)</h3>
+<table><tr><th colspan="3">BEST — most predictable</th></tr>
+<tr><th>Bucket</th><th>n</th><th>v6 LL</th></tr>
+<tr><td>huge gap (7+)</td><td class='mono'>51</td><td class='mono'>0.4399</td></tr><tr><td>elite vs floor</td><td class='mono'>26</td><td class='mono'>0.4614</td></tr><tr><td>big gap [4,7)</td><td class='mono'>204</td><td class='mono'>0.5771</td></tr><tr><td>stage grand_final</td><td class='mono'>26</td><td class='mono'>0.5950</td></tr><tr><td>format bo5_gf</td><td class='mono'>23</td><td class='mono'>0.5987</td></tr>
+</table>
+<table><tr><th colspan="3">WORST — least predictable</th></tr>
+<tr><th>Bucket</th><th>n</th><th>v6 LL</th></tr>
+<tr><td>EWC-class events</td><td class='mono'>109</td><td class='mono'>0.6918</td></tr><tr><td>close matchups (gap<1.5)</td><td class='mono'>347</td><td class='mono'>0.6871</td></tr><tr><td>stage playoffs</td><td class='mono'>438</td><td class='mono'>0.6836</td></tr><tr><td>international</td><td class='mono'>122</td><td class='mono'>0.6690</td></tr><tr><td>cross-region</td><td class='mono'>131</td><td class='mono'>0.6629</td></tr>
+</table>
+<p class="dim">Reading: huge rating gaps and grand finals are where the model is sharpest;
+EWC-class one-off events, coin-flip matchups, and playoffs are inherently the noisiest —
+size accordingly (this ranking drives the Playbook's sizing rules).</p>
+<h3>Self-calibration (favorite bands)</h3>
+<table>
+<tr><th>Band</th><th>n</th><th>Predicted</th><th>Won</th><th>95% CI</th></tr>
+<tr><td class='mono'>[0.5,0.6)</td><td class='mono'>466</td><td class='mono'>0.548</td><td class='mono'><b>0.562</b></td><td class='mono dim'>[0.52,0.61]</td></tr><tr><td class='mono'>[0.6,0.7)</td><td class='mono'>335</td><td class='mono'>0.648</td><td class='mono'><b>0.642</b></td><td class='mono dim'>[0.59,0.69]</td></tr><tr><td class='mono'>[0.7,0.8)</td><td class='mono'>152</td><td class='mono'>0.744</td><td class='mono'><b>0.750</b></td><td class='mono dim'>[0.68,0.81]</td></tr><tr><td class='mono'>[0.8,0.9)</td><td class='mono'>43</td><td class='mono'>0.839</td><td class='mono'><b>0.837</b></td><td class='mono dim'>[0.70,0.92]</td></tr>
+</table>
+<h3>Per-team bias — the honest watchlist</h3>
+<p>Mean predicted probability minus actual win rate per team (holdout, ≥25 matches).
+Negative = the model UNDER-rates the team:</p>
+<table><tr><th colspan="3">Most under-rated</th></tr><tr><th>Team</th><th>n</th><th>Bias</th></tr>
+<tr><td>T1</td><td class='mono'>53</td><td class='mono' style='color:#1e7a4f'>-7.6 pts</td></tr><tr><td>PRX</td><td class='mono'>65</td><td class='mono' style='color:#1e7a4f'>-7.3 pts</td></tr><tr><td>100T</td><td class='mono'>44</td><td class='mono' style='color:#1e7a4f'>-6.9 pts</td></tr><tr><td>NRG</td><td class='mono'>61</td><td class='mono' style='color:#1e7a4f'>-6.9 pts</td></tr><tr><td>TL</td><td class='mono'>56</td><td class='mono' style='color:#1e7a4f'>-6.5 pts</td></tr><tr><td>FNC</td><td class='mono'>52</td><td class='mono' style='color:#1e7a4f'>-6.2 pts</td></tr>
+</table>
+<table><tr><th colspan="3">Most over-rated</th></tr><tr><th>Team</th><th>n</th><th>Bias</th></tr>
+<tr><td>TS</td><td class='mono'>25</td><td class='mono' style='color:#c0392b'>+16.3 pts</td></tr><tr><td>JDG</td><td class='mono'>37</td><td class='mono' style='color:#c0392b'>+12.6 pts</td></tr><tr><td>TE</td><td class='mono'>41</td><td class='mono' style='color:#c0392b'>+10.4 pts</td></tr><tr><td>C9</td><td class='mono'>34</td><td class='mono' style='color:#c0392b'>+9.2 pts</td></tr><tr><td>FUR</td><td class='mono'>29</td><td class='mono' style='color:#c0392b'>+8.6 pts</td></tr><tr><td>LOUD</td><td class='mono'>28</td><td class='mono' style='color:#c0392b'>+7.1 pts</td></tr>
+</table>
+<div class="callout warn"><b>The residual the operator flagged is visible here:</b> even
+after the v6 fix, the elite tier (T1, PRX, 100T, NRG, TL) still runs ~6–8 points under-rated
+at the team level, while several mid/floor teams run over-rated — band calibration hides it
+because the biases cancel within bands. This is the #1 target for v7 (candidate mechanisms:
+per-team evidence-quality weighting, opponent-adjusted consistency thresholds), and until
+then it is a quoting note: lean toward the model's number MINUS caution when it fades T1/PRX-
+class teams, and don't defend over-rated mid teams at full size.</div>
+</section>
+
+<section>
+<h2><span class="n">2</span>Trading record &amp; edge anatomy — the full chart set</h2>
+
+<h3>The season ledger — equity curve (90 divergence trades, taker-priced)</h3>
+<div class="chartbox"><canvas id="equity"></canvas></div>
+<table>
+<tr><th>Month</th><th>Trades</th><th>P&amp;L (units)</th><th>ROI</th></tr>
+<tr><td class='mono'>2026-05</td><td class='mono'>39</td><td class='mono good'>+5.85</td><td class='mono good'>+38.6%</td></tr><tr><td class='mono'>2026-06</td><td class='mono'>12</td><td class='mono bad'>-0.71</td><td class='mono bad'>-12.4%</td></tr><tr><td class='mono'>2026-07</td><td class='mono'>39</td><td class='mono good'>+5.12</td><td class='mono good'>+34.4%</td></tr>
+</table>
+
+<h3>Where the ROI concentrates</h3>
+<div class="chartbox"><canvas id="roibars"></canvas></div>
+<table>
+<tr><th>Slice</th><th>n</th><th>ROI</th><th>95% CI</th><th></th></tr>
+<tr><td>Everything, no filter</td><td class='mono'>90</td><td class='mono' class='good'>+28.7%</td><td class='mono'>[+3%, +53%]</td><td class='dim'></td></tr>
+<tr><td>Regular rest (≤45d)</td><td class='mono'>83</td><td class='mono' class='good'>+31.0%</td><td class='mono'>[+6%, +56%]</td><td class='dim'>the default deployment state</td></tr>
+<tr><td>Buy price 30–45¢</td><td class='mono'>42</td><td class='mono' class='good'>+40.8%</td><td class='mono'>[+3%, +77%]</td><td class='dim'>the sweet spot</td></tr>
+<tr><td>Divergence 5–10 pts</td><td class='mono'>51</td><td class='mono' class='good'>+34.8%</td><td class='mono'>[+6%, +64%]</td><td class='dim'>trust these most</td></tr>
+<tr><td>Divergence 10–20 pts</td><td class='mono'>34</td><td class='mono'>+14.8%</td><td class='mono'>[-32%, +62%]</td><td class='dim'>market-information cases mixed in</td></tr>
+<tr><td>High volume (≥ median)</td><td class='mono'>47</td><td class='mono' class='good'>+35.9%</td><td class='mono'>[+2%, +71%]</td><td class='dim'>edge survives order flow</td></tr>
+<tr><td>Buy price >55¢ (favorites)</td><td class='mono'>18</td><td class='mono'>+6.4%</td><td class='mono'>[-29%, +39%]</td><td class='dim'>market prices favorites well</td></tr>
+<tr><td>Masters London (LAN)</td><td class='mono'>12</td><td class='mono'>-12.4%</td><td class='mono'>[-67%, +52%]</td><td class='dim'>the information-risk window</td></tr>
+</table>
+
+<h3>Market microstructure — when to have quotes up</h3>
+<div class="chartbox"><canvas id="micro"></canvas></div>
+<table>
+<tr><th>Hours before start</th><th>Median spread</th><th>Share of volume</th><th>|Move still to come|</th></tr>
+<tr><td class='mono'>48h-24h</td><td class='mono'>3.0¢</td><td class='mono'>4.5%</td><td class='mono'>3.0¢</td></tr><tr><td class='mono'>24h-12h</td><td class='mono'>2.0¢</td><td class='mono'>8.5%</td><td class='mono'>2.0¢</td></tr><tr><td class='mono'>12h-6h</td><td class='mono'>1.0¢</td><td class='mono'>15.4%</td><td class='mono'>1.5¢</td></tr><tr><td class='mono'>6h-2h</td><td class='mono'>1.0¢</td><td class='mono'>28.5%</td><td class='mono'>1.0¢</td></tr><tr><td class='mono'>2h-0h</td><td class='mono'>1.0¢</td><td class='mono'>43.3%</td><td class='mono'>0.5¢</td></tr>
+</table>
+
+<h3>Edge by pricing — where the model's sides beat their price</h3>
+<div class="chartbox"><canvas id="edgecurve"></canvas></div>
+
+<h3>The interaction grid — ROI by price × divergence</h3>
+<div class="heat"><div></div><div class='hcol'><20c</div><div class='hcol'>20-35c</div><div class='hcol'>35-50c</div><div class='hcol'>50-65c</div><div class='hcol'>>65c</div><div class='hlab'>10+ pts</div><div class='hcell' style='background:rgba(30,122,79,0.67);color:#fff' title='win 25% vs implied 16% (n=8)'><span class='hroi'>+61%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(30,122,79,0.16858333333333334);color:#0d3a24' title='win 30% vs implied 28% (n=10)'><span class='hroi'>+5%</span><span class='hn'>n=10</span></div><div class='hcell' style='background:rgba(30,122,79,0.4976666666666667);color:#0d3a24' title='win 59% vs implied 42% (n=17)'><span class='hroi'>+41%</span><span class='hn'>n=17</span></div><div class='hcell hna'><span class='hroi'>—</span><span class='hn'>n=4</span></div><div class='hcell hna'><span class='hroi'>—</span><span class='hn'>n=0</span></div><div class='hlab'>5-10 pts</div><div class='hcell hna'><span class='hroi'>—</span><span class='hn'>n=2</span></div><div class='hcell' style='background:rgba(30,122,79,0.17225000000000001);color:#0d3a24' title='win 31% vs implied 29% (n=13)'><span class='hroi'>+6%</span><span class='hn'>n=13</span></div><div class='hcell' style='background:rgba(30,122,79,0.5856666666666668);color:#fff' title='win 62% vs implied 41% (n=21)'><span class='hroi'>+51%</span><span class='hn'>n=21</span></div><div class='hcell' style='background:rgba(30,122,79,0.5865833333333335);color:#fff' title='win 88% vs implied 58% (n=8)'><span class='hroi'>+51%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(30,122,79,0.14566666666666667);color:#0d3a24' title='win 71% vs implied 70% (n=7)'><span class='hroi'>+3%</span><span class='hn'>n=7</span></div><div class='hlab'>2-5 pts</div><div class='hcell hna'><span class='hroi'>—</span><span class='hn'>n=1</span></div><div class='hcell' style='background:rgba(192,57,43,0.2831666666666667);color:#5a1610' title='win 25% vs implied 30% (n=8)'><span class='hroi'>-18%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(192,57,43,0.48116666666666674);color:#5a1610' title='win 25% vs implied 41% (n=16)'><span class='hroi'>-39%</span><span class='hn'>n=16</span></div><div class='hcell' style='background:rgba(192,57,43,0.23091666666666666);color:#5a1610' title='win 50% vs implied 57% (n=16)'><span class='hroi'>-12%</span><span class='hn'>n=16</span></div><div class='hcell' style='background:rgba(192,57,43,0.16949999999999998);color:#5a1610' title='win 67% vs implied 70% (n=6)'><span class='hroi'>-5%</span><span class='hn'>n=6</span></div><div class='hlab'>0-2 pts</div><div class='hcell hna'><span class='hroi'>—</span><span class='hn'>n=0</span></div><div class='hcell hna'><span class='hroi'>—</span><span class='hn'>n=0</span></div><div class='hcell' style='background:rgba(30,122,79,0.37483333333333335);color:#0d3a24' title='win 50% vs implied 39% (n=8)'><span class='hroi'>+28%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(192,57,43,0.33908333333333335);color:#5a1610' title='win 44% vs implied 57% (n=16)'><span class='hroi'>-24%</span><span class='hn'>n=16</span></div><div class='hcell' style='background:rgba(30,122,79,0.2639166666666667);color:#0d3a24' title='win 86% vs implied 74% (n=7)'><span class='hroi'>+16%</span><span class='hn'>n=7</span></div></div>
+
+<h3>Every match as a dot</h3>
+<div class="chartbox"><canvas id="edgescatter"></canvas></div>
+<p class="dim">Green won (sized by return), red lost; dashed line = the 5-pt trade threshold.
+The green cluster at 25–50¢ above the line is the strategy in one picture.</p>
+
+<h3>The quoting margin (maker-fill simulation, 310 markets)</h3>
+<table>
+<tr><th>Rule</th><th>Fills</th><th>Fill rate</th><th>Profit</th><th>ROI</th><th>95% CI</th></tr>
+<tr><td class='mono'>flat 1c</td><td class='mono'>221</td><td class='mono'>71%</td><td class='mono'>-0.68u</td><td class='mono'>-0.6%</td><td class='mono dim'>[-13%, +12%]</td></tr><tr><td class='mono'>flat 5c</td><td class='mono'>168</td><td class='mono'>54%</td><td class='mono'>+5.27u</td><td class='mono'>+6.7%</td><td class='mono dim'>[-9%, +23%]</td></tr><tr><td class='mono'>flat 11c</td><td class='mono'>100</td><td class='mono'>32%</td><td class='mono'>+8.07u</td><td class='mono'>+19.2%</td><td class='mono dim'>[-4%, +44%]</td></tr><tr><td class='mono'>logit +0.6</td><td class='mono'>74</td><td class='mono'>24%</td><td class='mono' class='good'>+8.12u</td><td class='mono' class='good'>+29.1%</td><td class='mono dim'>[+1%, +61%]</td></tr><tr><td class='mono'>logit +0.4</td><td class='mono'>122</td><td class='mono'>39%</td><td class='mono'>+7.82u</td><td class='mono'>+15.0%</td><td class='mono dim'>[-5%, +36%]</td></tr>
+</table>
+<p class="dim">logit+0.6 is the winner (only CI above zero); flat 1¢ — the old config —
+earned nothing. Cents equivalent: ≈14¢ @ 50¢ → ≈5¢ @ 92¢. Full verification battery in
+Deployment Playbook §9.</p>
+</section>
+
+<section>
+<h2><span class="n">3</span>How it got here — six models in one day of science</h2>
+<table>
+<tr><th>Version</th><th>Holdout LL</th><th>Change</th><th>The insight</th></tr>
+<tr><td><b>Production (start)</b></td><td class='mono'>0.6526</td><td>calendar HL 6w, sqrt margins, β=0.17</td><td class='dim'>baseline: −35m behind the Kalshi market on favorites-heavy 2026</td></tr><tr><td><b>v1</b></td><td class='mono'>0.6448</td><td>HL 6→13w calendar + margin^0.75</td><td class='dim'>the 'forgets too fast' discovery; survives only as constants-only fallback</td></tr><tr><td><b>v3</b></td><td class='mono'>0.6398</td><td>games-counted asym decay + playoff ×1.6 + cold-start priors + fitted x-region offsets</td><td class='dim'>decay by games played, not weeks; hand-tuned intl offsets retired</td></tr><tr><td><b>v4</b></td><td class='mono'>0.6367*</td><td>+ EWC-class events implemented in production data</td><td class='dim'>the market's post-break edge was missing tournaments, not modeling (*pre-native holdout)</td></tr><tr><td><b>v5</b></td><td class='mono'>0.6413</td><td>+ region-prior ridge 1.5 (native rebuilt data, n≈1000 holdout)</td><td class='dim'>teams regress to region context, not league average</td></tr><tr><td><b>v6 (FINAL)</b></td><td class='mono'>0.6409</td><td>asym → consistency-conditioned decay (W-consistent 20 / anomaly 12)</td><td class='dim'>operator-caught floor-team bug fixed; every elite-vs-floor gap corrected 2–7pts</td></tr>
+</table>
+<p class="dim">Log-losses across rows are comparable only within the same data era (v4
+onward includes the EWC-class events in both train and holdout). The arc: fix the memory
+clock → fix the information set → fix the evidence accounting.</p>
+</section>
+
+<section>
+<h2><span class="n">4</span>The rejected-ideas ledger — do not re-test without new cause</h2>
+<p>Every idea below was implemented, run walk-forward, and lost (or tied) against the
+champion of its day. This table is half the project's value: it prevents re-litigating.</p>
+<table>
+<tr><th>Idea</th><th>Why it died</th></tr>
+<tr><td>Shorter calendar half-lives (4–5w)</td><td class='dim'>worse everywhere — memory was too short, not too long</td></tr><tr><td>Power-law / box+exp / linear calendar decay</td><td class='dim'>all converge to 'longer memory'; none beat exponential-in-games</td></tr><tr><td>Calendar envelope over games decay</td><td class='dim'>age in weeks adds nothing once games are counted</td></tr><tr><td>Series-counted decay (age in series, not maps)</td><td class='dim'>a Bo5 teaches ~5 maps of information; map-counting is right</td></tr><tr><td>Plain win/loss asymmetric decay (W20/L12)</td><td class='dim'>the v5 bug — erases floor teams' losses; replaced by consistency-conditioning</td></tr><tr><td>Reversed asymmetry (losses persist)</td><td class='dim'>clearly worse; established the sign of the consistency effect</td></tr><tr><td>Lineup-overlap roster reweighting (3 schemes)</td><td class='dim'>year-boundary continuity already covers real rebuilds</td></tr><tr><td>Roster-instability prediction shrink</td><td class='dim'>changed-roster matches predict BETTER than average</td></tr><tr><td>Player-carryover priors (new signings import prior-org rating)</td><td class='dim'>hurt at every fade horizon, incl. post-break</td></tr><tr><td>Post-break gap dampener</td><td class='dim'>fit wants EXPANSION (γ=1.4) — games decay already handles breaks</td></tr><tr><td>Favorite blowout-margin discount ('don't try hard')</td><td class='dim'>favorites' big margins are signal, not noise</td></tr><tr><td>Residual margin (credit only surprise)</td><td class='dim'>neutral at best</td></tr><tr><td>Upset margin boost</td><td class='dim'>noise</td></tr><tr><td>Win-only ratings / margin-win blends in the solve</td><td class='dim'>margins matter; blends all negative</td></tr><tr><td>Rolling / per-stage β refits</td><td class='dim'>trailing fits chase noise; frozen β wins</td></tr><tr><td>Piecewise β (small vs large gaps)</td><td class='dim'>converges to a single slope</td></tr><tr><td>tanh saturating link</td><td class='dim'>fit runs to no-op</td></tr><tr><td>Convex link (extra slope beyond gap threshold)</td><td class='dim'>fits train, loses holdout — the anomaly was the ratings bug, not the link</td></tr><tr><td>Margin-derived probability links (empirical CDF, probit)</td><td class='dim'>margins UNDERSTATE win prob (better teams win the close maps)</td></tr><tr><td>Soft/mixed margin-label β fits, Rao-Blackwell retro targets</td><td class='dim'>all lose to binary fitting; ratings already consume margins</td></tr><tr><td>Margin-fitted cross-region offsets</td><td class='dim'>−14m on cross-region test</td></tr><tr><td>Margin-residual momentum feature</td><td class='dim'>redundant with games-decay ratings</td></tr><tr><td>Decayed-winrate additive feature</td><td class='dim'>redundant once consistency decay fixed evidence accounting</td></tr><tr><td>Veto rate shrinkage toward global</td><td class='dim'>team veto habits are idiosyncratic; raw rates win</td></tr><tr><td>Per-map rating splits stacked with pick bonus</td><td class='dim'>double-count — picked maps ARE the good maps</td></tr><tr><td>Closed-form × veto-MC ensemble</td><td class='dim'>MC adds no series-level information at any blend weight</td></tr><tr><td>Intra-series momentum correlation in the MC</td><td class='dim'>hurts</td></tr><tr><td>Intl-experience offset (+0.40)</td><td class='dim'>refits to zero on long-memory ratings</td></tr><tr><td>Recency-weighted cross-region offsets</td><td class='dim'>unstable small-sample fits; flat cumulative fit wins</td></tr><tr><td>Head-to-head / rematch term</td><td class='dim'>prior winner re-wins 53.2% vs 53.8% implied — ratings already carry it</td></tr><tr><td>Bo1 down-weighting / intl margin reweighting</td><td class='dim'>no effect / marginal</td></tr><tr><td>Rolling Platt / cubic recalibration layers</td><td class='dim'>walk-forward they chase noise; surface is calibrated</td></tr>
+</table>
+<div class="callout warn"><b>Standing re-open triggers:</b> a rejected idea may be re-tested
+only if (a) the model's own [0.8,0.9) self-band drifts out of calibration as n grows,
+(b) a new data source arrives (roster-news timestamps, telemetry markouts), or
+(c) an operator anomaly report implicates it — anomaly reports get case-level forensics
+first, statistics second (the v6 lesson).</div>
+</section>
+
+<section>
+<h2><span class="n">5</span>Operations manual</h2>
+<h3>Rebuild cadence</h3>
+<p><code>python3 trading_model/build_model_snapshot.py</code> after every data refresh
+(site scrape). Everything inside — ratings, region priors, cross-region offsets, pick
+bonus — refits walk-forward-consistently. The bot applies its own staleness rules against
+<code>generated_utc</code> / <code>ratings_as_of</code>.</p>
+<h3>β discipline</h3>
+<p>β is scale-bound to the exact solve config. If ANY constant changes, refit β on
+pre-holdout data before quoting. Current snapshot carries 0.1299 (fit on the core stack);
+the canonical full-stack refit is 0.1256 (≤0.5pt difference) — adopt at next rebuild.</p>
+<h3>Monitoring tripwires (check monthly)</h3>
+<ul>
+<li><b>Self-band calibration</b>: model-referenced [0.7,0.8) and [0.8,0.9) bands on
+accumulating results — drift outside CIs = investigate.</li>
+<li><b>Kalshi re-measure</b>: market-band table (Favorites Lab §3) and divergence-trade
+ledger with fresh settles; the market-favorite-bias claim is provisional pending v6-era data.</li>
+<li><b>Prediction logger</b> (<code>testing_lab/log_predictions.py</code>): keep it running —
+prospective evidence needs no reconstruction arguments.</li>
+<li><b>Telemetry spec</b> (Deployment Playbook §8): once the bot logs book snapshots with
+own-order flags + fill markouts, quoting-margin and adverse-selection tuning move from
+simulation to measurement.</li>
+</ul>
+<h3>Change control</h3>
+<ul>
+<li>All experiments in <code>PythonTest/testing_lab/</code>; VCTMM is hands-off.</li>
+<li>Model changes reach the bot ONLY via <code>trading_model/model_snapshot.json</code>
+rebuilds; <code>predict.py</code> is the reference math — parity-test any reimplementation.</li>
+<li>The website never gets this model (operator decision, standing).</li>
+<li>Promotion bar for any future v7: beats v6 on walk-forward holdout log-loss with
+paired-bootstrap support, no major bucket regression, AND survives case-level review of
+operator-flagged matchups.</li>
+</ul>
+<h3>Trading parameters (from the research pages)</h3>
+<ul>
+<li><b>Quoting margin</b>: logit-space +0.5 to +0.6 (≈14¢ @ 50¢ → ≈5¢ @ 92¢), not flat
+cents; skip NO quotes on sides the model prices below ~45%. (Favorites Lab §7 /
+Deployment Playbook §9.)</li>
+<li><b>Windows &amp; sizing</b>: Deployment Playbook rules 1–7 (regular-season default,
+quarter-size info-risk shapes, quote early / size 12h→2h, expire start−2h).</li>
+</ul>
+</section>
+
+<section>
+<h2><span class="n">6</span>Open leads for v7</h2>
+<ul>
+<li><b>Roster-news timestamps</b> — weekly off-week scrapes of VLR team pages (telemetry
+spec) to price announced-but-unplayed roster changes; the market's one structural edge.</li>
+<li><b>Per-map layer under consistency decay</b> — within-map memory wants its own
+half-life; currently overall-only + pick bonus is the validated surface.</li>
+<li><b>Markout-driven quoting</b> — once fill markouts accumulate, tune margin and expiry
+from measured adverse selection instead of candle simulation.</li>
+<li><b>EWC-class recurrence</b> — the registry pattern (ratings_only + vct_only) is ready
+for future off-season events; add them the week they're announced, not after.</li>
+<li><b>Market-blend surface</b> — sanctioned for display/sizing only; revisit when the
+prospective ledger reaches ~250 VCT matches.</li>
+</ul>
+</section>
+</div>
+<script>
+const EQ = {"dates": ["2026-05-15", "2026-05-16", "2026-05-16", "2026-05-16", "2026-05-17", "2026-05-17", "2026-05-17", "2026-05-17", "2026-05-17", "2026-05-18", "2026-05-18", "2026-05-20", "2026-05-21", "2026-05-21", "2026-05-22", "2026-05-22", "2026-05-22", "2026-05-22", "2026-05-23", "2026-05-23", "2026-05-23", "2026-05-23", "2026-05-23", "2026-05-24", "2026-05-24", "2026-05-24", "2026-05-24", "2026-05-24", "2026-05-25", "2026-05-25", "2026-05-26", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-30", "2026-05-30", "2026-05-31", "2026-06-07", "2026-06-09", "2026-06-10", "2026-06-13", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-16", "2026-06-19", "2026-06-20", "2026-06-21", "2026-07-02", "2026-07-02", "2026-07-02", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-11", "2026-07-11", "2026-07-12", "2026-07-12", "2026-07-12", "2026-07-14", "2026-07-14", "2026-07-15", "2026-07-15", "2026-07-15", "2026-07-16", "2026-07-16", "2026-07-16", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-18", "2026-07-18", "2026-07-18", "2026-07-18", "2026-07-19", "2026-07-19", "2026-07-19", "2026-07-19", "2026-07-19", "2026-07-21"], "cum": [0.33, 0.09, -0.12, 0.32, 0.01, 0.59, 1.21, 1.68, 2.24, 2.76, 2.6, 2.37, 2.25, 2.67, 2.35, 2.91, 2.45, 2.14, 1.79, 2.36, 1.89, 2.49, 2.36, 2.2, 2.02, 1.46, 2.19, 2.69, 3.08, 3.62, 4.06, 3.6, 3.3, 3.85, 4.56, 5.2, 5.61, 6.24, 5.85, 5.42, 5.87, 5.17, 4.61, 5.44, 4.96, 4.54, 4.24, 3.89, 4.14, 4.48, 5.14, 4.77, 4.48, 5.13, 5.93, 6.57, 6.26, 6.86, 7.37, 7.07, 7.65, 7.29, 7.83, 7.42, 8.0, 8.26, 9.1, 8.75, 9.4, 9.99, 9.36, 9.14, 9.57, 10.15, 9.8, 9.55, 9.4, 8.75, 8.49, 8.15, 7.81, 7.18, 6.81, 7.37, 7.21, 7.89, 8.49, 8.79, 9.57, 10.25], "labels": ["G2 v KR\u00dc", "PRX v GE", "XLG v FPX", "100T v LOUD", "PRX v FS", "FPX v JDG", "TEC v TE", "TH v VIT", "100T v MIBR", "AG v TYL", "XLG v TEC", "AG v TEC", "AG v DRG", "FPX v WOL", "GE v DFM", "NS v T1", "FUT v NAVI", "FNC v BBL", "G2 v NRG", "M8 v FUT", "RRQ v GEN", "KRX v FS", "JDG v XLG", "TYL v EDG", "T1 v DFM", "BBL v EF", "KC v FNC", "G2 v LEV", "AG v FPX", "TEC v TE", "TYL v BLG", "NOVA v JDG", "LEV v SEN", "SEN v KR\u00dc", "NOVA v TYL", "GEN v T1", "AG v TYL", "NAVI v FNC", "NS v GEN", "LEV v GE", "GE v FS", "XLG v GE", "EDG v FUT", "XLG v G2", "LEV v TH", "EDG v XLG", "LEV v XLG", "VIT v FUT", "PRX v EDG", "LEV v EDG", "LEV v PRX", "BBL v EDG", "VIT v KC", "NRG v PRX", "KC v PRX", "M8 v NS", "NRG v KC", "BBL v TH", "FPX v TE", "DRG v TEC", "100T v NS", "BLG v WOL", "NOVA v FPX", "NS v BBL", "100T v NRG", "AG v WOL", "TEC v XLG", "EF v TL", "TYL v EDG", "NAVI v FUT", "BLG v AG", "FNC v GX", "SEN v C9", "LOUD v KR\u00dc", "VIT v NAVI", "KRX v DFM", "EDG v TE", "FS v NS", "NOVA v JDG", "TYL v FPX", "BLG v TEC", "T1 v PRX", "XLG v AG", "100T v G2", "EDG v JDG", "WOL v DRG", "BBL v VIT", "NOVA v TE", "TS v KRX", "NOVA v EDG"]};
+new Chart(document.getElementById('equity'), {
+ type: 'line',
+ data: { labels: EQ.dates, datasets: [{ label: 'Cumulative P&L (units)',
+   data: EQ.cum, borderColor: '#1e7a4f', backgroundColor: '#1e7a4f22', fill: true,
+   pointRadius: 0, borderWidth: 2, tension: .15 }] },
+ options: { plugins: { tooltip: { callbacks: {
+     afterTitle: items => EQ.labels[items[0].dataIndex] } } },
+  scales: { x: { ticks: { maxTicksLimit: 8 } },
+            y: { title: { display: true, text: 'units' } } } }
+});
+const ROIB = {"labels": ["ALL", "regular rest", "30-45c", "div 5-10", "high vol", "Americas", "CN", "favorites >55c", "div 10-20", "London"], "vals": [28.67, 30.990000000000002, 40.82, 34.760000000000005, 35.870000000000005, 75.94999999999999, 33.96, 6.36, 14.85, -12.43]};
+new Chart(document.getElementById('roibars'), {
+ type: 'bar',
+ data: { labels: ROIB.labels, datasets: [{ label: 'ROI %', data: ROIB.vals,
+   backgroundColor: ROIB.vals.map(v => v >= 20 ? '#1e7a4f' : v >= 0 ? '#9ec7ae' : '#c0392b') }] },
+ options: { plugins: { legend: { display: false } },
+  scales: { y: { title: { display: true, text: 'ROI %' } } } }
+});
+const MIC = {"labels": ["48-24h", "24-12h", "12-6h", "6-2h", "2-0h"], "spread": [3.0, 2.0, 1.0, 1.0, 1.0], "vol": [4.5, 8.5, 15.4, 28.5, 43.3]};
+new Chart(document.getElementById('micro'), {
+ data: { labels: MIC.labels, datasets: [
+  { type: 'bar', label: 'share of volume (%)', data: MIC.vol, backgroundColor: '#7c4dd655', yAxisID: 'y' },
+  { type: 'line', label: 'median spread (¢)', data: MIC.spread, borderColor: '#b3541e',
+     pointRadius: 4, yAxisID: 'y2' } ] },
+ options: { scales: { y: { position: 'left', title: { display: true, text: 'volume share %' } },
+   y2: { position: 'right', grid: { drawOnChartArea: false },
+        title: { display: true, text: 'spread ¢' } } } }
+});
+const EA = {"curve": [{"lab": "15-25c", "implied": 0.195, "realized": 0.25, "n": 16}, {"lab": "25-35c", "implied": 0.311, "realized": 0.333, "n": 24}, {"lab": "35-45c", "implied": 0.393, "realized": 0.51, "n": 49}, {"lab": "45-55c", "implied": 0.503, "realized": 0.444, "n": 27}, {"lab": "55-70c", "implied": 0.612, "realized": 0.615, "n": 39}, {"lab": ">70c", "implied": 0.749, "realized": 0.727, "n": 11}], "scatter": [{"x": 0.665, "y": 0.06, "won": true, "ret": 0.5, "lab": "G2 v KR\u00dc 2026-05-15"}, {"x": 0.248, "y": 0.114, "won": false, "ret": -1.0, "lab": "PRX v GE 2026-05-16"}, {"x": 0.205, "y": 0.052, "won": false, "ret": -1.0, "lab": "XLG v FPX 2026-05-16"}, {"x": 0.56, "y": 0.0, "won": true, "ret": 0.79, "lab": "TYL v JDG 2026-05-16"}, {"x": 0.323, "y": 0.022, "won": true, "ret": 2.1, "lab": "TE v AG 2026-05-16"}, {"x": 0.4, "y": 0.009, "won": false, "ret": -1.0, "lab": "TH v FUT 2026-05-16"}, {"x": 0.643, "y": 0.003, "won": true, "ret": 0.56, "lab": "NRG v FUR 2026-05-16"}, {"x": 0.565, "y": 0.102, "won": true, "ret": 0.77, "lab": "100T v LOUD 2026-05-16"}, {"x": 0.515, "y": 0.003, "won": false, "ret": -1.0, "lab": "AG v DRG 2026-05-17"}, {"x": 0.302, "y": 0.115, "won": false, "ret": -1.0, "lab": "PRX v FS 2026-05-17"}, {"x": 0.3, "y": 0.027, "won": false, "ret": -1.0, "lab": "XLG v TYL 2026-05-17"}, {"x": 0.42, "y": 0.108, "won": true, "ret": 1.38, "lab": "FPX v JDG 2026-05-17"}, {"x": 0.383, "y": 0.145, "won": true, "ret": 1.61, "lab": "TEC v TE 2026-05-17"}, {"x": 0.532, "y": 0.075, "won": true, "ret": 0.88, "lab": "TH v VIT 2026-05-17"}, {"x": 0.675, "y": 0.01, "won": true, "ret": 0.48, "lab": "NRG v KR\u00dc 2026-05-17"}, {"x": 0.44, "y": 0.122, "won": true, "ret": 1.27, "lab": "100T v MIBR 2026-05-17"}, {"x": 0.373, "y": 0.041, "won": false, "ret": -1.0, "lab": "GEN v TS 2026-05-18"}, {"x": 0.51, "y": 0.045, "won": true, "ret": 0.96, "lab": "FPX v TE 2026-05-18"}, {"x": 0.152, "y": 0.113, "won": false, "ret": -1.0, "lab": "XLG v TEC 2026-05-18"}, {"x": 0.485, "y": 0.08, "won": true, "ret": 1.06, "lab": "AG v TYL 2026-05-18"}, {"x": 0.333, "y": 0.04, "won": false, "ret": -1.0, "lab": "GEN v VL 2026-05-19"}, {"x": 0.43, "y": 0.032, "won": false, "ret": -1.0, "lab": "AG v FPX 2026-05-19"}, {"x": 0.23, "y": 0.089, "won": false, "ret": -1.0, "lab": "AG v TEC 2026-05-20"}, {"x": 0.377, "y": 0.021, "won": false, "ret": -1.0, "lab": "SEN v EG 2026-05-20"}, {"x": 0.125, "y": 0.244, "won": false, "ret": -1.0, "lab": "AG v DRG 2026-05-21"}, {"x": 0.577, "y": 0.098, "won": true, "ret": 0.73, "lab": "FPX v WOL 2026-05-21"}, {"x": 0.323, "y": 0.066, "won": false, "ret": -1.0, "lab": "GE v DFM 2026-05-22"}, {"x": 0.537, "y": 0.04, "won": false, "ret": -1.0, "lab": "RRQ v KRX 2026-05-22"}, {"x": 0.435, "y": 0.051, "won": true, "ret": 1.3, "lab": "NS v T1 2026-05-22"}, {"x": 0.6, "y": 0.016, "won": false, "ret": -1.0, "lab": "GEN v FS 2026-05-22"}, {"x": 0.462, "y": 0.062, "won": false, "ret": -1.0, "lab": "FUT v NAVI 2026-05-22"}, {"x": 0.307, "y": 0.088, "won": false, "ret": -1.0, "lab": "FNC v BBL 2026-05-22"}, {"x": 0.528, "y": 0.018, "won": false, "ret": -1.0, "lab": "M8 v TL 2026-05-22"}, {"x": 0.613, "y": 0.022, "won": false, "ret": -1.0, "lab": "KC v EF 2026-05-22"}, {"x": 0.65, "y": 0.033, "won": false, "ret": -1.0, "lab": "LEV v G2 2026-05-22"}, {"x": 0.365, "y": 0.034, "won": false, "ret": -1.0, "lab": "NRG v 100T 2026-05-22"}, {"x": 0.403, "y": 0.057, "won": true, "ret": 1.48, "lab": "KRX v FS 2026-05-23"}, {"x": 0.13, "y": 0.606, "won": false, "ret": -1.0, "lab": "JDG v XLG 2026-05-23"}, {"x": 0.535, "y": 0.011, "won": false, "ret": -1.0, "lab": "NAVI v TL 2026-05-23"}, {"x": 0.438, "y": 0.083, "won": true, "ret": 1.29, "lab": "M8 v FUT 2026-05-23"}, {"x": 0.468, "y": 0.059, "won": false, "ret": -1.0, "lab": "RRQ v GEN 2026-05-23"}, {"x": 0.35, "y": 0.188, "won": false, "ret": -1.0, "lab": "G2 v NRG 2026-05-23"}, {"x": 0.157, "y": 0.522, "won": false, "ret": -1.0, "lab": "TYL v EDG 2026-05-24"}, {"x": 0.182, "y": 0.132, "won": false, "ret": -1.0, "lab": "T1 v DFM 2026-05-24"}, {"x": 0.573, "y": 0.022, "won": false, "ret": -1.0, "lab": "GE v NS 2026-05-24"}, {"x": 0.56, "y": 0.104, "won": false, "ret": -1.0, "lab": "BBL v EF 2026-05-24"}, {"x": 0.268, "y": 0.153, "won": true, "ret": 2.74, "lab": "KC v FNC 2026-05-24"}, {"x": 0.497, "y": 0.128, "won": true, "ret": 1.01, "lab": "G2 v LEV 2026-05-24"}, {"x": 0.615, "y": 0.054, "won": true, "ret": 0.63, "lab": "AG v FPX 2026-05-25"}, {"x": 0.453, "y": 0.066, "won": true, "ret": 1.21, "lab": "TEC v TE 2026-05-25"}, {"x": 0.458, "y": 0.15, "won": false, "ret": -1.0, "lab": "NOVA v JDG 2026-05-26"}, {"x": 0.568, "y": 0.053, "won": true, "ret": 0.76, "lab": "TYL v BLG 2026-05-26"}, {"x": 0.597, "y": 0.036, "won": true, "ret": 0.67, "lab": "100T v FUR 2026-05-27"}, {"x": 0.815, "y": 0.027, "won": false, "ret": -1.0, "lab": "LOUD v NRG 2026-05-27"}, {"x": 0.542, "y": 0.001, "won": true, "ret": 0.84, "lab": "MIBR v KR\u00dc 2026-05-27"}, {"x": 0.3, "y": 0.141, "won": false, "ret": -1.0, "lab": "LEV v SEN 2026-05-27"}, {"x": 0.63, "y": 0.041, "won": false, "ret": -1.0, "lab": "MIBR v LEV 2026-05-28"}, {"x": 0.45, "y": 0.212, "won": true, "ret": 1.22, "lab": "SEN v KR\u00dc 2026-05-28"}, {"x": 0.77, "y": 0.009, "won": false, "ret": -1.0, "lab": "TEC v AG 2026-05-29"}, {"x": 0.29, "y": 0.084, "won": true, "ret": 2.45, "lab": "NOVA v TYL 2026-05-29"}, {"x": 0.7, "y": 0.026, "won": true, "ret": 0.43, "lab": "NRG v FUR 2026-05-29"}, {"x": 0.7, "y": 0.046, "won": true, "ret": 0.43, "lab": "100T v LOUD 2026-05-29"}, {"x": 0.508, "y": 0.041, "won": true, "ret": 0.97, "lab": "NS v KRX 2026-05-30"}, {"x": 0.357, "y": 0.098, "won": true, "ret": 1.8, "lab": "GEN v T1 2026-05-30"}, {"x": 0.595, "y": 0.074, "won": true, "ret": 0.68, "lab": "AG v TYL 2026-05-30"}, {"x": 0.37, "y": 0.075, "won": true, "ret": 1.7, "lab": "NAVI v FNC 2026-05-30"}, {"x": 0.435, "y": 0.029, "won": true, "ret": 1.3, "lab": "BBL v FUT 2026-05-30"}, {"x": 0.345, "y": 0.027, "won": true, "ret": 1.9, "lab": "LOUD v SEN 2026-05-30"}, {"x": 0.422, "y": 0.035, "won": false, "ret": -1.0, "lab": "NRG v LEV 2026-05-30"}, {"x": 0.39, "y": 0.061, "won": false, "ret": -1.0, "lab": "NS v GEN 2026-05-31"}, {"x": 0.587, "y": 0.026, "won": true, "ret": 0.7, "lab": "NOVA v TEC 2026-05-31"}, {"x": 0.542, "y": 0.036, "won": false, "ret": -1.0, "lab": "BBL v NAVI 2026-05-31"}, {"x": 0.768, "y": 0.005, "won": true, "ret": 0.3, "lab": "NRG v LOUD 2026-05-31"}, {"x": 0.725, "y": 0.018, "won": true, "ret": 0.38, "lab": "NRG v XLG 2026-06-06"}, {"x": 0.177, "y": 0.046, "won": false, "ret": -1.0, "lab": "VIT v DRG 2026-06-06"}, {"x": 0.59, "y": 0.036, "won": false, "ret": -1.0, "lab": "FUT v FS 2026-06-07"}, {"x": 0.422, "y": 0.148, "won": false, "ret": -1.0, "lab": "LEV v GE 2026-06-07"}, {"x": 0.347, "y": 0.035, "won": false, "ret": -1.0, "lab": "VIT v FUT 2026-06-08"}, {"x": 0.595, "y": 0.004, "won": false, "ret": -1.0, "lab": "LEV v NRG 2026-06-08"}, {"x": 0.292, "y": 0.044, "won": false, "ret": -1.0, "lab": "XLG v DRG 2026-06-09"}, {"x": 0.555, "y": 0.071, "won": true, "ret": 0.8, "lab": "GE v FS 2026-06-09"}, {"x": 0.64, "y": 0.013, "won": false, "ret": -1.0, "lab": "FUT v NRG 2026-06-10"}, {"x": 0.702, "y": 0.054, "won": false, "ret": -1.0, "lab": "XLG v GE 2026-06-10"}, {"x": 0.35, "y": 0.017, "won": false, "ret": -1.0, "lab": "PRX v LEV 2026-06-12"}, {"x": 0.485, "y": 0.027, "won": false, "ret": -1.0, "lab": "VIT v TH 2026-06-12"}, {"x": 0.555, "y": 0.124, "won": false, "ret": -1.0, "lab": "EDG v FUT 2026-06-13"}, {"x": 0.175, "y": 0.102, "won": true, "ret": 4.71, "lab": "XLG v G2 2026-06-13"}, {"x": 0.478, "y": 0.097, "won": false, "ret": -1.0, "lab": "LEV v TH 2026-06-14"}, {"x": 0.398, "y": 0.031, "won": true, "ret": 1.52, "lab": "FUT v G2 2026-06-14"}, {"x": 0.415, "y": 0.131, "won": false, "ret": -1.0, "lab": "EDG v XLG 2026-06-15"}, {"x": 0.6, "y": 0.017, "won": true, "ret": 0.67, "lab": "PRX v VIT 2026-06-15"}, {"x": 0.305, "y": 0.106, "won": false, "ret": -1.0, "lab": "LEV v XLG 2026-06-16"}, {"x": 0.35, "y": 0.081, "won": false, "ret": -1.0, "lab": "VIT v FUT 2026-06-16"}, {"x": 0.75, "y": 0.052, "won": true, "ret": 0.33, "lab": "PRX v EDG 2026-06-19"}, {"x": 0.443, "y": 0.013, "won": true, "ret": 1.26, "lab": "LEV v VIT 2026-06-19"}, {"x": 0.657, "y": 0.1, "won": true, "ret": 0.52, "lab": "LEV v EDG 2026-06-20"}, {"x": 0.345, "y": 0.063, "won": true, "ret": 1.9, "lab": "LEV v PRX 2026-06-21"}, {"x": 0.365, "y": 0.115, "won": false, "ret": -1.0, "lab": "BBL v EDG 2026-07-02"}, {"x": 0.373, "y": 0.015, "won": false, "ret": -1.0, "lab": "100T v RRQ 2026-07-02"}, {"x": 0.292, "y": 0.08, "won": false, "ret": -1.0, "lab": "VIT v KC 2026-07-02"}, {"x": 0.352, "y": 0.06, "won": true, "ret": 1.84, "lab": "NRG v PRX 2026-07-02"}, {"x": 0.38, "y": 0.03, "won": false, "ret": -1.0, "lab": "M8 v XLG 2026-07-03"}, {"x": 0.46, "y": 0.034, "won": true, "ret": 1.17, "lab": "NS v G2 2026-07-03"}, {"x": 0.545, "y": 0.043, "won": false, "ret": -1.0, "lab": "EDG v RRQ 2026-07-04"}, {"x": 0.64, "y": 0.03, "won": true, "ret": 0.56, "lab": "100T v BBL 2026-07-04"}, {"x": 0.54, "y": 0.033, "won": false, "ret": -1.0, "lab": "VIT v NRG 2026-07-04"}, {"x": 0.2, "y": 0.068, "won": true, "ret": 4.0, "lab": "KC v PRX 2026-07-04"}, {"x": 0.27, "y": 0.046, "won": false, "ret": -1.0, "lab": "G2 v XLG 2026-07-05"}, {"x": 0.36, "y": 0.106, "won": true, "ret": 1.78, "lab": "M8 v NS 2026-07-05"}, {"x": 0.61, "y": 0.026, "won": true, "ret": 0.64, "lab": "BBL v EDG 2026-07-06"}, {"x": 0.31, "y": 0.056, "won": false, "ret": -1.0, "lab": "NRG v KC 2026-07-06"}, {"x": 0.538, "y": 0.003, "won": false, "ret": -1.0, "lab": "NS v G2 2026-07-07"}, {"x": 0.643, "y": 0.001, "won": false, "ret": -1.0, "lab": "WOL v TEC 2026-07-09"}, {"x": 0.5, "y": 0.023, "won": true, "ret": 1.0, "lab": "DRG v BLG 2026-07-09"}, {"x": 0.4, "y": 0.081, "won": true, "ret": 1.5, "lab": "BBL v TH 2026-07-09"}, {"x": 0.385, "y": 0.021, "won": false, "ret": -1.0, "lab": "NRG v M8 2026-07-09"}, {"x": 0.482, "y": 0.15, "won": true, "ret": 1.07, "lab": "FPX v TE 2026-07-10"}, {"x": 0.393, "y": 0.025, "won": false, "ret": -1.0, "lab": "TYL v JDG 2026-07-10"}, {"x": 0.562, "y": 0.02, "won": false, "ret": -1.0, "lab": "NS v VIT 2026-07-10"}, {"x": 0.3, "y": 0.123, "won": false, "ret": -1.0, "lab": "DRG v TEC 2026-07-11"}, {"x": 0.425, "y": 0.15, "won": true, "ret": 1.35, "lab": "100T v NS 2026-07-11"}, {"x": 0.363, "y": 0.054, "won": false, "ret": -1.0, "lab": "BLG v WOL 2026-07-11"}, {"x": 0.367, "y": 0.049, "won": false, "ret": -1.0, "lab": "NRG v BBL 2026-07-11"}, {"x": 0.453, "y": 0.114, "won": true, "ret": 1.21, "lab": "NOVA v FPX 2026-07-12"}, {"x": 0.667, "y": 0.042, "won": true, "ret": 0.5, "lab": "TYL v TE 2026-07-12"}, {"x": 0.41, "y": 0.068, "won": false, "ret": -1.0, "lab": "NS v BBL 2026-07-12"}, {"x": 0.422, "y": 0.087, "won": true, "ret": 1.37, "lab": "100T v NRG 2026-07-12"}, {"x": 0.742, "y": 0.056, "won": true, "ret": 0.35, "lab": "AG v WOL 2026-07-14"}, {"x": 0.155, "y": 0.144, "won": true, "ret": 5.45, "lab": "TEC v XLG 2026-07-14"}, {"x": 0.427, "y": 0.017, "won": false, "ret": -1.0, "lab": "FPX v JDG 2026-07-15"}, {"x": 0.345, "y": 0.101, "won": true, "ret": 1.9, "lab": "TYL v EDG 2026-07-15"}, {"x": 0.413, "y": 0.07, "won": true, "ret": 1.42, "lab": "NAVI v FUT 2026-07-15"}, {"x": 0.355, "y": 0.128, "won": false, "ret": -1.0, "lab": "EF v TL 2026-07-15"}, {"x": 0.77, "y": 0.002, "won": true, "ret": 0.3, "lab": "GEN v ZETA 2026-07-16"}, {"x": 0.633, "y": 0.104, "won": false, "ret": -1.0, "lab": "BLG v AG 2026-07-16"}, {"x": 0.587, "y": 0.007, "won": true, "ret": 0.7, "lab": "XLG v DRG 2026-07-16"}, {"x": 0.49, "y": 0.041, "won": false, "ret": -1.0, "lab": "VL v TS 2026-07-16"}, {"x": 0.218, "y": 0.127, "won": false, "ret": -1.0, "lab": "FNC v GX 2026-07-16"}, {"x": 0.795, "y": 0.01, "won": true, "ret": 0.26, "lab": "M8 v PCF 2026-07-16"}, {"x": 0.222, "y": 0.036, "won": false, "ret": -1.0, "lab": "LEV v FUR 2026-07-16"}, {"x": 0.568, "y": 0.084, "won": true, "ret": 0.76, "lab": "SEN v C9 2026-07-16"}, {"x": 0.26, "y": 0.057, "won": false, "ret": -1.0, "lab": "NOVA v JDG 2026-07-17"}, {"x": 0.65, "y": 0.077, "won": false, "ret": -1.0, "lab": "FS v NS 2026-07-17"}, {"x": 0.337, "y": 0.079, "won": false, "ret": -1.0, "lab": "TYL v FPX 2026-07-17"}, {"x": 0.248, "y": 0.128, "won": false, "ret": -1.0, "lab": "KRX v DFM 2026-07-17"}, {"x": 0.153, "y": 0.074, "won": false, "ret": -1.0, "lab": "EDG v TE 2026-07-17"}, {"x": 0.49, "y": 0.03, "won": false, "ret": -1.0, "lab": "KC v EF 2026-07-17"}, {"x": 0.35, "y": 0.076, "won": false, "ret": -1.0, "lab": "VIT v NAVI 2026-07-17"}, {"x": 0.423, "y": 0.086, "won": true, "ret": 1.37, "lab": "LOUD v KR\u00dc 2026-07-17"}, {"x": 0.545, "y": 0.008, "won": true, "ret": 0.83, "lab": "GE v RRQ 2026-07-18"}, {"x": 0.345, "y": 0.087, "won": false, "ret": -1.0, "lab": "BLG v TEC 2026-07-18"}, {"x": 0.63, "y": 0.05, "won": false, "ret": -1.0, "lab": "T1 v PRX 2026-07-18"}, {"x": 0.373, "y": 0.185, "won": false, "ret": -1.0, "lab": "XLG v AG 2026-07-18"}, {"x": 0.41, "y": 0.004, "won": true, "ret": 1.44, "lab": "FUT v M8 2026-07-18"}, {"x": 0.355, "y": 0.043, "won": true, "ret": 1.82, "lab": "TL v TH 2026-07-18"}, {"x": 0.435, "y": 0.206, "won": true, "ret": 1.3, "lab": "100T v G2 2026-07-18"}, {"x": 0.583, "y": 0.044, "won": true, "ret": 0.72, "lab": "NRG v MIBR 2026-07-18"}, {"x": 0.695, "y": 0.081, "won": true, "ret": 0.44, "lab": "NOVA v TE 2026-07-19"}, {"x": 0.35, "y": 0.019, "won": true, "ret": 1.86, "lab": "GEN v NS 2026-07-19"}, {"x": 0.225, "y": 0.084, "won": true, "ret": 3.44, "lab": "TS v KRX 2026-07-19"}, {"x": 0.315, "y": 0.061, "won": true, "ret": 2.17, "lab": "WOL v DRG 2026-07-19"}, {"x": 0.165, "y": 0.145, "won": false, "ret": -1.0, "lab": "EDG v JDG 2026-07-19"}, {"x": 0.685, "y": 0.011, "won": true, "ret": 0.46, "lab": "KC v GX 2026-07-19"}, {"x": 0.403, "y": 0.085, "won": true, "ret": 1.48, "lab": "BBL v VIT 2026-07-19"}, {"x": 0.698, "y": 0.026, "won": true, "ret": 0.43, "lab": "AG v TEC 2026-07-20"}, {"x": 0.378, "y": 0.004, "won": true, "ret": 1.65, "lab": "BLG v XLG 2026-07-20"}, {"x": 0.565, "y": 0.012, "won": true, "ret": 0.77, "lab": "JDG v TE 2026-07-21"}, {"x": 0.318, "y": 0.144, "won": true, "ret": 2.15, "lab": "NOVA v EDG 2026-07-21"}]};
+new Chart(document.getElementById('edgecurve'), {
+ type: 'line',
+ data: { labels: EA.curve.map(c => c.lab), datasets: [
+  { label: 'market-implied win rate', data: EA.curve.map(c => c.implied),
+     borderColor: '#9a93a6', borderDash: [6,4], pointRadius: 3 },
+  { label: 'realized win rate (model sides)', data: EA.curve.map(c => c.realized),
+     borderColor: '#7c4dd6', backgroundColor: '#7c4dd6', pointRadius: 5,
+     fill: { target: 0, above: 'rgba(30,122,79,.15)', below: 'rgba(192,57,43,.15)' } } ] },
+ options: { plugins: { tooltip: { callbacks: {
+     afterBody: items => 'n=' + EA.curve[items[0].dataIndex].n } } },
+  scales: { y: { min: 0, max: 1, title: { display: true, text: 'win probability' } } } }
+});
+new Chart(document.getElementById('edgescatter'), {
+ type: 'scatter',
+ data: { datasets: [
+  { label: 'won', data: EA.scatter.filter(p => p.won),
+     backgroundColor: 'rgba(30,122,79,.75)',
+     pointRadius: EA.scatter.filter(p => p.won).map(p => 3 + Math.min(9, Math.sqrt(Math.abs(p.ret)) * 3)) },
+  { label: 'lost', data: EA.scatter.filter(p => !p.won),
+     backgroundColor: 'rgba(192,57,43,.65)', pointRadius: 4 },
+  { label: '5-pt trade threshold', type: 'line', data: [{x:0.02,y:0.05},{x:0.98,y:0.05}],
+     borderColor: '#6b6478', borderDash: [7,5], pointRadius: 0, borderWidth: 1.5 } ] },
+ options: { plugins: { tooltip: { callbacks: {
+     label: ctx => { const p = ctx.raw; return p.lab ? p.lab + ' — price ' +
+       Math.round(p.x*100) + 'c, div ' + Math.round(p.y*100) + 'pts, ret ' +
+       (p.ret>0?'+':'') + Math.round(p.ret*100) + '%' : ''; } } } },
+  scales: { x: { min: 0, max: 1, title: { display: true, text: "price of the model's side (¢)" },
+              ticks: { callback: v => Math.round(v*100) + 'c' } },
+            y: { min: 0, title: { display: true, text: 'divergence (model − market)' },
+              ticks: { callback: v => Math.round(v*100) + 'pts' } } } }
+});
+const BK6 = {"labels": ["domestic EMEA", "format bo5", "domestic Americas", "CN involved", "domestic CN", "stage groups", "format bo5_gf", "year 2025", "close matchups (gap<1.5)", "cross-region", "domestic", "post-break (rest>45d)", "big gap [4,7)", "format bo3", "mid gap [1.5,4)", "stage grand_final", "stage playoffs", "year 2026", "huge gap (7+)", "international", "EWC-class events", "domestic Pacific", "elite vs floor"], "delta": [18.61, 16.99, 16.78, 16.08, 13.82, 13.31, 13.13, 13.1, 12.91, 12.66, 12.4, 12.0, 11.98, 11.48, 11.17, 10.94, 10.82, 10.45, 7.86, 7.23, 2.22, -3.07, -5.09]};
+new Chart(document.getElementById('bk6'), {
+ type: 'bar',
+ data: { labels: BK6.labels, datasets: [{ label: 'v6 − production (milli-LL)',
+   data: BK6.delta,
+   backgroundColor: BK6.delta.map(v => v >= 0 ? '#1e7a4f' : '#c0392b') }] },
+ options: { indexAxis: 'y', maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: { x: { title: { display: true, text: 'improvement (milli-LL/series)' } },
+            y: { ticks: { autoSkip: false, font: { size: 11 } } } } }
+});
+</script>
+</body></html>

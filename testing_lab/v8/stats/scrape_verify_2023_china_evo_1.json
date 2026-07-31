@@ -1,0 +1,344 @@
+{
+ "271425": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/271425/trace-esports-vs-all-gamers-china-evolution-series-act-1-variation-oq-a-r1",
+  "maps": {
+   "140462": [
+    "TE",
+    "13-1"
+   ]
+  },
+  "series": [
+   "TE",
+   "1-0"
+  ],
+  "match_name": "Open Qualifiers - Group A: Round 1",
+  "utc_ts": "2023-09-07 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "TE"
+  ]
+ },
+ "271488": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/271488/xlg-esports-vs-dragon-ranger-gaming-china-evolution-series-act-1-variation-oq-ro16-ur1",
+  "maps": {
+   "140546": [
+    "DRG",
+    "13-1"
+   ],
+   "140547": [
+    "DRG",
+    "13-2"
+   ]
+  },
+  "series": [
+   "DRG",
+   "2-0"
+  ],
+  "match_name": "Open Qualifier - Round of 16: Upper Round 1",
+  "utc_ts": "2023-09-08 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "XLG"
+  ]
+ },
+ "271938": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/271938/attacking-soul-esports-vs-dragon-ranger-gaming-china-evolution-series-act-1-variation-oq-ro16",
+  "maps": {
+   "140781": [
+    "ASE",
+    "13-4"
+   ],
+   "140782": [
+    "ASE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "ASE",
+   "2-0"
+  ],
+  "match_name": "Open Qualifier - Round of 16: Upper Quarterfinals",
+  "utc_ts": "2023-09-09 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "DRG"
+  ]
+ },
+ "271945": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/271945/dragon-ranger-gaming-vs-trace-esports-china-evolution-series-act-1-variation-oq-ro16-lr2",
+  "maps": {
+   "140796": [
+    "TE",
+    "13-4"
+   ],
+   "140797": [
+    "TE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Open Qualifier - Round of 16: Lower Round 2",
+  "utc_ts": "2023-09-10 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "TE"
+  ]
+ },
+ "272989": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/272989/attacking-soul-esports-vs-nova-esports-china-evolution-series-act-1-variation-opening-a",
+  "maps": {
+   "141003": [
+    "ASE",
+    "13-10"
+   ],
+   "141004": [
+    "ASE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "ASE",
+   "2-0"
+  ],
+  "match_name": "Play-In Stage: Opening (A)",
+  "utc_ts": "2023-09-12 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "NOVA"
+  ]
+ },
+ "272991": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/272991/trace-esports-vs-nova-esports-china-evolution-series-act-1-variation-elim-a",
+  "maps": {
+   "141009": [
+    "NOVA",
+    "13-4"
+   ],
+   "141010": [
+    "TE",
+    "13-4"
+   ],
+   "141011": [
+    "TE",
+    "13-11"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Play-In Stage: Elimination (A)",
+  "utc_ts": "2023-09-15 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "TE"
+  ]
+ },
+ "274401": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274401/tyloo-vs-attacking-soul-esports-china-evolution-series-act-1-variation-ubqf",
+  "maps": {
+   "141411": [
+    "ASE",
+    "13-5"
+   ],
+   "141412": [
+    "ASE",
+    "13-6"
+   ]
+  },
+  "series": [
+   "ASE",
+   "2-0"
+  ],
+  "match_name": "Main Stage: Upper Quarterfinals",
+  "utc_ts": "2023-09-23 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "TYL"
+  ]
+ },
+ "274402": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274402/edward-gaming-vs-trace-esports-china-evolution-series-act-1-variation-ubqf",
+  "maps": {
+   "141414": [
+    "EDG",
+    "13-4"
+   ],
+   "141415": [
+    "EDG",
+    "13-8"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-0"
+  ],
+  "match_name": "Main Stage: Upper Quarterfinals",
+  "utc_ts": "2023-09-23 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "TE"
+  ]
+ },
+ "274409": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274409/tyloo-vs-trace-esports-china-evolution-series-act-1-variation-lr1",
+  "maps": {
+   "141437": [
+    "TE",
+    "13-9"
+   ],
+   "141438": [
+    "TE",
+    "13-11"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Main Stage: Lower Round 1",
+  "utc_ts": "2023-09-25 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TE",
+   "TYL"
+  ]
+ },
+ "274405": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274405/attacking-soul-esports-vs-edward-gaming-china-evolution-series-act-1-variation-ubsf",
+  "maps": {
+   "141423": [
+    "EDG",
+    "13-5"
+   ],
+   "141424": [
+    "EDG",
+    "13-10"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-0"
+  ],
+  "match_name": "Main Stage: Upper Semifinals",
+  "utc_ts": "2023-09-26 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "EDG"
+  ]
+ },
+ "274406": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274406/funplus-phoenix-vs-bilibili-gaming-china-evolution-series-act-1-variation-ubsf",
+  "maps": {
+   "141426": [
+    "FPX",
+    "13-8"
+   ],
+   "141427": [
+    "BLG",
+    "13-8"
+   ],
+   "141428": [
+    "FPX",
+    "13-10"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Stage: Upper Semifinals",
+  "utc_ts": "2023-09-26 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "FPX"
+  ]
+ },
+ "274411": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274411/bilibili-gaming-vs-trace-esports-china-evolution-series-act-1-variation-lr2",
+  "maps": {
+   "141443": [
+    "TE",
+    "13-10"
+   ],
+   "141444": [
+    "TE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Main Stage: Lower Round 2",
+  "utc_ts": "2023-09-27 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TE"
+  ]
+ },
+ "274407": {
+  "event_id": "2023_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/274407/edward-gaming-vs-funplus-phoenix-china-evolution-series-act-1-variation-ubf",
+  "maps": {
+   "141429": [
+    "EDG",
+    "13-8"
+   ],
+   "141430": [
+    "EDG",
+    "13-5"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-0"
+  ],
+  "match_name": "Main Stage: Upper Final",
+  "utc_ts": "2023-09-28 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "FPX"
+  ]
+ }
+}

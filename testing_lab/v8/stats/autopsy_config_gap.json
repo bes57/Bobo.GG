@@ -1,0 +1,149 @@
+{
+ "live_config_verified": {
+  "source": "ssh cat VM config.toml 2026-07-28 (identical to Mac copy)",
+  "hard_min_edge_cents": 5,
+  "min_edge_cents": 1,
+  "hedge_margin_cents": 2,
+  "order_expiry_lead_hours": 2,
+  "kelly_fraction": 0.5,
+  "vm_model_rebuild": true,
+  "vm_git_provenance": "UNAVAILABLE \u2014 /home/vctmm/VCTMM is not a git repo"
+ },
+ "side1_settled_actual": {
+  "cost": 1633.66,
+  "pnl": -426.61,
+  "roi": -0.2611
+ },
+ "rows": [
+  {
+   "knob": "side-1 min edge",
+   "live": "flat 5c (hard_min_edge_cents=5)",
+   "recommended": "logit +0.5..+0.6 (FINDINGS 4; ~14c@50c, 8c@85c)",
+   "sim_roi": {
+    "flat_5c": [
+     0.067,
+     [
+      -0.092,
+      0.228
+     ]
+    ],
+    "logit_0.6": [
+     0.2911,
+     [
+      0.006,
+      0.61
+     ]
+    ],
+    "logit_0.4": [
+     0.1498,
+     [
+      -0.05,
+      0.364
+     ]
+    ]
+   },
+   "expected_roi_delta_pts": 22.4,
+   "counterfactual_on_our_fills": {
+    "logit_0.5_v6": {
+     "kept_fills": 101,
+     "kept_cost": 355.27,
+     "kept_pnl": 6.59,
+     "kept_roi": 0.0185,
+     "dropped_cost": 1278.39,
+     "dropped_pnl": -433.2,
+     "dropped_roi": -0.3389
+    },
+    "logit_0.6_v6": {
+     "kept_fills": 35,
+     "kept_cost": 133.34,
+     "kept_pnl": 122.66,
+     "kept_roi": 0.9199,
+     "dropped_cost": 1500.32,
+     "dropped_pnl": -549.27,
+     "dropped_roi": -0.3661
+    },
+    "logit_0.6_botfv": {
+     "kept_fills": 38,
+     "kept_cost": 195.37,
+     "kept_pnl": 124.11,
+     "kept_roi": 0.6353,
+     "dropped_cost": 1064.19,
+     "dropped_pnl": -329.62,
+     "dropped_roi": -0.3097
+    }
+   },
+   "implemented": false
+  },
+  {
+   "knob": "skip NO on model-p<45% sides",
+   "live": "ABSENT (code-verified: no threshold in quotes.py/engine.py)",
+   "recommended": "skip (FINDINGS 4 refinement; pocket -5.7% in sim)",
+   "our_pocket": {
+    "fills": 83,
+    "cost": 709.32,
+    "pnl": -105.89,
+    "roi": -0.1493
+   },
+   "implemented": false
+  },
+  {
+   "knob": "order expiry",
+   "live": "start-2h",
+   "recommended": "start-2h (Rule 5)",
+   "fills_inside_2h": {
+    "n": 132,
+    "contracts": 1241.8
+   },
+   "implemented": true
+  },
+  {
+   "knob": "hedge margin",
+   "live": "2c",
+   "recommended": "2c must clear fees+adverse; fees=0 verified",
+   "realized_margin_c_per_pair": 1.66,
+   "implemented": true
+  }
+ ],
+ "rule4_pocket_side1_settled": {
+  "definition": "market >=15pts MORE confident than frozen v6 (Rule 4 quarter-size shape); market proxy = 100-fill_px",
+  "cost": 23.07,
+  "pnl": -23.07,
+  "roi": -1.0,
+  "note": "small in dollars but 100% loss rate; rest of side-1 still -14.8%"
+ },
+ "parity_check": {
+  "bot_fv_vs_frozen_v6_all": {
+   "n": 631,
+   "mean": -0.0028,
+   "mad": 0.0463
+  },
+  "v6_valid_vintage_only": {
+   "n": 159,
+   "mean": 0.0078,
+   "mad": 0.0229
+  },
+  "note": "validates my org/format joins; residual = daily VM rebuild drift (legitimate post-sync) + format inference"
+ },
+ "top_gap_ranking_by_expected_dollars": [
+  {
+   "rank": 1,
+   "knob": "flat 5c -> logit +0.5/+0.6 side-1 edge floor",
+   "evidence": "sim +22.4 ROI pts; on our settled fills the beyond-cap tail cost -$549 standalone (kept portion +$123)"
+  },
+  {
+   "rank": 2,
+   "knob": "implement skip-NO-on-model-p<45%",
+   "evidence": "our pocket: 83 fills, $709 cost, -$106 (-14.9%); research flagged -5.7% presciently"
+  },
+  {
+   "rank": 3,
+   "knob": "hedge margin 2c",
+   "evidence": "adequate: fees=$0, realized 1.66c/pair locked; not the leak"
+  },
+  {
+   "rank": 4,
+   "knob": "expiry start-2h",
+   "evidence": "correctly implemented; 132 settled fills inside 2h calibrate -4.8pts (not the worst slice; 6-24h is, at -10.4pts)"
+  }
+ ]
+}

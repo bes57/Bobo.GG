@@ -1,0 +1,465 @@
+{
+ "provenance": {
+  "written_by": "agent:compose",
+  "written": "2026-07-28 22:36:52",
+  "preregistered": "testing_lab/v8/preregister.compose.md (BEFORE fits and scoring)",
+  "frame": "v8/data/frame_expanded/series.csv sha256 verified vs crn.json",
+  "one_scoring_rule": "each stack scored on holdout exactly once (sentinel scratch/compose/SCORED)",
+  "baseline_v6": {
+   "ll_holdout": 0.64216,
+   "beta": 0.1152,
+   "max_abs_bias": 0.1478
+  },
+  "mde_source": "stats/power_mde_expanded.json (within 1.773m / cross 5.889m); empirical pair-MDE = 2.8016*SD(d)/sqrt(n), raw + CUPED(l_v6) CV per stats/variance_reduction.json",
+  "units": "milli-LL + expected ROI via referee.expected_roi_of_dll"
+ },
+ "gates": {
+  "S1_gate5d": {
+   "verdict": "HOLD",
+   "candidate": "S1_gate5d",
+   "baseline": "v6",
+   "n_scored": 1217,
+   "clauses": [
+    {
+     "clause": "G1 paired-bootstrap support (mean \u0394LL >= mde=0.00589 AND P(better) >= 0.95 in iid AND block_event)",
+     "pass": false,
+     "mean_delta": 0.001958271014700141,
+     "delta_milli": 1.958,
+     "mde": 0.005889,
+     "iid": {
+      "mean_delta": 0.001958271014700141,
+      "ci_lo": -0.00015100523890662754,
+      "ci_hi": 0.004206100025043042,
+      "p_better": 0.96575,
+      "mode": "iid",
+      "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+      "n": 1217,
+      "seed": 20260728,
+      "n_boot": 4000,
+      "generator": "numpy PCG64",
+      "crn_verify": "not-applicable (subset n != holdout n)"
+     },
+     "block_event": {
+      "mean_delta": 0.001958271014700141,
+      "ci_lo": -0.0011881112973386539,
+      "ci_hi": 0.004941784231505707,
+      "p_better": 0.88825,
+      "mode": "block_event",
+      "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+      "n": 1217,
+      "seed": 20260729,
+      "n_boot": 4000,
+      "generator": "numpy PCG64",
+      "n_events": 31,
+      "crn_verify": "not-applicable (subset events != crn events)"
+     }
+    },
+    {
+     "clause": "G2 max|team bias| reduced (strict, min_n=25)",
+     "pass": false,
+     "candidate_max_abs_bias": 0.1491,
+     "v6_max_abs_bias": 0.1478,
+     "candidate_mean_abs_bias": 0.048,
+     "v6_mean_abs_bias": 0.0473
+    },
+    {
+     "clause": "G3 no major bucket regression (<= -4.0m @n>=100, <= -8.0m @30<=n<100)",
+     "pass": false,
+     "major_regressions": [
+      {
+       "name": "huge gap (7+)",
+       "n": 56,
+       "delta_milli": -8.86,
+       "bar": -8.0
+      }
+     ],
+     "n_buckets_evaluated": 27,
+     "pending": [
+      "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+     ]
+    }
+   ],
+   "expected_roi": {
+    "dll": 0.001958271014700141,
+    "dll_milli": 1.958,
+    "mean_one_minus_p_ref": 0.4578,
+    "delta_logit_equiv": 0.0043,
+    "delta_op": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0037,
+    "expected_roi_delta": 0.0016,
+    "roi_ci_at_op_plus_equiv": [
+     -0.118,
+     0.128
+    ],
+    "ladder_points": [
+     [
+      0.0,
+      0.0021
+     ],
+     [
+      0.1,
+      0.0402
+     ],
+     [
+      0.2,
+      0.0604
+     ],
+     [
+      0.3,
+      0.088
+     ],
+     [
+      0.4,
+      0.1498
+     ],
+     [
+      0.6,
+      0.2911
+     ]
+    ],
+    "ladder_source": "out/quote_margin.json",
+    "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+   },
+   "bias_summary": {
+    "candidate_max_abs": 0.1491,
+    "v6_max_abs": 0.1478
+   },
+   "full_tables_in": "stats/compose_stacks.json"
+  },
+  "S2_fade_shrink": {
+   "verdict": "HOLD",
+   "candidate": "S2_fade_shrink",
+   "baseline": "v6",
+   "n_scored": 1217,
+   "clauses": [
+    {
+     "clause": "G1 paired-bootstrap support (mean \u0394LL >= mde=0.00177 AND P(better) >= 0.95 in iid AND block_event)",
+     "pass": false,
+     "mean_delta": -0.00013962130005494648,
+     "delta_milli": -0.14,
+     "mde": 0.001773,
+     "iid": {
+      "mean_delta": -0.00013962130005494648,
+      "ci_lo": -0.0018899754054839167,
+      "ci_hi": 0.0016359729740085562,
+      "p_better": 0.42925,
+      "mode": "iid",
+      "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+      "n": 1217,
+      "seed": 20260728,
+      "n_boot": 4000,
+      "generator": "numpy PCG64",
+      "crn_verify": "not-applicable (subset n != holdout n)"
+     },
+     "block_event": {
+      "mean_delta": -0.00013962130005494648,
+      "ci_lo": -0.0028492275420731214,
+      "ci_hi": 0.002896179284171735,
+      "p_better": 0.471,
+      "mode": "block_event",
+      "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+      "n": 1217,
+      "seed": 20260729,
+      "n_boot": 4000,
+      "generator": "numpy PCG64",
+      "n_events": 31,
+      "crn_verify": "not-applicable (subset events != crn events)"
+     }
+    },
+    {
+     "clause": "G2 max|team bias| reduced (strict, min_n=25)",
+     "pass": false,
+     "candidate_max_abs_bias": 0.1548,
+     "v6_max_abs_bias": 0.1478,
+     "candidate_mean_abs_bias": 0.0484,
+     "v6_mean_abs_bias": 0.0473
+    },
+    {
+     "clause": "G3 no major bucket regression (<= -4.0m @n>=100, <= -8.0m @30<=n<100)",
+     "pass": false,
+     "major_regressions": [
+      {
+       "name": "domestic EMEA",
+       "n": 242,
+       "delta_milli": -4.41,
+       "bar": -4.0
+      },
+      {
+       "name": "favorite [0.7,0.8)",
+       "n": 137,
+       "delta_milli": -7.63,
+       "bar": -4.0
+      }
+     ],
+     "n_buckets_evaluated": 27,
+     "pending": [
+      "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+     ]
+    }
+   ],
+   "expected_roi": {
+    "dll": -0.00013962130005494648,
+    "dll_milli": -0.14,
+    "mean_one_minus_p_ref": 0.4578,
+    "delta_logit_equiv": -0.0003,
+    "delta_op": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "expected_roi_delta": 0.0,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ],
+    "ladder_points": [
+     [
+      0.0,
+      0.0021
+     ],
+     [
+      0.1,
+      0.0402
+     ],
+     [
+      0.2,
+      0.0604
+     ],
+     [
+      0.3,
+      0.088
+     ],
+     [
+      0.4,
+      0.1498
+     ],
+     [
+      0.6,
+      0.2911
+     ]
+    ],
+    "ladder_source": "out/quote_margin.json",
+    "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+   },
+   "bias_summary": {
+    "candidate_max_abs": 0.1548,
+    "v6_max_abs": 0.1478
+   },
+   "full_tables_in": "stats/compose_stacks.json"
+  },
+  "S3_full": {
+   "verdict": "HOLD",
+   "candidate": "S3_full",
+   "baseline": "v6",
+   "n_scored": 1217,
+   "clauses": [
+    {
+     "clause": "G1 paired-bootstrap support (mean \u0394LL >= mde=0.00589 AND P(better) >= 0.95 in iid AND block_event)",
+     "pass": false,
+     "mean_delta": -0.007873804652752874,
+     "delta_milli": -7.874,
+     "mde": 0.005889,
+     "iid": {
+      "mean_delta": -0.007873804652752874,
+      "ci_lo": -0.014335742988260977,
+      "ci_hi": -0.0015259190944729426,
+      "p_better": 0.00825,
+      "mode": "iid",
+      "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+      "n": 1217,
+      "seed": 20260728,
+      "n_boot": 4000,
+      "generator": "numpy PCG64",
+      "crn_verify": "not-applicable (subset n != holdout n)"
+     },
+     "block_event": {
+      "mean_delta": -0.007873804652752874,
+      "ci_lo": -0.01620256144018204,
+      "ci_hi": 0.0013965956109918724,
+      "p_better": 0.04275,
+      "mode": "block_event",
+      "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+      "n": 1217,
+      "seed": 20260729,
+      "n_boot": 4000,
+      "generator": "numpy PCG64",
+      "n_events": 31,
+      "crn_verify": "not-applicable (subset events != crn events)"
+     }
+    },
+    {
+     "clause": "G2 max|team bias| reduced (strict, min_n=25)",
+     "pass": false,
+     "candidate_max_abs_bias": 0.1968,
+     "v6_max_abs_bias": 0.1478,
+     "candidate_mean_abs_bias": 0.0616,
+     "v6_mean_abs_bias": 0.0473
+    },
+    {
+     "clause": "G3 no major bucket regression (<= -4.0m @n>=100, <= -8.0m @30<=n<100)",
+     "pass": false,
+     "major_regressions": [
+      {
+       "name": "year 2025",
+       "n": 674,
+       "delta_milli": -9.09,
+       "bar": -4.0
+      },
+      {
+       "name": "year 2026",
+       "n": 543,
+       "delta_milli": -6.36,
+       "bar": -4.0
+      },
+      {
+       "name": "format bo1",
+       "n": 55,
+       "delta_milli": -15.98,
+       "bar": -8.0
+      },
+      {
+       "name": "format bo3",
+       "n": 1074,
+       "delta_milli": -7.47,
+       "bar": -4.0
+      },
+      {
+       "name": "format bo5",
+       "n": 53,
+       "delta_milli": -16.42,
+       "bar": -8.0
+      },
+      {
+       "name": "stage groups",
+       "n": 568,
+       "delta_milli": -19.83,
+       "bar": -4.0
+      },
+      {
+       "name": "international",
+       "n": 122,
+       "delta_milli": -11.02,
+       "bar": -4.0
+      },
+      {
+       "name": "domestic",
+       "n": 1095,
+       "delta_milli": -7.52,
+       "bar": -4.0
+      },
+      {
+       "name": "CN involved",
+       "n": 394,
+       "delta_milli": -11.92,
+       "bar": -4.0
+      },
+      {
+       "name": "cross-region",
+       "n": 194,
+       "delta_milli": -13.03,
+       "bar": -4.0
+      },
+      {
+       "name": "domestic Americas",
+       "n": 233,
+       "delta_milli": -14.16,
+       "bar": -4.0
+      },
+      {
+       "name": "domestic EMEA",
+       "n": 242,
+       "delta_milli": -11.43,
+       "bar": -4.0
+      },
+      {
+       "name": "domestic CN",
+       "n": 311,
+       "delta_milli": -5.57,
+       "bar": -4.0
+      },
+      {
+       "name": "big gap [4,7)",
+       "n": 223,
+       "delta_milli": -25.11,
+       "bar": -4.0
+      },
+      {
+       "name": "huge gap (7+)",
+       "n": 56,
+       "delta_milli": -55.89,
+       "bar": -8.0
+      },
+      {
+       "name": "post-break (rest>45d)",
+       "n": 130,
+       "delta_milli": -14.09,
+       "bar": -4.0
+      },
+      {
+       "name": "favorite [0.5,0.6)",
+       "n": 865,
+       "delta_milli": -5.25,
+       "bar": -4.0
+      },
+      {
+       "name": "favorite [0.6,0.7)",
+       "n": 264,
+       "delta_milli": -19.29,
+       "bar": -4.0
+      }
+     ],
+     "n_buckets_evaluated": 27,
+     "pending": [
+      "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+     ]
+    }
+   ],
+   "expected_roi": {
+    "dll": -0.007873804652752874,
+    "dll_milli": -7.874,
+    "mean_one_minus_p_ref": 0.4578,
+    "delta_logit_equiv": -0.0172,
+    "delta_op": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "expected_roi_delta": 0.0,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ],
+    "ladder_points": [
+     [
+      0.0,
+      0.0021
+     ],
+     [
+      0.1,
+      0.0402
+     ],
+     [
+      0.2,
+      0.0604
+     ],
+     [
+      0.3,
+      0.088
+     ],
+     [
+      0.4,
+      0.1498
+     ],
+     [
+      0.6,
+      0.2911
+     ]
+    ],
+    "ladder_source": "out/quote_margin.json",
+    "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+   },
+   "bias_summary": {
+    "candidate_max_abs": 0.1968,
+    "v6_max_abs": 0.1478
+   },
+   "full_tables_in": "stats/compose_stacks.json"
+  }
+ }
+}

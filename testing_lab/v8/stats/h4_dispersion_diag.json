@@ -1,0 +1,321 @@
+{
+ "generated_by": "agent:bias-h4",
+ "generated": "2026-07-28 22:10:46",
+ "preregistered": "testing_lab/v8/preregister.bias_h4.md (before runs)",
+ "frame_sha256": "ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142",
+ "v6_reconstruction": {
+  "config": {
+   "decay": {
+    "kind": "games",
+    "consistency": [
+     20.0,
+     12.0
+    ]
+   },
+   "rd": {
+    "power": 0.75,
+    "scale": 2.5
+   },
+   "roster_mode": "year",
+   "roster_persistence": 0.3,
+   "ridge": 0.5,
+   "champ_mult": 2.0,
+   "region_prior_ridge": 1.5,
+   "w_custom": "PO 1.6 playoffs/GF from frame"
+  },
+  "beta": 0.1152,
+  "ll_train": 0.64823,
+  "ll_holdout": 0.64216,
+  "n_train_valid": 827,
+  "n_holdout": 1217
+ },
+ "definitions": {
+  "sample": "train rows (date<=2024-12-31), valid rdiff, fmt!=bo1",
+  "D_sweep_pp": "100*(obs share l_maps==0  -  mean iid P(sweep|win) at v6 map prob); >0 over-dispersed, <0 under-dispersed",
+  "conditional": "score distribution GIVEN series winner \u2014 insensitive to first-order rating miscalibration",
+  "sigma_hat": "ML shared series effect u~N(0,sigma), logit-additive, GH-31 quadrature, conditional score likelihood",
+  "h_hat": "ML alternating pick-spread (bo3 [+h,-h,0]; bo5 [+h,-h,+h,-h,0]), averaged over both starts, independent maps \u2014 the under-dispersion arm",
+  "depth": "favorite's distinct real maps played (officials, trailing 90d) \u2229 veto-era pool (map_vetos.csv, trailing 60d, fallback 120d) / pool size; MapNum=='all' never enters (engine loader filters it); 'TBD' junk map dropped",
+  "terciles_train_cuts": [
+   0.7778,
+   0.875
+  ],
+  "z_scaling_train": {
+   "mu": 0.7745,
+   "sd": 0.2579
+  }
+ },
+ "n_diag": 794,
+ "depth_coverage": {
+  "defined": 2056,
+  "of": 2058,
+  "pool_windows": {
+   "60": 587,
+   "120": 47,
+   "all-history": 2,
+   "none": 1
+  }
+ },
+ "crn": {
+  "cell_boot": {
+   "seed": 1949022022,
+   "n_boot": 4000,
+   "order": [
+    "overall",
+    "fmt_bo3",
+    "fmt_bo5",
+    "fav_050_070",
+    "fav_070_100",
+    "depth_T1",
+    "depth_T2",
+    "depth_T3",
+    "depth_T1_fav070",
+    "depth_T2_fav070",
+    "depth_T3_fav070"
+   ]
+  },
+  "param_boot": {
+   "seed": 2101413079,
+   "n_boot": 2000,
+   "cells": [
+    "depth_T1_fav070",
+    "depth_T3_fav070",
+    "fmt_bo3",
+    "fmt_bo5",
+    "overall"
+   ]
+  }
+ },
+ "cells": [
+  {
+   "name": "overall",
+   "n": 794,
+   "obs_sweep_share": 0.5529,
+   "implied_sweep_share": 0.502,
+   "D_sweep_pp": 5.09,
+   "D_sweep_ci_pp": [
+    1.81,
+    8.53
+   ],
+   "obs_mean_lmaps": 0.4723,
+   "implied_mean_lmaps": 0.5257,
+   "sigma_hat": 0.7209,
+   "h_hat": 0.0001,
+   "sigma_ci": [
+    0.3773,
+    0.9992
+   ],
+   "h_ci": [
+    0.0,
+    0.0001
+   ]
+  },
+  {
+   "name": "fmt_bo3",
+   "n": 733,
+   "obs_sweep_share": 0.5784,
+   "implied_sweep_share": 0.5217,
+   "D_sweep_pp": 5.68,
+   "D_sweep_ci_pp": [
+    2.05,
+    9.17
+   ],
+   "obs_mean_lmaps": 0.4216,
+   "implied_mean_lmaps": 0.4783,
+   "sigma_hat": 0.8231,
+   "h_hat": 0.0001,
+   "sigma_ci": [
+    0.5042,
+    1.1355
+   ],
+   "h_ci": [
+    0.0,
+    0.0001
+   ]
+  },
+  {
+   "name": "fmt_bo5",
+   "n": 61,
+   "obs_sweep_share": 0.2459,
+   "implied_sweep_share": 0.2654,
+   "D_sweep_pp": -1.95,
+   "D_sweep_ci_pp": [
+    -12.61,
+    9.32
+   ],
+   "obs_mean_lmaps": 1.082,
+   "implied_mean_lmaps": 1.0946,
+   "sigma_hat": 0.2403,
+   "h_hat": 0.214,
+   "sigma_ci": [
+    0.0,
+    0.9016
+   ],
+   "h_ci": [
+    0.0,
+    1.1555
+   ]
+  },
+  {
+   "name": "fav_050_070",
+   "n": 742,
+   "obs_sweep_share": 0.5472,
+   "implied_sweep_share": 0.4945,
+   "D_sweep_pp": 5.27,
+   "D_sweep_ci_pp": [
+    1.85,
+    8.77
+   ],
+   "obs_mean_lmaps": 0.4798,
+   "implied_mean_lmaps": 0.5351,
+   "sigma_hat": 0.7056,
+   "h_hat": 0.0
+  },
+  {
+   "name": "fav_070_100",
+   "n": 48,
+   "obs_sweep_share": 0.6042,
+   "implied_sweep_share": 0.618,
+   "D_sweep_pp": -1.39,
+   "D_sweep_ci_pp": [
+    -15.7,
+    12.46
+   ],
+   "obs_mean_lmaps": 0.3958,
+   "implied_mean_lmaps": 0.382,
+   "sigma_hat": 0.5496,
+   "h_hat": 0.3511
+  },
+  {
+   "name": "depth_T1",
+   "n": 276,
+   "obs_sweep_share": 0.5797,
+   "implied_sweep_share": 0.4973,
+   "D_sweep_pp": 8.24,
+   "D_sweep_ci_pp": [
+    2.39,
+    14.02
+   ],
+   "obs_mean_lmaps": 0.4348,
+   "implied_mean_lmaps": 0.5289,
+   "sigma_hat": 1.0528,
+   "h_hat": 0.0001
+  },
+  {
+   "name": "depth_T2",
+   "n": 273,
+   "obs_sweep_share": 0.5495,
+   "implied_sweep_share": 0.5116,
+   "D_sweep_pp": 3.79,
+   "D_sweep_ci_pp": [
+    -2.08,
+    9.68
+   ],
+   "obs_mean_lmaps": 0.4652,
+   "implied_mean_lmaps": 0.5084,
+   "sigma_hat": 0.627,
+   "h_hat": 0.0001
+  },
+  {
+   "name": "depth_T3",
+   "n": 245,
+   "obs_sweep_share": 0.5265,
+   "implied_sweep_share": 0.4965,
+   "D_sweep_pp": 3.0,
+   "D_sweep_ci_pp": [
+    -2.91,
+    9.06
+   ],
+   "obs_mean_lmaps": 0.5224,
+   "implied_mean_lmaps": 0.5413,
+   "sigma_hat": 0.3567,
+   "h_hat": 0.0
+  },
+  {
+   "name": "depth_T1_fav070",
+   "n": 14,
+   "obs_sweep_share": 0.5714,
+   "implied_sweep_share": 0.5824,
+   "D_sweep_pp": -1.1,
+   "D_sweep_ci_pp": [
+    -29.05,
+    25.66
+   ],
+   "obs_mean_lmaps": 0.4286,
+   "implied_mean_lmaps": 0.4176,
+   "sigma_hat": 0.8952,
+   "h_hat": 0.3111,
+   "sigma_ci": [
+    0.0,
+    2.4999
+   ],
+   "h_ci": [
+    0.0,
+    1.9007
+   ]
+  },
+  {
+   "name": "depth_T2_fav070",
+   "n": 24,
+   "obs_sweep_share": 0.625,
+   "implied_sweep_share": 0.6277,
+   "D_sweep_pp": -0.27,
+   "D_sweep_ci_pp": [
+    -21.2,
+    18.85
+   ],
+   "obs_mean_lmaps": 0.375,
+   "implied_mean_lmaps": 0.3723,
+   "sigma_hat": 0.7119,
+   "h_hat": 0.1555
+  },
+  {
+   "name": "depth_T3_fav070",
+   "n": 10,
+   "obs_sweep_share": 0.6,
+   "implied_sweep_share": 0.6446,
+   "D_sweep_pp": -4.46,
+   "D_sweep_ci_pp": [
+    -33.96,
+    24.92
+   ],
+   "obs_mean_lmaps": 0.4,
+   "implied_mean_lmaps": 0.3554,
+   "sigma_hat": 0.0001,
+   "h_hat": 0.6364,
+   "sigma_ci": [
+    0.0,
+    2.4999
+   ],
+   "h_ci": [
+    0.0,
+    2.1074
+   ]
+  }
+ ],
+ "joint_fit_overall": {
+  "sigma": 0.7209,
+  "h": 0.0,
+  "nll": 0.71295
+ },
+ "gates": {
+  "G1_underdispersed_deep_pool_favorites": false,
+  "G2_any_exploitable_dispersion": true,
+  "G2_terms": {
+   "overall_D": true,
+   "bo3_D": true,
+   "bo5_D": false,
+   "sigma_overall": true,
+   "h_overall": false,
+   "depth_gradient": false
+  },
+  "gradient_T1fav_minus_T3fav": {
+   "point_pp": 3.36,
+   "ci_pp": [
+    -36.94,
+    42.99
+   ]
+  },
+  "rule": "preregister.bias_h4.md E1/E2: L1 always; L2 if G1 or G2; L3+L4 only if G1"
+ }
+}

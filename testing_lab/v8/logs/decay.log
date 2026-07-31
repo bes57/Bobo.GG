@@ -1,0 +1,118 @@
+[2026-07-28 21:57:41] agent:decay start — read wave2_common.md, decay.md, README.md; frame sha256 verified ff772d41...d55142 == crn.frame_expanded
+[2026-07-28 22:07:35] 5a runner ready (1s): games=5140 teams=73 days=637 frame=2058
+[2026-07-28 22:07:37] eng.run(v6) done in 2s: beta=0.1152 ll_test=0.64216 n_test=1217
+[2026-07-28 22:07:37] VALIDATION PASS: max|drdiff|=0.00e+00 beta 0.1152 vs 0.1152, ll 0.64216 vs 0.64216
+[2026-07-28 22:07:37] saved v6_daily.npz
+[2026-07-28 22:07:37] v6_consist_20_12: beta=0.1152 ll_train=0.64823 ll_test=0.64216 (0s)
+[2026-07-28 22:07:38] consist_16_10: beta=0.1162 ll_train=0.64824 ll_test=0.64269 (0s)
+[2026-07-28 22:07:38] sym_20: beta=0.1201 ll_train=0.64745 ll_test=0.64434 (0s)
+[2026-07-28 22:07:38] sym_24: beta=0.1191 ll_train=0.64753 ll_test=0.64459 (0s)
+[2026-07-28 22:07:38] sym_16: beta=0.1213 ll_train=0.64754 ll_test=0.64450 (0s)
+[2026-07-28 22:07:38] 5a consist_16_10: d=-0.53m mde_raw=1.67 cv=1.66 p_iid=0.192 p_blk=0.126 -> INSIDE NOISE FLOOR
+[2026-07-28 22:07:39] 5a sym_20: d=-2.17m mde_raw=3.90 cv=3.39 p_iid=0.056 p_blk=0.058 -> INSIDE NOISE FLOOR
+[2026-07-28 22:07:39] 5a sym_24: d=-2.42m mde_raw=4.31 cv=3.61 p_iid=0.058 p_blk=0.076 -> INSIDE NOISE FLOOR
+[2026-07-28 22:07:39] 5a sym_16: d=-2.33m mde_raw=3.94 cv=3.66 p_iid=0.047 p_blk=0.015 -> INSIDE NOISE FLOOR
+[2026-07-28 22:07:39] wrote stats/decay_rerace.json
+[2026-07-28 22:09:33] 5b runner ready (1s)
+[2026-07-28 22:09:33] axis a: building lineup tables
+[2026-07-28 22:09:33] axis a: lineup sets on 4136 org-matches (4136 total)
+[2026-07-28 22:09:33]   lineup_h16_g0.5: train=0.6462 test=0.64424
+[2026-07-28 22:09:33]   lineup_h16_g1.0: train=0.64555 test=0.64427
+[2026-07-28 22:09:34]   lineup_h16_g2.0: train=0.64508 test=0.64699
+[2026-07-28 22:09:34]   lineup_h16_g4.0: train=0.64605 test=0.65264
+[2026-07-28 22:09:34]   lineup_h20_g0.5: train=0.64597 test=0.64374
+[2026-07-28 22:09:35]   lineup_h20_g1.0: train=0.64507 test=0.64335
+[2026-07-28 22:09:35]   lineup_h20_g2.0: train=0.64426 test=0.64571
+[2026-07-28 22:09:35]   lineup_h20_g4.0: train=0.64485 test=0.6513
+[2026-07-28 22:09:36]   lineup_h24_g0.5: train=0.64593 test=0.64377
+[2026-07-28 22:09:36]   lineup_h24_g1.0: train=0.64485 test=0.64302
+[2026-07-28 22:09:36]   lineup_h24_g2.0: train=0.64378 test=0.64499
+[2026-07-28 22:09:37]   lineup_h24_g4.0: train=0.64409 test=0.65044
+[2026-07-28 22:09:37]   sym_16_nc: train=0.64737 test=0.64614
+[2026-07-28 22:09:37]   sym_20_nc: train=0.64748 test=0.64619
+[2026-07-28 22:09:37]   sym_24_nc: train=0.64767 test=0.64667
+[2026-07-28 22:09:38] axis a selected lineup_h24_g2.0: vs v6 -2.82m (INSIDE NOISE FLOOR)
+[2026-07-28 22:09:38] axis b: anomalous sides elite/mid/floor = 1861/1969/901
+[2026-07-28 22:09:38]   oppq_m1.33: train=0.64788 test=0.64253
+[2026-07-28 22:09:38]   oppq_m1.67: train=0.64783 test=0.64301
+[2026-07-28 22:09:38]   oppq_m2.0: train=0.64791 test=0.64354
+[2026-07-28 22:09:38] axis b selected oppq_m1.67: -0.85m (INSIDE NOISE FLOOR)
+[2026-07-28 22:09:39]   amargin_k0.25: train=0.64791 test=0.64212
+[2026-07-28 22:09:39]   amargin_k0.5: train=0.64765 test=0.64224
+[2026-07-28 22:09:39]   amargin_k1.0: train=0.64727 test=0.64271
+[2026-07-28 22:09:39] axis c selected amargin_k1.0: -0.55m (INSIDE NOISE FLOOR)
+[2026-07-28 22:09:39] axis d: ewc_offseason games = 893/5140
+[2026-07-28 22:09:40]   eclass_h16_m0.4: train=0.64885 test=0.64435
+[2026-07-28 22:09:40]   eclass_h16_m0.6: train=0.64817 test=0.64411
+[2026-07-28 22:09:40]   eclass_h16_m0.8: train=0.64779 test=0.64425
+[2026-07-28 22:09:40]   eclass_h20_m0.4: train=0.64848 test=0.64392
+[2026-07-28 22:09:41]   eclass_h20_m0.6: train=0.64794 test=0.64386
+[2026-07-28 22:09:41]   eclass_h20_m0.8: train=0.64764 test=0.64407
+[2026-07-28 22:09:41]   eclass_h24_m0.4: train=0.64836 test=0.64407
+[2026-07-28 22:09:41]   eclass_h24_m0.6: train=0.64791 test=0.64409
+[2026-07-28 22:09:42]   eclass_h24_m0.8: train=0.64768 test=0.64432
+[2026-07-28 22:09:42] axis d selected eclass_h20_m0.8: vs v6 -1.90m (INSIDE NOISE FLOOR); on-v6 +0.24m
+[2026-07-28 22:09:42] axis e: 25 rotation dates: ['2023-04-29', '2023-08-20', '2023-09-15', '2023-11-19', '2023-12-17', '2024-02-16', '2024-06-09', '2024-07-13', '2024-08-08', '2024-08-26', '2024-10-19', '2024-12-01', '2025-01-11', '2025-03-02', '2025-05-08', '2025-06-22', '2025-07-10', '2025-08-22', '2025-10-06', '2025-11-08', '2025-12-20', '2026-01-16', '2026-03-31', '2026-05-03', '2026-07-02']
+[2026-07-28 22:09:42]   rot_h16_g0.85: train=0.64585 test=0.64599
+[2026-07-28 22:09:43]   rot_h16_g0.7: train=0.64594 test=0.64971
+[2026-07-28 22:09:43]   rot_h16_g0.55: train=0.64771 test=0.65455
+[2026-07-28 22:09:43]   rot_h20_g0.85: train=0.64527 test=0.64499
+[2026-07-28 22:09:43]   rot_h20_g0.7: train=0.64496 test=0.64847
+[2026-07-28 22:09:44]   rot_h20_g0.55: train=0.64651 test=0.65341
+[2026-07-28 22:09:44]   rot_h24_g0.85: train=0.64498 test=0.64447
+[2026-07-28 22:09:44]   rot_h24_g0.7: train=0.64436 test=0.64767
+[2026-07-28 22:09:44]   rot_h24_g0.55: train=0.64574 test=0.65264
+[2026-07-28 22:09:45] axis e selected rot_h24_g0.7: vs v6 -5.51m (INSIDE NOISE FLOOR); on-v6 -5.46m
+[2026-07-28 22:09:45] wrote stats/decay_axes.json
+[2026-07-28 22:12:01] 5c runner ready (1s)
+[2026-07-28 22:12:01] 5c form_wr3: b_form=-0.1176 ll=0.64282 d=-0.66m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:01] 5c form_wr5: b_form=-0.1294 ll=0.64247 d=-0.31m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c form_wr8: b_form=-0.3082 ll=0.64243 d=-0.27m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c form_rd3: b_form=-0.0059 ll=0.64298 d=-0.82m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c form_rd5: b_form=-0.0065 ll=0.6426 d=-0.44m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c form_rd8: b_form=-0.0144 ll=0.64257 d=-0.41m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c side: round rows used=92311, dropped=0; maps covered=4351
+[2026-07-28 22:12:02] 5c side coverage: both-teams-defined frame=1900/2058, holdout=1149/1217
+[2026-07-28 22:12:02] 5c form_side5: b_form=-0.0237 ll=0.64221 d=-0.05m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c player: 42000 player-map rows with R2.0 + date
+[2026-07-28 22:12:02] 5c player coverage: both-defined frame=1764/2058, holdout=1129/1217
+[2026-07-28 22:12:02] 5c form_player5: b_form=-0.0237 ll=0.64221 d=-0.05m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] 5c combined: b_rd=-0.0059 b_side=-0.0013 d=-0.82m (INSIDE NOISE FLOOR)
+[2026-07-28 22:12:02] wrote stats/decay_form.json
+[2026-07-28 22:13:57] 5c refit: tightened NM tolerances (xatol 1e-8) + train_gain_from_form identifiability metric; form npz caches cleared, rerunning
+[2026-07-28 22:13:58] 5c runner ready (1s)
+[2026-07-28 22:13:58] 5c form_wr3: b_form=-0.1176 ll=0.64282 d=-0.66m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:58] 5c form_wr5: b_form=-0.1300 ll=0.64248 d=-0.31m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:58] 5c form_wr8: b_form=-0.3082 ll=0.64243 d=-0.27m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:58] 5c form_rd3: b_form=-0.0059 ll=0.64298 d=-0.82m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:58] 5c form_rd5: b_form=-0.0064 ll=0.64259 d=-0.43m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:58] 5c form_rd8: b_form=-0.0143 ll=0.64257 d=-0.40m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:59] 5c side: round rows used=92311, dropped=0; maps covered=4351
+[2026-07-28 22:13:59] 5c side coverage: both-teams-defined frame=1900/2058, holdout=1149/1217
+[2026-07-28 22:13:59] 5c form_side5: b_form=-0.5663 ll=0.64314 d=-0.98m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:59] 5c player: 42000 player-map rows with R2.0 + date
+[2026-07-28 22:13:59] 5c player coverage: both-defined frame=1764/2058, holdout=1129/1217
+[2026-07-28 22:13:59] 5c form_player5: b_form=-2.6810 ll=0.64741 d=-5.24m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:59] 5c combined: b_rd=+0.0055 b_side=-0.7952 d=-0.59m (INSIDE NOISE FLOOR)
+[2026-07-28 22:13:59] wrote stats/decay_form.json
+[2026-07-28 22:15:19] 5e runner ready
+[2026-07-28 22:15:19] S1 msc agreement with lineup_features: 2616/3393 = 0.7710 (differences expected: their sequences lack the corpus-addition events)
+[2026-07-28 22:15:19] 5e consist_16_10: all_holdout:-0.531m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-0.087m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.573m/INSIDE NOISE FLOOR | S3_post_break_45d:-0.441m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-0.722m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-0.517m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e sym_16: all_holdout:-2.335m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-1.53m/INSIDE NOISE FLOOR | S2_post_patch_21d:-1.295m/INSIDE NOISE FLOOR | S3_post_break_45d:+0.233m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-2.808m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-2.147m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e sym_20: all_holdout:-2.174m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-1.703m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.978m/INSIDE NOISE FLOOR | S3_post_break_45d:+1.455m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-2.362m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-1.971m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e sym_24: all_holdout:-2.424m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-2.217m/INSIDE NOISE FLOOR | S2_post_patch_21d:-1.012m/INSIDE NOISE FLOOR | S3_post_break_45d:+2.137m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-2.368m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-2.196m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e lineup_h24_g2.0: all_holdout:-2.823m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-2.332m/INSIDE NOISE FLOOR | S2_post_patch_21d:-1.197m/INSIDE NOISE FLOOR | S3_post_break_45d:-8.725m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-2.659m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-2.81m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e oppq_m1.67: all_holdout:-0.852m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:+0.184m/INSIDE NOISE FLOOR | S2_post_patch_21d:+1.242m/INSIDE NOISE FLOOR | S3_post_break_45d:+0.271m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-0.569m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-0.739m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e amargin_k1.0: all_holdout:-0.548m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-1.094m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.043m/INSIDE NOISE FLOOR | S3_post_break_45d:-0.605m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-1.005m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-0.5m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e eclass_h20_m0.8: all_holdout:-1.904m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-1.146m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.469m/INSIDE NOISE FLOOR | S3_post_break_45d:+1.584m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-2.004m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-1.674m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e eclass_on_v6_m0.8: all_holdout:+0.239m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:+0.649m/INSIDE NOISE FLOOR | S2_post_patch_21d:+0.523m/INSIDE NOISE FLOOR | S3_post_break_45d:+1.025m/INSIDE NOISE FLOOR | S4_within_event_day2plus:+0.373m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:+0.267m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e rot_h24_g0.7: all_holdout:-5.511m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-3.005m/INSIDE NOISE FLOOR | S2_post_patch_21d:-4.132m/INSIDE NOISE FLOOR | S3_post_break_45d:-4.389m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-5.636m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-4.987m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e rot_on_v6_g0.7: all_holdout:-5.458m/WORSE | S1_post_roster_change_le3:-3.44m/WORSE | S2_post_patch_21d:-4.818m/WORSE | S3_post_break_45d:-6.439m/WORSE | S4_within_event_day2plus:-5.42m/WORSE | S5_quoted_band_20_55c:-4.972m/WORSE
+[2026-07-28 22:15:19] 5e form_wr3: all_holdout:-0.657m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-0.934m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.579m/INSIDE NOISE FLOOR | S3_post_break_45d:+0.46m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-0.356m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-0.635m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e form_rd3: all_holdout:-0.82m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-1.125m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.758m/INSIDE NOISE FLOOR | S3_post_break_45d:+0.137m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-0.572m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-0.803m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e form_side5: all_holdout:-0.979m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-1.109m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.706m/INSIDE NOISE FLOOR | S3_post_break_45d:+0.468m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-0.45m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-1.05m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] 5e form_player5: all_holdout:-5.244m/WORSE | S1_post_roster_change_le3:-6.372m/WORSE | S2_post_patch_21d:-4.463m/WORSE | S3_post_break_45d:-3.857m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-4.363m/WORSE | S5_quoted_band_20_55c:-5.332m/WORSE
+[2026-07-28 22:15:19] 5e form_combined: all_holdout:-0.593m/INSIDE NOISE FLOOR | S1_post_roster_change_le3:-0.508m/INSIDE NOISE FLOOR | S2_post_patch_21d:-0.288m/INSIDE NOISE FLOOR | S3_post_break_45d:+0.495m/INSIDE NOISE FLOOR | S4_within_event_day2plus:-0.075m/INSIDE NOISE FLOOR | S5_quoted_band_20_55c:-0.707m/INSIDE NOISE FLOOR
+[2026-07-28 22:15:19] wrote stats/decay_subpops.json
+[2026-07-28 22:15:19] wrote stats/decay_curves.json
+[2026-07-28 22:18:14] agent:decay COMPLETE. 5a: all ties (consist_16_10 -0.53m, sym_20 -2.17m, sym_24 -2.42m; CV MDEs 1.66/3.39/3.61). 5b: all five axes INSIDE NOISE FLOOR vs v6; b/c/e predicted-sign failures logged; d(on-v6) +0.24m positive in all 6 subpops (watch item); e falsifier fired (train-holdout reversal). 5c: all form defs b<0 on train, <=0 holdout; performance form adds nothing. 5e panel written for 16 configs. Outputs: stats/decay_{rerace,axes,form,subpops,curves}.json + phase4_decay.md + preregister outcomes appended.

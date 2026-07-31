@@ -1,0 +1,338 @@
+{
+ "283651": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/283651/dragon-ranger-gaming-vs-all-gamers-china-evolution-series-act-3-heriability-oq-f-gf",
+  "maps": {
+   "147659": [
+    "DRG",
+    "13-8"
+   ]
+  },
+  "series": [
+   "DRG",
+   "1-0"
+  ],
+  "match_name": "Open Qualifier - Group F: Grand Final",
+  "utc_ts": "2023-11-03 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "DRG"
+  ]
+ },
+ "284228": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/284228/funplus-phoenix-vs-all-gamers-china-evolution-series-act-3-heriability-winners-d",
+  "maps": {
+   "147823": [
+    "FPX",
+    "13-10"
+   ],
+   "147824": [
+    "FPX",
+    "13-5"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Play-In Stage: Winner's (D)",
+  "utc_ts": "2023-11-08 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "FPX"
+  ]
+ },
+ "285010": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285010/dragon-ranger-gaming-vs-titan-esports-club-china-evolution-series-act-3-heritability-ur1",
+  "maps": {
+   "148464": [
+    "DRG",
+    "13-10"
+   ],
+   "148465": [
+    "DRG",
+    "13-1"
+   ]
+  },
+  "series": [
+   "DRG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2023-11-16 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "TEC"
+  ]
+ },
+ "285013": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285013/trace-esports-vs-funplus-phoenix-china-evolution-series-act-3-heritability-ubqf",
+  "maps": {
+   "148473": [
+    "FPX",
+    "14-12"
+   ],
+   "148474": [
+    "TE",
+    "13-7"
+   ],
+   "148475": [
+    "TE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2023-11-17 05:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TE"
+  ]
+ },
+ "285015": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285015/attacking-soul-esports-vs-bilibili-gaming-china-evolution-series-act-3-heritability-ubqf",
+  "maps": {
+   "148479": [
+    "ASE",
+    "13-2"
+   ],
+   "148480": [
+    "BLG",
+    "13-10"
+   ],
+   "148481": [
+    "ASE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "ASE",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2023-11-18 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "BLG"
+  ]
+ },
+ "285024": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285024/bilibili-gaming-vs-titan-esports-club-china-evolution-series-act-3-heritability-lr1",
+  "maps": {
+   "148508": [
+    "TEC",
+    "13-8"
+   ],
+   "148509": [
+    "TEC",
+    "14-12"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2023-11-21 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TEC"
+  ]
+ },
+ "285018": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285018/attacking-soul-esports-vs-edward-gaming-china-evolution-series-act-3-heritability-ubsf",
+  "maps": {
+   "148488": [
+    "EDG",
+    "13-9"
+   ],
+   "148489": [
+    "ASE",
+    "13-11"
+   ],
+   "148490": [
+    "EDG",
+    "15-13"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2023-11-21 06:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "EDG"
+  ]
+ },
+ "285026": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285026/dragon-ranger-gaming-vs-funplus-phoenix-china-evolution-series-act-3-heritability-lr2",
+  "maps": {
+   "148514": [
+    "FPX",
+    "16-14"
+   ],
+   "148515": [
+    "FPX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2023-11-22 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "FPX"
+  ]
+ },
+ "285028": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285028/attacking-soul-esports-vs-funplus-phoenix-china-evolution-series-act-3-heritability-lr3",
+  "maps": {
+   "148520": [
+    "FPX",
+    "13-7"
+   ],
+   "148521": [
+    "ASE",
+    "13-9"
+   ],
+   "148522": [
+    "FPX",
+    "13-1"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2023-11-23 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "FPX"
+  ]
+ },
+ "285027": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285027/trace-esports-vs-titan-esports-club-china-evolution-series-act-3-heritability-lr3",
+  "maps": {
+   "148517": [
+    "TE",
+    "13-3"
+   ],
+   "148518": [
+    "TE",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2023-11-23 07:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TE",
+   "TEC"
+  ]
+ },
+ "285029": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285029/trace-esports-vs-funplus-phoenix-china-evolution-series-act-3-heritability-lr4",
+  "maps": {
+   "148523": [
+    "TE",
+    "13-7"
+   ],
+   "148524": [
+    "FPX",
+    "13-6"
+   ],
+   "148525": [
+    "FPX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 4",
+  "utc_ts": "2023-11-24 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TE"
+  ]
+ },
+ "285030": {
+  "event_id": "2023_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/285030/edward-gaming-vs-funplus-phoenix-china-evolution-series-act-3-heritability-lf",
+  "maps": {
+   "148526": [
+    "FPX",
+    "13-7"
+   ],
+   "148527": [
+    "EDG",
+    "13-5"
+   ],
+   "148528": [
+    "EDG",
+    "13-7"
+   ],
+   "148529": [
+    "EDG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "EDG",
+   "3-1"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2023-11-25 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "FPX"
+  ]
+ }
+}

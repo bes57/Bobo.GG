@@ -1,0 +1,275 @@
+{
+ "window_utc": [
+  "2026-07-21T19:11:31+00:00",
+  "2026-07-28T21:36:48+00:00"
+ ],
+ "fills": 719,
+ "contracts": 8143.2,
+ "cost_dollars": 3803.32,
+ "events": 37,
+ "events_settled": 28,
+ "waterfall": {
+  "locked_pair_margin": 53.98,
+  "locked_pairs": 3258.5,
+  "margin_cents_per_pair": 1.66,
+  "unhedged_settled_pnl": -362.67,
+  "unhedged_settled_cost": 529.0,
+  "fees": 0.0,
+  "realized_total": -308.69,
+  "open_inventory_mark_pnl": -4.67,
+  "open_inventory_cost": 69.8,
+  "total_incl_open_mark": -313.35
+ },
+ "identity_check": {
+  "deploy_index_settle_pnl_sum": -247.78,
+  "deploy_index_settled_n": 40,
+  "my_reconstruction_on_same_events": -247.8,
+  "reconciled": true,
+  "events_settled_after_bots_last_reconcile": {
+   "KXVALORANTGAME-26JUL231400NAVIGM": -50.47,
+   "KXVALORANTGAME-26JUL250500DRGJDG": -28.23,
+   "KXVALORANTGAME-26JUL252000LOUDSEN": 10.75
+  },
+  "settled_events_total_(28_events)": -315.75,
+  "waterfall_realized_includes_settled_legs_of_partial_events": -308.69,
+  "note": "independent FIFO reconstruction matches the bot's own settlement records to 2 cents; no hidden fee/cash leak"
+ },
+ "per_event_settled": {
+  "KXVALORANTGAME-26JUL221100PCFICFUT": {
+   "pair_margin": 1.0,
+   "unh_settled_pnl": -19.0,
+   "s1_cost": 37.0,
+   "s2_cost": 81.0,
+   "pairs": 100.0
+  },
+  "KXVALORANTGAME-26JUL221400KCFNC": {
+   "pair_margin": 1.18,
+   "unh_settled_pnl": 0.0,
+   "s1_cost": 51.74,
+   "s2_cost": 65.08,
+   "pairs": 118.0
+  },
+  "KXVALORANTGAME-26JUL230500NOVATYLOO": {
+   "pair_margin": 1.39,
+   "unh_settled_pnl": -41.05,
+   "s1_cost": 112.89,
+   "s2_cost": 60.39,
+   "pairs": 133.6
+  },
+  "KXVALORANTGAME-26JUL230700VART1": {
+   "pair_margin": 2.78,
+   "unh_settled_pnl": 0.0,
+   "s1_cost": 23.63,
+   "s2_cost": 112.59,
+   "pairs": 139.0
+  },
+  "KXVALORANTGAME-26JUL230800EDGFPX": {
+   "pair_margin": 0.12,
+   "unh_settled_pnl": -54.1,
+   "s1_cost": 56.98,
+   "s2_cost": 8.0,
+   "pairs": 11.0
+  },
+  "KXVALORANTGAME-26JUL231100THEF": {
+   "pair_margin": 2.71,
+   "unh_settled_pnl": -47.66,
+   "s1_cost": 139.5,
+   "s2_cost": 132.69,
+   "pairs": 227.2
+  },
+  "KXVALORANTGAME-26JUL231400NAVIGM": {
+   "pair_margin": 0.0,
+   "unh_settled_pnl": -50.47,
+   "s1_cost": 50.47,
+   "s2_cost": 0.0,
+   "pairs": 0.0
+  },
+  "KXVALORANTGAME-26JUL231700LEVEG": {
+   "pair_margin": 5.55,
+   "unh_settled_pnl": -11.39,
+   "s1_cost": 95.46,
+   "s2_cost": 338.05,
+   "pairs": 427.7
+  },
+  "KXVALORANTGAME-26JUL232000MIBRNV": {
+   "pair_margin": 0.12,
+   "unh_settled_pnl": -25.13,
+   "s1_cost": 28.11,
+   "s2_cost": 8.87,
+   "pairs": 12.0
+  },
+  "KXVALORANTGAME-26JUL240400ZETARRQ": {
+   "pair_margin": 6.11,
+   "unh_settled_pnl": 0.93,
+   "s1_cost": 71.13,
+   "s2_cost": 236.83,
+   "pairs": 313.8
+  },
+  "KXVALORANTGAME-26JUL240700AGEDG": {
+   "pair_margin": 1.7,
+   "unh_settled_pnl": -44.35,
+   "s1_cost": 79.2,
+   "s2_cost": 48.45,
+   "pairs": 85.0
+  },
+  "KXVALORANTGAME-26JUL240700PRDFM": {
+   "pair_margin": 1.21,
+   "unh_settled_pnl": -0.11,
+   "s1_cost": 7.42,
+   "s2_cost": 55.1,
+   "pairs": 63.6
+  },
+  "KXVALORANTGAME-26JUL241100BBLFUT": {
+   "pair_margin": 1.3,
+   "unh_settled_pnl": -48.55,
+   "s1_cost": 150.29,
+   "s2_cost": 13.31,
+   "pairs": 116.3
+  },
+  "KXVALORANTGAME-26JUL241700NRGFUR": {
+   "pair_margin": 3.62,
+   "unh_settled_pnl": -0.13,
+   "s1_cost": 49.4,
+   "s2_cost": 166.53,
+   "pairs": 219.4
+  },
+  "KXVALORANTGAME-26JUL242000KRU100T": {
+   "pair_margin": 3.36,
+   "unh_settled_pnl": 24.44,
+   "s1_cost": 200.55,
+   "s2_cost": 48.13,
+   "pairs": 189.2
+  },
+  "KXVALORANTGAME-26JUL250400GENS": {
+   "pair_margin": 1.67,
+   "unh_settled_pnl": 21.08,
+   "s1_cost": 83.12,
+   "s2_cost": 37.99,
+   "pairs": 92.0
+  },
+  "KXVALORANTGAME-26JUL250500DRGJDG": {
+   "pair_margin": 0.0,
+   "unh_settled_pnl": -28.23,
+   "s1_cost": 28.23,
+   "s2_cost": 0.0,
+   "pairs": 0.0
+  },
+  "KXVALORANTGAME-26JUL250700T1TS": {
+   "pair_margin": 3.64,
+   "unh_settled_pnl": -23.91,
+   "s1_cost": 66.0,
+   "s2_cost": 141.61,
+   "pairs": 187.3
+  },
+  "KXVALORANTGAME-26JUL250700XLGTYLOO": {
+   "pair_margin": 0.8,
+   "unh_settled_pnl": 0.0,
+   "s1_cost": 18.43,
+   "s2_cost": 23.77,
+   "pairs": 43.0
+  },
+  "KXVALORANTGAME-26JUL251100VITPCFIC": {
+   "pair_margin": 0.32,
+   "unh_settled_pnl": -13.73,
+   "s1_cost": 16.56,
+   "s2_cost": 17.85,
+   "pairs": 21.0
+  },
+  "KXVALORANTGAME-26JUL251400GXEF": {
+   "pair_margin": 2.26,
+   "unh_settled_pnl": -0.05,
+   "s1_cost": 70.12,
+   "s2_cost": 39.66,
+   "pairs": 112.0
+  },
+  "KXVALORANTGAME-26JUL251700C9G2": {
+   "pair_margin": 0.4,
+   "unh_settled_pnl": -0.23,
+   "s1_cost": 4.78,
+   "s2_cost": 14.85,
+   "pairs": 19.8
+  },
+  "KXVALORANTGAME-26JUL252000LOUDSEN": {
+   "pair_margin": 0.0,
+   "unh_settled_pnl": 10.75,
+   "s1_cost": 14.25,
+   "s2_cost": 0.0,
+   "pairs": 0.0
+  },
+  "KXVALORANTGAME-26JUL260400DRXPR": {
+   "pair_margin": 1.02,
+   "unh_settled_pnl": -11.76,
+   "s1_cost": 37.23,
+   "s2_cost": 24.51,
+   "pairs": 51.0
+  },
+  "KXVALORANTGAME-26JUL260700RRQGENG": {
+   "pair_margin": 0.1,
+   "unh_settled_pnl": 0.04,
+   "s1_cost": 1.13,
+   "s2_cost": 0.82,
+   "pairs": 2.0
+  },
+  "KXVALORANTGAME-26JUL261400KCTH": {
+   "pair_margin": 0.57,
+   "unh_settled_pnl": 0.5,
+   "s1_cost": 5.85,
+   "s2_cost": 8.08,
+   "pairs": 14.2
+  },
+  "KXVALORANTGAME-26JUL261700LEVNV": {
+   "pair_margin": 2.43,
+   "unh_settled_pnl": -0.07,
+   "s1_cost": 106.72,
+   "s2_cost": 12.91,
+   "pairs": 122.0
+  },
+  "KXVALORANTGAME-26JUL262000MIBRFUR": {
+   "pair_margin": 1.57,
+   "unh_settled_pnl": -0.5,
+   "s1_cost": 27.46,
+   "s2_cost": 82.47,
+   "pairs": 111.0
+  }
+ },
+ "worst_events": [
+  [
+   "EDGFPX 26JUL23",
+   -53.98
+  ],
+  [
+   "NAVIGM 26JUL23",
+   -50.47
+  ],
+  [
+   "BBLFUT 26JUL24 (incident role-flip suspect)",
+   -47.25
+  ],
+  [
+   "THEF 26JUL23",
+   -44.95
+  ],
+  [
+   "AGEDG 26JUL24",
+   -42.65
+  ],
+  [
+   "NOVATYLOO 26JUL23",
+   -39.66
+  ]
+ ],
+ "best_events": [
+  [
+   "KRU100T 26JUL24",
+   27.8
+  ],
+  [
+   "GENS 26JUL25",
+   22.75
+  ],
+  [
+   "LOUDSEN 26JUL25 (incident-window position)",
+   10.75
+  ]
+ ]
+}

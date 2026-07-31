@@ -1,0 +1,16 @@
+[2026-07-28 22:36:06] agent:compose START — brief briefs/compose.md; preregister.compose.md written BEFORE fits/scoring
+[2026-07-28 22:36:06] FATAL: b0 vs model_probs v6 disagree: max|dp|=2.663572183037033e-06
+[2026-07-28 22:36:27] v6 replay cross-check: max|dp| = 2.66e-06 (b0 vs model_probs; canonical p_v6 = model_probs, the h3-ensemble/gate-count source)
+[2026-07-28 22:36:27] gate ok: 330 train / 178 holdout rows (neff_min<12.0)
+[2026-07-28 22:36:27] S2 fit: beta=0.1252 k=0.3524 train_nll=0.64803 (n=827)
+[2026-07-28 22:36:27] S3 fit (non-gated train): beta=0.1174 k=1.8695 train_nll=0.67058 (n=497)
+[2026-07-28 22:36:27] train composites (train rows): {"v6": 0.6482258556293771, "S1_gate5d": 0.6469269476859414, "S2_fade_shrink": 0.6480346078198111, "S3_full": 0.6446890909035504}
+[2026-07-28 22:36:27] smoke test ok: self-gate HOLD, n_scored=1217, v6 max|bias|=0.1478
+[2026-07-28 22:36:27] phase_train DONE
+[2026-07-28 22:36:51] v6 replay cross-check: max|dp| = 2.66e-06 (b0 vs model_probs; canonical p_v6 = model_probs, the h3-ensemble/gate-count source)
+[2026-07-28 22:36:51] gate ok: 330 train / 178 holdout rows (neff_min<12.0)
+[2026-07-28 22:36:52] SCORED S1_gate5d: dLL=+1.958m (fam MDE 5.889m, pair raw 3.077m / cv 3.057m) p_iid=0.966 p_blk=0.888 -> INSIDE NOISE FLOOR; gate=HOLD; gated split {'n_gated': 178, 'delta_milli_gated': 13.389, 'delta_milli_nongated': 0.0}; ewc_full +0.20m; PRX/NRG {'PRX': -0.1011, 'NRG': -0.0927}
+[2026-07-28 22:36:52] SCORED S2_fade_shrink: dLL=-0.140m (fam MDE 1.7730000000000001m, pair raw 2.553m / cv 2.476m) p_iid=0.429 p_blk=0.471 -> INSIDE NOISE FLOOR; gate=HOLD; gated split {'n_gated': 178, 'delta_milli_gated': -3.571, 'delta_milli_nongated': 0.448}; ewc_full +3.15m; PRX/NRG {'PRX': -0.1007, 'NRG': -0.0934}
+[2026-07-28 22:36:52] SCORED S3_full: dLL=-7.874m (fam MDE 5.889m, pair raw 9.197m / cv 7.067m) p_iid=0.008 p_blk=0.043 -> LOSS; gate=HOLD; gated split {'n_gated': 178, 'delta_milli_gated': 13.389, 'delta_milli_nongated': -11.516}; ewc_full +2.43m; PRX/NRG {'PRX': -0.1192, 'NRG': -0.1136}
+[2026-07-28 22:36:52] wrote stats/compose_stacks.json + stats/compose_gate.json
+[2026-07-28 22:40:47] agent:compose DONE — 3 preregistered stacks scored once each (S1 +1.958m HOLD, S2 -0.140m HOLD, S3 -7.874m LOSS/HOLD, anti-synergy falsifier fired); looks tally 163 primary / 398 total; VERDICT: v6 stands. Artifacts: stats/compose_{stacks,gate,spec,looks}.json, phase_compose.md, preregister.compose.md outcomes appended.

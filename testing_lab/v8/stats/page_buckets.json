@@ -1,0 +1,641 @@
+{
+ "source": "compose_stacks.json buckets + power_mde_expanded floors; bucket MDE = family_MDE\u00b7\u221a(N/n) (preregistered scaling, decay_subpops rule)",
+ "n_holdout": 1217,
+ "stacks": {
+  "S1_gate5d": {
+   "family_mde_milli": 5.889,
+   "regime": "cross",
+   "verdict": "HOLD",
+   "rows": [
+    {
+     "name": "year 2025",
+     "n": 674,
+     "delta_milli": 0.94,
+     "bucket_mde_milli": 7.91,
+     "inside_floor": true
+    },
+    {
+     "name": "year 2026",
+     "n": 543,
+     "delta_milli": 3.23,
+     "bucket_mde_milli": 8.82,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo1",
+     "n": 55,
+     "delta_milli": -3.04,
+     "bucket_mde_milli": 27.7,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo3",
+     "n": 1074,
+     "delta_milli": 2.38,
+     "bucket_mde_milli": 6.27,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo5",
+     "n": 53,
+     "delta_milli": 0.0,
+     "bucket_mde_milli": 28.22,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo5_gf",
+     "n": 35,
+     "delta_milli": 0.0,
+     "bucket_mde_milli": 34.73,
+     "inside_floor": true
+    },
+    {
+     "name": "stage groups",
+     "n": 568,
+     "delta_milli": 0.12,
+     "bucket_mde_milli": 8.62,
+     "inside_floor": true
+    },
+    {
+     "name": "stage playoffs",
+     "n": 541,
+     "delta_milli": 2.03,
+     "bucket_mde_milli": 8.83,
+     "inside_floor": true
+    },
+    {
+     "name": "stage grand_final",
+     "n": 39,
+     "delta_milli": 0.0,
+     "bucket_mde_milli": 32.9,
+     "inside_floor": true
+    },
+    {
+     "name": "international",
+     "n": 122,
+     "delta_milli": -0.27,
+     "bucket_mde_milli": 18.6,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic",
+     "n": 1095,
+     "delta_milli": 2.21,
+     "bucket_mde_milli": 6.21,
+     "inside_floor": true
+    },
+    {
+     "name": "CN involved",
+     "n": 394,
+     "delta_milli": -1.79,
+     "bucket_mde_milli": 10.35,
+     "inside_floor": true
+    },
+    {
+     "name": "cross-region",
+     "n": 194,
+     "delta_milli": -0.17,
+     "bucket_mde_milli": 14.75,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic Americas",
+     "n": 233,
+     "delta_milli": 1.74,
+     "bucket_mde_milli": 13.46,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic EMEA",
+     "n": 242,
+     "delta_milli": 7.09,
+     "bucket_mde_milli": 13.21,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic Pacific",
+     "n": 237,
+     "delta_milli": 4.08,
+     "bucket_mde_milli": 13.34,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic CN",
+     "n": 311,
+     "delta_milli": -2.16,
+     "bucket_mde_milli": 11.65,
+     "inside_floor": true
+    },
+    {
+     "name": "close matchups (gap<1.5)",
+     "n": 433,
+     "delta_milli": 0.59,
+     "bucket_mde_milli": 9.87,
+     "inside_floor": true
+    },
+    {
+     "name": "mid gap [1.5,4)",
+     "n": 505,
+     "delta_milli": 4.83,
+     "bucket_mde_milli": 9.14,
+     "inside_floor": true
+    },
+    {
+     "name": "big gap [4,7)",
+     "n": 223,
+     "delta_milli": 0.85,
+     "bucket_mde_milli": 13.76,
+     "inside_floor": true
+    },
+    {
+     "name": "huge gap (7+)",
+     "n": 56,
+     "delta_milli": -8.86,
+     "bucket_mde_milli": 27.45,
+     "inside_floor": true
+    },
+    {
+     "name": "post-break (rest>45d)",
+     "n": 130,
+     "delta_milli": 4.33,
+     "bucket_mde_milli": 18.02,
+     "inside_floor": true
+    },
+    {
+     "name": "elite vs floor",
+     "n": 29,
+     "delta_milli": -5.39,
+     "bucket_mde_milli": 38.15,
+     "inside_floor": true
+    },
+    {
+     "name": "form shift",
+     "n": 168,
+     "delta_milli": -0.9,
+     "bucket_mde_milli": 15.85,
+     "inside_floor": true
+    },
+    {
+     "name": "EWC-class events",
+     "n": 115,
+     "delta_milli": 1.67,
+     "bucket_mde_milli": 19.16,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.5,0.6)",
+     "n": 664,
+     "delta_milli": 1.59,
+     "bucket_mde_milli": 7.97,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.6,0.7)",
+     "n": 385,
+     "delta_milli": 3.03,
+     "bucket_mde_milli": 10.47,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.7,0.8)",
+     "n": 138,
+     "delta_milli": 1.61,
+     "bucket_mde_milli": 17.49,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.8,0.9)",
+     "n": 29,
+     "delta_milli": -1.95,
+     "bucket_mde_milli": 38.15,
+     "inside_floor": true
+    }
+   ]
+  },
+  "S2_fade_shrink": {
+   "family_mde_milli": 1.7730000000000001,
+   "regime": "within",
+   "verdict": "HOLD",
+   "rows": [
+    {
+     "name": "year 2025",
+     "n": 674,
+     "delta_milli": 0.17,
+     "bucket_mde_milli": 2.38,
+     "inside_floor": true
+    },
+    {
+     "name": "year 2026",
+     "n": 543,
+     "delta_milli": -0.52,
+     "bucket_mde_milli": 2.65,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo1",
+     "n": 55,
+     "delta_milli": 0.15,
+     "bucket_mde_milli": 8.34,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo3",
+     "n": 1074,
+     "delta_milli": -0.2,
+     "bucket_mde_milli": 1.89,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo5",
+     "n": 53,
+     "delta_milli": -4.18,
+     "bucket_mde_milli": 8.5,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo5_gf",
+     "n": 35,
+     "delta_milli": 7.48,
+     "bucket_mde_milli": 10.45,
+     "inside_floor": true
+    },
+    {
+     "name": "stage groups",
+     "n": 568,
+     "delta_milli": -2.27,
+     "bucket_mde_milli": 2.6,
+     "inside_floor": true
+    },
+    {
+     "name": "stage playoffs",
+     "n": 541,
+     "delta_milli": 1.87,
+     "bucket_mde_milli": 2.66,
+     "inside_floor": true
+    },
+    {
+     "name": "stage grand_final",
+     "n": 39,
+     "delta_milli": 6.54,
+     "bucket_mde_milli": 9.9,
+     "inside_floor": true
+    },
+    {
+     "name": "international",
+     "n": 122,
+     "delta_milli": -3.5,
+     "bucket_mde_milli": 5.6,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic",
+     "n": 1095,
+     "delta_milli": 0.24,
+     "bucket_mde_milli": 1.87,
+     "inside_floor": true
+    },
+    {
+     "name": "CN involved",
+     "n": 394,
+     "delta_milli": 2.7,
+     "bucket_mde_milli": 3.12,
+     "inside_floor": true
+    },
+    {
+     "name": "cross-region",
+     "n": 194,
+     "delta_milli": -1.43,
+     "bucket_mde_milli": 4.44,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic Americas",
+     "n": 233,
+     "delta_milli": -1.57,
+     "bucket_mde_milli": 4.05,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic EMEA",
+     "n": 242,
+     "delta_milli": -4.41,
+     "bucket_mde_milli": 3.98,
+     "inside_floor": false
+    },
+    {
+     "name": "domestic Pacific",
+     "n": 237,
+     "delta_milli": 0.83,
+     "bucket_mde_milli": 4.02,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic CN",
+     "n": 311,
+     "delta_milli": 4.33,
+     "bucket_mde_milli": 3.51,
+     "inside_floor": false
+    },
+    {
+     "name": "close matchups (gap<1.5)",
+     "n": 433,
+     "delta_milli": 1.98,
+     "bucket_mde_milli": 2.97,
+     "inside_floor": true
+    },
+    {
+     "name": "mid gap [1.5,4)",
+     "n": 505,
+     "delta_milli": -1.23,
+     "bucket_mde_milli": 2.75,
+     "inside_floor": true
+    },
+    {
+     "name": "big gap [4,7)",
+     "n": 223,
+     "delta_milli": -1.32,
+     "bucket_mde_milli": 4.14,
+     "inside_floor": true
+    },
+    {
+     "name": "huge gap (7+)",
+     "n": 56,
+     "delta_milli": -1.93,
+     "bucket_mde_milli": 8.27,
+     "inside_floor": true
+    },
+    {
+     "name": "post-break (rest>45d)",
+     "n": 130,
+     "delta_milli": 2.0,
+     "bucket_mde_milli": 5.42,
+     "inside_floor": true
+    },
+    {
+     "name": "elite vs floor",
+     "n": 29,
+     "delta_milli": -5.41,
+     "bucket_mde_milli": 11.49,
+     "inside_floor": true
+    },
+    {
+     "name": "form shift",
+     "n": 168,
+     "delta_milli": -0.05,
+     "bucket_mde_milli": 4.77,
+     "inside_floor": true
+    },
+    {
+     "name": "EWC-class events",
+     "n": 115,
+     "delta_milli": 1.19,
+     "bucket_mde_milli": 5.77,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.5,0.6)",
+     "n": 683,
+     "delta_milli": 0.75,
+     "bucket_mde_milli": 2.37,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.6,0.7)",
+     "n": 370,
+     "delta_milli": 1.62,
+     "bucket_mde_milli": 3.22,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.7,0.8)",
+     "n": 137,
+     "delta_milli": -7.63,
+     "bucket_mde_milli": 5.28,
+     "inside_floor": false
+    },
+    {
+     "name": "favorite [0.8,0.9)",
+     "n": 25,
+     "delta_milli": -9.57,
+     "bucket_mde_milli": 12.37,
+     "inside_floor": true
+    }
+   ]
+  },
+  "S3_full": {
+   "family_mde_milli": 5.889,
+   "regime": "cross",
+   "verdict": "HOLD",
+   "rows": [
+    {
+     "name": "year 2025",
+     "n": 674,
+     "delta_milli": -9.09,
+     "bucket_mde_milli": 7.91,
+     "inside_floor": false
+    },
+    {
+     "name": "year 2026",
+     "n": 543,
+     "delta_milli": -6.36,
+     "bucket_mde_milli": 8.82,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo1",
+     "n": 55,
+     "delta_milli": -15.98,
+     "bucket_mde_milli": 27.7,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo3",
+     "n": 1074,
+     "delta_milli": -7.47,
+     "bucket_mde_milli": 6.27,
+     "inside_floor": false
+    },
+    {
+     "name": "format bo5",
+     "n": 53,
+     "delta_milli": -16.42,
+     "bucket_mde_milli": 28.22,
+     "inside_floor": true
+    },
+    {
+     "name": "format bo5_gf",
+     "n": 35,
+     "delta_milli": 5.54,
+     "bucket_mde_milli": 34.73,
+     "inside_floor": true
+    },
+    {
+     "name": "stage groups",
+     "n": 568,
+     "delta_milli": -19.83,
+     "bucket_mde_milli": 8.62,
+     "inside_floor": false
+    },
+    {
+     "name": "stage playoffs",
+     "n": 541,
+     "delta_milli": 3.42,
+     "bucket_mde_milli": 8.83,
+     "inside_floor": true
+    },
+    {
+     "name": "stage grand_final",
+     "n": 39,
+     "delta_milli": 5.65,
+     "bucket_mde_milli": 32.9,
+     "inside_floor": true
+    },
+    {
+     "name": "international",
+     "n": 122,
+     "delta_milli": -11.02,
+     "bucket_mde_milli": 18.6,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic",
+     "n": 1095,
+     "delta_milli": -7.52,
+     "bucket_mde_milli": 6.21,
+     "inside_floor": false
+    },
+    {
+     "name": "CN involved",
+     "n": 394,
+     "delta_milli": -11.92,
+     "bucket_mde_milli": 10.35,
+     "inside_floor": false
+    },
+    {
+     "name": "cross-region",
+     "n": 194,
+     "delta_milli": -13.03,
+     "bucket_mde_milli": 14.75,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic Americas",
+     "n": 233,
+     "delta_milli": -14.16,
+     "bucket_mde_milli": 13.46,
+     "inside_floor": false
+    },
+    {
+     "name": "domestic EMEA",
+     "n": 242,
+     "delta_milli": -11.43,
+     "bucket_mde_milli": 13.21,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic Pacific",
+     "n": 237,
+     "delta_milli": 3.14,
+     "bucket_mde_milli": 13.34,
+     "inside_floor": true
+    },
+    {
+     "name": "domestic CN",
+     "n": 311,
+     "delta_milli": -5.57,
+     "bucket_mde_milli": 11.65,
+     "inside_floor": true
+    },
+    {
+     "name": "close matchups (gap<1.5)",
+     "n": 433,
+     "delta_milli": 2.19,
+     "bucket_mde_milli": 9.87,
+     "inside_floor": true
+    },
+    {
+     "name": "mid gap [1.5,4)",
+     "n": 505,
+     "delta_milli": -3.56,
+     "bucket_mde_milli": 9.14,
+     "inside_floor": true
+    },
+    {
+     "name": "big gap [4,7)",
+     "n": 223,
+     "delta_milli": -25.11,
+     "bucket_mde_milli": 13.76,
+     "inside_floor": false
+    },
+    {
+     "name": "huge gap (7+)",
+     "n": 56,
+     "delta_milli": -55.89,
+     "bucket_mde_milli": 27.45,
+     "inside_floor": false
+    },
+    {
+     "name": "post-break (rest>45d)",
+     "n": 130,
+     "delta_milli": -14.09,
+     "bucket_mde_milli": 18.02,
+     "inside_floor": true
+    },
+    {
+     "name": "elite vs floor",
+     "n": 29,
+     "delta_milli": -59.25,
+     "bucket_mde_milli": 38.15,
+     "inside_floor": false
+    },
+    {
+     "name": "form shift",
+     "n": 168,
+     "delta_milli": -2.31,
+     "bucket_mde_milli": 15.85,
+     "inside_floor": true
+    },
+    {
+     "name": "EWC-class events",
+     "n": 115,
+     "delta_milli": 5.17,
+     "bucket_mde_milli": 19.16,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.5,0.6)",
+     "n": 865,
+     "delta_milli": -5.25,
+     "bucket_mde_milli": 6.99,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.6,0.7)",
+     "n": 264,
+     "delta_milli": -19.29,
+     "bucket_mde_milli": 12.64,
+     "inside_floor": false
+    },
+    {
+     "name": "favorite [0.7,0.8)",
+     "n": 68,
+     "delta_milli": 1.49,
+     "bucket_mde_milli": 24.91,
+     "inside_floor": true
+    },
+    {
+     "name": "favorite [0.8,0.9)",
+     "n": 19,
+     "delta_milli": -2.77,
+     "bucket_mde_milli": 47.13,
+     "inside_floor": true
+    }
+   ]
+  }
+ },
+ "floors": {
+  "rule": "preregistered: quote the composition-adjusted number",
+  "within_milli": 1.773,
+  "cross_milli": 5.889
+ }
+}

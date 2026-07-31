@@ -1,0 +1,938 @@
+[2026-07-28 T0] agent:corpus start. Read brief + README + stack (MoreTestingMaybeFiles, ScrapeMatchData, BuildMatchResults, ScrapeMatchDates, RefreshLiveData step5/_parse_match_html, vlr_client, ScrapeAllEvents, BuildMapRatings TEAM_REGIONS).
+[2026-07-28 T0] pgrep -f RefreshLiveData.py -> empty (no live refresh running).
+[2026-07-28 T0] Created v8/{logs,stats,data/prefranchise,scripts_corpus}; HTML cache in session scratchpad html_cache/.
+[2026-07-28 T0] preregister.corpus.md written BEFORE any VLR fetch. crn.json absent (power agent not run) -> sample-verify seed fixed at 20260728 in prereg.
+[2026-07-28 T0] Next: enumeration (archive sweep + year hubs + search) via vlr_client.fetch, sequential.
+[2026-07-28 T1] Archive sweep complete: 59/59 pages, 2937 rows (2917 completed-section). Initial month-rollover year inference was poisoned by an out-of-order row (event 2634, "Sep 6—May 16") and by a premature stop rule (pages 43-45 mistagged 2020); fixed by fetching remaining pages 46-59 and re-inferring with 9-row windowed-median month walk. In-data anchors all correct: Champions 2021(449)/Berlin(466)/Reykjavik-21(353)/Reykjavik-22(926)/Copenhagen(1014)/Champions 2022(1015)/2023(1657)/2024(2097)/2025(2283)/First Strike(2020). Histogram 2020:238 2021:530 2022:573 2023:495 2024:355 2025:450 2026:276.
+[2026-07-28 T1] NOTE: two of my provisional memory-based anchor ids (926, 800) were wrong-from-memory and the VLR data corrected them — enumerate-from-source rule vindicated.
+[2026-07-28 T2] corpus_diff.json written: add=26 vlr-events -> 25 registry ids (+2449 split into 2025_ewc/2025_ewc_qual), registered=52, exclude=580 (incl family excludes: Ascension/GC/Challengers/college/national), prefranchise_candidates=203.
+[2026-07-28 T2] FALSIFIER RESULT: 2025 EWC regional qualifiers exist ONLY as series stages inside VLR event 2449 (EMEA 4759 May16-26, Americas 4760 May16-25, Pacific-x-ACL 4757 May22-25) - NOT separate events like 2026. 77 completed matches split 28 main / 49 qual, disjoint. EWC 2025: 8 teams all franchised, NO CN participant. 2450 = China Evo Act 2 "X Asian Champions League" included as 2025_china_evo_2 (EWC-qual role unverified on VLR). No EWC 2024 Valorant event exists.
+[2026-07-28 T2] Registry: 25 entries appended to ALL_EVENTS EWC-class block (ratings_only+vct_only, real VLR dates). Import validated: 57 events, unique ids, live_events_today() still = [2026_stage2].
+[2026-07-28 T2] Launching scrape_backfill (25 events, EWC chain first), sequential via vlr_client.fetch, 0.9s match delay, HTML cached for mechanical verification.
+[2026-07-28 18:42:33] EVENT 2025_ewc start — 2025 Esports World Cup
+[2026-07-28 18:42:33]   2025_ewc/Mixed: 28 matches (explicit list)
+[2026-07-28 18:42:35]     [1/28] 510127 ok (ovw) PRX 1-0 | 1 maps
+[2026-07-28 18:42:36]     [2/28] 510128 ok (ovw) KC 1-0 | 1 maps
+[2026-07-28 18:42:37]     [3/28] 510133 ok (ovw) BBL 1-0 | 1 maps
+[2026-07-28 18:42:38]     [4/28] 510134 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:42:40]     [5/28] 510139 ok (ovw) RRQ 1-0 | 1 maps
+[2026-07-28 18:42:41]     [6/28] 510138 ok (ovw) NRG 1-0 | 1 maps
+[2026-07-28 18:42:42]     [7/28] 510144 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:42:43]     [8/28] 510143 ok (ovw) FNC 1-0 | 1 maps
+[2026-07-28 18:42:45]     [9/28] 510129 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:42:46]     [10/28] 510135 ok (ovw) BBL 2-0 | 2 maps
+[2026-07-28 18:42:47]     [11/28] 510145 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:42:49]     [12/28] 510140 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:42:50]     [13/28] 510131 ok (ovw) BLG 2-1 | 3 maps
+[2026-07-28 18:42:51]     [14/28] 510136 ok (ovw) SEN 2-1 | 3 maps
+[2026-07-28 18:42:53]     [15/28] 510146 ok (ovw) EDG 2-1 | 3 maps
+[2026-07-28 18:42:54]     [16/28] 510141 ok (ovw) TH 2-1 | 3 maps
+[2026-07-28 18:42:56]     [17/28] 510132 ok (ovw) KC 2-1 | 3 maps
+[2026-07-28 18:42:57]     [18/28] 510137 ok (ovw) SEN 2-0 | 2 maps
+[2026-07-28 18:42:58]     [19/28] 510142 ok (ovw) TH 2-0 | 2 maps
+[2026-07-28 18:43:00]     [20/28] 510147 ok (ovw) GEN 2-0 | 2 maps
+[2026-07-28 18:43:01]     [21/28] 510149 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:43:02]     [22/28] 510150 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:43:04]     [23/28] 510151 ok (ovw) GEN 2-0 | 2 maps
+[2026-07-28 18:43:05]     [24/28] 510152 ok (ovw) TH 2-0 | 2 maps
+[2026-07-28 18:43:06]     [25/28] 510153 ok (ovw) FNC 2-1 | 3 maps
+[2026-07-28 18:43:08]     [26/28] 510154 ok (ovw) TH 2-1 | 3 maps
+[2026-07-28 18:43:09]     [27/28] 510156 ok (ovw) GEN 2-0 | 2 maps
+[2026-07-28 18:43:11]     [28/28] 510155 ok (ovw) TH 3-2 | 5 maps
+[2026-07-28 18:43:11] EVENT 2025_ewc done: kept=28 series, map_rows=580, series_rows=280, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:43:11]   -> /Users/benny_es1/PythonTest/data/maps/2025_ewc.csv
+[2026-07-28 18:43:11]   -> /Users/benny_es1/PythonTest/data/series/2025_ewc.csv
+[2026-07-28 18:43:11]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_ewc.json
+[2026-07-28 18:43:11] EVENT 2025_ewc_qual start — 2025 EWC Qualifiers
+[2026-07-28 18:43:11]   2025_ewc_qual/Americas: 16 matches (explicit list)
+[2026-07-28 18:43:12]     [1/16] 488003 ok (ovw) 100T 2-0 | 2 maps
+[2026-07-28 18:43:14]     [2/16] 488004 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:43:15]     [3/16] 488005 ok (ovw) C9 2-0 | 2 maps
+[2026-07-28 18:43:16]     [4/16] 488007 ok (ovw) 100T 2-1 | 3 maps
+[2026-07-28 18:43:18]     [5/16] 488008 ok (ovw) C9 2-1 | 3 maps
+[2026-07-28 18:43:19]     [6/16] 488010 ok (ovw) LEV 2-0 | 2 maps
+[2026-07-28 18:43:20]     [7/16] 488009 ok (ovw) 100T 2-0 | 2 maps
+[2026-07-28 18:43:22]     [8/16] 488012 ok (ovw) KRÜ 2-0 | 2 maps
+[2026-07-28 18:43:23]     [9/16] 488013 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:43:24]     [10/16] 488014 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:43:25]     [11/16] 488015 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:43:27]     [12/16] 488016 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:43:28]     [13/16] 488017 ok (ovw) 100T 2-0 | 2 maps
+[2026-07-28 18:43:29]     [14/16] 488018 ok (ovw) NRG 3-1 | 4 maps
+[2026-07-28 18:43:31]     [15/16] 488019 ok (ovw) MIBR 2-1 | 3 maps
+[2026-07-28 18:43:32]     [16/16] 488020 ok (ovw) 100T 3-2 | 5 maps
+[2026-07-28 18:43:32]   2025_ewc_qual/EMEA: 18 matches (explicit list)
+[2026-07-28 18:43:34]     [1/18] 487985 ok (ovw) FUT 2-0 | 2 maps
+[2026-07-28 18:43:35]     [2/18] 487986 ok (ovw) VIT 2-1 | 3 maps
+[2026-07-28 18:43:36]     [3/18] 487987 ok (ovw) NAVI 2-0 | 2 maps
+[2026-07-28 18:43:37]     [4/18] 487988 ok (ovw) KC 2-0 | 2 maps
+[2026-07-28 18:43:39]     [5/18] 487989 ok (ovw) FUT 2-0 | 2 maps
+[2026-07-28 18:43:40]     [6/18] 487990 ok (ovw) KC 2-0 | 2 maps
+[2026-07-28 18:43:41]     [7/18] 487992 ok (ovw) GX 2-0 | 2 maps
+[2026-07-28 18:43:43]     [8/18] 487993 ok (ovw) M8 2-0 | 2 maps
+[2026-07-28 18:43:44]     [9/18] 487991 ok (ovw) KC 2-1 | 3 maps
+[2026-07-28 18:43:45]     [10/18] 487994 ok (ovw) NAVI 2-0 | 2 maps
+[2026-07-28 18:43:47]     [11/18] 487995 ok (ovw) M8 2-1 | 3 maps
+[2026-07-28 18:43:48]     [12/18] 487996 ok (ovw) NAVI 2-1 | 3 maps
+[2026-07-28 18:43:49]     [13/18] 487997 ok (ovw) FUT 2-0 | 2 maps
+[2026-07-28 18:43:51]     [14/18] 487998 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:43:52]     [15/18] 487999 ok (ovw) BBL 2-0 | 2 maps
+[2026-07-28 18:43:53]     [16/18] 488000 ok (ovw) BBL 3-1 | 4 maps
+[2026-07-28 18:43:55]     [17/18] 488001 ok (ovw) KC 2-0 | 2 maps
+[2026-07-28 18:43:56]     [18/18] 488002 ok (ovw) KC 3-1 | 4 maps
+[2026-07-28 18:43:56]   2025_ewc_qual/Pacific: 15 matches (explicit list)
+[2026-07-28 18:43:57]     [1/15] 489422 ok (ovw) PRX 1-0 | 1 maps
+[2026-07-28 18:43:59]     [2/15] 489423 ok (ovw) GE 1-0 | 1 maps
+[2026-07-28 18:44:00]     [3/15] 489424 ok (ovw) PRX 1-0 | 1 maps
+[2026-07-28 18:44:01]     [4/15] 489425 ok (ovw) GE 1-0 | 1 maps
+[2026-07-28 18:44:02]     [5/15] 489426 ok (ovw) PRX 1-0 | 1 maps
+[2026-07-28 18:44:03]     [6/15] 489427 ok (ovw) T1 1-0 | 1 maps
+[2026-07-28 18:44:05]     [7/15] 489428 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:44:06]     [8/15] 489429 ok (ovw) TS 1-0 | 1 maps
+[2026-07-28 18:44:07]     [9/15] 489430 ok (ovw) NS 1-0 | 1 maps
+[2026-07-28 18:44:08]     [10/15] 489431 ok (ovw) TS 1-0 | 1 maps
+[2026-07-28 18:44:10]     [11/15] 489432 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:44:11]     [12/15] 489433 ok (ovw) BME 1-0 | 1 maps
+[2026-07-28 18:44:12]     [13/15] 489434 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:44:14]     [14/15] 489435 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:44:15]     [15/15] 489436 ok (ovw) PRX 3-1 | 4 maps
+[2026-07-28 18:44:15] EVENT 2025_ewc_qual done: kept=49 series, map_rows=1040, series_rows=490, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:44:15]   -> /Users/benny_es1/PythonTest/data/maps/2025_ewc_qual.csv
+[2026-07-28 18:44:15]   -> /Users/benny_es1/PythonTest/data/series/2025_ewc_qual.csv
+[2026-07-28 18:44:15]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_ewc_qual.json
+[2026-07-28 18:44:15] EVENT 2025_china_evo_2 start — 2025 China Evolution Series Act 2
+[2026-07-28 18:44:16]   2025_china_evo_2/CN: 12 completed matches listed
+[2026-07-28 18:44:18]     [1/12] 485370 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:44:19]     [2/12] 485371 ok (ovw) NOVA 2-1 | 3 maps
+[2026-07-28 18:44:20]     [3/12] 485372 ok (ovw) TEC 2-0 | 2 maps
+[2026-07-28 18:44:22]     [4/12] 485373 ok (ovw) TYL 2-0 | 2 maps
+[2026-07-28 18:44:23]     [5/12] 485374 ok (ovw) EDG 1-0 | 1 maps
+[2026-07-28 18:44:24]     [6/12] 485375 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:44:25]     [7/12] 485376 ok (ovw) TEC 2-0 | 2 maps
+[2026-07-28 18:44:27]     [8/12] 485377 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:44:28]     [9/12] 485378 ok (ovw) EDG 2-0 | 2 maps
+[2026-07-28 18:44:29]     [10/12] 485379 ok (ovw) TEC 2-1 | 3 maps
+[2026-07-28 18:44:30]     [11/12] 485381 ok (ovw) TE 3-0 | 3 maps
+[2026-07-28 18:44:32]     [12/12] 485380 ok (ovw) EDG 3-0 | 3 maps
+[2026-07-28 18:44:32] EVENT 2025_china_evo_2 done: kept=12 series, map_rows=310, series_rows=120, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:44:32]   -> /Users/benny_es1/PythonTest/data/maps/2025_china_evo_2.csv
+[2026-07-28 18:44:32]   -> /Users/benny_es1/PythonTest/data/series/2025_china_evo_2.csv
+[2026-07-28 18:44:32]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_china_evo_2.json
+[2026-07-28 18:44:32] EVENT 2023_lcq start — 2023 Last Chance Qualifiers
+[2026-07-28 18:44:33]   2023_lcq/Americas: 9 completed matches listed
+[2026-07-28 18:44:34]     [1/9] 232729 ok (ovw) KRÜ 2-0 | 2 maps
+[2026-07-28 18:44:36]     [2/9] 232731 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:44:37]     [3/9] 232730 ok (ovw) SEN 2-1 | 3 maps
+[2026-07-28 18:44:39]     [4/9] 232732 ok (ovw) C9 2-1 | 3 maps
+[2026-07-28 18:44:40]     [5/9] 232733 ok (ovw) KRÜ 2-0 | 2 maps
+[2026-07-28 18:44:42]     [6/9] 232734 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:44:43]     [7/9] 232736 ok (ovw) LEV 2-0 | 2 maps
+[2026-07-28 18:44:45]     [8/9] 232737 ok (ovw) LEV 3-2 | 5 maps
+[2026-07-28 18:44:46]     [9/9] 232735 ok (ovw) KRÜ 3-1 | 4 maps
+[2026-07-28 18:44:47]   2023_lcq/EMEA: 8 completed matches listed
+[2026-07-28 18:44:49]     [1/8] 235363 ok (ovw) MKOI 2-1 | 3 maps
+[2026-07-28 18:44:50]     [2/8] 235364 ok (ovw) KC 2-1 | 3 maps
+[2026-07-28 18:44:51]     [3/8] 235365 ok (ovw) MKOI 2-0 | 2 maps
+[2026-07-28 18:44:53]     [4/8] 235366 ok (ovw) GIA 2-0 | 2 maps
+[2026-07-28 18:44:54]     [5/8] 235367 ok (ovw) GIA 2-0 | 2 maps
+[2026-07-28 18:44:55]     [6/8] 235371 ok (ovw) NAVI 2-1 | 3 maps
+[2026-07-28 18:44:57]     [7/8] 235372 ok (ovw) NAVI 3-0 | 3 maps
+[2026-07-28 18:44:58]     [8/8] 235368 ok (ovw) GIA 3-0 | 3 maps
+[2026-07-28 18:44:59]   2023_lcq/Pacific: 9 completed matches listed
+[2026-07-28 18:45:01]     [1/9] 237266 ok (ovw) TLN 2-0 | 2 maps
+[2026-07-28 18:45:02]     [2/9] 237267 ok (ovw) RRQ 2-0 | 2 maps
+[2026-07-28 18:45:04]     [3/9] 237268 ok (ovw) GEN 2-1 | 3 maps
+[2026-07-28 18:45:05]     [4/9] 237269 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:45:07]     [5/9] 237270 ok (ovw) TS 2-0 | 2 maps
+[2026-07-28 18:45:08]     [6/9] 237271 ok (ovw) ZETA 2-0 | 2 maps
+[2026-07-28 18:45:09]     [7/9] 237272 ok (ovw) GEN 2-1 | 3 maps
+[2026-07-28 18:45:11]     [8/9] 237273 ok (ovw) TS 3-1 | 4 maps
+[2026-07-28 18:45:12]     [9/9] 237274 ok (ovw) ZETA 3-1 | 4 maps
+[2026-07-28 18:45:12] EVENT 2023_lcq done: kept=26 series, map_rows=730, series_rows=263, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:45:12]   -> /Users/benny_es1/PythonTest/data/maps/2023_lcq.csv
+[2026-07-28 18:45:12]   -> /Users/benny_es1/PythonTest/data/series/2023_lcq.csv
+[2026-07-28 18:45:12]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_lcq.json
+[2026-07-28 18:45:12] EVENT 2023_china_champions_qual start — 2023 Champions China Qualifier
+[2026-07-28 18:45:13]   2023_china_champions_qual/CN: 51 completed matches listed
+[2026-07-28 18:45:15]     [1/51] 219595 skipped (non-VCT: ['TTG', 'WBG'])
+[2026-07-28 18:45:16]     [2/51] 219596 skipped (non-VCT: ['DYG', 'NOP'])
+[2026-07-28 18:45:17]     [3/51] 219594 skipped (non-VCT: ['GK', 'RNG'])
+[2026-07-28 18:45:19]     [4/51] 219598 skipped (non-VCT: ['4AM', 'NWG'])
+[2026-07-28 18:45:20]     [5/51] 219597 skipped (non-VCT: ['iNv'])
+[2026-07-28 18:45:21]     [6/51] 219599 skipped (non-VCT: ['ME'])
+[2026-07-28 18:45:22]     [7/51] 219601 skipped (non-VCT: ['KZ', 'NTER'])
+[2026-07-28 18:45:24]     [8/51] 219600 skipped (non-VCT: ['RA'])
+[2026-07-28 18:45:25]     [9/51] 221176 skipped (non-VCT: ['NTER', 'TTG'])
+[2026-07-28 18:45:26]     [10/51] 221177 skipped (non-VCT: ['RNG'])
+[2026-07-28 18:45:27]     [11/51] 221178 ok (ovw) TYL 2-0 | 2 maps
+[2026-07-28 18:45:29]     [12/51] 221179 skipped (non-VCT: ['DYG', 'NWG'])
+[2026-07-28 18:45:30]     [13/51] 221180 skipped (non-VCT: ['GK', 'iNv'])
+[2026-07-28 18:45:31]     [14/51] 221181 skipped (non-VCT: ['KZ', 'NOP'])
+[2026-07-28 18:45:32]     [15/51] 221183 skipped (non-VCT: ['4AM', 'WBG'])
+[2026-07-28 18:45:34]     [16/51] 221182 skipped (non-VCT: ['ME', 'RA'])
+[2026-07-28 18:45:35]     [17/51] 221837 skipped (non-VCT: ['NTER', 'WBG'])
+[2026-07-28 18:45:36]     [18/51] 221838 skipped (non-VCT: ['RNG'])
+[2026-07-28 18:45:37]     [19/51] 221839 skipped (non-VCT: ['GK', 'NWG'])
+[2026-07-28 18:45:39]     [20/51] 221840 skipped (non-VCT: ['ME', 'NOP'])
+[2026-07-28 18:45:40]     [21/51] 221841 skipped (non-VCT: ['DYG', 'TTG'])
+[2026-07-28 18:45:41]     [22/51] 221842 skipped (non-VCT: ['4AM', 'KZ'])
+[2026-07-28 18:45:42]     [23/51] 221844 skipped (non-VCT: ['RA', 'iNv'])
+[2026-07-28 18:45:44]     [24/51] 221843 ok (ovw) TYL 2-0 | 2 maps
+[2026-07-28 18:45:45]     [25/51] 222364 skipped (non-VCT: ['NWG', 'WBG'])
+[2026-07-28 18:45:46]     [26/51] 222367 skipped (non-VCT: ['4AM', 'iNv'])
+[2026-07-28 18:45:47]     [27/51] 222365 skipped (non-VCT: ['DYG', 'RNG'])
+[2026-07-28 18:45:49]     [28/51] 222368 skipped (non-VCT: ['GK'])
+[2026-07-28 18:45:50]     [29/51] 222366 skipped (non-VCT: ['ME'])
+[2026-07-28 18:45:51]     [30/51] 222369 skipped (non-VCT: ['NOP', 'NTER'])
+[2026-07-28 18:45:52]     [31/51] 222530 skipped (non-VCT: ['NTER', 'NWG'])
+[2026-07-28 18:45:54]     [32/51] 222531 skipped (non-VCT: ['4AM', 'GK'])
+[2026-07-28 18:45:55]     [33/51] 222532 skipped (non-VCT: ['DYG'])
+[2026-07-28 18:45:56]     [34/51] 235566 skipped (non-VCT: ['4AM'])
+[2026-07-28 18:45:57]     [35/51] 235567 skipped (non-VCT: ['ME', 'RNG'])
+[2026-07-28 18:45:59]     [36/51] 235568 skipped (non-VCT: ['NTER'])
+[2026-07-28 18:46:00]     [37/51] 235569 skipped (non-VCT: ['WBG'])
+[2026-07-28 18:46:01]     [38/51] 235552 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:46:03]     [39/51] 235553 skipped (non-VCT: ['ME'])
+[2026-07-28 18:46:04]     [40/51] 235554 ok (ovw) TYL 2-0 | 2 maps
+[2026-07-28 18:46:05]     [41/51] 235555 skipped (non-VCT: ['WBG'])
+[2026-07-28 18:46:06]     [42/51] 235560 skipped (non-VCT: ['ME'])
+[2026-07-28 18:46:08]     [43/51] 235561 skipped (non-VCT: ['WBG'])
+[2026-07-28 18:46:09]     [44/51] 235556 ok (ovw) BLG 3-0 | 3 maps
+[2026-07-28 18:46:10]     [45/51] 235557 ok (ovw) EDG 3-0 | 3 maps
+[2026-07-28 18:46:12]     [46/51] 235562 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:46:13]     [47/51] 235563 ok (ovw) TYL 2-1 | 3 maps
+[2026-07-28 18:46:14]     [48/51] 235558 ok (ovw) EDG 3-0 | 3 maps
+[2026-07-28 18:46:16]     [49/51] 235564 ok (ovw) FPX 3-1 | 4 maps
+[2026-07-28 18:46:17]     [50/51] 235565 ok (ovw) BLG 3-2 | 5 maps
+[2026-07-28 18:46:18]     [51/51] 235559 ok (ovw) EDG 3-1 | 4 maps
+[2026-07-28 18:46:18] EVENT 2023_china_champions_qual done: kept=12 series, map_rows=370, series_rows=120, skipped_vct=39, showmatch=0, empty=0
+[2026-07-28 18:46:18]   -> /Users/benny_es1/PythonTest/data/maps/2023_china_champions_qual.csv
+[2026-07-28 18:46:18]   -> /Users/benny_es1/PythonTest/data/series/2023_china_champions_qual.csv
+[2026-07-28 18:46:18]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_china_champions_qual.json
+[2026-07-28 18:46:18] EVENT 2023_china_evo_1 start — 2023 China Evolution Series Act 1
+[2026-07-28 18:46:19]   2023_china_evo_1/CN: 65 completed matches listed
+[2026-07-28 18:46:21]     [1/65] 271412 skipped (non-VCT: ['17', 'NH'])
+[2026-07-28 18:46:22]     [2/65] 271413 skipped (non-VCT: ['DYG', 'RSG'])
+[2026-07-28 18:46:23]     [3/65] 271425 ok (ovw) TE 1-0 | 1 maps
+[2026-07-28 18:46:24]     [4/65] 271427 EMPTY (no stat rows; forfeit/showpage?)
+[2026-07-28 18:46:26]     [5/65] 271414 skipped (non-VCT: ['Q9', 'VLG'])
+[2026-07-28 18:46:27]     [6/65] 271418 skipped (non-VCT: ['5KS'])
+[2026-07-28 18:46:28]     [7/65] 271426 skipped (non-VCT: ['RA', 'TES'])
+[2026-07-28 18:46:29]     [8/65] 271428 skipped (non-VCT: ['NIP', 'RNG'])
+[2026-07-28 18:46:30]     [9/65] 271423 skipped (non-VCT: ['17'])
+[2026-07-28 18:46:32]     [10/65] 271432 skipped (non-VCT: ['4AM', 'RSG'])
+[2026-07-28 18:46:33]     [11/65] 271436 skipped (non-VCT: ['KZ'])
+[2026-07-28 18:46:34]     [12/65] 271438 skipped (non-VCT: [])
+[2026-07-28 18:46:35]     [13/65] 271433 skipped (non-VCT: ['ED'])
+[2026-07-28 18:46:36]     [14/65] 271437 skipped (non-VCT: ['NTER'])
+[2026-07-28 18:46:37]     [15/65] 271439 skipped (non-VCT: ['NWG', 'VOID'])
+[2026-07-28 18:46:38]     [16/65] 271441 skipped (non-VCT: ['IMAY', 'TJD'])
+[2026-07-28 18:46:40]     [17/65] 271434 skipped (non-VCT: ['KBG', 'iG'])
+[2026-07-28 18:46:41]     [18/65] 271440 skipped (non-VCT: ['JJH', 'ME'])
+[2026-07-28 18:46:42]     [19/65] 271442 skipped (non-VCT: ['TUA'])
+[2026-07-28 18:46:43]     [20/65] 271435 skipped (non-VCT: ['5KS', 'WBG'])
+[2026-07-28 18:46:44]     [21/65] 271443 skipped (non-VCT: ['Q9'])
+[2026-07-28 18:46:46]     [22/65] 271481 skipped (non-VCT: ['RA'])
+[2026-07-28 18:46:47]     [23/65] 271482 skipped (non-VCT: ['KZ'])
+[2026-07-28 18:46:48]     [24/65] 271483 skipped (non-VCT: ['RNG'])
+[2026-07-28 18:46:49]     [25/65] 271484 skipped (non-VCT: ['JJH', 'NWG'])
+[2026-07-28 18:46:51]     [26/65] 271485 skipped (non-VCT: ['RSG'])
+[2026-07-28 18:46:52]     [27/65] 271486 skipped (non-VCT: ['KBG', 'WBG'])
+[2026-07-28 18:46:53]     [28/65] 271487 skipped (non-VCT: ['IMAY'])
+[2026-07-28 18:46:54]     [29/65] 271488 ok (ovw) DRG 2-0 | 2 maps
+[2026-07-28 18:46:55]     [30/65] 271940 skipped (non-VCT: [])
+[2026-07-28 18:46:57]     [31/65] 271941 skipped (non-VCT: ['JJH'])
+[2026-07-28 18:46:58]     [32/65] 271942 skipped (non-VCT: ['KBG'])
+[2026-07-28 18:46:59]     [33/65] 271943 skipped (non-VCT: ['IMAY'])
+[2026-07-28 18:47:00]     [34/65] 271935 skipped (non-VCT: ['KZ', 'RA'])
+[2026-07-28 18:47:01]     [35/65] 271936 skipped (non-VCT: ['NWG', 'RNG'])
+[2026-07-28 18:47:03]     [36/65] 271937 skipped (non-VCT: ['RSG', 'WBG'])
+[2026-07-28 18:47:04]     [37/65] 271938 ok (ovw) ASE 2-0 | 2 maps
+[2026-07-28 18:47:05]     [38/65] 271945 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:47:07]     [39/65] 271946 skipped (non-VCT: ['RSG'])
+[2026-07-28 18:47:08]     [40/65] 271947 skipped (non-VCT: ['KBG', 'RNG'])
+[2026-07-28 18:47:09]     [41/65] 271948 skipped (non-VCT: ['IMAY', 'KZ'])
+[2026-07-28 18:47:10]     [42/65] 272988 skipped (non-VCT: ['NWG'])
+[2026-07-28 18:47:11]     [43/65] 272989 ok (ovw) ASE 2-0 | 2 maps
+[2026-07-28 18:47:13]     [44/65] 272993 skipped (non-VCT: ['IMAY', 'WBG'])
+[2026-07-28 18:47:14]     [45/65] 272994 skipped (non-VCT: ['RA', 'RNG'])
+[2026-07-28 18:47:15]     [46/65] 272990 skipped (non-VCT: ['NWG'])
+[2026-07-28 T3] Mid-scrape checks: new maps/series CSVs schema-identical to existing (19 cols, same order). 2025_ewc main vs qual MatchID overlap = 0 (disjoint by series_id split, as designed). vct_only correctly skipping non-franchised CN teams (4AM/ME/RNG/NTER/WBG/KBG/iG/JJH/TUA...) in 2023 CN qualifier + evo events.
+[2026-07-28 T3] CORRECTION to earlier falsifier note: EWC 2025 main event is 16 teams (group stage) incl 4 CN orgs (BLG/EDG/XLG/TEC) — the event-page 8-team module was playoffs-only. Will fix wording in final corpus_diff.
+[2026-07-28 18:47:16]     [47/65] 272995 skipped (non-VCT: ['RA', 'WBG'])
+[2026-07-28 18:47:18]     [48/65] 272991 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:47:19]     [49/65] 272996 skipped (non-VCT: ['IMAY', 'RNG'])
+[2026-07-28 18:47:20]     [50/65] 272992 skipped (non-VCT: ['NWG'])
+[2026-07-28 18:47:22]     [51/65] 272997 skipped (non-VCT: ['RNG', 'WBG'])
+[2026-07-28 18:47:23]     [52/65] 274401 ok (ovw) ASE 2-0 | 2 maps
+[2026-07-28 18:47:24]     [53/65] 274402 ok (ovw) EDG 2-0 | 2 maps
+[2026-07-28 18:47:25]     [54/65] 274403 skipped (non-VCT: ['RA'])
+[2026-07-28 18:47:27]     [55/65] 274404 skipped (non-VCT: ['WBG'])
+[2026-07-28 18:47:28]     [56/65] 274409 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:47:29]     [57/65] 274410 skipped (non-VCT: ['RA', 'WBG'])
+[2026-07-28 18:47:30]     [58/65] 274405 ok (ovw) EDG 2-0 | 2 maps
+[2026-07-28 18:47:32]     [59/65] 274406 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:47:33]     [60/65] 274412 skipped (non-VCT: ['RA'])
+[2026-07-28 18:47:34]     [61/65] 274411 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:47:35]     [62/65] 274407 ok (ovw) EDG 2-0 | 2 maps
+[2026-07-28 18:47:37]     [63/65] 274413 skipped (non-VCT: ['RA'])
+[2026-07-28 18:47:38]     [64/65] 274414 skipped (non-VCT: ['RA'])
+[2026-07-28 18:47:39]     [65/65] 274408 skipped (non-VCT: ['RA'])
+[2026-07-28 18:47:39] EVENT 2023_china_evo_1 done: kept=13 series, map_rows=270, series_rows=130, skipped_vct=51, showmatch=0, empty=1
+[2026-07-28 18:47:39]   -> /Users/benny_es1/PythonTest/data/maps/2023_china_evo_1.csv
+[2026-07-28 18:47:39]   -> /Users/benny_es1/PythonTest/data/series/2023_china_evo_1.csv
+[2026-07-28 18:47:39]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_china_evo_1.json
+[2026-07-28 18:47:39] EVENT 2023_china_evo_3 start — 2023 China Evolution Series Act 3
+[2026-07-28 18:47:41]   2023_china_evo_3/CN: 72 completed matches listed
+[2026-07-28 18:47:42]     [1/72] 283380 skipped (non-VCT: ['SQM', 'VLG'])
+[2026-07-28 18:47:43]     [2/72] 283386 skipped (non-VCT: ['NWG', 'TUA'])
+[2026-07-28 18:47:44]     [3/72] 283392 skipped (non-VCT: ['DDT', 'DYG'])
+[2026-07-28 18:47:45]     [4/72] 283398 skipped (non-VCT: ['5KS'])
+[2026-07-28 18:47:47]     [5/72] 283382 skipped (non-VCT: ['CCG'])
+[2026-07-28 18:47:48]     [6/72] 283387 skipped (non-VCT: ['RSG'])
+[2026-07-28 18:47:49]     [7/72] 283393 skipped (non-VCT: ['TES', 'WBG'])
+[2026-07-28 18:47:50]     [8/72] 283399 skipped (non-VCT: ['CTG', 'ME'])
+[2026-07-28 18:47:51]     [9/72] 283381 skipped (non-VCT: ['VLG'])
+[2026-07-28 18:47:53]     [10/72] 283388 skipped (non-VCT: ['ODG'])
+[2026-07-28 18:47:54]     [11/72] 283394 skipped (non-VCT: ['DYG', 'NIP'])
+[2026-07-28 18:47:55]     [12/72] 283400 skipped (non-VCT: ['RNG', 'VOID'])
+[2026-07-28 18:47:56]     [13/72] 283383 skipped (non-VCT: ['JJH', 'NH'])
+[2026-07-28 18:47:57]     [14/72] 283389 skipped (non-VCT: ['4AM', 'KZ'])
+[2026-07-28 18:47:59]     [15/72] 283395 skipped (non-VCT: ['iG'])
+[2026-07-28 18:48:00]     [16/72] 283401 skipped (non-VCT: ['LGD', 'TJD'])
+[2026-07-28 18:48:01]     [17/72] 283384 skipped (non-VCT: ['17'])
+[2026-07-28 18:48:02]     [18/72] 283396 skipped (non-VCT: ['NTER'])
+[2026-07-28 18:48:03]     [19/72] 283402 skipped (non-VCT: ['KBG', 'LNG'])
+[2026-07-28 18:48:05]     [20/72] 283385 skipped (non-VCT: ['JJH'])
+[2026-07-28 18:48:06]     [21/72] 283397 NO RESULTS PARSED — excluded, flagged
+[2026-07-28 18:48:07]     [22/72] 283403 skipped (non-VCT: ['LGD'])
+[2026-07-28 18:48:08]     [23/72] 283642 skipped (non-VCT: [])
+[2026-07-28 18:48:09]     [24/72] 283649 skipped (non-VCT: ['DYG', 'TES'])
+[2026-07-28 18:48:10]     [25/72] 283644 skipped (non-VCT: ['17'])
+[2026-07-28 18:48:12]     [26/72] 283651 ok (ovw) DRG 1-0 | 1 maps
+[2026-07-28 18:48:13]     [27/72] 283646 skipped (non-VCT: ['NWG', 'RSG'])
+[2026-07-28 18:48:14]     [28/72] 283652 skipped (non-VCT: ['ME', 'RNG'])
+[2026-07-28 18:48:15]     [29/72] 283648 skipped (non-VCT: ['4AM', 'ODG'])
+[2026-07-28 18:48:16]     [30/72] 283653 skipped (non-VCT: ['KBG', 'LGD'])
+[2026-07-28 18:48:18]     [31/72] 284211 skipped (non-VCT: ['RSG'])
+[2026-07-28 18:48:19]     [32/72] 284212 skipped (non-VCT: ['ME', 'TES'])
+[2026-07-28 18:48:20]     [33/72] 284216 skipped (non-VCT: ['NWG'])
+[2026-07-28 18:48:21]     [34/72] 284217 skipped (non-VCT: ['DYG', 'RNG'])
+[2026-07-28 18:48:23]     [35/72] 284221 skipped (non-VCT: ['17', 'ODG'])
+[2026-07-28 18:48:24]     [36/72] 284222 skipped (non-VCT: ['KBG'])
+[2026-07-28 18:48:25]     [37/72] 284226 skipped (non-VCT: ['4AM'])
+[2026-07-28 18:48:26]     [38/72] 284227 skipped (non-VCT: ['LGD'])
+[2026-07-28 18:48:28]     [39/72] 284213 skipped (non-VCT: ['TES'])
+[2026-07-28 18:48:29]     [40/72] 284218 skipped (non-VCT: ['RNG'])
+[2026-07-28 18:48:30]     [41/72] 284223 skipped (non-VCT: ['17'])
+[2026-07-28 18:48:31]     [42/72] 284228 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:48:33]     [43/72] 284214 skipped (non-VCT: ['ME', 'RSG'])
+[2026-07-28 18:48:34]     [44/72] 284219 skipped (non-VCT: ['DYG', 'NWG'])
+[2026-07-28 18:48:35]     [45/72] 284224 skipped (non-VCT: ['KBG', 'ODG'])
+[2026-07-28 18:48:36]     [46/72] 284229 skipped (non-VCT: ['4AM', 'LGD'])
+[2026-07-28 18:48:38]     [47/72] 284215 skipped (non-VCT: ['RSG'])
+[2026-07-28 18:48:39]     [48/72] 284220 skipped (non-VCT: ['DYG', 'RNG'])
+[2026-07-28 18:48:40]     [49/72] 284225 skipped (non-VCT: ['17', 'KBG'])
+[2026-07-28 18:48:41]     [50/72] 284230 skipped (non-VCT: ['LGD'])
+[2026-07-28 18:48:43]     [51/72] 285009 skipped (non-VCT: ['RNG'])
+[2026-07-28 18:48:44]     [52/72] 285010 ok (ovw) DRG 2-0 | 2 maps
+[2026-07-28 18:48:45]     [53/72] 285011 skipped (non-VCT: ['LGD'])
+[2026-07-28 18:48:46]     [54/72] 285012 skipped (non-VCT: ['17', 'TES'])
+[2026-07-28 18:48:48]     [55/72] 285013 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:48:49]     [56/72] 285014 skipped (non-VCT: ['RA'])
+[2026-07-28 18:48:50]     [57/72] 285015 ok (ovw) ASE 2-1 | 3 maps
+[2026-07-28 18:48:51]     [58/72] 285016 skipped (non-VCT: ['TES'])
+[2026-07-28 18:48:53]     [59/72] 285021 skipped (non-VCT: ['LGD'])
+[2026-07-28 18:48:54]     [60/72] 285022 skipped (non-VCT: ['17'])
+[2026-07-28 18:48:55]     [61/72] 285017 skipped (non-VCT: ['RA'])
+[2026-07-28 18:48:56]     [62/72] 285023 skipped (non-VCT: ['RNG', 'TES'])
+[2026-07-28 18:48:58]     [63/72] 285024 ok (ovw) TEC 2-0 | 2 maps
+[2026-07-28 18:48:59]     [64/72] 285018 ok (ovw) EDG 2-1 | 3 maps
+[2026-07-28 18:49:00]     [65/72] 285026 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:49:01]     [66/72] 285025 skipped (non-VCT: ['TES'])
+[2026-07-28 18:49:03]     [67/72] 285028 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:49:04]     [68/72] 285027 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:49:05]     [69/72] 285019 skipped (non-VCT: ['RA'])
+[2026-07-28 18:49:06]     [70/72] 285029 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:49:08]     [71/72] 285030 ok (ovw) EDG 3-1 | 4 maps
+[2026-07-28 18:49:09]     [72/72] 285020 skipped (non-VCT: ['RA'])
+[2026-07-28 18:49:09] EVENT 2023_china_evo_3 done: kept=12 series, map_rows=300, series_rows=120, skipped_vct=59, showmatch=0, empty=1
+[2026-07-28 18:49:09]   -> /Users/benny_es1/PythonTest/data/maps/2023_china_evo_3.csv
+[2026-07-28 18:49:09]   -> /Users/benny_es1/PythonTest/data/series/2023_china_evo_3.csv
+[2026-07-28 18:49:09]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_china_evo_3.json
+[2026-07-28 18:49:09] EVENT 2023_rbhg start — 2023 Red Bull Home Ground #4
+[2026-07-28 18:49:10]   2023_rbhg/Mixed: 37 completed matches listed
+[2026-07-28 18:49:12]     [1/37] 273356 skipped (non-VCT: ['Farr', 'Xene'])
+[2026-07-28 18:49:13]     [2/37] 273357 skipped (non-VCT: ['SG', 'Xene'])
+[2026-07-28 18:49:14]     [3/37] 273358 skipped (non-VCT: ['INS', 'RIG'])
+[2026-07-28 18:49:15]     [4/37] 273359 EMPTY (no stat rows; forfeit/showpage?)
+[2026-07-28 18:49:16]     [5/37] 273360 skipped (non-VCT: ['FL', 'SRZ'])
+[2026-07-28 18:49:18]     [6/37] 273361 skipped (non-VCT: ['DRN', 'MRG'])
+[2026-07-28 18:49:19]     [7/37] 273362 skipped (non-VCT: ['DNE', 'FAV'])
+[2026-07-28 18:49:20]     [8/37] 273363 skipped (non-VCT: ['FB'])
+[2026-07-28 18:49:21]     [9/37] 273364 skipped (non-VCT: ['IGZ', 'LSZ'])
+[2026-07-28 18:49:23]     [10/37] 273768 skipped (non-VCT: ['FAV', 'MRG'])
+[2026-07-28 18:49:24]     [11/37] 273769 skipped (non-VCT: ['LSZ'])
+[2026-07-28 18:49:25]     [12/37] 273766 skipped (non-VCT: ['RIG', 'SG'])
+[2026-07-28 18:49:26]     [13/37] 273767 skipped (non-VCT: ['FL', 'RC'])
+[2026-07-28 18:49:28]     [14/37] 275842 skipped (non-VCT: ['FAV', 'LSZ'])
+[2026-07-28 18:49:29]     [15/37] 275841 skipped (non-VCT: ['FL', 'SG'])
+[2026-07-28 18:49:30]     [16/37] 276077 skipped (non-VCT: ['FAV', 'FL'])
+[2026-07-28 18:49:32]     [17/37] 279601 ok (ovw) FUT 1-0 | 1 maps
+[2026-07-28 18:49:33]     [18/37] 279602 skipped (non-VCT: ['FKS', 'G2G'])
+[2026-07-28 18:49:34]     [19/37] 279603 skipped (non-VCT: ['G2G'])
+[2026-07-28 18:49:35]     [20/37] 279604 skipped (non-VCT: ['FKS'])
+[2026-07-28 18:49:37]     [21/37] 279605 skipped (non-VCT: ['FKS'])
+[2026-07-28 18:49:38]     [22/37] 279606 skipped (non-VCT: ['G2G'])
+[2026-07-28 18:49:39]     [23/37] 279607 skipped (non-VCT: ['FKS'])
+[2026-07-28 18:49:40]     [24/37] 283088 ok (ovw) ZETA 1-0 | 1 maps
+[2026-07-28 18:49:42]     [25/37] 283089 ok (ovw) FUT 1-0 | 1 maps
+[2026-07-28 18:49:43]     [26/37] 283090 skipped (non-VCT: ['SZ'])
+[2026-07-28 18:49:44]     [27/37] 283091 skipped (non-VCT: ['FL'])
+[2026-07-28 18:49:45]     [28/37] 283092 skipped (non-VCT: ['FL'])
+[2026-07-28 18:49:47]     [29/37] 283093 ok (ovw) FNC 1-0 | 1 maps
+[2026-07-28 18:49:48]     [30/37] 283094 skipped (non-VCT: ['SZ'])
+[2026-07-28 18:49:49]     [31/37] 283095 ok (ovw) FUT 1-0 | 1 maps
+[2026-07-28 18:49:50]     [32/37] 283097 ok (ovw) C9 2-1 | 3 maps
+[2026-07-28 18:49:52]     [33/37] 283098 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:49:53]     [34/37] 283099 ok (ovw) C9 2-1 | 3 maps
+[2026-07-28 18:49:54]     [35/37] 283100 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:49:56]     [36/37] 284400 skipped (showmatch: Showmatch: Main Event)
+[2026-07-28 18:49:57]     [37/37] 283101 ok (ovw) FNC 3-2 | 5 maps
+[2026-07-28 18:49:57] EVENT 2023_rbhg done: kept=10 series, map_rows=200, series_rows=101, skipped_vct=25, showmatch=1, empty=1
+[2026-07-28 18:49:57]   -> /Users/benny_es1/PythonTest/data/maps/2023_rbhg.csv
+[2026-07-28 18:49:57]   -> /Users/benny_es1/PythonTest/data/series/2023_rbhg.csv
+[2026-07-28 18:49:57]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_rbhg.json
+[2026-07-28 18:49:57] EVENT 2023_ten_global start — 2023 TEN Global Invitational
+[2026-07-28 18:49:58]   2023_ten_global/Mixed: 9 completed matches listed
+[2026-07-28 18:50:00]     [1/9] 278589 ok (ovw) EDG 1-0 | 1 maps
+[2026-07-28 18:50:01]     [2/9] 278593 ok (ovw) EDG 1-0 | 1 maps
+[2026-07-28 18:50:02]     [3/9] 278590 ok (ovw) T1 1-0 | 1 maps
+[2026-07-28 18:50:03]     [4/9] 278594 ok (ovw) C9 1-0 | 1 maps
+[2026-07-28 18:50:05]     [5/9] 278595 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:50:06]     [6/9] 278596 ok (ovw) C9 1-0 | 1 maps
+[2026-07-28 18:50:07]     [7/9] 278614 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:50:08]     [8/9] 278615 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:50:10]     [9/9] 278616 ok (ovw) C9 2-1 | 3 maps
+[2026-07-28 18:50:10] EVENT 2023_ten_global done: kept=9 series, map_rows=130, series_rows=90, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:50:10]   -> /Users/benny_es1/PythonTest/data/maps/2023_ten_global.csv
+[2026-07-28 18:50:10]   -> /Users/benny_es1/PythonTest/data/series/2023_ten_global.csv
+[2026-07-28 18:50:10]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_ten_global.json
+[2026-07-28 18:50:10] EVENT 2023_convergence start — 2023 Convergence
+[2026-07-28 18:50:11]   2023_convergence/Mixed: 18 completed matches listed
+[2026-07-28 18:50:12]     [1/18] 288460 skipped (non-VCT: ['DWF', 'GRY'])
+[2026-07-28 18:50:14]     [2/18] 288461 skipped (non-VCT: ['MDL', 'RES'])
+[2026-07-28 18:50:15]     [3/18] 288463 skipped (non-VCT: ['GRY', 'TRS'])
+[2026-07-28 18:50:16]     [4/18] 288464 skipped (non-VCT: ['MDL', 'RGE'])
+[2026-07-28 18:50:17]     [5/18] 288466 skipped (non-VCT: ['DWF', 'MDL'])
+[2026-07-28 18:50:19]     [6/18] 288467 skipped (non-VCT: ['GRY', 'RES'])
+[2026-07-28 18:50:20]     [7/18] 288468 skipped (non-VCT: ['GRY', 'MDL'])
+[2026-07-28 18:50:21]     [8/18] 288469 skipped (non-VCT: ['RGE', 'TRS'])
+[2026-07-28 18:50:22]     [9/18] 288470 skipped (non-VCT: ['GRY', 'TRS'])
+[2026-07-28 18:50:24]     [10/18] 288471 skipped (non-VCT: ['RGE', 'TRS'])
+[2026-07-28 18:50:25]     [11/18] 289447 skipped (non-VCT: ['TRS'])
+[2026-07-28 18:50:27]     [12/18] 289448 ok (ovw) VIT 2-0 | 2 maps
+[2026-07-28 18:50:28]     [13/18] 289449 skipped (non-VCT: ['TRS'])
+[2026-07-28 18:50:29]     [14/18] 289450 ok (ovw) VIT 2-0 | 2 maps
+[2026-07-28 18:50:31]     [15/18] 289451 ok (ovw) FUT 2-1 | 3 maps
+[2026-07-28 18:50:32]     [16/18] 289452 ok (ovw) GE 2-1 | 3 maps
+[2026-07-28 18:50:33]     [17/18] 292430 skipped (showmatch: Showmatch: Main Event)
+[2026-07-28 18:50:35]     [18/18] 289453 ok (ovw) FUT 3-1 | 4 maps
+[2026-07-28 18:50:35] EVENT 2023_convergence done: kept=5 series, map_rows=140, series_rows=50, skipped_vct=12, showmatch=1, empty=0
+[2026-07-28 18:50:35]   -> /Users/benny_es1/PythonTest/data/maps/2023_convergence.csv
+[2026-07-28 18:50:35]   -> /Users/benny_es1/PythonTest/data/series/2023_convergence.csv
+[2026-07-28 18:50:35]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2023_convergence.json
+[2026-07-28 18:50:35] EVENT 2024_fgc_inv start — 2024 FGC Invitational
+[2026-07-28 18:50:36]   2024_fgc_inv/CN: 18 completed matches listed
+[2026-07-28 18:50:37]     [1/18] 414847 ok (ovw) WOL 2-0 | 2 maps
+[2026-07-28 18:50:39]     [2/18] 414848 ok (ovw) XLG 2-1 | 3 maps
+[2026-07-28 18:50:40]     [3/18] 414850 ok (ovw) JDG 2-0 | 2 maps
+[2026-07-28 18:50:41]     [4/18] 414852 ok (ovw) NOVA 2-0 | 2 maps
+[2026-07-28 18:50:42]     [5/18] 414849 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:50:44]     [6/18] 414851 ok (ovw) BLG 2-1 | 3 maps
+[2026-07-28 18:50:45]     [7/18] 414857 ok (ovw) TYL 2-1 | 3 maps
+[2026-07-28 18:50:46]     [8/18] 414858 ok (ovw) TEC 2-1 | 3 maps
+[2026-07-28 18:50:47]     [9/18] 414859 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:50:49]     [10/18] 414860 ok (ovw) XLG 2-0 | 2 maps
+[2026-07-28 18:50:50]     [11/18] 414853 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:50:51]     [12/18] 414854 ok (ovw) BLG 2-0 | 2 maps
+[2026-07-28 18:50:53]     [13/18] 414862 ok (ovw) XLG 2-1 | 3 maps
+[2026-07-28 18:50:54]     [14/18] 414861 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:50:55]     [15/18] 414855 ok (ovw) BLG 2-1 | 3 maps
+[2026-07-28 18:50:56]     [16/18] 414864 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:50:58]     [17/18] 414865 ok (ovw) WOL 3-0 | 3 maps
+[2026-07-28 18:50:59]     [18/18] 414856 ok (ovw) BLG 3-1 | 4 maps
+[2026-07-28 18:50:59] EVENT 2024_fgc_inv done: kept=18 series, map_rows=480, series_rows=180, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:50:59]   -> /Users/benny_es1/PythonTest/data/maps/2024_fgc_inv.csv
+[2026-07-28 18:50:59]   -> /Users/benny_es1/PythonTest/data/series/2024_fgc_inv.csv
+[2026-07-28 18:50:59]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2024_fgc_inv.json
+[2026-07-28 18:50:59] EVENT 2024_ten_asia start — 2024 TEN Valorant Asia Invitational
+[2026-07-28 18:51:00]   2024_ten_asia/Mixed: 9 completed matches listed
+[2026-07-28 18:51:02]     [1/9] 415852 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:51:03]     [2/9] 415853 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:51:04]     [3/9] 415854 ok (ovw) TLN 1-0 | 1 maps
+[2026-07-28 18:51:05]     [4/9] 415855 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:51:07]     [5/9] 415856 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:51:08]     [6/9] 415857 ok (ovw) TLN 1-0 | 1 maps
+[2026-07-28 18:51:09]     [7/9] 415858 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:51:10]     [8/9] 415859 ok (ovw) TLN 2-0 | 2 maps
+[2026-07-28 18:51:12]     [9/9] 415860 ok (ovw) GEN 2-1 | 3 maps
+[2026-07-28 18:51:12] EVENT 2024_ten_asia done: kept=9 series, map_rows=120, series_rows=90, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:51:12]   -> /Users/benny_es1/PythonTest/data/maps/2024_ten_asia.csv
+[2026-07-28 18:51:12]   -> /Users/benny_es1/PythonTest/data/series/2024_ten_asia.csv
+[2026-07-28 18:51:12]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2024_ten_asia.json
+[2026-07-28 18:51:12] EVENT 2024_rbhg start — 2024 Red Bull Home Ground #5
+[2026-07-28 18:51:13]   2024_rbhg/Mixed: 39 completed matches listed
+[2026-07-28 18:51:14]     [1/39] 408413 skipped (non-VCT: ['MxS'])
+[2026-07-28 18:51:16]     [2/39] 408414 skipped (non-VCT: ['YFP'])
+[2026-07-28 18:51:17]     [3/39] 408415 ok (ovw) C9 2-0 | 2 maps
+[2026-07-28 18:51:18]     [4/39] 414230 ok (ovw) RRQ 1-0 | 1 maps
+[2026-07-28 18:51:20]     [5/39] 414234 skipped (non-VCT: ['CGZ'])
+[2026-07-28 18:51:21]     [6/39] 414231 ok (ovw) TLN 1-0 | 1 maps
+[2026-07-28 18:51:22]     [7/39] 414235 ok (ovw) ZETA 1-0 | 1 maps
+[2026-07-28 18:51:23]     [8/39] 414232 ok (ovw) DFM 1-0 | 1 maps
+[2026-07-28 18:51:25]     [9/39] 414236 skipped (non-VCT: ['CGZ'])
+[2026-07-28 18:51:26]     [10/39] 414238 ok (ovw) T1 2-0 | 2 maps
+[2026-07-28 18:51:27]     [11/39] 414239 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:51:29]     [12/39] 414240 skipped (showmatch: APAC Play-ins: Showmatch)
+[2026-07-28 18:51:30]     [13/39] 414241 ok (ovw) T1 3-1 | 4 maps
+[2026-07-28 18:51:31]     [14/39] 421593 skipped (non-VCT: ['SIKO'])
+[2026-07-28 18:51:32]     [15/39] 421594 skipped (non-VCT: ['G2G'])
+[2026-07-28 18:51:34]     [16/39] 421595 skipped (non-VCT: ['NXT', 'PXU'])
+[2026-07-28 18:51:35]     [17/39] 421596 skipped (non-VCT: ['ZEN'])
+[2026-07-28 18:51:36]     [18/39] 421600 skipped (non-VCT: ['G2G', 'SIKO'])
+[2026-07-28 18:51:37]     [19/39] 421601 skipped (non-VCT: ['NXT', 'ZEN'])
+[2026-07-28 18:51:39]     [20/39] 421597 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:51:40]     [21/39] 421598 skipped (non-VCT: ['PXU'])
+[2026-07-28 18:51:41]     [22/39] 421602 skipped (non-VCT: ['PXU', 'SIKO'])
+[2026-07-28 18:51:42]     [23/39] 421603 skipped (non-VCT: ['ZEN'])
+[2026-07-28 18:51:43]     [24/39] 421599 ok (ovw) FUT 1-0 | 1 maps
+[2026-07-28 18:51:45]     [25/39] 421604 skipped (non-VCT: ['PXU'])
+[2026-07-28 18:51:46]     [26/39] 421605 skipped (non-VCT: ['PXU'])
+[2026-07-28 18:51:47]     [27/39] 423620 skipped (non-VCT: ['FKS'])
+[2026-07-28 18:51:48]     [28/39] 423621 ok (ovw) C9 1-0 | 1 maps
+[2026-07-28 18:51:50]     [29/39] 423622 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:51:51]     [30/39] 423623 ok (ovw) T1 1-0 | 1 maps
+[2026-07-28 18:51:52]     [31/39] 423972 ok (ovw) C9 1-0 | 1 maps
+[2026-07-28 18:51:53]     [32/39] 423973 ok (ovw) T1 1-0 | 1 maps
+[2026-07-28 18:51:55]     [33/39] 423975 ok (ovw) FUT 1-0 | 1 maps
+[2026-07-28 18:51:56]     [34/39] 423974 skipped (non-VCT: ['FKS'])
+[2026-07-28 18:51:57]     [35/39] 424021 EMPTY (no stat rows; forfeit/showpage?)
+[2026-07-28 18:51:58]     [36/39] 424022 ok (ovw) G2 2-0 | 2 maps
+[2026-07-28 18:52:00]     [37/39] 424007 ok (ovw) C9 2-0 | 2 maps
+[2026-07-28 18:52:01]     [38/39] 424006 ok (ovw) T1 2-1 | 3 maps
+[2026-07-28 18:52:02]     [39/39] 424008 ok (ovw) T1 3-1 | 4 maps
+[2026-07-28 18:52:02] EVENT 2024_rbhg done: kept=20 series, map_rows=340, series_rows=200, skipped_vct=17, showmatch=1, empty=1
+[2026-07-28 18:52:02]   -> /Users/benny_es1/PythonTest/data/maps/2024_rbhg.csv
+[2026-07-28 18:52:02]   -> /Users/benny_es1/PythonTest/data/series/2024_rbhg.csv
+[2026-07-28 18:52:02]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2024_rbhg.json
+[2026-07-28 18:52:02] EVENT 2024_radiant_asia start — 2024 Valorant Radiant Asia Invitational
+[2026-07-28 18:52:03]   2024_radiant_asia/Mixed: 17 completed matches listed
+[2026-07-28 18:52:05]     [1/17] 418804 ok (ovw) RRQ 2-0 | 2 maps
+[2026-07-28 18:52:06]     [2/17] 418805 ok (ovw) GEN 2-1 | 3 maps
+[2026-07-28 18:52:08]     [3/17] 418806 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:52:09]     [4/17] 418807 ok (ovw) DFM 2-1 | 3 maps
+[2026-07-28 18:52:10]     [5/17] 418808 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:52:12]     [6/17] 418809 ok (ovw) DFM 2-1 | 3 maps
+[2026-07-28 18:52:13]     [7/17] 423545 skipped (showmatch: Showmatch: Main Event)
+[2026-07-28 18:52:14]     [8/17] 418810 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:52:16]     [9/17] 418811 ok (ovw) PRX 2-1 | 3 maps
+[2026-07-28 18:52:17]     [10/17] 418813 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:52:18]     [11/17] 418812 ok (ovw) PRX 2-1 | 3 maps
+[2026-07-28 18:52:20]     [12/17] 418815 ok (ovw) PRX 2-1 | 3 maps
+[2026-07-28 18:52:21]     [13/17] 418814 ok (ovw) DFM 2-1 | 3 maps
+[2026-07-28 18:52:22]     [14/17] 418816 ok (ovw) DFM 2-0 | 2 maps
+[2026-07-28 18:52:24]     [15/17] 418818 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:52:25]     [16/17] 418819 ok (ovw) PRX 3-0 | 3 maps
+[2026-07-28 18:52:26]     [17/17] 418817 ok (ovw) PRX 3-1 | 4 maps
+[2026-07-28 18:52:26] EVENT 2024_radiant_asia done: kept=16 series, map_rows=440, series_rows=160, skipped_vct=0, showmatch=1, empty=0
+[2026-07-28 18:52:26]   -> /Users/benny_es1/PythonTest/data/maps/2024_radiant_asia.csv
+[2026-07-28 18:52:26]   -> /Users/benny_es1/PythonTest/data/series/2024_radiant_asia.csv
+[2026-07-28 18:52:26]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2024_radiant_asia.json
+[2026-07-28 18:52:26] EVENT 2024_shanghai_masters start — 2024 Shanghai Esports Masters
+[2026-07-28 18:52:28]   2024_shanghai_masters/Mixed: 3 completed matches listed
+[2026-07-28 18:52:29]     [1/3] 425163 ok (ovw) XLG 2-0 | 2 maps
+[2026-07-28 18:52:30]     [2/3] 425164 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:52:32]     [3/3] 425165 ok (ovw) WOL 3-0 | 3 maps
+[2026-07-28 18:52:32] EVENT 2024_shanghai_masters done: kept=3 series, map_rows=80, series_rows=30, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:52:32]   -> /Users/benny_es1/PythonTest/data/maps/2024_shanghai_masters.csv
+[2026-07-28 18:52:32]   -> /Users/benny_es1/PythonTest/data/series/2024_shanghai_masters.csv
+[2026-07-28 18:52:32]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2024_shanghai_masters.json
+[2026-07-28 18:52:32] EVENT 2025_china_evo_1 start — 2025 China Evolution Series Act 1
+[2026-07-28 18:52:33]   2025_china_evo_1/CN: 12 completed matches listed
+[2026-07-28 18:52:34]     [1/12] 440530 ok (ovw) TYL 2-0 | 2 maps
+[2026-07-28 18:52:35]     [2/12] 440531 ok (ovw) NOVA 2-1 | 3 maps
+[2026-07-28 18:52:37]     [3/12] 440532 ok (ovw) WOL 2-0 | 2 maps
+[2026-07-28 18:52:38]     [4/12] 440533 ok (ovw) JDG 2-0 | 2 maps
+[2026-07-28 18:52:39]     [5/12] 440534 ok (ovw) BLG 2-0 | 2 maps
+[2026-07-28 18:52:40]     [6/12] 440535 ok (ovw) NOVA 2-0 | 2 maps
+[2026-07-28 18:52:42]     [7/12] 440536 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:52:43]     [8/12] 440537 ok (ovw) JDG 2-0 | 2 maps
+[2026-07-28 18:52:44]     [9/12] 440538 ok (ovw) NOVA 2-0 | 2 maps
+[2026-07-28 18:52:46]     [10/12] 440539 ok (ovw) WOL 2-0 | 2 maps
+[2026-07-28 18:52:47]     [11/12] 440541 ok (ovw) BLG 3-0 | 3 maps
+[2026-07-28 18:52:48]     [12/12] 440540 ok (ovw) NOVA 3-0 | 3 maps
+[2026-07-28 18:52:48] EVENT 2025_china_evo_1 done: kept=12 series, map_rows=280, series_rows=120, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:52:48]   -> /Users/benny_es1/PythonTest/data/maps/2025_china_evo_1.csv
+[2026-07-28 18:52:48]   -> /Users/benny_es1/PythonTest/data/series/2025_china_evo_1.csv
+[2026-07-28 18:52:48]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_china_evo_1.json
+[2026-07-28 18:52:48] EVENT 2025_acl start — 2025 Asian Champions League
+[2026-07-28 18:52:49]   2025_acl/Mixed: 7 completed matches listed
+[2026-07-28 18:52:51]     [1/7] 481653 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:52:52]     [2/7] 481654 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:52:53]     [3/7] 481651 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:52:55]     [4/7] 481655 ok (ovw) BLG 2-0 | 2 maps
+[2026-07-28 18:52:56]     [5/7] 481656 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:52:57]     [6/7] 481657 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:52:59]     [7/7] 481652 ok (ovw) KRX 3-1 | 4 maps
+[2026-07-28 18:52:59] EVENT 2025_acl done: kept=7 series, map_rows=180, series_rows=70, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:52:59]   -> /Users/benny_es1/PythonTest/data/maps/2025_acl.csv
+[2026-07-28 18:52:59]   -> /Users/benny_es1/PythonTest/data/series/2025_acl.csv
+[2026-07-28 18:52:59]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_acl.json
+[2026-07-28 18:52:59] EVENT 2025_china_evo_3 start — 2025 China Evolution Series Act 3
+[2026-07-28 18:53:00]   2025_china_evo_3/CN: 12 completed matches listed
+[2026-07-28 18:53:01]     [1/12] 538566 ok (ovw) NOVA 2-0 | 2 maps
+[2026-07-28 18:53:02]     [2/12] 538565 ok (ovw) TEC 2-1 | 3 maps
+[2026-07-28 18:53:04]     [3/12] 538567 ok (ovw) JDG 2-0 | 2 maps
+[2026-07-28 18:53:05]     [4/12] 538568 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:53:06]     [5/12] 538569 ok (ovw) TEC 2-1 | 3 maps
+[2026-07-28 18:53:07]     [6/12] 538570 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:53:09]     [7/12] 538571 ok (ovw) JDG 2-1 | 3 maps
+[2026-07-28 18:53:10]     [8/12] 538572 ok (ovw) WOL 2-1 | 3 maps
+[2026-07-28 18:53:11]     [9/12] 538573 ok (ovw) TEC 2-1 | 3 maps
+[2026-07-28 18:53:13]     [10/12] 538574 ok (ovw) JDG 2-1 | 3 maps
+[2026-07-28 18:53:14]     [11/12] 538576 ok (ovw) WOL 3-0 | 3 maps
+[2026-07-28 18:53:15]     [12/12] 538575 ok (ovw) JDG 3-0 | 3 maps
+[2026-07-28 18:53:15] EVENT 2025_china_evo_3 done: kept=12 series, map_rows=340, series_rows=120, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:53:15]   -> /Users/benny_es1/PythonTest/data/maps/2025_china_evo_3.csv
+[2026-07-28 18:53:15]   -> /Users/benny_es1/PythonTest/data/series/2025_china_evo_3.csv
+[2026-07-28 18:53:15]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_china_evo_3.json
+[2026-07-28 18:53:15] EVENT 2025_ten_global start — 2025 TEN Global Invitational
+[2026-07-28 18:53:16]   2025_ten_global/Mixed: 9 completed matches listed
+[2026-07-28 18:53:18]     [1/9] 582193 ok (ovw) NS 1-0 | 1 maps
+[2026-07-28 18:53:19]     [2/9] 582194 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:53:20]     [3/9] 582195 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:53:21]     [4/9] 582196 ok (ovw) WOL 1-0 | 1 maps
+[2026-07-28 18:53:23]     [5/9] 582197 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:53:24]     [6/9] 582198 ok (ovw) NS 1-0 | 1 maps
+[2026-07-28 18:53:25]     [7/9] 582199 ok (ovw) TH 1-0 | 1 maps
+[2026-07-28 18:53:26]     [8/9] 582200 ok (ovw) NS 2-0 | 2 maps
+[2026-07-28 18:53:28]     [9/9] 582201 ok (ovw) NS 2-1 | 3 maps
+[2026-07-28 18:53:28] EVENT 2025_ten_global done: kept=9 series, map_rows=120, series_rows=90, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:53:28]   -> /Users/benny_es1/PythonTest/data/maps/2025_ten_global.csv
+[2026-07-28 18:53:28]   -> /Users/benny_es1/PythonTest/data/series/2025_ten_global.csv
+[2026-07-28 18:53:28]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_ten_global.json
+[2026-07-28 18:53:28] EVENT 2025_china_evo_epilogue start — 2025 China Evolution Series Epilogue
+[2026-07-28 18:53:29]   2025_china_evo_epilogue/CN: 8 completed matches listed
+[2026-07-28 18:53:30]     [1/8] 582531 ok (ovw) NOVA 2-1 | 3 maps
+[2026-07-28 18:53:32]     [2/8] 582532 skipped (non-VCT: ['AQ'])
+[2026-07-28 18:53:33]     [3/8] 582533 ok (ovw) TE 2-0 | 2 maps
+[2026-07-28 18:53:34]     [4/8] 582534 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:53:36]     [5/8] 582535 ok (ovw) NOVA 2-1 | 3 maps
+[2026-07-28 18:53:37]     [6/8] 582536 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:53:38]     [7/8] 582538 ok (ovw) JDG 3-2 | 5 maps
+[2026-07-28 18:53:40]     [8/8] 582537 ok (ovw) FPX 3-1 | 4 maps
+[2026-07-28 18:53:40] EVENT 2025_china_evo_epilogue done: kept=7 series, map_rows=230, series_rows=70, skipped_vct=1, showmatch=0, empty=0
+[2026-07-28 18:53:40]   -> /Users/benny_es1/PythonTest/data/maps/2025_china_evo_epilogue.csv
+[2026-07-28 18:53:40]   -> /Users/benny_es1/PythonTest/data/series/2025_china_evo_epilogue.csv
+[2026-07-28 18:53:40]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_china_evo_epilogue.json
+[2026-07-28 18:53:40] EVENT 2025_rbhg start — 2025 Red Bull Home Ground
+[2026-07-28 18:53:41]   2025_rbhg/Mixed: 27 completed matches listed
+[2026-07-28 18:53:42]     [1/27] 585202 skipped (non-VCT: ['BNK', 'Klan'])
+[2026-07-28 18:53:43]     [2/27] 585203 skipped (non-VCT: ['RAAD'])
+[2026-07-28 18:53:45]     [3/27] 585204 skipped (non-VCT: ['CUBE', 'FTC'])
+[2026-07-28 18:53:46]     [4/27] 585205 skipped (non-VCT: ['BXLZ'])
+[2026-07-28 18:53:47]     [5/27] 585206 skipped (non-VCT: ['BLX', 'BNK'])
+[2026-07-28 18:53:48]     [6/27] 585209 skipped (non-VCT: ['BXLZ', 'SGE'])
+[2026-07-28 18:53:50]     [7/27] 585207 skipped (non-VCT: ['FL'])
+[2026-07-28 18:53:51]     [8/27] 585211 skipped (non-VCT: ['FL', 'RAAD'])
+[2026-07-28 18:53:52]     [9/27] 585210 skipped (non-VCT: ['BLX', 'Klan'])
+[2026-07-28 18:53:53]     [10/27] 585212 skipped (non-VCT: ['SGE'])
+[2026-07-28 18:53:55]     [11/27] 585213 skipped (non-VCT: ['Klan'])
+[2026-07-28 18:53:56]     [12/27] 585214 skipped (non-VCT: ['CUBE', 'SGE'])
+[2026-07-28 18:53:57]     [13/27] 585446 skipped (non-VCT: ['CUBE'])
+[2026-07-28 18:53:58]     [14/27] 585447 ok (ovw) SEN 1-0 | 1 maps
+[2026-07-28 18:53:59]     [15/27] 585448 ok (ovw) FNC 1-0 | 1 maps
+[2026-07-28 18:54:01]     [16/27] 585449 ok (ovw) ZETA 1-0 | 1 maps
+[2026-07-28 18:54:02]     [17/27] 585450 ok (ovw) NRG 1-0 | 1 maps
+[2026-07-28 18:54:03]     [18/27] 585451 ok (ovw) ZETA 1-0 | 1 maps
+[2026-07-28 18:54:04]     [19/27] 585454 skipped (non-VCT: ['CUBE'])
+[2026-07-28 18:54:06]     [20/27] 585455 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:54:07]     [21/27] 585456 ok (ovw) FNC 1-0 | 1 maps
+[2026-07-28 18:54:08]     [22/27] 585457 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:54:09]     [23/27] 585458 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:54:11]     [24/27] 585452 ok (ovw) NRG 2-0 | 2 maps
+[2026-07-28 18:54:12]     [25/27] 585459 ok (ovw) G2 2-0 | 2 maps
+[2026-07-28 18:54:13]     [26/27] 586655 skipped (showmatch: Showmatch: Main Event)
+[2026-07-28 18:54:14]     [27/27] 585453 ok (ovw) G2 3-0 | 3 maps
+[2026-07-28 18:54:14] EVENT 2025_rbhg done: kept=12 series, map_rows=160, series_rows=120, skipped_vct=14, showmatch=1, empty=0
+[2026-07-28 18:54:14]   -> /Users/benny_es1/PythonTest/data/maps/2025_rbhg.csv
+[2026-07-28 18:54:14]   -> /Users/benny_es1/PythonTest/data/series/2025_rbhg.csv
+[2026-07-28 18:54:14]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_rbhg.json
+[2026-07-28 18:54:14] EVENT 2025_super_champions_cup start — 2025 China Esports Festival Super Champions Cup
+[2026-07-28 18:54:16]   2025_super_champions_cup/Mixed: 10 completed matches listed
+[2026-07-28 18:54:17]     [1/10] 590024 ok (ovw) EDG 1-0 | 1 maps
+[2026-07-28 18:54:18]     [2/10] 590025 ok (ovw) LEV 1-0 | 1 maps
+[2026-07-28 18:54:20]     [3/10] 590026 ok (ovw) LEV 1-0 | 1 maps
+[2026-07-28 18:54:21]     [4/10] 590027 ok (ovw) BLG 1-0 | 1 maps
+[2026-07-28 18:54:22]     [5/10] 590028 ok (ovw) KRX 1-0 | 1 maps
+[2026-07-28 18:54:23]     [6/10] 590029 ok (ovw) WOL 1-0 | 1 maps
+[2026-07-28 18:54:25]     [7/10] 590030 ok (ovw) LEV 2-0 | 2 maps
+[2026-07-28 18:54:26]     [8/10] 590031 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:54:27]     [9/10] 590033 ok (ovw) BLG 2-1 | 3 maps
+[2026-07-28 18:54:28]     [10/10] 590032 ok (ovw) LEV 3-1 | 4 maps
+[2026-07-28 18:54:28] EVENT 2025_super_champions_cup done: kept=10 series, map_rows=170, series_rows=100, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:54:28]   -> /Users/benny_es1/PythonTest/data/maps/2025_super_champions_cup.csv
+[2026-07-28 18:54:28]   -> /Users/benny_es1/PythonTest/data/series/2025_super_champions_cup.csv
+[2026-07-28 18:54:28]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_super_champions_cup.json
+[2026-07-28 18:54:28] EVENT 2025_shanghai_masters start — 2025 Shanghai Esports Masters
+[2026-07-28 18:54:30]   2025_shanghai_masters/Mixed: 3 completed matches listed
+[2026-07-28 18:54:31]     [1/3] 589960 ok (ovw) TE 2-1 | 3 maps
+[2026-07-28 18:54:32]     [2/3] 589961 ok (ovw) EDG 2-0 | 2 maps
+[2026-07-28 18:54:34]     [3/3] 589962 ok (ovw) EDG 3-0 | 3 maps
+[2026-07-28 18:54:34] EVENT 2025_shanghai_masters done: kept=3 series, map_rows=80, series_rows=30, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:54:34]   -> /Users/benny_es1/PythonTest/data/maps/2025_shanghai_masters.csv
+[2026-07-28 18:54:34]   -> /Users/benny_es1/PythonTest/data/series/2025_shanghai_masters.csv
+[2026-07-28 18:54:34]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_shanghai_masters.json
+[2026-07-28 18:54:34] EVENT 2025_radiant_intl start — 2025 Valorant Radiant International Invitational
+[2026-07-28 18:54:35]   2025_radiant_intl/Mixed: 15 completed matches listed
+[2026-07-28 18:54:36]     [1/15] 590624 ok (ovw) PRX 1-0 | 1 maps
+[2026-07-28 18:54:37]     [2/15] 590625 ok (ovw) FPX 1-0 | 1 maps
+[2026-07-28 18:54:39]     [3/15] 590626 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:54:40]     [4/15] 590627 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:54:41]     [5/15] 590628 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:54:42]     [6/15] 590629 ok (ovw) G2 1-0 | 1 maps
+[2026-07-28 18:54:44]     [7/15] 590630 ok (ovw) FPX 1-0 | 1 maps
+[2026-07-28 18:54:45]     [8/15] 590631 ok (ovw) FPX 1-0 | 1 maps
+[2026-07-28 18:54:46]     [9/15] 590632 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:54:47]     [10/15] 590633 ok (ovw) GEN 1-0 | 1 maps
+[2026-07-28 18:54:49]     [11/15] 590634 ok (ovw) PRX 1-0 | 1 maps
+[2026-07-28 18:54:50]     [12/15] 590635 ok (ovw) NOVA 1-0 | 1 maps
+[2026-07-28 18:54:51]     [13/15] 590636 ok (ovw) PRX 2-1 | 3 maps
+[2026-07-28 18:54:52]     [14/15] 590637 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:54:54]     [15/15] 590638 ok (ovw) PRX 3-1 | 4 maps
+[2026-07-28 18:54:54] EVENT 2025_radiant_intl done: kept=15 series, map_rows=210, series_rows=150, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:54:54]   -> /Users/benny_es1/PythonTest/data/maps/2025_radiant_intl.csv
+[2026-07-28 18:54:54]   -> /Users/benny_es1/PythonTest/data/series/2025_radiant_intl.csv
+[2026-07-28 18:54:54]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2025_radiant_intl.json
+[2026-07-28 18:54:54] EVENT 2026_china_evo_1 start — 2026 China Evolution Series Act 1
+[2026-07-28 18:54:55]   2026_china_evo_1/CN: 12 completed matches listed
+[2026-07-28 18:54:56]     [1/12] 640013 skipped (non-VCT: ['AQ'])
+[2026-07-28 18:54:58]     [2/12] 640015 skipped (non-VCT: ['WSIG'])
+[2026-07-28 18:54:59]     [3/12] 640017 skipped (non-VCT: ['RA'])
+[2026-07-28 18:55:00]     [4/12] 640019 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:55:01]     [5/12] 640020 skipped (non-VCT: ['AQ'])
+[2026-07-28 18:55:03]     [6/12] 640021 ok (ovw) TYL 2-1 | 3 maps
+[2026-07-28 18:55:04]     [7/12] 640022 ok (ovw) JDG 2-0 | 2 maps
+[2026-07-28 18:55:05]     [8/12] 640023 ok (ovw) BLG 2-0 | 2 maps
+[2026-07-28 18:55:06]     [9/12] 640024 skipped (non-VCT: ['AQ'])
+[2026-07-28 18:55:08]     [10/12] 640025 ok (ovw) BLG 2-0 | 2 maps
+[2026-07-28 18:55:09]     [11/12] 640027 skipped (non-VCT: ['AQ'])
+[2026-07-28 18:55:10]     [12/12] 640026 ok (ovw) BLG 3-1 | 4 maps
+[2026-07-28 18:55:10] EVENT 2026_china_evo_1 done: kept=6 series, map_rows=150, series_rows=60, skipped_vct=6, showmatch=0, empty=0
+[2026-07-28 18:55:10]   -> /Users/benny_es1/PythonTest/data/maps/2026_china_evo_1.csv
+[2026-07-28 18:55:10]   -> /Users/benny_es1/PythonTest/data/series/2026_china_evo_1.csv
+[2026-07-28 18:55:10]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2026_china_evo_1.json
+[2026-07-28 18:55:10] scrape_backfill plan complete
+[2026-07-28 T4] Main backfill complete: 25/25 events, 335 kept series (2023-2026). Per-event counts in EVENT-done lines above. Empty/forfeit pages: 271427 (IG-NiP CN open qual), + 3 others logged; all excluded loudly, all non-franchised or would-be vct_only-filtered. Launching prefranchise scrape (6 intl LANs 2021-22, vct_only OFF, dest=testing_lab/v8/data/prefranchise/).
+[2026-07-28 18:55:27] EVENT 2021_masters2_reykjavik start — VCT 2021 Stage 2 Masters Reykjavik
+[2026-07-28 18:55:28]   2021_masters2_reykjavik/International: 18 completed matches listed
+[2026-07-28 18:55:30]     [1/18] 19071 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:55:32]     [2/18] 19072 ok (ovw) V1 2-0 | 2 maps
+[2026-07-28 18:55:33]     [3/18] 19075 ok (ovw) NU 2-1 | 3 maps
+[2026-07-28 18:55:35]     [4/18] 19074 ok (ovw) VKS 2-0 | 2 maps
+[2026-07-28 18:55:36]     [5/18] 19076 ok (ovw) V1 2-1 | 3 maps
+[2026-07-28 18:55:38]     [6/18] 19073 ok (ovw) SEN 2-0 | 2 maps
+[2026-07-28 18:55:39]     [7/18] 19081 ok (ovw) X10 2-0 | 2 maps
+[2026-07-28 18:55:40]     [8/18] 19082 ok (ovw) KRÜ 2-0 | 2 maps
+[2026-07-28 18:55:42]     [9/18] 19078 ok (ovw) SEN 2-0 | 2 maps
+[2026-07-28 18:55:43]     [10/18] 19079 ok (ovw) NU 2-1 | 3 maps
+[2026-07-28 18:55:45]     [11/18] 19083 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:55:46]     [12/18] 19084 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:55:48]     [13/18] 19085 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:55:49]     [14/18] 19086 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:55:50]     [15/18] 19080 ok (ovw) SEN 2-0 | 2 maps
+[2026-07-28 18:55:52]     [16/18] 19087 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:55:53]     [17/18] 19088 ok (ovw) FNC 2-1 | 3 maps
+[2026-07-28 18:55:55]     [18/18] 19089 ok (ovw) SEN 3-0 | 3 maps
+[2026-07-28 18:55:55] EVENT 2021_masters2_reykjavik done: kept=18 series, map_rows=410, series_rows=180, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:55:55]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/maps_2021_masters2_reykjavik.csv
+[2026-07-28 18:55:55]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/series_2021_masters2_reykjavik.csv
+[2026-07-28 18:55:55]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2021_masters2_reykjavik.json
+[2026-07-28 18:55:55] EVENT 2021_masters3_berlin start — VCT 2021 Stage 3 Masters Berlin
+[2026-07-28 18:55:56]   2021_masters3_berlin/International: 28 completed matches listed
+[2026-07-28 18:55:58]     [1/28] 34948 ok (ovw) ACE 2-0 | 2 maps
+[2026-07-28 18:55:59]     [2/28] 35938 ok (ovw) G2 2-1 | 3 maps
+[2026-07-28 18:56:01]     [3/28] 34952 ok (ovw) 100T 2-0 | 2 maps
+[2026-07-28 18:56:02]     [4/28] 34947 ok (ovw) VS 2-0 | 2 maps
+[2026-07-28 18:56:03]     [5/28] 34951 ok (ovw) GMB 2-0 | 2 maps
+[2026-07-28 18:56:05]     [6/28] 34949 ok (ovw) ENVY 2-0 | 2 maps
+[2026-07-28 18:56:06]     [7/28] 34950 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:56:08]     [8/28] 35939 ok (ovw) SEN 2-1 | 3 maps
+[2026-07-28 18:56:10]     [9/28] 34964 ok (ovw) 100T 2-1 | 3 maps
+[2026-07-28 18:56:11]     [10/28] 34961 ok (ovw) ENVY 2-0 | 2 maps
+[2026-07-28 18:56:13]     [11/28] 34958 ok (ovw) VS 2-0 | 2 maps
+[2026-07-28 18:56:14]     [12/28] 35940 ok (ovw) SEN 2-0 | 2 maps
+[2026-07-28 18:56:15]     [13/28] 35941 ok (ovw) G2 2-0 | 2 maps
+[2026-07-28 18:56:17]     [14/28] 34962 ok (ovw) VKS 2-0 | 2 maps
+[2026-07-28 18:56:18]     [15/28] 34965 ok (ovw) CR 2-0 | 2 maps
+[2026-07-28 18:56:20]     [16/28] 34959 ok (ovw) SUP 2-1 | 3 maps
+[2026-07-28 18:56:21]     [17/28] 35942 ok (ovw) G2 2-0 | 2 maps
+[2026-07-28 18:56:23]     [18/28] 34963 ok (ovw) KRÜ 2-0 | 2 maps
+[2026-07-28 18:56:24]     [19/28] 34960 ok (ovw) ACE 2-1 | 3 maps
+[2026-07-28 18:56:25]     [20/28] 34966 ok (ovw) GMB 2-0 | 2 maps
+[2026-07-28 18:56:27]     [21/28] 35943 ok (ovw) SEN 2-1 | 3 maps
+[2026-07-28 18:56:28]     [22/28] 34975 ok (ovw) GMB 2-1 | 3 maps
+[2026-07-28 18:56:30]     [23/28] 34976 ok (ovw) G2 2-0 | 2 maps
+[2026-07-28 18:56:31]     [24/28] 34973 ok (ovw) 100T 2-1 | 3 maps
+[2026-07-28 18:56:33]     [25/28] 34974 ok (ovw) ENVY 2-0 | 2 maps
+[2026-07-28 18:56:34]     [26/28] 34977 ok (ovw) GMB 2-0 | 2 maps
+[2026-07-28 18:56:36]     [27/28] 34978 ok (ovw) ENVY 2-0 | 2 maps
+[2026-07-28 18:56:37]     [28/28] 34979 ok (ovw) GMB 3-0 | 3 maps
+[2026-07-28 18:56:37] EVENT 2021_masters3_berlin done: kept=28 series, map_rows=660, series_rows=284, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:56:37]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/maps_2021_masters3_berlin.csv
+[2026-07-28 18:56:37]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/series_2021_masters3_berlin.csv
+[2026-07-28 18:56:37]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2021_masters3_berlin.json
+[2026-07-28 18:56:37] EVENT 2021_champions start — Valorant Champions 2021
+[2026-07-28 18:56:39]   2021_champions/International: 27 completed matches listed
+[2026-07-28 18:56:40]     [1/27] 51282 ok (ovw) VS 2-0 | 2 maps
+[2026-07-28 18:56:42]     [2/27] 51278 ok (ovw) VKS 2-0 | 2 maps
+[2026-07-28 18:56:43]     [3/27] 51283 ok (ovw) FNC 2-1 | 3 maps
+[2026-07-28 18:56:45]     [4/27] 51277 ok (ovw) GMB 2-1 | 3 maps
+[2026-07-28 18:56:46]     [5/27] 51273 ok (ovw) SEN 2-1 | 3 maps
+[2026-07-28 18:56:48]     [6/27] 51272 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:56:49]     [7/27] 51284 ok (ovw) FNC 2-1 | 3 maps
+[2026-07-28 18:56:51]     [8/27] 51267 ok (ovw) ENVY 2-0 | 2 maps
+[2026-07-28 18:56:52]     [9/27] 51279 ok (ovw) GMB 2-1 | 3 maps
+[2026-07-28 18:56:54]     [10/27] 51274 ok (ovw) TL 2-1 | 3 maps
+[2026-07-28 18:56:55]     [11/27] 51266 ok (ovw) ACE 2-1 | 3 maps
+[2026-07-28 18:56:57]     [12/27] 51280 ok (ovw) TS 2-0 | 2 maps
+[2026-07-28 18:56:58]     [13/27] 51275 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:56:59]     [14/27] 51285 ok (ovw) C9 2-0 | 2 maps
+[2026-07-28 18:57:01]     [15/27] 51268 ok (ovw) ACE 2-0 | 2 maps
+[2026-07-28 18:57:02]     [16/27] 51269 ok (ovw) X10 2-0 | 2 maps
+[2026-07-28 18:57:04]     [17/27] 51276 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:57:05]     [18/27] 51286 ok (ovw) C9 2-1 | 3 maps
+[2026-07-28 18:57:07]     [19/27] 51281 ok (ovw) TS 2-0 | 2 maps
+[2026-07-28 18:57:08]     [20/27] 51270 ok (ovw) X10 2-1 | 3 maps
+[2026-07-28 18:57:10]     [21/27] 51290 ok (ovw) ACE 2-0 | 2 maps
+[2026-07-28 18:57:11]     [22/27] 51291 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:57:13]     [23/27] 51292 ok (ovw) GMB 2-1 | 3 maps
+[2026-07-28 18:57:14]     [24/27] 51293 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:57:16]     [25/27] 51294 ok (ovw) ACE 2-0 | 2 maps
+[2026-07-28 18:57:17]     [26/27] 51295 ok (ovw) GMB 2-1 | 3 maps
+[2026-07-28 18:57:19]     [27/27] 51296 ok (ovw) ACE 3-2 | 5 maps
+[2026-07-28 18:57:19] EVENT 2021_champions done: kept=27 series, map_rows=710, series_rows=273, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:57:19]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/maps_2021_champions.csv
+[2026-07-28 18:57:19]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/series_2021_champions.csv
+[2026-07-28 18:57:19]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2021_champions.json
+[2026-07-28 18:57:19] EVENT 2022_masters1_reykjavik start — VCT 2022 Stage 1 Masters Reykjavik
+[2026-07-28 18:57:20]   2022_masters1_reykjavik/International: 24 completed matches listed
+[2026-07-28 18:57:22]     [1/24] 84372 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:57:23]     [2/24] 84374 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:57:25]     [3/24] 84373 ok (ovw) XIA 2-0 | 2 maps
+[2026-07-28 18:57:27]     [4/24] 84371 ok (ovw) NIP 2-0 | 2 maps
+[2026-07-28 18:57:28]     [5/24] 84647 ok (ovw) TL 2-1 | 3 maps
+[2026-07-28 18:57:30]     [6/24] 84644 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:57:31]     [7/24] 84648 ok (ovw) OPTC 2-0 | 2 maps
+[2026-07-28 18:57:33]     [8/24] 84645 ok (ovw) ZETA 2-0 | 2 maps
+[2026-07-28 18:57:34]     [9/24] 84649 ok (ovw) OPTC 2-0 | 2 maps
+[2026-07-28 18:57:36]     [10/24] 84646 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:57:37]     [11/24] 85523 ok (ovw) G2 2-0 | 2 maps
+[2026-07-28 18:57:39]     [12/24] 85526 ok (ovw) LOUD 2-1 | 3 maps
+[2026-07-28 18:57:40]     [13/24] 85525 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:57:42]     [14/24] 85524 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:57:43]     [15/24] 85531 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:57:45]     [16/24] 85532 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:57:46]     [17/24] 85528 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:57:48]     [18/24] 85527 ok (ovw) LOUD 2-0 | 2 maps
+[2026-07-28 18:57:49]     [19/24] 85533 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:57:51]     [20/24] 85534 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:57:52]     [21/24] 85529 ok (ovw) LOUD 2-1 | 3 maps
+[2026-07-28 18:57:54]     [22/24] 85535 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:57:56]     [23/24] 85536 ok (ovw) OPTC 3-0 | 3 maps
+[2026-07-28 18:57:57]     [24/24] 85530 ok (ovw) OPTC 3-0 | 3 maps
+[2026-07-28 18:57:57] EVENT 2022_masters1_reykjavik done: kept=24 series, map_rows=600, series_rows=240, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:57:57]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/maps_2022_masters1_reykjavik.csv
+[2026-07-28 18:57:57]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/series_2022_masters1_reykjavik.csv
+[2026-07-28 18:57:57]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2022_masters1_reykjavik.json
+[2026-07-28 18:57:57] EVENT 2022_masters2_copenhagen start — VCT 2022 Stage 2 Masters Copenhagen
+[2026-07-28 18:57:58]   2022_masters2_copenhagen/International: 24 completed matches listed
+[2026-07-28 18:58:00]     [1/24] 112288 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:58:02]     [2/24] 112283 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:58:03]     [3/24] 112282 ok (ovw) GLD 2-0 | 2 maps
+[2026-07-28 18:58:05]     [4/24] 112287 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:58:06]     [5/24] 112284 ok (ovw) GLD 2-1 | 3 maps
+[2026-07-28 18:58:08]     [6/24] 112289 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:58:09]     [7/24] 112290 ok (ovw) NTH 2-1 | 3 maps
+[2026-07-28 18:58:11]     [8/24] 112285 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:58:12]     [9/24] 112291 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:58:14]     [10/24] 112286 ok (ovw) OPTC 2-0 | 2 maps
+[2026-07-28 18:58:15]     [11/24] 112320 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:58:17]     [12/24] 112321 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:58:18]     [13/24] 112322 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:58:20]     [14/24] 112323 ok (ovw) OPTC 2-0 | 2 maps
+[2026-07-28 18:58:21]     [15/24] 112328 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:58:23]     [16/24] 112329 ok (ovw) LEV 2-1 | 3 maps
+[2026-07-28 18:58:24]     [17/24] 112324 ok (ovw) PRX 2-0 | 2 maps
+[2026-07-28 18:58:26]     [18/24] 112325 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:58:27]     [19/24] 112331 ok (ovw) FNC 2-1 | 3 maps
+[2026-07-28 18:58:29]     [20/24] 112330 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:58:30]     [21/24] 112326 ok (ovw) PRX 2-1 | 3 maps
+[2026-07-28 18:58:32]     [22/24] 112332 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:58:33]     [23/24] 112334 ok (ovw) FPX 3-1 | 4 maps
+[2026-07-28 18:58:35]     [24/24] 112327 ok (ovw) FPX 3-2 | 5 maps
+[2026-07-28 18:58:35] EVENT 2022_masters2_copenhagen done: kept=24 series, map_rows=660, series_rows=240, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:58:35]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/maps_2022_masters2_copenhagen.csv
+[2026-07-28 18:58:35]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/series_2022_masters2_copenhagen.csv
+[2026-07-28 18:58:35]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2022_masters2_copenhagen.json
+[2026-07-28 18:58:35] EVENT 2022_champions start — Valorant Champions 2022
+[2026-07-28 18:58:36]   2022_champions/International: 34 completed matches listed
+[2026-07-28 18:58:38]     [1/34] 130617 ok (ovw) PRX 2-1 | 3 maps
+[2026-07-28 18:58:40]     [2/34] 130618 ok (ovw) LEV 2-0 | 2 maps
+[2026-07-28 18:58:41]     [3/34] 130623 ok (ovw) LOUD 2-0 | 2 maps
+[2026-07-28 18:58:43]     [4/34] 130622 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:58:44]     [5/34] 130619 ok (ovw) LEV 2-0 | 2 maps
+[2026-07-28 18:58:46]     [6/34] 130632 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:58:47]     [7/34] 130633 ok (ovw) 100T 2-1 | 3 maps
+[2026-07-28 18:58:49]     [8/34] 130624 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:58:50]     [9/34] 130628 ok (ovw) XSET 2-0 | 2 maps
+[2026-07-28 18:58:51]     [10/34] 130627 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:58:53]     [11/34] 130634 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:58:55]     [12/34] 130625 ok (ovw) ZETA 2-1 | 3 maps
+[2026-07-28 18:58:56]     [13/34] 130620 ok (ovw) TL 2-0 | 2 maps
+[2026-07-28 18:58:57]     [14/34] 130630 ok (ovw) KRÜ 2-1 | 3 maps
+[2026-07-28 18:58:59]     [15/34] 130635 ok (ovw) FNC 2-1 | 3 maps
+[2026-07-28 18:59:00]     [16/34] 130629 ok (ovw) XSET 2-1 | 3 maps
+[2026-07-28 18:59:02]     [17/34] 130621 ok (ovw) TL 2-1 | 3 maps
+[2026-07-28 18:59:03]     [18/34] 130626 ok (ovw) LOUD 2-0 | 2 maps
+[2026-07-28 18:59:05]     [19/34] 130631 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:59:06]     [20/34] 130636 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:59:08]     [21/34] 130679 ok (ovw) LOUD 2-0 | 2 maps
+[2026-07-28 18:59:09]     [22/34] 130678 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:59:11]     [23/34] 130680 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:59:12]     [24/34] 130681 ok (ovw) XSET 2-0 | 2 maps
+[2026-07-28 18:59:14]     [25/34] 130686 ok (ovw) FPX 2-0 | 2 maps
+[2026-07-28 18:59:15]     [26/34] 130687 ok (ovw) FNC 2-0 | 2 maps
+[2026-07-28 18:59:17]     [27/34] 130682 ok (ovw) LOUD 2-0 | 2 maps
+[2026-07-28 18:59:18]     [28/34] 130683 ok (ovw) OPTC 2-1 | 3 maps
+[2026-07-28 18:59:20]     [29/34] 130689 ok (ovw) KRX 2-1 | 3 maps
+[2026-07-28 18:59:21]     [30/34] 130688 ok (ovw) FPX 2-1 | 3 maps
+[2026-07-28 18:59:23]     [31/34] 130684 ok (ovw) LOUD 2-0 | 2 maps
+[2026-07-28 18:59:24]     [32/34] 130690 ok (ovw) KRX 2-0 | 2 maps
+[2026-07-28 18:59:26]     [33/34] 130691 ok (ovw) OPTC 3-2 | 5 maps
+[2026-07-28 18:59:28]     [34/34] 130685 ok (ovw) LOUD 3-1 | 4 maps
+[2026-07-28 18:59:28] EVENT 2022_champions done: kept=34 series, map_rows=860, series_rows=340, skipped_vct=0, showmatch=0, empty=0
+[2026-07-28 18:59:28]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/maps_2022_champions.csv
+[2026-07-28 18:59:28]   -> /Users/benny_es1/PythonTest/testing_lab/v8/data/prefranchise/series_2022_champions.csv
+[2026-07-28 18:59:28]   -> /Users/benny_es1/PythonTest/testing_lab/v8/stats/scrape_verify_2022_champions.json
+[2026-07-28 18:59:28] scrape_backfill plan complete
+[2026-07-28 T5] Prefranchise scrape complete: 6/6 intl LANs, 155 series (18+28+27+24+24+34), all ovw-parsed, zero empties. Now: data/<id>.csv event-stats step for the 25 new registry ids.
+[2026-07-28 T6] data/<id>.csv written for all 25 ids (ScrapeAllEvents semantics via vlr_client; series_id-filtered stats pages verified working for 2025_ewc_qual). pgrep -f RefreshLiveData.py -> empty. Running BuildMatchResults.py (incremental, ~335 new MatchIDs, independent re-fetch+parse for verification).
+[2026-07-28 T7] BuildMatchResults incremental: 335/335 new matches, 0 fetch errors; match_results.csv 1733 -> 2068 unique MatchIDs. Dates/times: +335 both (step-5 semantics from scrape-time ts; 0 missing). Prefranchise results CSV: 545 rows. corpus_blocks totals: 490 matches / 1134 maps (335 new 2023-2026, 155 prefranchise).
+[2026-07-28 T7] MECHANICAL VERIFICATION round 1: all 490 series + 1134 maps winner/score CONSISTENT between scrape-time parse and independent builder re-fetch (0 mismatches). 9 date-window failures were registry windows vs VLR reality: 2024_rbhg includes its Sep-Oct qualifier phase under the main event id (8 matches) -> start corrected to 2024-09-29; 2025_china_evo_2 has a May 12 match -> end corrected to 2025-05-12. Both corrected toward VLR dates (annotated in registry). Round 2: 490/490, 0 failures, exit 0.
+[2026-07-28 T7] Starting live re-fetch sample verification (seed 20260728, min(10,n)/event, 31 events).
+[2026-07-28 T8] SAMPLE VERIFICATION: 278/278 across all 31 backfilled events (seed 20260728 live re-fetch, winner+score vs recorded), 0 failures. MECHANICAL: 490/490 series, 1134/1134 maps, 0 failures (after 2 registry-window corrections toward VLR reality). corpus_diff.json patched with match counts + corrected EWC-2025 falsifier wording + prefranchise status. corpus_blocks.json final: 490 matches / 1134 maps across 8 blocks.
+[2026-07-28 T8] Totals: match_results.csv 1733 -> 2068 series (+335 for 2023-2026: 87/66/176/6 by year); holdout window (2025+) 1041 -> 1223 (+182, ~+17%). Prefranchise separate corpus: 155 series / 6 intl LANs; deferred 194 regional 2021-22 events (139 vct-2021 hub + 55 vct-2022 hub, non-international) = several thousand series, itemized as prefranchise_candidate rows in corpus_diff.
+[2026-07-28 T8] Constraint audit: BuildRatingTimeline / BuildMapRatings / RefreshLiveData never run (BuildMapRatings only imported for TEAM_REGIONS, same as production ScrapeMatchData does); VCTMM untouched; no existing event CSV rewritten (append-new only); all fetches sequential via vlr_client.fetch or the builders' own curl_cffi stack; pgrep gate observed before BuildMatchResults. Rating JSONs untouched by me (their git-modified state predates this session).
+[2026-07-28 T8] agent:corpus COMPLETE.

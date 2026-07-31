@@ -1,0 +1,88 @@
+{
+ "425163": {
+  "event_id": "2024_shanghai_masters",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/425163/edward-gaming-vs-xi-lai-gaming-shanghai-esports-masters-2024-sf",
+  "maps": {
+   "194105": [
+    "XLG",
+    "13-8"
+   ],
+   "194106": [
+    "XLG",
+    "15-13"
+   ]
+  },
+  "series": [
+   "XLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2024-12-06 03:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "XLG"
+  ]
+ },
+ "425164": {
+  "event_id": "2024_shanghai_masters",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/425164/paper-rex-vs-wolves-esports-shanghai-esports-masters-2024-sf",
+  "maps": {
+   "194108": [
+    "WOL",
+    "13-11"
+   ],
+   "194109": [
+    "PRX",
+    "13-8"
+   ],
+   "194110": [
+    "WOL",
+    "13-11"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2024-12-06 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "WOL"
+  ]
+ },
+ "425165": {
+  "event_id": "2024_shanghai_masters",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/425165/xi-lai-gaming-vs-wolves-esports-shanghai-esports-masters-2024-gf",
+  "maps": {
+   "194111": [
+    "WOL",
+    "13-7"
+   ],
+   "194112": [
+    "WOL",
+    "13-10"
+   ],
+   "194113": [
+    "WOL",
+    "13-11"
+   ]
+  },
+  "series": [
+   "WOL",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2024-12-07 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "WOL",
+   "XLG"
+  ]
+ }
+}

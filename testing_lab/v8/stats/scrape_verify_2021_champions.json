@@ -1,0 +1,772 @@
+{
+ "51282": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51282/vision-strikers-vs-full-sense-valorant-champions-opening-d",
+  "maps": {
+   "57948": [
+    "VS",
+    "13-5"
+   ],
+   "57949": [
+    "VS",
+    "13-5"
+   ]
+  },
+  "series": [
+   "VS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (D)",
+  "utc_ts": "2021-12-01 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FS",
+   "VS"
+  ]
+ },
+ "51278": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51278/team-vikings-vs-crazy-raccoon-valorant-champions-opening-c",
+  "maps": {
+   "57936": [
+    "VKS",
+    "13-9"
+   ],
+   "57937": [
+    "VKS",
+    "13-8"
+   ]
+  },
+  "series": [
+   "VKS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2021-12-01 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "VKS"
+  ]
+ },
+ "51283": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51283/fnatic-vs-cloud9-blue-valorant-champions-opening-d",
+  "maps": {
+   "57951": [
+    "FNC",
+    "13-11"
+   ],
+   "57952": [
+    "C9",
+    "13-11"
+   ],
+   "57953": [
+    "FNC",
+    "14-12"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (D)",
+  "utc_ts": "2021-12-01 14:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "FNC"
+  ]
+ },
+ "51277": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51277/gambit-esports-vs-team-secret-valorant-champions-opening-c",
+  "maps": {
+   "57933": [
+    "TS",
+    "13-6"
+   ],
+   "57934": [
+    "GMB",
+    "13-0"
+   ],
+   "57935": [
+    "GMB",
+    "13-6"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2021-12-02 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GMB",
+   "TS"
+  ]
+ },
+ "51273": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51273/sentinels-vs-furia-valorant-champions-opening-b",
+  "maps": {
+   "57921": [
+    "SEN",
+    "13-9"
+   ],
+   "57922": [
+    "FUR",
+    "13-10"
+   ],
+   "57923": [
+    "SEN",
+    "13-9"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2021-12-02 12:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "SEN"
+  ]
+ },
+ "51272": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51272/kr-esports-vs-team-liquid-valorant-champions-opening-b",
+  "maps": {
+   "57918": [
+    "TL",
+    "13-5"
+   ],
+   "57919": [
+    "TL",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2021-12-02 16:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "TL"
+  ]
+ },
+ "51284": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51284/vision-strikers-vs-fnatic-valorant-champions-winners-d",
+  "maps": {
+   "57954": [
+    "FNC",
+    "13-10"
+   ],
+   "57955": [
+    "VS",
+    "13-10"
+   ],
+   "57956": [
+    "FNC",
+    "13-6"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (D)",
+  "utc_ts": "2021-12-03 12:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "VS"
+  ]
+ },
+ "51267": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51267/envy-vs-x10-crit-valorant-champions-opening-a",
+  "maps": {
+   "57906": [
+    "ENVY",
+    "13-8"
+   ],
+   "57907": [
+    "ENVY",
+    "13-7"
+   ]
+  },
+  "series": [
+   "ENVY",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2021-12-03 16:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "ENVY",
+   "X10"
+  ]
+ },
+ "51279": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51279/gambit-esports-vs-team-vikings-valorant-champions-winners-c",
+  "maps": {
+   "57939": [
+    "GMB",
+    "13-6"
+   ],
+   "57940": [
+    "VKS",
+    "13-5"
+   ],
+   "57941": [
+    "GMB",
+    "14-12"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (C)",
+  "utc_ts": "2021-12-04 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GMB",
+   "VKS"
+  ]
+ },
+ "51274": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51274/team-liquid-vs-sentinels-valorant-champions-winners-b",
+  "maps": {
+   "57924": [
+    "TL",
+    "14-12"
+   ],
+   "57925": [
+    "SEN",
+    "13-2"
+   ],
+   "57926": [
+    "TL",
+    "13-10"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (B)",
+  "utc_ts": "2021-12-04 14:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "SEN",
+   "TL"
+  ]
+ },
+ "51266": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51266/acend-vs-keyd-stars-valorant-champions-opening-a",
+  "maps": {
+   "57903": [
+    "VKS",
+    "13-9"
+   ],
+   "57904": [
+    "ACE",
+    "13-3"
+   ],
+   "59254": [
+    "ACE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "ACE",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2021-12-05 08:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "VKS"
+  ]
+ },
+ "51280": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51280/team-secret-vs-crazy-raccoon-valorant-champions-elim-c",
+  "maps": {
+   "57942": [
+    "TS",
+    "13-5"
+   ],
+   "57943": [
+    "TS",
+    "13-2"
+   ]
+  },
+  "series": [
+   "TS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (C)",
+  "utc_ts": "2021-12-05 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "TS"
+  ]
+ },
+ "51275": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51275/kr-esports-vs-furia-valorant-champions-elim-b",
+  "maps": {
+   "57927": [
+    "FUR",
+    "13-11"
+   ],
+   "57928": [
+    "KR\u00dc",
+    "13-8"
+   ],
+   "57929": [
+    "KR\u00dc",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (B)",
+  "utc_ts": "2021-12-05 12:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "KR\u00dc"
+  ]
+ },
+ "51285": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51285/full-sense-vs-cloud9-blue-valorant-champions-elim-d",
+  "maps": {
+   "57957": [
+    "C9",
+    "13-7"
+   ],
+   "57958": [
+    "C9",
+    "14-12"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (D)",
+  "utc_ts": "2021-12-05 16:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "FS"
+  ]
+ },
+ "51268": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51268/acend-vs-envy-valorant-champions-winners-a",
+  "maps": {
+   "57909": [
+    "ACE",
+    "13-8"
+   ],
+   "57910": [
+    "ACE",
+    "13-11"
+   ]
+  },
+  "series": [
+   "ACE",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (A)",
+  "utc_ts": "2021-12-06 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "ENVY"
+  ]
+ },
+ "51269": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51269/keyd-stars-vs-x10-crit-valorant-champions-elim-a",
+  "maps": {
+   "57912": [
+    "X10",
+    "13-6"
+   ],
+   "57913": [
+    "X10",
+    "13-5"
+   ]
+  },
+  "series": [
+   "X10",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (A)",
+  "utc_ts": "2021-12-06 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "VKS",
+   "X10"
+  ]
+ },
+ "51276": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51276/sentinels-vs-kr-esports-valorant-champions-decider-b",
+  "maps": {
+   "57930": [
+    "SEN",
+    "13-7"
+   ],
+   "57931": [
+    "KR\u00dc",
+    "13-11"
+   ],
+   "57932": [
+    "KR\u00dc",
+    "13-11"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (B)",
+  "utc_ts": "2021-12-06 14:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "SEN"
+  ]
+ },
+ "51286": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51286/vision-strikers-vs-cloud9-blue-valorant-champions-decider-d",
+  "maps": {
+   "57960": [
+    "C9",
+    "13-10"
+   ],
+   "57961": [
+    "VS",
+    "13-9"
+   ],
+   "57962": [
+    "C9",
+    "13-11"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (D)",
+  "utc_ts": "2021-12-07 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "VS"
+  ]
+ },
+ "51281": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51281/team-vikings-vs-team-secret-valorant-champions-decider-c",
+  "maps": {
+   "57945": [
+    "TS",
+    "13-6"
+   ],
+   "57946": [
+    "TS",
+    "13-7"
+   ]
+  },
+  "series": [
+   "TS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (C)",
+  "utc_ts": "2021-12-07 13:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "TS",
+   "VKS"
+  ]
+ },
+ "51270": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51270/envy-vs-x10-crit-valorant-champions-decider-a",
+  "maps": {
+   "57915": [
+    "ENVY",
+    "13-10"
+   ],
+   "57916": [
+    "X10",
+    "13-8"
+   ],
+   "57917": [
+    "X10",
+    "14-12"
+   ]
+  },
+  "series": [
+   "X10",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (A)",
+  "utc_ts": "2021-12-07 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ENVY",
+   "X10"
+  ]
+ },
+ "51290": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51290/acend-vs-team-secret-valorant-champions-qf",
+  "maps": {
+   "57963": [
+    "ACE",
+    "13-8"
+   ],
+   "57964": [
+    "ACE",
+    "13-6"
+   ]
+  },
+  "series": [
+   "ACE",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-12-08 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "TS"
+  ]
+ },
+ "51291": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51291/team-liquid-vs-cloud9-valorant-champions-qf",
+  "maps": {
+   "57966": [
+    "TL",
+    "13-10"
+   ],
+   "57967": [
+    "TL",
+    "13-11"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-12-08 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "TL"
+  ]
+ },
+ "51292": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51292/gambit-esports-vs-x10-crit-valorant-champions-qf",
+  "maps": {
+   "57969": [
+    "GMB",
+    "13-7"
+   ],
+   "57970": [
+    "X10",
+    "13-7"
+   ],
+   "57971": [
+    "GMB",
+    "13-7"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-12-09 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GMB",
+   "X10"
+  ]
+ },
+ "51293": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51293/fnatic-vs-kr-esports-valorant-champions-qf",
+  "maps": {
+   "57972": [
+    "KR\u00dc",
+    "15-13"
+   ],
+   "57973": [
+    "FNC",
+    "13-6"
+   ],
+   "57974": [
+    "KR\u00dc",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-12-09 15:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "KR\u00dc"
+  ]
+ },
+ "51294": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51294/acend-vs-team-liquid-valorant-champions-sf",
+  "maps": {
+   "57975": [
+    "ACE",
+    "13-6"
+   ],
+   "57976": [
+    "ACE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "ACE",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Semifinals",
+  "utc_ts": "2021-12-11 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "TL"
+  ]
+ },
+ "51295": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51295/gambit-esports-vs-kr-esports-valorant-champions-sf",
+  "maps": {
+   "57978": [
+    "GMB",
+    "13-8"
+   ],
+   "57979": [
+    "KR\u00dc",
+    "13-7"
+   ],
+   "57980": [
+    "GMB",
+    "18-16"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Semifinals",
+  "utc_ts": "2021-12-11 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GMB",
+   "KR\u00dc"
+  ]
+ },
+ "51296": {
+  "event_id": "2021_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/51296/acend-vs-gambit-esports-valorant-champions-2021-gf",
+  "maps": {
+   "57981": [
+    "GMB",
+    "13-11"
+   ],
+   "57982": [
+    "ACE",
+    "13-7"
+   ],
+   "57983": [
+    "GMB",
+    "13-3"
+   ],
+   "57984": [
+    "ACE",
+    "14-12"
+   ],
+   "57985": [
+    "ACE",
+    "13-8"
+   ]
+  },
+  "series": [
+   "ACE",
+   "3-2"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2021-12-12 12:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "GMB"
+  ]
+ }
+}

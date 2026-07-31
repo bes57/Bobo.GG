@@ -1,0 +1,220 @@
+{
+ "582531": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582531/nova-esports-vs-edward-gaming-china-evolution-series-epilogue-qf",
+  "maps": {
+   "240467": [
+    "NOVA",
+    "13-3"
+   ],
+   "240468": [
+    "EDG",
+    "13-9"
+   ],
+   "240469": [
+    "NOVA",
+    "13-4"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-11-12 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "NOVA"
+  ]
+ },
+ "582533": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582533/titan-esports-club-vs-trace-esports-china-evolution-series-epilogue-qf",
+  "maps": {
+   "240473": [
+    "TE",
+    "13-4"
+   ],
+   "240474": [
+    "TE",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-11-13 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TE",
+   "TEC"
+  ]
+ },
+ "582534": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582534/wolves-esports-vs-funplus-phoenix-china-evolution-series-epilogue-qf",
+  "maps": {
+   "240476": [
+    "FPX",
+    "13-10"
+   ],
+   "240477": [
+    "WOL",
+    "13-11"
+   ],
+   "240478": [
+    "FPX",
+    "13-6"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-11-13 06:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "WOL"
+  ]
+ },
+ "582535": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582535/nova-esports-vs-jdg-esports-china-evolution-series-epilogue-sf",
+  "maps": {
+   "240479": [
+    "NOVA",
+    "13-5"
+   ],
+   "240480": [
+    "JDG",
+    "13-6"
+   ],
+   "240481": [
+    "NOVA",
+    "13-10"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-11-14 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "NOVA"
+  ]
+ },
+ "582536": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582536/trace-esports-vs-funplus-phoenix-china-evolution-series-epilogue-sf",
+  "maps": {
+   "240482": [
+    "FPX",
+    "13-6"
+   ],
+   "240483": [
+    "TE",
+    "13-10"
+   ],
+   "240484": [
+    "FPX",
+    "13-3"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-11-14 06:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TE"
+  ]
+ },
+ "582538": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582538/jdg-esports-vs-trace-esports-china-evolution-series-epilogue-cf",
+  "maps": {
+   "240490": [
+    "TE",
+    "13-11"
+   ],
+   "240491": [
+    "JDG",
+    "13-7"
+   ],
+   "240492": [
+    "JDG",
+    "13-11"
+   ],
+   "240493": [
+    "TE",
+    "14-12"
+   ],
+   "240494": [
+    "JDG",
+    "13-1"
+   ]
+  },
+  "series": [
+   "JDG",
+   "3-2"
+  ],
+  "match_name": "Main Event: Consolation Final",
+  "utc_ts": "2025-11-15 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "TE"
+  ]
+ },
+ "582537": {
+  "event_id": "2025_china_evo_epilogue",
+  "region": "CN",
+  "url": "https://www.vlr.gg/582537/nova-esports-vs-funplus-phoenix-china-evolution-series-epilogue-gf",
+  "maps": {
+   "240485": [
+    "FPX",
+    "13-7"
+   ],
+   "240486": [
+    "NOVA",
+    "14-12"
+   ],
+   "240487": [
+    "FPX",
+    "13-11"
+   ],
+   "240488": [
+    "FPX",
+    "14-12"
+   ]
+  },
+  "series": [
+   "FPX",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-11-16 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "NOVA"
+  ]
+ }
+}

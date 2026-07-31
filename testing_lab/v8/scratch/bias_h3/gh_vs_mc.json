@@ -1,0 +1,13 @@
+{
+ "gh20_vs_gh40_max_abs_diff": 2.220446049250313e-16,
+ "gh20_vs_gh40_mean_abs_diff": 6.050122070539908e-17,
+ "gh_convergence_bar": 1e-06,
+ "gh_pass": true,
+ "mc_check": {
+  "max_abs_diff_gh20_vs_mc200k": 0.00025564461453442267,
+  "mc_se_approx": 0.0011,
+  "within_3se": true,
+  "mc_seed": 1949022022,
+  "note": "original 1e-4 bar was tighter than MC noise; GH20-vs-GH40 is the convergence test"
+ }
+}

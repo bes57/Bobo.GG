@@ -1,0 +1,972 @@
+{
+ "preregistered": "testing_lab/v8/preregister.decay.md",
+ "mask_definitions": {
+  "S1_post_roster_change_le3": "either org's matches_since_change <= 3, recomputed on the expanded lineup table (lineups-agent rule verbatim; walk back while lineup identical); unknown lineup -> not in bucket",
+  "S2_post_patch_21d": "series date within 21d at-or-after any derived map-pool rotation date (5b-e mechanical derivation)",
+  "S3_post_break_45d": "either team's rest days > 45 (both teams have a prior series; referee.rest_days)",
+  "S4_within_event_day2plus": "series date > event's first series date",
+  "S5_quoted_band_20_55c": "v6 favorite-side prob <= 0.80 == either side priced inside [20,55)c under v6 (referee fallback-band definition)"
+ },
+ "mask_coverage_holdout": {
+  "all_holdout": 1217,
+  "S1_post_roster_change_le3": 731,
+  "S2_post_patch_21d": 730,
+  "S3_post_break_45d": 130,
+  "S4_within_event_day2plus": 1118,
+  "S5_quoted_band_20_55c": 1189
+ },
+ "s1_agreement_with_published": {
+  "n_compared": 3393,
+  "n_equal": 2616,
+  "rate": 0.771,
+  "orgs_never_in_addition_events": "165/165 = 1.0000 (implementation exact)",
+  "note": "all disagreement from corpus-addition matches interleaving into org sequences \u2014 the expanded recompute is the corpus-correct value"
+ },
+ "bucket_mde_rule": "family_MDE(regime) * sqrt(1217/n_bucket); tags at bucket MDE, p_better clause waived in buckets (preregistered)",
+ "panel": {
+  "consist_16_10": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64269,
+     "delta_milli": -0.531,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63765,
+     "delta_milli": -0.087,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65111,
+     "delta_milli": -0.573,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64387,
+     "delta_milli": -0.441,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64422,
+     "delta_milli": -0.722,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64811,
+     "delta_milli": -0.517,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "sym_16": {
+   "regime": "cross",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.6445,
+     "delta_milli": -2.335,
+     "bucket_mde_milli": 5.889,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63909,
+     "delta_milli": -1.53,
+     "bucket_mde_milli": 7.599,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65183,
+     "delta_milli": -1.295,
+     "bucket_mde_milli": 7.604,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.6432,
+     "delta_milli": 0.233,
+     "bucket_mde_milli": 18.018,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.6463,
+     "delta_milli": -2.808,
+     "bucket_mde_milli": 6.144,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64974,
+     "delta_milli": -2.147,
+     "bucket_mde_milli": 5.958,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "sym_20": {
+   "regime": "cross",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64434,
+     "delta_milli": -2.174,
+     "bucket_mde_milli": 5.889,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63927,
+     "delta_milli": -1.703,
+     "bucket_mde_milli": 7.599,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65151,
+     "delta_milli": -0.978,
+     "bucket_mde_milli": 7.604,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64198,
+     "delta_milli": 1.455,
+     "bucket_mde_milli": 18.018,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64586,
+     "delta_milli": -2.362,
+     "bucket_mde_milli": 6.144,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64956,
+     "delta_milli": -1.971,
+     "bucket_mde_milli": 5.958,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "sym_24": {
+   "regime": "cross",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64459,
+     "delta_milli": -2.424,
+     "bucket_mde_milli": 5.889,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63978,
+     "delta_milli": -2.217,
+     "bucket_mde_milli": 7.599,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65155,
+     "delta_milli": -1.012,
+     "bucket_mde_milli": 7.604,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.6413,
+     "delta_milli": 2.137,
+     "bucket_mde_milli": 18.018,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64586,
+     "delta_milli": -2.368,
+     "bucket_mde_milli": 6.144,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64979,
+     "delta_milli": -2.196,
+     "bucket_mde_milli": 5.958,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "lineup_h24_g2.0": {
+   "regime": "cross",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64499,
+     "delta_milli": -2.823,
+     "bucket_mde_milli": 5.889,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.6399,
+     "delta_milli": -2.332,
+     "bucket_mde_milli": 7.599,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65173,
+     "delta_milli": -1.197,
+     "bucket_mde_milli": 7.604,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.65216,
+     "delta_milli": -8.725,
+     "bucket_mde_milli": 18.018,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64615,
+     "delta_milli": -2.659,
+     "bucket_mde_milli": 6.144,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.6504,
+     "delta_milli": -2.81,
+     "bucket_mde_milli": 5.958,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "oppq_m1.67": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64301,
+     "delta_milli": -0.852,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63738,
+     "delta_milli": 0.184,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.64929,
+     "delta_milli": 1.242,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64316,
+     "delta_milli": 0.271,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64406,
+     "delta_milli": -0.569,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64833,
+     "delta_milli": -0.739,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "amargin_k1.0": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64271,
+     "delta_milli": -0.548,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63866,
+     "delta_milli": -1.094,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65058,
+     "delta_milli": -0.043,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64404,
+     "delta_milli": -0.605,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.6445,
+     "delta_milli": -1.005,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64809,
+     "delta_milli": -0.5,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "eclass_h20_m0.8": {
+   "regime": "cross",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64407,
+     "delta_milli": -1.904,
+     "bucket_mde_milli": 5.889,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63871,
+     "delta_milli": -1.146,
+     "bucket_mde_milli": 7.599,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.651,
+     "delta_milli": -0.469,
+     "bucket_mde_milli": 7.604,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64185,
+     "delta_milli": 1.584,
+     "bucket_mde_milli": 18.018,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.6455,
+     "delta_milli": -2.004,
+     "bucket_mde_milli": 6.144,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64926,
+     "delta_milli": -1.674,
+     "bucket_mde_milli": 5.958,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "eclass_on_v6_m0.8": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64192,
+     "delta_milli": 0.239,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63691,
+     "delta_milli": 0.649,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65001,
+     "delta_milli": 0.523,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64241,
+     "delta_milli": 1.025,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64312,
+     "delta_milli": 0.373,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64732,
+     "delta_milli": 0.267,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "rot_h24_g0.7": {
+   "regime": "cross",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64767,
+     "delta_milli": -5.511,
+     "bucket_mde_milli": 5.889,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.64057,
+     "delta_milli": -3.005,
+     "bucket_mde_milli": 7.599,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65467,
+     "delta_milli": -4.132,
+     "bucket_mde_milli": 7.604,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64782,
+     "delta_milli": -4.389,
+     "bucket_mde_milli": 18.018,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64913,
+     "delta_milli": -5.636,
+     "bucket_mde_milli": 6.144,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.65258,
+     "delta_milli": -4.987,
+     "bucket_mde_milli": 5.958,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "rot_on_v6_g0.7": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64762,
+     "delta_milli": -5.458,
+     "bucket_mde_milli": 1.773,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.641,
+     "delta_milli": -3.44,
+     "bucket_mde_milli": 2.288,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65535,
+     "delta_milli": -4.818,
+     "bucket_mde_milli": 2.289,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64987,
+     "delta_milli": -6.439,
+     "bucket_mde_milli": 5.425,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64891,
+     "delta_milli": -5.42,
+     "bucket_mde_milli": 1.85,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.65256,
+     "delta_milli": -4.972,
+     "bucket_mde_milli": 1.794,
+     "tag": "WORSE"
+    }
+   ]
+  },
+  "form_wr3": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64282,
+     "delta_milli": -0.657,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.6385,
+     "delta_milli": -0.934,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65111,
+     "delta_milli": -0.579,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64297,
+     "delta_milli": 0.46,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64385,
+     "delta_milli": -0.356,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64822,
+     "delta_milli": -0.635,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "form_rd3": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64298,
+     "delta_milli": -0.82,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63869,
+     "delta_milli": -1.125,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65129,
+     "delta_milli": -0.758,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.6433,
+     "delta_milli": 0.137,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64406,
+     "delta_milli": -0.572,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64839,
+     "delta_milli": -0.803,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "form_side5": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64314,
+     "delta_milli": -0.979,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63867,
+     "delta_milli": -1.109,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65124,
+     "delta_milli": -0.706,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64296,
+     "delta_milli": 0.468,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64394,
+     "delta_milli": -0.45,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.64864,
+     "delta_milli": -1.05,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  },
+  "form_player5": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64741,
+     "delta_milli": -5.244,
+     "bucket_mde_milli": 1.773,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.64394,
+     "delta_milli": -6.372,
+     "bucket_mde_milli": 2.288,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.655,
+     "delta_milli": -4.463,
+     "bucket_mde_milli": 2.289,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64729,
+     "delta_milli": -3.857,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64786,
+     "delta_milli": -4.363,
+     "bucket_mde_milli": 1.85,
+     "tag": "WORSE"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.65292,
+     "delta_milli": -5.332,
+     "bucket_mde_milli": 1.794,
+     "tag": "WORSE"
+    }
+   ]
+  },
+  "form_combined": {
+   "regime": "within",
+   "rows": [
+    {
+     "subpop": "all_holdout",
+     "n": 1217,
+     "ll_v6": 0.64216,
+     "ll_cand": 0.64275,
+     "delta_milli": -0.593,
+     "bucket_mde_milli": 1.773,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S1_post_roster_change_le3",
+     "n": 731,
+     "ll_v6": 0.63756,
+     "ll_cand": 0.63807,
+     "delta_milli": -0.508,
+     "bucket_mde_milli": 2.288,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S2_post_patch_21d",
+     "n": 730,
+     "ll_v6": 0.65053,
+     "ll_cand": 0.65082,
+     "delta_milli": -0.288,
+     "bucket_mde_milli": 2.289,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S3_post_break_45d",
+     "n": 130,
+     "ll_v6": 0.64343,
+     "ll_cand": 0.64294,
+     "delta_milli": 0.495,
+     "bucket_mde_milli": 5.425,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S4_within_event_day2plus",
+     "n": 1118,
+     "ll_v6": 0.64349,
+     "ll_cand": 0.64357,
+     "delta_milli": -0.075,
+     "bucket_mde_milli": 1.85,
+     "tag": "INSIDE NOISE FLOOR"
+    },
+    {
+     "subpop": "S5_quoted_band_20_55c",
+     "n": 1189,
+     "ll_v6": 0.64759,
+     "ll_cand": 0.6483,
+     "delta_milli": -0.707,
+     "bucket_mde_milli": 1.794,
+     "tag": "INSIDE NOISE FLOOR"
+    }
+   ]
+  }
+ }
+}

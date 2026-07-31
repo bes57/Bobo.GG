@@ -1,0 +1,78 @@
+2026-07-28 23:43:51 agent:roster START — briefs read (wave2_common, roster, README); adversary demotions noted (5d HL table demoted to hypothesis, S1 HOLD is evidence's verdict, cold<10 sole robust lead, HOLDOUT SPENT 398 looks). Writing preregister BEFORE computation.
+2026-07-28 23:47:43 agent:roster ORDERING DISCLOSURE: preregister.roster.md was locked BEFORE any computation. Steps run so far: build_changes.py (episodes+msc verify, 0 mismatches), run_v6_daily.py (bit-identical v6 replay). build_cases.py written but NOT yet run; NO treatment computed, NO holdout read taken. Operator amendment (phase-reset filter) received now — appending OPERATOR ADDENDUM with its own predictions BEFORE running any treatment. Old treatment (d) (change-scoped 5d gate) is WITHDRAWN UNREAD and replaced by the phase-reset filter.
+2026-07-29 00:12 PIPELINE COMPLETE.
+  build_changes.py: 489 episodes (333 sustained: 205 keep4/75 keep3/53 overhaul), msc verify 0 mismatches vs bias_h3 topup.
+  run_v6_daily.py: v6 replay bit-identical to stored baseline (max|dp|=0.0), daily ratings saved.
+  build_cases.py: ENVY chain reconstructed (inspire->Demon1 2026-02-06; eggsterr->NightZ 2026-05-12; p0ppin->Glyph 2026-07-17; S1->S2 overlap 0.6). Named cases verified from data: LEV/Neon 2025-11-29 ov 0.4 cost -14.7pp/m; ENVY/inspire +7.4pp/m. Gallery GE/EDG/FUR/KRU.
+  build_population.py: atlas — post-change first-3 outperformance +4.4/+5.6/+4.8pp (keep4/keep3/overhaul) vs +0.7 stable.
+  run_treatments.py: 3 EXPLORATORY reads, all negative. (b) gamma=2.0 -3.889m (falsifier fired; block CI excludes 0). (c) a0=1.0 M=6 -1.423m INSIDE FLOOR. (d) phase-reset g=0.5 -19.275m vs v6, -7.524m vs own 1b base (falsifier fired); contrast prediction REVERSED (d-c improvement rows -38.32m [-68.25,-9.17]). LOOK HYGIENE: grid points train-only, ll_test scrubbed on return before any recording; reserve unused (no <0.1m train tie); v6 baseline + h3-1b holdout = stored reuses, not new looks. roster_looks.json: 398 -> 401.
+  build_integration.py: Tier1 sizing RECOMMENDED, Tier2 fair-value NOT NOW, player-identity design note only, prospective plan preregistered (arms frozen, MDE80(n) table).
+  gen_roster_report.py: page rendered from stats JSONs only; palette = house slots already validated by agent:page's dataviz six-check run (22:52 entry), reused in same roles (#6f6a7c neutral-only).
+  preregister.roster.md: outcomes appended at full resolution (failures = successes resolution).
+2026-07-29 00:28 PAGE VERIFIED with isolated headless Chrome (own --user-data-dir, no Chrome kill): first render had a JS crash after chart 1 (globally-registered Chart.js plugin read cb.lo on a chart without ciBars options) — guards hardened, animation disabled for deterministic paint; re-render shows all 6 charts, zero uncaught errors. Reports glob lists the page per-request (no Flask restart needed; server up). Palette = house slots validated by agent:page's six-check run, reused in identical roles.
+DONE. Artifacts: stats/roster_{case_envy,case_gallery,population,treatments,integration,looks}.json; out/reports/roster_adaptation.html via gen_roster_report.py; v8/roster_adaptation.md; preregister.roster.md (+addendum +outcomes); scratch/roster/*.
+2026-07-29 00:52 COORDINATOR FOLLOW-UP (base_path emission; trajectory only, NO scoring, no new looks).
+  emit_base_paths.py: g=0 base run verified vs lib_h3.run_filter; emitted injected path reproduces shipped filter_path to <=1e-9; base_path added to roster_case_envy.json + LEV named case in roster_case_gallery.json with base_check blocks.
+  ASSERTION RESULT: LEV pre-change base==filter vacuously (0 in-window pre-change points; LEV idle before the new five debuted 2025-11-29). ENVY pre-change base!=filter, max |diff| 0.696 rating units over 4 Jan matches — INVESTIGATED: not a bug. ENVY has ZERO own episodes before 2026-02-06; all 489 injections verified to land exactly on the episode org's side of its change match. Divergence = network coupling of the preregistered CORPUS-WIDE injection rule (Jan opponents EG ov0.2 / KRU ov0.0 / MIBR ov0.4 / C9 ov0.8 carried their own injections into shared-game gain denominators S). Read (d) measured exactly what was preregistered (all-injections vs no-injection base); section-5 interpretation unchanged. Chart should reference base_path, not v6, for the mechanism.
+  Pre-change offsets (base - v6): ENVY window +0.086; LEV +2.636 (over LEV's last 5 pre-change game days, Aug 2025 — no in-window points).
+2026-07-29 01:06:22 OPERATOR DIRECTIVE received: treatment (e) v6+overreact (clean mechanism test on v6). Preregister ADDENDUM 2 appended BEFORE any (e) computation (grid, predictions, falsifier, corpus-wide decision frozen). Reserve (4th) read consumed by operator directive, not the tie rule — disclosed. No (e) numbers exist yet at this timestamp.
+2026-07-29 01:12 READ 4 (e) COMPLETE (operator-directed clean mechanism test on v6). v6-reproduction guard 1e-12 OK. Grid train-only (6 pts, holdouts scrubbed); selected a=2.0 tau=5.0 (grid edge on a, train +2.4m). Holdout: -0.395m [iid -3.13,+2.30; blk -2.32,+1.35] — INSIDE NOISE FLOOR; post<=3 -0.19m [-4.38,+3.95]; falsifier NOT fired. NULL, not a kill — contrasts with (d)'s confounded -19.3m; attribution caveat written into read3 spec. Slices lean positive where mechanism aims (improvement +4.12m, gated +2.57m, keep4 +2.69m; CIs straddle 0). v6_overreact_path + v6_overreact_check added to both case overlays (pre-change coupling: ENVY max 0.735/mean -0.03 n=19; LEV max 0.271/mean -0.042 n=10). Looks 401->402 (reserve consumed by operator directive, disclosed). Prospective arm F_v6_overreact frozen. Preregister ADDENDUM 2 outcome appended; md mirror updated.
+2026-07-29 01:22:31 agent:roster-f STAND-DOWN (coordinator directive): (f) superseded by operator spec before completion — no artifacts written. No prereg ADDENDUM 3, no holdout read (looks unchanged at 402), stats/scratch/case JSONs untouched; only read-only structural checks were run (R-based rdiff reproduces stored v6 rdiff exactly, max|diff|=0.0; 0 anchorless episodes).
+
+=== agent:roster-g THE SPEC RUN ===
+2026-07-29 01:37  ADDENDUM 4 preregistered (preregister.roster.md) BEFORE any
+                  classifier/fixture/solve/holdout computation. Ordering: spec
+                  read twice -> data verification (lineups ONLY: SEN marved
+                  m706350 2026-07-16 one-match deviation reverted m706360
+                  2026-07-25; established five since 2026-04-19) -> v6
+                  reproduction guard (bit-identical, max|dp|=0.0e0 vs stored
+                  baseline, beta 0.1152, 2.2s/run) -> ADDENDUM 4 locked.
+                  No holdout number seen. Next: fixtures F1-F4 as hard
+                  assertions, then train stages.
+2026-07-29 01:58  FIXTURES F1-F4: 53/53 PASSED (stats/roster_spec_fixtures.json).
+                  F1 SEN: marved m706350 = one-match deviation, no boundary
+                  under P1 W3/5/8 + P3; P2 provisional 07-16 -> retracted
+                  07-25. F2/F3 synthetic: zero-boundary revert exact-0.0
+                  solve identity; sustained change detected at exactly the
+                  policy lag (W3@2nd, W5@3rd, W8@4th new match, P2@m=3) with
+                  pre-detection solve identity 0.0 (peeking guard).
+                  P2 DECISION: NOT RUN as scoring policy — final-timeline
+                  identity fails by 3.5e-4 rating pts via v6's region-prior
+                  recursion (root cause PROVEN: multipliers bit-identical
+                  post-retraction; residue exactly 0.0 with recursion off).
+                  Spec 2.5: 'do not run P2 rather than running it wrong.'
+                  CENSUS (roster_spec_census.json): preregistered 60% rule
+                  disqualifies c in {0,3} for P1+P2 (b_ewc>0.6*d_ewc; c=0
+                  share 0.69-0.74 = the spec's warned EWC spike). Shippable:
+                  p1w3c5/p1w5c5/p1w8c5/p3w5 (+p2m3c5 excluded by harness).
+                  c=5 mechanism note: event-length EWC stand-in excursions
+                  merge to k=5 (boost-inert) boundaries — the intended sub
+                  rejection at event scale. NO holdout numbers seen.
+                  Next: train stages at c=5 (c-scan stage voided by the
+                  census rule — disclosed deviation from the c=3-default
+                  plan, forced by the preregistered disqualifier).
+2026-07-29 02:20  TRAIN STAGES: 114 configs train-only (holdout scrubbed).
+                  tau_hat=13 (tau-grid edge, disclosed). a-grid widened per
+                  spec 3 edge rule: {8,10} -> {14,20} -> (W8) {28,40};
+                  interior argmins W3 a=8 (s=1.0), W5 a=10 (s=0.7),
+                  W8 a=28 (s=0.7). P3 s-profile monotone worse (s_raw=0).
+2026-07-29 02:25  GATE (inner-CV K=5, lambda*a^2): p1w3c5 shrunk 4.5 CV+4.97m
+                  SE2.89 FIRED; p1w5c5 shrunk 4.5 CV+4.88m SE2.49 FIRED;
+                  p1w8c5 lambda=0 shrunk 28 CV+6.42m SE5.34 FIRED (ratio
+                  1.20); p3w5 not fired. Preregistered max-CV selection ->
+                  p1w8c5 a=28 tau=13 s=0.7; cap fit (train) C_hat=1.5.
+2026-07-29 02:30  THE READ (look 403; 1 of <=3): corpus-wide -11.595m vs v6
+                  iid[-18.99,-4.39] blk[-18.18,-5.20] p .001/.000.
+                  FALSIFIER FIRED (fired gate + read <= -1.773m). DEPLOYED
+                  MODEL IS v6. Slices: gated -6.17m, k<=2 -18.65m, sub-heavy
+                  +0.56m. Coupling: never-changing teams |dr| p90 1.70 max
+                  8.03 - the a=28 solve deformation is the damage vector.
+                  Contrast reads: condition unmet (CV gap 1.45m), 0 spent.
+2026-07-29 02:33  ABLATIONS: zero-gate EXACTLY 0.0 x3 (ENVY 514d / LEV 487d /
+                  SEN 631d, global all-team check). ENVY b: 02-06 k4 + MERGED
+                  05-12 k3 (chain rule end-to-end); LEV 11-29 k2; SEN none.
+                  roster_spec_cases.json emitted (generator gates satisfied).
+2026-07-29 02:36  INTEGRATION: roster_flag extension (73 teams, 22 pending),
+                  H_specrun frozen (expectations LOW). ADDENDUM 4 outcomes
+                  appended; roster_adaptation.md answer-first top section
+                  written. SPEC RUN complete.

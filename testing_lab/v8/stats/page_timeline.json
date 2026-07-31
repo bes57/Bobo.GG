@@ -1,0 +1,104 @@
+{
+ "source": "logs/<agent>.log first/last journal timestamps",
+ "date": "2026-07-28",
+ "rows": [
+  {
+   "agent": "corpus",
+   "wave": 1,
+   "first": "18:42:33",
+   "last": "18:59:28",
+   "outcome": "31 events backfilled; verification passed in full; prefranchise corpus scraped separately, regional 2021-22 deferred"
+  },
+  {
+   "agent": "lineups",
+   "wave": 1,
+   "first": "18:29",
+   "last": "18:34",
+   "outcome": "every engine side matched to a lineup; stand-in observables emitted for context/compose"
+  },
+  {
+   "agent": "power",
+   "wave": 1,
+   "first": null,
+   "last": null,
+   "outcome": "the instrument was measured before it was used: MDE floors, v7 ladder re-adjudication, ledger reclassification"
+  },
+  {
+   "agent": "referee",
+   "wave": 1,
+   "first": "18:30",
+   "last": "18:30",
+   "outcome": "metric suite upgraded (CRN boots, CUPED CV, per-team bias, expected-ROI unit); self-test green vs published numbers"
+  },
+  {
+   "agent": "autopsy",
+   "wave": 1,
+   "first": "22:21:22",
+   "last": "22:37:21",
+   "outcome": "live P&L decomposed; verdict: config first, model second, microstructure/fees/noise exonerated"
+  },
+  {
+   "agent": "decay",
+   "wave": 2,
+   "first": "21:57:41",
+   "last": "22:18:14",
+   "outcome": "re-race says ties; five new axes inside the floor; patch fade falsifier fired; performance form adds nothing"
+  },
+  {
+   "agent": "context",
+   "wave": 2,
+   "first": "22:03:02",
+   "last": "22:03:02",
+   "outcome": "event context carries ~no extra probability signal; learned class weights anti-validate; stand-in shrink is a bucket lead only"
+  },
+  {
+   "agent": "bias_h1",
+   "wave": 2,
+   "first": "21:58:07",
+   "last": "22:15:37",
+   "outcome": "censoring premise empirically false; Tobit and round-BT leave the elite bias intact; round-level power play refuted"
+  },
+  {
+   "agent": "bias_h2",
+   "wave": 2,
+   "first": null,
+   "last": null,
+   "outcome": "bias does not live on the schedule graph; gate stopped the program before any candidate fit"
+  },
+  {
+   "agent": "bias_h3",
+   "wave": 2,
+   "first": "22:0x",
+   "last": "22:0x",
+   "outcome": "state-space loses overall, wins the cold tail exactly as preregistered; heterogeneity unsupported at this n"
+  },
+  {
+   "agent": "bias_h4",
+   "wave": 2,
+   "first": "22:05:39",
+   "last": "22:13:32",
+   "outcome": "premise inverted: maps are OVER-dispersed; \u03b2 already pays the correction; links inside the floor"
+  },
+  {
+   "agent": "compose",
+   "wave": 3,
+   "first": "22:36:06",
+   "last": "22:40:47",
+   "outcome": "three preregistered stacks, three HOLDs; S3 anti-synergy falsifier fired; v6 stands"
+  },
+  {
+   "agent": "adversary",
+   "wave": 3,
+   "first": "02:27:17",
+   "last": "22:5x",
+   "outcome": "independent hostile recompute: negatives reproduce to the last digit; positive residue cut down to one lead"
+  },
+  {
+   "agent": "page",
+   "wave": 3,
+   "first": "22:50",
+   "last": "22:54",
+   "outcome": "this page: adversary-amended verdicts published; holdout declared spent"
+  }
+ ]
+}

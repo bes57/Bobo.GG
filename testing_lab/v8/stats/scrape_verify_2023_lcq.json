@@ -1,0 +1,762 @@
+{
+ "232729": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232729/mibr-vs-kr-esports-champions-tour-2023-americas-last-chance-qualifier-ur1",
+  "maps": {
+   "134548": [
+    "KR\u00dc",
+    "13-7"
+   ],
+   "134549": [
+    "KR\u00dc",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2023-07-15 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "MIBR"
+  ]
+ },
+ "232731": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232731/furia-vs-kr-esports-champions-tour-2023-americas-last-chance-qualifier-ubqf",
+  "maps": {
+   "134554": [
+    "FUR",
+    "14-12"
+   ],
+   "134555": [
+    "KR\u00dc",
+    "13-4"
+   ],
+   "134556": [
+    "KR\u00dc",
+    "13-11"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2023-07-16 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "KR\u00dc"
+  ]
+ },
+ "232730": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232730/sentinels-vs-100-thieves-champions-tour-2023-americas-last-chance-qualifier-ubqf",
+  "maps": {
+   "134551": [
+    "100T",
+    "14-12"
+   ],
+   "134552": [
+    "SEN",
+    "13-7"
+   ],
+   "134553": [
+    "SEN",
+    "13-7"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2023-07-16 19:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "SEN"
+  ]
+ },
+ "232732": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232732/cloud9-vs-sentinels-champions-tour-2023-americas-last-chance-qualifier-ubsf",
+  "maps": {
+   "134557": [
+    "C9",
+    "13-8"
+   ],
+   "134558": [
+    "SEN",
+    "13-5"
+   ],
+   "134559": [
+    "C9",
+    "13-8"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2023-07-17 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "SEN"
+  ]
+ },
+ "232733": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232733/leviat-n-vs-kr-esports-champions-tour-2023-americas-last-chance-qualifier-ubsf",
+  "maps": {
+   "134560": [
+    "KR\u00dc",
+    "13-5"
+   ],
+   "134561": [
+    "KR\u00dc",
+    "13-7"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2023-07-17 19:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "LEV"
+  ]
+ },
+ "232734": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232734/cloud9-vs-kr-esports-champions-tour-2023-americas-last-chance-qualifier-ubf",
+  "maps": {
+   "134563": [
+    "C9",
+    "13-4"
+   ],
+   "134564": [
+    "KR\u00dc",
+    "13-4"
+   ],
+   "134565": [
+    "KR\u00dc",
+    "13-6"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Final",
+  "utc_ts": "2023-07-18 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "KR\u00dc"
+  ]
+ },
+ "232736": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232736/sentinels-vs-leviat-n-champions-tour-2023-americas-last-chance-qualifier-lr1",
+  "maps": {
+   "134571": [
+    "LEV",
+    "13-8"
+   ],
+   "134572": [
+    "LEV",
+    "13-4"
+   ]
+  },
+  "series": [
+   "LEV",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2023-07-18 19:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "LEV",
+   "SEN"
+  ]
+ },
+ "232737": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232737/cloud9-vs-leviat-n-champions-tour-2023-americas-last-chance-qualifier-lbf",
+  "maps": {
+   "134574": [
+    "C9",
+    "13-7"
+   ],
+   "134575": [
+    "C9",
+    "13-9"
+   ],
+   "134576": [
+    "LEV",
+    "13-11"
+   ],
+   "134577": [
+    "LEV",
+    "13-10"
+   ],
+   "134578": [
+    "LEV",
+    "13-7"
+   ]
+  },
+  "series": [
+   "LEV",
+   "3-2"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2023-07-22 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "LEV"
+  ]
+ },
+ "232735": {
+  "event_id": "2023_lcq",
+  "region": "Americas",
+  "url": "https://www.vlr.gg/232735/kr-esports-vs-leviat-n-champions-tour-2023-americas-last-chance-qualifier-gf",
+  "maps": {
+   "134566": [
+    "KR\u00dc",
+    "13-5"
+   ],
+   "134567": [
+    "LEV",
+    "13-8"
+   ],
+   "134568": [
+    "KR\u00dc",
+    "13-6"
+   ],
+   "134569": [
+    "KR\u00dc",
+    "13-10"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2023-07-23 16:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "LEV"
+  ]
+ },
+ "235363": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235363/team-heretics-vs-koi-champions-tour-2023-emea-last-chance-qualifier-ko",
+  "maps": {
+   "135070": [
+    "MKOI",
+    "13-8"
+   ],
+   "135071": [
+    "TH",
+    "13-10"
+   ],
+   "135072": [
+    "MKOI",
+    "13-6"
+   ]
+  },
+  "series": [
+   "MKOI",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Knockout Round",
+  "utc_ts": "2023-07-19 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "MKOI",
+   "TH"
+  ]
+ },
+ "235364": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235364/bbl-esports-vs-karmine-corp-champions-tour-2023-emea-last-chance-qualifier-ko",
+  "maps": {
+   "135073": [
+    "BBL",
+    "14-12"
+   ],
+   "135074": [
+    "KC",
+    "13-9"
+   ],
+   "135075": [
+    "KC",
+    "14-12"
+   ]
+  },
+  "series": [
+   "KC",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Knockout Round",
+  "utc_ts": "2023-07-19 15:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "KC"
+  ]
+ },
+ "235365": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235365/natus-vincere-vs-koi-champions-tour-2023-emea-last-chance-qualifier-ubsf",
+  "maps": {
+   "135076": [
+    "MKOI",
+    "13-6"
+   ],
+   "135077": [
+    "MKOI",
+    "13-3"
+   ]
+  },
+  "series": [
+   "MKOI",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2023-07-20 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "MKOI",
+   "NAVI"
+  ]
+ },
+ "235366": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235366/giants-gaming-vs-karmine-corp-champions-tour-2023-emea-last-chance-qualifier-ubsf",
+  "maps": {
+   "135079": [
+    "GIA",
+    "13-11"
+   ],
+   "135080": [
+    "GIA",
+    "13-5"
+   ]
+  },
+  "series": [
+   "GIA",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2023-07-20 13:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "GIA",
+   "KC"
+  ]
+ },
+ "235367": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235367/koi-vs-giants-gaming-champions-tour-2023-emea-last-chance-qualifier-ubf",
+  "maps": {
+   "135082": [
+    "GIA",
+    "14-12"
+   ],
+   "135083": [
+    "GIA",
+    "13-5"
+   ]
+  },
+  "series": [
+   "GIA",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Final",
+  "utc_ts": "2023-07-21 10:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "GIA",
+   "MKOI"
+  ]
+ },
+ "235371": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235371/natus-vincere-vs-karmine-corp-champions-tour-2023-emea-last-chance-qualifier-lr1",
+  "maps": {
+   "135096": [
+    "NAVI",
+    "13-6"
+   ],
+   "135097": [
+    "KC",
+    "13-7"
+   ],
+   "135098": [
+    "NAVI",
+    "13-7"
+   ]
+  },
+  "series": [
+   "NAVI",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 1",
+  "utc_ts": "2023-07-21 13:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "KC",
+   "NAVI"
+  ]
+ },
+ "235372": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235372/koi-vs-natus-vincere-champions-tour-2023-emea-last-chance-qualifier-lbf",
+  "maps": {
+   "135099": [
+    "NAVI",
+    "14-12"
+   ],
+   "135100": [
+    "NAVI",
+    "13-10"
+   ],
+   "135101": [
+    "NAVI",
+    "13-9"
+   ]
+  },
+  "series": [
+   "NAVI",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Lower Final",
+  "utc_ts": "2023-07-22 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "MKOI",
+   "NAVI"
+  ]
+ },
+ "235368": {
+  "event_id": "2023_lcq",
+  "region": "EMEA",
+  "url": "https://www.vlr.gg/235368/giants-gaming-vs-natus-vincere-champions-tour-2023-emea-last-chance-qualifier-gf",
+  "maps": {
+   "135085": [
+    "GIA",
+    "13-11"
+   ],
+   "135086": [
+    "GIA",
+    "13-7"
+   ],
+   "135087": [
+    "GIA",
+    "13-9"
+   ]
+  },
+  "series": [
+   "GIA",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2023-07-23 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GIA",
+   "NAVI"
+  ]
+ },
+ "237266": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237266/talon-esports-vs-detonation-focusme-champions-tour-2023-pacific-last-chance-qualifier-ur1",
+  "maps": {
+   "135648": [
+    "TLN",
+    "13-7"
+   ],
+   "135649": [
+    "TLN",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TLN",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2023-07-18 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "TLN"
+  ]
+ },
+ "237267": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237267/rex-regum-qeon-vs-global-esports-champions-tour-2023-pacific-last-chance-qualifier-ubqf",
+  "maps": {
+   "135651": [
+    "RRQ",
+    "13-10"
+   ],
+   "135652": [
+    "RRQ",
+    "13-10"
+   ]
+  },
+  "series": [
+   "RRQ",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2023-07-19 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GE",
+   "RRQ"
+  ]
+ },
+ "237268": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237268/gen-g-vs-talon-esports-champions-tour-2023-pacific-last-chance-qualifier-ubqf",
+  "maps": {
+   "135654": [
+    "TLN",
+    "13-11"
+   ],
+   "135655": [
+    "GEN",
+    "13-10"
+   ],
+   "135656": [
+    "GEN",
+    "15-13"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2023-07-19 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TLN"
+  ]
+ },
+ "237269": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237269/zeta-division-vs-rex-regum-qeon-champions-tour-2023-pacific-last-chance-qualifier-ubsf",
+  "maps": {
+   "135657": [
+    "RRQ",
+    "13-2"
+   ],
+   "135658": [
+    "ZETA",
+    "13-8"
+   ],
+   "135659": [
+    "ZETA",
+    "21-19"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2023-07-20 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "RRQ",
+   "ZETA"
+  ]
+ },
+ "237270": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237270/team-secret-vs-gen-g-champions-tour-2023-pacific-last-chance-qualifier-ubsf",
+  "maps": {
+   "135660": [
+    "TS",
+    "13-6"
+   ],
+   "135661": [
+    "TS",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TS",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2023-07-20 08:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TS"
+  ]
+ },
+ "237271": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237271/zeta-division-vs-team-secret-champions-tour-2023-pacific-last-chance-qualifier-uf",
+  "maps": {
+   "135663": [
+    "ZETA",
+    "13-9"
+   ],
+   "135664": [
+    "ZETA",
+    "13-7"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Final",
+  "utc_ts": "2023-07-21 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TS",
+   "ZETA"
+  ]
+ },
+ "237272": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237272/rex-regum-qeon-vs-gen-g-champions-tour-2023-pacific-last-chance-qualifier-lr1",
+  "maps": {
+   "135666": [
+    "GEN",
+    "13-6"
+   ],
+   "135667": [
+    "RRQ",
+    "13-2"
+   ],
+   "135668": [
+    "GEN",
+    "13-7"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2023-07-21 06:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "RRQ"
+  ]
+ },
+ "237273": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237273/team-secret-vs-gen-g-champions-tour-2023-pacific-last-chance-qualifier-lf",
+  "maps": {
+   "135669": [
+    "GEN",
+    "13-10"
+   ],
+   "135670": [
+    "TS",
+    "13-11"
+   ],
+   "135671": [
+    "TS",
+    "13-2"
+   ],
+   "135672": [
+    "TS",
+    "13-6"
+   ]
+  },
+  "series": [
+   "TS",
+   "3-1"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2023-07-22 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TS"
+  ]
+ },
+ "237274": {
+  "event_id": "2023_lcq",
+  "region": "Pacific",
+  "url": "https://www.vlr.gg/237274/zeta-division-vs-team-secret-champions-tour-2023-pacific-last-chance-qualifier-gf",
+  "maps": {
+   "135674": [
+    "ZETA",
+    "14-12"
+   ],
+   "135675": [
+    "TS",
+    "13-9"
+   ],
+   "135676": [
+    "ZETA",
+    "13-7"
+   ],
+   "135677": [
+    "ZETA",
+    "13-6"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2023-07-23 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TS",
+   "ZETA"
+  ]
+ }
+}

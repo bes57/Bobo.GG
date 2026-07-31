@@ -1,0 +1,354 @@
+{
+ "538566": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538566/nova-esports-vs-edward-gaming-china-evolution-series-act-3-ro12",
+  "maps": {
+   "232748": [
+    "NOVA",
+    "13-9"
+   ],
+   "232749": [
+    "NOVA",
+    "13-3"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-08-28 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "NOVA"
+  ]
+ },
+ "538565": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538565/titan-esports-club-vs-dragon-ranger-gaming-china-evolution-series-act-3-ro12",
+  "maps": {
+   "232745": [
+    "DRG",
+    "14-12"
+   ],
+   "232746": [
+    "TEC",
+    "14-12"
+   ],
+   "232747": [
+    "TEC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-1"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-08-28 08:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "TEC"
+  ]
+ },
+ "538567": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538567/jdg-esports-vs-xi-lai-gaming-china-evolution-series-act-3-ro12",
+  "maps": {
+   "232751": [
+    "JDG",
+    "13-6"
+   ],
+   "232752": [
+    "JDG",
+    "13-3"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-08-29 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "XLG"
+  ]
+ },
+ "538568": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538568/wolves-esports-vs-bilibili-gaming-china-evolution-series-act-3-ro12",
+  "maps": {
+   "232754": [
+    "BLG",
+    "13-11"
+   ],
+   "232755": [
+    "WOL",
+    "13-9"
+   ],
+   "232756": [
+    "WOL",
+    "13-7"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-08-29 06:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "WOL"
+  ]
+ },
+ "538569": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538569/tyloo-vs-titan-esports-club-china-evolution-series-act-3-qf",
+  "maps": {
+   "232757": [
+    "TYL",
+    "13-3"
+   ],
+   "232758": [
+    "TEC",
+    "14-12"
+   ],
+   "232759": [
+    "TEC",
+    "13-6"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-08-30 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "TYL"
+  ]
+ },
+ "538570": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538570/funplus-phoenix-vs-nova-esports-china-evolution-series-act-3-qf",
+  "maps": {
+   "232760": [
+    "FPX",
+    "13-4"
+   ],
+   "232761": [
+    "NOVA",
+    "13-4"
+   ],
+   "232762": [
+    "FPX",
+    "13-4"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-08-30 07:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "NOVA"
+  ]
+ },
+ "538571": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538571/trace-esports-vs-jdg-esports-china-evolution-series-act-3-qf",
+  "maps": {
+   "232763": [
+    "JDG",
+    "13-6"
+   ],
+   "232764": [
+    "TE",
+    "13-3"
+   ],
+   "232765": [
+    "JDG",
+    "15-13"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-08-31 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "TE"
+  ]
+ },
+ "538572": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538572/all-gamers-vs-wolves-esports-china-evolution-series-act-3-qf",
+  "maps": {
+   "232766": [
+    "WOL",
+    "13-11"
+   ],
+   "232767": [
+    "AG",
+    "13-6"
+   ],
+   "232768": [
+    "WOL",
+    "13-9"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-08-31 07:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "WOL"
+  ]
+ },
+ "538573": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538573/titan-esports-club-vs-funplus-phoenix-china-evolution-series-act-3-sf",
+  "maps": {
+   "232769": [
+    "FPX",
+    "15-13"
+   ],
+   "232770": [
+    "TEC",
+    "13-10"
+   ],
+   "232771": [
+    "TEC",
+    "13-6"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-09-05 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TEC"
+  ]
+ },
+ "538574": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538574/jdg-esports-vs-wolves-esports-china-evolution-series-act-3-sf",
+  "maps": {
+   "232772": [
+    "JDG",
+    "13-5"
+   ],
+   "232773": [
+    "WOL",
+    "13-5"
+   ],
+   "232774": [
+    "JDG",
+    "13-4"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-09-05 08:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "WOL"
+  ]
+ },
+ "538576": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538576/funplus-phoenix-vs-wolves-esports-china-evolution-series-act-3-cf",
+  "maps": {
+   "232780": [
+    "WOL",
+    "13-11"
+   ],
+   "232781": [
+    "WOL",
+    "13-10"
+   ],
+   "232782": [
+    "WOL",
+    "13-10"
+   ]
+  },
+  "series": [
+   "WOL",
+   "3-0"
+  ],
+  "match_name": "Main Event: Consolation Final",
+  "utc_ts": "2025-09-06 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "WOL"
+  ]
+ },
+ "538575": {
+  "event_id": "2025_china_evo_3",
+  "region": "CN",
+  "url": "https://www.vlr.gg/538575/titan-esports-club-vs-jdg-esports-china-evolution-series-act-3-gf",
+  "maps": {
+   "232775": [
+    "JDG",
+    "13-11"
+   ],
+   "232776": [
+    "JDG",
+    "13-6"
+   ],
+   "232777": [
+    "JDG",
+    "13-7"
+   ]
+  },
+  "series": [
+   "JDG",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-09-07 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "TEC"
+  ]
+ }
+}

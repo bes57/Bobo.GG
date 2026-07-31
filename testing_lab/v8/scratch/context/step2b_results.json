@@ -1,0 +1,348 @@
+{
+ "fitted": {
+  "vct_playoffs": 0.7341,
+  "champions": 0.0007,
+  "masters": 1.8803,
+  "ewc_offseason": 1.0182
+ },
+ "anchor": "vct_regular=1.0",
+ "n_evals": 162,
+ "ll_train_fitted": 0.64405,
+ "beta_fitted": 0.1216,
+ "ll_test_fitted": 0.6479,
+ "ll_test_B0": 0.6421619175670709,
+ "dll_holdout_milli": -5.737,
+ "history_tail": [
+  {
+   "w": {
+    "vct_playoffs": 0.7345,
+    "champions": 0.0007,
+    "masters": 1.8811,
+    "ewc_offseason": 1.0182
+   },
+   "ll_train": 0.64405,
+   "beta": 0.1216
+  },
+  {
+   "w": {
+    "vct_playoffs": 0.7345,
+    "champions": 0.0007,
+    "masters": 1.8806,
+    "ewc_offseason": 1.0182
+   },
+   "ll_train": 0.64405,
+   "beta": 0.1216
+  },
+  {
+   "w": {
+    "vct_playoffs": 0.7337,
+    "champions": 0.0007,
+    "masters": 1.8799,
+    "ewc_offseason": 1.0182
+   },
+   "ll_train": 0.64405,
+   "beta": 0.1216
+  },
+  {
+   "w": {
+    "vct_playoffs": 0.7337,
+    "champions": 0.0007,
+    "masters": 1.8813,
+    "ewc_offseason": 1.0182
+   },
+   "ll_train": 0.64405,
+   "beta": 0.1216
+  },
+  {
+   "w": {
+    "vct_playoffs": 0.7346,
+    "champions": 0.0007,
+    "masters": 1.8809,
+    "ewc_offseason": 1.0182
+   },
+   "ll_train": 0.64405,
+   "beta": 0.1216
+  }
+ ],
+ "profiles": {
+  "vct_playoffs": [
+   {
+    "w": 0.25,
+    "ll_train": 0.64456,
+    "ll_test": 0.65288
+   },
+   {
+    "w": 0.4,
+    "ll_train": 0.64425,
+    "ll_test": 0.65073
+   },
+   {
+    "w": 0.6,
+    "ll_train": 0.64407,
+    "ll_test": 0.6488
+   },
+   {
+    "w": 0.8,
+    "ll_train": 0.64407,
+    "ll_test": 0.64754
+   },
+   {
+    "w": 1.0,
+    "ll_train": 0.64419,
+    "ll_test": 0.64672
+   },
+   {
+    "w": 1.3,
+    "ll_train": 0.6445,
+    "ll_test": 0.646
+   },
+   {
+    "w": 1.6,
+    "ll_train": 0.64489,
+    "ll_test": 0.64567
+   },
+   {
+    "w": 2.0,
+    "ll_train": 0.64547,
+    "ll_test": 0.64557
+   },
+   {
+    "w": 2.6,
+    "ll_train": 0.64636,
+    "ll_test": 0.64581
+   },
+   {
+    "w": 3.4,
+    "ll_train": 0.64747,
+    "ll_test": 0.64641
+   }
+  ],
+  "champions": [
+   {
+    "w": 0.25,
+    "ll_train": 0.64467,
+    "ll_test": 0.64679
+   },
+   {
+    "w": 0.4,
+    "ll_train": 0.64497,
+    "ll_test": 0.64637
+   },
+   {
+    "w": 0.6,
+    "ll_train": 0.64533,
+    "ll_test": 0.64597
+   },
+   {
+    "w": 0.8,
+    "ll_train": 0.64565,
+    "ll_test": 0.64569
+   },
+   {
+    "w": 1.0,
+    "ll_train": 0.64594,
+    "ll_test": 0.64549
+   },
+   {
+    "w": 1.3,
+    "ll_train": 0.64636,
+    "ll_test": 0.64529
+   },
+   {
+    "w": 1.6,
+    "ll_train": 0.64674,
+    "ll_test": 0.64519
+   },
+   {
+    "w": 2.0,
+    "ll_train": 0.64723,
+    "ll_test": 0.64515
+   },
+   {
+    "w": 2.6,
+    "ll_train": 0.6479,
+    "ll_test": 0.64523
+   },
+   {
+    "w": 3.4,
+    "ll_train": 0.64872,
+    "ll_test": 0.64547
+   }
+  ],
+  "masters": [
+   {
+    "w": 0.25,
+    "ll_train": 0.65137,
+    "ll_test": 0.64664
+   },
+   {
+    "w": 0.4,
+    "ll_train": 0.64918,
+    "ll_test": 0.64643
+   },
+   {
+    "w": 0.6,
+    "ll_train": 0.64729,
+    "ll_test": 0.64641
+   },
+   {
+    "w": 0.8,
+    "ll_train": 0.64607,
+    "ll_test": 0.64654
+   },
+   {
+    "w": 1.0,
+    "ll_train": 0.64526,
+    "ll_test": 0.64673
+   },
+   {
+    "w": 1.3,
+    "ll_train": 0.64453,
+    "ll_test": 0.64709
+   },
+   {
+    "w": 1.6,
+    "ll_train": 0.64418,
+    "ll_test": 0.6475
+   },
+   {
+    "w": 2.0,
+    "ll_train": 0.64405,
+    "ll_test": 0.64807
+   },
+   {
+    "w": 2.6,
+    "ll_train": 0.64427,
+    "ll_test": 0.64895
+   },
+   {
+    "w": 3.4,
+    "ll_train": 0.64495,
+    "ll_test": 0.65008
+   }
+  ],
+  "ewc_offseason": [
+   {
+    "w": 0.25,
+    "ll_train": 0.64721,
+    "ll_test": 0.65138
+   },
+   {
+    "w": 0.4,
+    "ll_train": 0.64617,
+    "ll_test": 0.64993
+   },
+   {
+    "w": 0.6,
+    "ll_train": 0.64523,
+    "ll_test": 0.64878
+   },
+   {
+    "w": 0.8,
+    "ll_train": 0.64457,
+    "ll_test": 0.64818
+   },
+   {
+    "w": 1.0,
+    "ll_train": 0.64409,
+    "ll_test": 0.64791
+   },
+   {
+    "w": 1.3,
+    "ll_train": 0.64359,
+    "ll_test": 0.6479
+   },
+   {
+    "w": 1.6,
+    "ll_train": 0.64324,
+    "ll_test": 0.64816
+   },
+   {
+    "w": 2.0,
+    "ll_train": 0.64294,
+    "ll_test": 0.64874
+   },
+   {
+    "w": 2.6,
+    "ll_train": 0.6427,
+    "ll_test": 0.64983
+   },
+   {
+    "w": 3.4,
+    "ll_train": 0.64258,
+    "ll_test": 0.65138
+   }
+  ]
+ },
+ "ci": {
+  "vct_playoffs": {
+   "ci_lo": 0.25,
+   "ci_hi": 3.4,
+   "argmin_dist": {
+    "0.25": 1003,
+    "0.4": 478,
+    "0.6": 562,
+    "0.8": 458,
+    "1.0": 404,
+    "1.3": 355,
+    "1.6": 269,
+    "2.0": 203,
+    "2.6": 121,
+    "3.4": 147
+   },
+   "profile_argmin_w": 0.6
+  },
+  "champions": {
+   "ci_lo": 0.25,
+   "ci_hi": 3.4,
+   "argmin_dist": {
+    "0.25": 3441,
+    "0.4": 74,
+    "0.6": 67,
+    "0.8": 54,
+    "1.0": 48,
+    "1.3": 58,
+    "1.6": 54,
+    "2.0": 51,
+    "2.6": 48,
+    "3.4": 105
+   },
+   "profile_argmin_w": 0.25
+  },
+  "masters": {
+   "ci_lo": 0.8,
+   "ci_hi": 3.4,
+   "argmin_dist": {
+    "0.25": 9,
+    "0.4": 15,
+    "0.6": 41,
+    "0.8": 99,
+    "1.0": 229,
+    "1.3": 501,
+    "1.6": 734,
+    "2.0": 956,
+    "2.6": 840,
+    "3.4": 576
+   },
+   "profile_argmin_w": 2.0
+  },
+  "ewc_offseason": {
+   "ci_lo": 0.4,
+   "ci_hi": 3.4,
+   "argmin_dist": {
+    "0.25": 81,
+    "0.4": 68,
+    "0.6": 92,
+    "0.8": 134,
+    "1.0": 164,
+    "1.3": 195,
+    "1.6": 238,
+    "2.0": 307,
+    "2.6": 385,
+    "3.4": 2336
+   },
+   "profile_argmin_w": 3.4
+  }
+ },
+ "ci_recipe": "1-D profile argmin over grid [0.25, 0.4, 0.6, 0.8, 1.0, 1.3, 1.6, 2.0, 2.6, 3.4], others at fitted; CRN iid resample of the 827 valid train rows, seed 20260728, n_boot 4000, full-matrix recipe; declared approximation: ignores cross-weight covariance"
+}

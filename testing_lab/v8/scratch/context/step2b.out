@@ -1,0 +1,56 @@
+  Loaded 2068 match dates from match_dates.json
+  eval 20: {'w': {'vct_playoffs': 1.6482, 'champions': 1.0326, 'masters': 1.479, 'ewc_offseason': 1.0}, 'll_train': 0.64732, 'beta': 0.1191}
+  eval 40: {'w': {'vct_playoffs': 1.5085, 'champions': 0.0213, 'masters': 3.5995, 'ewc_offseason': 0.9997}, 'll_train': 0.64523, 'beta': 0.113}
+  eval 60: {'w': {'vct_playoffs': 1.3579, 'champions': 0.0955, 'masters': 2.6762, 'ewc_offseason': 1.0001}, 'll_train': 0.64481, 'beta': 0.1171}
+  eval 80: {'w': {'vct_playoffs': 0.8805, 'champions': 0.1298, 'masters': 2.7232, 'ewc_offseason': 1.0008}, 'll_train': 0.64467, 'beta': 0.1173}
+  eval 100: {'w': {'vct_playoffs': 0.6631, 'champions': 0.0365, 'masters': 2.4771, 'ewc_offseason': 1.006}, 'll_train': 0.64434, 'beta': 0.1182}
+  eval 120: {'w': {'vct_playoffs': 0.6835, 'champions': 0.0002, 'masters': 1.7767, 'ewc_offseason': 1.0217}, 'll_train': 0.64407, 'beta': 0.1221}
+  eval 140: {'w': {'vct_playoffs': 0.7371, 'champions': 0.0006, 'masters': 1.8866, 'ewc_offseason': 1.0184}, 'll_train': 0.64405, 'beta': 0.1216}
+  eval 160: {'w': {'vct_playoffs': 0.7337, 'champions': 0.0007, 'masters': 1.8799, 'ewc_offseason': 1.0182}, 'll_train': 0.64405, 'beta': 0.1216}
+fitted (162 evals, 362s): {'vct_playoffs': np.float64(0.734), 'champions': np.float64(0.001), 'masters': np.float64(1.88), 'ewc_offseason': np.float64(1.018)} ll_train=0.64405
+holdout: fitted 0.64790 vs B0 0.64216 (d=-5.737m)
+  profile vct_playoffs w=0.25 ll_train=0.64456
+  profile vct_playoffs w=0.4 ll_train=0.64425
+  profile vct_playoffs w=0.6 ll_train=0.64407
+  profile vct_playoffs w=0.8 ll_train=0.64407
+  profile vct_playoffs w=1.0 ll_train=0.64419
+  profile vct_playoffs w=1.3 ll_train=0.64450
+  profile vct_playoffs w=1.6 ll_train=0.64489
+  profile vct_playoffs w=2.0 ll_train=0.64547
+  profile vct_playoffs w=2.6 ll_train=0.64636
+  profile vct_playoffs w=3.4 ll_train=0.64747
+  profile champions w=0.25 ll_train=0.64467
+  profile champions w=0.4 ll_train=0.64497
+  profile champions w=0.6 ll_train=0.64533
+  profile champions w=0.8 ll_train=0.64565
+  profile champions w=1.0 ll_train=0.64594
+  profile champions w=1.3 ll_train=0.64636
+  profile champions w=1.6 ll_train=0.64674
+  profile champions w=2.0 ll_train=0.64723
+  profile champions w=2.6 ll_train=0.64790
+  profile champions w=3.4 ll_train=0.64872
+  profile masters w=0.25 ll_train=0.65137
+  profile masters w=0.4 ll_train=0.64918
+  profile masters w=0.6 ll_train=0.64729
+  profile masters w=0.8 ll_train=0.64607
+  profile masters w=1.0 ll_train=0.64526
+  profile masters w=1.3 ll_train=0.64453
+  profile masters w=1.6 ll_train=0.64418
+  profile masters w=2.0 ll_train=0.64405
+  profile masters w=2.6 ll_train=0.64427
+  profile masters w=3.4 ll_train=0.64495
+  profile ewc_offseason w=0.25 ll_train=0.64721
+  profile ewc_offseason w=0.4 ll_train=0.64617
+  profile ewc_offseason w=0.6 ll_train=0.64523
+  profile ewc_offseason w=0.8 ll_train=0.64457
+  profile ewc_offseason w=1.0 ll_train=0.64409
+  profile ewc_offseason w=1.3 ll_train=0.64359
+  profile ewc_offseason w=1.6 ll_train=0.64324
+  profile ewc_offseason w=2.0 ll_train=0.64294
+  profile ewc_offseason w=2.6 ll_train=0.64270
+  profile ewc_offseason w=3.4 ll_train=0.64258
+  CI vct_playoffs: [0.25, 3.4]
+  CI champions: [0.25, 3.4]
+  CI masters: [0.8, 3.4]
+  CI ewc_offseason: [0.4, 3.4]
+step2b DONE in 453s

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Bot Deployment Playbook</title>
+<link rel="icon" href="/logo.svg">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --badbg:#fbeaea;
+         --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:900px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.6rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 24px; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.1rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.78rem; width:24px;
+        height:24px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ h3 { font-size:.95rem; font-weight:700; margin:14px 0 6px; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); } .good { color:var(--good); font-weight:700; }
+ .bad { color:var(--bad); font-weight:700; }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ table { width:100%; border-collapse:collapse; font-size:.85rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:7px 9px; border-bottom:1px solid var(--line); }
+ tr:last-child td { border-bottom:0; }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg); border-radius:0 12px 12px 0;
+            padding:12px 16px; margin:10px 0; font-size:.89rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:10px 0; }
+ .card { border:1px solid var(--line); border-radius:14px; padding:13px 15px; }
+ .card .lbl { font-size:.68rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--dim); }
+ .card .big { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.4rem; margin:2px 0; }
+ .card .sub { font-size:.76rem; color:var(--dim); }
+ ol, ul { font-size:.9rem; margin:8px 0 8px 20px; }
+ li { margin:6px 0; }
+ canvas { max-height:320px; }
+ .chartbox { margin:12px 0 4px; }
+ .rule { background:var(--goodbg); border:1px solid #cde8da; border-radius:12px;
+         padding:12px 16px; margin:8px 0; font-size:.9rem; }
+ .rule b { color:var(--good); }
+ .rule.no { background:var(--badbg); border-color:#f0d4d0; }
+ .rule.no b { color:var(--bad); }
+ .heat { display:grid; grid-template-columns:70px repeat(5,1fr); gap:5px; margin:12px 0; }
+ .hcol { font-size:.72rem; font-weight:700; color:var(--dim); text-align:center;
+         text-transform:uppercase; letter-spacing:.4px; align-self:end; padding-bottom:2px; }
+ .hlab { font-size:.74rem; font-weight:700; color:var(--dim); align-self:center;
+         text-align:right; padding-right:6px; }
+ .hcell { border-radius:10px; padding:10px 4px; text-align:center; min-height:56px;
+          display:flex; flex-direction:column; justify-content:center; cursor:default; }
+ .hcell .hroi { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.02rem; }
+ .hcell .hn { font-size:.66rem; opacity:.75; }
+ .hcell.hna { background:#f1f0f4; color:var(--dim); }
+ .axnote { display:flex; justify-content:space-between; font-size:.72rem; color:var(--dim);
+           margin-top:2px; }
+ @media (max-width:640px) { section { padding:18px 14px; } }
+</style></head>
+<body><div class="wrap">
+<h1>Bot Deployment Playbook</h1>
+<div class="tagline">When and how VCTMM earns its highest expected ROI — full data analysis,
+historical research, and operating rules · candidate v5 vs Kalshi pre-match prices ·
+generated 2026-07-22</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook" class="on">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab">Favorites Lab</a>
+<a href="/testing/report/final_model">Final Model</a>
+</div>
+
+<section>
+<h2><span class="n">0</span>Executive summary</h2>
+<div class="cards">
+ <div class="card"><div class="lbl">Season record</div><div class="big good">+10.25u</div>
+  <div class="sub">on 35.8u staked · 90 trades · 46W/44L · +28.7% ROI [CI +3%, +53%]</div></div>
+ <div class="card"><div class="lbl">The edge pocket</div><div class="big">30–45¢ dogs</div>
+  <div class="sub">model-backed sides at 30–45¢, 5–10pt divergence, regular season:
+  +35–41%, CIs exclude zero</div></div>
+ <div class="card"><div class="lbl">The avoid list</div><div class="big bad">LANs</div>
+  <div class="sub">London was −12%; post-break weeks barely trigger; 15+pt gaps vs
+  favorites = market knows</div></div>
+ <div class="card"><div class="lbl">Quote timing</div><div class="big">early + 12h→2h</div>
+  <div class="sub">3¢ spreads a day out (5% of volume) · 72% of volume in final 6h at 1¢</div></div>
+</div>
+<div class="callout good"><b>One-paragraph version:</b> deploy by default during regular-season
+VCT windows and EWC-class events; concentrate size where the model backs a 25–45¢ side that the
+market prices 5–10 points cheaper; treat very large divergences (15+ pts), LAN internationals,
+and the first post-break week as information-risk zones and cut size there; keep quotes up from
+listing (wide spreads, drifting prices) and scale through the 12h→2h window where the volume
+actually arrives. Every claim below has its data attached.</div>
+</section>
+
+<section>
+<h2><span class="n">1</span>Historical evidence: why the model has an edge at all</h2>
+<p>The prerequisite for profitable quoting is a fair value at least as accurate as the market's
+price, produced <b>independently</b> of it. Both halves are now measured:</p>
+<table>
+<tr><th>Milestone (2026 season, walk-forward)</th><th>BenPom LL</th><th>Market LL</th><th>Meaning</th></tr>
+<tr><td>Production model, VCT overlap (n=86)</td><td class="mono">0.6805</td><td class="mono">0.6457</td>
+<td class="bad">−35m behind — quoting this loses to the tape</td></tr>
+<tr><td>Candidate (games decay + stack + EWC data)</td><td class="mono good">0.6441</td>
+<td class="mono">0.6457</td><td class="good">ahead — parity or better</td></tr>
+<tr><td>VCT Stage 2 window (n=49, most recent)</td><td class="mono good">0.6418</td>
+<td class="mono">0.6607</td><td class="good">clearly ahead in the current era</td></tr>
+</table>
+<p>Independence: correlation between model and market probabilities is <b>0.78</b>.
+The model reads only match results; the market reads news, lineups, and sentiment. When two
+equally-accurate but different signals disagree, the disagreement itself is the alpha — that's
+what the rest of this page quantifies.</p>
+<p class="dim">Provenance for the accuracy claims (8 optimization rounds, 1,687 walk-forward
+series 2023–2026, every hypothesis' fate): see the State of BenPom report via the nav above.</p>
+</section>
+
+<section>
+<h2><span class="n">2</span>The season ledger — every divergence trade</h2>
+<p>Rules of the ledger: whenever model and pre-match market disagreed by &gt;5 points, buy one
+contract of the model's side at the market price (taker — worst case; maker fills only improve
+this). 90 trades, May 16 – Jul 21.</p>
+<div class="chartbox"><canvas id="equity"></canvas></div>
+<table>
+<tr><th>Month</th><th>Trades</th><th>P&amp;L (units)</th><th>ROI</th></tr>
+<tr><td class='mono'>2026-05</td><td class='mono'>39</td><td class='mono' class='good'>+5.85</td><td class='mono' class='good'>+38.6%</td></tr><tr><td class='mono'>2026-06</td><td class='mono'>12</td><td class='mono' class='bad'>-0.71</td><td class='mono' class='bad'>-12.4%</td></tr><tr><td class='mono'>2026-07</td><td class='mono'>39</td><td class='mono' class='good'>+5.12</td><td class='mono' class='good'>+34.4%</td></tr>
+</table>
+<p><b>Expectancy anatomy:</b> 46 wins averaging +0.56u vs 44 losses averaging −0.35u — the
+edge is payoff asymmetry, not hit rate. That is exactly the shape you want from buying
+underpriced underdogs, and exactly the shape that dies if you only back favorites.</p>
+<p class="dim">June's drawdown is Masters London — the LAN window where the market holds an
+information advantage. It is the deliberate exception in the rules below, identified from the
+data, not assumed.</p>
+</section>
+
+<section>
+<h2><span class="n">3</span>Where the ROI concentrates (full slicing)</h2>
+<div class="chartbox"><canvas id="roibars"></canvas></div>
+<h3>By calendar window</h3>
+<table>
+<tr><th>Slice</th><th>n</th><th>ROI</th><th>95% CI</th><th></th></tr>
+<tr><td>May qualifiers (EWC quals + CES)</td><td class='mono'>39</td><td class='mono' class='good'>+38.6%</td><td class='mono'>[+2%, +72%]</td><td class='dim'>one-off events, still positive</td></tr>
+<tr><td>Masters London (LAN)</td><td class='mono'>12</td><td class='mono'>-12.4%</td><td class='mono'>[-67%, +52%]</td><td class='dim'>the information-risk window</td></tr>
+<tr><td>Stage 2 + EWC (current era)</td><td class='mono'>39</td><td class='mono'>+34.4%</td><td class='mono'>[-5%, +75%]</td><td class='dim'>the going-forward regime</td></tr>
+<tr><td>Regular rest (≤45d)</td><td class='mono'>83</td><td class='mono' class='good'>+31.0%</td><td class='mono'>[+6%, +56%]</td><td class='dim'>the default deployment state</td></tr>
+</table>
+<h3>By region</h3>
+<table>
+<tr><th>Slice</th><th>n</th><th>ROI</th><th>95% CI</th><th></th></tr>
+<tr><td>Americas</td><td class='mono'>11</td><td class='mono' class='good'>+75.9%</td><td class='mono'>[+31%, +110%]</td><td class='dim'>strongest slice on the record</td></tr>
+<tr><td>CN</td><td class='mono'>34</td><td class='mono'>+34.0%</td><td class='mono'>[-7%, +73%]</td><td class='dim'>EWC-qualifier data gave the model an information edge here</td></tr>
+<tr><td>EMEA</td><td class='mono'>15</td><td class='mono'>+22.4%</td><td class='mono'>[-46%, +85%]</td><td class='dim'></td></tr>
+<tr><td>Cross-region</td><td class='mono'>16</td><td class='mono'>+17.4%</td><td class='mono'>[-40%, +90%]</td><td class='dim'></td></tr>
+<tr><td>Pacific</td><td class='mono'>14</td><td class='mono'>-7.7%</td><td class='mono'>[-66%, +66%]</td><td class='dim'>only negative region; overlaps the London losses</td></tr>
+</table>
+<h3>By price of the side bought</h3>
+<table>
+<tr><th>Slice</th><th>n</th><th>ROI</th><th>95% CI</th><th></th></tr>
+<tr><td>&lt;30¢ (deep dogs)</td><td class='mono'>20</td><td class='mono'>+47.1%</td><td class='mono'>[-51%, +151%]</td><td class='dim'>huge variance — wins pay 3-6x</td></tr>
+<tr><td>30–45¢ (live dogs)</td><td class='mono'>42</td><td class='mono' class='good'>+40.8%</td><td class='mono'>[+3%, +77%]</td><td class='dim'>the sweet spot — CI excludes zero</td></tr>
+<tr><td>45–55¢ (coin flips)</td><td class='mono'>10</td><td class='mono'>+25.9%</td><td class='mono'>[-37%, +87%]</td><td class='dim'></td></tr>
+<tr><td>&gt;55¢ (favorites)</td><td class='mono'>18</td><td class='mono'>+6.4%</td><td class='mono'>[-29%, +39%]</td><td class='dim'>market prices favorites well — little edge</td></tr>
+</table>
+<h3>By size of the disagreement</h3>
+<table>
+<tr><th>Slice</th><th>n</th><th>ROI</th><th>95% CI</th><th></th></tr>
+<tr><td>5–10 pts</td><td class='mono'>51</td><td class='mono' class='good'>+34.8%</td><td class='mono'>[+6%, +64%]</td><td class='dim'>trust these most</td></tr>
+<tr><td>10–20 pts</td><td class='mono'>34</td><td class='mono'>+14.8%</td><td class='mono'>[-32%, +62%]</td><td class='dim'>mixed — includes market-information cases</td></tr>
+</table>
+<h3>By liquidity</h3>
+<table>
+<tr><th>Slice</th><th>n</th><th>ROI</th><th>95% CI</th><th></th></tr>
+<tr><td>High volume (≥ median)</td><td class='mono'>47</td><td class='mono' class='good'>+35.9%</td><td class='mono'>[+2%, +71%]</td><td class='dim'>edge survives real order flow</td></tr>
+<tr><td>Low volume</td><td class='mono'>43</td><td class='mono'>+19.7%</td><td class='mono'>[-17%, +54%]</td><td class='dim'></td></tr>
+</table>
+<div class="callout"><b>The three findings that should drive sizing:</b> (1) favorites are
+near-fair — the money is in dogs; (2) <b>moderate</b> disagreement beats extreme disagreement —
+when the market is 15+ points away from the model, it too often has a reason (the four −100%
+trades of May were all fades of surging teams the market had already re-priced); (3) liquidity
+is not the enemy — the biggest ROI came where volume was highest.</div>
+</section>
+
+<section>
+<h2><span class="n">4</span>Market behavior research — when to have quotes up</h2>
+<p>Minute-candle microstructure across 155 tier-1 markets, aligned to scheduled
+start times:</p>
+<table>
+<tr><th>Hours before start</th><th>Median spread</th><th>Share of pre-match volume</th>
+<th>Median |price move still to come|</th></tr>
+<tr><td class='mono'>48h-24h</td><td class='mono'>3.0¢</td><td class='mono'>4.5%</td><td class='mono'>3.0¢</td></tr><tr><td class='mono'>24h-12h</td><td class='mono'>2.0¢</td><td class='mono'>8.5%</td><td class='mono'>2.0¢</td></tr><tr><td class='mono'>12h-6h</td><td class='mono'>1.0¢</td><td class='mono'>15.4%</td><td class='mono'>1.5¢</td></tr><tr><td class='mono'>6h-2h</td><td class='mono'>1.0¢</td><td class='mono'>28.5%</td><td class='mono'>1.0¢</td></tr><tr><td class='mono'>2h-0h</td><td class='mono'>1.0¢</td><td class='mono'>43.3%</td><td class='mono'>0.5¢</td></tr>
+</table>
+<div class="chartbox"><canvas id="micro"></canvas></div>
+<p><b>Reading:</b> a day out, the book is soft — 3¢ spreads and prices still a median 3¢ from
+their eventual pre-match value. That is maker heaven (edge per fill), but almost nobody is
+there (≈5% of volume). The crowd arrives in the last 6 hours (72% of volume) when spreads are
+1¢ and prices nearly final. So the bot should <b>quote from listing with small size</b>
+(capturing spread + favorable drift), <b>scale size through 12h→2h</b> (44% of volume, 1–1.5¢
+of drift left), and let the standing start−2h expiry rule take quotes down.</p>
+<h3>When the market is the smart one (stand down)</h3>
+<ul>
+<li><b>Post-break weeks:</b> the market prices off-season information (roster news, scrims)
+the model cannot see. Notably, model-market divergences barely even trigger there — both
+compress toward similar numbers — so exposure is naturally low; keep it that way.</li>
+<li><b>LAN internationals:</b> London was the season's one negative window (−12%). On-site form
+reads, stand-in news and prep intel concentrate in market prices.</li>
+<li><b>15+ point gaps where the market is more confident in a favorite:</b> the May −100%
+cluster (PRX, XLG fades) is this exact shape. The market had re-priced surging teams faster
+than any results-based model could.</li>
+</ul>
+</section>
+
+<section>
+<h2><span class="n">5</span>Operating rules</h2>
+<div class="rule"><b>RULE 1 — Default on.</b> Deploy across regular-season VCT windows (group
+stages, playoffs) and EWC-class events. Every regular-window slice is ROI-positive.</div>
+<div class="rule"><b>RULE 2 — Size the pocket.</b> Largest size where the model's side costs
+25–45¢ and the divergence is 5–10 points. This pocket returned +35–41% with CIs above zero.</div>
+<div class="rule"><b>RULE 3 — Respect favorites.</b> Above ~55¢ the market is near-fair (+6%).
+Quote them for spread, not for edge.</div>
+<div class="rule no"><b>RULE 4 — Information-risk zones = quarter size.</b> LAN internationals,
+the first week after a 45+ day break, and any 15+ point divergence where the market is the more
+confident side. If the model's inputs can't explain the gap, assume the market can.</div>
+<div class="rule"><b>RULE 5 — Quote early, size late.</b> Quotes up at listing (3¢ spreads, 3¢
+drift remaining, small size), scale through 12h→2h (44% of volume), expire at start−2h.</div>
+<div class="rule"><b>RULE 6 — Let liquidity in.</b> No thin-market preference — the edge was
+larger with volume, and maker fills are likelier.</div>
+<div class="rule"><b>RULE 7 — Re-underwrite monthly.</b> The prediction logger accrues
+prospective trades; regenerate this page as n grows. If the 30–45¢ pocket's CI ever includes
+zero on 250+ trades, retire Rule 2 and re-slice.</div>
+</section>
+
+<section>
+<h2><span class="n">6</span>Edge anatomy — pricing × divergence, and how they interact</h2>
+<p>This section uses <b>all 168 matches</b> (not just the 5+pt trades), always from the
+perspective of the model's preferred side: its market <b>price</b>, the model's
+<b>divergence</b> above that price, and what happened.</p>
+
+<h3>1 · Edge by pricing: where the model's sides beat their price</h3>
+<p>Two lines — what the market price implied, and what actually happened. The vertical gap
+IS the edge:</p>
+<div class="chartbox"><canvas id="edgecurve"></canvas></div>
+<div class="callout"><b>Read:</b> the model's sides outperform their price most in the
+<b>35–45¢ band (priced 39%, won 51% — a 12-point edge)</b> and modestly at 15–35¢. At coin
+flips (45–55¢) they <i>under</i>-perform (50% → 44%): when the model can't separate the teams,
+its "preference" is noise. From 55¢ up the market is fair. Edge lives in live dogs,
+not in favorites and not in toss-ups.</div>
+
+<h3>2 · The interaction grid: ROI by price × divergence</h3>
+<p>Columns = price of the model's side; rows = how far the model is above the market.
+Green = profitable, red = losing, gray = too few matches (n&lt;6). Hover any cell for win
+rate vs implied.</p>
+<div class="heat"><div></div><div class='hcol'><20c</div><div class='hcol'>20-35c</div><div class='hcol'>35-50c</div><div class='hcol'>50-65c</div><div class='hcol'>>65c</div><div class='hlab'>10+ pts</div><div class='hcell' style='background:rgba(30,122,79,0.67);color:#fff' title='win rate 25% vs implied 16% (n=8)'><span class='hroi'>+61%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(30,122,79,0.16858333333333334);color:#0d3a24' title='win rate 30% vs implied 28% (n=10)'><span class='hroi'>+5%</span><span class='hn'>n=10</span></div><div class='hcell' style='background:rgba(30,122,79,0.4976666666666667);color:#0d3a24' title='win rate 59% vs implied 42% (n=17)'><span class='hroi'>+41%</span><span class='hn'>n=17</span></div><div class='hcell hna' title='n=4 — too few'><span class='hroi'>—</span><span class='hn'>n=4</span></div><div class='hcell hna' title='n=0 — too few'><span class='hroi'>—</span><span class='hn'>n=0</span></div><div class='hlab'>5-10 pts</div><div class='hcell hna' title='n=2 — too few'><span class='hroi'>—</span><span class='hn'>n=2</span></div><div class='hcell' style='background:rgba(30,122,79,0.17225000000000001);color:#0d3a24' title='win rate 31% vs implied 29% (n=13)'><span class='hroi'>+6%</span><span class='hn'>n=13</span></div><div class='hcell' style='background:rgba(30,122,79,0.5856666666666668);color:#fff' title='win rate 62% vs implied 41% (n=21)'><span class='hroi'>+51%</span><span class='hn'>n=21</span></div><div class='hcell' style='background:rgba(30,122,79,0.5865833333333335);color:#fff' title='win rate 88% vs implied 58% (n=8)'><span class='hroi'>+51%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(30,122,79,0.14566666666666667);color:#0d3a24' title='win rate 71% vs implied 70% (n=7)'><span class='hroi'>+3%</span><span class='hn'>n=7</span></div><div class='hlab'>2-5 pts</div><div class='hcell hna' title='n=1 — too few'><span class='hroi'>—</span><span class='hn'>n=1</span></div><div class='hcell' style='background:rgba(192,57,43,0.2831666666666667);color:#5a1610' title='win rate 25% vs implied 30% (n=8)'><span class='hroi'>-18%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(192,57,43,0.48116666666666674);color:#5a1610' title='win rate 25% vs implied 41% (n=16)'><span class='hroi'>-39%</span><span class='hn'>n=16</span></div><div class='hcell' style='background:rgba(192,57,43,0.23091666666666666);color:#5a1610' title='win rate 50% vs implied 57% (n=16)'><span class='hroi'>-12%</span><span class='hn'>n=16</span></div><div class='hcell' style='background:rgba(192,57,43,0.16949999999999998);color:#5a1610' title='win rate 67% vs implied 70% (n=6)'><span class='hroi'>-5%</span><span class='hn'>n=6</span></div><div class='hlab'>0-2 pts</div><div class='hcell hna' title='n=0 — too few'><span class='hroi'>—</span><span class='hn'>n=0</span></div><div class='hcell hna' title='n=0 — too few'><span class='hroi'>—</span><span class='hn'>n=0</span></div><div class='hcell' style='background:rgba(30,122,79,0.37483333333333335);color:#0d3a24' title='win rate 50% vs implied 39% (n=8)'><span class='hroi'>+28%</span><span class='hn'>n=8</span></div><div class='hcell' style='background:rgba(192,57,43,0.33908333333333335);color:#5a1610' title='win rate 44% vs implied 57% (n=16)'><span class='hroi'>-24%</span><span class='hn'>n=16</span></div><div class='hcell' style='background:rgba(30,122,79,0.2639166666666667);color:#0d3a24' title='win rate 86% vs implied 74% (n=7)'><span class='hroi'>+16%</span><span class='hn'>n=7</span></div></div>
+<div class="axnote"><span>&larr; cheaper sides</span><span>more expensive sides &rarr;</span></div>
+<div class="callout good"><b>The three lessons in the grid:</b>
+(1) <b>The 2–5pt row is red across every price</b> — small disagreements are model noise, and
+trading them just pays the spread; the 5-point trade threshold isn't a convention, it's where
+the data says edge switches on. (2) <b>The golden cells are 35–65¢ × 5–10pts</b>
+(+51% ROI, winning ~62–88% vs ~42–55% implied) — divergence converts to profit best when the
+side is competitively priced. (3) <b>At deep-dog prices (&lt;20¢) only huge divergences pay</b>
+(+61% at 10+pts) and they hit only 25% of the time — real edge, lottery variance; size
+accordingly.</div>
+
+<h3>3 · Every match as a dot</h3>
+<p>x = price of the model's side, y = divergence. Green dots won, red lost. The dashed
+line is the 5-pt trade threshold — notice how much greener the picture is above it and to
+the middle:</p>
+<div class="chartbox"><canvas id="edgescatter"></canvas></div>
+<p class="dim">Hover any dot for the match and the return. The cluster of big green dots
+between 25–50¢ above the line is the strategy in one picture; the red dots at the top-left
+(cheap side, giant divergence) are the "market knew something" fades.</p>
+</section>
+
+<section>
+<h2><span class="n">9</span>The quoting margin — how much edge to demand (triple-tested)</h2>
+<p>Maker-fill simulation over 310 markets / 155 events: rest a NO bid on both sides of every
+event at (model NO value − margin), fill only if a real trade printed at/through the level
+inside the bot's actual quoting window (listing → start−2h), settle at the result. Margin
+families swept: flat cents 0–15, logit-space shifts, sqrt-price-scaled. Model = v6.</p>
+<table>
+<tr><th>Rule</th><th>Fills</th><th>Fill rate</th><th>Total profit (u)</th><th>ROI</th><th>95% CI</th></tr>
+<tr><td class="mono">flat 1¢ (≈ current config)</td><td class="mono">221</td><td class="mono">71%</td>
+<td class="mono" style="color:#c0392b">−0.68</td><td class="mono" style="color:#c0392b">−0.6%</td>
+<td class="mono dim">[−13%, +12%]</td></tr>
+<tr><td class="mono">flat 5¢</td><td class="mono">168</td><td class="mono">54%</td>
+<td class="mono">+5.27</td><td class="mono">+6.7%</td><td class="mono dim">[−9%, +23%]</td></tr>
+<tr><td class="mono">flat 11¢ (best flat)</td><td class="mono">100</td><td class="mono">32%</td>
+<td class="mono">+8.07</td><td class="mono">+19.2%</td><td class="mono dim">[−4%, +44%]</td></tr>
+<tr><td class="mono"><b>logit +0.6 (winner)</b></td><td class="mono">74</td><td class="mono">24%</td>
+<td class="mono good"><b>+8.12</b></td><td class="mono good"><b>+29.1%</b></td>
+<td class="mono good">[+1%, +61%] — only CI &gt; 0</td></tr>
+<tr><td class="mono">logit +0.4</td><td class="mono">122</td><td class="mono">39%</td>
+<td class="mono">+7.82</td><td class="mono">+15.0%</td><td class="mono dim">[−5%, +36%]</td></tr>
+</table>
+<p><b>Why logit-space wins:</b> a flat cent margin demands wildly different relative edge at
+different prices (10¢ at a 15¢ book is enormous; at 50¢ it is modest). A logit shift
+auto-scales: it demands the most cents exactly at coin flips — where the edge-anatomy grid
+(§6) showed small divergences are worthless — and fewer at the extremes. At equal fill
+counts, logit beats flat every time (122 fills: +7.82 vs +5.86).</p>
+<h3>Verification battery (logit +0.6)</h3>
+<table>
+<tr><th>Check</th><th>Fills</th><th>Profit</th><th>ROI</th></tr>
+<tr><td>First half (May 16 – Jun 19)</td><td class="mono">49</td><td class="mono">+1.95</td><td class="mono">+10.8%</td></tr>
+<tr><td>Second half (Jun 20 – Jul 21)</td><td class="mono">25</td><td class="mono">+6.17</td><td class="mono">+62.7%</td></tr>
+<tr><td>Conservative fills (trade must print 1¢ through)</td><td class="mono">61</td><td class="mono">+5.79</td><td class="mono">+26.1%</td></tr>
+<tr><td>Excluding info-risk shapes + London (Playbook rules)</td><td class="mono">52</td><td class="mono good">+10.00</td><td class="mono good">+52.6%</td></tr>
+<tr><td>Quote window extended to start−5m</td><td class="mono">79</td><td class="mono">+10.78</td><td class="mono">+36.9%</td></tr>
+</table>
+<p>Positive under every stress. Fill decomposition re-confirms §6 independently: NO bids
+resting at 30–50¢ made +56.5% (n=34); NO bids against model-underdogs (bid ≥50¢) were the one
+negative pocket (−5.7%, n=16) — consistent with "favorites near fair, dogs undervalued":
+selling the dog side is the wrong side of that asymmetry. Optional refinement: skip NO quotes
+on sides the model prices below ~45%.</p>
+<div class="callout good"><b>Recommendation for the bot config:</b> replace
+<span class="mono">min_edge_cents = 1</span> (which earned ≈ nothing on this history) with a
+<b>logit-space edge of +0.5 to +0.6</b>, implemented as a per-price cent table:
+≈14¢ at 50¢ · ≈12¢ at 65¢ · ≈10¢ at 75¢ · ≈8¢ at 85¢ · ≈5¢ at 92¢ (per side, applied to the
+NO cap). The 0.4–0.6 range is a plateau — the exact value matters less than abandoning
+flat-1¢.</div>
+<p class="dim">Honest limits: fills inferred from 1-minute trade prints (no queue modeling, no
+partial fills, assumes our size doesn't move these books); maker fees assumed zero; 10 weeks
+of one season. The telemetry spec's markout logging is what turns this from simulation into
+measurement.</p>
+</section>
+
+<section>
+<h2><span class="n">7</span>Risks and honest limits</h2>
+<ul>
+<li><b>Sample size:</b> 90 trades, 10 weeks, one season. The headline CI is positive but wide;
+slice orderings are directional. Rules 2/4's exact thresholds will move as n grows.</li>
+<li><b>Regime change:</b> the market is young (listed May 2026) and sharpening — early-season
+softness may fade. The microstructure table is the thing to re-measure first.</li>
+<li><b>Echo effect:</b> as VCTMM's own quotes become a larger share of these books, measured
+"market" prices partially reflect the model itself — future comparisons must use pre-deploy
+snapshots (the logger handles this).</li>
+<li><b>Model promotion pending:</b> these numbers use candidate v5. The live site/bot still run
+production constants until promotion — deploy sizing decisions built on this page assume the
+candidate is what's quoting.</li>
+</ul>
+</section>
+
+<section>
+<h2><span class="n">8</span>Telemetry spec — what the bot should record for future improvement</h2>
+<p>Guiding principle: <b>capture what cannot be reconstructed later.</b> Prices, results and
+candles can always be re-pulled from Kalshi/VLR; book depth, our own quote provenance, and
+"what was knowable at the time" vanish if not logged live. Append-only tables, UTC
+timestamps, never pruned (a season ≈ a few MB).</p>
+<h3>Tier 1 — irreplaceable</h3>
+<table>
+<tr><th>Record</th><th>What</th><th>Why it matters later</th></tr>
+<tr><td><b>Book snapshots</b></td><td>At T−24h/−12h/−6h/−2h/−30m/−5m vs scheduled start:
+best bid/ask both sides, top-3 depth, last trade, cum. volume, <b>own orders flagged</b></td>
+<td>Kalshi never publishes historical depth; and only the bot knows which liquidity was its
+own. Solves clean benchmarking AND the echo-chamber problem (subtracting ourselves from
+"the market") permanently.</td></tr>
+<tr><td><b>FV provenance</b></td><td>Every quote decision: FV, model-version tag, ratings
+snapshot time, rating gap, per-map ratings, veto distribution, β/offsets, MC sims/seed</td>
+<td>Every future model promotion becomes an automatic A/B — accuracy changes attributable
+to the model, not the calendar.</td></tr>
+<tr><td><b>Quote lifecycle + markouts</b></td><td>Place/amend/cancel with book+FV at that
+moment; fills with price, time-to-fill, and market mid at +5m/+30m/+2h after</td>
+<td>Decomposes maker P&amp;L into spread capture vs adverse selection; identifies toxic
+fills (picked off before line moves). The single best dataset for tuning quoting.</td></tr>
+<tr><td><b>Deployment snapshots</b></td><td>Every deploy/undeploy of a market from the
+dashboard: timestamp, minutes-to-scheduled-start, full book state, FV + provenance, sizing
+config (max contracts, quote size, min edge), volume traded so far, context flags</td>
+<td>Makes the operator's own deployment-timing decisions analyzable — e.g. "was arming
+markets 24h out better than 4h out?" — and ties every episode's outcome to the exact
+conditions at arm time.</td></tr>
+</table>
+<p class="dim"><b>Universal convention:</b> every row in every table carries BOTH
+<span class="mono">ts_utc</span> and <span class="mono">mins_to_start</span> (plus the
+<span class="mono">scheduled_start</span> it was computed against, since schedules shift) —
+so every analysis can slice by match phase without joins or reconstruction.</p>
+<h3>Tier 2 — closes known blind spots</h3>
+<table>
+<tr><th>Record</th><th>What</th><th>Why</th></tr>
+<tr><td><b>Roster observations</b></td><td>Lineups seen at discovery time + weekly off-week
+scrape of VLR team pages, timestamped when each change became public</td>
+<td>The post-break window was the market's whole 2026 edge — announced-but-unplayed roster
+changes. This log enables the roster-aware pre-break discount that couldn't be built
+retroactively.</td></tr>
+<tr><td><b>Timing truth</b></td><td>Listing time, scheduled start at listing, actual start,
+settlement time vs match end, delays</td>
+<td>Anchor correctness (bit us 3×) + tunes the start−2h expiry rule with real delay
+statistics.</td></tr>
+<tr><td><b>Context flags</b></td><td>LAN/online, stage, dead-rubber (seeding locked),
+bracket rematch, days-since-last-match per team</td>
+<td>"Was this match meaningful" is trivial to tag live, painful to reconstruct.</td></tr>
+</table>
+<h3>Tier 3 — cheap options on the future</h3>
+<ul>
+<li><b>Trade tape with aggressor side</b> from the WS feed (the public trades API lacks it) —
+raw material for sharp-flow detection.</li>
+<li><b>Veto auto-scoring</b>: predicted top-3 bans/picks vs the actual veto each match — the
+veto model accrues its own prospective track record.</li>
+<li><b>n_eff per team</b> alongside each FV — enables confidence-aware sizing when there's
+enough history to test it.</li>
+</ul>
+<div class="callout warn">Implementation note: this is a spec to hand to the VCTMM side —
+per the working rule, nothing here touches the live trading environment from the testing lab.
+Suggested homes: new append-only tables in the bot's SQLite (<span class="mono">book_snaps,
+fv_log, quote_events, fill_markouts, roster_obs, market_meta</span>).</div>
+</section>
+</div>
+<script>
+const EQ = {"dates": ["2026-05-15", "2026-05-16", "2026-05-16", "2026-05-16", "2026-05-17", "2026-05-17", "2026-05-17", "2026-05-17", "2026-05-17", "2026-05-18", "2026-05-18", "2026-05-20", "2026-05-21", "2026-05-21", "2026-05-22", "2026-05-22", "2026-05-22", "2026-05-22", "2026-05-23", "2026-05-23", "2026-05-23", "2026-05-23", "2026-05-23", "2026-05-24", "2026-05-24", "2026-05-24", "2026-05-24", "2026-05-24", "2026-05-25", "2026-05-25", "2026-05-26", "2026-05-26", "2026-05-27", "2026-05-28", "2026-05-29", "2026-05-30", "2026-05-30", "2026-05-30", "2026-05-31", "2026-06-07", "2026-06-09", "2026-06-10", "2026-06-13", "2026-06-13", "2026-06-14", "2026-06-15", "2026-06-16", "2026-06-16", "2026-06-19", "2026-06-20", "2026-06-21", "2026-07-02", "2026-07-02", "2026-07-02", "2026-07-04", "2026-07-05", "2026-07-06", "2026-07-09", "2026-07-10", "2026-07-11", "2026-07-11", "2026-07-11", "2026-07-12", "2026-07-12", "2026-07-12", "2026-07-14", "2026-07-14", "2026-07-15", "2026-07-15", "2026-07-15", "2026-07-16", "2026-07-16", "2026-07-16", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-17", "2026-07-18", "2026-07-18", "2026-07-18", "2026-07-18", "2026-07-19", "2026-07-19", "2026-07-19", "2026-07-19", "2026-07-19", "2026-07-21"], "cum": [0.33, 0.09, -0.12, 0.32, 0.01, 0.59, 1.21, 1.68, 2.24, 2.76, 2.6, 2.37, 2.25, 2.67, 2.35, 2.91, 2.45, 2.14, 1.79, 2.36, 1.89, 2.49, 2.36, 2.2, 2.02, 1.46, 2.19, 2.69, 3.08, 3.62, 4.06, 3.6, 3.3, 3.85, 4.56, 5.2, 5.61, 6.24, 5.85, 5.42, 5.87, 5.17, 4.61, 5.44, 4.96, 4.54, 4.24, 3.89, 4.14, 4.48, 5.14, 4.77, 4.48, 5.13, 5.93, 6.57, 6.26, 6.86, 7.37, 7.07, 7.65, 7.29, 7.83, 7.42, 8.0, 8.26, 9.1, 8.75, 9.4, 9.99, 9.36, 9.14, 9.57, 10.15, 9.8, 9.55, 9.4, 8.75, 8.49, 8.15, 7.81, 7.18, 6.81, 7.37, 7.21, 7.89, 8.49, 8.79, 9.57, 10.25], "labels": ["G2 v KR\u00dc", "PRX v GE", "XLG v FPX", "100T v LOUD", "PRX v FS", "FPX v JDG", "TEC v TE", "TH v VIT", "100T v MIBR", "AG v TYL", "XLG v TEC", "AG v TEC", "AG v DRG", "FPX v WOL", "GE v DFM", "NS v T1", "FUT v NAVI", "FNC v BBL", "G2 v NRG", "M8 v FUT", "RRQ v GEN", "KRX v FS", "JDG v XLG", "TYL v EDG", "T1 v DFM", "BBL v EF", "KC v FNC", "G2 v LEV", "AG v FPX", "TEC v TE", "TYL v BLG", "NOVA v JDG", "LEV v SEN", "SEN v KR\u00dc", "NOVA v TYL", "GEN v T1", "AG v TYL", "NAVI v FNC", "NS v GEN", "LEV v GE", "GE v FS", "XLG v GE", "EDG v FUT", "XLG v G2", "LEV v TH", "EDG v XLG", "LEV v XLG", "VIT v FUT", "PRX v EDG", "LEV v EDG", "LEV v PRX", "BBL v EDG", "VIT v KC", "NRG v PRX", "KC v PRX", "M8 v NS", "NRG v KC", "BBL v TH", "FPX v TE", "DRG v TEC", "100T v NS", "BLG v WOL", "NOVA v FPX", "NS v BBL", "100T v NRG", "AG v WOL", "TEC v XLG", "EF v TL", "TYL v EDG", "NAVI v FUT", "BLG v AG", "FNC v GX", "SEN v C9", "LOUD v KR\u00dc", "VIT v NAVI", "KRX v DFM", "EDG v TE", "FS v NS", "NOVA v JDG", "TYL v FPX", "BLG v TEC", "T1 v PRX", "XLG v AG", "100T v G2", "EDG v JDG", "WOL v DRG", "BBL v VIT", "NOVA v TE", "TS v KRX", "NOVA v EDG"]};
+new Chart(document.getElementById('equity'), {
+ type: 'line',
+ data: { labels: EQ.dates, datasets: [{ label: 'Cumulative P&L (units, 1 contract/trade)',
+   data: EQ.cum, borderColor: '#1e7a4f', backgroundColor: '#1e7a4f22', fill: true,
+   pointRadius: 0, borderWidth: 2, tension: .15 }] },
+ options: { plugins: { tooltip: { callbacks: {
+     afterTitle: items => EQ.labels[items[0].dataIndex] } } },
+  scales: { x: { ticks: { maxTicksLimit: 8 } },
+            y: { title: { display: true, text: 'units' } } } }
+});
+const ROIB = {"labels": ["ALL", "regular rest", "30-45c", "div 5-10", "high vol", "Americas", "CN", "favorites >55c", "div 10-20", "London"], "vals": [28.67, 30.990000000000002, 40.82, 34.760000000000005, 35.870000000000005, 75.94999999999999, 33.96, 6.36, 14.85, -12.43]};
+new Chart(document.getElementById('roibars'), {
+ type: 'bar',
+ data: { labels: ROIB.labels, datasets: [{ label: 'ROI %', data: ROIB.vals,
+   backgroundColor: ROIB.vals.map(v => v >= 20 ? '#1e7a4f' : v >= 0 ? '#9ec7ae' : '#c0392b') }] },
+ options: { plugins: { legend: { display: false } },
+  scales: { y: { title: { display: true, text: 'ROI %' } } } }
+});
+const MIC = {"labels": ["48-24h", "24-12h", "12-6h", "6-2h", "2-0h"], "spread": [3.0, 2.0, 1.0, 1.0, 1.0], "vol": [4.5, 8.5, 15.4, 28.5, 43.3]};
+const EA = {"curve": [{"lab": "15-25c", "implied": 0.195, "realized": 0.25, "n": 16}, {"lab": "25-35c", "implied": 0.311, "realized": 0.333, "n": 24}, {"lab": "35-45c", "implied": 0.393, "realized": 0.51, "n": 49}, {"lab": "45-55c", "implied": 0.503, "realized": 0.444, "n": 27}, {"lab": "55-70c", "implied": 0.612, "realized": 0.615, "n": 39}, {"lab": ">70c", "implied": 0.749, "realized": 0.727, "n": 11}], "scatter": [{"x": 0.665, "y": 0.06, "won": true, "ret": 0.5, "lab": "G2 v KR\u00dc 2026-05-15"}, {"x": 0.248, "y": 0.114, "won": false, "ret": -1.0, "lab": "PRX v GE 2026-05-16"}, {"x": 0.205, "y": 0.052, "won": false, "ret": -1.0, "lab": "XLG v FPX 2026-05-16"}, {"x": 0.56, "y": 0.0, "won": true, "ret": 0.79, "lab": "TYL v JDG 2026-05-16"}, {"x": 0.323, "y": 0.022, "won": true, "ret": 2.1, "lab": "TE v AG 2026-05-16"}, {"x": 0.4, "y": 0.009, "won": false, "ret": -1.0, "lab": "TH v FUT 2026-05-16"}, {"x": 0.643, "y": 0.003, "won": true, "ret": 0.56, "lab": "NRG v FUR 2026-05-16"}, {"x": 0.565, "y": 0.102, "won": true, "ret": 0.77, "lab": "100T v LOUD 2026-05-16"}, {"x": 0.515, "y": 0.003, "won": false, "ret": -1.0, "lab": "AG v DRG 2026-05-17"}, {"x": 0.302, "y": 0.115, "won": false, "ret": -1.0, "lab": "PRX v FS 2026-05-17"}, {"x": 0.3, "y": 0.027, "won": false, "ret": -1.0, "lab": "XLG v TYL 2026-05-17"}, {"x": 0.42, "y": 0.108, "won": true, "ret": 1.38, "lab": "FPX v JDG 2026-05-17"}, {"x": 0.383, "y": 0.145, "won": true, "ret": 1.61, "lab": "TEC v TE 2026-05-17"}, {"x": 0.532, "y": 0.075, "won": true, "ret": 0.88, "lab": "TH v VIT 2026-05-17"}, {"x": 0.675, "y": 0.01, "won": true, "ret": 0.48, "lab": "NRG v KR\u00dc 2026-05-17"}, {"x": 0.44, "y": 0.122, "won": true, "ret": 1.27, "lab": "100T v MIBR 2026-05-17"}, {"x": 0.373, "y": 0.041, "won": false, "ret": -1.0, "lab": "GEN v TS 2026-05-18"}, {"x": 0.51, "y": 0.045, "won": true, "ret": 0.96, "lab": "FPX v TE 2026-05-18"}, {"x": 0.152, "y": 0.113, "won": false, "ret": -1.0, "lab": "XLG v TEC 2026-05-18"}, {"x": 0.485, "y": 0.08, "won": true, "ret": 1.06, "lab": "AG v TYL 2026-05-18"}, {"x": 0.333, "y": 0.04, "won": false, "ret": -1.0, "lab": "GEN v VL 2026-05-19"}, {"x": 0.43, "y": 0.032, "won": false, "ret": -1.0, "lab": "AG v FPX 2026-05-19"}, {"x": 0.23, "y": 0.089, "won": false, "ret": -1.0, "lab": "AG v TEC 2026-05-20"}, {"x": 0.377, "y": 0.021, "won": false, "ret": -1.0, "lab": "SEN v EG 2026-05-20"}, {"x": 0.125, "y": 0.244, "won": false, "ret": -1.0, "lab": "AG v DRG 2026-05-21"}, {"x": 0.577, "y": 0.098, "won": true, "ret": 0.73, "lab": "FPX v WOL 2026-05-21"}, {"x": 0.323, "y": 0.066, "won": false, "ret": -1.0, "lab": "GE v DFM 2026-05-22"}, {"x": 0.537, "y": 0.04, "won": false, "ret": -1.0, "lab": "RRQ v KRX 2026-05-22"}, {"x": 0.435, "y": 0.051, "won": true, "ret": 1.3, "lab": "NS v T1 2026-05-22"}, {"x": 0.6, "y": 0.016, "won": false, "ret": -1.0, "lab": "GEN v FS 2026-05-22"}, {"x": 0.462, "y": 0.062, "won": false, "ret": -1.0, "lab": "FUT v NAVI 2026-05-22"}, {"x": 0.307, "y": 0.088, "won": false, "ret": -1.0, "lab": "FNC v BBL 2026-05-22"}, {"x": 0.528, "y": 0.018, "won": false, "ret": -1.0, "lab": "M8 v TL 2026-05-22"}, {"x": 0.613, "y": 0.022, "won": false, "ret": -1.0, "lab": "KC v EF 2026-05-22"}, {"x": 0.65, "y": 0.033, "won": false, "ret": -1.0, "lab": "LEV v G2 2026-05-22"}, {"x": 0.365, "y": 0.034, "won": false, "ret": -1.0, "lab": "NRG v 100T 2026-05-22"}, {"x": 0.403, "y": 0.057, "won": true, "ret": 1.48, "lab": "KRX v FS 2026-05-23"}, {"x": 0.13, "y": 0.606, "won": false, "ret": -1.0, "lab": "JDG v XLG 2026-05-23"}, {"x": 0.535, "y": 0.011, "won": false, "ret": -1.0, "lab": "NAVI v TL 2026-05-23"}, {"x": 0.438, "y": 0.083, "won": true, "ret": 1.29, "lab": "M8 v FUT 2026-05-23"}, {"x": 0.468, "y": 0.059, "won": false, "ret": -1.0, "lab": "RRQ v GEN 2026-05-23"}, {"x": 0.35, "y": 0.188, "won": false, "ret": -1.0, "lab": "G2 v NRG 2026-05-23"}, {"x": 0.157, "y": 0.522, "won": false, "ret": -1.0, "lab": "TYL v EDG 2026-05-24"}, {"x": 0.182, "y": 0.132, "won": false, "ret": -1.0, "lab": "T1 v DFM 2026-05-24"}, {"x": 0.573, "y": 0.022, "won": false, "ret": -1.0, "lab": "GE v NS 2026-05-24"}, {"x": 0.56, "y": 0.104, "won": false, "ret": -1.0, "lab": "BBL v EF 2026-05-24"}, {"x": 0.268, "y": 0.153, "won": true, "ret": 2.74, "lab": "KC v FNC 2026-05-24"}, {"x": 0.497, "y": 0.128, "won": true, "ret": 1.01, "lab": "G2 v LEV 2026-05-24"}, {"x": 0.615, "y": 0.054, "won": true, "ret": 0.63, "lab": "AG v FPX 2026-05-25"}, {"x": 0.453, "y": 0.066, "won": true, "ret": 1.21, "lab": "TEC v TE 2026-05-25"}, {"x": 0.458, "y": 0.15, "won": false, "ret": -1.0, "lab": "NOVA v JDG 2026-05-26"}, {"x": 0.568, "y": 0.053, "won": true, "ret": 0.76, "lab": "TYL v BLG 2026-05-26"}, {"x": 0.597, "y": 0.036, "won": true, "ret": 0.67, "lab": "100T v FUR 2026-05-27"}, {"x": 0.815, "y": 0.027, "won": false, "ret": -1.0, "lab": "LOUD v NRG 2026-05-27"}, {"x": 0.542, "y": 0.001, "won": true, "ret": 0.84, "lab": "MIBR v KR\u00dc 2026-05-27"}, {"x": 0.3, "y": 0.141, "won": false, "ret": -1.0, "lab": "LEV v SEN 2026-05-27"}, {"x": 0.63, "y": 0.041, "won": false, "ret": -1.0, "lab": "MIBR v LEV 2026-05-28"}, {"x": 0.45, "y": 0.212, "won": true, "ret": 1.22, "lab": "SEN v KR\u00dc 2026-05-28"}, {"x": 0.77, "y": 0.009, "won": false, "ret": -1.0, "lab": "TEC v AG 2026-05-29"}, {"x": 0.29, "y": 0.084, "won": true, "ret": 2.45, "lab": "NOVA v TYL 2026-05-29"}, {"x": 0.7, "y": 0.026, "won": true, "ret": 0.43, "lab": "NRG v FUR 2026-05-29"}, {"x": 0.7, "y": 0.046, "won": true, "ret": 0.43, "lab": "100T v LOUD 2026-05-29"}, {"x": 0.508, "y": 0.041, "won": true, "ret": 0.97, "lab": "NS v KRX 2026-05-30"}, {"x": 0.357, "y": 0.098, "won": true, "ret": 1.8, "lab": "GEN v T1 2026-05-30"}, {"x": 0.595, "y": 0.074, "won": true, "ret": 0.68, "lab": "AG v TYL 2026-05-30"}, {"x": 0.37, "y": 0.075, "won": true, "ret": 1.7, "lab": "NAVI v FNC 2026-05-30"}, {"x": 0.435, "y": 0.029, "won": true, "ret": 1.3, "lab": "BBL v FUT 2026-05-30"}, {"x": 0.345, "y": 0.027, "won": true, "ret": 1.9, "lab": "LOUD v SEN 2026-05-30"}, {"x": 0.422, "y": 0.035, "won": false, "ret": -1.0, "lab": "NRG v LEV 2026-05-30"}, {"x": 0.39, "y": 0.061, "won": false, "ret": -1.0, "lab": "NS v GEN 2026-05-31"}, {"x": 0.587, "y": 0.026, "won": true, "ret": 0.7, "lab": "NOVA v TEC 2026-05-31"}, {"x": 0.542, "y": 0.036, "won": false, "ret": -1.0, "lab": "BBL v NAVI 2026-05-31"}, {"x": 0.768, "y": 0.005, "won": true, "ret": 0.3, "lab": "NRG v LOUD 2026-05-31"}, {"x": 0.725, "y": 0.018, "won": true, "ret": 0.38, "lab": "NRG v XLG 2026-06-06"}, {"x": 0.177, "y": 0.046, "won": false, "ret": -1.0, "lab": "VIT v DRG 2026-06-06"}, {"x": 0.59, "y": 0.036, "won": false, "ret": -1.0, "lab": "FUT v FS 2026-06-07"}, {"x": 0.422, "y": 0.148, "won": false, "ret": -1.0, "lab": "LEV v GE 2026-06-07"}, {"x": 0.347, "y": 0.035, "won": false, "ret": -1.0, "lab": "VIT v FUT 2026-06-08"}, {"x": 0.595, "y": 0.004, "won": false, "ret": -1.0, "lab": "LEV v NRG 2026-06-08"}, {"x": 0.292, "y": 0.044, "won": false, "ret": -1.0, "lab": "XLG v DRG 2026-06-09"}, {"x": 0.555, "y": 0.071, "won": true, "ret": 0.8, "lab": "GE v FS 2026-06-09"}, {"x": 0.64, "y": 0.013, "won": false, "ret": -1.0, "lab": "FUT v NRG 2026-06-10"}, {"x": 0.702, "y": 0.054, "won": false, "ret": -1.0, "lab": "XLG v GE 2026-06-10"}, {"x": 0.35, "y": 0.017, "won": false, "ret": -1.0, "lab": "PRX v LEV 2026-06-12"}, {"x": 0.485, "y": 0.027, "won": false, "ret": -1.0, "lab": "VIT v TH 2026-06-12"}, {"x": 0.555, "y": 0.124, "won": false, "ret": -1.0, "lab": "EDG v FUT 2026-06-13"}, {"x": 0.175, "y": 0.102, "won": true, "ret": 4.71, "lab": "XLG v G2 2026-06-13"}, {"x": 0.478, "y": 0.097, "won": false, "ret": -1.0, "lab": "LEV v TH 2026-06-14"}, {"x": 0.398, "y": 0.031, "won": true, "ret": 1.52, "lab": "FUT v G2 2026-06-14"}, {"x": 0.415, "y": 0.131, "won": false, "ret": -1.0, "lab": "EDG v XLG 2026-06-15"}, {"x": 0.6, "y": 0.017, "won": true, "ret": 0.67, "lab": "PRX v VIT 2026-06-15"}, {"x": 0.305, "y": 0.106, "won": false, "ret": -1.0, "lab": "LEV v XLG 2026-06-16"}, {"x": 0.35, "y": 0.081, "won": false, "ret": -1.0, "lab": "VIT v FUT 2026-06-16"}, {"x": 0.75, "y": 0.052, "won": true, "ret": 0.33, "lab": "PRX v EDG 2026-06-19"}, {"x": 0.443, "y": 0.013, "won": true, "ret": 1.26, "lab": "LEV v VIT 2026-06-19"}, {"x": 0.657, "y": 0.1, "won": true, "ret": 0.52, "lab": "LEV v EDG 2026-06-20"}, {"x": 0.345, "y": 0.063, "won": true, "ret": 1.9, "lab": "LEV v PRX 2026-06-21"}, {"x": 0.365, "y": 0.115, "won": false, "ret": -1.0, "lab": "BBL v EDG 2026-07-02"}, {"x": 0.373, "y": 0.015, "won": false, "ret": -1.0, "lab": "100T v RRQ 2026-07-02"}, {"x": 0.292, "y": 0.08, "won": false, "ret": -1.0, "lab": "VIT v KC 2026-07-02"}, {"x": 0.352, "y": 0.06, "won": true, "ret": 1.84, "lab": "NRG v PRX 2026-07-02"}, {"x": 0.38, "y": 0.03, "won": false, "ret": -1.0, "lab": "M8 v XLG 2026-07-03"}, {"x": 0.46, "y": 0.034, "won": true, "ret": 1.17, "lab": "NS v G2 2026-07-03"}, {"x": 0.545, "y": 0.043, "won": false, "ret": -1.0, "lab": "EDG v RRQ 2026-07-04"}, {"x": 0.64, "y": 0.03, "won": true, "ret": 0.56, "lab": "100T v BBL 2026-07-04"}, {"x": 0.54, "y": 0.033, "won": false, "ret": -1.0, "lab": "VIT v NRG 2026-07-04"}, {"x": 0.2, "y": 0.068, "won": true, "ret": 4.0, "lab": "KC v PRX 2026-07-04"}, {"x": 0.27, "y": 0.046, "won": false, "ret": -1.0, "lab": "G2 v XLG 2026-07-05"}, {"x": 0.36, "y": 0.106, "won": true, "ret": 1.78, "lab": "M8 v NS 2026-07-05"}, {"x": 0.61, "y": 0.026, "won": true, "ret": 0.64, "lab": "BBL v EDG 2026-07-06"}, {"x": 0.31, "y": 0.056, "won": false, "ret": -1.0, "lab": "NRG v KC 2026-07-06"}, {"x": 0.538, "y": 0.003, "won": false, "ret": -1.0, "lab": "NS v G2 2026-07-07"}, {"x": 0.643, "y": 0.001, "won": false, "ret": -1.0, "lab": "WOL v TEC 2026-07-09"}, {"x": 0.5, "y": 0.023, "won": true, "ret": 1.0, "lab": "DRG v BLG 2026-07-09"}, {"x": 0.4, "y": 0.081, "won": true, "ret": 1.5, "lab": "BBL v TH 2026-07-09"}, {"x": 0.385, "y": 0.021, "won": false, "ret": -1.0, "lab": "NRG v M8 2026-07-09"}, {"x": 0.482, "y": 0.15, "won": true, "ret": 1.07, "lab": "FPX v TE 2026-07-10"}, {"x": 0.393, "y": 0.025, "won": false, "ret": -1.0, "lab": "TYL v JDG 2026-07-10"}, {"x": 0.562, "y": 0.02, "won": false, "ret": -1.0, "lab": "NS v VIT 2026-07-10"}, {"x": 0.3, "y": 0.123, "won": false, "ret": -1.0, "lab": "DRG v TEC 2026-07-11"}, {"x": 0.425, "y": 0.15, "won": true, "ret": 1.35, "lab": "100T v NS 2026-07-11"}, {"x": 0.363, "y": 0.054, "won": false, "ret": -1.0, "lab": "BLG v WOL 2026-07-11"}, {"x": 0.367, "y": 0.049, "won": false, "ret": -1.0, "lab": "NRG v BBL 2026-07-11"}, {"x": 0.453, "y": 0.114, "won": true, "ret": 1.21, "lab": "NOVA v FPX 2026-07-12"}, {"x": 0.667, "y": 0.042, "won": true, "ret": 0.5, "lab": "TYL v TE 2026-07-12"}, {"x": 0.41, "y": 0.068, "won": false, "ret": -1.0, "lab": "NS v BBL 2026-07-12"}, {"x": 0.422, "y": 0.087, "won": true, "ret": 1.37, "lab": "100T v NRG 2026-07-12"}, {"x": 0.742, "y": 0.056, "won": true, "ret": 0.35, "lab": "AG v WOL 2026-07-14"}, {"x": 0.155, "y": 0.144, "won": true, "ret": 5.45, "lab": "TEC v XLG 2026-07-14"}, {"x": 0.427, "y": 0.017, "won": false, "ret": -1.0, "lab": "FPX v JDG 2026-07-15"}, {"x": 0.345, "y": 0.101, "won": true, "ret": 1.9, "lab": "TYL v EDG 2026-07-15"}, {"x": 0.413, "y": 0.07, "won": true, "ret": 1.42, "lab": "NAVI v FUT 2026-07-15"}, {"x": 0.355, "y": 0.128, "won": false, "ret": -1.0, "lab": "EF v TL 2026-07-15"}, {"x": 0.77, "y": 0.002, "won": true, "ret": 0.3, "lab": "GEN v ZETA 2026-07-16"}, {"x": 0.633, "y": 0.104, "won": false, "ret": -1.0, "lab": "BLG v AG 2026-07-16"}, {"x": 0.587, "y": 0.007, "won": true, "ret": 0.7, "lab": "XLG v DRG 2026-07-16"}, {"x": 0.49, "y": 0.041, "won": false, "ret": -1.0, "lab": "VL v TS 2026-07-16"}, {"x": 0.218, "y": 0.127, "won": false, "ret": -1.0, "lab": "FNC v GX 2026-07-16"}, {"x": 0.795, "y": 0.01, "won": true, "ret": 0.26, "lab": "M8 v PCF 2026-07-16"}, {"x": 0.222, "y": 0.036, "won": false, "ret": -1.0, "lab": "LEV v FUR 2026-07-16"}, {"x": 0.568, "y": 0.084, "won": true, "ret": 0.76, "lab": "SEN v C9 2026-07-16"}, {"x": 0.26, "y": 0.057, "won": false, "ret": -1.0, "lab": "NOVA v JDG 2026-07-17"}, {"x": 0.65, "y": 0.077, "won": false, "ret": -1.0, "lab": "FS v NS 2026-07-17"}, {"x": 0.337, "y": 0.079, "won": false, "ret": -1.0, "lab": "TYL v FPX 2026-07-17"}, {"x": 0.248, "y": 0.128, "won": false, "ret": -1.0, "lab": "KRX v DFM 2026-07-17"}, {"x": 0.153, "y": 0.074, "won": false, "ret": -1.0, "lab": "EDG v TE 2026-07-17"}, {"x": 0.49, "y": 0.03, "won": false, "ret": -1.0, "lab": "KC v EF 2026-07-17"}, {"x": 0.35, "y": 0.076, "won": false, "ret": -1.0, "lab": "VIT v NAVI 2026-07-17"}, {"x": 0.423, "y": 0.086, "won": true, "ret": 1.37, "lab": "LOUD v KR\u00dc 2026-07-17"}, {"x": 0.545, "y": 0.008, "won": true, "ret": 0.83, "lab": "GE v RRQ 2026-07-18"}, {"x": 0.345, "y": 0.087, "won": false, "ret": -1.0, "lab": "BLG v TEC 2026-07-18"}, {"x": 0.63, "y": 0.05, "won": false, "ret": -1.0, "lab": "T1 v PRX 2026-07-18"}, {"x": 0.373, "y": 0.185, "won": false, "ret": -1.0, "lab": "XLG v AG 2026-07-18"}, {"x": 0.41, "y": 0.004, "won": true, "ret": 1.44, "lab": "FUT v M8 2026-07-18"}, {"x": 0.355, "y": 0.043, "won": true, "ret": 1.82, "lab": "TL v TH 2026-07-18"}, {"x": 0.435, "y": 0.206, "won": true, "ret": 1.3, "lab": "100T v G2 2026-07-18"}, {"x": 0.583, "y": 0.044, "won": true, "ret": 0.72, "lab": "NRG v MIBR 2026-07-18"}, {"x": 0.695, "y": 0.081, "won": true, "ret": 0.44, "lab": "NOVA v TE 2026-07-19"}, {"x": 0.35, "y": 0.019, "won": true, "ret": 1.86, "lab": "GEN v NS 2026-07-19"}, {"x": 0.225, "y": 0.084, "won": true, "ret": 3.44, "lab": "TS v KRX 2026-07-19"}, {"x": 0.315, "y": 0.061, "won": true, "ret": 2.17, "lab": "WOL v DRG 2026-07-19"}, {"x": 0.165, "y": 0.145, "won": false, "ret": -1.0, "lab": "EDG v JDG 2026-07-19"}, {"x": 0.685, "y": 0.011, "won": true, "ret": 0.46, "lab": "KC v GX 2026-07-19"}, {"x": 0.403, "y": 0.085, "won": true, "ret": 1.48, "lab": "BBL v VIT 2026-07-19"}, {"x": 0.698, "y": 0.026, "won": true, "ret": 0.43, "lab": "AG v TEC 2026-07-20"}, {"x": 0.378, "y": 0.004, "won": true, "ret": 1.65, "lab": "BLG v XLG 2026-07-20"}, {"x": 0.565, "y": 0.012, "won": true, "ret": 0.77, "lab": "JDG v TE 2026-07-21"}, {"x": 0.318, "y": 0.144, "won": true, "ret": 2.15, "lab": "NOVA v EDG 2026-07-21"}]};
+new Chart(document.getElementById('edgecurve'), {
+ type: 'line',
+ data: { labels: EA.curve.map(c => c.lab), datasets: [
+  { label: 'market-implied win rate', data: EA.curve.map(c => c.implied),
+     borderColor: '#9a93a6', borderDash: [6,4], pointRadius: 3 },
+  { label: 'realized win rate (model sides)', data: EA.curve.map(c => c.realized),
+     borderColor: '#7c4dd6', backgroundColor: '#7c4dd6', pointRadius: 5,
+     fill: { target: 0, above: 'rgba(30,122,79,.15)', below: 'rgba(192,57,43,.15)' } } ] },
+ options: { plugins: { tooltip: { callbacks: {
+     afterBody: items => 'n=' + EA.curve[items[0].dataIndex].n } } },
+  scales: { y: { min: 0, max: 1, title: { display: true, text: 'win probability' } } } }
+});
+new Chart(document.getElementById('edgescatter'), {
+ type: 'scatter',
+ data: { datasets: [
+  { label: 'won', data: EA.scatter.filter(p => p.won),
+     backgroundColor: 'rgba(30,122,79,.75)',
+     pointRadius: EA.scatter.filter(p => p.won).map(p => 3 + Math.min(9, Math.sqrt(Math.abs(p.ret)) * 3)) },
+  { label: 'lost', data: EA.scatter.filter(p => !p.won),
+     backgroundColor: 'rgba(192,57,43,.65)', pointRadius: 4 },
+  { label: '5-pt trade threshold', type: 'line', data: [{x:0.02,y:0.05},{x:0.98,y:0.05}],
+     borderColor: '#6b6478', borderDash: [7,5], pointRadius: 0, borderWidth: 1.5 } ] },
+ options: { plugins: { tooltip: { callbacks: {
+     label: ctx => { const p = ctx.raw; return p.lab ? p.lab + ' — price ' +
+       Math.round(p.x*100) + 'c, div ' + Math.round(p.y*100) + 'pts, ret ' +
+       (p.ret>0?'+':'') + Math.round(p.ret*100) + '%' : ''; } } } },
+  scales: { x: { min: 0, max: 1, title: { display: true, text: "price of the model's side (¢)" },
+              ticks: { callback: v => Math.round(v*100) + 'c' } },
+            y: { min: 0, title: { display: true, text: 'divergence (model − market)' },
+              ticks: { callback: v => Math.round(v*100) + 'pts' } } } }
+});
+new Chart(document.getElementById('micro'), {
+ data: { labels: MIC.labels, datasets: [
+  { type: 'bar', label: 'share of volume (%)', data: MIC.vol, backgroundColor: '#7c4dd655',
+     yAxisID: 'y' },
+  { type: 'line', label: 'median spread (¢)', data: MIC.spread, borderColor: '#b3541e',
+     pointRadius: 4, yAxisID: 'y2' } ] },
+ options: { scales: { y: { position: 'left', title: { display: true, text: 'volume share %' } },
+   y2: { position: 'right', grid: { drawOnChartArea: false },
+        title: { display: true, text: 'spread ¢' } } } }
+});
+</script>
+</body></html>

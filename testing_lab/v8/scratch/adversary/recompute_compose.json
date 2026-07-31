@@ -1,0 +1,48 @@
+{
+ "gate_counts": {
+  "train": 344,
+  "holdout": 178,
+  "published": [
+   330,
+   178
+  ]
+ },
+ "S1": {
+  "delta_milli_mine": 1.958,
+  "published": 1.958,
+  "iid": {
+   "p_better": 0.96575,
+   "lo": -0.00015100523890662754,
+   "hi": 0.004206100025043042
+  },
+  "block": {
+   "p_better": 0.88825,
+   "lo": -0.0011881112973386539,
+   "hi": 0.004941784231505707
+  },
+  "gated_rows_delta_milli": 13.39,
+  "n_gated_hold": 178,
+  "drop_top5pct_milli": -3.963,
+  "jackknife_flips": {},
+  "jackknife_min": 0.903,
+  "gate_thin_overlap_holdout": {
+   "n_gate": 178,
+   "n_thin": 117,
+   "n_both": 68
+  }
+ },
+ "S2": {
+  "beta": 0.1252,
+  "k": 0.3524,
+  "delta_milli_mine": -0.14,
+  "published": -0.14,
+  "n": 1217
+ },
+ "S3": {
+  "beta": 0.1174,
+  "k": 1.8695,
+  "delta_milli_mine": -7.874,
+  "published": -7.874,
+  "S3_vs_minS1S2_anti_synergy_falsifier_fired": true
+ }
+}

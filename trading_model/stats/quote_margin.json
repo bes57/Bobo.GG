@@ -1,0 +1,328 @@
+{
+ "n_markets": 310,
+ "flat_0c": {
+  "quoted": 310,
+  "fills": 233,
+  "fill_rate": 0.752,
+  "profit": 0.25,
+  "cost": 118.75,
+  "roi": 0.0021,
+  "profit_per_event": 0.0016,
+  "ci": [
+   -0.119,
+   0.126
+  ]
+ },
+ "flat_1c": {
+  "quoted": 310,
+  "fills": 221,
+  "fill_rate": 0.713,
+  "profit": -0.68,
+  "cost": 110.68,
+  "roi": -0.0061,
+  "profit_per_event": -0.0044,
+  "ci": [
+   -0.134,
+   0.12
+  ]
+ },
+ "flat_2c": {
+  "quoted": 310,
+  "fills": 204,
+  "fill_rate": 0.658,
+  "profit": 3.45,
+  "cost": 101.55,
+  "roi": 0.034,
+  "profit_per_event": 0.0222,
+  "ci": [
+   -0.093,
+   0.17
+  ]
+ },
+ "flat_3c": {
+  "quoted": 310,
+  "fills": 193,
+  "fill_rate": 0.623,
+  "profit": 4.79,
+  "cost": 94.21,
+  "roi": 0.0509,
+  "profit_per_event": 0.0309,
+  "ci": [
+   -0.091,
+   0.197
+  ]
+ },
+ "flat_4c": {
+  "quoted": 310,
+  "fills": 177,
+  "fill_rate": 0.571,
+  "profit": 3.18,
+  "cost": 84.82,
+  "roi": 0.0375,
+  "profit_per_event": 0.0205,
+  "ci": [
+   -0.117,
+   0.184
+  ]
+ },
+ "flat_5c": {
+  "quoted": 310,
+  "fills": 168,
+  "fill_rate": 0.542,
+  "profit": 5.27,
+  "cost": 78.73,
+  "roi": 0.067,
+  "profit_per_event": 0.034,
+  "ci": [
+   -0.092,
+   0.228
+  ]
+ },
+ "flat_6c": {
+  "quoted": 310,
+  "fills": 156,
+  "fill_rate": 0.503,
+  "profit": 4.23,
+  "cost": 71.77,
+  "roi": 0.059,
+  "profit_per_event": 0.0273,
+  "ci": [
+   -0.102,
+   0.226
+  ]
+ },
+ "flat_7c": {
+  "quoted": 310,
+  "fills": 147,
+  "fill_rate": 0.474,
+  "profit": 5.67,
+  "cost": 66.33,
+  "roi": 0.0854,
+  "profit_per_event": 0.0366,
+  "ci": [
+   -0.086,
+   0.27
+  ]
+ },
+ "flat_8c": {
+  "quoted": 310,
+  "fills": 136,
+  "fill_rate": 0.439,
+  "profit": 4.63,
+  "cost": 60.37,
+  "roi": 0.0767,
+  "profit_per_event": 0.0299,
+  "ci": [
+   -0.109,
+   0.263
+  ]
+ },
+ "flat_9c": {
+  "quoted": 310,
+  "fills": 122,
+  "fill_rate": 0.394,
+  "profit": 5.86,
+  "cost": 53.14,
+  "roi": 0.1104,
+  "profit_per_event": 0.0378,
+  "ci": [
+   -0.094,
+   0.33
+  ]
+ },
+ "flat_10c": {
+  "quoted": 310,
+  "fills": 109,
+  "fill_rate": 0.352,
+  "profit": 6.14,
+  "cost": 46.86,
+  "roi": 0.131,
+  "profit_per_event": 0.0396,
+  "ci": [
+   -0.091,
+   0.352
+  ]
+ },
+ "flat_11c": {
+  "quoted": 310,
+  "fills": 100,
+  "fill_rate": 0.323,
+  "profit": 8.07,
+  "cost": 41.93,
+  "roi": 0.1925,
+  "profit_per_event": 0.0521,
+  "ci": [
+   -0.042,
+   0.435
+  ]
+ },
+ "flat_12c": {
+  "quoted": 310,
+  "fills": 84,
+  "fill_rate": 0.271,
+  "profit": 5.01,
+  "cost": 34.99,
+  "roi": 0.1432,
+  "profit_per_event": 0.0323,
+  "ci": [
+   -0.107,
+   0.401
+  ]
+ },
+ "flat_13c": {
+  "quoted": 310,
+  "fills": 76,
+  "fill_rate": 0.245,
+  "profit": 5.12,
+  "cost": 30.88,
+  "roi": 0.1658,
+  "profit_per_event": 0.033,
+  "ci": [
+   -0.096,
+   0.446
+  ]
+ },
+ "flat_14c": {
+  "quoted": 310,
+  "fills": 67,
+  "fill_rate": 0.216,
+  "profit": 5.08,
+  "cost": 25.92,
+  "roi": 0.1959,
+  "profit_per_event": 0.0328,
+  "ci": [
+   -0.109,
+   0.517
+  ]
+ },
+ "flat_15c": {
+  "quoted": 309,
+  "fills": 58,
+  "fill_rate": 0.188,
+  "profit": 4.42,
+  "cost": 21.58,
+  "roi": 0.2049,
+  "profit_per_event": 0.0285,
+  "ci": [
+   -0.123,
+   0.561
+  ]
+ },
+ "logit_0.1": {
+  "quoted": 310,
+  "fills": 202,
+  "fill_rate": 0.652,
+  "profit": 4.02,
+  "cost": 99.98,
+  "roi": 0.0402,
+  "profit_per_event": 0.0259,
+  "ci": [
+   -0.093,
+   0.179
+  ]
+ },
+ "logit_0.2": {
+  "quoted": 310,
+  "fills": 171,
+  "fill_rate": 0.552,
+  "profit": 4.9,
+  "cost": 81.1,
+  "roi": 0.0604,
+  "profit_per_event": 0.0316,
+  "ci": [
+   -0.091,
+   0.216
+  ]
+ },
+ "logit_0.3": {
+  "quoted": 310,
+  "fills": 148,
+  "fill_rate": 0.477,
+  "profit": 5.9,
+  "cost": 67.1,
+  "roi": 0.088,
+  "profit_per_event": 0.0381,
+  "ci": [
+   -0.092,
+   0.266
+  ]
+ },
+ "logit_0.4": {
+  "quoted": 310,
+  "fills": 122,
+  "fill_rate": 0.394,
+  "profit": 7.82,
+  "cost": 52.18,
+  "roi": 0.1498,
+  "profit_per_event": 0.0504,
+  "ci": [
+   -0.05,
+   0.364
+  ]
+ },
+ "logit_0.6": {
+  "quoted": 310,
+  "fills": 74,
+  "fill_rate": 0.239,
+  "profit": 8.12,
+  "cost": 27.88,
+  "roi": 0.2911,
+  "profit_per_event": 0.0524,
+  "ci": [
+   0.006,
+   0.61
+  ]
+ },
+ "sqrt_8": {
+  "quoted": 310,
+  "fills": 180,
+  "fill_rate": 0.581,
+  "profit": 4.44,
+  "cost": 86.56,
+  "roi": 0.0513,
+  "profit_per_event": 0.0286,
+  "ci": [
+   -0.096,
+   0.201
+  ]
+ },
+ "sqrt_12": {
+  "quoted": 310,
+  "fills": 158,
+  "fill_rate": 0.51,
+  "profit": 3.79,
+  "cost": 73.21,
+  "roi": 0.0518,
+  "profit_per_event": 0.0244,
+  "ci": [
+   -0.116,
+   0.218
+  ]
+ },
+ "sqrt_16": {
+  "quoted": 310,
+  "fills": 139,
+  "fill_rate": 0.448,
+  "profit": 4.14,
+  "cost": 61.86,
+  "roi": 0.0669,
+  "profit_per_event": 0.0267,
+  "ci": [
+   -0.115,
+   0.256
+  ]
+ },
+ "sqrt_20": {
+  "quoted": 310,
+  "fills": 116,
+  "fill_rate": 0.374,
+  "profit": 8.15,
+  "cost": 49.85,
+  "roi": 0.1635,
+  "profit_per_event": 0.0526,
+  "ci": [
+   -0.037,
+   0.384
+  ]
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "written_by": "agent:compose",
+ "written": "2026-07-28",
+ "what_this_is": "EXACT reproducible spec of the best Wave-3 stack (S1_gate5d, dLL +1.958m, verdict HOLD — v6 stands; spec published for reimplementation/telemetry purposes, NOT as a promotion). A spec-level reimplementation needs nothing beyond this file plus the named data artifacts.",
+ "verdict_context": "S1 did NOT clear the promotion gate (G1/G2/G3 all fail). It is the only stack with positive holdout dLL and its gain is concentrated exactly where preregistered (gated thin-data rows +13.39m on n=178).",
+ "data_recipe": {
+  "frame": "testing_lab/v8/data/frame_expanded/series.csv, sha256 ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142 (verify vs crn.json frame_expanded before use; abort on mismatch)",
+  "holdout": "date > 2024-12-31 (n=1217); train = rest (n=841); sort (date, match_id)",
+  "game_corpus": "engine.Engine().games on the expanded registry (2023-2026 incl. corpus additions); per-map rows; MapNum=='all' aggregate rows excluded upstream",
+  "series_prob_form": "bo1: pm; bo3: pm^2(3-2pm); bo5/bo5_gf: pm^3(1+3(1-pm)+6(1-pm)^2)"
+ },
+ "branch_A_v6_default": {
+  "model": "v6 champion (walk-forward Massey), replayed on the expanded frame",
+  "decay": "games-counted, consistency-typed: HL 20 map-games if result consistent with team's trailing HL16 decayed map winrate (>=0.5 won / <0.5 lost), else HL 12",
+  "rd_transform": "sign(rd)*|rd|^0.75*2.5",
+  "weights": "champ x2 on event_id fullmatch YYYY_champions only; playoffs/grand_final x1.6; year-boundary roster continuity (engine roster_mode 'year')",
+  "solve": "ridge 0.5 + region-prior ridge 1.5 toward previous-day region means; sum-zero constraint",
+  "beta_train_fit": 0.1152,
+  "reference_vector": "scratch/bias_h3/model_probs.npz p_v6 (holdout LL 0.64216)"
+ },
+ "branch_B_5d_statespace": {
+  "model": "per-team Kalman analog (bias-h3 5d roster-typed), strict-day walk-forward",
+  "observation": "per map y = sign(rd)*|rd|^0.75*2.5, winner-referenced",
+  "R_identification_constant": 11.293301971678328,
+  "R_definition": "Var(y) over train-era maps (date <= 2024-12-31); all reported quantities depend only on q/R and are invariant to this choice",
+  "obs_noise_per_game": "R_i = R / w_i with w_i = (2.0 if YYYY_champions exact-shape else 1.0) * (1.6 if stage in {playoffs, grand_final} else 1.0)",
+  "V0_initial_variance": 14.360127353605192,
+  "process_noise_q_per_own_map_game_by_roster_cell": {
+   "change_adjacent_msc_le_3": 0.09897760670751181,
+   "settling_msc_4_to_10": 7.88387319297735e-06,
+   "stable_msc_gt_10": 0.008849729496574744
+  },
+  "roster_cell_rule": "matches_since_change at the game's match (lineups-agent rule: walk back through the org's strictly-earlier match sequence while the fielded 5-lineup is identical; missing lineup -> stable cell). Table: scratch/bias_h3/lineup_topup.csv (0/3466 mismatches vs lineups agent)",
+  "p_series": "GH-20 Gauss-Hermite integral of series form over N(mu_delta, v_A+v_B), normalized weights",
+  "beta_5d_train_fit": 0.09503121380171933,
+  "probability_vector": "scratch/bias_h3/model_probs.npz p_ss_5d (holdout LL 0.647483); pre-match variances vw_5d/vl_5d"
+ },
+ "gate": {
+  "rule": "use branch B iff neff_min < 12 else branch A",
+  "neff_min": "min(R/v_w, R/v_l) with the SAME R constant as branch B and v = pre-match per-team posterior variance from the 5d filter",
+  "threshold": 12.0,
+  "threshold_provenance": "only 5d hard gate beating v6 on TRAIN (h3_ensemble.json train_table: 0.646927 vs v6 0.648226); preregistered in preregister.compose.md before scoring",
+  "verification_targets": {
+   "n_gated_train": 330,
+   "n_gated_holdout": 178,
+   "composite_train_nll": 0.6469269476859414,
+   "composite_holdout_ll": 0.6402,
+   "v6_holdout_ll": 0.64216,
+   "delta_holdout_milli": 1.958,
+   "delta_gated_rows_milli": 13.389,
+   "delta_nongated_rows_milli": 0.0
+  }
+ },
+ "no_other_free_parameters": "S1 introduces zero new fitted constants; every number above is a Wave-2 train-side fit from the named artifacts. No solve constant changed, so no beta refit was owed (wave2_common scale-bound rule).",
+ "judging_record": "stats/compose_stacks.json S1_gate5d; gate clauses in stats/compose_gate.json; one-shot scoring sentinel scratch/compose/SCORED"
+}

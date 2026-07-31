@@ -1,0 +1,770 @@
+{
+ "34948": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34948/supermassive-blaze-vs-acend-valorant-champions-tour-stage-3-masters-berlin-opening-a",
+  "maps": {
+   "50203": [
+    "ACE",
+    "13-9"
+   ],
+   "50204": [
+    "ACE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "ACE",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2021-09-10 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "SUP"
+  ]
+ },
+ "35938": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/35938/g2-esports-vs-f4q-valorant-champions-tour-stage-3-masters-berlin-group-d",
+  "maps": {
+   "51040": [
+    "G2",
+    "13-5"
+   ],
+   "51041": [
+    "F4Q",
+    "13-9"
+   ],
+   "51042": [
+    "G2",
+    "13-8"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Group D",
+  "utc_ts": "2021-09-10 12:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "F4Q",
+   "G2"
+  ]
+ },
+ "34952": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34952/100-thieves-vs-havan-liberty-valorant-champions-tour-stage-3-masters-berlin-opening-c",
+  "maps": {
+   "50214": [
+    "100T",
+    "13-3"
+   ],
+   "50215": [
+    "100T",
+    "13-6"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2021-09-10 15:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "LBR"
+  ]
+ },
+ "34947": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34947/vision-strikers-vs-paper-rex-valorant-champions-tour-stage-3-masters-berlin-opening-a",
+  "maps": {
+   "50199": [
+    "VS",
+    "13-9"
+   ],
+   "50200": [
+    "VS",
+    "13-11"
+   ]
+  },
+  "series": [
+   "VS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2021-09-11 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "VS"
+  ]
+ },
+ "34951": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34951/gambit-esports-vs-crazy-raccoon-valorant-champions-tour-stage-3-masters-berlin-opening-c",
+  "maps": {
+   "50211": [
+    "GMB",
+    "13-1"
+   ],
+   "50212": [
+    "GMB",
+    "13-1"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2021-09-11 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "GMB"
+  ]
+ },
+ "34949": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34949/vivo-keyd-vs-envy-valorant-champions-tour-stage-3-masters-berlin-opening-b",
+  "maps": {
+   "50205": [
+    "ENVY",
+    "15-13"
+   ],
+   "50206": [
+    "ENVY",
+    "13-9"
+   ]
+  },
+  "series": [
+   "ENVY",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2021-09-11 14:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "ENVY",
+   "VKS"
+  ]
+ },
+ "34950": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34950/kr-esports-vs-zeta-division-valorant-champions-tour-stage-3-masters-berlin-opening-b",
+  "maps": {
+   "50208": [
+    "KR\u00dc",
+    "13-8"
+   ],
+   "50209": [
+    "ZETA",
+    "13-5"
+   ],
+   "50210": [
+    "KR\u00dc",
+    "13-7"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2021-09-12 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "ZETA"
+  ]
+ },
+ "35939": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/35939/sentinels-vs-g2-esports-valorant-champions-tour-stage-3-masters-berlin-group-d",
+  "maps": {
+   "51043": [
+    "SEN",
+    "13-6"
+   ],
+   "51044": [
+    "G2",
+    "13-8"
+   ],
+   "51045": [
+    "SEN",
+    "13-8"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Group D",
+  "utc_ts": "2021-09-12 12:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "SEN"
+  ]
+ },
+ "34964": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34964/gambit-esports-vs-100-thieves-valorant-champions-tour-stage-3-masters-berlin-winners-c",
+  "maps": {
+   "50241": [
+    "GMB",
+    "13-5"
+   ],
+   "50242": [
+    "100T",
+    "13-11"
+   ],
+   "50243": [
+    "100T",
+    "13-10"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (C)",
+  "utc_ts": "2021-09-12 16:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "GMB"
+  ]
+ },
+ "34961": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34961/envy-vs-kr-esports-valorant-champions-tour-stage-3-masters-berlin-winners-b",
+  "maps": {
+   "50232": [
+    "ENVY",
+    "13-9"
+   ],
+   "50233": [
+    "ENVY",
+    "13-2"
+   ]
+  },
+  "series": [
+   "ENVY",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (B)",
+  "utc_ts": "2021-09-13 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ENVY",
+   "KR\u00dc"
+  ]
+ },
+ "34958": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34958/vision-strikers-vs-acend-valorant-champions-tour-stage-3-masters-berlin-winners-a",
+  "maps": {
+   "50223": [
+    "VS",
+    "13-7"
+   ],
+   "50224": [
+    "VS",
+    "13-9"
+   ]
+  },
+  "series": [
+   "VS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (A)",
+  "utc_ts": "2021-09-13 11:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "VS"
+  ]
+ },
+ "35940": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/35940/f4q-vs-sentinels-valorant-champions-tour-stage-3-masters-berlin-group-d",
+  "maps": {
+   "51046": [
+    "SEN",
+    "13-9"
+   ],
+   "51047": [
+    "SEN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Group D",
+  "utc_ts": "2021-09-13 14:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "F4Q",
+   "SEN"
+  ]
+ },
+ "35941": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/35941/f4q-vs-g2-esports-valorant-champions-tour-stage-3-masters-berlin-group-d",
+  "maps": {
+   "51049": [
+    "G2",
+    "13-3"
+   ],
+   "51050": [
+    "G2",
+    "13-6"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Group D",
+  "utc_ts": "2021-09-14 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "F4Q",
+   "G2"
+  ]
+ },
+ "34962": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34962/vivo-keyd-vs-zeta-division-valorant-champions-tour-stage-3-masters-berlin-elimination-b",
+  "maps": {
+   "50235": [
+    "VKS",
+    "13-3"
+   ],
+   "50236": [
+    "VKS",
+    "13-4"
+   ]
+  },
+  "series": [
+   "VKS",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (B)",
+  "utc_ts": "2021-09-14 11:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "VKS",
+   "ZETA"
+  ]
+ },
+ "34965": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34965/crazy-raccoon-vs-havan-liberty-valorant-champions-tour-stage-3-masters-berlin-elimination-c",
+  "maps": {
+   "50244": [
+    "CR",
+    "13-9"
+   ],
+   "50245": [
+    "CR",
+    "13-8"
+   ]
+  },
+  "series": [
+   "CR",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (C)",
+  "utc_ts": "2021-09-14 14:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "LBR"
+  ]
+ },
+ "34959": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34959/paper-rex-vs-supermassive-blaze-valorant-champions-tour-stage-3-masters-berlin-elimination-a",
+  "maps": {
+   "50226": [
+    "PRX",
+    "14-12"
+   ],
+   "50227": [
+    "SUP",
+    "13-2"
+   ],
+   "50228": [
+    "SUP",
+    "13-10"
+   ]
+  },
+  "series": [
+   "SUP",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (A)",
+  "utc_ts": "2021-09-15 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "SUP"
+  ]
+ },
+ "35942": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/35942/g2-esports-vs-sentinels-valorant-champions-tour-stage-3-masters-berlin-group-d",
+  "maps": {
+   "51052": [
+    "G2",
+    "13-3"
+   ],
+   "51053": [
+    "G2",
+    "13-11"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Group D",
+  "utc_ts": "2021-09-15 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "SEN"
+  ]
+ },
+ "34963": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34963/kr-esports-vs-vivo-keyd-valorant-champions-tour-stage-3-masters-berlin-decider-b",
+  "maps": {
+   "50238": [
+    "KR\u00dc",
+    "13-11"
+   ],
+   "50239": [
+    "KR\u00dc",
+    "13-11"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (B)",
+  "utc_ts": "2021-09-15 15:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "VKS"
+  ]
+ },
+ "34960": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34960/acend-vs-supermassive-blaze-valorant-champions-tour-stage-3-masters-berlin-decider-a",
+  "maps": {
+   "50229": [
+    "SUP",
+    "13-6"
+   ],
+   "50230": [
+    "ACE",
+    "13-7"
+   ],
+   "50231": [
+    "ACE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "ACE",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (A)",
+  "utc_ts": "2021-09-16 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ACE",
+   "SUP"
+  ]
+ },
+ "34966": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34966/gambit-esports-vs-crazy-raccoon-valorant-champions-tour-stage-3-masters-berlin-decider-c",
+  "maps": {
+   "50248": [
+    "GMB",
+    "14-12"
+   ],
+   "50249": [
+    "GMB",
+    "13-8"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (C)",
+  "utc_ts": "2021-09-16 13:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "GMB"
+  ]
+ },
+ "35943": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/35943/sentinels-vs-f4q-valorant-champions-tour-stage-3-masters-berlin-group-d",
+  "maps": {
+   "51055": [
+    "SEN",
+    "13-3"
+   ],
+   "51056": [
+    "F4Q",
+    "13-9"
+   ],
+   "51057": [
+    "SEN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Group D",
+  "utc_ts": "2021-09-16 16:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "F4Q",
+   "SEN"
+  ]
+ },
+ "34975": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34975/vision-strikers-vs-gambit-esports-valorant-champions-tour-stage-3-masters-berlin-qf",
+  "maps": {
+   "50265": [
+    "GMB",
+    "13-2"
+   ],
+   "50266": [
+    "VS",
+    "13-7"
+   ],
+   "50267": [
+    "GMB",
+    "13-8"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-09-17 07:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GMB",
+   "VS"
+  ]
+ },
+ "34976": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34976/g2-esports-vs-kr-esports-valorant-champions-tour-stage-3-masters-berlin-qf",
+  "maps": {
+   "50269": [
+    "G2",
+    "13-7"
+   ],
+   "50270": [
+    "G2",
+    "13-9"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-09-17 10:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "KR\u00dc"
+  ]
+ },
+ "34973": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34973/100-thieves-vs-acend-valorant-champions-tour-stage-3-masters-berlin-qf",
+  "maps": {
+   "50259": [
+    "ACE",
+    "13-9"
+   ],
+   "50260": [
+    "100T",
+    "13-8"
+   ],
+   "50261": [
+    "100T",
+    "14-12"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-09-17 13:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "ACE"
+  ]
+ },
+ "34974": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34974/envy-vs-sentinels-valorant-champions-tour-stage-3-masters-berlin-qf",
+  "maps": {
+   "50262": [
+    "ENVY",
+    "15-13"
+   ],
+   "50263": [
+    "ENVY",
+    "13-7"
+   ]
+  },
+  "series": [
+   "ENVY",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2021-09-17 16:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "ENVY",
+   "SEN"
+  ]
+ },
+ "34977": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34977/gambit-esports-vs-g2-esports-valorant-champions-tour-stage-3-masters-berlin-sf",
+  "maps": {
+   "50271": [
+    "GMB",
+    "13-10"
+   ],
+   "50272": [
+    "GMB",
+    "13-0"
+   ]
+  },
+  "series": [
+   "GMB",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Semifinals",
+  "utc_ts": "2021-09-18 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "GMB"
+  ]
+ },
+ "34978": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34978/100-thieves-vs-envy-valorant-champions-tour-stage-3-masters-berlin-sf",
+  "maps": {
+   "50274": [
+    "ENVY",
+    "13-5"
+   ],
+   "50275": [
+    "ENVY",
+    "13-8"
+   ]
+  },
+  "series": [
+   "ENVY",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Semifinals",
+  "utc_ts": "2021-09-18 14:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "ENVY"
+  ]
+ },
+ "34979": {
+  "event_id": "2021_masters3_berlin",
+  "region": "International",
+  "url": "https://www.vlr.gg/34979/envy-vs-gambit-esports-valorant-champions-tour-stage-3-masters-berlin-gf",
+  "maps": {
+   "50277": [
+    "GMB",
+    "15-13"
+   ],
+   "50278": [
+    "GMB",
+    "13-11"
+   ],
+   "50279": [
+    "GMB",
+    "13-9"
+   ]
+  },
+  "series": [
+   "GMB",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2021-09-19 12:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ENVY",
+   "GMB"
+  ]
+ }
+}

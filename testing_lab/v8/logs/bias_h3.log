@@ -1,0 +1,41 @@
+[2026-07-28 22:0x] agent:bias-h3 START. Read wave2_common.md, bias_h3.md, README.md.
+Frame verified: series.csv sha256 ff772d41... == crn.frame_expanded (n=2058, train 841, holdout 1217).
+Engine loads expanded corpus: 5140 games, 56 events, EWC-class present (2026_ewc 76, 2026_ewc_qual 184 maps...).
+Frame<->games alignment: 0 missing matches, 0 date mismatches, 0 map-count mismatches. 637 pred days.
+lineup_features coverage: 1723/2058 frame matches; 335 corpus-addition matches lack rows ->
+5d roster typing needs scratch-only top-up per wave2_common (same definitions as preregister.lineups.md;
+recompute full corpus from data/maps/, verify 0 mismatches vs lineups agent on the 1723 overlap).
+Next: write preregister.bias_h3.md BEFORE any experiment run.
+[+] preregister.bias_h3.md written (incl. pre-run amendment on two-mode lineup verification), THEN runs started.
+[+] v6 baseline (consist 20/12, PO/champ/region-prior, beta refit train) on expanded frame:
+    beta=0.1152 ll_train=0.64823 (n=827; first-14 train rows invalid, <30-game history) ll_holdout=0.64216 (n=1217, full).
+    Checkpoint scratch/bias_h3/v6_baseline.npz + meta. Runtime 2.2s.
+[+] lib_h3.py written: GameData (R=Var(y) on train games), strict-day filter, GH-20 series integral, train-only beta fit.
+Next: full-corpus lineup recompute + two-mode verification (implementation check vs lineups agent's table).
+[+] Lineup top-up recompute done (scratch/bias_h3/lineup_topup.csv, 4148 (match,org) rows, 85 orgs).
+    Mode (i) IMPLEMENTATION CHECK: 0 mismatches on all 3466 overlap rows vs lineups agent (msc+gsc exact,
+    their NaN-on-debut compared as 0 per their spec). Mode (ii): full-corpus history changes msc on some
+    overlap rows (corpus-addition interleaving; counted in lineup_topup_verify.json) — expected, preregistered.
+Next: smoke-test filter + (q,V0) train sweep.
+[+] Core sweep done (227 pts, checkpointed sweep_core.json). TRAIN-selected:
+    1a plain: q/R=0.00565 V0/R=1.27 beta=0.0917 ll_train=0.64862 (HL 9.2g)
+    1b +q_cal: q/R=0.00282 V0/R=1.80 q_cal=0.01R/wk ll_train=0.64485  <- primary by train rule
+    1c debut-region-prior: ll_train=0.64730
+    Holdout stored in checkpoint for the record; selection used train only (preregistered).
+[decision, before 5d fits] 5d base = PLAIN core 1a (q-per-game only, V0 frozen at 1a's 1.27R):
+    mechanism isolation — typed q on the games-counted core keeps SS-5d vs SS-1a strictly
+    within-family with one moving part; 1b's calendar term is a separate variant, not the core.
+Next: GH-vs-MC validation (crn mc_seeds[0]), then 5d axis fits.
+[+] GH validation: GH20 == GH40 to machine epsilon over all 2058 rows; MC(200k, crn mc_seeds[0]) agrees within 3 MC-SE (scratch gh_vs_mc.json).
+[+] 5d fits done (sweep_5d.json checkpointed). Roster axis: q = [0.099, ~0 (boundary), 0.0089] -> HL [7.4, ~inf, 24.8] games;
+    extremes ratio 11x in the predicted direction. Org-age: REVERSED (established q largest), holdout -14m -> falsified/censoring artifact.
+    Volatility: flat -> falsified. DL pooling: tau2=0 on all axes (curvature SEs too wide at n_train=841) -> pooled-null published alongside
+    point ordering; roster-axis holdout record +3.6m vs core is the independent generalization signal (bootstrap adjudication next).
+[+] PUBLISHED stats/h3_process_noise.json (EARLY deliverable for agent:decay).
+Next: full referee judging (core+5d vs v6), caterpillar, n_eff, ensemble.
+[+] Judging suite done: h3_statespace.json (pairwise crn bootstraps, buckets, cold buckets, GH check),
+    h3_bias_caterpillar.json. Cold-start substitution documented (COLD_EPS empty on engine ratings).
+[+] h3_neff.json (622KB, per-match telemetry, 1b primary + 5d secondary). h3_ensemble.json:
+    train winner soft-blend(1b) LOST holdout -12.2m; no deployable composite; HOLD.
+[+] phase5_h3.md written; OUTCOMES appended to preregister.bias_h3.md (failures at full resolution).
+[2026-07-28] agent:bias-h3 DONE. All 5 stats artifacts + phase md + preregister + scratch checkpoints in place.

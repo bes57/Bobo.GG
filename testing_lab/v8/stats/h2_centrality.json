@@ -1,0 +1,859 @@
+{
+ "generated_by": "agent:bias-h2 E1, 2026-07-28",
+ "preregistered": "preregister.bias_h2.md E1 (written before running)",
+ "frame": {
+  "path": "testing_lab/v8/data/frame_expanded/series.csv",
+  "sha256_verified": true,
+  "n_holdout": 1217
+ },
+ "v6_baseline": {
+  "beta": 0.1152,
+  "ll_holdout": 0.64216,
+  "n_teams_bias": 43,
+  "max_abs_bias": 0.1478,
+  "mean_abs_bias": 0.0473
+ },
+ "feature_spec": {
+  "graph": "expanded games list, walk-forward at each holdout month boundary, edge weight exp decay HL 26 weeks; per-team aggregate weighted by holdout series per month",
+  "eig": "principal eigvec of symmetric W (eigh), abs, max=1"
+ },
+ "scatter": [
+  {
+   "team": "PRX",
+   "region": "Pacific",
+   "n": 86,
+   "ll": 0.6057,
+   "bias": -0.1016,
+   "abs_bias": 0.1016,
+   "eig_centrality": 0.8938758488911561,
+   "opp_count": 30.151162790697676,
+   "opp_diversity": 0.11380772781061554,
+   "xregion_share": 0.34543578313634327,
+   "mean_rating": 4.989968452579749
+  },
+  {
+   "team": "NRG",
+   "region": "Americas",
+   "n": 75,
+   "ll": 0.6246,
+   "bias": -0.0914,
+   "abs_bias": 0.0914,
+   "eig_centrality": 0.40700929852156076,
+   "opp_count": 25.213333333333335,
+   "opp_diversity": 0.14571481101213693,
+   "xregion_share": 0.20282956584708242,
+   "mean_rating": 3.705694809685104
+  },
+  {
+   "team": "BBL",
+   "region": "EMEA",
+   "n": 53,
+   "ll": 0.689,
+   "bias": -0.0866,
+   "abs_bias": 0.0866,
+   "eig_centrality": 0.2344838411936569,
+   "opp_count": 15.018867924528301,
+   "opp_diversity": 0.1375496687386329,
+   "xregion_share": 0.08337519560583433,
+   "mean_rating": 1.5022048403111714
+  },
+  {
+   "team": "100T",
+   "region": "Americas",
+   "n": 53,
+   "ll": 0.5715,
+   "bias": -0.0707,
+   "abs_bias": 0.0707,
+   "eig_centrality": 0.32293296471549426,
+   "opp_count": 17.79245283018868,
+   "opp_diversity": 0.12380201248806867,
+   "xregion_share": 0.08349912971962102,
+   "mean_rating": 2.3457512133916087
+  },
+  {
+   "team": "FNC",
+   "region": "EMEA",
+   "n": 63,
+   "ll": 0.6243,
+   "bias": -0.0651,
+   "abs_bias": 0.0651,
+   "eig_centrality": 0.5626645959102918,
+   "opp_count": 28.26984126984127,
+   "opp_diversity": 0.12780486931588214,
+   "xregion_share": 0.350118744585018,
+   "mean_rating": 4.356817730558024
+  },
+  {
+   "team": "NS",
+   "region": "Pacific",
+   "n": 54,
+   "ll": 0.7354,
+   "bias": -0.0631,
+   "abs_bias": 0.0631,
+   "eig_centrality": 0.2578560092618397,
+   "opp_count": 10.962962962962964,
+   "opp_diversity": 0.20957436453690287,
+   "xregion_share": 0.07384842421988605,
+   "mean_rating": 3.5779096934436856
+  },
+  {
+   "team": "TL",
+   "region": "EMEA",
+   "n": 60,
+   "ll": 0.6602,
+   "bias": -0.0617,
+   "abs_bias": 0.0617,
+   "eig_centrality": 0.34791987070749025,
+   "opp_count": 21.083333333333332,
+   "opp_diversity": 0.1400200690736533,
+   "xregion_share": 0.14615521122823744,
+   "mean_rating": 1.6222320560764245
+  },
+  {
+   "team": "MIBR",
+   "region": "Americas",
+   "n": 52,
+   "ll": 0.6751,
+   "bias": -0.0587,
+   "abs_bias": 0.0587,
+   "eig_centrality": 0.30110748761561856,
+   "opp_count": 14.615384615384615,
+   "opp_diversity": 0.12462330235117204,
+   "xregion_share": 0.07951702334802566,
+   "mean_rating": 0.8906984514199267
+  },
+  {
+   "team": "LEV",
+   "region": "Americas",
+   "n": 51,
+   "ll": 0.6839,
+   "bias": -0.0501,
+   "abs_bias": 0.0501,
+   "eig_centrality": 0.3332509230709628,
+   "opp_count": 22.215686274509803,
+   "opp_diversity": 0.12320874657737657,
+   "xregion_share": 0.1870009503343102,
+   "mean_rating": 2.194017154689455
+  },
+  {
+   "team": "XLG",
+   "region": "CN",
+   "n": 69,
+   "ll": 0.6095,
+   "bias": -0.0494,
+   "abs_bias": 0.0494,
+   "eig_centrality": 0.5983028461948433,
+   "opp_count": 13.826086956521738,
+   "opp_diversity": 0.16346521444869058,
+   "xregion_share": 0.14402436802681587,
+   "mean_rating": 0.004238116773712532
+  },
+  {
+   "team": "G2",
+   "region": "Americas",
+   "n": 80,
+   "ll": 0.6107,
+   "bias": -0.0469,
+   "abs_bias": 0.0469,
+   "eig_centrality": 0.6544415095276283,
+   "opp_count": 26.325,
+   "opp_diversity": 0.14819538791585252,
+   "xregion_share": 0.39510257348530897,
+   "mean_rating": 4.958432074658133
+  },
+  {
+   "team": "NOVA",
+   "region": "CN",
+   "n": 52,
+   "ll": 0.7102,
+   "bias": -0.0416,
+   "abs_bias": 0.0416,
+   "eig_centrality": 0.45603446237654344,
+   "opp_count": 12.51923076923077,
+   "opp_diversity": 0.1334438553543013,
+   "xregion_share": 0.012492187089911184,
+   "mean_rating": -2.2796276225432623
+  },
+  {
+   "team": "TH",
+   "region": "EMEA",
+   "n": 63,
+   "ll": 0.6592,
+   "bias": -0.0402,
+   "abs_bias": 0.0402,
+   "eig_centrality": 0.4961295215667324,
+   "opp_count": 28.41269841269841,
+   "opp_diversity": 0.1389060093894768,
+   "xregion_share": 0.3269608686307381,
+   "mean_rating": 2.4370285344043703
+  },
+  {
+   "team": "KRX",
+   "region": "Pacific",
+   "n": 71,
+   "ll": 0.642,
+   "bias": -0.0398,
+   "abs_bias": 0.0398,
+   "eig_centrality": 0.8165748977604644,
+   "opp_count": 32.66197183098591,
+   "opp_diversity": 0.13481914188027014,
+   "xregion_share": 0.3090689640167336,
+   "mean_rating": 3.9999890199419235
+  },
+  {
+   "team": "T1",
+   "region": "Pacific",
+   "n": 60,
+   "ll": 0.6295,
+   "bias": -0.0271,
+   "abs_bias": 0.0271,
+   "eig_centrality": 0.6342388632248241,
+   "opp_count": 23.383333333333333,
+   "opp_diversity": 0.12376989729210487,
+   "xregion_share": 0.2771920022315414,
+   "mean_rating": 3.124882129028693
+  },
+  {
+   "team": "AG",
+   "region": "CN",
+   "n": 53,
+   "ll": 0.6178,
+   "bias": -0.0174,
+   "abs_bias": 0.0174,
+   "eig_centrality": 0.476708193694446,
+   "opp_count": 12.49056603773585,
+   "opp_diversity": 0.13945387249990226,
+   "xregion_share": 0.0665926758907789,
+   "mean_rating": -3.046081542369731
+  },
+  {
+   "team": "EDG",
+   "region": "CN",
+   "n": 79,
+   "ll": 0.6019,
+   "bias": -0.0154,
+   "abs_bias": 0.0154,
+   "eig_centrality": 0.8704037861474757,
+   "opp_count": 30.265822784810126,
+   "opp_diversity": 0.1270655130499184,
+   "xregion_share": 0.318685326064772,
+   "mean_rating": 1.9391197134683331
+  },
+  {
+   "team": "VIT",
+   "region": "EMEA",
+   "n": 50,
+   "ll": 0.6585,
+   "bias": -0.013,
+   "abs_bias": 0.013,
+   "eig_centrality": 0.2815143112180236,
+   "opp_count": 20.62,
+   "opp_diversity": 0.1347921113590234,
+   "xregion_share": 0.1497996896506554,
+   "mean_rating": 1.6043959125026672
+  },
+  {
+   "team": "SEN",
+   "region": "Americas",
+   "n": 56,
+   "ll": 0.589,
+   "bias": -0.0113,
+   "abs_bias": 0.0113,
+   "eig_centrality": 0.49694182484621097,
+   "opp_count": 22.75,
+   "opp_diversity": 0.12823049897564429,
+   "xregion_share": 0.3274412822978147,
+   "mean_rating": 2.3957186079832176
+  },
+  {
+   "team": "FPX",
+   "region": "CN",
+   "n": 55,
+   "ll": 0.664,
+   "bias": -0.0104,
+   "abs_bias": 0.0104,
+   "eig_centrality": 0.6171196880563872,
+   "opp_count": 22.945454545454545,
+   "opp_diversity": 0.11981862810372823,
+   "xregion_share": 0.11447004829301548,
+   "mean_rating": -2.9352074853172936
+  },
+  {
+   "team": "DRG",
+   "region": "CN",
+   "n": 54,
+   "ll": 0.6372,
+   "bias": -0.0086,
+   "abs_bias": 0.0086,
+   "eig_centrality": 0.5257643079062104,
+   "opp_count": 15.11111111111111,
+   "opp_diversity": 0.12673299961163464,
+   "xregion_share": 0.04385090717660747,
+   "mean_rating": -3.225942766771391
+  },
+  {
+   "team": "BLG",
+   "region": "CN",
+   "n": 73,
+   "ll": 0.6872,
+   "bias": -0.0077,
+   "abs_bias": 0.0077,
+   "eig_centrality": 0.7694544569069856,
+   "opp_count": 20.753424657534246,
+   "opp_diversity": 0.11676019769378372,
+   "xregion_share": 0.16306531449829306,
+   "mean_rating": -0.6393668343439608
+  },
+  {
+   "team": "GX",
+   "region": "EMEA",
+   "n": 43,
+   "ll": 0.6505,
+   "bias": -0.0062,
+   "abs_bias": 0.0062,
+   "eig_centrality": 0.22459891862208697,
+   "opp_count": 12.674418604651162,
+   "opp_diversity": 0.17474103968262966,
+   "xregion_share": 0.04493645600181464,
+   "mean_rating": -1.2930168423070016
+  },
+  {
+   "team": "RRQ",
+   "region": "Pacific",
+   "n": 54,
+   "ll": 0.7021,
+   "bias": -0.0061,
+   "abs_bias": 0.0061,
+   "eig_centrality": 0.518900471239276,
+   "opp_count": 18.166666666666668,
+   "opp_diversity": 0.12938777308455907,
+   "xregion_share": 0.1256542780797456,
+   "mean_rating": 1.6231892247881003
+  },
+  {
+   "team": "KC",
+   "region": "EMEA",
+   "n": 46,
+   "ll": 0.6528,
+   "bias": -0.0045,
+   "abs_bias": 0.0045,
+   "eig_centrality": 0.24630854942143426,
+   "opp_count": 17.195652173913043,
+   "opp_diversity": 0.1242568671032551,
+   "xregion_share": 0.07486085271376064,
+   "mean_rating": 0.1729351681290201
+  },
+  {
+   "team": "NAVI",
+   "region": "EMEA",
+   "n": 44,
+   "ll": 0.6436,
+   "bias": -0.0012,
+   "abs_bias": 0.0012,
+   "eig_centrality": 0.20489257216911894,
+   "opp_count": 18.931818181818183,
+   "opp_diversity": 0.13701320852725082,
+   "xregion_share": 0.027300444693725258,
+   "mean_rating": -0.49356661118795986
+  },
+  {
+   "team": "FUT",
+   "region": "EMEA",
+   "n": 47,
+   "ll": 0.7008,
+   "bias": -0.0002,
+   "abs_bias": 0.0002,
+   "eig_centrality": 0.282697466807341,
+   "opp_count": 26.0,
+   "opp_diversity": 0.14329561657741471,
+   "xregion_share": 0.16442668387120238,
+   "mean_rating": 0.36566260957694624
+  },
+  {
+   "team": "GEN",
+   "region": "Pacific",
+   "n": 56,
+   "ll": 0.6946,
+   "bias": 0.0051,
+   "abs_bias": 0.0051,
+   "eig_centrality": 0.7203008373296973,
+   "opp_count": 24.839285714285715,
+   "opp_diversity": 0.10699756492450688,
+   "xregion_share": 0.25210330115122265,
+   "mean_rating": 4.178685989340893
+  },
+  {
+   "team": "M8",
+   "region": "EMEA",
+   "n": 42,
+   "ll": 0.6653,
+   "bias": 0.0057,
+   "abs_bias": 0.0057,
+   "eig_centrality": 0.18270042901705155,
+   "opp_count": 12.19047619047619,
+   "opp_diversity": 0.18291328249508068,
+   "xregion_share": 0.05096258917619613,
+   "mean_rating": -0.10245905480749531
+  },
+  {
+   "team": "GE",
+   "region": "Pacific",
+   "n": 42,
+   "ll": 0.6461,
+   "bias": 0.006,
+   "abs_bias": 0.006,
+   "eig_centrality": 0.2521389913781357,
+   "opp_count": 14.428571428571429,
+   "opp_diversity": 0.14389934118469005,
+   "xregion_share": 0.03736636027958261,
+   "mean_rating": 0.4842385507196615
+  },
+  {
+   "team": "TYL",
+   "region": "CN",
+   "n": 51,
+   "ll": 0.6353,
+   "bias": 0.0118,
+   "abs_bias": 0.0118,
+   "eig_centrality": 0.48332931167347937,
+   "opp_count": 11.117647058823529,
+   "opp_diversity": 0.10855588986647849,
+   "xregion_share": 0.0,
+   "mean_rating": -2.3001500891145383
+  },
+  {
+   "team": "TEC",
+   "region": "CN",
+   "n": 53,
+   "ll": 0.6496,
+   "bias": 0.0393,
+   "abs_bias": 0.0393,
+   "eig_centrality": 0.4756015169307733,
+   "opp_count": 12.20754716981132,
+   "opp_diversity": 0.12193659632578091,
+   "xregion_share": 0.024163463529034094,
+   "mean_rating": -3.7242115534810796
+  },
+  {
+   "team": "DFM",
+   "region": "Pacific",
+   "n": 32,
+   "ll": 0.6021,
+   "bias": 0.0456,
+   "abs_bias": 0.0456,
+   "eig_centrality": 0.33771427595955944,
+   "opp_count": 14.75,
+   "opp_diversity": 0.14067575936331445,
+   "xregion_share": 0.0738117796437115,
+   "mean_rating": -0.8952335331465203
+  },
+  {
+   "team": "ZETA",
+   "region": "Pacific",
+   "n": 30,
+   "ll": 0.6111,
+   "bias": 0.0546,
+   "abs_bias": 0.0546,
+   "eig_centrality": 0.2691025041477621,
+   "opp_count": 17.1,
+   "opp_diversity": 0.13682384004082218,
+   "xregion_share": 0.12145229777278654,
+   "mean_rating": -2.244498696857995
+  },
+  {
+   "team": "EG",
+   "region": "Americas",
+   "n": 34,
+   "ll": 0.5599,
+   "bias": 0.06,
+   "abs_bias": 0.06,
+   "eig_centrality": 0.18725354340320027,
+   "opp_count": 20.205882352941178,
+   "opp_diversity": 0.14487134329623652,
+   "xregion_share": 0.0823533390033334,
+   "mean_rating": -0.9912914007595579
+  },
+  {
+   "team": "KR\u00dc",
+   "region": "Americas",
+   "n": 35,
+   "ll": 0.6629,
+   "bias": 0.0665,
+   "abs_bias": 0.0665,
+   "eig_centrality": 0.23915554261854785,
+   "opp_count": 17.257142857142856,
+   "opp_diversity": 0.12953926003567742,
+   "xregion_share": 0.07461078408254768,
+   "mean_rating": 0.19015246288297985
+  },
+  {
+   "team": "TE",
+   "region": "CN",
+   "n": 55,
+   "ll": 0.6436,
+   "bias": 0.0721,
+   "abs_bias": 0.0721,
+   "eig_centrality": 0.7076519188137853,
+   "opp_count": 21.145454545454545,
+   "opp_diversity": 0.12381765500599493,
+   "xregion_share": 0.16515675364454113,
+   "mean_rating": -1.976518584979471
+  },
+  {
+   "team": "LOUD",
+   "region": "Americas",
+   "n": 29,
+   "ll": 0.6854,
+   "bias": 0.0881,
+   "abs_bias": 0.0881,
+   "eig_centrality": 0.20075591476502222,
+   "opp_count": 20.103448275862068,
+   "opp_diversity": 0.12728442342553486,
+   "xregion_share": 0.10748221016991784,
+   "mean_rating": -1.730199830265915
+  },
+  {
+   "team": "WOL",
+   "region": "CN",
+   "n": 60,
+   "ll": 0.6686,
+   "bias": 0.0941,
+   "abs_bias": 0.0941,
+   "eig_centrality": 0.5738356091279084,
+   "opp_count": 15.55,
+   "opp_diversity": 0.1377551592898326,
+   "xregion_share": 0.12022231549166154,
+   "mean_rating": -1.6656449579920902
+  },
+  {
+   "team": "JDG",
+   "region": "CN",
+   "n": 51,
+   "ll": 0.6681,
+   "bias": 0.1058,
+   "abs_bias": 0.1058,
+   "eig_centrality": 0.5005823956316179,
+   "opp_count": 11.0,
+   "opp_diversity": 0.12707981926255965,
+   "xregion_share": 0.0,
+   "mean_rating": -1.7596286913629409
+  },
+  {
+   "team": "C9",
+   "region": "Americas",
+   "n": 41,
+   "ll": 0.6226,
+   "bias": 0.1172,
+   "abs_bias": 0.1172,
+   "eig_centrality": 0.3012545149281405,
+   "opp_count": 18.951219512195124,
+   "opp_diversity": 0.12669202062933188,
+   "xregion_share": 0.12048846812222061,
+   "mean_rating": 1.4646119692873718
+  },
+  {
+   "team": "FUR",
+   "region": "Americas",
+   "n": 33,
+   "ll": 0.4646,
+   "bias": 0.12,
+   "abs_bias": 0.12,
+   "eig_centrality": 0.17491771240420873,
+   "opp_count": 15.636363636363637,
+   "opp_diversity": 0.15553919426351087,
+   "xregion_share": 0.08346793517733553,
+   "mean_rating": -2.0019844285121664
+  },
+  {
+   "team": "TS",
+   "region": "Pacific",
+   "n": 30,
+   "ll": 0.6145,
+   "bias": 0.1478,
+   "abs_bias": 0.1478,
+   "eig_centrality": 0.24582636496976462,
+   "opp_count": 13.5,
+   "opp_diversity": 0.11553958901026319,
+   "xregion_share": 0.005325452480372409,
+   "mean_rating": -1.0532204165630057
+  }
+ ],
+ "correlations": [
+  {
+   "target": "bias",
+   "feature": "eig_centrality",
+   "pearson": -0.2769,
+   "pearson_ci": [
+    -0.5176,
+    0.0017
+   ],
+   "spearman": -0.3041,
+   "spearman_ci": [
+    -0.5659,
+    0.0046
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "bias",
+   "feature": "opp_count",
+   "pearson": -0.345,
+   "pearson_ci": [
+    -0.5544,
+    -0.0943
+   ],
+   "spearman": -0.3144,
+   "spearman_ci": [
+    -0.5753,
+    -0.007
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "bias",
+   "feature": "opp_diversity",
+   "pearson": -0.1329,
+   "pearson_ci": [
+    -0.3533,
+    0.1635
+   ],
+   "spearman": -0.0761,
+   "spearman_ci": [
+    -0.3786,
+    0.2489
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "bias",
+   "feature": "xregion_share",
+   "pearson": -0.4198,
+   "pearson_ci": [
+    -0.5955,
+    -0.2099
+   ],
+   "spearman": -0.4306,
+   "spearman_ci": [
+    -0.6403,
+    -0.1568
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "abs_bias",
+   "feature": "eig_centrality",
+   "pearson": -0.1394,
+   "pearson_ci": [
+    -0.4444,
+    0.1968
+   ],
+   "spearman": -0.0766,
+   "spearman_ci": [
+    -0.4211,
+    0.2814
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "abs_bias",
+   "feature": "opp_count",
+   "pearson": -0.0721,
+   "pearson_ci": [
+    -0.3302,
+    0.2323
+   ],
+   "spearman": -0.0426,
+   "spearman_ci": [
+    -0.3159,
+    0.2631
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "abs_bias",
+   "feature": "opp_diversity",
+   "pearson": -0.0366,
+   "pearson_ci": [
+    -0.3339,
+    0.2715
+   ],
+   "spearman": -0.0095,
+   "spearman_ci": [
+    -0.3349,
+    0.3352
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  },
+  {
+   "target": "abs_bias",
+   "feature": "xregion_share",
+   "pearson": -0.0531,
+   "pearson_ci": [
+    -0.3249,
+    0.2507
+   ],
+   "spearman": 0.0523,
+   "spearman_ci": [
+    -0.2538,
+    0.3669
+   ],
+   "n_teams": 43,
+   "degenerate_resamples": 0
+  }
+ ],
+ "partial": {
+  "stat": "partial spearman bias ~ eig_centrality | mean_rating",
+  "value": -0.1879,
+  "ci": [
+   -0.4914,
+   0.1608
+  ]
+ },
+ "bootstrap": {
+  "seed": 20260728,
+  "n_boot": 4000,
+  "unit": "teams",
+  "note": "crn seed/generator/n_boot reused for team resampling (crn stores series-level matrices); full index matrix drawn in one call"
+ },
+ "gate": {
+  "rule": "H2 alive iff >=1 of spearman(|bias|,eig) / spearman(bias,eig) has 95% CI excluding 0 with negative sign (preregistered)",
+  "abs_bias_vs_eig": {
+   "spearman": -0.0766,
+   "ci": [
+    -0.4211,
+    0.2814
+   ],
+   "passes": false
+  },
+  "bias_vs_eig": {
+   "spearman": -0.3041,
+   "ci": [
+    -0.5659,
+    0.0046
+   ],
+   "passes": false
+  },
+  "verdict": "DEAD \u2014 no bias-centrality relationship; stop"
+ },
+ "expansion_shift": {
+  "t_ref": "2026-07-01",
+  "excluded_events": [
+   "2023_china_champions_qual",
+   "2023_china_evo_1",
+   "2023_china_evo_3",
+   "2023_convergence",
+   "2023_lcq",
+   "2023_rbhg",
+   "2023_ten_global",
+   "2024_fgc_inv",
+   "2024_radiant_asia",
+   "2024_rbhg",
+   "2024_shanghai_masters",
+   "2024_ten_asia",
+   "2025_acl",
+   "2025_china_evo_1",
+   "2025_china_evo_2",
+   "2025_china_evo_3",
+   "2025_china_evo_epilogue",
+   "2025_ewc",
+   "2025_ewc_qual",
+   "2025_radiant_intl",
+   "2025_rbhg",
+   "2025_shanghai_masters",
+   "2025_super_champions_cup",
+   "2025_ten_global",
+   "2026_china_evo_1"
+  ],
+  "named_teams": [
+   {
+    "team": "T1",
+    "group": "elite",
+    "eig_pre": 0.4326,
+    "eig_post": 0.3558,
+    "delta": -0.0769,
+    "rank_pre": 17,
+    "rank_post": 19
+   },
+   {
+    "team": "PRX",
+    "group": "elite",
+    "eig_pre": 0.7739,
+    "eig_post": 0.6953,
+    "delta": -0.0786,
+    "rank_pre": 5,
+    "rank_post": 11
+   },
+   {
+    "team": "100T",
+    "group": "elite",
+    "eig_pre": 0.404,
+    "eig_post": 0.2951,
+    "delta": -0.1089,
+    "rank_pre": 25,
+    "rank_post": 27
+   },
+   {
+    "team": "NRG",
+    "group": "elite",
+    "eig_pre": 0.7053,
+    "eig_post": 0.5245,
+    "delta": -0.1808,
+    "rank_pre": 9,
+    "rank_post": 16
+   },
+   {
+    "team": "TL",
+    "group": "elite",
+    "eig_pre": 0.3557,
+    "eig_post": 0.2457,
+    "delta": -0.11,
+    "rank_pre": 30,
+    "rank_post": 30
+   },
+   {
+    "team": "TS",
+    "group": "floor",
+    "eig_pre": 0.1908,
+    "eig_post": 0.1595,
+    "delta": -0.0313,
+    "rank_pre": 43,
+    "rank_post": 42
+   },
+   {
+    "team": "JDG",
+    "group": "floor",
+    "eig_pre": 0.6125,
+    "eig_post": 0.7747,
+    "delta": 0.1622,
+    "rank_pre": 12,
+    "rank_post": 8
+   },
+   {
+    "team": "TE",
+    "group": "floor",
+    "eig_pre": 0.5593,
+    "eig_post": 0.7402,
+    "delta": 0.1809,
+    "rank_pre": 14,
+    "rank_post": 10
+   },
+   {
+    "team": "C9",
+    "group": "floor",
+    "eig_pre": 0.304,
+    "eig_post": 0.2207,
+    "delta": -0.0833,
+    "rank_pre": 33,
+    "rank_post": 32
+   }
+  ],
+  "mean_abs_delta_bias_table_teams": 0.0985
+ }
+}

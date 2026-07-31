@@ -1,0 +1,200 @@
+{
+ "481653": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481653/trace-esports-vs-zeta-division-hero-esports-asian-champions-league-2025-lr1",
+  "maps": {
+   "215076": [
+    "ZETA",
+    "13-7"
+   ],
+   "215077": [
+    "TE",
+    "13-9"
+   ],
+   "215078": [
+    "TE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2025-05-14 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TE",
+   "ZETA"
+  ]
+ },
+ "481654": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481654/bilibili-gaming-vs-drx-hero-esports-asian-champions-league-2025-lr2",
+  "maps": {
+   "215079": [
+    "KRX",
+    "13-1"
+   ],
+   "215080": [
+    "KRX",
+    "14-12"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2025-05-14 08:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "KRX"
+  ]
+ },
+ "481651": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481651/xi-lai-gaming-vs-paper-rex-hero-esports-asian-champions-league-2025-ubf",
+  "maps": {
+   "215068": [
+    "PRX",
+    "15-13"
+   ],
+   "215069": [
+    "PRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Final",
+  "utc_ts": "2025-05-15 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "XLG"
+  ]
+ },
+ "481655": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481655/bilibili-gaming-vs-trace-esports-hero-esports-asian-champions-league-2025-lr2",
+  "maps": {
+   "215082": [
+    "BLG",
+    "13-9"
+   ],
+   "215083": [
+    "BLG",
+    "13-4"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2025-05-15 07:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TE"
+  ]
+ },
+ "481656": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481656/drx-vs-bilibili-gaming-hero-esports-asian-champions-league-2025-lr3",
+  "maps": {
+   "215085": [
+    "KRX",
+    "13-10"
+   ],
+   "215086": [
+    "KRX",
+    "13-5"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2025-05-16 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "KRX"
+  ]
+ },
+ "481657": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481657/xi-lai-gaming-vs-drx-hero-esports-asian-champions-league-2025-lbf",
+  "maps": {
+   "215088": [
+    "KRX",
+    "13-6"
+   ],
+   "215089": [
+    "XLG",
+    "13-5"
+   ],
+   "215090": [
+    "KRX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2025-05-16 07:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "XLG"
+  ]
+ },
+ "481652": {
+  "event_id": "2025_acl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/481652/paper-rex-vs-drx-hero-esports-asian-champions-league-2025-gf",
+  "maps": {
+   "215071": [
+    "PRX",
+    "14-12"
+   ],
+   "215072": [
+    "KRX",
+    "13-4"
+   ],
+   "215073": [
+    "KRX",
+    "13-11"
+   ],
+   "215074": [
+    "KRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KRX",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-05-18 07:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "PRX"
+  ]
+ }
+}

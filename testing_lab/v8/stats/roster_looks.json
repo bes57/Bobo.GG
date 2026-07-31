@@ -1,0 +1,127 @@
+{
+ "written_by": "agent:roster",
+ "written": "2026-07-28 23:57:58",
+ "successor_of": "stats/compose_looks.json (grand total 398 at Wave 3 close)",
+ "prior_grand_total_recorded_holdout_numbers": 398,
+ "unit_definition": {
+  "primary": "distinct candidate config whose holdout LL was computed and recorded (selection may still have been train-only \u2014 a recorded holdout number is a look regardless)",
+  "sweep_checkpoint": "holdout LL recorded per sweep point in scratch checkpoints (h3 core sweep; train-only selection but numbers exist on disk)",
+  "per_iteration_diagnostic": "same config re-scored across EM iterations (h1)",
+  "excluded": "slice/bucket/subpop tables of an already-counted vector; v6 baseline replays; reproductions of published v7 numbers; market-side autopsy (separate family)"
+ },
+ "epistemic_status": "ALL reads below are EXPLORATORY on a SPENT holdout \u2014 never confirmatory, never promotable (adversary_report.md; preregister.roster.md)",
+ "new_reads": [
+  {
+   "read": 1,
+   "config": "change_continuity_gamma2.0",
+   "ll_holdout": 0.64605,
+   "delta_milli_vs_v6": -3.889,
+   "status": "EXPLORATORY"
+  },
+  {
+   "read": 2,
+   "config": "coldstart_a1.0_M6",
+   "ll_holdout": 0.64358,
+   "delta_milli_vs_v6": -1.423,
+   "status": "EXPLORATORY"
+  },
+  {
+   "read": 3,
+   "config": "phase_reset_g0.5",
+   "ll_holdout": 0.66144,
+   "delta_milli_vs_v6": -19.275,
+   "status": "EXPLORATORY",
+   "operator_specified": true
+  },
+  {
+   "read": 4,
+   "config": "v6_overreact_a2.0_tau5.0",
+   "ll_holdout": 0.64256,
+   "delta_milli_vs_v6": -0.395,
+   "status": "EXPLORATORY",
+   "operator_specified": true,
+   "reserve_consumed_by": "operator directive (ADDENDUM 2)"
+  },
+  {
+   "read": "spec_run_headline",
+   "config": "p1w8c5_a28.0_t13.0_s0.7_cap1.5",
+   "ll_holdout": 0.653757,
+   "delta_milli_vs_v6": -11.595,
+   "status": "EXPLORATORY",
+   "operator_specified": true,
+   "note": "headline read: shipped config p1w8c5 a=28.0 tau=13.0 s=0.7"
+  }
+ ],
+ "new_primary_looks": 5,
+ "grid_points_train_only": {
+  "read1_gammas": [
+   2.0,
+   1.0,
+   0.5
+  ],
+  "read2_grid": [
+   [
+    1.0,
+    6
+   ],
+   [
+    0.6,
+    6
+   ],
+   [
+    0.3,
+    6
+   ],
+   [
+    0.6,
+    3
+   ],
+   [
+    1.0,
+    3
+   ],
+   [
+    0.3,
+    3
+   ]
+  ],
+  "read3_gs": [
+   0.5,
+   1.0,
+   2.0,
+   4.0
+  ],
+  "note": "non-selected grid points were evaluated on TRAIN only; the engine/filter holdout numbers for them were scrubbed before any recording (logs/roster.log)",
+  "read4_grid": [
+   [
+    2.0,
+    5.0
+   ],
+   [
+    1.0,
+    5.0
+   ],
+   [
+    2.0,
+    2.0
+   ],
+   [
+    0.5,
+    5.0
+   ],
+   [
+    1.0,
+    2.0
+   ],
+   [
+    0.5,
+    2.0
+   ]
+  ]
+ },
+ "stored_reuse_not_new_looks": [
+  "v6 baseline (bias_h3/v6_baseline.npz)",
+  "h3 core 1b holdout (sweep_core.json, already among the 398)"
+ ],
+ "grand_total_after": 403
+}

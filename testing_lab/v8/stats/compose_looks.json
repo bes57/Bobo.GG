@@ -1,0 +1,648 @@
+{
+ "written_by": "agent:compose",
+ "written": "2026-07-28 22:38:47",
+ "rule": "compose brief rule 4 \u2014 the garden of forking paths, measured not hidden",
+ "unit_definition": {
+  "primary": "distinct candidate config whose holdout LL was computed and recorded (selection may still have been train-only \u2014 a recorded holdout number is a look regardless)",
+  "sweep_checkpoint": "holdout LL recorded per sweep point in scratch checkpoints (h3 core sweep; train-only selection but numbers exist on disk)",
+  "per_iteration_diagnostic": "same config re-scored across EM iterations (h1)",
+  "excluded": "slice/bucket/subpop tables of an already-counted vector; v6 baseline replays; reproductions of published v7 numbers; market-side autopsy (separate family)"
+ },
+ "per_agent_primary": {
+  "decay": 56,
+  "context": 88,
+  "bias_h1": 4,
+  "bias_h2": 0,
+  "bias_h3": 8,
+  "bias_h4": 4,
+  "power": 0,
+  "referee": 0,
+  "corpus": 0,
+  "autopsy": 0,
+  "compose": 3
+ },
+ "totals": {
+  "primary_candidate_looks": 163,
+  "sweep_checkpoint_looks": 227,
+  "per_iteration_diagnostic_looks": 8,
+  "grand_total_recorded_holdout_numbers": 398
+ },
+ "family_wise_context": {
+  "note": "With K primary looks at alpha=0.05 one expects ~K/20 spurious 'wins' by chance; the program's guardrails are (a) train-only selection, (b) the MDE noise floor, (c) the promotion gate (mean dLL >= family MDE AND p_better >= 0.95 in BOTH CRN modes AND bias AND buckets). No look in this program cleared that bar. Bonferroni at the primary-look count is quoted with compose's p-values in phase_compose.md.",
+  "K_primary": 163,
+  "bonferroni_alpha_at_K": 0.000307
+ },
+ "detail": {
+  "decay": [
+   {
+    "source": "stats/decay_axes.json (every grid point carries ll_test)",
+    "kind": "candidate_config",
+    "n": 41,
+    "names": [
+     "a_lineup_continuity:lineup_h16_g0.5",
+     "a_lineup_continuity:lineup_h16_g1.0",
+     "a_lineup_continuity:lineup_h16_g2.0",
+     "a_lineup_continuity:lineup_h16_g4.0",
+     "a_lineup_continuity:lineup_h20_g0.5",
+     "a_lineup_continuity:lineup_h20_g1.0",
+     "a_lineup_continuity:lineup_h20_g2.0",
+     "a_lineup_continuity:lineup_h20_g4.0",
+     "a_lineup_continuity:lineup_h24_g0.5",
+     "a_lineup_continuity:lineup_h24_g1.0",
+     "a_lineup_continuity:lineup_h24_g2.0",
+     "a_lineup_continuity:lineup_h24_g4.0",
+     "a_lineup_continuity:sym_16_nc",
+     "a_lineup_continuity:sym_20_nc",
+     "a_lineup_continuity:sym_24_nc",
+     "b_opponent_quality_of_anomaly:oppq_m1.33",
+     "b_opponent_quality_of_anomaly:oppq_m1.67",
+     "b_opponent_quality_of_anomaly:oppq_m2.0",
+     "c_anomaly_margin:amargin_k0.25",
+     "c_anomaly_margin:amargin_k0.5",
+     "c_anomaly_margin:amargin_k1.0",
+     "d_event_class:eclass_h16_m0.4",
+     "d_event_class:eclass_h16_m0.6",
+     "d_event_class:eclass_h16_m0.8",
+     "d_event_class:eclass_h20_m0.4",
+     "d_event_class:eclass_h20_m0.6",
+     "d_event_class:eclass_h20_m0.8",
+     "d_event_class:eclass_h24_m0.4",
+     "d_event_class:eclass_h24_m0.6",
+     "d_event_class:eclass_h24_m0.8",
+     "d_event_class:eclass_on_v6_m0.8",
+     "e_patch_boundary:rot_h16_g0.55",
+     "e_patch_boundary:rot_h16_g0.7",
+     "e_patch_boundary:rot_h16_g0.85",
+     "e_patch_boundary:rot_h20_g0.55",
+     "e_patch_boundary:rot_h20_g0.7",
+     "e_patch_boundary:rot_h20_g0.85",
+     "e_patch_boundary:rot_h24_g0.55",
+     "e_patch_boundary:rot_h24_g0.7",
+     "e_patch_boundary:rot_h24_g0.85",
+     "e_patch_boundary:rot_on_v6_g0.7"
+    ]
+   },
+   {
+    "source": "stats/decay_form.json",
+    "kind": "candidate_config",
+    "n": 11,
+    "names": [
+     "continuity_note",
+     "form_combined",
+     "form_player5",
+     "form_rd3",
+     "form_rd5",
+     "form_rd8",
+     "form_rd_selected",
+     "form_side5",
+     "form_wr3",
+     "form_wr5",
+     "form_wr8"
+    ]
+   },
+   {
+    "source": "stats/decay_rerace.json (5a re-race table)",
+    "kind": "candidate_config",
+    "n": 4,
+    "names": [
+     "consist_16_10",
+     "sym_16",
+     "sym_20",
+     "sym_24"
+    ]
+   },
+   {
+    "source": "stats/decay_subpops.json",
+    "kind": "slice_tables_only",
+    "n": 1,
+    "names": [
+     "(subpop slices of already-counted configs \u2014 no new vectors)"
+    ]
+   }
+  ],
+  "context": [
+   {
+    "source": "stats/context_seriousness.json",
+    "kind": "candidate_config",
+    "n": 20,
+    "names": [
+     "3a_blanket_we[0]",
+     "3a_blanket_we[1]",
+     "3a_blanket_we[2]",
+     "3a_blanket_we[3]",
+     "3a_blanket_we[4]",
+     "3a_blanket_we[5]",
+     "3a_blanket_we[6]",
+     "3a_blanket_we[7]",
+     "3a_blanket_we[8]",
+     "3a_integrity_w0[0]",
+     "3a_integrity_w0[10]",
+     "3a_integrity_w0[1]",
+     "3a_integrity_w0[2]",
+     "3a_integrity_w0[3]",
+     "3a_integrity_w0[4]",
+     "3a_integrity_w0[5]",
+     "3a_integrity_w0[6]",
+     "3a_integrity_w0[7]",
+     "3a_integrity_w0[8]",
+     "3a_integrity_w0[9]"
+    ]
+   },
+   {
+    "source": "stats/context_stakes.json",
+    "kind": "candidate_config",
+    "n": 7,
+    "names": [
+     "3cA_solve_weight[0]",
+     "3cA_solve_weight[1]",
+     "3cA_solve_weight[2]",
+     "3cA_solve_weight[3]",
+     "3cA_solve_weight[4]",
+     "3cA_solve_weight[5]",
+     "3cB_elim_variance"
+    ]
+   },
+   {
+    "source": "stats/context_exposure.json",
+    "kind": "candidate_config",
+    "n": 6,
+    "names": [
+     "3ba_exposure_ewcLAN",
+     "3ba_exposure_term",
+     "3bb_form3_alone",
+     "3bb_form3_with",
+     "3bb_form5_alone",
+     "3bb_form5_with"
+    ]
+   },
+   {
+    "source": "stats/context_weights.json (per-class weight profiles + selected + sensitivity)",
+    "kind": "candidate_config",
+    "n": 51,
+    "names": [
+     "2b_ewc_sens[0]",
+     "2b_ewc_sens[1]",
+     "2b_ewc_sens[2]",
+     "2b_ewc_sens[3]",
+     "2b_ewc_sens[4]",
+     "2b_ewc_sens[5]",
+     "2b_ewc_sens[6]",
+     "2b_ewc_sens[7]",
+     "2b_ewc_sens[8]",
+     "2b_ewc_sens[9]",
+     "2b_fitted_classweights_holdout",
+     "2b_profile_champions[0]",
+     "2b_profile_champions[1]",
+     "2b_profile_champions[2]",
+     "2b_profile_champions[3]",
+     "2b_profile_champions[4]",
+     "2b_profile_champions[5]",
+     "2b_profile_champions[6]",
+     "2b_profile_champions[7]",
+     "2b_profile_champions[8]",
+     "2b_profile_champions[9]",
+     "2b_profile_ewc_offseason[0]",
+     "2b_profile_ewc_offseason[1]",
+     "2b_profile_ewc_offseason[2]",
+     "2b_profile_ewc_offseason[3]",
+     "2b_profile_ewc_offseason[4]",
+     "2b_profile_ewc_offseason[5]",
+     "2b_profile_ewc_offseason[6]",
+     "2b_profile_ewc_offseason[7]",
+     "2b_profile_ewc_offseason[8]",
+     "2b_profile_ewc_offseason[9]",
+     "2b_profile_masters[0]",
+     "2b_profile_masters[1]",
+     "2b_profile_masters[2]",
+     "2b_profile_masters[3]",
+     "2b_profile_masters[4]",
+     "2b_profile_masters[5]",
+     "2b_profile_masters[6]",
+     "2b_profile_masters[7]",
+     "2b_profile_masters[8]",
+     "2b_profile_masters[9]",
+     "2b_profile_vct_playoffs[0]",
+     "2b_profile_vct_playoffs[1]",
+     "2b_profile_vct_playoffs[2]",
+     "2b_profile_vct_playoffs[3]",
+     "2b_profile_vct_playoffs[4]",
+     "2b_profile_vct_playoffs[5]",
+     "2b_profile_vct_playoffs[6]",
+     "2b_profile_vct_playoffs[7]",
+     "2b_profile_vct_playoffs[8]",
+     "2b_profile_vct_playoffs[9]"
+    ]
+   },
+   {
+    "source": "stats/context_shrink.json",
+    "kind": "candidate_config",
+    "n": 4,
+    "names": [
+     "3e_X1_standin",
+     "3e_X2_prepasym",
+     "3e_class_dummy_falsifier",
+     "3e_joint"
+    ]
+   },
+   {
+    "source": "stats/context_adjacency.json",
+    "kind": "none",
+    "n": 1,
+    "names": [
+     "(coefficient inference only \u2014 no holdout scoring)"
+    ]
+   }
+  ],
+  "bias_h1": [
+   {
+    "source": "stats/h1_roundbt.json",
+    "kind": "candidate_config",
+    "n": 1,
+    "names": [
+     "roundbt_primary"
+    ]
+   },
+   {
+    "source": "stats/h1_tobit.json",
+    "kind": "candidate_config",
+    "n": 3,
+    "names": [
+     "tobit_s0.8_sens",
+     "tobit_s1.0_primary",
+     "tobit_s1.25_sens"
+    ]
+   },
+   {
+    "source": "stats/h1_tobit.json em_history",
+    "kind": "per_iteration_diagnostic",
+    "n": 8,
+    "names": [
+     "em_iter:s0.8[0]",
+     "em_iter:s0.8[1]",
+     "em_iter:s0.8[2]",
+     "em_iter:s1.0[0]",
+     "em_iter:s1.0[1]",
+     "em_iter:s1.25[0]",
+     "em_iter:s1.25[1]",
+     "em_iter:s1.25[2]"
+    ]
+   }
+  ],
+  "bias_h2": [
+   {
+    "source": "stats/h2_hierarchical.json",
+    "kind": "none",
+    "n": 1,
+    "names": [
+     "(status=NOT RUN \u2014 preregistered E1 gate failed (bias does not track centrality; preregister.bias_h2.md: 'H2 is DEAD ... STOP, no E2/E3 model fits'). See stats/h2_centrality.json + phase5_h2.md.; no candidate holdout scoring)"
+    ]
+   },
+   {
+    "source": "stats/h2_ridge_ablation.json",
+    "kind": "none",
+    "n": 1,
+    "names": [
+     "(status=NOT RUN \u2014 preregistered E1 gate failed (bias does not track centrality; preregister.bias_h2.md: 'H2 is DEAD ... STOP, no E2/E3 model fits'). See stats/h2_centrality.json + phase5_h2.md.; no candidate holdout scoring)"
+    ]
+   },
+   {
+    "source": "stats/h2_centrality.json",
+    "kind": "baseline_replay",
+    "n": 1,
+    "names": [
+     "(v6 baseline replay only)"
+    ]
+   }
+  ],
+  "bias_h3": [
+   {
+    "source": "stats/h3_statespace.json",
+    "kind": "candidate_config",
+    "n": 4,
+    "names": [
+     "ss_1a",
+     "ss_1b_qcal",
+     "ss_1c_debutprior",
+     "ss_5d_roster"
+    ]
+   },
+   {
+    "source": "stats/h3_process_noise.json (per-axis ll_holdout_record)",
+    "kind": "candidate_config",
+    "n": 3,
+    "names": [
+     "axis_A_roster",
+     "axis_B_orgage",
+     "axis_C_volatility"
+    ]
+   },
+   {
+    "source": "stats/h3_ensemble.json (one scored composite)",
+    "kind": "candidate_config",
+    "n": 1,
+    "names": [
+     "ss_1b|soft_blend_neff composite"
+    ]
+   },
+   {
+    "source": "scratch/bias_h3/sweep_core.json (checkpointed core sweep \u2014 ll_holdout recorded per point; selection was train-only)",
+    "kind": "sweep_checkpoint",
+    "n": 227,
+    "names": [
+     "core:1a|q/R=0.000160852|V0/R=0.05",
+     "core:1a|q/R=0.000160852|V0/R=0.083414",
+     "core:1a|q/R=0.000160852|V0/R=0.139158",
+     "core:1a|q/R=0.000160852|V0/R=0.232154",
+     "core:1a|q/R=0.000160852|V0/R=0.387298",
+     "core:1a|q/R=0.000160852|V0/R=0.646122",
+     "core:1a|q/R=0.000160852|V0/R=1.07791",
+     "core:1a|q/R=0.000160852|V0/R=1.79826",
+     "core:1a|q/R=0.000160852|V0/R=3",
+     "core:1a|q/R=0.0001|V0/R=0.05",
+     "core:1a|q/R=0.0001|V0/R=0.083414",
+     "core:1a|q/R=0.0001|V0/R=0.139158",
+     "core:1a|q/R=0.0001|V0/R=0.232154",
+     "core:1a|q/R=0.0001|V0/R=0.387298",
+     "core:1a|q/R=0.0001|V0/R=0.646122",
+     "core:1a|q/R=0.0001|V0/R=1.07791",
+     "core:1a|q/R=0.0001|V0/R=1.79826",
+     "core:1a|q/R=0.0001|V0/R=3",
+     "core:1a|q/R=0.000258734|V0/R=0.05",
+     "core:1a|q/R=0.000258734|V0/R=0.083414",
+     "core:1a|q/R=0.000258734|V0/R=0.139158",
+     "core:1a|q/R=0.000258734|V0/R=0.232154",
+     "core:1a|q/R=0.000258734|V0/R=0.387298",
+     "core:1a|q/R=0.000258734|V0/R=0.646122",
+     "core:1a|q/R=0.000258734|V0/R=1.07791",
+     "core:1a|q/R=0.000258734|V0/R=1.79826",
+     "core:1a|q/R=0.000258734|V0/R=3",
+     "core:1a|q/R=0.000416179|V0/R=0.05",
+     "core:1a|q/R=0.000416179|V0/R=0.083414",
+     "core:1a|q/R=0.000416179|V0/R=0.139158",
+     "core:1a|q/R=0.000416179|V0/R=0.232154",
+     "core:1a|q/R=0.000416179|V0/R=0.387298",
+     "core:1a|q/R=0.000416179|V0/R=0.646122",
+     "core:1a|q/R=0.000416179|V0/R=1.07791",
+     "core:1a|q/R=0.000416179|V0/R=1.79826",
+     "core:1a|q/R=0.000416179|V0/R=3",
+     "core:1a|q/R=0.000669433|V0/R=0.05",
+     "core:1a|q/R=0.000669433|V0/R=0.083414",
+     "core:1a|q/R=0.000669433|V0/R=0.139158",
+     "core:1a|q/R=0.000669433|V0/R=0.232154",
+     "core:1a|q/R=0.000669433|V0/R=0.387298",
+     "core:1a|q/R=0.000669433|V0/R=0.646122",
+     "core:1a|q/R=0.000669433|V0/R=1.07791",
+     "core:1a|q/R=0.000669433|V0/R=1.79826",
+     "core:1a|q/R=0.000669433|V0/R=3",
+     "core:1a|q/R=0.0010768|V0/R=0.05",
+     "core:1a|q/R=0.0010768|V0/R=0.083414",
+     "core:1a|q/R=0.0010768|V0/R=0.139158",
+     "core:1a|q/R=0.0010768|V0/R=0.232154",
+     "core:1a|q/R=0.0010768|V0/R=0.387298",
+     "core:1a|q/R=0.0010768|V0/R=0.646122",
+     "core:1a|q/R=0.0010768|V0/R=1.07791",
+     "core:1a|q/R=0.0010768|V0/R=1.79826",
+     "core:1a|q/R=0.0010768|V0/R=3",
+     "core:1a|q/R=0.00173205|V0/R=0.05",
+     "core:1a|q/R=0.00173205|V0/R=0.083414",
+     "core:1a|q/R=0.00173205|V0/R=0.139158",
+     "core:1a|q/R=0.00173205|V0/R=0.232154",
+     "core:1a|q/R=0.00173205|V0/R=0.387298",
+     "core:1a|q/R=0.00173205|V0/R=0.646122",
+     "core:1a|q/R=0.00173205|V0/R=1.07791",
+     "core:1a|q/R=0.00173205|V0/R=1.79826",
+     "core:1a|q/R=0.00173205|V0/R=3",
+     "core:1a|q/R=0.0022407|V0/R=0.89913",
+     "core:1a|q/R=0.0022407|V0/R=1.27156",
+     "core:1a|q/R=0.0022407|V0/R=1.79826",
+     "core:1a|q/R=0.0022407|V0/R=2.54312",
+     "core:1a|q/R=0.0022407|V0/R=3.59652",
+     "core:1a|q/R=0.00278604|V0/R=0.05",
+     "core:1a|q/R=0.00278604|V0/R=0.083414",
+     "core:1a|q/R=0.00278604|V0/R=0.139158",
+     "core:1a|q/R=0.00278604|V0/R=0.232154",
+     "core:1a|q/R=0.00278604|V0/R=0.387298",
+     "core:1a|q/R=0.00278604|V0/R=0.646122",
+     "core:1a|q/R=0.00278604|V0/R=1.07791",
+     "core:1a|q/R=0.00278604|V0/R=1.79826",
+     "core:1a|q/R=0.00278604|V0/R=3",
+     "core:1a|q/R=0.00282311|V0/R=0.89913",
+     "core:1a|q/R=0.00282311|V0/R=1.27156",
+     "core:1a|q/R=0.00282311|V0/R=1.79826",
+     "core:1a|q/R=0.00282311|V0/R=2.54312",
+     "core:1a|q/R=0.00282311|V0/R=3.59652",
+     "core:1a|q/R=0.00355689|V0/R=0.89913",
+     "core:1a|q/R=0.00355689|V0/R=1.27156",
+     "core:1a|q/R=0.00355689|V0/R=1.79826",
+     "core:1a|q/R=0.00355689|V0/R=2.54312",
+     "core:1a|q/R=0.00355689|V0/R=3.59652",
+     "core:1a|q/R=0.0044814|V0/R=0.05",
+     "core:1a|q/R=0.0044814|V0/R=0.083414",
+     "core:1a|q/R=0.0044814|V0/R=0.139158",
+     "core:1a|q/R=0.0044814|V0/R=0.232154",
+     "core:1a|q/R=0.0044814|V0/R=0.387298",
+     "core:1a|q/R=0.0044814|V0/R=0.646122",
+     "core:1a|q/R=0.0044814|V0/R=0.89913",
+     "core:1a|q/R=0.0044814|V0/R=1.07791",
+     "core:1a|q/R=0.0044814|V0/R=1.27156",
+     "core:1a|q/R=0.0044814|V0/R=1.79826",
+     "core:1a|q/R=0.0044814|V0/R=2.54312",
+     "core:1a|q/R=0.0044814|V0/R=3",
+     "core:1a|q/R=0.0044814|V0/R=3.59652",
+     "core:1a|q/R=0.00564622|V0/R=0.89913",
+     "core:1a|q/R=0.00564622|V0/R=1.27156",
+     "core:1a|q/R=0.00564622|V0/R=1.79826",
+     "core:1a|q/R=0.00564622|V0/R=2.54312",
+     "core:1a|q/R=0.00564622|V0/R=3.59652",
+     "core:1a|q/R=0.00711379|V0/R=0.89913",
+     "core:1a|q/R=0.00711379|V0/R=1.27156",
+     "core:1a|q/R=0.00711379|V0/R=1.79826",
+     "core:1a|q/R=0.00711379|V0/R=2.54312",
+     "core:1a|q/R=0.00711379|V0/R=3.59652",
+     "core:1a|q/R=0.00720843|V0/R=0.05",
+     "core:1a|q/R=0.00720843|V0/R=0.083414",
+     "core:1a|q/R=0.00720843|V0/R=0.139158",
+     "core:1a|q/R=0.00720843|V0/R=0.232154",
+     "core:1a|q/R=0.00720843|V0/R=0.387298",
+     "core:1a|q/R=0.00720843|V0/R=0.646122",
+     "core:1a|q/R=0.00720843|V0/R=1.07791",
+     "core:1a|q/R=0.00720843|V0/R=1.79826",
+     "core:1a|q/R=0.00720843|V0/R=3",
+     "core:1a|q/R=0.00896281|V0/R=0.89913",
+     "core:1a|q/R=0.00896281|V0/R=1.27156",
+     "core:1a|q/R=0.00896281|V0/R=1.79826",
+     "core:1a|q/R=0.00896281|V0/R=2.54312",
+     "core:1a|q/R=0.00896281|V0/R=3.59652",
+     "core:1a|q/R=0.0115949|V0/R=0.05",
+     "core:1a|q/R=0.0115949|V0/R=0.083414",
+     "core:1a|q/R=0.0115949|V0/R=0.139158",
+     "core:1a|q/R=0.0115949|V0/R=0.232154",
+     "core:1a|q/R=0.0115949|V0/R=0.387298",
+     "core:1a|q/R=0.0115949|V0/R=0.646122",
+     "core:1a|q/R=0.0115949|V0/R=1.07791",
+     "core:1a|q/R=0.0115949|V0/R=1.79826",
+     "core:1a|q/R=0.0115949|V0/R=3",
+     "core:1a|q/R=0.0186507|V0/R=0.05",
+     "core:1a|q/R=0.0186507|V0/R=0.083414",
+     "core:1a|q/R=0.0186507|V0/R=0.139158",
+     "core:1a|q/R=0.0186507|V0/R=0.232154",
+     "core:1a|q/R=0.0186507|V0/R=0.387298",
+     "core:1a|q/R=0.0186507|V0/R=0.646122",
+     "core:1a|q/R=0.0186507|V0/R=1.07791",
+     "core:1a|q/R=0.0186507|V0/R=1.79826",
+     "core:1a|q/R=0.0186507|V0/R=3",
+     "core:1a|q/R=0.03|V0/R=0.05",
+     "core:1a|q/R=0.03|V0/R=0.083414",
+     "core:1a|q/R=0.03|V0/R=0.139158",
+     "core:1a|q/R=0.03|V0/R=0.232154",
+     "core:1a|q/R=0.03|V0/R=0.387298",
+     "core:1a|q/R=0.03|V0/R=0.646122",
+     "core:1a|q/R=0.03|V0/R=1.07791",
+     "core:1a|q/R=0.03|V0/R=1.79826",
+     "core:1a|q/R=0.03|V0/R=3",
+     "core:1b|q/R=0.00282311|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.00282311|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.00282311|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.00282311|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.00282311|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1b|q/R=0.00355689|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.00355689|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.00355689|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.00355689|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.00355689|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1b|q/R=0.0044814|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.0044814|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.0044814|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.0044814|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.0044814|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1b|q/R=0.00564622|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.00564622|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.000112933",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.000338799",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.00112933",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.00338799",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.0112933",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.0338799",
+     "core:1b|q/R=0.00564622|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.00564622|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.00564622|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1b|q/R=0.00711379|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.00711379|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.00711379|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.00711379|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.00711379|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1b|q/R=0.00896281|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.00896281|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.00896281|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.00896281|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.00896281|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1b|q/R=0.0112924|V0/R=0.635781|q_cal_week=0.112933",
+     "core:1b|q/R=0.0112924|V0/R=0.89913|q_cal_week=0.112933",
+     "core:1b|q/R=0.0112924|V0/R=1.27156|q_cal_week=0.112933",
+     "core:1b|q/R=0.0112924|V0/R=1.79826|q_cal_week=0.112933",
+     "core:1b|q/R=0.0112924|V0/R=2.54312|q_cal_week=0.112933",
+     "core:1c|q/R=0.00282311|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.00282311|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.00282311|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.00282311|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.00282311|V0/R=2.54312|debut_region_prior=True",
+     "core:1c|q/R=0.00355689|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.00355689|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.00355689|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.00355689|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.00355689|V0/R=2.54312|debut_region_prior=True",
+     "core:1c|q/R=0.0044814|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.0044814|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.0044814|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.0044814|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.0044814|V0/R=2.54312|debut_region_prior=True",
+     "core:1c|q/R=0.00564622|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.00564622|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.00564622|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.00564622|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.00564622|V0/R=2.54312|debut_region_prior=True",
+     "core:1c|q/R=0.00711379|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.00711379|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.00711379|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.00711379|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.00711379|V0/R=2.54312|debut_region_prior=True",
+     "core:1c|q/R=0.00896281|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.00896281|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.00896281|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.00896281|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.00896281|V0/R=2.54312|debut_region_prior=True",
+     "core:1c|q/R=0.0112924|V0/R=0.635781|debut_region_prior=True",
+     "core:1c|q/R=0.0112924|V0/R=0.89913|debut_region_prior=True",
+     "core:1c|q/R=0.0112924|V0/R=1.27156|debut_region_prior=True",
+     "core:1c|q/R=0.0112924|V0/R=1.79826|debut_region_prior=True",
+     "core:1c|q/R=0.0112924|V0/R=2.54312|debut_region_prior=True"
+    ]
+   }
+  ],
+  "bias_h4": [
+   {
+    "source": "stats/h4_series_link.json",
+    "kind": "candidate_config",
+    "n": 4,
+    "names": [
+     "link:L1_sigma_global",
+     "link:L2_sigma_depth",
+     "link:L3_h_global",
+     "link:L4_h_depth"
+    ]
+   }
+  ],
+  "power": [
+   {
+    "source": "stats/power_mde*.json",
+    "kind": "reproduction",
+    "n": 1,
+    "names": [
+     "(24 published v7 ll_test values reproduced for npz alignment \u2014 reproductions, not new candidates)"
+    ]
+   }
+  ],
+  "referee": [
+   {
+    "source": "stats/referee_selftest.json",
+    "kind": "reproduction",
+    "n": 1,
+    "names": [
+     "(canonical baseline reproductions: 4 npz configs + native v6 build)"
+    ]
+   }
+  ],
+  "corpus": [
+   {
+    "source": "stats/corpus_*.json",
+    "kind": "none",
+    "n": 1,
+    "names": [
+     "(data provenance only \u2014 no holdout scoring)"
+    ]
+   }
+  ],
+  "autopsy": [
+   {
+    "source": "stats/autopsy_*.json",
+    "kind": "market_diagnostics",
+    "n": 1,
+    "names": [
+     "(market-side diagnostics on n=38 settled fills \u2014 separate family, never a fitting target; no expanded-holdout LL scorings)"
+    ]
+   }
+  ],
+  "compose": [
+   {
+    "source": "stats/compose_stacks.json (this wave, preregistered, one scoring each)",
+    "kind": "candidate_config",
+    "n": 3,
+    "names": [
+     "S1_gate5d",
+     "S2_fade_shrink",
+     "S3_full"
+    ]
+   }
+  ]
+ }
+}

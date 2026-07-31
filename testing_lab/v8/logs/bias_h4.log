@@ -1,0 +1,29 @@
+[2026-07-28 T0] agent:bias-h4 start. Frame sha256 verified against crn.json frame_expanded: ff772d41... OK (n=2058, train 841, holdout 1217). v6 reconstruction config identified from run_v7_stage1.py: BASE{rd pow0.75/sc2.5, roster year/0.3, ridge 0.5, champ x2 exact-shape, region_prior_ridge 1.5, w_custom playoffs/GF 1.6} + decay games consistency(20,12). Prior art pinned: ledger id27 intra-series momentum MC (g16_k20_corr07, -2.77m, UNRESOLVED) = the rejected momentum idea; id25 per-map+pick double-count kill stays dead. Writing preregistration BEFORE any experiment code runs.
+[2026-07-28 22:05:39] stage1: frame verified (sha ok, n=2058/841/1217)
+[2026-07-28 22:05:40] stage1: engine init 0.6s; games=5140, teams=73
+[2026-07-28 22:05:40] stage1: series frame replaced; pred_days=637
+[2026-07-28 22:05:40] stage1: game maps (14): ['Abyss', 'Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Summit', 'Sunset', 'TBD']
+[2026-07-28 22:05:40] stage1: frame teams missing from game index: none
+[2026-07-28 22:05:40] stage1: v6 solve start (playoff-weighted games: 2374)
+[2026-07-28 22:05:42] stage1: v6 solve done 2.2s — beta=0.1152 ll_train=0.64823 ll_test=0.64216 n_train=827 n_test=1217
+[2026-07-28 22:05:42] stage1: artifacts saved (v6_solve.npz, games.csv, v6_meta.json)
+[2026-07-28 22:10:46] depth: built in 0.1s; real maps=13; pool windows used {60: 587, 120: 47, 'all-history': 2, 'none': 1}; depth_fav defined on 2056/2058 rows; ties=6
+[2026-07-28 22:10:46] depth terciles (train diag): cuts=[0.7778, 0.875] z mu/sd=0.7745/0.2579
+[2026-07-28 22:10:46] E1 cells + D_sweep boots done 0.1s
+[2026-07-28 22:10:55] E1 param CI overall: sigma=0.7209 [0.3773, 0.9992] h=0.0001 [0.0, 0.0001]
+[2026-07-28 22:11:01] E1 param CI fmt_bo3: sigma=0.8231 [0.5042, 1.1355] h=0.0001 [0.0, 0.0001]
+[2026-07-28 22:11:04] E1 param CI fmt_bo5: sigma=0.2403 [0.0, 0.9016] h=0.214 [0.0, 1.1555]
+[2026-07-28 22:11:06] E1 param CI depth_T1_fav070: sigma=0.8952 [0.0, 2.4999] h=0.3111 [0.0, 1.9007]
+[2026-07-28 22:11:07] E1 param CI depth_T3_fav070: sigma=0.0001 [0.0, 2.4999] h=0.6364 [0.0, 2.1074]
+[2026-07-28 22:11:07] E1 param boots done 21.5s
+[2026-07-28 22:11:07] E1 joint fit (descriptive): {'sigma': 0.7209, 'h': 0.0, 'nll': 0.71295}
+[2026-07-28 22:11:07] gates: G1=False G2=True terms={'overall_D': True, 'bo3_D': True, 'bo5_D': False, 'sigma_overall': True, 'h_overall': False, 'depth_gradient': False}
+[2026-07-28 22:11:07] E1 written: stats/h4_dispersion_diag.json
+[2026-07-28 22:11:07] L1 fit: sigma=0.7209 beta=0.1407 (0.0s)
+[2026-07-28 22:11:53] L2 fit: a=0.0090 b=-0.4354 ci=[-1.7933, 0.0295] beta=0.1401 (45.2s)
+[2026-07-28 22:11:53] L1_sigma_global: dLL=-0.048m (MDE 1.773m, inside=True) iid CI=[-0.42,0.32]m block CI=[-0.31,0.25]m dP_bo5fav={'n': 5, 'mean_deltaP_favside': -0.0155}
+[2026-07-28 22:11:53] L2_sigma_depth: dLL=+0.213m (MDE 1.773m, inside=True) iid CI=[-0.75,1.15]m block CI=[-0.72,0.90]m dP_bo5fav={'n': 5, 'mean_deltaP_favside': 0.0022}
+[2026-07-28 22:11:53] E3 reduction check pass=True: [{'fmt': 'bo1', 'max_abs_diff_sigma0': 4.440892098500626e-16, 'max_abs_diff_h0': 0.0}, {'fmt': 'bo3', 'max_abs_diff_sigma0': 4.440892098500626e-16, 'max_abs_diff_h0': 2.220446049250313e-16}, {'fmt': 'bo5', 'max_abs_diff_sigma0': 4.440892098500626e-16, 'max_abs_diff_h0': 3.3306690738754696e-16}]
+[2026-07-28 22:11:53] E2/E3 written: stats/h4_series_link.json, stats/h4_bias_caterpillar.json
+[2026-07-28 22:11:53] stage2 complete
+[2026-07-28 22:13:32] DONE. E1: over-dispersion D_sweep +5.09pp [1.81,8.53], sigma=0.72 [0.38,1.00], h=0; G1 FALSE (premise refuted), G2 TRUE. E2: L1 -0.048m, L2 +0.213m, both INSIDE NOISE FLOOR (MDE 1.773m); P(bo5 strong fav) falls 1.55pp under L1. E3 guard passed. Outputs: stats/h4_dispersion_diag.json, stats/h4_series_link.json, stats/h4_bias_caterpillar.json, phase5_h4.md, preregister outcomes appended.

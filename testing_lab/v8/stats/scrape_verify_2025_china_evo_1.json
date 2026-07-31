@@ -1,0 +1,330 @@
+{
+ "440530": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440530/tyloo-vs-all-gamers-china-evolution-series-act-1-ro12",
+  "maps": {
+   "200451": [
+    "TYL",
+    "13-3"
+   ],
+   "200452": [
+    "TYL",
+    "13-2"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-02-08 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "TYL"
+  ]
+ },
+ "440531": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440531/nova-esports-vs-trace-esports-china-evolution-series-act-1-ro12",
+  "maps": {
+   "200454": [
+    "TE",
+    "14-12"
+   ],
+   "200455": [
+    "NOVA",
+    "13-4"
+   ],
+   "200456": [
+    "NOVA",
+    "13-6"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-1"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-02-08 05:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "TE"
+  ]
+ },
+ "440532": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440532/wolves-esports-vs-titan-esports-club-china-evolution-series-act-1-ro12",
+  "maps": {
+   "200457": [
+    "WOL",
+    "13-8"
+   ],
+   "200458": [
+    "WOL",
+    "13-10"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-02-09 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "WOL"
+  ]
+ },
+ "440533": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440533/jdg-esports-vs-edward-gaming-china-evolution-series-act-1-ro12",
+  "maps": {
+   "200460": [
+    "JDG",
+    "13-4"
+   ],
+   "200461": [
+    "JDG",
+    "13-7"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-02-09 06:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "JDG"
+  ]
+ },
+ "440534": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440534/bilibili-gaming-vs-tyloo-china-evolution-series-act-1-qf",
+  "maps": {
+   "200463": [
+    "BLG",
+    "13-9"
+   ],
+   "200464": [
+    "BLG",
+    "19-17"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-02-10 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TYL"
+  ]
+ },
+ "440535": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440535/funplus-phoenix-vs-nova-esports-china-evolution-series-act-1-qf",
+  "maps": {
+   "200466": [
+    "NOVA",
+    "13-8"
+   ],
+   "200467": [
+    "NOVA",
+    "13-3"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-02-10 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "NOVA"
+  ]
+ },
+ "440536": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440536/dragon-ranger-gaming-vs-wolves-esports-china-evolution-series-act-1-qf",
+  "maps": {
+   "200469": [
+    "WOL",
+    "13-6"
+   ],
+   "200470": [
+    "DRG",
+    "13-11"
+   ],
+   "200471": [
+    "WOL",
+    "13-4"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-02-11 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "WOL"
+  ]
+ },
+ "440537": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440537/xi-lai-gaming-vs-jdg-esports-china-evolution-series-act-1-qf",
+  "maps": {
+   "200472": [
+    "JDG",
+    "16-14"
+   ],
+   "200473": [
+    "JDG",
+    "13-5"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-02-11 06:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "XLG"
+  ]
+ },
+ "440538": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440538/bilibili-gaming-vs-nova-esports-china-evolution-series-act-1-sf",
+  "maps": {
+   "200475": [
+    "NOVA",
+    "13-8"
+   ],
+   "200476": [
+    "NOVA",
+    "13-4"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-02-14 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "NOVA"
+  ]
+ },
+ "440539": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440539/wolves-esports-vs-jdg-esports-china-evolution-series-act-1-sf",
+  "maps": {
+   "200478": [
+    "WOL",
+    "13-5"
+   ],
+   "200479": [
+    "WOL",
+    "13-11"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-02-14 06:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "WOL"
+  ]
+ },
+ "440541": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440541/bilibili-gaming-vs-jdg-esports-china-evolution-series-act-1-cf",
+  "maps": {
+   "200486": [
+    "BLG",
+    "13-9"
+   ],
+   "200487": [
+    "BLG",
+    "13-3"
+   ],
+   "200488": [
+    "BLG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "BLG",
+   "3-0"
+  ],
+  "match_name": "Main Event: Consolation Final",
+  "utc_ts": "2025-02-15 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "JDG"
+  ]
+ },
+ "440540": {
+  "event_id": "2025_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/440540/nova-esports-vs-wolves-esports-china-evolution-series-act-1-gf",
+  "maps": {
+   "200481": [
+    "NOVA",
+    "13-2"
+   ],
+   "200482": [
+    "NOVA",
+    "13-5"
+   ],
+   "200483": [
+    "NOVA",
+    "13-9"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-02-16 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "WOL"
+  ]
+ }
+}

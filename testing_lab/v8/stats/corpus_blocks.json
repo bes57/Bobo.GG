@@ -1,0 +1,340 @@
+{
+ "generated": "2026-07-28",
+ "note": "blocks are disjoint; every backfilled event appears exactly once. prefranchise blocks live in testing_lab/v8/data/prefranchise/ and are NOT part of data/ or ALL_EVENTS.",
+ "blocks": {
+  "ewc_2025_chain": {
+   "events": {
+    "2025_ewc": {
+     "n_matches": 28,
+     "n_maps": 58,
+     "span": [
+      "2025-07-08",
+      "2025-07-13"
+     ]
+    },
+    "2025_ewc_qual": {
+     "n_matches": 49,
+     "n_maps": 104,
+     "span": [
+      "2025-05-16",
+      "2025-05-25"
+     ]
+    },
+    "2025_china_evo_2": {
+     "n_matches": 12,
+     "n_maps": 30,
+     "span": [
+      "2025-05-08",
+      "2025-05-12"
+     ]
+    }
+   },
+   "n_matches": 89,
+   "n_maps": 192,
+   "span": [
+    "2025-05-08",
+    "2025-07-13"
+   ]
+  },
+  "vct_2023_qualifiers": {
+   "events": {
+    "2023_lcq": {
+     "n_matches": 26,
+     "n_maps": 73,
+     "span": [
+      "2023-07-15",
+      "2023-07-23"
+     ]
+    },
+    "2023_china_champions_qual": {
+     "n_matches": 12,
+     "n_maps": 37,
+     "span": [
+      "2023-06-03",
+      "2023-07-16"
+     ]
+    }
+   },
+   "n_matches": 38,
+   "n_maps": 110,
+   "span": [
+    "2023-06-03",
+    "2023-07-23"
+   ]
+  },
+  "cn_evolution_family": {
+   "events": {
+    "2023_china_evo_1": {
+     "n_matches": 13,
+     "n_maps": 27,
+     "span": [
+      "2023-09-07",
+      "2023-09-28"
+     ]
+    },
+    "2023_china_evo_3": {
+     "n_matches": 12,
+     "n_maps": 30,
+     "span": [
+      "2023-11-03",
+      "2023-11-25"
+     ]
+    },
+    "2025_china_evo_1": {
+     "n_matches": 12,
+     "n_maps": 28,
+     "span": [
+      "2025-02-08",
+      "2025-02-16"
+     ]
+    },
+    "2025_china_evo_3": {
+     "n_matches": 12,
+     "n_maps": 34,
+     "span": [
+      "2025-08-28",
+      "2025-09-07"
+     ]
+    },
+    "2025_china_evo_epilogue": {
+     "n_matches": 7,
+     "n_maps": 23,
+     "span": [
+      "2025-11-12",
+      "2025-11-16"
+     ]
+    },
+    "2026_china_evo_1": {
+     "n_matches": 6,
+     "n_maps": 15,
+     "span": [
+      "2026-03-17",
+      "2026-03-22"
+     ]
+    },
+    "2024_fgc_inv": {
+     "n_matches": 18,
+     "n_maps": 48,
+     "span": [
+      "2024-10-30",
+      "2024-11-10"
+     ]
+    }
+   },
+   "n_matches": 80,
+   "n_maps": 205,
+   "span": [
+    "2023-09-07",
+    "2026-03-22"
+   ]
+  },
+  "offseason_2023": {
+   "events": {
+    "2023_rbhg": {
+     "n_matches": 10,
+     "n_maps": 20,
+     "span": [
+      "2023-10-14",
+      "2023-11-05"
+     ]
+    },
+    "2023_ten_global": {
+     "n_matches": 9,
+     "n_maps": 13,
+     "span": [
+      "2023-10-07",
+      "2023-10-08"
+     ]
+    },
+    "2023_convergence": {
+     "n_matches": 5,
+     "n_maps": 14,
+     "span": [
+      "2023-12-14",
+      "2023-12-17"
+     ]
+    }
+   },
+   "n_matches": 24,
+   "n_maps": 47,
+   "span": [
+    "2023-10-07",
+    "2023-12-17"
+   ]
+  },
+  "offseason_2024": {
+   "events": {
+    "2024_rbhg": {
+     "n_matches": 20,
+     "n_maps": 34,
+     "span": [
+      "2024-09-29",
+      "2024-11-23"
+     ]
+    },
+    "2024_ten_asia": {
+     "n_matches": 9,
+     "n_maps": 12,
+     "span": [
+      "2024-10-26",
+      "2024-10-27"
+     ]
+    },
+    "2024_radiant_asia": {
+     "n_matches": 16,
+     "n_maps": 44,
+     "span": [
+      "2024-11-21",
+      "2024-12-01"
+     ]
+    },
+    "2024_shanghai_masters": {
+     "n_matches": 3,
+     "n_maps": 8,
+     "span": [
+      "2024-12-06",
+      "2024-12-07"
+     ]
+    }
+   },
+   "n_matches": 48,
+   "n_maps": 98,
+   "span": [
+    "2024-09-29",
+    "2024-12-07"
+   ]
+  },
+  "offseason_2025": {
+   "events": {
+    "2025_acl": {
+     "n_matches": 7,
+     "n_maps": 18,
+     "span": [
+      "2025-05-14",
+      "2025-05-18"
+     ]
+    },
+    "2025_rbhg": {
+     "n_matches": 12,
+     "n_maps": 16,
+     "span": [
+      "2025-11-14",
+      "2025-11-16"
+     ]
+    },
+    "2025_ten_global": {
+     "n_matches": 9,
+     "n_maps": 12,
+     "span": [
+      "2025-11-08",
+      "2025-11-09"
+     ]
+    },
+    "2025_super_champions_cup": {
+     "n_matches": 10,
+     "n_maps": 17,
+     "span": [
+      "2025-11-29",
+      "2025-11-30"
+     ]
+    },
+    "2025_shanghai_masters": {
+     "n_matches": 3,
+     "n_maps": 8,
+     "span": [
+      "2025-12-04",
+      "2025-12-05"
+     ]
+    },
+    "2025_radiant_intl": {
+     "n_matches": 15,
+     "n_maps": 21,
+     "span": [
+      "2025-12-18",
+      "2025-12-21"
+     ]
+    }
+   },
+   "n_matches": 56,
+   "n_maps": 92,
+   "span": [
+    "2025-05-14",
+    "2025-12-21"
+   ]
+  },
+  "prefranchise_2021": {
+   "events": {
+    "2021_masters2_reykjavik": {
+     "n_matches": 18,
+     "n_maps": 41,
+     "span": [
+      "2021-05-24",
+      "2021-05-30"
+     ]
+    },
+    "2021_masters3_berlin": {
+     "n_matches": 28,
+     "n_maps": 66,
+     "span": [
+      "2021-09-10",
+      "2021-09-19"
+     ]
+    },
+    "2021_champions": {
+     "n_matches": 27,
+     "n_maps": 71,
+     "span": [
+      "2021-12-01",
+      "2021-12-12"
+     ]
+    }
+   },
+   "n_matches": 73,
+   "n_maps": 178,
+   "span": [
+    "2021-05-24",
+    "2021-12-12"
+   ]
+  },
+  "prefranchise_2022": {
+   "events": {
+    "2022_masters1_reykjavik": {
+     "n_matches": 24,
+     "n_maps": 60,
+     "span": [
+      "2022-04-10",
+      "2022-04-24"
+     ]
+    },
+    "2022_masters2_copenhagen": {
+     "n_matches": 24,
+     "n_maps": 66,
+     "span": [
+      "2022-07-10",
+      "2022-07-24"
+     ]
+    },
+    "2022_champions": {
+     "n_matches": 34,
+     "n_maps": 86,
+     "span": [
+      "2022-08-31",
+      "2022-09-18"
+     ]
+    }
+   },
+   "n_matches": 82,
+   "n_maps": 212,
+   "span": [
+    "2022-04-10",
+    "2022-09-18"
+   ]
+  }
+ },
+ "totals": {
+  "all_matches": 490,
+  "all_maps": 1134,
+  "matches_2023_2026": 335,
+  "matches_prefranchise": 155
+ }
+}

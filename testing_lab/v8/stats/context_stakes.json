@@ -1,0 +1,135 @@
+{
+ "provenance": {
+  "agent": "context",
+  "written": "2026-07-28",
+  "frame": "v8/data/frame_expanded/series.csv sha256 ff772d41... (verified vs crn.json)",
+  "baseline_B0": {
+   "desc": "v6 champion replayed on expanded frame (consist 20/12, PO 1.6, champ x2, beta train-fit)",
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "n_test": 1217,
+   "n_train": 827
+  },
+  "mde_milli": {
+   "within": 1.773,
+   "cross": 5.889,
+   "source": "stats/power_mde_expanded.json"
+  },
+  "selection_rule": "train NLL only; holdout curves shown are transparency, never selection"
+ },
+ "preregistered": "preregister.context.md 3c",
+ "elim_flag_def": "stage grand_final OR name has Lower/Elimination/Decider/Knockout/(0-1)/(1-1) OR playoffs-stage KO name w/o Upper",
+ "elim_counts": {
+  "overall": 619,
+  "holdout": 387,
+  "share": 0.301
+ },
+ "dead_rubbers": "DECLARED UNTESTABLE (preregistered): group membership, advancement thresholds and tiebreakers not derivable from the corpus; approximation forbidden by brief.",
+ "testA_solve_weight": {
+  "grid": [
+   {
+    "x": 0.7,
+    "beta": 0.1181,
+    "ll_train": 0.64785,
+    "ll_test": 0.6427,
+    "dll_holdout_milli": -0.537
+   },
+   {
+    "x": 0.85,
+    "beta": 0.1168,
+    "ll_train": 0.64796,
+    "ll_test": 0.6423,
+    "dll_holdout_milli": -0.141
+   },
+   {
+    "x": 1.0,
+    "beta": 0.1152,
+    "ll_train": 0.64823,
+    "ll_test": 0.64216,
+    "dll_holdout_milli": 0.0
+   },
+   {
+    "x": 1.15,
+    "beta": 0.1135,
+    "ll_train": 0.64859,
+    "ll_test": 0.64219,
+    "dll_holdout_milli": -0.029
+   },
+   {
+    "x": 1.3,
+    "beta": 0.1118,
+    "ll_train": 0.64901,
+    "ll_test": 0.64233,
+    "dll_holdout_milli": -0.17
+   },
+   {
+    "x": 1.5,
+    "beta": 0.1094,
+    "ll_train": 0.64961,
+    "ll_test": 0.64263,
+    "dll_holdout_milli": -0.469
+   }
+  ],
+  "train_argmin_w_elim": 0.7,
+  "edge_note": "argmin at grid EDGE 0.7 \u2014 train prefers DOWN-weighting elimination games (they are noisier in-sample), the opposite of the 'stakes reveal true strength' story",
+  "dll_milli": -0.537,
+  "pair_mde_milli": 1.773,
+  "boot_iid_ci_milli": [
+   -2.08,
+   0.928
+  ],
+  "boot_block_ci_milli": [
+   -1.727,
+   0.704
+  ],
+  "p_better_iid": 0.23825,
+  "expected_roi_delta": 0.0,
+  "roi_note": "ladder clamps at delta_logit 0; negative dll -> 0.0",
+  "ewc_full_bucket_dll_milli": -1.78,
+  "ewc_legacy_bucket_dll_milli": -2.38,
+  "verdict": "INSIDE NOISE FLOOR"
+ },
+ "testB_variance": {
+  "name": "3c-B elim variance",
+  "ll_test": 0.64253,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.371,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.00037058059566648355,
+   "ci_lo": -0.0026581916763427265,
+   "ci_hi": 0.0018697155773924566,
+   "p_better": 0.37425
+  },
+  "boot_block": {
+   "mean_delta": -0.00037058059566648355,
+   "ci_lo": -0.003298622126451014,
+   "ci_hi": 0.0024292970354018876,
+   "p_better": 0.40425
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0008,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.69203,
+   "ll_B0": 0.68633,
+   "dll_milli": -5.7
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.67347,
+   "ll_B0": 0.67224,
+   "dll_milli": -1.23
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.124,
+   "a_elim": -0.3483
+  },
+  "ll_train": 0.64731
+ },
+ "verdict_summary": "3c DEAD/INSIDE NOISE FLOOR: train wants elim games down-weighted (w=0.7 edge) but that pick scores -0.54m on holdout (floor 1.773m); the prediction-layer shrink fits a_elim=-0.348 on train (elim matches less predictable) and lands -0.37m on holdout, inside the floor. Stakes carry no usable probability information at this n."
+}

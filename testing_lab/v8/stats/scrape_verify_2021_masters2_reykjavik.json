@@ -1,0 +1,490 @@
+{
+ "19071": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19071/fnatic-vs-kr-esports-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ur1",
+  "maps": {
+   "34248": [
+    "FNC",
+    "13-5"
+   ],
+   "34249": [
+    "FNC",
+    "13-4"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2021-05-24 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "KR\u00dc"
+  ]
+ },
+ "19072": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19072/version1-vs-crazy-raccoon-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ur1",
+  "maps": {
+   "34251": [
+    "V1",
+    "13-11"
+   ],
+   "34252": [
+    "V1",
+    "13-10"
+   ]
+  },
+  "series": [
+   "V1",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2021-05-24 13:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "V1"
+  ]
+ },
+ "19075": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19075/sharks-esports-vs-nuturn-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubqf",
+  "maps": {
+   "34260": [
+    "SHK",
+    "13-5"
+   ],
+   "34261": [
+    "NU",
+    "13-5"
+   ],
+   "34262": [
+    "NU",
+    "13-5"
+   ]
+  },
+  "series": [
+   "NU",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2021-05-24 16:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "NU",
+   "SHK"
+  ]
+ },
+ "19074": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19074/team-vikings-vs-x10-esports-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubqf",
+  "maps": {
+   "34258": [
+    "VKS",
+    "14-12"
+   ],
+   "34971": [
+    "VKS",
+    "13-11"
+   ]
+  },
+  "series": [
+   "VKS",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2021-05-25 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "VKS",
+   "X10"
+  ]
+ },
+ "19076": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19076/team-liquid-vs-version1-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubqf",
+  "maps": {
+   "34263": [
+    "TL",
+    "16-14"
+   ],
+   "34264": [
+    "V1",
+    "13-11"
+   ],
+   "34265": [
+    "V1",
+    "13-4"
+   ]
+  },
+  "series": [
+   "V1",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2021-05-25 14:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "TL",
+   "V1"
+  ]
+ },
+ "19073": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19073/sentinels-vs-fnatic-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubqf",
+  "maps": {
+   "34254": [
+    "SEN",
+    "13-11"
+   ],
+   "34255": [
+    "SEN",
+    "13-10"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2021-05-25 18:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "SEN"
+  ]
+ },
+ "19081": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19081/x10-esports-vs-crazy-raccoon-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr1",
+  "maps": {
+   "34275": [
+    "X10",
+    "13-9"
+   ],
+   "34276": [
+    "X10",
+    "13-5"
+   ]
+  },
+  "series": [
+   "X10",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2021-05-26 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "CR",
+   "X10"
+  ]
+ },
+ "19082": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19082/sharks-esports-vs-kr-esports-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr1",
+  "maps": {
+   "34278": [
+    "KR\u00dc",
+    "13-5"
+   ],
+   "34279": [
+    "KR\u00dc",
+    "13-6"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2021-05-26 13:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "SHK"
+  ]
+ },
+ "19078": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19078/sentinels-vs-team-vikings-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubsf",
+  "maps": {
+   "34266": [
+    "SEN",
+    "13-7"
+   ],
+   "34267": [
+    "SEN",
+    "13-6"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2021-05-26 15:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "SEN",
+   "VKS"
+  ]
+ },
+ "19079": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19079/version1-vs-nuturn-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubsf",
+  "maps": {
+   "34269": [
+    "V1",
+    "13-3"
+   ],
+   "34270": [
+    "NU",
+    "15-13"
+   ],
+   "34271": [
+    "NU",
+    "14-12"
+   ]
+  },
+  "series": [
+   "NU",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2021-05-27 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NU",
+   "V1"
+  ]
+ },
+ "19083": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19083/fnatic-vs-x10-esports-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr2",
+  "maps": {
+   "34281": [
+    "FNC",
+    "13-4"
+   ],
+   "34282": [
+    "FNC",
+    "13-9"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2021-05-27 14:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "X10"
+  ]
+ },
+ "19084": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19084/team-liquid-vs-kr-esports-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr2",
+  "maps": {
+   "34284": [
+    "TL",
+    "13-2"
+   ],
+   "34285": [
+    "TL",
+    "13-9"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2021-05-27 16:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "TL"
+  ]
+ },
+ "19085": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19085/version1-vs-fnatic-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr3",
+  "maps": {
+   "34287": [
+    "FNC",
+    "14-12"
+   ],
+   "34288": [
+    "FNC",
+    "13-6"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2021-05-28 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "V1"
+  ]
+ },
+ "19086": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19086/team-vikings-vs-team-liquid-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr3",
+  "maps": {
+   "34290": [
+    "TL",
+    "13-8"
+   ],
+   "34291": [
+    "TL",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2021-05-28 13:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "TL",
+   "VKS"
+  ]
+ },
+ "19080": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19080/sentinels-vs-nuturn-valorant-champions-tour-stage-2-masters-reykjavik-main-event-ubf",
+  "maps": {
+   "34272": [
+    "SEN",
+    "13-5"
+   ],
+   "34273": [
+    "SEN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Final",
+  "utc_ts": "2021-05-28 15:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "NU",
+   "SEN"
+  ]
+ },
+ "19087": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19087/fnatic-vs-team-liquid-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lr4",
+  "maps": {
+   "34293": [
+    "FNC",
+    "13-10"
+   ],
+   "34294": [
+    "FNC",
+    "13-10"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 4",
+  "utc_ts": "2021-05-29 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "TL"
+  ]
+ },
+ "19088": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19088/nuturn-vs-fnatic-valorant-champions-tour-stage-2-masters-reykjavik-main-event-lbf",
+  "maps": {
+   "34296": [
+    "FNC",
+    "13-8"
+   ],
+   "34297": [
+    "NU",
+    "13-8"
+   ],
+   "34298": [
+    "FNC",
+    "13-8"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2021-05-29 15:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "NU"
+  ]
+ },
+ "19089": {
+  "event_id": "2021_masters2_reykjavik",
+  "region": "International",
+  "url": "https://www.vlr.gg/19089/sentinels-vs-fnatic-valorant-champions-tour-stage-2-masters-reykjavik-main-event-gf",
+  "maps": {
+   "34299": [
+    "SEN",
+    "14-12"
+   ],
+   "34300": [
+    "SEN",
+    "16-14"
+   ],
+   "34301": [
+    "SEN",
+    "13-11"
+   ]
+  },
+  "series": [
+   "SEN",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2021-05-30 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "SEN"
+  ]
+ }
+}

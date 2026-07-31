@@ -1,0 +1,466 @@
+{
+ "418804": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418804/trace-esports-vs-rex-regum-qeon-valorant-radiant-asia-invitational-r1",
+  "maps": {
+   "191192": [
+    "RRQ",
+    "13-6"
+   ],
+   "191193": [
+    "RRQ",
+    "13-5"
+   ]
+  },
+  "series": [
+   "RRQ",
+   "2-0"
+  ],
+  "match_name": "Swiss Stage: Round 1",
+  "utc_ts": "2024-11-21 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "RRQ",
+   "TE"
+  ]
+ },
+ "418805": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418805/paper-rex-vs-gen-g-valorant-radiant-asia-invitational-r1",
+  "maps": {
+   "191195": [
+    "GEN",
+    "14-12"
+   ],
+   "191196": [
+    "PRX",
+    "15-13"
+   ],
+   "191197": [
+    "GEN",
+    "18-16"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 1",
+  "utc_ts": "2024-11-21 06:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "PRX"
+  ]
+ },
+ "418806": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418806/drx-vs-bilibili-gaming-valorant-radiant-asia-invitational-r1",
+  "maps": {
+   "191198": [
+    "KRX",
+    "13-11"
+   ],
+   "191199": [
+    "KRX",
+    "13-2"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Swiss Stage: Round 1",
+  "utc_ts": "2024-11-22 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "KRX"
+  ]
+ },
+ "418807": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418807/edward-gaming-vs-detonation-focusme-valorant-radiant-asia-invitational-r1",
+  "maps": {
+   "191201": [
+    "EDG",
+    "13-7"
+   ],
+   "191202": [
+    "DFM",
+    "13-9"
+   ],
+   "191203": [
+    "DFM",
+    "13-5"
+   ]
+  },
+  "series": [
+   "DFM",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 1",
+  "utc_ts": "2024-11-22 06:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "EDG"
+  ]
+ },
+ "418808": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418808/gen-g-vs-drx-valorant-radiant-asia-invitational-r2-1-0",
+  "maps": {
+   "191204": [
+    "KRX",
+    "13-8"
+   ],
+   "191205": [
+    "GEN",
+    "13-9"
+   ],
+   "191206": [
+    "KRX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 2 (1-0)",
+  "utc_ts": "2024-11-23 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "KRX"
+  ]
+ },
+ "418809": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418809/rex-regum-qeon-vs-detonation-focusme-valorant-radiant-asia-invitational-r2-1-0",
+  "maps": {
+   "191207": [
+    "RRQ",
+    "13-9"
+   ],
+   "191208": [
+    "DFM",
+    "13-6"
+   ],
+   "191209": [
+    "DFM",
+    "13-10"
+   ]
+  },
+  "series": [
+   "DFM",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 2 (1-0)",
+  "utc_ts": "2024-11-23 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "RRQ"
+  ]
+ },
+ "418810": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418810/trace-esports-vs-bilibili-gaming-valorant-radiant-asia-invitational-r2-0-1",
+  "maps": {
+   "191210": [
+    "TE",
+    "13-9"
+   ],
+   "191211": [
+    "BLG",
+    "13-4"
+   ],
+   "191212": [
+    "TE",
+    "13-6"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 2 (0-1)",
+  "utc_ts": "2024-11-24 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TE"
+  ]
+ },
+ "418811": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418811/edward-gaming-vs-paper-rex-valorant-radiant-asia-invitational-r2-0-1",
+  "maps": {
+   "191213": [
+    "PRX",
+    "13-6"
+   ],
+   "191214": [
+    "EDG",
+    "13-6"
+   ],
+   "191215": [
+    "PRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 2 (0-1)",
+  "utc_ts": "2024-11-24 07:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "PRX"
+  ]
+ },
+ "418813": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418813/trace-esports-vs-gen-g-valorant-radiant-asia-invitational-r3",
+  "maps": {
+   "191219": [
+    "TE",
+    "13-7"
+   ],
+   "191220": [
+    "TE",
+    "14-12"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Swiss Stage: Round 3",
+  "utc_ts": "2024-11-25 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TE"
+  ]
+ },
+ "418812": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418812/rex-regum-qeon-vs-paper-rex-valorant-radiant-asia-invitational-r3",
+  "maps": {
+   "191216": [
+    "PRX",
+    "14-12"
+   ],
+   "191217": [
+    "RRQ",
+    "14-12"
+   ],
+   "191218": [
+    "PRX",
+    "13-10"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-1"
+  ],
+  "match_name": "Swiss Stage: Round 3",
+  "utc_ts": "2024-11-25 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "RRQ"
+  ]
+ },
+ "418815": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418815/drx-vs-paper-rex-valorant-radiant-asia-invitational-ubsf",
+  "maps": {
+   "191225": [
+    "PRX",
+    "15-13"
+   ],
+   "191226": [
+    "KRX",
+    "13-6"
+   ],
+   "191227": [
+    "PRX",
+    "13-6"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2024-11-28 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "PRX"
+  ]
+ },
+ "418814": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418814/detonation-focusme-vs-trace-esports-valorant-radiant-asia-invitational-ubsf",
+  "maps": {
+   "191222": [
+    "TE",
+    "13-11"
+   ],
+   "191223": [
+    "DFM",
+    "13-8"
+   ],
+   "191224": [
+    "DFM",
+    "13-7"
+   ]
+  },
+  "series": [
+   "DFM",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2024-11-28 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "TE"
+  ]
+ },
+ "418816": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418816/detonation-focusme-vs-paper-rex-valorant-radiant-asia-invitational-ubf",
+  "maps": {
+   "191228": [
+    "DFM",
+    "15-13"
+   ],
+   "191229": [
+    "DFM",
+    "13-8"
+   ]
+  },
+  "series": [
+   "DFM",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Final",
+  "utc_ts": "2024-11-29 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "PRX"
+  ]
+ },
+ "418818": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418818/trace-esports-vs-drx-valorant-radiant-asia-invitational-lr1",
+  "maps": {
+   "191236": [
+    "TE",
+    "13-7"
+   ],
+   "191237": [
+    "TE",
+    "13-10"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Lower Round 1",
+  "utc_ts": "2024-11-29 06:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "TE"
+  ]
+ },
+ "418819": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418819/paper-rex-vs-trace-esports-valorant-radiant-asia-invitational-lbf",
+  "maps": {
+   "191239": [
+    "PRX",
+    "13-5"
+   ],
+   "191240": [
+    "PRX",
+    "13-4"
+   ],
+   "191241": [
+    "PRX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "PRX",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Lower Final",
+  "utc_ts": "2024-11-30 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "TE"
+  ]
+ },
+ "418817": {
+  "event_id": "2024_radiant_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/418817/detonation-focusme-vs-paper-rex-valorant-radiant-asia-invitational-gf",
+  "maps": {
+   "191231": [
+    "PRX",
+    "13-10"
+   ],
+   "191232": [
+    "DFM",
+    "13-6"
+   ],
+   "191233": [
+    "PRX",
+    "13-2"
+   ],
+   "191234": [
+    "PRX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "PRX",
+   "3-1"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2024-12-01 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "PRX"
+  ]
+ }
+}

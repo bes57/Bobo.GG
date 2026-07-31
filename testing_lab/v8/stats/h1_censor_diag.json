@@ -1,0 +1,255 @@
+{
+ "written_by": "agent:bias_h1",
+ "preregistered": "preregister.bias_h1.md E3",
+ "sample": {
+  "n_train_maps": 2057,
+  "skipped_no_asof_rating": 34,
+  "junk_margin_excluded": 0,
+  "class_counts": {
+   "REG": 1866,
+   "OT": 222,
+   "CAP": 3
+  }
+ },
+ "cap_share_by_winner_rating_quartile": [
+  {
+   "quartile": "Q1",
+   "n": 514,
+   "r_w_mean": -2.92,
+   "cap_share": 0.0,
+   "nearcap_share_m11": 0.03891,
+   "ot_share": 0.09339,
+   "loser_rounds_mean": 8.117,
+   "loser_rounds_dist": {
+    "0": 0,
+    "1": 9,
+    "2": 11,
+    "3": 13,
+    "4": 36,
+    "5": 29,
+    "6": 49,
+    "7": 63,
+    "8": 63,
+    "9": 55,
+    "10": 67,
+    "11": 71,
+    "12": 24
+   }
+  },
+  {
+   "quartile": "Q2",
+   "n": 512,
+   "r_w_mean": 0.457,
+   "cap_share": 0.0,
+   "nearcap_share_m11": 0.03125,
+   "ot_share": 0.11328,
+   "loser_rounds_mean": 8.215,
+   "loser_rounds_dist": {
+    "0": 0,
+    "1": 3,
+    "2": 13,
+    "3": 16,
+    "4": 27,
+    "5": 50,
+    "6": 43,
+    "7": 57,
+    "8": 55,
+    "9": 51,
+    "10": 70,
+    "11": 69,
+    "12": 34
+   }
+  },
+  {
+   "quartile": "Q3",
+   "n": 515,
+   "r_w_mean": 3.061,
+   "cap_share": 0.00388,
+   "nearcap_share_m11": 0.03301,
+   "ot_share": 0.10097,
+   "loser_rounds_mean": 7.771,
+   "loser_rounds_dist": {
+    "0": 2,
+    "1": 3,
+    "2": 12,
+    "3": 26,
+    "4": 36,
+    "5": 44,
+    "6": 58,
+    "7": 56,
+    "8": 65,
+    "9": 57,
+    "10": 47,
+    "11": 57,
+    "12": 28
+   }
+  },
+  {
+   "quartile": "Q4",
+   "n": 516,
+   "r_w_mean": 5.6,
+   "cap_share": 0.00194,
+   "nearcap_share_m11": 0.04651,
+   "ot_share": 0.11628,
+   "loser_rounds_mean": 7.924,
+   "loser_rounds_dist": {
+    "0": 1,
+    "1": 5,
+    "2": 18,
+    "3": 20,
+    "4": 39,
+    "5": 52,
+    "6": 40,
+    "7": 45,
+    "8": 58,
+    "9": 59,
+    "10": 58,
+    "11": 61,
+    "12": 28
+   }
+  }
+ ],
+ "cap_ratio_Q4_over_mid": 0.995,
+ "cap_Q4": 0.00194,
+ "cap_mid_Q2Q3": 0.00195,
+ "nearcap_ratio_Q4_over_mid": 1.447,
+ "margin_link_slope_a_train": 0.54736,
+ "resid_by_predicted_decile": [
+  {
+   "decile": 1,
+   "n": 205,
+   "yhat_mean": -2.998,
+   "y_mean": 7.882,
+   "resid_mean": 10.88,
+   "ci95": [
+    10.409,
+    11.351
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 2,
+   "n": 207,
+   "yhat_mean": -1.554,
+   "y_mean": 7.991,
+   "resid_mean": 9.545,
+   "ci95": [
+    9.075,
+    10.015
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 3,
+   "n": 204,
+   "yhat_mean": -0.897,
+   "y_mean": 8.097,
+   "resid_mean": 8.994,
+   "ci95": [
+    8.551,
+    9.437
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 4,
+   "n": 207,
+   "yhat_mean": -0.344,
+   "y_mean": 8.293,
+   "resid_mean": 8.637,
+   "ci95": [
+    8.196,
+    9.078
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 5,
+   "n": 204,
+   "yhat_mean": 0.104,
+   "y_mean": 8.534,
+   "resid_mean": 8.43,
+   "ci95": [
+    7.96,
+    8.901
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 6,
+   "n": 207,
+   "yhat_mean": 0.568,
+   "y_mean": 8.155,
+   "resid_mean": 7.587,
+   "ci95": [
+    7.147,
+    8.027
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 7,
+   "n": 205,
+   "yhat_mean": 1.055,
+   "y_mean": 8.323,
+   "resid_mean": 7.268,
+   "ci95": [
+    6.814,
+    7.723
+   ],
+   "cap_share": 0.0
+  },
+  {
+   "decile": 8,
+   "n": 206,
+   "yhat_mean": 1.617,
+   "y_mean": 8.573,
+   "resid_mean": 6.955,
+   "ci95": [
+    6.499,
+    7.412
+   ],
+   "cap_share": 0.0049
+  },
+  {
+   "decile": 9,
+   "n": 204,
+   "yhat_mean": 2.402,
+   "y_mean": 8.865,
+   "resid_mean": 6.464,
+   "ci95": [
+    5.992,
+    6.935
+   ],
+   "cap_share": 0.0049
+  },
+  {
+   "decile": 10,
+   "n": 208,
+   "yhat_mean": 3.928,
+   "y_mean": 9.116,
+   "resid_mean": 5.187,
+   "ci95": [
+    4.706,
+    5.669
+   ],
+   "cap_share": 0.0048
+  }
+ ],
+ "top_decile_resid": {
+  "decile": 10,
+  "n": 208,
+  "yhat_mean": 3.928,
+  "y_mean": 9.116,
+  "resid_mean": 5.187,
+  "ci95": [
+   4.706,
+   5.669
+  ],
+  "cap_share": 0.0048
+ },
+ "prong_P1_capratio_ge_2": false,
+ "prong_P2_top_resid_neg": false,
+ "gate_decision": "SKIP_E1_PREMISE_WEAK",
+ "cap_target_const": 17.1158
+}

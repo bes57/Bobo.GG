@@ -1,0 +1,246 @@
+{
+ "source": "scratch/bias_h3/model_probs.npz (per-row winner-probabilities, holdout rows)",
+ "frame": "favorite frame: p_fav = max(p, 1\u2212p); y = favorite won; rows with p = 0.5 exactly excluded",
+ "holdout_n": 1217,
+ "v6_holdout_ll_check": 0.64216,
+ "min_bin_n": 15,
+ "models": {
+  "v6": [
+   {
+    "n": 348,
+    "pred_mean": 0.5232,
+    "emp": 0.5259,
+    "wilson_lo": 0.4734,
+    "wilson_hi": 0.5778,
+    "range": [
+     0.5,
+     0.55
+    ]
+   },
+   {
+    "n": 306,
+    "pred_mean": 0.5762,
+    "emp": 0.6078,
+    "wilson_lo": 0.5521,
+    "wilson_hi": 0.6609,
+    "range": [
+     0.55,
+     0.6
+    ]
+   },
+   {
+    "n": 227,
+    "pred_mean": 0.6226,
+    "emp": 0.6344,
+    "wilson_lo": 0.57,
+    "wilson_hi": 0.6943,
+    "range": [
+     0.6,
+     0.65
+    ]
+   },
+   {
+    "n": 161,
+    "pred_mean": 0.6728,
+    "emp": 0.6398,
+    "wilson_lo": 0.5631,
+    "wilson_hi": 0.7099,
+    "range": [
+     0.65,
+     0.7
+    ]
+   },
+   {
+    "n": 96,
+    "pred_mean": 0.7236,
+    "emp": 0.8229,
+    "wilson_lo": 0.7346,
+    "wilson_hi": 0.8864,
+    "range": [
+     0.7,
+     0.75
+    ]
+   },
+   {
+    "n": 49,
+    "pred_mean": 0.7719,
+    "emp": 0.8776,
+    "wilson_lo": 0.7576,
+    "wilson_hi": 0.9427,
+    "range": [
+     0.75,
+     0.8
+    ]
+   },
+   {
+    "n": 28,
+    "pred_mean": 0.8308,
+    "emp": 0.8571,
+    "wilson_lo": 0.6851,
+    "wilson_hi": 0.943,
+    "range": [
+     0.8,
+     1.0001
+    ]
+   }
+  ],
+  "ss_1a": [
+   {
+    "n": 357,
+    "pred_mean": 0.5239,
+    "emp": 0.4958,
+    "wilson_lo": 0.4443,
+    "wilson_hi": 0.5474,
+    "range": [
+     0.5,
+     0.55
+    ]
+   },
+   {
+    "n": 323,
+    "pred_mean": 0.5738,
+    "emp": 0.6161,
+    "wilson_lo": 0.562,
+    "wilson_hi": 0.6675,
+    "range": [
+     0.55,
+     0.6
+    ]
+   },
+   {
+    "n": 227,
+    "pred_mean": 0.6246,
+    "emp": 0.6035,
+    "wilson_lo": 0.5387,
+    "wilson_hi": 0.6649,
+    "range": [
+     0.6,
+     0.65
+    ]
+   },
+   {
+    "n": 141,
+    "pred_mean": 0.6723,
+    "emp": 0.6809,
+    "wilson_lo": 0.6,
+    "wilson_hi": 0.7521,
+    "range": [
+     0.65,
+     0.7
+    ]
+   },
+   {
+    "n": 86,
+    "pred_mean": 0.7227,
+    "emp": 0.7558,
+    "wilson_lo": 0.6554,
+    "wilson_hi": 0.8344,
+    "range": [
+     0.7,
+     0.75
+    ]
+   },
+   {
+    "n": 52,
+    "pred_mean": 0.7733,
+    "emp": 0.8269,
+    "wilson_lo": 0.7027,
+    "wilson_hi": 0.9062,
+    "range": [
+     0.75,
+     0.8
+    ]
+   },
+   {
+    "n": 31,
+    "pred_mean": 0.8286,
+    "emp": 0.8387,
+    "wilson_lo": 0.6737,
+    "wilson_hi": 0.9291,
+    "range": [
+     0.8,
+     1.0001
+    ]
+   }
+  ],
+  "ss_5d": [
+   {
+    "n": 361,
+    "pred_mean": 0.5251,
+    "emp": 0.5208,
+    "wilson_lo": 0.4693,
+    "wilson_hi": 0.5718,
+    "range": [
+     0.5,
+     0.55
+    ]
+   },
+   {
+    "n": 323,
+    "pred_mean": 0.5744,
+    "emp": 0.6006,
+    "wilson_lo": 0.5463,
+    "wilson_hi": 0.6525,
+    "range": [
+     0.55,
+     0.6
+    ]
+   },
+   {
+    "n": 228,
+    "pred_mean": 0.6222,
+    "emp": 0.6096,
+    "wilson_lo": 0.545,
+    "wilson_hi": 0.6707,
+    "range": [
+     0.6,
+     0.65
+    ]
+   },
+   {
+    "n": 149,
+    "pred_mean": 0.6708,
+    "emp": 0.6913,
+    "wilson_lo": 0.6131,
+    "wilson_hi": 0.7599,
+    "range": [
+     0.65,
+     0.7
+    ]
+   },
+   {
+    "n": 74,
+    "pred_mean": 0.7224,
+    "emp": 0.7568,
+    "wilson_lo": 0.6479,
+    "wilson_hi": 0.8402,
+    "range": [
+     0.7,
+     0.75
+    ]
+   },
+   {
+    "n": 50,
+    "pred_mean": 0.7707,
+    "emp": 0.86,
+    "wilson_lo": 0.7381,
+    "wilson_hi": 0.9305,
+    "range": [
+     0.75,
+     0.8
+    ]
+   },
+   {
+    "n": 32,
+    "pred_mean": 0.8286,
+    "emp": 0.8438,
+    "wilson_lo": 0.6825,
+    "wilson_hi": 0.9314,
+    "range": [
+     0.8,
+     1.0001
+    ]
+   }
+  ]
+ }
+}

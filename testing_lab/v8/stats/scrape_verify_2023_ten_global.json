@@ -1,0 +1,216 @@
+{
+ "278589": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278589/drx-vs-edward-gaming-ten-global-invitational-r1",
+  "maps": {
+   "143487": [
+    "EDG",
+    "14-12"
+   ]
+  },
+  "series": [
+   "EDG",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Round 1",
+  "utc_ts": "2023-10-07 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "KRX"
+  ]
+ },
+ "278593": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278593/t1-vs-edward-gaming-ten-global-invitational-r1",
+  "maps": {
+   "143489": [
+    "EDG",
+    "13-9"
+   ]
+  },
+  "series": [
+   "EDG",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Round 1",
+  "utc_ts": "2023-10-07 02:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "T1"
+  ]
+ },
+ "278590": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278590/t1-vs-cloud9-ten-global-invitational-r2",
+  "maps": {
+   "143488": [
+    "T1",
+    "13-10"
+   ]
+  },
+  "series": [
+   "T1",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Round 2",
+  "utc_ts": "2023-10-07 04:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "T1"
+  ]
+ },
+ "278594": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278594/drx-vs-cloud9-ten-global-invitational-r2",
+  "maps": {
+   "143490": [
+    "C9",
+    "13-11"
+   ]
+  },
+  "series": [
+   "C9",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Round 2",
+  "utc_ts": "2023-10-07 05:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "KRX"
+  ]
+ },
+ "278595": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278595/drx-vs-t1-ten-global-invitational-r3",
+  "maps": {
+   "143491": [
+    "KRX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Round 3",
+  "utc_ts": "2023-10-07 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "T1"
+  ]
+ },
+ "278596": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278596/cloud9-vs-edward-gaming-ten-global-invitational-r3",
+  "maps": {
+   "143492": [
+    "C9",
+    "13-11"
+   ]
+  },
+  "series": [
+   "C9",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Round 3",
+  "utc_ts": "2023-10-07 07:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "EDG"
+  ]
+ },
+ "278614": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278614/drx-vs-t1-ten-global-invitational-qf",
+  "maps": {
+   "143493": [
+    "KRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Playoffs: Quarterfinal",
+  "utc_ts": "2023-10-08 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "T1"
+  ]
+ },
+ "278615": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278615/edward-gaming-vs-drx-ten-global-invitational-sf",
+  "maps": {
+   "143494": [
+    "EDG",
+    "16-14"
+   ],
+   "143495": [
+    "KRX",
+    "13-9"
+   ],
+   "143496": [
+    "KRX",
+    "13-4"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Semifinal",
+  "utc_ts": "2023-10-08 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "KRX"
+  ]
+ },
+ "278616": {
+  "event_id": "2023_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/278616/cloud9-vs-drx-ten-global-invitational-gf",
+  "maps": {
+   "143497": [
+    "KRX",
+    "14-12"
+   ],
+   "143498": [
+    "C9",
+    "13-2"
+   ],
+   "143499": [
+    "C9",
+    "13-9"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2023-10-08 05:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "KRX"
+  ]
+ }
+}

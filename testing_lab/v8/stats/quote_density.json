@@ -1,0 +1,522 @@
+{
+ "generated_utc": "2026-07-28",
+ "source": "vctmm_live.db snapshot (VM, VACUUM 2026-07-28)",
+ "dry_run_filter": "dry_run=0 only",
+ "price_convention": "NO-side cents, 5c bands",
+ "bands": {
+  "01-05": {
+   "fills": {
+    "1": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    },
+    "2": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 7,
+     "contracts": 3000.0
+    },
+    "2": {
+     "n": 4,
+     "contracts": 2000.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0,
+    "2": 0.0
+   }
+  },
+  "06-10": {
+   "fills": {
+    "1": {
+     "n": 3,
+     "contracts": 26.0,
+     "dollars": 2.6
+    },
+    "2": {
+     "n": 6,
+     "contracts": 85.0,
+     "dollars": 8.5
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 16,
+     "contracts": 2651.0
+    },
+    "2": {
+     "n": 130,
+     "contracts": 56187.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0098,
+    "2": 0.0015
+   }
+  },
+  "11-15": {
+   "fills": {
+    "1": {
+     "n": 22,
+     "contracts": 224.3,
+     "dollars": 30.53
+    },
+    "2": {
+     "n": 7,
+     "contracts": 80.3,
+     "dollars": 8.83
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 111,
+     "contracts": 4880.2
+    },
+    "2": {
+     "n": 286,
+     "contracts": 136539.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.046,
+    "2": 0.0006
+   }
+  },
+  "16-20": {
+   "fills": {
+    "1": {
+     "n": 70,
+     "contracts": 749.0,
+     "dollars": 140.97
+    },
+    "2": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 279,
+     "contracts": 10158.0
+    },
+    "2": {
+     "n": 187,
+     "contracts": 87802.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0737,
+    "2": 0.0
+   }
+  },
+  "21-25": {
+   "fills": {
+    "1": {
+     "n": 81,
+     "contracts": 1278.0,
+     "dollars": 296.3
+    },
+    "2": {
+     "n": 17,
+     "contracts": 195.0,
+     "dollars": 47.82
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 2977,
+     "contracts": 447906.0
+    },
+    "2": {
+     "n": 1083,
+     "contracts": 331986.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0029,
+    "2": 0.0006
+   }
+  },
+  "26-30": {
+   "fills": {
+    "1": {
+     "n": 73,
+     "contracts": 197.7,
+     "dollars": 56.72
+    },
+    "2": {
+     "n": 28,
+     "contracts": 205.4,
+     "dollars": 60.44
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 237,
+     "contracts": 31038.0
+    },
+    "2": {
+     "n": 167,
+     "contracts": 21740.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0064,
+    "2": 0.0094
+   }
+  },
+  "31-35": {
+   "fills": {
+    "1": {
+     "n": 1,
+     "contracts": 26.1,
+     "dollars": 8.37
+    },
+    "2": {
+     "n": 8,
+     "contracts": 70.0,
+     "dollars": 22.72
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 188,
+     "contracts": 32114.0
+    },
+    "2": {
+     "n": 33,
+     "contracts": 2791.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0008,
+    "2": 0.0251
+   }
+  },
+  "36-40": {
+   "fills": {
+    "1": {
+     "n": 50,
+     "contracts": 271.0,
+     "dollars": 106.19
+    },
+    "2": {
+     "n": 21,
+     "contracts": 110.6,
+     "dollars": 40.83
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 2387,
+     "contracts": 234812.0
+    },
+    "2": {
+     "n": 2353,
+     "contracts": 523708.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0012,
+    "2": 0.0002
+   }
+  },
+  "41-45": {
+   "fills": {
+    "1": {
+     "n": 47,
+     "contracts": 658.4,
+     "dollars": 275.85
+    },
+    "2": {
+     "n": 11,
+     "contracts": 147.5,
+     "dollars": 60.9
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 3469,
+     "contracts": 404967.2
+    },
+    "2": {
+     "n": 404,
+     "contracts": 4644.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0016,
+    "2": 0.0318
+   }
+  },
+  "46-50": {
+   "fills": {
+    "1": {
+     "n": 16,
+     "contracts": 261.3,
+     "dollars": 128.92
+    },
+    "2": {
+     "n": 1,
+     "contracts": 9.0,
+     "dollars": 4.32
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 888,
+     "contracts": 312976.0
+    },
+    "2": {
+     "n": 133,
+     "contracts": 2080.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0008,
+    "2": 0.0043
+   }
+  },
+  "51-55": {
+   "fills": {
+    "1": {
+     "n": 3,
+     "contracts": 49.1,
+     "dollars": 25.1
+    },
+    "2": {
+     "n": 16,
+     "contracts": 247.0,
+     "dollars": 132.44
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 1189,
+     "contracts": 104449.0
+    },
+    "2": {
+     "n": 90,
+     "contracts": 1507.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0005,
+    "2": 0.1639
+   }
+  },
+  "56-60": {
+   "fills": {
+    "1": {
+     "n": 26,
+     "contracts": 369.4,
+     "dollars": 213.67
+    },
+    "2": {
+     "n": 36,
+     "contracts": 367.4,
+     "dollars": 212.51
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 4759,
+     "contracts": 2018723.0
+    },
+    "2": {
+     "n": 222,
+     "contracts": 4187.4
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0002,
+    "2": 0.0877
+   }
+  },
+  "61-65": {
+   "fills": {
+    "1": {
+     "n": 14,
+     "contracts": 119.6,
+     "dollars": 75.52
+    },
+    "2": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 663,
+     "contracts": 169177.0
+    },
+    "2": {
+     "n": 38,
+     "contracts": 585.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0007,
+    "2": 0.0
+   }
+  },
+  "66-70": {
+   "fills": {
+    "1": {
+     "n": 23,
+     "contracts": 248.3,
+     "dollars": 169.52
+    },
+    "2": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 700,
+     "contracts": 13800.0
+    },
+    "2": {
+     "n": 107,
+     "contracts": 468.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.018,
+    "2": 0.0
+   }
+  },
+  "71-75": {
+   "fills": {
+    "1": {
+     "n": 11,
+     "contracts": 242.0,
+     "dollars": 176.15
+    },
+    "2": {
+     "n": 42,
+     "contracts": 512.5,
+     "dollars": 380.74
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 89,
+     "contracts": 2543.0
+    },
+    "2": {
+     "n": 121,
+     "contracts": 2253.6
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0952,
+    "2": 0.2274
+   }
+  },
+  "76-80": {
+   "fills": {
+    "1": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    },
+    "2": {
+     "n": 50,
+     "contracts": 851.5,
+     "dollars": 661.72
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 7,
+     "contracts": 129.0
+    },
+    "2": {
+     "n": 247,
+     "contracts": 8186.8
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.0,
+    "2": 0.104
+   }
+  },
+  "81-85": {
+   "fills": {
+    "1": {
+     "n": 0,
+     "contracts": 0.0,
+     "dollars": 0.0
+    },
+    "2": {
+     "n": 17,
+     "contracts": 353.0,
+     "dollars": 289.84
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 0,
+     "contracts": 0.0
+    },
+    "2": {
+     "n": 32,
+     "contracts": 699.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": null,
+    "2": 0.505
+   }
+  },
+  "86-90": {
+   "fills": {
+    "1": {
+     "n": 13,
+     "contracts": 153.0,
+     "dollars": 134.0
+    },
+    "2": {
+     "n": 6,
+     "contracts": 35.6,
+     "dollars": 31.3
+    }
+   },
+   "orders_placed": {
+    "1": {
+     "n": 22,
+     "contracts": 219.0
+    },
+    "2": {
+     "n": 26,
+     "contracts": 166.0
+    }
+   },
+   "fill_per_order_contracts": {
+    "1": 0.6986,
+    "2": 0.2145
+   }
+  }
+ },
+ "totals": {
+  "fills": 719,
+  "contracts": 8143.2,
+  "cost_dollars": 3803.32
+ },
+ "notes": [
+  "side_role 1=accumulate (edge side), 2=hedge tier",
+  "orders_placed = rows in orders table (each row one posted order); quote_events place-count similar",
+  "fills 719 verified real (dry_run=0); zero dry-run fills in live db"
+ ]
+}

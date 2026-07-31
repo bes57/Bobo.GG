@@ -1,0 +1,683 @@
+{
+ "generated": "2026-07-28 18:29",
+ "coverage_bar_preregistered": "\u226599.0% of engine (match_id, org) sides with n_players \u2265 5",
+ "engine_sides_total": 3466,
+ "engine_sides_covered": 3466,
+ "coverage_pct": 100.0,
+ "covered_with_5plus_pct": 99.827,
+ "per_event": {
+  "2023_champions": {
+   "covered": 68,
+   "total": 68,
+   "pct": 100.0,
+   "engine_map_games": 84,
+   "engine_matches": 34
+  },
+  "2023_league": {
+   "covered": 332,
+   "total": 332,
+   "pct": 100.0,
+   "engine_map_games": 404,
+   "engine_matches": 166
+  },
+  "2023_lock_in": {
+   "covered": 64,
+   "total": 64,
+   "pct": 100.0,
+   "engine_map_games": 79,
+   "engine_matches": 32
+  },
+  "2023_masters_tokyo": {
+   "covered": 48,
+   "total": 48,
+   "pct": 100.0,
+   "engine_map_games": 62,
+   "engine_matches": 24
+  },
+  "2024_champions": {
+   "covered": 68,
+   "total": 68,
+   "pct": 100.0,
+   "engine_map_games": 86,
+   "engine_matches": 34
+  },
+  "2024_china_kickoff": {
+   "covered": 38,
+   "total": 38,
+   "pct": 100.0,
+   "engine_map_games": 46,
+   "engine_matches": 19
+  },
+  "2024_china_stage1": {
+   "covered": 76,
+   "total": 76,
+   "pct": 100.0,
+   "engine_map_games": 95,
+   "engine_matches": 38
+  },
+  "2024_china_stage2": {
+   "covered": 66,
+   "total": 66,
+   "pct": 100.0,
+   "engine_map_games": 84,
+   "engine_matches": 33
+  },
+  "2024_kickoff": {
+   "covered": 114,
+   "total": 114,
+   "pct": 100.0,
+   "engine_map_games": 143,
+   "engine_matches": 57
+  },
+  "2024_masters_madrid": {
+   "covered": 34,
+   "total": 34,
+   "pct": 100.0,
+   "engine_map_games": 46,
+   "engine_matches": 17
+  },
+  "2024_masters_shanghai": {
+   "covered": 50,
+   "total": 50,
+   "pct": 100.0,
+   "engine_map_games": 65,
+   "engine_matches": 25
+  },
+  "2024_stage1": {
+   "covered": 228,
+   "total": 228,
+   "pct": 100.0,
+   "engine_map_games": 288,
+   "engine_matches": 114
+  },
+  "2024_stage2": {
+   "covered": 198,
+   "total": 198,
+   "pct": 100.0,
+   "engine_map_games": 253,
+   "engine_matches": 99
+  },
+  "2025_champions": {
+   "covered": 68,
+   "total": 68,
+   "pct": 100.0,
+   "engine_map_games": 88,
+   "engine_matches": 34
+  },
+  "2025_china_kickoff": {
+   "covered": 44,
+   "total": 44,
+   "pct": 100.0,
+   "engine_map_games": 56,
+   "engine_matches": 22
+  },
+  "2025_china_stage1": {
+   "covered": 84,
+   "total": 84,
+   "pct": 100.0,
+   "engine_map_games": 105,
+   "engine_matches": 42
+  },
+  "2025_china_stage2": {
+   "covered": 86,
+   "total": 86,
+   "pct": 100.0,
+   "engine_map_games": 111,
+   "engine_matches": 43
+  },
+  "2025_kickoff": {
+   "covered": 132,
+   "total": 132,
+   "pct": 100.0,
+   "engine_map_games": 179,
+   "engine_matches": 66
+  },
+  "2025_masters_bangkok": {
+   "covered": 34,
+   "total": 34,
+   "pct": 100.0,
+   "engine_map_games": 43,
+   "engine_matches": 17
+  },
+  "2025_masters_toronto": {
+   "covered": 50,
+   "total": 50,
+   "pct": 100.0,
+   "engine_map_games": 60,
+   "engine_matches": 25
+  },
+  "2025_stage1": {
+   "covered": 252,
+   "total": 252,
+   "pct": 100.0,
+   "engine_map_games": 315,
+   "engine_matches": 126
+  },
+  "2025_stage2": {
+   "covered": 258,
+   "total": 258,
+   "pct": 100.0,
+   "engine_map_games": 321,
+   "engine_matches": 129
+  },
+  "2026_china_evo_2": {
+   "covered": 24,
+   "total": 24,
+   "pct": 100.0,
+   "engine_map_games": 32,
+   "engine_matches": 12
+  },
+  "2026_china_kickoff": {
+   "covered": 60,
+   "total": 60,
+   "pct": 100.0,
+   "engine_map_games": 84,
+   "engine_matches": 30
+  },
+  "2026_ewc": {
+   "covered": 56,
+   "total": 56,
+   "pct": 100.0,
+   "engine_map_games": 76,
+   "engine_matches": 28
+  },
+  "2026_ewc_qual": {
+   "covered": 138,
+   "total": 138,
+   "pct": 100.0,
+   "engine_map_games": 184,
+   "engine_matches": 69
+  },
+  "2026_kickoff": {
+   "covered": 180,
+   "total": 180,
+   "pct": 100.0,
+   "engine_map_games": 236,
+   "engine_matches": 90
+  },
+  "2026_masters_london": {
+   "covered": 48,
+   "total": 48,
+   "pct": 100.0,
+   "engine_map_games": 65,
+   "engine_matches": 24
+  },
+  "2026_masters_santiago": {
+   "covered": 48,
+   "total": 48,
+   "pct": 100.0,
+   "engine_map_games": 59,
+   "engine_matches": 24
+  },
+  "2026_stage1": {
+   "covered": 348,
+   "total": 348,
+   "pct": 100.0,
+   "engine_map_games": 442,
+   "engine_matches": 174
+  },
+  "2026_stage2": {
+   "covered": 172,
+   "total": 172,
+   "pct": 100.0,
+   "engine_map_games": 205,
+   "engine_matches": 86
+  }
+ },
+ "gaps_missing_side": [],
+ "gaps_short_lineup": [
+  {
+   "match_id": 321373,
+   "org": "INTL",
+   "event_id": "2024_masters_madrid",
+   "reason": "n_players=2"
+  },
+  {
+   "match_id": 321373,
+   "org": "Team",
+   "event_id": "2024_masters_madrid",
+   "reason": "n_players=4"
+  },
+  {
+   "match_id": 359463,
+   "org": "CN",
+   "event_id": "2024_masters_shanghai",
+   "reason": "n_players=1"
+  },
+  {
+   "match_id": 359463,
+   "org": "INTL",
+   "event_id": "2024_masters_shanghai",
+   "reason": "n_players=3"
+  },
+  {
+   "match_id": 450589,
+   "org": "INTL",
+   "event_id": "2025_masters_bangkok",
+   "reason": "n_players=4"
+  },
+  {
+   "match_id": 450589,
+   "org": "THAi",
+   "event_id": "2025_masters_bangkok",
+   "reason": "n_players=4"
+  }
+ ],
+ "n_gt5_player_matches": 41,
+ "gt5_list": [
+  {
+   "match_id": 167349,
+   "org": "DFM",
+   "event_id": "2023_lock_in",
+   "n_players": 6
+  },
+  {
+   "match_id": 167366,
+   "org": "RRQ",
+   "event_id": "2023_lock_in",
+   "n_players": 6
+  },
+  {
+   "match_id": 184457,
+   "org": "T1",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184459,
+   "org": "TLN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184460,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 173220,
+   "org": "FUT",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184462,
+   "org": "T1",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184465,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184468,
+   "org": "PRX",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184468,
+   "org": "T1",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 183783,
+   "org": "EG",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184471,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184472,
+   "org": "PRX",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184473,
+   "org": "RRQ",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184474,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184474,
+   "org": "T1",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184476,
+   "org": "GE",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184477,
+   "org": "GE",
+   "event_id": "2023_league",
+   "n_players": 7
+  },
+  {
+   "match_id": 184477,
+   "org": "PRX",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184478,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184479,
+   "org": "RRQ",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184481,
+   "org": "TLN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184485,
+   "org": "RRQ",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184488,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184490,
+   "org": "RRQ",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184491,
+   "org": "T1",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184493,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184497,
+   "org": "RRQ",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184497,
+   "org": "TLN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184498,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184502,
+   "org": "RRQ",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184514,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184515,
+   "org": "TS",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 184518,
+   "org": "GEN",
+   "event_id": "2023_league",
+   "n_players": 6
+  },
+  {
+   "match_id": 314307,
+   "org": "TLN",
+   "event_id": "2024_stage1",
+   "n_players": 6
+  },
+  {
+   "match_id": 314321,
+   "org": "TLN",
+   "event_id": "2024_stage1",
+   "n_players": 6
+  },
+  {
+   "match_id": 314328,
+   "org": "TLN",
+   "event_id": "2024_stage1",
+   "n_players": 6
+  },
+  {
+   "match_id": 329908,
+   "org": "TLN",
+   "event_id": "2024_stage1",
+   "n_players": 6
+  },
+  {
+   "match_id": 490313,
+   "org": "TL",
+   "event_id": "2025_masters_toronto",
+   "n_players": 6
+  },
+  {
+   "match_id": 490314,
+   "org": "TL",
+   "event_id": "2025_masters_toronto",
+   "n_players": 6
+  },
+  {
+   "match_id": 698893,
+   "org": "VL",
+   "event_id": "2026_stage2",
+   "n_players": 6
+  }
+ ],
+ "lineup_rows_total": 3466,
+ "lineup_matches_total": 1733,
+ "lineup_only_matches_not_in_engine": 0,
+ "date_sources": {
+  "match_dates": 3466
+ },
+ "events_missing_maps_csv": [
+  "2026_champions"
+ ],
+ "enriched": {
+  "match_file_presence": {
+   "present": 1716,
+   "corpus_matches": 1733,
+   "pct": 99.02
+  },
+  "missing_by_event": {
+   "2023_lock_in": 1,
+   "2026_ewc_qual": 16
+  },
+  "player_join_rate": 79.08,
+  "player_join_n": [
+   13593,
+   17190
+  ],
+  "player_join_rate_by_event": {
+   "2023_champions": 100.0,
+   "2023_league": 98.7,
+   "2023_lock_in": 99.4,
+   "2023_masters_tokyo": 100.0,
+   "2024_champions": 100.0,
+   "2024_china_kickoff": 0.0,
+   "2024_china_stage1": 0.0,
+   "2024_china_stage2": 0.0,
+   "2024_kickoff": 99.3,
+   "2024_masters_madrid": 93.4,
+   "2024_masters_shanghai": 0.0,
+   "2024_stage1": 99.5,
+   "2024_stage2": 100.0,
+   "2025_champions": 100.0,
+   "2025_china_kickoff": 0.0,
+   "2025_china_stage1": 0.0,
+   "2025_china_stage2": 0.0,
+   "2025_kickoff": 100.0,
+   "2025_masters_bangkok": 95.2,
+   "2025_masters_toronto": 96.0,
+   "2025_stage1": 100.0,
+   "2025_stage2": 97.7,
+   "2026_china_evo_2": 0.0,
+   "2026_china_kickoff": 0.0,
+   "2026_ewc": 100.0,
+   "2026_ewc_qual": 94.3,
+   "2026_kickoff": 100.0,
+   "2026_masters_london": 100.0,
+   "2026_masters_santiago": 100.0,
+   "2026_stage1": 72.4,
+   "2026_stage2": 58.2
+  },
+  "id_mismatches": 0,
+  "id_mismatch_examples": []
+ },
+ "standin_by_event_class": {
+  "vct": {
+   "stand_in_30d_modal": {
+    "rate": 0.067,
+    "n_defined": 2793,
+    "n_rows": 3248
+   },
+   "stand_in_vs_vct_modal": {
+    "rate": 0.3934,
+    "n_defined": 3175,
+    "n_rows": 3248
+   },
+   "no_prior_30d_share": 0.1401,
+   "first_after_break_45d_share": 0.0893
+  },
+  "ewc": {
+   "stand_in_30d_modal": {
+    "rate": 0.2333,
+    "n_defined": 210,
+    "n_rows": 218
+   },
+   "stand_in_vs_vct_modal": {
+    "rate": 0.3716,
+    "n_defined": 218,
+    "n_rows": 218
+   },
+   "no_prior_30d_share": 0.0367,
+   "first_after_break_45d_share": 0.0
+  }
+ },
+ "per_ewc_event": {
+  "2026_china_evo_2": {
+   "stand_in_30d_modal": {
+    "rate": 0.7083,
+    "n_defined": 24,
+    "n_rows": 24
+   },
+   "stand_in_vs_vct_modal": {
+    "rate": 0.7083,
+    "n_defined": 24,
+    "n_rows": 24
+   },
+   "no_prior_30d_share": 0.0,
+   "n_sides": 24
+  },
+  "2026_ewc": {
+   "stand_in_30d_modal": {
+    "rate": 0.0625,
+    "n_defined": 48,
+    "n_rows": 56
+   },
+   "stand_in_vs_vct_modal": {
+    "rate": 0.1964,
+    "n_defined": 56,
+    "n_rows": 56
+   },
+   "no_prior_30d_share": 0.1429,
+   "n_sides": 56
+  },
+  "2026_ewc_qual": {
+   "stand_in_30d_modal": {
+    "rate": 0.2101,
+    "n_defined": 138,
+    "n_rows": 138
+   },
+   "stand_in_vs_vct_modal": {
+    "rate": 0.3841,
+    "n_defined": 138,
+    "n_rows": 138
+   },
+   "no_prior_30d_share": 0.0,
+   "n_sides": 138
+  }
+ },
+ "registry_events_seen": [
+  "2026_ewc_qual",
+  "2026_china_evo_2",
+  "2026_ewc",
+  "2026_champions",
+  "2026_stage2",
+  "2026_masters_london",
+  "2026_stage1",
+  "2026_masters_santiago",
+  "2026_china_kickoff",
+  "2026_kickoff",
+  "2025_champions",
+  "2025_stage2",
+  "2025_china_stage2",
+  "2025_masters_toronto",
+  "2025_stage1",
+  "2025_china_stage1",
+  "2025_masters_bangkok",
+  "2025_kickoff",
+  "2025_china_kickoff",
+  "2024_champions",
+  "2024_stage2",
+  "2024_china_stage2",
+  "2024_masters_shanghai",
+  "2024_stage1",
+  "2024_china_stage1",
+  "2024_masters_madrid",
+  "2024_kickoff",
+  "2024_china_kickoff",
+  "2023_champions",
+  "2023_masters_tokyo",
+  "2023_league",
+  "2023_lock_in"
+ ]
+}

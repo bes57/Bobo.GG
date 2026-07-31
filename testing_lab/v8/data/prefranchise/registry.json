@@ -1,0 +1,41 @@
+{
+  "corpus": "prefranchise_2021_2022",
+  "written": "2026-07-28",
+  "writer": "agent:corpus (BenPom v8 Phase 1)",
+  "isolation": "SEPARATE corpus. These events are NOT in MoreTestingMaybeFiles.ALL_EVENTS and their CSVs are NOT under data/ — by brief. Files here: maps_<id>.csv, series_<id>.csv, match_results_prefranchise.csv.",
+  "caveats": [
+    "Map-pool / patch regime discontinuity: 2021-2022 was pre-franchising Valorant on old patches (pre 5.x metas), with maps entering/leaving the pool (Fracture added 2021-09, Pearl added 2022-06, Split removed 2022 etc.) and agents that reshaped map identities. Map-level parameters learned on 2023+ do NOT transfer; treat these blocks as a separate regime for any fit.",
+    "Org continuity: many 2021-22 orgs do not exist in the franchised era (Gambit, Acend, OpTic, XSET, FPX-EMEA...) or changed regions. Org abbreviations here must not be joined against BuildMapRatings.TEAM_REGIONS.",
+    "vct_only filtering intentionally OFF for this corpus (participants predate the franchise org list).",
+    "Winners verified mechanically per series (map winner in map-row orgs; series score equals per-map tally; date inside window) + a seed-20260728 10-series live re-fetch sample per event; see testing_lab/v8/stats/verification_report.json."
+  ],
+  "events": [
+    {"id": "2021_masters2_reykjavik", "label": "VCT 2021 Stage 2 Masters Reykjavik",
+     "year": 2021, "start": "2021-05-24", "end": "2021-05-30", "ratings_only": true, "vct_only": false,
+     "regions": {"International": "https://www.vlr.gg/event/stats/353/valorant-champions-tour-stage-2-masters-reykjav-k"}},
+    {"id": "2021_masters3_berlin", "label": "VCT 2021 Stage 3 Masters Berlin",
+     "year": 2021, "start": "2021-09-10", "end": "2021-09-19", "ratings_only": true, "vct_only": false,
+     "regions": {"International": "https://www.vlr.gg/event/stats/466/valorant-champions-tour-stage-3-masters-berlin"}},
+    {"id": "2021_champions", "label": "Valorant Champions 2021",
+     "year": 2021, "start": "2021-12-01", "end": "2021-12-12", "ratings_only": true, "vct_only": false,
+     "regions": {"International": "https://www.vlr.gg/event/stats/449/valorant-champions-2021"}},
+    {"id": "2022_masters1_reykjavik", "label": "VCT 2022 Stage 1 Masters Reykjavik",
+     "year": 2022, "start": "2022-04-10", "end": "2022-04-24", "ratings_only": true, "vct_only": false,
+     "regions": {"International": "https://www.vlr.gg/event/stats/926/valorant-champions-tour-stage-1-masters-reykjav-k"}},
+    {"id": "2022_masters2_copenhagen", "label": "VCT 2022 Stage 2 Masters Copenhagen",
+     "year": 2022, "start": "2022-07-10", "end": "2022-07-24", "ratings_only": true, "vct_only": false,
+     "regions": {"International": "https://www.vlr.gg/event/stats/1014/valorant-champions-tour-stage-2-masters-copenhagen"}},
+    {"id": "2022_champions", "label": "Valorant Champions 2022",
+     "year": 2022, "start": "2022-08-31", "end": "2022-09-19", "ratings_only": true, "vct_only": false,
+     "regions": {"International": "https://www.vlr.gg/event/stats/1015/valorant-champions-2022"}}
+  ],
+  "deferred": {
+    "policy": "Brief priority Champions > Masters > regional main events. All six 2021-22 INTERNATIONAL events (3 Champions/Masters per year) are scraped here. Regional main events are DEFERRED (loud, counted below); their full per-event candidate rows are in testing_lab/v8/stats/corpus_diff.json seasons 2021/2022 with decision=prefranchise_candidate.",
+    "deferred_counts": {
+      "vct_2021_hub_regional_or_other_events": 139,
+      "vct_2022_hub_regional_or_other_events": 55,
+      "archive_prefranchise_candidate_rows_2021_2022": 203
+    },
+    "notes": "2021-22 regional events include per-region Challengers 1/2/3 + Challengers Finals per stage (NA/EMEA-set/KR/JP/BR/LATAM/SEA nationals/OCE), 2021 Stage-1 regional Masters, 2022 regional Challengers + 7 Last Chance Qualifiers. Estimated several thousand additional series across ~194 events; not attempted this wave."
+  }
+}

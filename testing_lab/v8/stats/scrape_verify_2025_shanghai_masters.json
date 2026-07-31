@@ -1,0 +1,88 @@
+{
+ "589960": {
+  "event_id": "2025_shanghai_masters",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/589960/funplus-phoenix-vs-trace-esports-shanghai-esports-masters-2025-sf",
+  "maps": {
+   "242848": [
+    "TE",
+    "13-9"
+   ],
+   "242849": [
+    "FPX",
+    "14-12"
+   ],
+   "242850": [
+    "TE",
+    "14-12"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-12-04 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TE"
+  ]
+ },
+ "589961": {
+  "event_id": "2025_shanghai_masters",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/589961/edward-gaming-vs-bilibili-gaming-shanghai-esports-masters-2025-sf",
+  "maps": {
+   "242851": [
+    "EDG",
+    "13-7"
+   ],
+   "242852": [
+    "EDG",
+    "13-4"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-12-04 06:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "EDG"
+  ]
+ },
+ "589962": {
+  "event_id": "2025_shanghai_masters",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/589962/trace-esports-vs-edward-gaming-shanghai-esports-masters-2025-gf",
+  "maps": {
+   "242854": [
+    "EDG",
+    "13-11"
+   ],
+   "242855": [
+    "EDG",
+    "13-2"
+   ],
+   "242856": [
+    "EDG",
+    "13-8"
+   ]
+  },
+  "series": [
+   "EDG",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-12-05 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "TE"
+  ]
+ }
+}

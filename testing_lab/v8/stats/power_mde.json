@@ -1,0 +1,604 @@
+{
+ "preregistered": "testing_lab/v8/preregister.power.md",
+ "n_holdout": 1007,
+ "estimator": "MDE80 = 2.8016 * sd(d)/sqrt(n), d_i = l_v6,i - l_cand,i",
+ "overall": {
+  "regime_within": {
+   "sd_median": 0.02176,
+   "mde80_milli": 1.921,
+   "sd_range": [
+    0.00104,
+    0.05382
+   ],
+   "configs": [
+    "v5_asym_W20L12",
+    "consist_16_10",
+    "consist_14_8",
+    "consist_12_8",
+    "v6_consist_20_12+form3",
+    "v6_consist_20_12+form5",
+    "v6_consist_20_12+form8"
+   ]
+  },
+  "regime_cross": {
+   "sd_median": 0.07223,
+   "mde80_milli": 6.377,
+   "sd_range": [
+    0.04952,
+    0.1407
+   ],
+   "configs": [
+    "sym_6",
+    "sym_8",
+    "sym_10",
+    "sym_12",
+    "sym_14",
+    "sym_16",
+    "sym_20",
+    "sym_24",
+    "surprise_12_20",
+    "surprise_16_24",
+    "boxexp_c3_hl8",
+    "boxexp_c5_hl10",
+    "power_t6_a15",
+    "sym_20+form3",
+    "sym_20+form5",
+    "sym_20+form8"
+   ]
+  },
+  "per_pair": [
+   {
+    "config": "v5_asym_W20L12",
+    "regime": "within",
+    "sd_d": 0.05382,
+    "mde80_milli": 4.752
+   },
+   {
+    "config": "consist_16_10",
+    "regime": "within",
+    "sd_d": 0.02176,
+    "mde80_milli": 1.921
+   },
+   {
+    "config": "consist_14_8",
+    "regime": "within",
+    "sd_d": 0.03964,
+    "mde80_milli": 3.5
+   },
+   {
+    "config": "consist_12_8",
+    "regime": "within",
+    "sd_d": 0.05248,
+    "mde80_milli": 4.633
+   },
+   {
+    "config": "v6_consist_20_12+form3",
+    "regime": "within",
+    "sd_d": 0.01149,
+    "mde80_milli": 1.015
+   },
+   {
+    "config": "v6_consist_20_12+form5",
+    "regime": "within",
+    "sd_d": 0.00191,
+    "mde80_milli": 0.168
+   },
+   {
+    "config": "v6_consist_20_12+form8",
+    "regime": "within",
+    "sd_d": 0.00104,
+    "mde80_milli": 0.092
+   },
+   {
+    "config": "sym_6",
+    "regime": "cross",
+    "sd_d": 0.1407,
+    "mde80_milli": 12.422
+   },
+   {
+    "config": "sym_8",
+    "regime": "cross",
+    "sd_d": 0.107,
+    "mde80_milli": 9.447
+   },
+   {
+    "config": "sym_10",
+    "regime": "cross",
+    "sd_d": 0.08351,
+    "mde80_milli": 7.373
+   },
+   {
+    "config": "sym_12",
+    "regime": "cross",
+    "sd_d": 0.06748,
+    "mde80_milli": 5.957
+   },
+   {
+    "config": "sym_14",
+    "regime": "cross",
+    "sd_d": 0.05719,
+    "mde80_milli": 5.049
+   },
+   {
+    "config": "sym_16",
+    "regime": "cross",
+    "sd_d": 0.05148,
+    "mde80_milli": 4.545
+   },
+   {
+    "config": "sym_20",
+    "regime": "cross",
+    "sd_d": 0.04952,
+    "mde80_milli": 4.372
+   },
+   {
+    "config": "sym_24",
+    "regime": "cross",
+    "sd_d": 0.05395,
+    "mde80_milli": 4.763
+   },
+   {
+    "config": "surprise_12_20",
+    "regime": "cross",
+    "sd_d": 0.11421,
+    "mde80_milli": 10.083
+   },
+   {
+    "config": "surprise_16_24",
+    "regime": "cross",
+    "sd_d": 0.09043,
+    "mde80_milli": 7.984
+   },
+   {
+    "config": "boxexp_c3_hl8",
+    "regime": "cross",
+    "sd_d": 0.10045,
+    "mde80_milli": 8.868
+   },
+   {
+    "config": "boxexp_c5_hl10",
+    "regime": "cross",
+    "sd_d": 0.07699,
+    "mde80_milli": 6.797
+   },
+   {
+    "config": "power_t6_a15",
+    "regime": "cross",
+    "sd_d": 0.11234,
+    "mde80_milli": 9.918
+   },
+   {
+    "config": "sym_20+form3",
+    "regime": "cross",
+    "sd_d": 0.0503,
+    "mde80_milli": 4.441
+   },
+   {
+    "config": "sym_20+form5",
+    "regime": "cross",
+    "sd_d": 0.05354,
+    "mde80_milli": 4.727
+   },
+   {
+    "config": "sym_20+form8",
+    "regime": "cross",
+    "sd_d": 0.05607,
+    "mde80_milli": 4.95
+   }
+  ]
+ },
+ "simulation_verification": {
+  "consist_16_10": {
+   "mde_analytic_milli": 1.921,
+   "power_at_mult": {
+    "0.5": 0.292,
+    "1.0": 0.795,
+    "1.5": 0.988
+   },
+   "accept_0.74_0.86": true,
+   "n_sim": 400,
+   "n_boot": 2000,
+   "mc_seeds_used": [
+    1949022022,
+    2101413079,
+    992148826
+   ],
+   "size_at_mu0": 0.062
+  },
+  "sym_20": {
+   "mde_analytic_milli": 4.372,
+   "power_at_mult": {
+    "0.5": 0.302,
+    "1.0": 0.795,
+    "1.5": 0.992
+   },
+   "accept_0.74_0.86": true,
+   "n_sim": 400,
+   "n_boot": 2000,
+   "mc_seeds_used": [
+    2000207224,
+    214560592,
+    1460182500
+   ],
+   "size_at_mu0": 0.058
+  }
+ },
+ "buckets": [
+  {
+   "bucket": "format bo1",
+   "n": 0,
+   "note": "too small to estimate"
+  },
+  {
+   "bucket": "format bo3",
+   "n": 939,
+   "sd_within_median": 0.02155,
+   "sd_cross_median": 0.0704,
+   "sd_cross_range": [
+    0.04853,
+    0.13839
+   ],
+   "mde80_within_milli": 1.97,
+   "mde80_cross_milli": 6.44
+  },
+  {
+   "bucket": "format bo5",
+   "n": 45,
+   "sd_within_median": 0.02672,
+   "sd_cross_median": 0.10804,
+   "sd_cross_range": [
+    0.06317,
+    0.19053
+   ],
+   "mde80_within_milli": 11.16,
+   "mde80_cross_milli": 45.12
+  },
+  {
+   "bucket": "format bo5_gf",
+   "n": 23,
+   "sd_within_median": 0.0204,
+   "sd_cross_median": 0.06258,
+   "sd_cross_range": [
+    0.05041,
+    0.1267
+   ],
+   "mde80_within_milli": 11.92,
+   "mde80_cross_milli": 36.55
+  },
+  {
+   "bucket": "stage groups",
+   "n": 502,
+   "sd_within_median": 0.022,
+   "sd_cross_median": 0.06901,
+   "sd_cross_range": [
+    0.04969,
+    0.13752
+   ],
+   "mde80_within_milli": 2.75,
+   "mde80_cross_milli": 8.63
+  },
+  {
+   "bucket": "stage playoffs",
+   "n": 438,
+   "sd_within_median": 0.02148,
+   "sd_cross_median": 0.07699,
+   "sd_cross_range": [
+    0.05025,
+    0.14555
+   ],
+   "mde80_within_milli": 2.88,
+   "mde80_cross_milli": 10.31
+  },
+  {
+   "bucket": "stage grand_final",
+   "n": 26,
+   "sd_within_median": 0.02078,
+   "sd_cross_median": 0.06013,
+   "sd_cross_range": [
+    0.04803,
+    0.12082
+   ],
+   "mde80_within_milli": 11.42,
+   "mde80_cross_milli": 33.04
+  },
+  {
+   "bucket": "international",
+   "n": 122,
+   "sd_within_median": 0.02343,
+   "sd_cross_median": 0.07199,
+   "sd_cross_range": [
+    0.04815,
+    0.13084
+   ],
+   "mde80_within_milli": 5.94,
+   "mde80_cross_milli": 18.26
+  },
+  {
+   "bucket": "domestic",
+   "n": 885,
+   "sd_within_median": 0.02153,
+   "sd_cross_median": 0.0723,
+   "sd_cross_range": [
+    0.04965,
+    0.14202
+   ],
+   "mde80_within_milli": 2.03,
+   "mde80_cross_milli": 6.81
+  },
+  {
+   "bucket": "EWC-class events",
+   "n": 109,
+   "sd_within_median": 0.0238,
+   "sd_cross_median": 0.07961,
+   "sd_cross_range": [
+    0.05641,
+    0.15479
+   ],
+   "mde80_within_milli": 6.39,
+   "mde80_cross_milli": 21.36
+  },
+  {
+   "bucket": "CN involved",
+   "n": 297,
+   "sd_within_median": 0.02371,
+   "sd_cross_median": 0.07263,
+   "sd_cross_range": [
+    0.04419,
+    0.14293
+   ],
+   "mde80_within_milli": 3.85,
+   "mde80_cross_milli": 11.81
+  },
+  {
+   "bucket": "cross-region",
+   "n": 131,
+   "sd_within_median": 0.02525,
+   "sd_cross_median": 0.07698,
+   "sd_cross_range": [
+    0.04985,
+    0.1447
+   ],
+   "mde80_within_milli": 6.18,
+   "mde80_cross_milli": 18.84
+  },
+  {
+   "bucket": "domestic Americas",
+   "n": 205,
+   "sd_within_median": 0.0201,
+   "sd_cross_median": 0.05982,
+   "sd_cross_range": [
+    0.04437,
+    0.13309
+   ],
+   "mde80_within_milli": 3.93,
+   "mde80_cross_milli": 11.71
+  },
+  {
+   "bucket": "domestic EMEA",
+   "n": 213,
+   "sd_within_median": 0.01864,
+   "sd_cross_median": 0.07258,
+   "sd_cross_range": [
+    0.05137,
+    0.13028
+   ],
+   "mde80_within_milli": 3.58,
+   "mde80_cross_milli": 13.93
+  },
+  {
+   "bucket": "domestic Pacific",
+   "n": 210,
+   "sd_within_median": 0.02181,
+   "sd_cross_median": 0.0794,
+   "sd_cross_range": [
+    0.05508,
+    0.15255
+   ],
+   "mde80_within_milli": 4.22,
+   "mde80_cross_milli": 15.35
+  },
+  {
+   "bucket": "domestic CN",
+   "n": 248,
+   "sd_within_median": 0.02357,
+   "sd_cross_median": 0.07265,
+   "sd_cross_range": [
+    0.04231,
+    0.14376
+   ],
+   "mde80_within_milli": 4.19,
+   "mde80_cross_milli": 12.92
+  },
+  {
+   "bucket": "fav band [.5,.6)",
+   "n": 467,
+   "sd_within_median": 0.02171,
+   "sd_cross_median": 0.07068,
+   "sd_cross_range": [
+    0.04361,
+    0.132
+   ],
+   "mde80_within_milli": 2.81,
+   "mde80_cross_milli": 9.16
+  },
+  {
+   "bucket": "fav band [.6,.7)",
+   "n": 335,
+   "sd_within_median": 0.02352,
+   "sd_cross_median": 0.07787,
+   "sd_cross_range": [
+    0.05573,
+    0.15028
+   ],
+   "mde80_within_milli": 3.6,
+   "mde80_cross_milli": 11.92
+  },
+  {
+   "bucket": "fav band [.7,.8)",
+   "n": 161,
+   "sd_within_median": 0.01974,
+   "sd_cross_median": 0.07043,
+   "sd_cross_range": [
+    0.04995,
+    0.15427
+   ],
+   "mde80_within_milli": 4.36,
+   "mde80_cross_milli": 15.55
+  },
+  {
+   "bucket": "fav band [.8,.9)",
+   "n": 42,
+   "sd_within_median": 0.01336,
+   "sd_cross_median": 0.06194,
+   "sd_cross_range": [
+    0.04268,
+    0.10751
+   ],
+   "mde80_within_milli": 5.77,
+   "mde80_cross_milli": 26.78
+  },
+  {
+   "bucket": "fav band [.9,1]",
+   "n": 2,
+   "sd_within_median": 0.00155,
+   "sd_cross_median": 0.00843,
+   "sd_cross_range": [
+    0.00224,
+    0.02658
+   ],
+   "mde80_within_milli": 3.06,
+   "mde80_cross_milli": 16.69
+  },
+  {
+   "bucket": "gap <1.5",
+   "n": 352,
+   "sd_within_median": 0.02178,
+   "sd_cross_median": 0.06815,
+   "sd_cross_range": [
+    0.0438,
+    0.12921
+   ],
+   "mde80_within_milli": 3.25,
+   "mde80_cross_milli": 10.18
+  },
+  {
+   "bucket": "gap [1.5,4)",
+   "n": 408,
+   "sd_within_median": 0.0228,
+   "sd_cross_median": 0.07834,
+   "sd_cross_range": [
+    0.05216,
+    0.14842
+   ],
+   "mde80_within_milli": 3.16,
+   "mde80_cross_milli": 10.87
+  },
+  {
+   "bucket": "gap [4,7)",
+   "n": 203,
+   "sd_within_median": 0.0211,
+   "sd_cross_median": 0.07085,
+   "sd_cross_range": [
+    0.05092,
+    0.15182
+   ],
+   "mde80_within_milli": 4.15,
+   "mde80_cross_milli": 13.93
+  },
+  {
+   "bucket": "gap 7+",
+   "n": 44,
+   "sd_within_median": 0.01322,
+   "sd_cross_median": 0.06045,
+   "sd_cross_range": [
+    0.04199,
+    0.10464
+   ],
+   "mde80_within_milli": 5.58,
+   "mde80_cross_milli": 25.53
+  },
+  {
+   "bucket": "post-break (rest>45d)",
+   "n": 145,
+   "sd_within_median": 0.02119,
+   "sd_cross_median": 0.06622,
+   "sd_cross_range": [
+    0.0435,
+    0.14156
+   ],
+   "mde80_within_milli": 4.93,
+   "mde80_cross_milli": 15.41
+  },
+  {
+   "bucket": "elite vs floor",
+   "n": 26,
+   "sd_within_median": 0.01445,
+   "sd_cross_median": 0.07182,
+   "sd_cross_range": [
+    0.04823,
+    0.12514
+   ],
+   "mde80_within_milli": 7.94,
+   "mde80_cross_milli": 39.46
+  },
+  {
+   "bucket": "form shift",
+   "n": 121,
+   "sd_within_median": 0.02633,
+   "sd_cross_median": 0.08378,
+   "sd_cross_range": [
+    0.0553,
+    0.19534
+   ],
+   "mde80_within_milli": 6.71,
+   "mde80_cross_milli": 21.34
+  },
+  {
+   "bucket": "roster change <=3 matches ago (either team)",
+   "n": 598,
+   "sd_within_median": 0.02199,
+   "sd_cross_median": 0.06817,
+   "sd_cross_range": [
+    0.04671,
+    0.14036
+   ],
+   "mde80_within_milli": 2.52,
+   "mde80_cross_milli": 7.81
+  },
+  {
+   "bucket": "roster change 4-10 matches ago",
+   "n": 304,
+   "sd_within_median": 0.02094,
+   "sd_cross_median": 0.07726,
+   "sd_cross_range": [
+    0.05202,
+    0.14155
+   ],
+   "mde80_within_milli": 3.37,
+   "mde80_cross_milli": 12.41
+  },
+  {
+   "bucket": "roster stable (>10 matches since change)",
+   "n": 105,
+   "sd_within_median": 0.02276,
+   "sd_cross_median": 0.07989,
+   "sd_cross_range": [
+    0.0572,
+    0.14135
+   ],
+   "mde80_within_milli": 6.22,
+   "mde80_cross_milli": 21.84
+  },
+  {
+   "bucket": "roster-change recency: uncovered series",
+   "n": 0,
+   "note": "no lineup row for either side (org debut / missing scrape); excluded from the three recency bands"
+  }
+ ],
+ "notes": [
+  "within = variants sharing the v6 consistency core; cross = structurally different decay",
+  "EWC-class mask (event_id contains 'ewc' or 'evo') gives holdout n=109; v6_profile recorded 109",
+  "post-break (either team rest>45d) gives holdout n=145; v6_profile recorded 135",
+  "roster-change recency computed from v8/data/lineup_features.csv (landed 18:29 during the run): min over the two teams of matches_since_change; NaN treated as no-change-evidence"
+ ]
+}

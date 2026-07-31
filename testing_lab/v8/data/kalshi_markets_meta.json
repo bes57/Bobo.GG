@@ -1,0 +1,1842 @@
+{
+ "KXVALORANTGAME-26JUL210800NOVAEDG-EDG": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T13:19:39Z",
+  "settlement_ts": "2026-07-21T13:22:39.806628Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL210800NOVAEDG-NOVA": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T13:19:39Z",
+  "settlement_ts": "2026-07-21T13:22:39.806628Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211400FKSTMO-TMO": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T20:59:44Z",
+  "settlement_ts": "2026-07-21T21:02:44.013845Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211400M8GCSKN-M8GC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T18:49:36Z",
+  "settlement_ts": "2026-07-21T18:52:39.804693Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL220500WOLXLG-WOL": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T11:59:59Z",
+  "settlement_ts": "2026-07-22T12:03:03.954929Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL220500WOLXLG-XLG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T11:59:59Z",
+  "settlement_ts": "2026-07-22T12:03:03.954929Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL220800DRGAG-AG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T15:19:41Z",
+  "settlement_ts": "2026-07-22T15:22:44.008862Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL220800DRGAG-DRG": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T15:19:41Z",
+  "settlement_ts": "2026-07-22T15:22:44.008862Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230400FSGE-FS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T10:09:40Z",
+  "settlement_ts": "2026-07-23T10:12:46.007831Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230400FSGE-GE": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T10:09:40Z",
+  "settlement_ts": "2026-07-23T10:12:46.007831Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230500NOVATYLOO-NOVA": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T11:09:41Z",
+  "settlement_ts": "2026-07-23T11:12:46.005098Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230700VART1-T1": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T11:59:49Z",
+  "settlement_ts": "2026-07-23T12:02:56.062613Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230700VART1-VAR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T11:59:49Z",
+  "settlement_ts": "2026-07-23T12:02:56.062613Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230800EDGFPX-EDG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T14:19:39Z",
+  "settlement_ts": "2026-07-23T14:22:46.058791Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230800EDGFPX-FPX": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T14:19:39Z",
+  "settlement_ts": "2026-07-23T14:22:46.058791Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL210500TEJDG-JDG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T10:59:53Z",
+  "settlement_ts": "2026-07-21T11:02:59.804644Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL210500TEJDG-TE": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T10:59:53Z",
+  "settlement_ts": "2026-07-21T11:02:59.804644Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211100BARGXGC-BAR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T18:29:45Z",
+  "settlement_ts": "2026-07-21T18:32:49.808159Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211100BARGXGC-GXGC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T18:29:45Z",
+  "settlement_ts": "2026-07-21T18:32:49.808159Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211100HBSG2-G2": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T17:19:38Z",
+  "settlement_ts": "2026-07-21T17:22:39.800607Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211100HBSG2-HBS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T17:19:38Z",
+  "settlement_ts": "2026-07-21T17:22:39.800607Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211400FKSTMO-FKS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T20:59:44Z",
+  "settlement_ts": "2026-07-21T21:02:44.013845Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL211400M8GCSKN-SKN": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-21T18:49:36Z",
+  "settlement_ts": "2026-07-21T18:52:39.804693Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221100BARSKN-BAR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T17:09:46Z",
+  "settlement_ts": "2026-07-22T17:12:43.955803Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221100BARSKN-SKN": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T17:09:46Z",
+  "settlement_ts": "2026-07-22T17:12:43.955803Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221100FKSGXGC-FKS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T18:21:40Z",
+  "settlement_ts": "2026-07-22T18:24:43.954046Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221100FKSGXGC-GXGC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T18:21:40Z",
+  "settlement_ts": "2026-07-22T18:24:43.954046Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221100PCFICFUT-FUT": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T18:39:46Z",
+  "settlement_ts": "2026-07-22T18:42:43.953455Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221100PCFICFUT-PCFIC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T18:39:46Z",
+  "settlement_ts": "2026-07-22T18:42:43.953455Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221400AARTMO-AAR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T20:29:43Z",
+  "settlement_ts": "2026-07-22T20:32:44.3735Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221400AARTMO-TMO": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T20:29:43Z",
+  "settlement_ts": "2026-07-22T20:32:44.3735Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221400HBSKC-HBS": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T19:30:37Z",
+  "settlement_ts": "2026-07-22T19:33:43.951943Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221400HBSKC-KC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T19:30:37Z",
+  "settlement_ts": "2026-07-22T19:33:43.951943Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221400KCFNC-FNC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T21:59:45Z",
+  "settlement_ts": "2026-07-22T22:02:44.013037Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL221400KCFNC-KC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-22T21:59:45Z",
+  "settlement_ts": "2026-07-22T22:02:44.013037Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL230500NOVATYLOO-TYLOO": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T11:09:41Z",
+  "settlement_ts": "2026-07-23T11:12:46.005098Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231100FKSBAR-BAR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T18:49:38Z",
+  "settlement_ts": "2026-07-23T18:52:36.002432Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231100FKSBAR-FKS": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T18:49:38Z",
+  "settlement_ts": "2026-07-23T18:52:36.002432Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231100HBSM8GC-HBS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T17:09:41Z",
+  "settlement_ts": "2026-07-23T17:12:46.061347Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231100HBSM8GC-M8GC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T17:09:41Z",
+  "settlement_ts": "2026-07-23T17:12:46.061347Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231100THEF-EF": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T17:09:41Z",
+  "settlement_ts": "2026-07-23T17:12:46.060881Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231100THEF-TH": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T17:09:41Z",
+  "settlement_ts": "2026-07-23T17:12:46.060881Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231400NAVIGM-GM": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T19:19:40Z",
+  "settlement_ts": "2026-07-23T19:22:46.060269Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231400NAVIGM-NAVI": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T19:19:40Z",
+  "settlement_ts": "2026-07-23T19:22:46.060269Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231700LEVEG-EG": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T23:09:42Z",
+  "settlement_ts": "2026-07-23T23:12:46.00812Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231700LEVEG-LEV": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T23:09:42Z",
+  "settlement_ts": "2026-07-23T23:12:46.00812Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240400ZETARRQ-RRQ": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T09:49:39Z",
+  "settlement_ts": "2026-07-24T09:52:46.011249Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240500TECTE-TE": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T11:09:38Z",
+  "settlement_ts": "2026-07-24T11:12:36.007603Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240500TECTE-TEC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T11:09:38Z",
+  "settlement_ts": "2026-07-24T11:12:36.007603Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240700AGEDG-EDG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T13:29:46Z",
+  "settlement_ts": "2026-07-24T13:32:46.009948Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240700PRDFM-DFM": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T18:29:44Z",
+  "settlement_ts": "2026-07-24T18:32:46.05625Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240700PRDFM-PR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T18:29:44Z",
+  "settlement_ts": "2026-07-24T18:32:46.05625Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL241100BBLFUT-BBL": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T18:19:47Z",
+  "settlement_ts": "2026-07-24T18:22:46.062972Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL241100BBLFUT-FUT": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T18:19:47Z",
+  "settlement_ts": "2026-07-24T18:22:46.062972Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL241700NRGFUR-FUR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T00:39:45Z",
+  "settlement_ts": "2026-07-25T00:42:46.007212Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL241700NRGFUR-NRG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T00:39:45Z",
+  "settlement_ts": "2026-07-25T00:42:46.007212Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250700T1TS-T1": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T12:29:54Z",
+  "settlement_ts": "2026-07-25T12:32:56.008289Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250700T1TS-TS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T12:29:54Z",
+  "settlement_ts": "2026-07-25T12:32:56.008289Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250700XLGTYLOO-TYLOO": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T14:39:45Z",
+  "settlement_ts": "2026-07-25T14:42:46.009514Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250700XLGTYLOO-XLG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T14:39:45Z",
+  "settlement_ts": "2026-07-25T14:42:46.009514Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231400TMOGXGC-GXGC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T20:29:43Z",
+  "settlement_ts": "2026-07-23T20:32:46.006848Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL231400TMOGXGC-TMO": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-23T20:29:43Z",
+  "settlement_ts": "2026-07-23T20:32:46.006848Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL232000MIBRNV-MIBR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T00:49:47Z",
+  "settlement_ts": "2026-07-24T00:52:46.004865Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL232000MIBRNV-NV": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T00:49:47Z",
+  "settlement_ts": "2026-07-24T00:52:46.004865Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240400ZETARRQ-ZETA": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T09:49:39Z",
+  "settlement_ts": "2026-07-24T09:52:46.011249Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL240700AGEDG-AG": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T13:29:46Z",
+  "settlement_ts": "2026-07-24T13:32:46.009948Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL241400FNCTL-FNC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T20:09:40Z",
+  "settlement_ts": "2026-07-24T20:12:46.011531Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL241400FNCTL-TL": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-24T20:09:40Z",
+  "settlement_ts": "2026-07-24T20:12:46.011531Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL242000KRU100T-100T": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T02:09:39Z",
+  "settlement_ts": "2026-07-25T02:12:46.061026Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL242000KRU100T-KRU": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T02:09:39Z",
+  "settlement_ts": "2026-07-25T02:12:46.061026Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL242300IGZRC-IGZ": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T05:59:52Z",
+  "settlement_ts": "2026-07-25T06:02:56.009959Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL242300IGZRC-RC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T05:59:52Z",
+  "settlement_ts": "2026-07-25T06:02:56.009959Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250330FLQTD-FL": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T10:09:48Z",
+  "settlement_ts": "2026-07-25T10:12:46.006266Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250330FLQTD-QTD": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T10:09:48Z",
+  "settlement_ts": "2026-07-25T10:12:46.006266Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250400GENS-GE": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T10:39:38Z",
+  "settlement_ts": "2026-07-25T10:42:36.011445Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250400GENS-NS": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T10:39:38Z",
+  "settlement_ts": "2026-07-25T10:42:36.011445Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250500DRGJDG-DRG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T12:19:39Z",
+  "settlement_ts": "2026-07-25T12:22:46.006567Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL250500DRGJDG-JDG": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T12:19:39Z",
+  "settlement_ts": "2026-07-25T12:22:46.006567Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL251100VITPCFIC-PCFIC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T16:49:42Z",
+  "settlement_ts": "2026-07-25T16:52:46.007481Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL251100VITPCFIC-VIT": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T16:49:42Z",
+  "settlement_ts": "2026-07-25T16:52:46.007481Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL251700C9G2-C9": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T22:39:42Z",
+  "settlement_ts": "2026-07-25T22:42:46.007684Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL252000LOUDSEN-LOUD": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T03:39:47Z",
+  "settlement_ts": "2026-07-26T03:42:46.15297Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL252000LOUDSEN-SEN": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T03:39:47Z",
+  "settlement_ts": "2026-07-26T03:42:46.15297Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260030QTDRC-QTD": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T11:59:46Z",
+  "settlement_ts": "2026-07-26T12:02:46.063213Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260030QTDRC-RC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T11:59:46Z",
+  "settlement_ts": "2026-07-26T12:02:46.063213Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL251400GXEF-EF": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T19:00:15Z",
+  "settlement_ts": "2026-07-25T19:03:16.005691Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL251400GXEF-GX": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T19:00:15Z",
+  "settlement_ts": "2026-07-25T19:03:16.005691Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL251700C9G2-G2": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-25T22:39:42Z",
+  "settlement_ts": "2026-07-25T22:42:46.007684Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260400DRXPR-DRX": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T09:29:43Z",
+  "settlement_ts": "2026-07-26T09:32:46.009435Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260400DRXPR-PR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T09:29:43Z",
+  "settlement_ts": "2026-07-26T09:32:46.009435Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260500WOLFPX-FPX": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T11:09:41Z",
+  "settlement_ts": "2026-07-26T11:12:46.00829Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260500WOLFPX-WOL": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T11:09:41Z",
+  "settlement_ts": "2026-07-26T11:12:46.00829Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260700BLGNOVA-BLG": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T13:19:37Z",
+  "settlement_ts": "2026-07-26T13:22:35.958154Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260700BLGNOVA-NOVA": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T13:19:37Z",
+  "settlement_ts": "2026-07-26T13:22:35.958154Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260700RRQGENG-GENG": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T12:49:38Z",
+  "settlement_ts": "2026-07-26T12:52:36.005238Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL260700RRQGENG-RRQ": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T12:49:38Z",
+  "settlement_ts": "2026-07-26T12:52:36.005238Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL261100NAVIBBL-BBL": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T17:59:46Z",
+  "settlement_ts": "2026-07-26T18:02:46.059377Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL261100NAVIBBL-NAVI": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T17:59:46Z",
+  "settlement_ts": "2026-07-26T18:02:46.059377Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL261400KCTH-KC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T19:59:45Z",
+  "settlement_ts": "2026-07-26T20:02:46.007768Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL261400KCTH-TH": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T19:59:45Z",
+  "settlement_ts": "2026-07-26T20:02:46.007768Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL261700LEVNV-LEV": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T22:59:50Z",
+  "settlement_ts": "2026-07-26T23:02:56.057939Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL261700LEVNV-NV": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-26T22:59:50Z",
+  "settlement_ts": "2026-07-26T23:02:56.057939Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL262000MIBRFUR-FUR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T01:29:43Z",
+  "settlement_ts": "2026-07-27T01:32:46.010461Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL262000MIBRFUR-MIBR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T01:29:43Z",
+  "settlement_ts": "2026-07-27T01:32:46.010461Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271100GXGCM8GC-GXGC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T16:49:44Z",
+  "settlement_ts": "2026-07-27T16:52:46.007745Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271100GXGCM8GC-M8GC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T16:49:44Z",
+  "settlement_ts": "2026-07-27T16:52:46.007745Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271100HBSBAR-BAR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T16:49:45Z",
+  "settlement_ts": "2026-07-27T16:52:46.008764Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271100HBSBAR-HBS": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T16:49:45Z",
+  "settlement_ts": "2026-07-27T16:52:46.008764Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271400KCG2-G2": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T18:59:58Z",
+  "settlement_ts": "2026-07-27T19:02:56.562336Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271400KCG2-KC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-27T18:59:58Z",
+  "settlement_ts": "2026-07-27T19:02:56.562336Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271500BBBBST-BBB": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:46Z",
+  "settlement_ts": "2026-07-28T00:05:46.058797Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271500BBBBST-BST": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:46Z",
+  "settlement_ts": "2026-07-28T00:05:46.058797Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700FLYRAXO-AXO": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:47Z",
+  "settlement_ts": "2026-07-28T00:05:46.059476Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700FLYRAXO-FLYR": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:47Z",
+  "settlement_ts": "2026-07-28T00:05:46.059476Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700SADORAT-ORAT": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:47Z",
+  "settlement_ts": "2026-07-28T00:05:46.059857Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700SADORAT-SAD": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:47Z",
+  "settlement_ts": "2026-07-28T00:05:46.059857Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700SPIC9GC-C9GC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:48Z",
+  "settlement_ts": "2026-07-28T00:05:46.053958Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700SPIC9GC-SPI": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:48Z",
+  "settlement_ts": "2026-07-28T00:05:46.053958Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700SWIMSRGC-SRGC": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:49Z",
+  "settlement_ts": "2026-07-28T00:05:56.007477Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271700SWIMSRGC-SWIM": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T00:02:49Z",
+  "settlement_ts": "2026-07-28T00:05:56.007477Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930LCDEFA-LCD": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T02:09:41Z",
+  "settlement_ts": "2026-07-28T02:12:46.060064Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930ROSOHIM-ROSO": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T01:20:39Z",
+  "settlement_ts": "2026-07-28T01:23:46.005407Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281100FKSG2-G2": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T16:49:45Z",
+  "settlement_ts": "2026-07-28T16:52:46.009059Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281400AARSKN-AAR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T20:09:43Z",
+  "settlement_ts": "2026-07-28T20:12:46.006434Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281400AARSKN-SKN": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T20:09:43Z",
+  "settlement_ts": "2026-07-28T20:12:46.006434Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281400HBSTMO-HBS": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T20:09:43Z",
+  "settlement_ts": "2026-07-28T20:12:46.008186Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281400HBSTMO-TMO": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T20:09:43Z",
+  "settlement_ts": "2026-07-28T20:12:46.008186Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281500SR2GAME-2GAME": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-30T19:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281500SR2GAME-SR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-30T19:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281800SRBBB-BBB": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-30T22:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281800SRBBB-SR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-30T22:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL282100BBB2GAME-2GAME": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T01:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL282100BBB2GAME-BBB": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T01:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291100FKSM8GC-FKS": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291100FKSM8GC-M8GC": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291100G2SKN-G2": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291100G2SKN-SKN": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291100TLGX-GX": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291100TLGX-TL": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291400AARBAR-AAR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291400AARBAR-BAR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291400HBSGXGC-GXGC": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291400HBSGXGC-HBS": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291400VITGM-GM": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL291400VITGM-VIT": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-07-31T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL300400DFMVAR-DFM": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T08:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL300400DFMVAR-VAR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T08:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL300700ZETAFS-FS": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T11:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL300700ZETAFS-ZETA": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T11:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301100BARM8GC-BAR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301100BARM8GC-M8GC": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930LCDEFA-EFA": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T02:09:41Z",
+  "settlement_ts": "2026-07-28T02:12:46.060064Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930ROSOHIM-HIM": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T01:20:39Z",
+  "settlement_ts": "2026-07-28T01:23:46.005407Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930RVNUNK-RVN": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T01:20:40Z",
+  "settlement_ts": "2026-07-28T01:23:46.006079Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930RVNUNK-UNK": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T01:20:40Z",
+  "settlement_ts": "2026-07-28T01:23:46.006079Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930SENMVS-MVS": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T01:20:41Z",
+  "settlement_ts": "2026-07-28T01:23:46.006682Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL271930SENMVS-SEN": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T01:20:41Z",
+  "settlement_ts": "2026-07-28T01:23:46.006682Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281100FKSG2-FKS": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T16:49:45Z",
+  "settlement_ts": "2026-07-28T16:52:46.009059Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281100KCBAR-BAR": {
+  "result": "no",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T18:49:52Z",
+  "settlement_ts": "2026-07-28T18:52:56.062935Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL281100KCBAR-KC": {
+  "result": "yes",
+  "status": "finalized",
+  "last_price": null,
+  "close_time": "2026-07-28T18:49:52Z",
+  "settlement_ts": "2026-07-28T18:52:56.062935Z",
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301100HBSSKN-HBS": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301100HBSSKN-SKN": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301100PCFICNAVI-NAVI": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301100PCFICNAVI-PCFIC": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301400AARGXGC-AAR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301400AARGXGC-GXGC": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301400FNCEF-EF": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301400FNCEF-FNC": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301400TMOG2-G2": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301400TMOG2-TMO": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301700G2KRU-G2": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T21:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL301700G2KRU-KRU": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-01T21:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL302000SEN100T-100T": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T00:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL302000SEN100T-SEN": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T00:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL310400PRTS-PR": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T08:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL310400PRTS-TS": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T08:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL310700GENGGE-GE": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T11:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL310700GENGGE-GENG": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T11:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL311100GMBBL-BBL": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL311100GMBBL-GM": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T15:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL311400THGX-GX": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL311400THGX-TH": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T18:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL311700LOUDC9-C9": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T21:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ },
+ "KXVALORANTGAME-26JUL311700LOUDC9-LOUD": {
+  "result": "",
+  "status": "active",
+  "last_price": null,
+  "close_time": "2026-08-02T21:00:00Z",
+  "settlement_ts": null,
+  "volume": null,
+  "maker_fee": null,
+  "taker_fee": null
+ }
+}

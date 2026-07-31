@@ -1,0 +1,15 @@
+{
+ "fee_schedule_source": "GET /trade-api/v2/series/KXVALORANTGAME (public, 2026-07-28)",
+ "fee_type": "quadratic",
+ "fee_multiplier": 1,
+ "formula": "taker: ceil_cents(0.07*C*P*(1-P)); maker: none for this series (no maker-fee field; Kalshi maker fees apply only to designated series)",
+ "maker_only_evidence": [
+  "vctmm/kalshi/orders.py post_only=True hardcoded; taker fill raises OrderRejected and halts",
+  "all 719 fills join to resting orders (0 orphans)",
+  "tape taker_side on our fills: {\"missing\": [668, 7332.4], \"yes\": [51, 810.8]} (taker_side=yes means counterparty took YES against our resting NO bid)"
+ ],
+ "fees_paid_dollars": 0.0,
+ "counterfactual_taker_fees_dollars": 154.29,
+ "hedge_margin_vs_cost_stack": "2c hedge margin clears fees trivially (fees=0); real cost stack is adverse selection only \u2014 see autopsy_markouts.json",
+ "settlement_fees": "none on Kalshi for this series (settlement_value null; no fee fields on settled markets)"
+}

@@ -1,0 +1,318 @@
+{
+ "generated_by": "agent:bias-h2, 2026-07-28",
+ "note": "v6 baseline per-team bias caterpillar on the expanded frame (referee.per_team_bias, min_n=25, holdout n=1217). Candidate variants absent by design: E1 gate failed.",
+ "baseline": {
+  "label": "v6 (expanded frame)",
+  "beta": 0.1152,
+  "ll_holdout": 0.64216,
+  "max_abs_bias": 0.1478,
+  "mean_abs_bias": 0.0473
+ },
+ "teams": [
+  {
+   "team": "PRX",
+   "region": "Pacific",
+   "n": 86,
+   "ll": 0.6057,
+   "bias": -0.1016
+  },
+  {
+   "team": "NRG",
+   "region": "Americas",
+   "n": 75,
+   "ll": 0.6246,
+   "bias": -0.0914
+  },
+  {
+   "team": "BBL",
+   "region": "EMEA",
+   "n": 53,
+   "ll": 0.689,
+   "bias": -0.0866
+  },
+  {
+   "team": "100T",
+   "region": "Americas",
+   "n": 53,
+   "ll": 0.5715,
+   "bias": -0.0707
+  },
+  {
+   "team": "FNC",
+   "region": "EMEA",
+   "n": 63,
+   "ll": 0.6243,
+   "bias": -0.0651
+  },
+  {
+   "team": "NS",
+   "region": "Pacific",
+   "n": 54,
+   "ll": 0.7354,
+   "bias": -0.0631
+  },
+  {
+   "team": "TL",
+   "region": "EMEA",
+   "n": 60,
+   "ll": 0.6602,
+   "bias": -0.0617
+  },
+  {
+   "team": "MIBR",
+   "region": "Americas",
+   "n": 52,
+   "ll": 0.6751,
+   "bias": -0.0587
+  },
+  {
+   "team": "LEV",
+   "region": "Americas",
+   "n": 51,
+   "ll": 0.6839,
+   "bias": -0.0501
+  },
+  {
+   "team": "XLG",
+   "region": "CN",
+   "n": 69,
+   "ll": 0.6095,
+   "bias": -0.0494
+  },
+  {
+   "team": "G2",
+   "region": "Americas",
+   "n": 80,
+   "ll": 0.6107,
+   "bias": -0.0469
+  },
+  {
+   "team": "NOVA",
+   "region": "CN",
+   "n": 52,
+   "ll": 0.7102,
+   "bias": -0.0416
+  },
+  {
+   "team": "TH",
+   "region": "EMEA",
+   "n": 63,
+   "ll": 0.6592,
+   "bias": -0.0402
+  },
+  {
+   "team": "KRX",
+   "region": "Pacific",
+   "n": 71,
+   "ll": 0.642,
+   "bias": -0.0398
+  },
+  {
+   "team": "T1",
+   "region": "Pacific",
+   "n": 60,
+   "ll": 0.6295,
+   "bias": -0.0271
+  },
+  {
+   "team": "AG",
+   "region": "CN",
+   "n": 53,
+   "ll": 0.6178,
+   "bias": -0.0174
+  },
+  {
+   "team": "EDG",
+   "region": "CN",
+   "n": 79,
+   "ll": 0.6019,
+   "bias": -0.0154
+  },
+  {
+   "team": "VIT",
+   "region": "EMEA",
+   "n": 50,
+   "ll": 0.6585,
+   "bias": -0.013
+  },
+  {
+   "team": "SEN",
+   "region": "Americas",
+   "n": 56,
+   "ll": 0.589,
+   "bias": -0.0113
+  },
+  {
+   "team": "FPX",
+   "region": "CN",
+   "n": 55,
+   "ll": 0.664,
+   "bias": -0.0104
+  },
+  {
+   "team": "DRG",
+   "region": "CN",
+   "n": 54,
+   "ll": 0.6372,
+   "bias": -0.0086
+  },
+  {
+   "team": "BLG",
+   "region": "CN",
+   "n": 73,
+   "ll": 0.6872,
+   "bias": -0.0077
+  },
+  {
+   "team": "GX",
+   "region": "EMEA",
+   "n": 43,
+   "ll": 0.6505,
+   "bias": -0.0062
+  },
+  {
+   "team": "RRQ",
+   "region": "Pacific",
+   "n": 54,
+   "ll": 0.7021,
+   "bias": -0.0061
+  },
+  {
+   "team": "KC",
+   "region": "EMEA",
+   "n": 46,
+   "ll": 0.6528,
+   "bias": -0.0045
+  },
+  {
+   "team": "NAVI",
+   "region": "EMEA",
+   "n": 44,
+   "ll": 0.6436,
+   "bias": -0.0012
+  },
+  {
+   "team": "FUT",
+   "region": "EMEA",
+   "n": 47,
+   "ll": 0.7008,
+   "bias": -0.0002
+  },
+  {
+   "team": "GEN",
+   "region": "Pacific",
+   "n": 56,
+   "ll": 0.6946,
+   "bias": 0.0051
+  },
+  {
+   "team": "M8",
+   "region": "EMEA",
+   "n": 42,
+   "ll": 0.6653,
+   "bias": 0.0057
+  },
+  {
+   "team": "GE",
+   "region": "Pacific",
+   "n": 42,
+   "ll": 0.6461,
+   "bias": 0.006
+  },
+  {
+   "team": "TYL",
+   "region": "CN",
+   "n": 51,
+   "ll": 0.6353,
+   "bias": 0.0118
+  },
+  {
+   "team": "TEC",
+   "region": "CN",
+   "n": 53,
+   "ll": 0.6496,
+   "bias": 0.0393
+  },
+  {
+   "team": "DFM",
+   "region": "Pacific",
+   "n": 32,
+   "ll": 0.6021,
+   "bias": 0.0456
+  },
+  {
+   "team": "ZETA",
+   "region": "Pacific",
+   "n": 30,
+   "ll": 0.6111,
+   "bias": 0.0546
+  },
+  {
+   "team": "EG",
+   "region": "Americas",
+   "n": 34,
+   "ll": 0.5599,
+   "bias": 0.06
+  },
+  {
+   "team": "KR\u00dc",
+   "region": "Americas",
+   "n": 35,
+   "ll": 0.6629,
+   "bias": 0.0665
+  },
+  {
+   "team": "TE",
+   "region": "CN",
+   "n": 55,
+   "ll": 0.6436,
+   "bias": 0.0721
+  },
+  {
+   "team": "LOUD",
+   "region": "Americas",
+   "n": 29,
+   "ll": 0.6854,
+   "bias": 0.0881
+  },
+  {
+   "team": "WOL",
+   "region": "CN",
+   "n": 60,
+   "ll": 0.6686,
+   "bias": 0.0941
+  },
+  {
+   "team": "JDG",
+   "region": "CN",
+   "n": 51,
+   "ll": 0.6681,
+   "bias": 0.1058
+  },
+  {
+   "team": "C9",
+   "region": "Americas",
+   "n": 41,
+   "ll": 0.6226,
+   "bias": 0.1172
+  },
+  {
+   "team": "FUR",
+   "region": "Americas",
+   "n": 33,
+   "ll": 0.4646,
+   "bias": 0.12
+  },
+  {
+   "team": "TS",
+   "region": "Pacific",
+   "n": 30,
+   "ll": 0.6145,
+   "bias": 0.1478
+  }
+ ],
+ "variants": {
+  "ridge_ablation": "NOT RUN \u2014 preregistered E1 gate failed (bias does not track centrality; preregister.bias_h2.md: 'H2 is DEAD ... STOP, no E2/E3 model fits'). See stats/h2_centrality.json + phase5_h2.md.",
+  "hierarchical": "NOT RUN \u2014 preregistered E1 gate failed (bias does not track centrality; preregister.bias_h2.md: 'H2 is DEAD ... STOP, no E2/E3 model fits'). See stats/h2_centrality.json + phase5_h2.md."
+ }
+}

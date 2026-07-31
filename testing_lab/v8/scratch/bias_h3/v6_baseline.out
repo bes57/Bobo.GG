@@ -1,0 +1,4 @@
+  Loaded 2068 match dates from match_dates.json
+engine ready in 0.8s; running v6 walk-forward (637 days)...
+v6 run done in 2.2s  beta=0.1152 ll_train=0.64823 ll_test=0.64216 n_test=1217
+checkpoint written

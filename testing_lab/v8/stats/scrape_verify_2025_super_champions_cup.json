@@ -1,0 +1,250 @@
+{
+ "590024": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590024/rex-regum-qeon-vs-edward-gaming-china-esports-festival-super-champions-cup-a",
+  "maps": {
+   "242859": [
+    "EDG",
+    "13-9"
+   ]
+  },
+  "series": [
+   "EDG",
+   "1-0"
+  ],
+  "match_name": "Main Event: Group A",
+  "utc_ts": "2025-11-29 00:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "RRQ"
+  ]
+ },
+ "590025": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590025/edward-gaming-vs-leviat-n-china-esports-festival-super-champions-cup-a",
+  "maps": {
+   "242860": [
+    "LEV",
+    "13-4"
+   ]
+  },
+  "series": [
+   "LEV",
+   "1-0"
+  ],
+  "match_name": "Main Event: Group A",
+  "utc_ts": "2025-11-29 01:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "LEV"
+  ]
+ },
+ "590026": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590026/leviat-n-vs-rex-regum-qeon-china-esports-festival-super-champions-cup-a",
+  "maps": {
+   "242861": [
+    "LEV",
+    "13-8"
+   ]
+  },
+  "series": [
+   "LEV",
+   "1-0"
+  ],
+  "match_name": "Main Event: Group A",
+  "utc_ts": "2025-11-29 03:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LEV",
+   "RRQ"
+  ]
+ },
+ "590027": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590027/bilibili-gaming-vs-drx-china-esports-festival-super-champions-cup-b",
+  "maps": {
+   "242862": [
+    "BLG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "BLG",
+   "1-0"
+  ],
+  "match_name": "Main Event: Group B",
+  "utc_ts": "2025-11-29 05:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "KRX"
+  ]
+ },
+ "590028": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590028/drx-vs-wolves-esports-china-esports-festival-super-champions-cup-b",
+  "maps": {
+   "242863": [
+    "KRX",
+    "13-10"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Group B",
+  "utc_ts": "2025-11-29 06:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "WOL"
+  ]
+ },
+ "590029": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590029/wolves-esports-vs-bilibili-gaming-china-esports-festival-super-champions-cup-b",
+  "maps": {
+   "242864": [
+    "WOL",
+    "13-11"
+   ]
+  },
+  "series": [
+   "WOL",
+   "1-0"
+  ],
+  "match_name": "Main Event: Group B",
+  "utc_ts": "2025-11-29 09:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "WOL"
+  ]
+ },
+ "590030": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590030/leviat-n-vs-bilibili-gaming-china-esports-festival-super-champions-cup-sf",
+  "maps": {
+   "242865": [
+    "LEV",
+    "17-15"
+   ],
+   "242866": [
+    "LEV",
+    "13-5"
+   ]
+  },
+  "series": [
+   "LEV",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-11-29 22:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "LEV"
+  ]
+ },
+ "590031": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590031/drx-vs-edward-gaming-china-esports-festival-super-champions-cup-sf",
+  "maps": {
+   "242868": [
+    "KRX",
+    "13-11"
+   ],
+   "242869": [
+    "KRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-11-30 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "KRX"
+  ]
+ },
+ "590033": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590033/bilibili-gaming-vs-edward-gaming-china-esports-festival-super-champions-cup-cf",
+  "maps": {
+   "242876": [
+    "BLG",
+    "15-13"
+   ],
+   "242877": [
+    "EDG",
+    "13-4"
+   ],
+   "242878": [
+    "BLG",
+    "15-13"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Consolation Final",
+  "utc_ts": "2025-11-30 03:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "EDG"
+  ]
+ },
+ "590032": {
+  "event_id": "2025_super_champions_cup",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590032/leviat-n-vs-drx-china-esports-festival-super-champions-cup-gf",
+  "maps": {
+   "242871": [
+    "KRX",
+    "13-7"
+   ],
+   "242872": [
+    "LEV",
+    "13-5"
+   ],
+   "242873": [
+    "LEV",
+    "13-10"
+   ],
+   "242874": [
+    "LEV",
+    "14-12"
+   ]
+  },
+  "series": [
+   "LEV",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-11-30 07:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "LEV"
+  ]
+ }
+}

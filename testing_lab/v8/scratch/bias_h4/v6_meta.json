@@ -1,0 +1,45 @@
+{
+ "config": {
+  "decay": {
+   "kind": "games",
+   "consistency": [
+    20.0,
+    12.0
+   ]
+  },
+  "rd": {
+   "power": 0.75,
+   "scale": 2.5
+  },
+  "roster_mode": "year",
+  "roster_persistence": 0.3,
+  "ridge": 0.5,
+  "champ_mult": 2.0,
+  "region_prior_ridge": 1.5,
+  "w_custom": "PO 1.6 playoffs/GF from frame"
+ },
+ "beta": 0.1152,
+ "ll_train": 0.64823,
+ "ll_test": 0.64216,
+ "n_train": 827,
+ "n_test": 1217,
+ "brier_test": 0.22578,
+ "n_games": 5140,
+ "maps_seen": [
+  "Abyss",
+  "Ascent",
+  "Bind",
+  "Breeze",
+  "Corrode",
+  "Fracture",
+  "Haven",
+  "Icebox",
+  "Lotus",
+  "Pearl",
+  "Split",
+  "Summit",
+  "Sunset",
+  "TBD"
+ ],
+ "frame_sha256": "ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142"
+}

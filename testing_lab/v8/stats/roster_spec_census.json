@@ -1,0 +1,794 @@
+{
+ "tier_rule": {
+  "csv_event_class_first": true,
+  "fallback_pattern_ewc": [
+   "ewc",
+   "rbhg",
+   "evo",
+   "ten_",
+   "acl",
+   "radiant",
+   "fgc",
+   "convergence",
+   "super_champions",
+   "china_champions_qual"
+  ],
+  "note": "untagged corpus-addition events classed by pattern; shanghai_masters/lcq etc resolve to vct (mainline)."
+ },
+ "reference": {
+  "vct_standin_rate_pct": 6.7,
+  "ewc_class_standin_rate_pct": 23.3,
+  "source": "lineups agent, 30d-calendar-modal definition (briefs/context.md)"
+ },
+ "policies": {
+  "p1w3c0": {
+   "total_boundaries": 408,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 34,
+     "deviations_without_boundary": 9,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 24,
+     "deviations_without_boundary": 5,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 78,
+     "deviations_without_boundary": 8,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 21,
+     "deviations_without_boundary": 6,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 91,
+     "deviations_without_boundary": 19,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 47,
+     "deviations_without_boundary": 19,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 90,
+     "deviations_without_boundary": 14,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 23,
+     "deviations_without_boundary": 10,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 1.51,
+    "ewc_class": 4.85
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 8.85,
+    "ewc_class": 13.96
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 115,
+   "d_ewc": 40,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.742
+  },
+  "p1w3c3": {
+   "total_boundaries": 311,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 26,
+     "deviations_without_boundary": 21,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 23,
+     "deviations_without_boundary": 22,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 58,
+     "deviations_without_boundary": 40,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 18,
+     "deviations_without_boundary": 22,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 61,
+     "deviations_without_boundary": 65,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 40,
+     "deviations_without_boundary": 52,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 67,
+     "deviations_without_boundary": 51,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 18,
+     "deviations_without_boundary": 27,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 5.34,
+    "ewc_class": 14.93
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 6.4,
+    "ewc_class": 12.01
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 99,
+   "d_ewc": 123,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.446
+  },
+  "p1w3c5": {
+   "total_boundaries": 240,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 19,
+     "deviations_without_boundary": 59,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 18,
+     "deviations_without_boundary": 43,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 47,
+     "deviations_without_boundary": 92,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 15,
+     "deviations_without_boundary": 37,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 46,
+     "deviations_without_boundary": 132,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 34,
+     "deviations_without_boundary": 86,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 48,
+     "deviations_without_boundary": 80,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 13,
+     "deviations_without_boundary": 56,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 10.96,
+    "ewc_class": 26.94
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 4.83,
+    "ewc_class": 9.71
+   },
+   "ewc_misclassification_flag": false,
+   "b_ewc": 80,
+   "d_ewc": 222,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.265
+  },
+  "p1w5c0": {
+   "total_boundaries": 387,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 34,
+     "deviations_without_boundary": 15,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 22,
+     "deviations_without_boundary": 8,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 78,
+     "deviations_without_boundary": 8,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 21,
+     "deviations_without_boundary": 6,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 89,
+     "deviations_without_boundary": 25,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 47,
+     "deviations_without_boundary": 21,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 78,
+     "deviations_without_boundary": 31,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 18,
+     "deviations_without_boundary": 14,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 2.39,
+    "ewc_class": 5.95
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 8.42,
+    "ewc_class": 13.11
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 108,
+   "d_ewc": 49,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.688
+  },
+  "p1w5c3": {
+   "total_boundaries": 302,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 25,
+     "deviations_without_boundary": 20,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 21,
+     "deviations_without_boundary": 20,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 60,
+     "deviations_without_boundary": 40,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 18,
+     "deviations_without_boundary": 22,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 61,
+     "deviations_without_boundary": 59,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 41,
+     "deviations_without_boundary": 48,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 61,
+     "deviations_without_boundary": 60,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 15,
+     "deviations_without_boundary": 26,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 5.4,
+    "ewc_class": 14.08
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 6.25,
+    "ewc_class": 11.53
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 95,
+   "d_ewc": 116,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.45
+  },
+  "p1w5c5": {
+   "total_boundaries": 235,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 18,
+     "deviations_without_boundary": 59,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 16,
+     "deviations_without_boundary": 41,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 49,
+     "deviations_without_boundary": 92,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 15,
+     "deviations_without_boundary": 37,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 46,
+     "deviations_without_boundary": 129,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 34,
+     "deviations_without_boundary": 82,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 46,
+     "deviations_without_boundary": 79,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 11,
+     "deviations_without_boundary": 53,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 10.84,
+    "ewc_class": 25.85
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 4.8,
+    "ewc_class": 9.22
+   },
+   "ewc_misclassification_flag": false,
+   "b_ewc": 76,
+   "d_ewc": 213,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.263
+  },
+  "p1w8c0": {
+   "total_boundaries": 329,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 28,
+     "deviations_without_boundary": 19,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 19,
+     "deviations_without_boundary": 19,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 70,
+     "deviations_without_boundary": 22,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 19,
+     "deviations_without_boundary": 10,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 79,
+     "deviations_without_boundary": 46,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 37,
+     "deviations_without_boundary": 42,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 63,
+     "deviations_without_boundary": 63,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 14,
+     "deviations_without_boundary": 26,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 4.53,
+    "ewc_class": 11.77
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 7.25,
+    "ewc_class": 10.8
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 89,
+   "d_ewc": 97,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.478
+  },
+  "p1w8c3": {
+   "total_boundaries": 287,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 24,
+     "deviations_without_boundary": 22,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 16,
+     "deviations_without_boundary": 23,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 61,
+     "deviations_without_boundary": 41,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 17,
+     "deviations_without_boundary": 19,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 67,
+     "deviations_without_boundary": 58,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 35,
+     "deviations_without_boundary": 49,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 55,
+     "deviations_without_boundary": 84,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 12,
+     "deviations_without_boundary": 32,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 6.19,
+    "ewc_class": 14.93
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 6.25,
+    "ewc_class": 9.71
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 80,
+   "d_ewc": 123,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.394
+  },
+  "p1w8c5": {
+   "total_boundaries": 236,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 19,
+     "deviations_without_boundary": 50,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 14,
+     "deviations_without_boundary": 37,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 52,
+     "deviations_without_boundary": 81,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 14,
+     "deviations_without_boundary": 32,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 54,
+     "deviations_without_boundary": 110,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 31,
+     "deviations_without_boundary": 78,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 43,
+     "deviations_without_boundary": 93,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 9,
+     "deviations_without_boundary": 48,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 10.08,
+    "ewc_class": 23.67
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 5.07,
+    "ewc_class": 8.25
+   },
+   "ewc_misclassification_flag": false,
+   "b_ewc": 68,
+   "d_ewc": 195,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.259
+  },
+  "p2m3c0": {
+   "total_boundaries": 331,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 16,
+     "deviations_without_boundary": 24,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 22,
+     "deviations_without_boundary": 22,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 65,
+     "deviations_without_boundary": 24,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 24,
+     "deviations_without_boundary": 14,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 74,
+     "deviations_without_boundary": 46,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 46,
+     "deviations_without_boundary": 32,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 68,
+     "deviations_without_boundary": 33,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 16,
+     "deviations_without_boundary": 23,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 3.83,
+    "ewc_class": 11.04
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 6.73,
+    "ewc_class": 13.11
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 108,
+   "d_ewc": 91,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.543,
+   "open_provisional_at_corpus_end": 22
+  },
+  "p2m3c3": {
+   "total_boundaries": 331,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 16,
+     "deviations_without_boundary": 24,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 22,
+     "deviations_without_boundary": 22,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 65,
+     "deviations_without_boundary": 24,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 24,
+     "deviations_without_boundary": 14,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 74,
+     "deviations_without_boundary": 46,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 46,
+     "deviations_without_boundary": 32,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 68,
+     "deviations_without_boundary": 33,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 16,
+     "deviations_without_boundary": 23,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 3.83,
+    "ewc_class": 11.04
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 6.73,
+    "ewc_class": 13.11
+   },
+   "ewc_misclassification_flag": true,
+   "b_ewc": 108,
+   "d_ewc": 91,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.543,
+   "open_provisional_at_corpus_end": 22
+  },
+  "p2m3c5": {
+   "total_boundaries": 238,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 14,
+     "deviations_without_boundary": 44,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 17,
+     "deviations_without_boundary": 45,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 50,
+     "deviations_without_boundary": 91,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 18,
+     "deviations_without_boundary": 37,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 44,
+     "deviations_without_boundary": 132,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 36,
+     "deviations_without_boundary": 83,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 47,
+     "deviations_without_boundary": 65,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 12,
+     "deviations_without_boundary": 47,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 10.02,
+    "ewc_class": 25.73
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 4.68,
+    "ewc_class": 10.07
+   },
+   "ewc_misclassification_flag": false,
+   "b_ewc": 83,
+   "d_ewc": 212,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.281,
+   "open_provisional_at_corpus_end": 18
+  },
+  "p3w5": {
+   "total_boundaries": 0,
+   "by_year_tier": {
+    "2023|vct": {
+     "boundaries": 0,
+     "deviations_without_boundary": 57,
+     "team_matches": 564
+    },
+    "2023|ewc_class": {
+     "boundaries": 0,
+     "deviations_without_boundary": 55,
+     "team_matches": 122
+    },
+    "2024|vct": {
+     "boundaries": 0,
+     "deviations_without_boundary": 206,
+     "team_matches": 878
+    },
+    "2024|ewc_class": {
+     "boundaries": 0,
+     "deviations_without_boundary": 63,
+     "team_matches": 126
+    },
+    "2025|vct": {
+     "boundaries": 0,
+     "deviations_without_boundary": 247,
+     "team_matches": 1014
+    },
+    "2025|ewc_class": {
+     "boundaries": 0,
+     "deviations_without_boundary": 148,
+     "team_matches": 346
+    },
+    "2026|vct": {
+     "boundaries": 0,
+     "deviations_without_boundary": 231,
+     "team_matches": 856
+    },
+    "2026|ewc_class": {
+     "boundaries": 0,
+     "deviations_without_boundary": 65,
+     "team_matches": 230
+    }
+   },
+   "dev_rate_pct": {
+    "vct": 22.37,
+    "ewc_class": 40.17
+   },
+   "boundary_rate_per_100_team_matches": {
+    "vct": 0.0,
+    "ewc_class": 0.0
+   },
+   "ewc_misclassification_flag": false,
+   "b_ewc": 0,
+   "d_ewc": 331,
+   "share_of_ewc_lineup_events_becoming_boundaries": 0.0
+  }
+ },
+ "misclassification_rule": {
+  "rule": "b_ewc > 0.6 * d_ewc  =>  policy cannot ship (preregistered)",
+  "verdicts": {
+   "p1w3c0": true,
+   "p1w3c3": true,
+   "p1w3c5": false,
+   "p1w5c0": true,
+   "p1w5c3": true,
+   "p1w5c5": false,
+   "p1w8c0": true,
+   "p1w8c3": true,
+   "p1w8c5": false,
+   "p2m3c0": true,
+   "p2m3c3": true,
+   "p2m3c5": false,
+   "p3w5": false
+  },
+  "shippable_policies": [
+   "p1w3c5",
+   "p1w5c5",
+   "p1w8c5",
+   "p2m3c5",
+   "p3w5"
+  ]
+ }
+}

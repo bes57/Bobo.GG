@@ -1,0 +1,5 @@
+[2026-07-28T22:21:22Z] agent:autopsy start. Brief + README read. Plan: prereg -> VM snapshot -> inventory -> quote_density early -> P&L -> fees -> calib -> markouts -> config gap -> variance -> phase7_autopsy.md
+[2026-07-28T22:23:57Z] prereg written. Starting VM snapshot (VACUUM INTO /tmp/v8_autopsy.db)
+[2026-07-28T22:24:41Z] VM snapshot OK (119742464 bytes), /tmp removed, config+gitlog captured. VM branch closed — all further work local.
+[2026-07-28T22:27:39Z] quote_density.json SHIPPED for referee. 719 real fills, 8143.2 contracts, $3803 cost.
+[2026-07-28T22:37:21Z] ANALYSIS COMPLETE. 719 fills verified. Waterfall: pairs +53.98, unhedged settled -362.67, fees 0, realized -308.69, open mark -4.67. Identity reconciled vs deploy_index (-247.80 vs -247.78). AS number -8.5pts (side1 -15.8). Variance p=0/4000 (CRN 20260728). Top gap: flat5c vs logit+0.6 (tail -549 refused). Drift-window fills exonerated (+7.8pts). phase7_autopsy.md + 7 stats JSONs written. VM touched only via sanctioned snapshot (removed) + cat config/gitlog (repo has no .git).

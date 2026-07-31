@@ -1,0 +1,958 @@
+{
+ "130617": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130617/paper-rex-vs-edward-gaming-valorant-champions-2022-group-stage-opening-a",
+  "maps": {
+   "95029": [
+    "PRX",
+    "13-11"
+   ],
+   "95030": [
+    "EDG",
+    "13-5"
+   ],
+   "95031": [
+    "PRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2022-08-31 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "PRX"
+  ]
+ },
+ "130618": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130618/leviat-n-vs-team-liquid-valorant-champions-2022-group-stage-opening-a",
+  "maps": {
+   "95032": [
+    "LEV",
+    "13-10"
+   ],
+   "95033": [
+    "LEV",
+    "13-10"
+   ]
+  },
+  "series": [
+   "LEV",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2022-08-31 13:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "LEV",
+   "TL"
+  ]
+ },
+ "130623": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130623/zeta-division-vs-loud-valorant-champions-2022-group-stage-opening-b",
+  "maps": {
+   "95047": [
+    "LOUD",
+    "13-8"
+   ],
+   "95048": [
+    "LOUD",
+    "13-9"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2022-09-01 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "ZETA"
+  ]
+ },
+ "130622": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130622/optic-gaming-vs-boom-esports-valorant-champions-2022-group-stage-opening-b",
+  "maps": {
+   "95044": [
+    "BME",
+    "18-16"
+   ],
+   "95045": [
+    "OPTC",
+    "13-5"
+   ],
+   "95046": [
+    "OPTC",
+    "13-3"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2022-09-01 10:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "BME",
+   "OPTC"
+  ]
+ },
+ "130619": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130619/paper-rex-vs-leviat-n-valorant-champions-2022-group-stage-winners-a",
+  "maps": {
+   "95035": [
+    "LEV",
+    "13-8"
+   ],
+   "95036": [
+    "LEV",
+    "13-11"
+   ]
+  },
+  "series": [
+   "LEV",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (A)",
+  "utc_ts": "2022-09-01 14:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "LEV",
+   "PRX"
+  ]
+ },
+ "130632": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130632/drx-vs-furia-valorant-champions-2022-group-stage-opening-d",
+  "maps": {
+   "95074": [
+    "KRX",
+    "16-14"
+   ],
+   "95075": [
+    "KRX",
+    "13-4"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (D)",
+  "utc_ts": "2022-09-02 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "KRX"
+  ]
+ },
+ "130633": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130633/fnatic-vs-100-thieves-valorant-champions-2022-group-stage-opening-d",
+  "maps": {
+   "95077": [
+    "100T",
+    "13-10"
+   ],
+   "95078": [
+    "FNC",
+    "13-7"
+   ],
+   "95079": [
+    "100T",
+    "13-7"
+   ]
+  },
+  "series": [
+   "100T",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Opening (D)",
+  "utc_ts": "2022-09-02 11:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "FNC"
+  ]
+ },
+ "130624": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130624/optic-gaming-vs-loud-valorant-champions-2022-group-stage-winners-b",
+  "maps": {
+   "95050": [
+    "LOUD",
+    "13-7"
+   ],
+   "95051": [
+    "OPTC",
+    "13-10"
+   ],
+   "95052": [
+    "OPTC",
+    "13-3"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (B)",
+  "utc_ts": "2022-09-02 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "OPTC"
+  ]
+ },
+ "130628": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130628/xset-vs-xerxia-esports-valorant-champions-2022-group-stage-opening-c",
+  "maps": {
+   "95062": [
+    "XSET",
+    "13-11"
+   ],
+   "95063": [
+    "XSET",
+    "13-10"
+   ]
+  },
+  "series": [
+   "XSET",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2022-09-03 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "XIA",
+   "XSET"
+  ]
+ },
+ "130627": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130627/funplus-phoenix-vs-kr-esports-valorant-champions-2022-group-stage-opening-c",
+  "maps": {
+   "95059": [
+    "FPX",
+    "14-12"
+   ],
+   "95060": [
+    "FPX",
+    "13-10"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2022-09-03 11:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "KR\u00dc"
+  ]
+ },
+ "130634": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130634/drx-vs-100-thieves-valorant-champions-2022-group-stage-winners-d",
+  "maps": {
+   "95080": [
+    "KRX",
+    "18-16"
+   ],
+   "95081": [
+    "KRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (D)",
+  "utc_ts": "2022-09-03 13:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "KRX"
+  ]
+ },
+ "130625": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130625/boom-esports-vs-zeta-division-valorant-champions-2022-group-stage-elim-b",
+  "maps": {
+   "95053": [
+    "BME",
+    "13-11"
+   ],
+   "95054": [
+    "ZETA",
+    "13-11"
+   ],
+   "95055": [
+    "ZETA",
+    "13-2"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (B)",
+  "utc_ts": "2022-09-04 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BME",
+   "ZETA"
+  ]
+ },
+ "130620": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130620/edward-gaming-vs-team-liquid-valorant-champions-2022-group-stage-elim-a",
+  "maps": {
+   "95038": [
+    "TL",
+    "13-5"
+   ],
+   "95039": [
+    "TL",
+    "14-12"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Elimination (A)",
+  "utc_ts": "2022-09-04 11:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "TL"
+  ]
+ },
+ "130630": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130630/kr-esports-vs-xerxia-esports-valorant-champions-2022-group-stage-elim-c",
+  "maps": {
+   "95068": [
+    "KR\u00dc",
+    "13-4"
+   ],
+   "95069": [
+    "XIA",
+    "13-7"
+   ],
+   "95070": [
+    "KR\u00dc",
+    "13-6"
+   ]
+  },
+  "series": [
+   "KR\u00dc",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (C)",
+  "utc_ts": "2022-09-05 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KR\u00dc",
+   "XIA"
+  ]
+ },
+ "130635": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130635/furia-vs-fnatic-valorant-champions-2022-group-stage-elim-d",
+  "maps": {
+   "95083": [
+    "FUR",
+    "13-9"
+   ],
+   "95084": [
+    "FNC",
+    "13-7"
+   ],
+   "95085": [
+    "FNC",
+    "13-11"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (D)",
+  "utc_ts": "2022-09-05 11:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "FUR"
+  ]
+ },
+ "130629": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130629/funplus-phoenix-vs-xset-valorant-champions-2022-group-stage-winners-c",
+  "maps": {
+   "95065": [
+    "XSET",
+    "13-7"
+   ],
+   "95066": [
+    "FPX",
+    "13-4"
+   ],
+   "95067": [
+    "XSET",
+    "13-5"
+   ]
+  },
+  "series": [
+   "XSET",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Winner's (C)",
+  "utc_ts": "2022-09-05 15:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "XSET"
+  ]
+ },
+ "130621": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130621/paper-rex-vs-team-liquid-valorant-champions-2022-group-stage-decider-a",
+  "maps": {
+   "95041": [
+    "TL",
+    "15-13"
+   ],
+   "95042": [
+    "PRX",
+    "13-4"
+   ],
+   "95043": [
+    "TL",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TL",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (A)",
+  "utc_ts": "2022-09-07 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "TL"
+  ]
+ },
+ "130626": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130626/loud-vs-zeta-division-valorant-champions-2022-group-stage-decider-b",
+  "maps": {
+   "95056": [
+    "LOUD",
+    "13-11"
+   ],
+   "95057": [
+    "LOUD",
+    "13-5"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (B)",
+  "utc_ts": "2022-09-07 14:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "ZETA"
+  ]
+ },
+ "130631": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130631/funplus-phoenix-vs-kr-esports-valorant-champions-2022-group-stage-decider-c",
+  "maps": {
+   "95071": [
+    "FPX",
+    "13-9"
+   ],
+   "95072": [
+    "FPX",
+    "13-4"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (C)",
+  "utc_ts": "2022-09-08 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "KR\u00dc"
+  ]
+ },
+ "130636": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130636/100-thieves-vs-fnatic-valorant-champions-2022-group-stage-decider-d",
+  "maps": {
+   "95086": [
+    "FNC",
+    "13-5"
+   ],
+   "95087": [
+    "FNC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (D)",
+  "utc_ts": "2022-09-08 12:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "FNC"
+  ]
+ },
+ "130679": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130679/leviat-n-vs-loud-valorant-champions-2022-ubqf",
+  "maps": {
+   "95113": [
+    "LOUD",
+    "14-12"
+   ],
+   "95114": [
+    "LOUD",
+    "13-6"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-09-09 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "LEV",
+   "LOUD"
+  ]
+ },
+ "130678": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130678/drx-vs-funplus-phoenix-valorant-champions-2022-ubqf",
+  "maps": {
+   "95110": [
+    "KRX",
+    "19-17"
+   ],
+   "95111": [
+    "KRX",
+    "13-5"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-09-09 13:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "KRX"
+  ]
+ },
+ "130680": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130680/optic-gaming-vs-team-liquid-valorant-champions-2022-ubqf",
+  "maps": {
+   "95116": [
+    "TL",
+    "13-7"
+   ],
+   "95117": [
+    "OPTC",
+    "13-8"
+   ],
+   "95118": [
+    "OPTC",
+    "13-8"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-09-10 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "OPTC",
+   "TL"
+  ]
+ },
+ "130681": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130681/xset-vs-fnatic-valorant-champions-2022-ubqf",
+  "maps": {
+   "95119": [
+    "XSET",
+    "13-8"
+   ],
+   "95120": [
+    "XSET",
+    "13-11"
+   ]
+  },
+  "series": [
+   "XSET",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2022-09-10 13:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "XSET"
+  ]
+ },
+ "130686": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130686/funplus-phoenix-vs-leviat-n-valorant-champions-2022-lr1",
+  "maps": {
+   "95136": [
+    "FPX",
+    "13-6"
+   ],
+   "95137": [
+    "FPX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Lower Round 1",
+  "utc_ts": "2022-09-11 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "LEV"
+  ]
+ },
+ "130687": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130687/team-liquid-vs-fnatic-valorant-champions-2022-lr1",
+  "maps": {
+   "95139": [
+    "FNC",
+    "13-6"
+   ],
+   "95140": [
+    "FNC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Lower Round 1",
+  "utc_ts": "2022-09-11 12:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "TL"
+  ]
+ },
+ "130682": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130682/drx-vs-loud-valorant-champions-2022-ubsf",
+  "maps": {
+   "95122": [
+    "LOUD",
+    "13-11"
+   ],
+   "95123": [
+    "LOUD",
+    "13-6"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2022-09-12 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "LOUD"
+  ]
+ },
+ "130683": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130683/optic-gaming-vs-xset-valorant-champions-2022-ubsf",
+  "maps": {
+   "95125": [
+    "OPTC",
+    "13-9"
+   ],
+   "95126": [
+    "XSET",
+    "13-11"
+   ],
+   "95127": [
+    "OPTC",
+    "13-8"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2022-09-12 12:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "OPTC",
+   "XSET"
+  ]
+ },
+ "130689": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130689/drx-vs-fnatic-valorant-champions-2022-lr2",
+  "maps": {
+   "95145": [
+    "FNC",
+    "13-7"
+   ],
+   "95146": [
+    "KRX",
+    "14-12"
+   ],
+   "95147": [
+    "KRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 2",
+  "utc_ts": "2022-09-13 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "KRX"
+  ]
+ },
+ "130688": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130688/xset-vs-funplus-phoenix-valorant-champions-2022-lr2",
+  "maps": {
+   "95142": [
+    "XSET",
+    "13-11"
+   ],
+   "95143": [
+    "FPX",
+    "13-10"
+   ],
+   "95144": [
+    "FPX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 2",
+  "utc_ts": "2022-09-13 14:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "XSET"
+  ]
+ },
+ "130684": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130684/loud-vs-optic-gaming-valorant-champions-2022-ubf",
+  "maps": {
+   "95128": [
+    "LOUD",
+    "13-10"
+   ],
+   "95129": [
+    "LOUD",
+    "13-3"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Final",
+  "utc_ts": "2022-09-16 10:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "OPTC"
+  ]
+ },
+ "130690": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130690/funplus-phoenix-vs-drx-valorant-champions-2022-lr3",
+  "maps": {
+   "95148": [
+    "KRX",
+    "13-11"
+   ],
+   "95149": [
+    "KRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Lower Round 3",
+  "utc_ts": "2022-09-16 12:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "KRX"
+  ]
+ },
+ "130691": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130691/optic-gaming-vs-drx-valorant-champions-2022-lbf",
+  "maps": {
+   "95151": [
+    "OPTC",
+    "13-8"
+   ],
+   "95152": [
+    "OPTC",
+    "13-5"
+   ],
+   "95153": [
+    "KRX",
+    "13-8"
+   ],
+   "95154": [
+    "KRX",
+    "13-6"
+   ],
+   "95155": [
+    "OPTC",
+    "13-10"
+   ]
+  },
+  "series": [
+   "OPTC",
+   "3-2"
+  ],
+  "match_name": "Playoffs: Lower Final",
+  "utc_ts": "2022-09-17 10:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "OPTC"
+  ]
+ },
+ "130685": {
+  "event_id": "2022_champions",
+  "region": "International",
+  "url": "https://www.vlr.gg/130685/loud-vs-optic-gaming-valorant-champions-2022-gf",
+  "maps": {
+   "95131": [
+    "LOUD",
+    "15-13"
+   ],
+   "95132": [
+    "OPTC",
+    "13-6"
+   ],
+   "95133": [
+    "LOUD",
+    "16-14"
+   ],
+   "95134": [
+    "LOUD",
+    "13-5"
+   ]
+  },
+  "series": [
+   "LOUD",
+   "3-1"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2022-09-18 10:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "LOUD",
+   "OPTC"
+  ]
+ }
+}

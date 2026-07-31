@@ -1,0 +1,53 @@
+[2026-07-28] agent:lineups start.
+Read briefs/lineups.md + v8/README.md. Local-only confirmed; no network calls will be made.
+Registry snapshot at START (import #1 of MoreTestingMaybeFiles.ALL_EVENTS, 32 events):
+  2026_ewc_qual, 2026_china_evo_2, 2026_ewc, 2026_champions, 2026_stage2,
+  2026_masters_london, 2026_stage1, 2026_masters_santiago, 2026_china_kickoff,
+  2026_kickoff, 2025_champions, 2025_stage2, 2025_china_stage2,
+  2025_masters_toronto, 2025_stage1, 2025_china_stage1, 2025_masters_bangkok,
+  2025_kickoff, 2025_china_kickoff, 2024_champions, 2024_stage2,
+  2024_china_stage2, 2024_masters_shanghai, 2024_stage1, 2024_china_stage1,
+  2024_masters_madrid, 2024_kickoff, 2024_china_kickoff, 2023_champions,
+  2023_masters_tokyo, 2023_league, 2023_lock_in
+ratings_only (EWC-class): 2026_ewc_qual, 2026_china_evo_2, 2026_ewc.
+Note: registry comment says the four per-region EWC-qual CSVs were merged into
+2026_ewc_qual today (2026-07-28) by agent:corpus; data/maps/2026_ewc_qual.csv exists,
+per-region maps CSVs are gone. Will re-import registry at END and top up if changed.
+Schema recon done: data/maps/<eid>.csv (Player,Org,ProfileURL,MatchID,MapNum,...),
+match_dates.json (1733 mids), data/enriched/vlr/ (1716 in _index, 1718 files incl.
+_index/_tombstones), enriched maps[].players[] has player/org/player_id; ProfileURL
+embeds the same numeric id (/player/<id>/<slug>). Engine game list =
+testing_lab/engine.load_games_real_dates() -> BuildRatingTimeline.load_all_games()
+(map-level, interpolated dates for mids missing from match_dates.json, drops games
+absent from match_results.csv).
+Next: write preregister.lineups.md BEFORE building anything.
+[2026-07-28 18:29] Preregister written BEFORE build (preregister.lineups.md), then built.
+Builder: scratchpad/build_lineups.py (session scratchpad; definitions mirror preregister
+verbatim). Outputs written: v8/data/lineups.csv (3,466 rows = 1,733 matches x 2 sides),
+v8/data/lineup_features.csv (3,466), v8/data/modal5_by_org_date.csv (697 org-event rows),
+v8/stats/lineups_coverage.json.
+COVERAGE vs engine game list (engine.load_games_real_dates, 31 events): 3,466/3,466
+(match,org) sides = 100.0%; with n_players>=5: 99.83% — preregistered bar (>=99.0%) MET.
+0 missing sides. 6 short sides = 3 Masters SHOWMATCHES in the engine corpus
+(321373 Madrid INTL/Team, 359463 Shanghai CN/INTL, 450589 Bangkok INTL/THAi) — flagged
+for orchestrator: showmatch pseudo-orgs are in the engine game list. 41 matches n>5
+(mid-series subs; 32 in 2023_league), flagged not collapsed. All dates from
+match_dates.json (no interpolation fallback used). 0 lineup matches outside engine list.
+ENRICHED: file presence 1716/1733 (99.02%); missing 16x 2026_ewc_qual + 1x 2023_lock_in.
+Player-level validation join 79.08% overall, 0 id mismatches; ALL CN-hosted events are
+0% (files exist, maps[].players arrays EMPTY — enricher/CN-page limitation);
+2026_stage1 72.4% / 2026_stage2 58.2% partial (enriched_at 2026-07-04 predates recent
+matches / VLR div migration). player_ids in lineups.csv are URL-derived: 100% complete.
+STAND-IN RATES (brief-exact, 30d modal): VCT 6.7% (2793 defined/3248) vs EWC-class
+23.3% (210/218) — 3.5x elevated; per event: china_evo_2 70.8%, ewc_qual 21.0%,
+ewc 6.25%. Supplement vs-VCT-last10-modal: VCT 39.3% / EWC 37.2% (high-churn baseline,
+non-discriminating; the 30d number is the Phase 2 teaser). offseason_absence_flag=49
+rows, vs_vct variant=81. Only 8/218 EWC rows lack a 30d modal (events sat closer to
+VCT play than feared).
+VERIFICATION: independent recompute (scratchpad/verify_lineups.py, separate code path)
+of ALL 3,466 feature rows: 0 mismatches; leak assertions passed (no history >= match
+date); 13 same-day org-day clusters share identical history (day-granularity rule held).
+REGISTRY END-CHECK: fresh import #2 of MoreTestingMaybeFiles.ALL_EVENTS = same 32
+events, added [] removed [] -> no top-up needed. maps/ CSVs unchanged during run
+(newest mtime 17:34 < build 18:29). No network used at any point.
+[2026-07-28 18:34] agent:lineups done.

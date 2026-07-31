@@ -1,0 +1,98 @@
+{
+ "fit_X1_mine": {
+  "beta": 0.1251,
+  "k": 0.3466,
+  "ll_train": 0.6478,
+  "ll_test": 0.64256,
+  "published": {
+   "beta": 0.1251,
+   "k": 0.3466,
+   "ll_train": 0.6478,
+   "ll_test": 0.64256
+  }
+ },
+ "fit_dummy_mine": {
+  "beta": 0.1278,
+  "k": 0.8595,
+  "ll_test": 0.64166,
+  "published": {
+   "beta": 0.1278,
+   "k": 0.8595,
+   "ll_test": 0.64166
+  }
+ },
+ "bucket_counts_holdout_valid": {
+  "legacy2026": 115,
+  "eclass_ewc_offseason": 291,
+  "union": 291,
+  "legacy_not_in_eclass": 0
+ },
+ "eclass_events_holdout": [
+  "2025_acl",
+  "2025_china_evo_1",
+  "2025_china_evo_2",
+  "2025_china_evo_3",
+  "2025_china_evo_epilogue",
+  "2025_ewc",
+  "2025_ewc_qual",
+  "2025_radiant_intl",
+  "2025_rbhg",
+  "2025_shanghai_masters",
+  "2025_super_champions_cup",
+  "2025_ten_global",
+  "2026_china_evo_1",
+  "2026_china_evo_2",
+  "2026_ewc",
+  "2026_ewc_qual"
+ ],
+ "legacy_events_holdout": [
+  "2026_china_evo_1",
+  "2026_china_evo_2",
+  "2026_ewc",
+  "2026_ewc_qual"
+ ],
+ "bucket_legacy2026": {
+  "n": 115,
+  "ll_B0": 0.68633,
+  "ll_X1": 0.68506,
+  "dll_X1_milli": 1.26,
+  "dll_dummy_milli": 3.34
+ },
+ "bucket_fullclass": {
+  "n": 291,
+  "ll_B0": 0.67224,
+  "ll_X1": 0.66878,
+  "dll_X1_milli": 3.46,
+  "dll_dummy_milli": -3.76
+ },
+ "bucket_union": {
+  "n": 291,
+  "ll_B0": 0.67224,
+  "ll_X1": 0.66878,
+  "dll_X1_milli": 3.46,
+  "dll_dummy_milli": -3.76
+ },
+ "fullclass_drop_top5pct": {
+  "k_dropped": 15,
+  "delta_milli_after": -2.96
+ },
+ "fullclass_jackknife_by_event": {
+  "2025_acl": 3.47,
+  "2025_china_evo_1": 2.35,
+  "2025_china_evo_2": 2.47,
+  "2025_china_evo_3": 2.59,
+  "2025_china_evo_epilogue": 2.75,
+  "2025_ewc": 3.78,
+  "2025_ewc_qual": 5.38,
+  "2025_radiant_intl": 3.62,
+  "2025_rbhg": 3.58,
+  "2025_shanghai_masters": 3.56,
+  "2025_super_champions_cup": 3.7,
+  "2025_ten_global": 3.67,
+  "2026_china_evo_1": 3.68,
+  "2026_china_evo_2": 2.89,
+  "2026_ewc": 3.85,
+  "2026_ewc_qual": 4.58
+ },
+ "bucket_mde_within_at_n291": 3.63
+}

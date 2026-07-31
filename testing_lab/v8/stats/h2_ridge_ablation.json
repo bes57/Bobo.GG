@@ -1,0 +1,25 @@
+{
+ "generated_by": "agent:bias-h2, 2026-07-28",
+ "experiment": "E2 region_prior_ridge x ridge grid",
+ "status": "NOT RUN \u2014 preregistered E1 gate failed (bias does not track centrality; preregister.bias_h2.md: 'H2 is DEAD ... STOP, no E2/E3 model fits'). See stats/h2_centrality.json + phase5_h2.md.",
+ "gate": {
+  "rule": "H2 alive iff >=1 of spearman(|bias|,eig) / spearman(bias,eig) has 95% CI excluding 0 with negative sign (preregistered)",
+  "abs_bias_vs_eig": {
+   "spearman": -0.0766,
+   "ci": [
+    -0.4211,
+    0.2814
+   ],
+   "passes": false
+  },
+  "bias_vs_eig": {
+   "spearman": -0.3041,
+   "ci": [
+    -0.5659,
+    0.0046
+   ],
+   "passes": false
+  },
+  "verdict": "DEAD \u2014 no bias-centrality relationship; stop"
+ }
+}

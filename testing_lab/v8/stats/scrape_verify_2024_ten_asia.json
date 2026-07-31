@@ -1,0 +1,212 @@
+{
+ "415852": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415852/gen-g-vs-funplus-phoenix-ten-valorant-asia-invitational-rr",
+  "maps": {
+   "189737": [
+    "GEN",
+    "13-7"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2024-10-26 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "GEN"
+  ]
+ },
+ "415853": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415853/drx-vs-funplus-phoenix-ten-valorant-asia-invitational-rr",
+  "maps": {
+   "189738": [
+    "KRX",
+    "14-12"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2024-10-26 02:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "KRX"
+  ]
+ },
+ "415854": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415854/drx-vs-talon-esports-ten-valorant-asia-invitational-rr",
+  "maps": {
+   "189739": [
+    "TLN",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TLN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2024-10-26 03:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "TLN"
+  ]
+ },
+ "415855": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415855/gen-g-vs-talon-esports-ten-valorant-asia-invitational-rr",
+  "maps": {
+   "189740": [
+    "GEN",
+    "13-8"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2024-10-26 04:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TLN"
+  ]
+ },
+ "415856": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415856/gen-g-vs-drx-ten-valorant-asia-invitational-rr",
+  "maps": {
+   "189741": [
+    "KRX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2024-10-26 05:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "KRX"
+  ]
+ },
+ "415857": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415857/talon-esports-vs-funplus-phoenix-ten-valorant-asia-invitational-rr",
+  "maps": {
+   "189742": [
+    "TLN",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TLN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2024-10-26 06:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TLN"
+  ]
+ },
+ "415858": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415858/drx-vs-funplus-phoenix-ten-valorant-asia-invitational-qf",
+  "maps": {
+   "189743": [
+    "KRX",
+    "13-5"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2024-10-27 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "KRX"
+  ]
+ },
+ "415859": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415859/talon-esports-vs-drx-ten-valorant-asia-invitational-sf",
+  "maps": {
+   "189744": [
+    "TLN",
+    "13-4"
+   ],
+   "189745": [
+    "TLN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "TLN",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2024-10-27 02:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "TLN"
+  ]
+ },
+ "415860": {
+  "event_id": "2024_ten_asia",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/415860/gen-g-vs-talon-esports-ten-valorant-asia-invitational-gf",
+  "maps": {
+   "189747": [
+    "GEN",
+    "13-7"
+   ],
+   "189748": [
+    "TLN",
+    "13-10"
+   ],
+   "189749": [
+    "GEN",
+    "13-2"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2024-10-27 03:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TLN"
+  ]
+ }
+}

@@ -1,0 +1,518 @@
+{
+ "414847": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414847/titan-esports-club-vs-wolves-esports-fgc-invitational-2024-main-event-ur1",
+  "maps": {
+   "189006": [
+    "WOL",
+    "13-7"
+   ],
+   "189007": [
+    "WOL",
+    "13-5"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2024-10-30 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "WOL"
+  ]
+ },
+ "414848": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414848/dragon-ranger-gaming-vs-xi-lai-gaming-fgc-invitational-2024-main-event-ur1",
+  "maps": {
+   "189009": [
+    "DRG",
+    "13-10"
+   ],
+   "189010": [
+    "XLG",
+    "13-1"
+   ],
+   "189011": [
+    "XLG",
+    "13-5"
+   ]
+  },
+  "series": [
+   "XLG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Round 1",
+  "utc_ts": "2024-10-30 07:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "XLG"
+  ]
+ },
+ "414850": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414850/tyloo-vs-jdg-esports-fgc-invitational-2024-main-event-ubqf",
+  "maps": {
+   "189015": [
+    "JDG",
+    "13-10"
+   ],
+   "189016": [
+    "JDG",
+    "13-9"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2024-10-31 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "TYL"
+  ]
+ },
+ "414852": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414852/all-gamers-vs-nova-esports-fgc-invitational-2024-main-event-ubqf",
+  "maps": {
+   "189021": [
+    "NOVA",
+    "13-2"
+   ],
+   "189022": [
+    "NOVA",
+    "13-7"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2024-10-31 07:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "NOVA"
+  ]
+ },
+ "414849": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414849/funplus-phoenix-vs-wolves-esports-fgc-invitational-2024-main-event-ubqf",
+  "maps": {
+   "189012": [
+    "WOL",
+    "13-7"
+   ],
+   "189013": [
+    "FPX",
+    "13-11"
+   ],
+   "189014": [
+    "WOL",
+    "13-9"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2024-11-01 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "WOL"
+  ]
+ },
+ "414851": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414851/bilibili-gaming-vs-xi-lai-gaming-fgc-invitational-2024-main-event-ubqf",
+  "maps": {
+   "189018": [
+    "XLG",
+    "13-10"
+   ],
+   "189019": [
+    "BLG",
+    "13-6"
+   ],
+   "189020": [
+    "BLG",
+    "15-13"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Quarterfinals",
+  "utc_ts": "2024-11-01 08:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "XLG"
+  ]
+ },
+ "414857": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414857/tyloo-vs-dragon-ranger-gaming-fgc-invitational-2024-main-event-lr1",
+  "maps": {
+   "189038": [
+    "TYL",
+    "13-10"
+   ],
+   "189039": [
+    "DRG",
+    "13-11"
+   ],
+   "189040": [
+    "TYL",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2024-11-02 05:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "TYL"
+  ]
+ },
+ "414858": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414858/all-gamers-vs-titan-esports-club-fgc-invitational-2024-main-event-lr1",
+  "maps": {
+   "189041": [
+    "AG",
+    "13-10"
+   ],
+   "189042": [
+    "TEC",
+    "13-6"
+   ],
+   "189043": [
+    "TEC",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 1",
+  "utc_ts": "2024-11-02 08:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "TEC"
+  ]
+ },
+ "414859": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414859/funplus-phoenix-vs-tyloo-fgc-invitational-2024-main-event-lr2",
+  "maps": {
+   "189044": [
+    "FPX",
+    "13-9"
+   ],
+   "189045": [
+    "FPX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2024-11-03 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TYL"
+  ]
+ },
+ "414860": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414860/xi-lai-gaming-vs-titan-esports-club-fgc-invitational-2024-main-event-lr2",
+  "maps": {
+   "189047": [
+    "XLG",
+    "13-7"
+   ],
+   "189048": [
+    "XLG",
+    "13-8"
+   ]
+  },
+  "series": [
+   "XLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 2",
+  "utc_ts": "2024-11-03 06:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "XLG"
+  ]
+ },
+ "414853": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414853/wolves-esports-vs-jdg-esports-fgc-invitational-2024-main-event-ubsf",
+  "maps": {
+   "189024": [
+    "JDG",
+    "13-6"
+   ],
+   "189025": [
+    "WOL",
+    "13-4"
+   ],
+   "189026": [
+    "WOL",
+    "13-8"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2024-11-06 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "WOL"
+  ]
+ },
+ "414854": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414854/bilibili-gaming-vs-nova-esports-fgc-invitational-2024-main-event-ubsf",
+  "maps": {
+   "189027": [
+    "BLG",
+    "13-10"
+   ],
+   "189028": [
+    "BLG",
+    "13-9"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Upper Semifinals",
+  "utc_ts": "2024-11-06 07:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "NOVA"
+  ]
+ },
+ "414862": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414862/jdg-esports-vs-xi-lai-gaming-fgc-invitational-2024-main-event-lr3",
+  "maps": {
+   "189053": [
+    "XLG",
+    "13-8"
+   ],
+   "189054": [
+    "JDG",
+    "13-9"
+   ],
+   "189055": [
+    "XLG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "XLG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2024-11-07 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "XLG"
+  ]
+ },
+ "414861": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414861/nova-esports-vs-funplus-phoenix-fgc-invitational-2024-main-event-lr3",
+  "maps": {
+   "189050": [
+    "FPX",
+    "13-6"
+   ],
+   "189051": [
+    "NOVA",
+    "13-4"
+   ],
+   "189052": [
+    "FPX",
+    "13-10"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Lower Round 3",
+  "utc_ts": "2024-11-07 07:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "NOVA"
+  ]
+ },
+ "414855": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414855/wolves-esports-vs-bilibili-gaming-fgc-invitational-2024-main-event-ubf",
+  "maps": {
+   "189030": [
+    "WOL",
+    "13-9"
+   ],
+   "189031": [
+    "BLG",
+    "13-7"
+   ],
+   "189032": [
+    "BLG",
+    "13-6"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-1"
+  ],
+  "match_name": "Main Event: Upper Final",
+  "utc_ts": "2024-11-08 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "WOL"
+  ]
+ },
+ "414864": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414864/funplus-phoenix-vs-xi-lai-gaming-fgc-invitational-2024-main-event-lr4",
+  "maps": {
+   "189056": [
+    "FPX",
+    "14-12"
+   ],
+   "189057": [
+    "FPX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Lower Round 4",
+  "utc_ts": "2024-11-08 07:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "XLG"
+  ]
+ },
+ "414865": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414865/wolves-esports-vs-funplus-phoenix-fgc-invitational-2024-main-event-lbf",
+  "maps": {
+   "189059": [
+    "WOL",
+    "13-5"
+   ],
+   "189060": [
+    "WOL",
+    "13-8"
+   ],
+   "189061": [
+    "WOL",
+    "17-15"
+   ]
+  },
+  "series": [
+   "WOL",
+   "3-0"
+  ],
+  "match_name": "Main Event: Lower Final",
+  "utc_ts": "2024-11-09 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "WOL"
+  ]
+ },
+ "414856": {
+  "event_id": "2024_fgc_inv",
+  "region": "CN",
+  "url": "https://www.vlr.gg/414856/bilibili-gaming-vs-wolves-esports-fgc-invitational-2024-main-event-gf",
+  "maps": {
+   "189033": [
+    "BLG",
+    "13-5"
+   ],
+   "189034": [
+    "BLG",
+    "13-11"
+   ],
+   "189035": [
+    "WOL",
+    "13-9"
+   ],
+   "189036": [
+    "BLG",
+    "16-14"
+   ]
+  },
+  "series": [
+   "BLG",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2024-11-10 04:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "WOL"
+  ]
+ }
+}

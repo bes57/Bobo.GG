@@ -1,0 +1,80 @@
+[2026-07-28 ~18:30] agent:referee start. Read briefs/referee.md + v8/README.md.
+[recon] harness.py metrics read (logloss/brier/paired_bootstrap 4000/seed7 iid/
+  reliability Wilson/calib_slope). gen_report.py is HTML only — bucket MACHINERY
+  actually lives in run_final_check.py (year/format/stage/intl/CN/x-region/
+  domestic-region/gap buckets, min n=15) + the deleted profile writer.
+[recon] v6_profile.json structure: buckets[23]{name,n,v6,prod,delta,fav_acc},
+  bands[4]{band,n,pred,emp,ci}, teams[42]{team,n,ll,bias}.
+[recon] BIAS DEFINITION RECOVERED from gen_final_model.py L298-300 (renders
+  v6_profile teams): "Mean predicted probability minus actual win rate per team
+  (holdout, >=25 matches). Negative = the model UNDER-rates the team." Rendered
+  x100 as "pts". So bias = mean(p_team) - mean(won_team) in PROBABILITY points,
+  NOT rating points (brief's parenthetical said rating-point residual — source
+  says otherwise; source wins, verified numerically 42/42 below).
+[recon] margin_mse recovered from run_margin2.py L151-170: realized avg
+  transformed margin/map, m_t = sign(wr-lr)*|wr-lr|^0.75*2.5 winner-referenced,
+  avg over maps; predicted = a_slope * rdiff (margin_link.json a_slope=0.59290);
+  published marginMSE_v5 mse=43.095 corr=0.148 n=999 (margin2.json).
+[recon] quote_margin.json machinery read (run_quote_margin.py): NO-maker sim,
+  310 markets, rules flat_0..15c / logit_0.1..0.6 / sqrt_k; entries carry
+  quoted/fills/fill_rate/profit/cost/roi/profit_per_event/ci.
+[recon] crn.json schema from briefs/power.md item 6: {bootstrap:{generator:
+  "numpy PCG64",seed,n_boot}, block_bootstrap:{seed,unit:"event_id"},
+  mc_seeds[64], holdout_order, verify:{first100_iid_indices_sha256}}. Not yet
+  on disk — reader reads at call time, raises if absent.
+[probe1+2 results — reproduction from artifacts, NO solving]
+  v7_probs.npz (1695 rows, masks stored): v6_consist_20_12 LL=0.64095 n=1007
+  EXACT; v5_asym 0.64145, consist_16_10 0.64135, sym_16 0.64262 all EXACT.
+  rd_v6_native.npy (1687 rows) + v6_native_beta 0.12556: today's load_series()
+  (1723 rows) prefix-aligns; holdout n=999; year 2025 0.63036 / 2026 0.65127
+  EXACT; EWC-class 0.69182 n=109 EXACT; bias table 42/42 teams EXACT (bias, n,
+  ll all to rounding); gap/format/stage/intl/CN/x-region/domestic buckets EXACT.
+  post-break def PINNED: days since team's previous series, BOTH teams must
+  have a prior series (debuts excluded), either rest>45 strictly -> n=135
+  LL=0.61166 EXACT. bands: favorite-side 0.1 bins excl exact ties (1 tie at
+  p=.5) -> 466/335/152/43 EXACT. elite-floor: npz stored wr16 mask on p6-native
+  -> 0.46138 n=26 EXACT (stage1's own-beta variant 0.46106 also reproduced).
+  cold-start (deep1, PRODUCTION harness surface, frame truncated date<
+  2026-07-22): n=57 LL=0.70205 EXACT.
+[reconcile] 0.64095 = v7_stage1.json v6_consist_20_12 (Jul-23 native frame,
+  n_test=1007, beta 0.1294) -> CANONICAL. 0.6409 (final_model report) = same
+  champion on Jul-22 native frame (rd_v6_native, beta 0.12556, n=999, pooled
+  LL 0.64085, displayed 0.6409). 0.64126 (favorites report prose, hardcoded) =
+  v6-correction build mid-favorites-session, pre-final frame. Both superseded.
+[next] write preregister.referee.md, then referee.py + metrics_spec.md, then
+  self-test -> stats/referee_selftest.json.
+[preregister] preregister.referee.md written (formulas + bars + gate clauses)
+  BEFORE referee.py was coded.
+[build] referee.py written: per_series_ll/delta_vector, paired_bootstrap_crn
+  (reads crn.json at call time, raises if absent; iid + block_event per
+  power's recipes, sha256 verify), bucketed (full frozen definition set +
+  roster-recency PENDING-DATA hook), per_team_bias (gate input),
+  pnl_weighted_ll (quote_density.json reader + labeled uniform-20-55c
+  fallback), expected_roi_of_dll (quote_margin ladder + first-order
+  dll->logit equivalence), fill_conditional_calibration (autopsy interface),
+  margin_mse + realized_avg_margin + margin_slope, reliability emitters,
+  promotion_gate (G1 CRN-boot both modes / G2 max|bias| strict / G3
+  pre-committed -4m@n>=100 / -8m@30<=n<100), loaders load_npz_frame /
+  load_native_v6 / load_timeline_games / load_series_full, selftest.
+[selftest run 1] 19/24: FAILS at 7a/7 (elite-floor), 10 (deep1 bins),
+  11 (margin n=890), 14 (source label overwrite).
+[diagnosis] (a) Engine().games TODAY lacks ALL EWC-class maps — site
+  registry moved those events to per-region data files after Jul 23
+  (uncommitted); wr masks + margins broke through the games path, NOT my
+  code. Fixed artifact-true via new load_timeline_games() (maps straight
+  from rating_timeline*.json): npz elite_floor/form_shift masks EXACT,
+  marginMSE_v5 43.095/0.148/n=999 EXACT. (b) deep1.json ran Jul-22 01:43 on
+  the pre-native 1578-row frame; reconstructed as prefix-1687 minus the 109
+  EWC-class rows -> warm n 1521 and cold set (57, LL 0.70205) EXACT, but 6/10
+  bins still differ (max |dn|=3, max |d_emp|=0.016): production scrapes
+  mutated some 2025-26 pre-match ratings in place since Jul-22, and the last
+  data commit is Jul 17 (dd0d81f) — the exact state exists NOWHERE on disk or
+  git. Emitter itself proven == harness.reliability on identical input.
+  (c) fixed density-file source-label overwrite (upstream_source rename).
+[deviations] recorded as preregister §6 D1 (item 10 -> 10a acceptance +
+  10b drift finding) and D2 (games source). No formula changed.
+[selftest run 2] ALL 24 REFEREE-OWNED ITEMS PASS; 1 upstream-data-drift
+  finding documented (10b) + Engine-games gap flagged for other agents.
+  stats/referee_selftest.json written. metrics_spec.md written.
+[artifacts] v8/referee.py, v8/metrics_spec.md, v8/preregister.referee.md,
+  v8/stats/referee_selftest.json, this log.

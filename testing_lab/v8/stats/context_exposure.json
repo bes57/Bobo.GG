@@ -1,0 +1,326 @@
+{
+ "provenance": {
+  "agent": "context",
+  "written": "2026-07-28",
+  "frame": "v8/data/frame_expanded/series.csv sha256 ff772d41... (verified vs crn.json)",
+  "baseline_B0": {
+   "desc": "v6 champion replayed on expanded frame (consist 20/12, PO 1.6, champ x2, beta train-fit)",
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "n_test": 1217,
+   "n_train": 827
+  },
+  "mde_milli": {
+   "within": 1.773,
+   "cross": 5.889,
+   "source": "stats/power_mde_expanded.json"
+  },
+  "selection_rule": "train NLL only; holdout curves shown are transparency, never selection"
+ },
+ "preregistered": "preregister.context.md 3b",
+ "features": "walk-forward from engine games: maps in 14/30d, days since last official map (cap 120), days since intl LAN (cap 365; exact-shape masters/champions/lock_in; sensitivity + EWC mains); winner-referenced diffs dmaps30/10, dlog1p(dso), dlog1p(dsi)",
+ "prediction_term": {
+  "name": "3b-a exposure term",
+  "ll_test": 0.64244,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.28,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.0002798021765354717,
+   "ci_lo": -0.005171890600724624,
+   "ci_hi": 0.004462832456932955,
+   "p_better": 0.461
+  },
+  "boot_block": {
+   "mean_delta": -0.0002798021765354717,
+   "ci_lo": -0.00597882999356894,
+   "ci_hi": 0.004318635106165767,
+   "p_better": 0.46875
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0006,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.70092,
+   "ll_B0": 0.68633,
+   "dll_milli": -14.59
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.68315,
+   "ll_B0": 0.67224,
+   "dll_milli": -10.91
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1033,
+   "c_dmaps30/10": 0.1177,
+   "c_dlog_dso": 0.073,
+   "c_dlog_dsi": -0.0866
+  },
+  "ll_train": 0.64482
+ },
+ "prediction_term_sensitivity_ewcLAN": {
+  "name": "3b-a exposure (dsi incl EWC mains)",
+  "ll_test": 0.6427,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.542,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.0005421959957480778,
+   "ci_lo": -0.005743084448829104,
+   "ci_hi": 0.0046821636519528516,
+   "p_better": 0.429
+  },
+  "boot_block": {
+   "mean_delta": -0.0005421959957480778,
+   "ci_lo": -0.005481699067766801,
+   "ci_hi": 0.004184009030923792,
+   "p_better": 0.4015
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0012,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.6933,
+   "ll_B0": 0.68633,
+   "dll_milli": -6.98
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.68159,
+   "ll_B0": 0.67224,
+   "dll_milli": -9.34
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1033,
+   "c_dmaps30/10": 0.1177,
+   "c_dlog_dso": 0.073,
+   "c_dlog_dsi2": -0.0866
+  },
+  "ll_train": 0.64482
+ },
+ "decomposition": {
+  "form3": {
+   "b_form_alone": -0.1176,
+   "b_form_with_exposure": -0.0492,
+   "shrink_pct": 58.2,
+   "published_v7_oldframe": -0.0872,
+   "judge_alone": {
+    "name": "3b-b form3 alone",
+    "ll_test": 0.64282,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.657,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.000656770969915451,
+     "ci_lo": -0.0014910325220722283,
+     "ci_hi": 0.00020127655505564325,
+     "p_better": 0.06025
+    },
+    "boot_block": {
+     "mean_delta": -0.000656770969915451,
+     "ci_lo": -0.0015116325592883023,
+     "ci_hi": 0.0001208274402931959,
+     "p_better": 0.05125
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0014,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.68849,
+     "ll_B0": 0.68633,
+     "dll_milli": -2.16
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.67381,
+     "ll_B0": 0.67224,
+     "dll_milli": -1.57
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1145,
+     "b_form": -0.1176
+    },
+    "ll_train": 0.64813
+   },
+   "judge_with": {
+    "name": "3b-b form3+exposure",
+    "ll_test": 0.64279,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.631,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.0006308167780319038,
+     "ci_lo": -0.005595964967365718,
+     "ci_hi": 0.004195555417572424,
+     "p_better": 0.40875
+    },
+    "boot_block": {
+     "mean_delta": -0.0006308167780319038,
+     "ci_lo": -0.006365689486816823,
+     "ci_hi": 0.004016401597866397,
+     "p_better": 0.4155
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0014,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.70212,
+     "ll_B0": 0.68633,
+     "dll_milli": -15.8
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.68398,
+     "ll_B0": 0.67224,
+     "dll_milli": -11.74
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1031,
+     "b_form": -0.0492,
+     "c_dmaps30/10": 0.1209,
+     "c_dlog_dso": 0.0726,
+     "c_dlog_dsi": -0.0851
+    },
+    "ll_train": 0.6448
+   }
+  },
+  "form5": {
+   "b_form_alone": -0.13,
+   "b_form_with_exposure": 0.012,
+   "shrink_pct": 109.2,
+   "published_v7_oldframe": -0.0242,
+   "judge_alone": {
+    "name": "3b-b form5 alone",
+    "ll_test": 0.64248,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.314,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.00031417116478414767,
+     "ci_lo": -0.0008669003093134155,
+     "ci_hi": 0.00023855651867438964,
+     "p_better": 0.13425
+    },
+    "boot_block": {
+     "mean_delta": -0.00031417116478414767,
+     "ci_lo": -0.0008373844751690638,
+     "ci_hi": 0.00016237634942029458,
+     "p_better": 0.103
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0007,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.68758,
+     "ll_B0": 0.68633,
+     "dll_milli": -1.25
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.67316,
+     "ll_B0": 0.67224,
+     "dll_milli": -0.92
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1149,
+     "b_form": -0.13
+    },
+    "ll_train": 0.64819
+   },
+   "judge_with": {
+    "name": "3b-b form5+exposure",
+    "ll_test": 0.6424,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.241,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.00024122067138406135,
+     "ci_lo": -0.00512054377942547,
+     "ci_hi": 0.004508440521873825,
+     "p_better": 0.467
+    },
+    "boot_block": {
+     "mean_delta": -0.00024122067138406135,
+     "ci_lo": -0.005921898390613394,
+     "ci_hi": 0.004340464372184861,
+     "p_better": 0.4745
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0005,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.70077,
+     "ll_B0": 0.68633,
+     "dll_milli": -14.44
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.68305,
+     "ll_B0": 0.67224,
+     "dll_milli": -10.81
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1033,
+     "b_form": 0.012,
+     "c_dmaps30/10": 0.1174,
+     "c_dlog_dso": 0.0731,
+     "c_dlog_dsi": -0.0868
+    },
+    "ll_train": 0.64482
+   }
+  },
+  "correlations_train": {
+   "corr(dform5,dmaps30)": 0.114,
+   "corr(dform5,dlog_dso)": -0.142,
+   "corr(dform5,dlog_dsi)": 0.169
+  }
+ },
+ "forest_plot": [
+  {
+   "label": "b_form (HL5) alone",
+   "coef": -0.13
+  },
+  {
+   "label": "b_form (HL5) + exposure",
+   "coef": 0.012
+  },
+  {
+   "label": "b_form (HL3) alone",
+   "coef": -0.1176
+  },
+  {
+   "label": "b_form (HL3) + exposure",
+   "coef": -0.0492
+  },
+  {
+   "label": "published v7 old-frame HL5",
+   "coef": -0.0242
+  },
+  {
+   "label": "published v7 old-frame HL3",
+   "coef": -0.0872
+  }
+ ],
+ "quotable": "With footage-exposure controls, the v7 form coefficient collapses from -0.130 to +0.012 at HL5 (109% absorbed; HL3 -0.118 to -0.049, 58%): at HL5 'form is mean-reverting' was scouting/exposure in disguise, at HL3 about half of it was - and neither the form term nor the exposure term survives the expanded holdout anyway (all INSIDE the 1.773m floor).",
+ "verdict_summary": "3b: exposure term train-fits (c_dm30 +0.118, c_dso +0.073, c_dsi -0.087) but is INSIDE NOISE FLOOR on holdout (-0.28m) and hurts the EWC bucket (-10.9m). Decomposition answered as above."
+}

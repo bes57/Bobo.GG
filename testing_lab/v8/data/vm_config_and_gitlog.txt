@@ -1,0 +1,60 @@
+# VCTMM tunables. Secrets live in .env, never here.
+
+[mode]
+# dry_run is a PERMANENT option: true = full pipeline against live data,
+# orders routed to the simulator (no real order possible). Flipping to
+# false additionally requires the live probe suite to have passed
+# (scripts/live_probe.py) — see docs/STEP6.md before touching this.
+dry_run = false
+# Current build phase (shown on the dashboard badge).
+phase = 6
+
+[sizing]
+max_contracts = 100          # default per-market unhedged exposure cap
+quote_size = 100             # default posting size (deploy dialog preselect)
+max_event_contracts = 500    # hard ceiling for any deploy size (incl. Kelly)
+kelly_fraction = 0.5         # fractional Kelly multiplier (half-Kelly)
+
+[strategy]
+min_edge_cents = 1           # cap = fair-value cent floor minus (min_edge_cents - 1); 1 = strictly below BenPom
+empty_book_floor_cents = 5   # bid when the external book has zero NO bids (STRATEGY.md 4-8 veto); escalation takes over once a real bid appears
+order_expiry_lead_hours = 2  # every order expires at min(VLR start, Kalshi listed start) minus this (rule changed 3h -> 2h by user, 2026-07-21)
+reprice_debounce_ms = 250    # min interval between amends per price level (anti-churn)
+ladder_patience_cents = 3    # ladder: deep rungs reprice up only when ≥ this far below their slot
+join_behind_contracts = 50  # join (not outbid) an external best level thinner than this; 0 = always outbid (user: 100 -> 50, 2026-07-23)
+# On-VM model rebuilds re-enabled 2026-07-23 AFTER the full research data
+# root (incl. the EWC backfill) was synced to the VM and an isolated build
+# reproduced the Mac's structural fit (xregion identical, n_games grew
+# only by fresh results). Guarded by the n_games restore-on-shrink
+# tripwire; scripts/push_model.sh remains the manual override.
+vm_model_rebuild = true
+hard_min_edge_cents = 5      # HARD RULE (2026-07-22 research): no side-1 contract without >= 5 pts of edge; hedges/locking exempt
+hedge_margin_cents = 2       # min locked cents per hedged pair (deploy dialog can override per market)
+
+[benpom]
+refresh_minutes = 5          # pipeline cadence
+staleness_minutes = 15       # older than this -> stop placing new orders everywhere + notify
+mc_sims = 20000              # matches the site's frontend MC exactly
+
+[kalshi]
+# Both candidate production hosts; canonical one is determined at step 2 via
+# a signed read and recorded here.
+rest_host = "https://api.elections.kalshi.com"
+rest_host_alt = "https://external-api.kalshi.com"
+ws_url = "wss://external-api-ws.kalshi.com/trade-api/ws/v2"
+series_ticker = "KXVALORANTGAME"
+discovery_poll_seconds = 60
+# BASIC tier (current account): 200 read + 100 write tokens/s,
+# 10 tokens/request, 2/cancel. Bump if the account is upgraded.
+read_tokens_per_sec = 200
+write_tokens_per_sec = 100
+ws_blind_cancel_seconds = 30   # blind longer than this -> REST cancel-all + notify
+
+[reconcile]
+interval_minutes = 10
+
+[dashboard]
+host = "127.0.0.1"           # hard-asserted in code; never expose
+port = 8777
+=====GITLOG=====
+fatal: not a git repository (or any of the parent directories): .git

@@ -1,0 +1,366 @@
+{
+ "221178": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/221178/nova-esports-vs-tyloo-valorant-champions-2023-china-qualifier-r2",
+  "maps": {
+   "133131": [
+    "TYL",
+    "13-7"
+   ],
+   "133132": [
+    "TYL",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-0"
+  ],
+  "match_name": "Preliminary Stage: Round 2",
+  "utc_ts": "2023-06-03 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "TYL"
+  ]
+ },
+ "221843": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/221843/dragon-ranger-gaming-vs-tyloo-valorant-champions-2023-china-qualifier-r3",
+  "maps": {
+   "133538": [
+    "TYL",
+    "13-7"
+   ],
+   "133539": [
+    "TYL",
+    "13-9"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-0"
+  ],
+  "match_name": "Preliminary Stage: Round 3",
+  "utc_ts": "2023-06-06 07:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "TYL"
+  ]
+ },
+ "235552": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235552/attacking-soul-esports-vs-trace-esports-champions-tour-2023-champions-china-qualifier-ubqf",
+  "maps": {
+   "135273": [
+    "ASE",
+    "13-10"
+   ],
+   "135274": [
+    "TE",
+    "13-5"
+   ],
+   "135275": [
+    "TE",
+    "13-11"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2023-07-05 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "TE"
+  ]
+ },
+ "235554": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235554/funplus-phoenix-vs-tyloo-champions-tour-2023-champions-china-qualifier-ubqf",
+  "maps": {
+   "135279": [
+    "TYL",
+    "13-9"
+   ],
+   "135280": [
+    "TYL",
+    "13-10"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Upper Quarterfinals",
+  "utc_ts": "2023-07-06 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TYL"
+  ]
+ },
+ "235556": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235556/trace-esports-vs-bilibili-gaming-champions-tour-2023-champions-china-qualifier-ubsf",
+  "maps": {
+   "135285": [
+    "BLG",
+    "13-10"
+   ],
+   "135286": [
+    "BLG",
+    "13-5"
+   ],
+   "135287": [
+    "BLG",
+    "13-2"
+   ]
+  },
+  "series": [
+   "BLG",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2023-07-08 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TE"
+  ]
+ },
+ "235557": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235557/tyloo-vs-edward-gaming-champions-tour-2023-champions-china-qualifier-ubsf",
+  "maps": {
+   "135288": [
+    "EDG",
+    "13-6"
+   ],
+   "135289": [
+    "EDG",
+    "13-2"
+   ],
+   "135290": [
+    "EDG",
+    "13-2"
+   ]
+  },
+  "series": [
+   "EDG",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Upper Semifinals",
+  "utc_ts": "2023-07-09 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "TYL"
+  ]
+ },
+ "235562": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235562/trace-esports-vs-funplus-phoenix-champions-tour-2023-champions-china-qualifier-lr2",
+  "maps": {
+   "135307": [
+    "FPX",
+    "13-9"
+   ],
+   "135308": [
+    "TE",
+    "13-6"
+   ],
+   "135309": [
+    "FPX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 2",
+  "utc_ts": "2023-07-10 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TE"
+  ]
+ },
+ "235563": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235563/tyloo-vs-attacking-soul-esports-champions-tour-2023-champions-china-qualifier-lr2",
+  "maps": {
+   "135310": [
+    "ASE",
+    "13-3"
+   ],
+   "135311": [
+    "TYL",
+    "13-10"
+   ],
+   "135312": [
+    "TYL",
+    "14-12"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Lower Round 2",
+  "utc_ts": "2023-07-10 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "ASE",
+   "TYL"
+  ]
+ },
+ "235558": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235558/bilibili-gaming-vs-edward-gaming-champions-tour-2023-champions-china-qualifier-uf",
+  "maps": {
+   "135291": [
+    "EDG",
+    "13-3"
+   ],
+   "135292": [
+    "EDG",
+    "13-10"
+   ],
+   "135293": [
+    "EDG",
+    "13-4"
+   ]
+  },
+  "series": [
+   "EDG",
+   "3-0"
+  ],
+  "match_name": "Playoffs: Upper Final",
+  "utc_ts": "2023-07-13 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "EDG"
+  ]
+ },
+ "235564": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235564/tyloo-vs-funplus-phoenix-champions-tour-2023-champions-china-qualifier-lr3",
+  "maps": {
+   "135313": [
+    "FPX",
+    "13-8"
+   ],
+   "135314": [
+    "TYL",
+    "13-7"
+   ],
+   "135315": [
+    "FPX",
+    "13-11"
+   ],
+   "135316": [
+    "FPX",
+    "13-10"
+   ]
+  },
+  "series": [
+   "FPX",
+   "3-1"
+  ],
+  "match_name": "Playoffs: Lower Round 3",
+  "utc_ts": "2023-07-14 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "TYL"
+  ]
+ },
+ "235565": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235565/bilibili-gaming-vs-funplus-phoenix-champions-tour-2023-champions-china-qualifier-lf",
+  "maps": {
+   "135318": [
+    "FPX",
+    "13-11"
+   ],
+   "135319": [
+    "BLG",
+    "13-9"
+   ],
+   "135320": [
+    "FPX",
+    "13-9"
+   ],
+   "135321": [
+    "BLG",
+    "13-6"
+   ],
+   "135322": [
+    "BLG",
+    "13-5"
+   ]
+  },
+  "series": [
+   "BLG",
+   "3-2"
+  ],
+  "match_name": "Playoffs: Lower Final",
+  "utc_ts": "2023-07-15 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "FPX"
+  ]
+ },
+ "235559": {
+  "event_id": "2023_china_champions_qual",
+  "region": "CN",
+  "url": "https://www.vlr.gg/235559/edward-gaming-vs-bilibili-gaming-champions-tour-2023-champions-china-qualifier-gf",
+  "maps": {
+   "135296": [
+    "EDG",
+    "13-6"
+   ],
+   "135297": [
+    "EDG",
+    "13-4"
+   ],
+   "135298": [
+    "BLG",
+    "14-12"
+   ],
+   "135299": [
+    "EDG",
+    "14-12"
+   ]
+  },
+  "series": [
+   "EDG",
+   "3-1"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2023-07-16 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "EDG"
+  ]
+ }
+}

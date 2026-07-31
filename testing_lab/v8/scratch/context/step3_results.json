@@ -1,0 +1,519 @@
+{
+ "3ba_exposure_term": {
+  "name": "3b-a exposure term",
+  "ll_test": 0.64244,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.28,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.0002798021765354717,
+   "ci_lo": -0.005171890600724624,
+   "ci_hi": 0.004462832456932955,
+   "p_better": 0.461
+  },
+  "boot_block": {
+   "mean_delta": -0.0002798021765354717,
+   "ci_lo": -0.00597882999356894,
+   "ci_hi": 0.004318635106165767,
+   "p_better": 0.46875
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0006,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.70092,
+   "ll_B0": 0.68633,
+   "dll_milli": -14.59
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.68315,
+   "ll_B0": 0.67224,
+   "dll_milli": -10.91
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1033,
+   "c_dmaps30/10": 0.1177,
+   "c_dlog_dso": 0.073,
+   "c_dlog_dsi": -0.0866
+  },
+  "ll_train": 0.64482
+ },
+ "3ba_exposure_term_ewcLAN": {
+  "name": "3b-a exposure (dsi incl EWC mains)",
+  "ll_test": 0.6427,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.542,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.0005421959957480778,
+   "ci_lo": -0.005743084448829104,
+   "ci_hi": 0.0046821636519528516,
+   "p_better": 0.429
+  },
+  "boot_block": {
+   "mean_delta": -0.0005421959957480778,
+   "ci_lo": -0.005481699067766801,
+   "ci_hi": 0.004184009030923792,
+   "p_better": 0.4015
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0012,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.6933,
+   "ll_B0": 0.68633,
+   "dll_milli": -6.98
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.68159,
+   "ll_B0": 0.67224,
+   "dll_milli": -9.34
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1033,
+   "c_dmaps30/10": 0.1177,
+   "c_dlog_dso": 0.073,
+   "c_dlog_dsi2": -0.0866
+  },
+  "ll_train": 0.64482
+ },
+ "3bb_decomposition": {
+  "form3": {
+   "b_form_alone": -0.1176,
+   "b_form_with_exposure": -0.0492,
+   "shrink_pct": 58.2,
+   "published_v7_oldframe": -0.0872,
+   "judge_alone": {
+    "name": "3b-b form3 alone",
+    "ll_test": 0.64282,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.657,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.000656770969915451,
+     "ci_lo": -0.0014910325220722283,
+     "ci_hi": 0.00020127655505564325,
+     "p_better": 0.06025
+    },
+    "boot_block": {
+     "mean_delta": -0.000656770969915451,
+     "ci_lo": -0.0015116325592883023,
+     "ci_hi": 0.0001208274402931959,
+     "p_better": 0.05125
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0014,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.68849,
+     "ll_B0": 0.68633,
+     "dll_milli": -2.16
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.67381,
+     "ll_B0": 0.67224,
+     "dll_milli": -1.57
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1145,
+     "b_form": -0.1176
+    },
+    "ll_train": 0.64813
+   },
+   "judge_with": {
+    "name": "3b-b form3+exposure",
+    "ll_test": 0.64279,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.631,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.0006308167780319038,
+     "ci_lo": -0.005595964967365718,
+     "ci_hi": 0.004195555417572424,
+     "p_better": 0.40875
+    },
+    "boot_block": {
+     "mean_delta": -0.0006308167780319038,
+     "ci_lo": -0.006365689486816823,
+     "ci_hi": 0.004016401597866397,
+     "p_better": 0.4155
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0014,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.70212,
+     "ll_B0": 0.68633,
+     "dll_milli": -15.8
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.68398,
+     "ll_B0": 0.67224,
+     "dll_milli": -11.74
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1031,
+     "b_form": -0.0492,
+     "c_dmaps30/10": 0.1209,
+     "c_dlog_dso": 0.0726,
+     "c_dlog_dsi": -0.0851
+    },
+    "ll_train": 0.6448
+   }
+  },
+  "form5": {
+   "b_form_alone": -0.13,
+   "b_form_with_exposure": 0.012,
+   "shrink_pct": 109.2,
+   "published_v7_oldframe": -0.0242,
+   "judge_alone": {
+    "name": "3b-b form5 alone",
+    "ll_test": 0.64248,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.314,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.00031417116478414767,
+     "ci_lo": -0.0008669003093134155,
+     "ci_hi": 0.00023855651867438964,
+     "p_better": 0.13425
+    },
+    "boot_block": {
+     "mean_delta": -0.00031417116478414767,
+     "ci_lo": -0.0008373844751690638,
+     "ci_hi": 0.00016237634942029458,
+     "p_better": 0.103
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0007,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.68758,
+     "ll_B0": 0.68633,
+     "dll_milli": -1.25
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.67316,
+     "ll_B0": 0.67224,
+     "dll_milli": -0.92
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1149,
+     "b_form": -0.13
+    },
+    "ll_train": 0.64819
+   },
+   "judge_with": {
+    "name": "3b-b form5+exposure",
+    "ll_test": 0.6424,
+    "ll_test_B0": 0.64216,
+    "dll_milli": -0.241,
+    "pair_mde_milli": 1.773,
+    "mde_family": "within (v6-family variant, power_mde_expanded)",
+    "boot_iid": {
+     "mean_delta": -0.00024122067138406135,
+     "ci_lo": -0.00512054377942547,
+     "ci_hi": 0.004508440521873825,
+     "p_better": 0.467
+    },
+    "boot_block": {
+     "mean_delta": -0.00024122067138406135,
+     "ci_lo": -0.005921898390613394,
+     "ci_hi": 0.004340464372184861,
+     "p_better": 0.4745
+    },
+    "expected_roi_delta": 0.0,
+    "roi_at_op": 0.0021,
+    "delta_logit_equiv": -0.0005,
+    "bucket_ewc_legacy2026": {
+     "n": 115,
+     "ll": 0.70077,
+     "ll_B0": 0.68633,
+     "dll_milli": -14.44
+    },
+    "bucket_ewc_fullclass": {
+     "n": 291,
+     "ll": 0.68305,
+     "ll_B0": 0.67224,
+     "dll_milli": -10.81
+    },
+    "verdict": "INSIDE NOISE FLOOR",
+    "coef": {
+     "beta": 0.1033,
+     "b_form": 0.012,
+     "c_dmaps30/10": 0.1174,
+     "c_dlog_dso": 0.0731,
+     "c_dlog_dsi": -0.0868
+    },
+    "ll_train": 0.64482
+   }
+  },
+  "correlations_train": {
+   "corr(dform5,dmaps30)": 0.114,
+   "corr(dform5,dlog_dso)": -0.142,
+   "corr(dform5,dlog_dsi)": 0.169
+  }
+ },
+ "3cB_elim_variance": {
+  "name": "3c-B elim variance",
+  "ll_test": 0.64253,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.371,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.00037058059566648355,
+   "ci_lo": -0.0026581916763427265,
+   "ci_hi": 0.0018697155773924566,
+   "p_better": 0.37425
+  },
+  "boot_block": {
+   "mean_delta": -0.00037058059566648355,
+   "ci_lo": -0.003298622126451014,
+   "ci_hi": 0.0024292970354018876,
+   "p_better": 0.40425
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0008,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.69203,
+   "ll_B0": 0.68633,
+   "dll_milli": -5.7
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.67347,
+   "ll_B0": 0.67224,
+   "dll_milli": -1.23
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.124,
+   "a_elim": -0.3483
+  },
+  "ll_train": 0.64731
+ },
+ "3e_shrink_standin": {
+  "name": "3e shrink X1=stand-in load",
+  "ll_test": 0.64256,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.402,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.0004019390572233421,
+   "ci_lo": -0.002050170197110284,
+   "ci_hi": 0.0013288038030133062,
+   "p_better": 0.3125
+  },
+  "boot_block": {
+   "mean_delta": -0.0004019390572233421,
+   "ci_lo": -0.002767984127949236,
+   "ci_hi": 0.0024272468100436833,
+   "p_better": 0.38975
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0009,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68506,
+   "ll_B0": 0.68633,
+   "dll_milli": 1.26
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.66878,
+   "ll_B0": 0.67224,
+   "dll_milli": 3.46
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1251,
+   "k_standin": 0.3466
+  },
+  "ll_train": 0.6478
+ },
+ "3e_shrink_prepasym": {
+  "name": "3e shrink X2=|dlog dso|",
+  "ll_test": 0.64217,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.008,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -7.9346443477125e-06,
+   "ci_lo": -6.350591505704001e-05,
+   "ci_hi": 4.6257825668966453e-05,
+   "p_better": 0.39275
+  },
+  "boot_block": {
+   "mean_delta": -7.9346443477125e-06,
+   "ci_lo": -7.062540020383988e-05,
+   "ci_hi": 6.80668567142439e-05,
+   "p_better": 0.3985
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68627,
+   "ll_B0": 0.68633,
+   "dll_milli": 0.05
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.67219,
+   "ll_B0": 0.67224,
+   "dll_milli": 0.05
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1148,
+   "k_prep": -0.0067
+  },
+  "ll_train": 0.64823
+ },
+ "3e_shrink_joint": {
+  "name": "3e shrink X1+X2",
+  "ll_test": 0.64267,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.503,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.000503368398201588,
+   "ci_lo": -0.002240326489825312,
+   "ci_hi": 0.0013225415901434922,
+   "p_better": 0.2805
+  },
+  "boot_block": {
+   "mean_delta": -0.000503368398201588,
+   "ci_lo": -0.0029291127329460916,
+   "ci_hi": 0.002453620860436233,
+   "p_better": 0.36775
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0011,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68458,
+   "ll_B0": 0.68633,
+   "dll_milli": 1.75
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.66811,
+   "ll_B0": 0.67224,
+   "dll_milli": 4.13
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.123,
+   "k_standin": 0.3739,
+   "k_prep": -0.0488
+  },
+  "ll_train": 0.64776
+ },
+ "3e_classdummy_falsifier": {
+  "name": "3e FALSIFIER class dummy",
+  "ll_test": 0.64166,
+  "ll_test_B0": 0.64216,
+  "dll_milli": 0.5,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": 0.0004996689553613162,
+   "ci_lo": -0.003055126062789416,
+   "ci_hi": 0.004329696051889426,
+   "p_better": 0.61325
+  },
+  "boot_block": {
+   "mean_delta": 0.0004996689553613162,
+   "ci_lo": -0.003916156776732222,
+   "ci_hi": 0.003978062070565511,
+   "p_better": 0.622
+  },
+  "expected_roi_delta": 0.0004,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": 0.0011,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68299,
+   "ll_B0": 0.68633,
+   "dll_milli": 3.34
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.676,
+   "ll_B0": 0.67224,
+   "dll_milli": -3.76
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1278,
+   "k_ewc_dummy": 0.8595
+  },
+  "ll_train": 0.64585,
+  "role": "falsifier control \u2014 never a candidate"
+ },
+ "3b_adjacency": {
+  "pairs": {
+   "2023_champions": "2023_masters_tokyo",
+   "2024_masters_shanghai": "2024_masters_madrid",
+   "2024_champions": "2024_masters_shanghai",
+   "2025_masters_toronto": "2025_masters_bangkok",
+   "2025_ewc": "2025_masters_toronto",
+   "2026_masters_london": "2026_masters_santiago",
+   "2026_ewc": "2026_masters_london"
+  },
+  "n_series_bothattended": 57,
+  "per_next_event_n": {
+   "2023_champions": 21,
+   "2024_champions": 14,
+   "2025_ewc": 10,
+   "2024_masters_shanghai": 5,
+   "2026_masters_london": 4,
+   "2026_ewc": 3
+  },
+  "deep_run_measure": "n series at prev Masters, centered within event",
+  "beta0_frozen": 0.1152,
+  "c_hat": 0.0213,
+  "wald_se": 0.0524,
+  "wald_ci95": [
+   -0.0814,
+   0.124
+  ],
+  "crn_boot_ci95": [
+   -0.0876,
+   0.1374
+  ],
+  "crn_seed": 20260728,
+  "note": "inference only; nothing promoted from this",
+  "dll_equiv_if_used_milli": null
+ }
+}

@@ -1,0 +1,198 @@
+{
+ "provenance": {
+  "agent": "context",
+  "written": "2026-07-28",
+  "frame": "v8/data/frame_expanded/series.csv sha256 ff772d41... (verified vs crn.json)",
+  "baseline_B0": {
+   "desc": "v6 champion replayed on expanded frame (consist 20/12, PO 1.6, champ x2, beta train-fit)",
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "n_test": 1217,
+   "n_train": 827
+  },
+  "mde_milli": {
+   "within": 1.773,
+   "cross": 5.889,
+   "source": "stats/power_mde_expanded.json"
+  },
+  "selection_rule": "train NLL only; holdout curves shown are transparency, never selection"
+ },
+ "preregistered": "preregister.context.md 3a",
+ "mechanism": "down-weight EWC-class solve games by lineup integrity (vct-modal overlap), f(x)=w0+(1-w0)x per side, w=f_w*f_l",
+ "integrity_source": "overlap_vct_modal, fallback overlap_modal, fallback 1.0; lineups agent table + scratch top-up (cross-checked 20/20 exact)",
+ "grid_integrity_w0": [
+  {
+   "x": 0.0,
+   "beta": 0.1116,
+   "ll_train": 0.65052,
+   "ll_test": 0.64313,
+   "dll_holdout_milli": -0.963
+  },
+  {
+   "x": 0.1,
+   "beta": 0.1121,
+   "ll_train": 0.65023,
+   "ll_test": 0.64285,
+   "dll_holdout_milli": -0.688
+  },
+  {
+   "x": 0.2,
+   "beta": 0.1126,
+   "ll_train": 0.64996,
+   "ll_test": 0.64262,
+   "dll_holdout_milli": -0.46
+  },
+  {
+   "x": 0.3,
+   "beta": 0.113,
+   "ll_train": 0.6497,
+   "ll_test": 0.64244,
+   "dll_holdout_milli": -0.275
+  },
+  {
+   "x": 0.4,
+   "beta": 0.1134,
+   "ll_train": 0.64945,
+   "ll_test": 0.64229,
+   "dll_holdout_milli": -0.132
+  },
+  {
+   "x": 0.5,
+   "beta": 0.1138,
+   "ll_train": 0.64922,
+   "ll_test": 0.64219,
+   "dll_holdout_milli": -0.027
+  },
+  {
+   "x": 0.6,
+   "beta": 0.1141,
+   "ll_train": 0.649,
+   "ll_test": 0.64212,
+   "dll_holdout_milli": 0.041
+  },
+  {
+   "x": 0.7,
+   "beta": 0.1144,
+   "ll_train": 0.64879,
+   "ll_test": 0.64209,
+   "dll_holdout_milli": 0.075
+  },
+  {
+   "x": 0.8,
+   "beta": 0.1147,
+   "ll_train": 0.64859,
+   "ll_test": 0.64208,
+   "dll_holdout_milli": 0.079
+  },
+  {
+   "x": 0.9,
+   "beta": 0.115,
+   "ll_train": 0.6484,
+   "ll_test": 0.64211,
+   "dll_holdout_milli": 0.053
+  },
+  {
+   "x": 1.0,
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "dll_holdout_milli": 0.0
+  }
+ ],
+ "grid_blanket_we": [
+  {
+   "x": 0.4,
+   "beta": 0.1136,
+   "ll_train": 0.65062,
+   "ll_test": 0.64388,
+   "dll_holdout_milli": -1.718
+  },
+  {
+   "x": 0.5,
+   "beta": 0.1142,
+   "ll_train": 0.65004,
+   "ll_test": 0.64326,
+   "dll_holdout_milli": -1.099
+  },
+  {
+   "x": 0.6,
+   "beta": 0.1146,
+   "ll_train": 0.64956,
+   "ll_test": 0.64282,
+   "dll_holdout_milli": -0.661
+  },
+  {
+   "x": 0.7,
+   "beta": 0.1149,
+   "ll_train": 0.64915,
+   "ll_test": 0.64252,
+   "dll_holdout_milli": -0.359
+  },
+  {
+   "x": 0.8,
+   "beta": 0.1151,
+   "ll_train": 0.6488,
+   "ll_test": 0.64232,
+   "dll_holdout_milli": -0.162
+  },
+  {
+   "x": 0.9,
+   "beta": 0.1152,
+   "ll_train": 0.6485,
+   "ll_test": 0.64221,
+   "dll_holdout_milli": -0.048
+  },
+  {
+   "x": 1.0,
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "dll_holdout_milli": 0.0
+  },
+  {
+   "x": 1.1,
+   "beta": 0.1152,
+   "ll_train": 0.64799,
+   "ll_test": 0.64217,
+   "dll_holdout_milli": -0.004
+  },
+  {
+   "x": 1.2,
+   "beta": 0.1151,
+   "ll_train": 0.64777,
+   "ll_test": 0.64221,
+   "dll_holdout_milli": -0.051
+  }
+ ],
+ "train_argmin": {
+  "w0": 1.0,
+  "we": 1.2,
+  "we_note": "argmin at grid EDGE 1.2 \u2014 train prefers UP-weighting EWC games, not down"
+ },
+ "result_integrity": {
+  "train_selected_w0": 1.0,
+  "note": "train argmin is w0=1.0 == B0 exactly: the preregistered falsifier fired \u2014 train NLL rejects lineup-conditioned down-weighting outright (monotone worse toward w0=0). No candidate to judge on holdout; holdout curve shown above is descriptive (its own min, +0.08m at w0=0.8, is deep inside the 1.773m floor).",
+  "verdict": "DEAD (train selects baseline; falsifier fired)"
+ },
+ "result_blanket": {
+  "train_selected_we": 1.2,
+  "dll_milli": -0.051,
+  "pair_mde_milli": 1.773,
+  "boot_iid_ci_milli": [
+   -0.736,
+   0.648
+  ],
+  "boot_block_ci_milli": [
+   -0.704,
+   0.7
+  ],
+  "p_better_iid": 0.44075,
+  "expected_roi_delta": 0.0,
+  "roi_note": "ladder clamps at delta_logit 0; negative dll -> 0.0",
+  "ewc_full_bucket_dll_milli": 0.76,
+  "ewc_legacy_bucket_dll_milli": -0.01,
+  "verdict": "INSIDE NOISE FLOOR"
+ },
+ "verdict_summary": "3a DEAD both ways: integrity conditioning rejected by train; blanket train pick is an UP-weight (1.2) whose holdout delta is -0.05m, inside the 1.773m floor. The operator's EWC down-weight intuition finds no support in the solve objective."
+}

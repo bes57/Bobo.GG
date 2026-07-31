@@ -1,0 +1,199 @@
+{
+ "grids": {
+  "3a_integrity": [
+   {
+    "x": 0.0,
+    "beta": 0.1116,
+    "ll_train": 0.65052,
+    "ll_test": 0.64313,
+    "dll_holdout_milli": -0.963
+   },
+   {
+    "x": 0.1,
+    "beta": 0.1121,
+    "ll_train": 0.65023,
+    "ll_test": 0.64285,
+    "dll_holdout_milli": -0.688
+   },
+   {
+    "x": 0.2,
+    "beta": 0.1126,
+    "ll_train": 0.64996,
+    "ll_test": 0.64262,
+    "dll_holdout_milli": -0.46
+   },
+   {
+    "x": 0.3,
+    "beta": 0.113,
+    "ll_train": 0.6497,
+    "ll_test": 0.64244,
+    "dll_holdout_milli": -0.275
+   },
+   {
+    "x": 0.4,
+    "beta": 0.1134,
+    "ll_train": 0.64945,
+    "ll_test": 0.64229,
+    "dll_holdout_milli": -0.132
+   },
+   {
+    "x": 0.5,
+    "beta": 0.1138,
+    "ll_train": 0.64922,
+    "ll_test": 0.64219,
+    "dll_holdout_milli": -0.027
+   },
+   {
+    "x": 0.6,
+    "beta": 0.1141,
+    "ll_train": 0.649,
+    "ll_test": 0.64212,
+    "dll_holdout_milli": 0.041
+   },
+   {
+    "x": 0.7,
+    "beta": 0.1144,
+    "ll_train": 0.64879,
+    "ll_test": 0.64209,
+    "dll_holdout_milli": 0.075
+   },
+   {
+    "x": 0.8,
+    "beta": 0.1147,
+    "ll_train": 0.64859,
+    "ll_test": 0.64208,
+    "dll_holdout_milli": 0.079
+   },
+   {
+    "x": 0.9,
+    "beta": 0.115,
+    "ll_train": 0.6484,
+    "ll_test": 0.64211,
+    "dll_holdout_milli": 0.053
+   },
+   {
+    "x": 1.0,
+    "beta": 0.1152,
+    "ll_train": 0.64823,
+    "ll_test": 0.64216,
+    "dll_holdout_milli": 0.0
+   }
+  ],
+  "3a_blanket": [
+   {
+    "x": 0.4,
+    "beta": 0.1136,
+    "ll_train": 0.65062,
+    "ll_test": 0.64388,
+    "dll_holdout_milli": -1.718
+   },
+   {
+    "x": 0.5,
+    "beta": 0.1142,
+    "ll_train": 0.65004,
+    "ll_test": 0.64326,
+    "dll_holdout_milli": -1.099
+   },
+   {
+    "x": 0.6,
+    "beta": 0.1146,
+    "ll_train": 0.64956,
+    "ll_test": 0.64282,
+    "dll_holdout_milli": -0.661
+   },
+   {
+    "x": 0.7,
+    "beta": 0.1149,
+    "ll_train": 0.64915,
+    "ll_test": 0.64252,
+    "dll_holdout_milli": -0.359
+   },
+   {
+    "x": 0.8,
+    "beta": 0.1151,
+    "ll_train": 0.6488,
+    "ll_test": 0.64232,
+    "dll_holdout_milli": -0.162
+   },
+   {
+    "x": 0.9,
+    "beta": 0.1152,
+    "ll_train": 0.6485,
+    "ll_test": 0.64221,
+    "dll_holdout_milli": -0.048
+   },
+   {
+    "x": 1.0,
+    "beta": 0.1152,
+    "ll_train": 0.64823,
+    "ll_test": 0.64216,
+    "dll_holdout_milli": 0.0
+   },
+   {
+    "x": 1.1,
+    "beta": 0.1152,
+    "ll_train": 0.64799,
+    "ll_test": 0.64217,
+    "dll_holdout_milli": -0.004
+   },
+   {
+    "x": 1.2,
+    "beta": 0.1151,
+    "ll_train": 0.64777,
+    "ll_test": 0.64221,
+    "dll_holdout_milli": -0.051
+   }
+  ],
+  "3cA_elim": [
+   {
+    "x": 0.7,
+    "beta": 0.1181,
+    "ll_train": 0.64785,
+    "ll_test": 0.6427,
+    "dll_holdout_milli": -0.537
+   },
+   {
+    "x": 0.85,
+    "beta": 0.1168,
+    "ll_train": 0.64796,
+    "ll_test": 0.6423,
+    "dll_holdout_milli": -0.141
+   },
+   {
+    "x": 1.0,
+    "beta": 0.1152,
+    "ll_train": 0.64823,
+    "ll_test": 0.64216,
+    "dll_holdout_milli": 0.0
+   },
+   {
+    "x": 1.15,
+    "beta": 0.1135,
+    "ll_train": 0.64859,
+    "ll_test": 0.64219,
+    "dll_holdout_milli": -0.029
+   },
+   {
+    "x": 1.3,
+    "beta": 0.1118,
+    "ll_train": 0.64901,
+    "ll_test": 0.64233,
+    "dll_holdout_milli": -0.17
+   },
+   {
+    "x": 1.5,
+    "beta": 0.1094,
+    "ll_train": 0.64961,
+    "ll_test": 0.64263,
+    "dll_holdout_milli": -0.469
+   }
+  ]
+ },
+ "B0": {
+  "beta": 0.1152,
+  "ll_train": 0.64823,
+  "ll_test": 0.64216,
+  "n_test": 1217,
+  "n_train": 827
+ }
+}

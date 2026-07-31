@@ -1,0 +1,38 @@
+[2026-07-28 22:50] agent:page start. Read briefs/page.md, README.md, all phase*.md,
+  adversary_report.md, TestingLab.py, gen_report.py, gen_v7_report.py; inventoried
+  stats/*.json schemas (power/v7_reclass/ledger_reclass/variance_reduction, corpus_*,
+  context_*, decay_*, h1-h4_*, compose_*, autopsy_*, adversary_report.json,
+  compose_looks, lineups_coverage, verification_report). Nav strips confirmed on all
+  six pages (lab page in TestingLab.py _LAB_HTML + 5 report HTMLs), identical anchor
+  block ending in the v7 Lab link.
+[2026-07-28 22:52] Palette for multi-model charts validated with the dataviz six-check
+  procedure (Python port of validate_palette.js, Machado 2009 sev-1.0): neutral v6
+  #6f6a7c (baseline, non-categorical), slots #7c4dd6 S1, #c96a2a 5d, #3a90cc 1b,
+  #6b8f1f tobit, #2b6f9e round-BT; adjacent CVD worst dE 21.6 pass, normal floor 22.1
+  pass, contrast all >=3:1 on #fff. Status green/red reserved for polarity (house).
+[2026-07-28 22:54] preregister.page.md written BEFORE build. Derived-JSON plan:
+  page_v7_ladder, page_adversary_fragility, page_prereg_scatter, page_reliability,
+  page_mde_curve, page_slate, page_timeline, ledger_v8_updates. predict.py slate
+  smoke-tested (42 upcoming, all bo3, all orgs rated, snapshot benpom-v6-2026-07-22).
+[2026-07-28 23:05] gen_v8_report.py written: derive phase (10 derived JSONs incl.
+  ledger_v8_updates.json) + render phase (HTML from stats/*.json only). All build
+  assertions passed first full run: v7 amended-loss set == adversary's four; 32/32
+  prereg quotes verified verbatim; reliability orientation check reproduced v6
+  holdout LL 0.64216 exactly.
+[2026-07-28 23:10] TestingLab.py wired: /testing/v8/stats/<name>.json download route
+  (same auth gate) + v8 Lab tab in _LAB_HTML. Five report HTMLs nav strips
+  STRING-PATCHED (assert exactly-one v7 anchor before, exactly-one v8 anchor after;
+  old pages NOT regenerated). Spot-check suite: 76/76 rendered numbers identical to
+  their source JSONs; adversary <pre> block byte-identical to adversary_report.md
+  after HTML-unescape; every download link resolves on disk.
+[2026-07-28 23:22] Headless-Chrome render verification (isolated --user-data-dir,
+  house rule): all 17 charts draw; fixed float artifact in gate table (1.7730000...m),
+  reworded §6 huge-gap caption to the gate's fixed-threshold G3 wording, noted
+  sym_20 curve coincides with v6 HL20 in the w(g) caption, added rot/form instrument
+  note to subpop caption, rescaled §8 scatter axes, broadened timeline ts parser for
+  per-agent log formats. Re-verified 68/68 after fixes.
+[2026-07-28 23:27] Delivered: out/reports/v8_lab.html (served 200 behind gate),
+  v8/v8_report.md mirror, stats/ledger_v8_updates.json + 9 page_*.json,
+  preregister.page.md, status.json entry. Flask restarted and left running
+  (port 5001, debug reloader). Nav tab verified present on all six old pages + v8.
+  DONE. No statistics computed; reshapes only, per preregistration.

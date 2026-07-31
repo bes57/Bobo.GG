@@ -1,0 +1,212 @@
+{
+ "582193": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582193/team-heretics-vs-nongshim-redforce-ten-global-invitational-2025-rr",
+  "maps": {
+   "240381": [
+    "NS",
+    "13-7"
+   ]
+  },
+  "series": [
+   "NS",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2025-11-08 00:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NS",
+   "TH"
+  ]
+ },
+ "582194": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582194/drx-vs-nongshim-redforce-ten-global-invitational-2025-rr",
+  "maps": {
+   "240382": [
+    "KRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2025-11-08 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "NS"
+  ]
+ },
+ "582195": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582195/drx-vs-wolves-esports-ten-global-invitational-2025-rr",
+  "maps": {
+   "240383": [
+    "KRX",
+    "13-4"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2025-11-08 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "WOL"
+  ]
+ },
+ "582196": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582196/team-heretics-vs-wolves-esports-ten-global-invitational-2025-rr",
+  "maps": {
+   "240384": [
+    "WOL",
+    "13-10"
+   ]
+  },
+  "series": [
+   "WOL",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2025-11-08 03:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TH",
+   "WOL"
+  ]
+ },
+ "582197": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582197/team-heretics-vs-drx-ten-global-invitational-2025-rr",
+  "maps": {
+   "240385": [
+    "KRX",
+    "13-8"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2025-11-08 04:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "TH"
+  ]
+ },
+ "582198": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582198/wolves-esports-vs-nongshim-redforce-ten-global-invitational-2025-rr",
+  "maps": {
+   "240386": [
+    "NS",
+    "13-9"
+   ]
+  },
+  "series": [
+   "NS",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round Robin",
+  "utc_ts": "2025-11-08 05:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "NS",
+   "WOL"
+  ]
+ },
+ "582199": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582199/wolves-esports-vs-team-heretics-ten-global-invitational-2025-qf",
+  "maps": {
+   "240387": [
+    "TH",
+    "13-9"
+   ]
+  },
+  "series": [
+   "TH",
+   "1-0"
+  ],
+  "match_name": "Main Event: Quarterfinal",
+  "utc_ts": "2025-11-09 00:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TH",
+   "WOL"
+  ]
+ },
+ "582200": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582200/nongshim-redforce-vs-team-heretics-ten-global-invitational-2025-sf",
+  "maps": {
+   "240388": [
+    "NS",
+    "15-13"
+   ],
+   "240389": [
+    "NS",
+    "13-1"
+   ]
+  },
+  "series": [
+   "NS",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinal",
+  "utc_ts": "2025-11-09 01:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "NS",
+   "TH"
+  ]
+ },
+ "582201": {
+  "event_id": "2025_ten_global",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/582201/drx-vs-nongshim-redforce-ten-global-invitational-2025-gf",
+  "maps": {
+   "240391": [
+    "NS",
+    "13-8"
+   ],
+   "240392": [
+    "KRX",
+    "13-3"
+   ],
+   "240393": [
+    "NS",
+    "13-10"
+   ]
+  },
+  "series": [
+   "NS",
+   "2-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-11-09 03:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "NS"
+  ]
+ }
+}

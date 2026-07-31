@@ -1,0 +1,131 @@
+{
+ "written_by": "agent:bias-h3 (experiment 4)",
+ "preregistered": "gate list + selection rule in preregister.bias_h3.md; search space = gates x fitted SS variants {ss_1b, ss_5d_roster}, selection purely on TRAIN composite NLL",
+ "train_table": {
+  "ss_1b|neff<3": {
+   "train_nll": 0.650504,
+   "n_gated_train": 57,
+   "n_gated_holdout": 15
+  },
+  "ss_1b|neff<5": {
+   "train_nll": 0.648425,
+   "n_gated_train": 103,
+   "n_gated_holdout": 30
+  },
+  "ss_1b|neff<8": {
+   "train_nll": 0.644207,
+   "n_gated_train": 254,
+   "n_gated_holdout": 132
+  },
+  "ss_1b|neff<12": {
+   "train_nll": 0.644779,
+   "n_gated_train": 596,
+   "n_gated_holdout": 684
+  },
+  "ss_1b|change_adjacent": {
+   "train_nll": 0.643345,
+   "n_gated_train": 506,
+   "n_gated_holdout": 745
+  },
+  "ss_1b|ewc_offseason": {
+   "train_nll": 0.64819,
+   "n_gated_train": 112,
+   "n_gated_holdout": 278
+  },
+  "ss_1b|soft_blend_neff": {
+   "train_nll": 0.640705,
+   "ab": [
+    -7302.743725358395,
+    2716.7020494988974
+   ]
+  },
+  "ss_5d_roster|neff<3": {
+   "train_nll": 0.651144,
+   "n_gated_train": 48,
+   "n_gated_holdout": 10
+  },
+  "ss_5d_roster|neff<5": {
+   "train_nll": 0.649958,
+   "n_gated_train": 75,
+   "n_gated_holdout": 17
+  },
+  "ss_5d_roster|neff<8": {
+   "train_nll": 0.648755,
+   "n_gated_train": 140,
+   "n_gated_holdout": 30
+  },
+  "ss_5d_roster|neff<12": {
+   "train_nll": 0.646927,
+   "n_gated_train": 330,
+   "n_gated_holdout": 178
+  },
+  "ss_5d_roster|change_adjacent": {
+   "train_nll": 0.647251,
+   "n_gated_train": 506,
+   "n_gated_holdout": 745
+  },
+  "ss_5d_roster|ewc_offseason": {
+   "train_nll": 0.649996,
+   "n_gated_train": 112,
+   "n_gated_holdout": 278
+  },
+  "ss_5d_roster|soft_blend_neff": {
+   "train_nll": 0.641591,
+   "ab": [
+    -9720.395790272245,
+    2787.7434006813246
+   ]
+  }
+ },
+ "v6_train_nll": 0.648226,
+ "selected": {
+  "name": "ss_1b|soft_blend_neff",
+  "label": "train-selected winner",
+  "beats_v6_on_train": true
+ },
+ "holdout_judging": {
+  "composite_vs_v6 (cross-family MDE)": {
+   "delta_milli": -12.155,
+   "mde_milli": 5.889,
+   "verdict": "LOSS",
+   "iid_p_better": 0.0005,
+   "block_p_better": 0.0,
+   "iid_ci": [
+    -0.02002775712622537,
+    -0.004591035780790543
+   ],
+   "block_ci": [
+    -0.018875396596678896,
+    -0.005752840688984356
+   ],
+   "expected_roi_delta": 0.0,
+   "delta_logit_equiv": -0.0266
+  },
+  "composite_vs_ss_core_1a (within-family MDE)": {
+   "delta_milli": -3.283,
+   "mde_milli": 1.773,
+   "verdict": "LOSS",
+   "iid_p_better": 0.05325,
+   "block_p_better": 0.00675,
+   "iid_ci": [
+    -0.007122327350127762,
+    0.0005634999171126189
+   ],
+   "block_ci": [
+    -0.006245794137819318,
+    -0.0005796865480171211
+   ],
+   "expected_roi_delta": 0.0,
+   "delta_logit_equiv": -0.0071
+  },
+  "ll_composite": 0.65432,
+  "ll_v6": 0.64216,
+  "n": 1217,
+  "max_abs_bias": {
+   "composite": 0.1255,
+   "v6": 0.1478
+  },
+  "gated_subset_detail": {}
+ },
+ "verdict_shape": "candidate shape per brief: gated ensemble, not full replacement, if composite wins where SS-core alone loses"
+}

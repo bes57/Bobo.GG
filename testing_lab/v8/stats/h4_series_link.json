@@ -1,0 +1,736 @@
+{
+ "generated_by": "agent:bias-h4",
+ "generated": "2026-07-28 22:10:46",
+ "preregistered": "testing_lab/v8/preregister.bias_h4.md",
+ "frame_sha256": "ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142",
+ "v6": {
+  "beta": 0.1152,
+  "ll_holdout": 0.64216,
+  "n_holdout": 1217
+ },
+ "fitting_protocol": "dispersion params: ML on TRAIN conditional score likelihood (stage A); beta: refit per link on TRAIN series win/loss with dispersion frozen (stage B); holdout untouched by any fit",
+ "gates": {
+  "G1_underdispersed_deep_pool_favorites": false,
+  "G2_any_exploitable_dispersion": true,
+  "G2_terms": {
+   "overall_D": true,
+   "bo3_D": true,
+   "bo5_D": false,
+   "sigma_overall": true,
+   "h_overall": false,
+   "depth_gradient": false
+  },
+  "gradient_T1fav_minus_T3fav": {
+   "point_pp": 3.36,
+   "ci_pp": [
+    -36.94,
+    42.99
+   ]
+  },
+  "rule": "preregister.bias_h4.md E1/E2: L1 always; L2 if G1 or G2; L3+L4 only if G1"
+ },
+ "links": {
+  "L1_sigma_global": {
+   "params": {
+    "sigma": 0.7209,
+    "sigma_ci": [
+     0.3773,
+     0.9992
+    ]
+   },
+   "beta_refit": 0.14069439234289002,
+   "disp_desc": "sigma constant",
+   "ll_holdout": 0.64221,
+   "ll_holdout_v6": 0.64216,
+   "delta_milli_vs_v6": -0.048,
+   "mde_within_milli": 1.773,
+   "inside_noise_floor": true,
+   "boot_iid": {
+    "mean_delta": -4.848645406930456e-05,
+    "ci_lo": -0.00042038117746261025,
+    "ci_hi": 0.0003182974939260234,
+    "p_better": 0.39925,
+    "mode": "iid",
+    "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+    "n": 1217,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "generator": "numpy PCG64",
+    "crn_verify": "not-applicable (subset n != holdout n)"
+   },
+   "boot_block_event": {
+    "mean_delta": -4.848645406930456e-05,
+    "ci_lo": -0.0003052463622386755,
+    "ci_hi": 0.00024811325211960194,
+    "p_better": 0.3705,
+    "mode": "block_event",
+    "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+    "n": 1217,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "generator": "numpy PCG64",
+    "n_events": 31,
+    "crn_verify": "not-applicable (subset events != crn events)"
+   },
+   "expected_roi": {
+    "dll": -4.848645406930456e-05,
+    "dll_milli": -0.048,
+    "mean_one_minus_p_ref": 0.4578,
+    "delta_logit_equiv": -0.0001,
+    "delta_op": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0021,
+    "expected_roi_delta": 0.0,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ],
+    "ladder_points": [
+     [
+      0.0,
+      0.0021
+     ],
+     [
+      0.1,
+      0.0402
+     ],
+     [
+      0.2,
+      0.0604
+     ],
+     [
+      0.3,
+      0.088
+     ],
+     [
+      0.4,
+      0.1498
+     ],
+     [
+      0.6,
+      0.2911
+     ]
+    ],
+    "ladder_source": "out/quote_margin.json",
+    "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+   },
+   "strong_fav_deltaP": {
+    "bo5_pfav_ge_070": {
+     "n": 5,
+     "mean_deltaP_favside": -0.0155
+    },
+    "bo3_pfav_ge_070": {
+     "n": 165,
+     "mean_deltaP_favside": 0.0008
+    }
+   },
+   "buckets": {
+    "buckets": [
+     {
+      "name": "year 2025",
+      "n": 674,
+      "ll": 0.63777,
+      "fav_acc": 0.634,
+      "ll_ref": 0.63796,
+      "delta_milli": 0.19
+     },
+     {
+      "name": "year 2026",
+      "n": 543,
+      "ll": 0.64772,
+      "fav_acc": 0.621,
+      "ll_ref": 0.64738,
+      "delta_milli": -0.34
+     },
+     {
+      "name": "format bo1",
+      "n": 55,
+      "ll": 0.65276,
+      "fav_acc": 0.636,
+      "ll_ref": 0.65327,
+      "delta_milli": 0.51
+     },
+     {
+      "name": "format bo3",
+      "n": 1074,
+      "ll": 0.6409,
+      "fav_acc": 0.627,
+      "ll_ref": 0.64095,
+      "delta_milli": 0.05
+     },
+     {
+      "name": "format bo5",
+      "n": 53,
+      "ll": 0.64963,
+      "fav_acc": 0.623,
+      "ll_ref": 0.64835,
+      "delta_milli": -1.28
+     },
+     {
+      "name": "format bo5_gf",
+      "n": 35,
+      "ll": 0.65454,
+      "fav_acc": 0.657,
+      "ll_ref": 0.65258,
+      "delta_milli": -1.96
+     },
+     {
+      "name": "stage groups",
+      "n": 568,
+      "ll": 0.61026,
+      "fav_acc": 0.665,
+      "ll_ref": 0.61038,
+      "delta_milli": 0.12
+     },
+     {
+      "name": "stage playoffs",
+      "n": 541,
+      "ll": 0.67465,
+      "fav_acc": 0.584,
+      "ll_ref": 0.67447,
+      "delta_milli": -0.18
+     },
+     {
+      "name": "stage grand_final",
+      "n": 39,
+      "ll": 0.658,
+      "fav_acc": 0.641,
+      "ll_ref": 0.65624,
+      "delta_milli": -1.76
+     },
+     {
+      "name": "international",
+      "n": 122,
+      "ll": 0.64241,
+      "fav_acc": 0.631,
+      "ll_ref": 0.64221,
+      "delta_milli": -0.2
+     },
+     {
+      "name": "domestic",
+      "n": 1095,
+      "ll": 0.64219,
+      "fav_acc": 0.627,
+      "ll_ref": 0.64216,
+      "delta_milli": -0.03
+     },
+     {
+      "name": "CN involved",
+      "n": 394,
+      "ll": 0.64058,
+      "fav_acc": 0.642,
+      "ll_ref": 0.6403,
+      "delta_milli": -0.28
+     },
+     {
+      "name": "cross-region",
+      "n": 194,
+      "ll": 0.63831,
+      "fav_acc": 0.67,
+      "ll_ref": 0.63812,
+      "delta_milli": -0.19
+     },
+     {
+      "name": "domestic Americas",
+      "n": 233,
+      "ll": 0.60193,
+      "fav_acc": 0.708,
+      "ll_ref": 0.60183,
+      "delta_milli": -0.1
+     },
+     {
+      "name": "domestic EMEA",
+      "n": 242,
+      "ll": 0.64673,
+      "fav_acc": 0.599,
+      "ll_ref": 0.64716,
+      "delta_milli": 0.43
+     },
+     {
+      "name": "domestic Pacific",
+      "n": 237,
+      "ll": 0.65955,
+      "fav_acc": 0.582,
+      "ll_ref": 0.65975,
+      "delta_milli": 0.2
+     },
+     {
+      "name": "domestic CN",
+      "n": 311,
+      "ll": 0.65809,
+      "fav_acc": 0.598,
+      "ll_ref": 0.65761,
+      "delta_milli": -0.48
+     },
+     {
+      "name": "close matchups (gap<1.5)",
+      "n": 433,
+      "ll": 0.69088,
+      "fav_acc": 0.538,
+      "ll_ref": 0.69076,
+      "delta_milli": -0.12
+     },
+     {
+      "name": "mid gap [1.5,4)",
+      "n": 505,
+      "ll": 0.65845,
+      "fav_acc": 0.632,
+      "ll_ref": 0.65852,
+      "delta_milli": 0.07
+     },
+     {
+      "name": "big gap [4,7)",
+      "n": 223,
+      "ll": 0.56321,
+      "fav_acc": 0.74,
+      "ll_ref": 0.56345,
+      "delta_milli": 0.24
+     },
+     {
+      "name": "huge gap (7+)",
+      "n": 56,
+      "ll": 0.43404,
+      "fav_acc": 0.839,
+      "ll_ref": 0.43237,
+      "delta_milli": -1.67
+     },
+     {
+      "name": "post-break (rest>45d)",
+      "n": 130,
+      "ll": 0.64353,
+      "fav_acc": 0.577,
+      "ll_ref": 0.64343,
+      "delta_milli": -0.1
+     },
+     {
+      "name": "elite vs floor",
+      "n": 29,
+      "ll": 0.47236,
+      "fav_acc": 0.793,
+      "ll_ref": 0.4718,
+      "delta_milli": -0.56
+     },
+     {
+      "name": "form shift",
+      "n": 168,
+      "ll": 0.65228,
+      "fav_acc": 0.625,
+      "ll_ref": 0.6522,
+      "delta_milli": -0.08
+     },
+     {
+      "name": "EWC-class events",
+      "n": 115,
+      "ll": 0.68664,
+      "fav_acc": 0.591,
+      "ll_ref": 0.68633,
+      "delta_milli": -0.31
+     },
+     {
+      "name": "favorite [0.5,0.6)",
+      "n": 656,
+      "ll": 0.68262,
+      "fav_acc": 0.564,
+      "ll_ref": 0.68248,
+      "delta_milli": -0.14
+     },
+     {
+      "name": "favorite [0.6,0.7)",
+      "n": 383,
+      "ll": 0.6553,
+      "fav_acc": 0.64,
+      "ll_ref": 0.65573,
+      "delta_milli": 0.43
+     },
+     {
+      "name": "favorite [0.7,0.8)",
+      "n": 148,
+      "ll": 0.47219,
+      "fav_acc": 0.831,
+      "ll_ref": 0.47125,
+      "delta_milli": -0.94
+     },
+     {
+      "name": "favorite [0.8,0.9)",
+      "n": 27,
+      "ll": 0.42292,
+      "fav_acc": 0.852,
+      "ll_ref": 0.42316,
+      "delta_milli": 0.24
+     }
+    ],
+    "pending": [
+     "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+    ]
+   }
+  },
+  "L2_sigma_depth": {
+   "params": {
+    "a": 0.009,
+    "b_depth": -0.4354,
+    "b_depth_ci": [
+     -1.7933,
+     0.0295
+    ],
+    "sigma_at_z(-1,0,1)": [
+     0.9398,
+     0.6977,
+     0.5025
+    ]
+   },
+   "beta_refit": 0.14011704892639928,
+   "disp_desc": "sigma=softplus(a+b*z_depth_fav), z train-frozen, undefined depth -> z=0",
+   "ll_holdout": 0.64195,
+   "ll_holdout_v6": 0.64216,
+   "delta_milli_vs_v6": 0.213,
+   "mde_within_milli": 1.773,
+   "inside_noise_floor": true,
+   "boot_iid": {
+    "mean_delta": 0.00021287271470150156,
+    "ci_lo": -0.0007460825498591048,
+    "ci_hi": 0.0011487752674511549,
+    "p_better": 0.6625,
+    "mode": "iid",
+    "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+    "n": 1217,
+    "seed": 20260728,
+    "n_boot": 4000,
+    "generator": "numpy PCG64",
+    "crn_verify": "not-applicable (subset n != holdout n)"
+   },
+   "boot_block_event": {
+    "mean_delta": 0.00021287271470150156,
+    "ci_lo": -0.0007197780599701348,
+    "ci_hi": 0.0009029737923078304,
+    "p_better": 0.699,
+    "mode": "block_event",
+    "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+    "n": 1217,
+    "seed": 20260729,
+    "n_boot": 4000,
+    "generator": "numpy PCG64",
+    "n_events": 31,
+    "crn_verify": "not-applicable (subset events != crn events)"
+   },
+   "expected_roi": {
+    "dll": 0.00021287271470150156,
+    "dll_milli": 0.213,
+    "mean_one_minus_p_ref": 0.4578,
+    "delta_logit_equiv": 0.0005,
+    "delta_op": 0.0,
+    "roi_at_op": 0.0021,
+    "roi_at_op_plus_equiv": 0.0023,
+    "expected_roi_delta": 0.0002,
+    "roi_ci_at_op_plus_equiv": [
+     -0.119,
+     0.126
+    ],
+    "ladder_points": [
+     [
+      0.0,
+      0.0021
+     ],
+     [
+      0.1,
+      0.0402
+     ],
+     [
+      0.2,
+      0.0604
+     ],
+     [
+      0.3,
+      0.088
+     ],
+     [
+      0.4,
+      0.1498
+     ],
+     [
+      0.6,
+      0.2911
+     ]
+    ],
+    "ladder_source": "out/quote_margin.json",
+    "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+   },
+   "strong_fav_deltaP": {
+    "bo5_pfav_ge_070": {
+     "n": 5,
+     "mean_deltaP_favside": 0.0022
+    },
+    "bo3_pfav_ge_070": {
+     "n": 165,
+     "mean_deltaP_favside": 0.0051
+    }
+   },
+   "buckets": {
+    "buckets": [
+     {
+      "name": "year 2025",
+      "n": 674,
+      "ll": 0.63764,
+      "fav_acc": 0.634,
+      "ll_ref": 0.63796,
+      "delta_milli": 0.32
+     },
+     {
+      "name": "year 2026",
+      "n": 543,
+      "ll": 0.64729,
+      "fav_acc": 0.621,
+      "ll_ref": 0.64738,
+      "delta_milli": 0.09
+     },
+     {
+      "name": "format bo1",
+      "n": 55,
+      "ll": 0.65582,
+      "fav_acc": 0.636,
+      "ll_ref": 0.65327,
+      "delta_milli": -2.55
+     },
+     {
+      "name": "format bo3",
+      "n": 1074,
+      "ll": 0.64057,
+      "fav_acc": 0.627,
+      "ll_ref": 0.64095,
+      "delta_milli": 0.38
+     },
+     {
+      "name": "format bo5",
+      "n": 53,
+      "ll": 0.64749,
+      "fav_acc": 0.623,
+      "ll_ref": 0.64835,
+      "delta_milli": 0.86
+     },
+     {
+      "name": "format bo5_gf",
+      "n": 35,
+      "ll": 0.65398,
+      "fav_acc": 0.657,
+      "ll_ref": 0.65258,
+      "delta_milli": -1.4
+     },
+     {
+      "name": "stage groups",
+      "n": 568,
+      "ll": 0.60926,
+      "fav_acc": 0.665,
+      "ll_ref": 0.61038,
+      "delta_milli": 1.12
+     },
+     {
+      "name": "stage playoffs",
+      "n": 541,
+      "ll": 0.67474,
+      "fav_acc": 0.584,
+      "ll_ref": 0.67447,
+      "delta_milli": -0.27
+     },
+     {
+      "name": "stage grand_final",
+      "n": 39,
+      "ll": 0.65789,
+      "fav_acc": 0.641,
+      "ll_ref": 0.65624,
+      "delta_milli": -1.65
+     },
+     {
+      "name": "international",
+      "n": 122,
+      "ll": 0.6417,
+      "fav_acc": 0.631,
+      "ll_ref": 0.64221,
+      "delta_milli": 0.51
+     },
+     {
+      "name": "domestic",
+      "n": 1095,
+      "ll": 0.64198,
+      "fav_acc": 0.627,
+      "ll_ref": 0.64216,
+      "delta_milli": 0.18
+     },
+     {
+      "name": "CN involved",
+      "n": 394,
+      "ll": 0.64045,
+      "fav_acc": 0.642,
+      "ll_ref": 0.6403,
+      "delta_milli": -0.15
+     },
+     {
+      "name": "cross-region",
+      "n": 194,
+      "ll": 0.63855,
+      "fav_acc": 0.67,
+      "ll_ref": 0.63812,
+      "delta_milli": -0.43
+     },
+     {
+      "name": "domestic Americas",
+      "n": 233,
+      "ll": 0.60122,
+      "fav_acc": 0.708,
+      "ll_ref": 0.60183,
+      "delta_milli": 0.61
+     },
+     {
+      "name": "domestic EMEA",
+      "n": 242,
+      "ll": 0.64585,
+      "fav_acc": 0.599,
+      "ll_ref": 0.64716,
+      "delta_milli": 1.31
+     },
+     {
+      "name": "domestic Pacific",
+      "n": 237,
+      "ll": 0.66006,
+      "fav_acc": 0.582,
+      "ll_ref": 0.65975,
+      "delta_milli": -0.31
+     },
+     {
+      "name": "domestic CN",
+      "n": 311,
+      "ll": 0.65776,
+      "fav_acc": 0.598,
+      "ll_ref": 0.65761,
+      "delta_milli": -0.15
+     },
+     {
+      "name": "close matchups (gap<1.5)",
+      "n": 433,
+      "ll": 0.6909,
+      "fav_acc": 0.538,
+      "ll_ref": 0.69076,
+      "delta_milli": -0.14
+     },
+     {
+      "name": "mid gap [1.5,4)",
+      "n": 505,
+      "ll": 0.65784,
+      "fav_acc": 0.632,
+      "ll_ref": 0.65852,
+      "delta_milli": 0.68
+     },
+     {
+      "name": "big gap [4,7)",
+      "n": 223,
+      "ll": 0.5623,
+      "fav_acc": 0.74,
+      "ll_ref": 0.56345,
+      "delta_milli": 1.15
+     },
+     {
+      "name": "huge gap (7+)",
+      "n": 56,
+      "ll": 0.43726,
+      "fav_acc": 0.839,
+      "ll_ref": 0.43237,
+      "delta_milli": -4.89
+     },
+     {
+      "name": "post-break (rest>45d)",
+      "n": 130,
+      "ll": 0.64807,
+      "fav_acc": 0.577,
+      "ll_ref": 0.64343,
+      "delta_milli": -4.64
+     },
+     {
+      "name": "elite vs floor",
+      "n": 29,
+      "ll": 0.47634,
+      "fav_acc": 0.793,
+      "ll_ref": 0.4718,
+      "delta_milli": -4.54
+     },
+     {
+      "name": "form shift",
+      "n": 168,
+      "ll": 0.65304,
+      "fav_acc": 0.625,
+      "ll_ref": 0.6522,
+      "delta_milli": -0.84
+     },
+     {
+      "name": "EWC-class events",
+      "n": 115,
+      "ll": 0.68679,
+      "fav_acc": 0.591,
+      "ll_ref": 0.68633,
+      "delta_milli": -0.46
+     },
+     {
+      "name": "favorite [0.5,0.6)",
+      "n": 657,
+      "ll": 0.68468,
+      "fav_acc": 0.559,
+      "ll_ref": 0.68469,
+      "delta_milli": 0.01
+     },
+     {
+      "name": "favorite [0.6,0.7)",
+      "n": 376,
+      "ll": 0.65864,
+      "fav_acc": 0.641,
+      "ll_ref": 0.65856,
+      "delta_milli": -0.08
+     },
+     {
+      "name": "favorite [0.7,0.8)",
+      "n": 150,
+      "ll": 0.4575,
+      "fav_acc": 0.847,
+      "ll_ref": 0.45912,
+      "delta_milli": 1.62
+     },
+     {
+      "name": "favorite [0.8,0.9)",
+      "n": 31,
+      "ll": 0.44081,
+      "fav_acc": 0.839,
+      "ll_ref": 0.44169,
+      "delta_milli": 0.88
+     }
+    ],
+    "pending": [
+     "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+    ]
+   }
+  },
+  "L3_h_global": {
+   "skipped": "gate G1 false (no under-dispersion for deep-pool favorites)"
+  },
+  "L4_h_depth": {
+   "skipped": "gate G1 false"
+  }
+ },
+ "interaction_guard": {
+  "reduction_check": [
+   {
+    "fmt": "bo1",
+    "max_abs_diff_sigma0": 4.440892098500626e-16,
+    "max_abs_diff_h0": 0.0
+   },
+   {
+    "fmt": "bo3",
+    "max_abs_diff_sigma0": 4.440892098500626e-16,
+    "max_abs_diff_h0": 2.220446049250313e-16
+   },
+   {
+    "fmt": "bo5",
+    "max_abs_diff_sigma0": 4.440892098500626e-16,
+    "max_abs_diff_h0": 3.3306690738754696e-16
+   }
+  ],
+  "statement": "Dispersion acts ONLY at the series-aggregation layer over the single p: link inputs are (beta*rdiff, fmt, z_depth_of_favorite as the sigma/h covariate). No per-map ratings, no pick bonus, no map identities anywhere in the link \u2014 the ledger id 25 per-map+pick kill stays dead; no map-level double counting is possible by construction.",
+  "momentum_distinction": "NOT intra-series momentum (ledger id 27): the series effect u is exchangeable, drawn before map 1; no map outcome feeds another map's probability."
+ },
+ "units_note": "delta_milli = milli-LL vs v6 on holdout n=1217; expected_roi via referee.expected_roi_of_dll (reporting unit only, never selection)"
+}

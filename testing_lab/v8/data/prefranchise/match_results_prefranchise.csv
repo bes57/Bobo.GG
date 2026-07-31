@@ -1,0 +1,546 @@
+MatchID,MapNum,WinnerOrg,Score,MatchName,EventID
+19071,34248,FNC,13-5,Main Event: Upper Round 1,2021_masters2_reykjavik
+19071,34249,FNC,13-4,Main Event: Upper Round 1,2021_masters2_reykjavik
+19071,all,FNC,2-0,Main Event: Upper Round 1,2021_masters2_reykjavik
+19072,34251,V1,13-11,Main Event: Upper Round 1,2021_masters2_reykjavik
+19072,34252,V1,13-10,Main Event: Upper Round 1,2021_masters2_reykjavik
+19072,all,V1,2-0,Main Event: Upper Round 1,2021_masters2_reykjavik
+19073,34254,SEN,13-11,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19073,34255,SEN,13-10,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19073,all,SEN,2-0,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19074,34258,VKS,14-12,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19074,34971,VKS,13-11,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19074,all,VKS,2-0,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19075,34260,SHK,13-5,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19075,34261,NU,13-5,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19075,34262,NU,13-5,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19075,all,NU,2-1,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19076,34263,TL,16-14,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19076,34264,V1,13-11,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19076,34265,V1,13-4,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19076,all,V1,2-1,Main Event: Upper Quarterfinals,2021_masters2_reykjavik
+19078,34266,SEN,13-7,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19078,34267,SEN,13-6,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19078,all,SEN,2-0,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19079,34269,V1,13-3,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19079,34270,NU,15-13,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19079,34271,NU,14-12,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19079,all,NU,2-1,Main Event: Upper Semifinals,2021_masters2_reykjavik
+19080,34272,SEN,13-5,Main Event: Upper Final,2021_masters2_reykjavik
+19080,34273,SEN,13-4,Main Event: Upper Final,2021_masters2_reykjavik
+19080,all,SEN,2-0,Main Event: Upper Final,2021_masters2_reykjavik
+19081,34275,X10,13-9,Main Event: Lower Round 1,2021_masters2_reykjavik
+19081,34276,X10,13-5,Main Event: Lower Round 1,2021_masters2_reykjavik
+19081,all,X10,2-0,Main Event: Lower Round 1,2021_masters2_reykjavik
+19082,34278,KRÜ,13-5,Main Event: Lower Round 1,2021_masters2_reykjavik
+19082,34279,KRÜ,13-6,Main Event: Lower Round 1,2021_masters2_reykjavik
+19082,all,KRÜ,2-0,Main Event: Lower Round 1,2021_masters2_reykjavik
+19083,34281,FNC,13-4,Main Event: Lower Round 2,2021_masters2_reykjavik
+19083,34282,FNC,13-9,Main Event: Lower Round 2,2021_masters2_reykjavik
+19083,all,FNC,2-0,Main Event: Lower Round 2,2021_masters2_reykjavik
+19084,34284,TL,13-2,Main Event: Lower Round 2,2021_masters2_reykjavik
+19084,34285,TL,13-9,Main Event: Lower Round 2,2021_masters2_reykjavik
+19084,all,TL,2-0,Main Event: Lower Round 2,2021_masters2_reykjavik
+19085,34287,FNC,14-12,Main Event: Lower Round 3,2021_masters2_reykjavik
+19085,34288,FNC,13-6,Main Event: Lower Round 3,2021_masters2_reykjavik
+19085,all,FNC,2-0,Main Event: Lower Round 3,2021_masters2_reykjavik
+19086,34290,TL,13-8,Main Event: Lower Round 3,2021_masters2_reykjavik
+19086,34291,TL,13-5,Main Event: Lower Round 3,2021_masters2_reykjavik
+19086,all,TL,2-0,Main Event: Lower Round 3,2021_masters2_reykjavik
+19087,34293,FNC,13-10,Main Event: Lower Round 4,2021_masters2_reykjavik
+19087,34294,FNC,13-10,Main Event: Lower Round 4,2021_masters2_reykjavik
+19087,all,FNC,2-0,Main Event: Lower Round 4,2021_masters2_reykjavik
+19088,34296,FNC,13-8,Main Event: Lower Final,2021_masters2_reykjavik
+19088,34297,NU,13-8,Main Event: Lower Final,2021_masters2_reykjavik
+19088,34298,FNC,13-8,Main Event: Lower Final,2021_masters2_reykjavik
+19088,all,FNC,2-1,Main Event: Lower Final,2021_masters2_reykjavik
+19089,34299,SEN,14-12,Main Event: Grand Final,2021_masters2_reykjavik
+19089,34300,SEN,16-14,Main Event: Grand Final,2021_masters2_reykjavik
+19089,34301,SEN,13-11,Main Event: Grand Final,2021_masters2_reykjavik
+19089,all,SEN,3-0,Main Event: Grand Final,2021_masters2_reykjavik
+34947,50199,VS,13-9,Group Stage: Opening (A),2021_masters3_berlin
+34947,50200,VS,13-11,Group Stage: Opening (A),2021_masters3_berlin
+34947,all,VS,2-0,Group Stage: Opening (A),2021_masters3_berlin
+34948,50203,ACE,13-9,Group Stage: Opening (A),2021_masters3_berlin
+34948,50204,ACE,13-5,Group Stage: Opening (A),2021_masters3_berlin
+34948,all,ACE,2-0,Group Stage: Opening (A),2021_masters3_berlin
+34949,50205,ENVY,15-13,Group Stage: Opening (B),2021_masters3_berlin
+34949,50206,ENVY,13-9,Group Stage: Opening (B),2021_masters3_berlin
+34949,all,ENVY,2-0,Group Stage: Opening (B),2021_masters3_berlin
+34950,50208,KRÜ,13-8,Group Stage: Opening (B),2021_masters3_berlin
+34950,50209,ZETA,13-5,Group Stage: Opening (B),2021_masters3_berlin
+34950,50210,KRÜ,13-7,Group Stage: Opening (B),2021_masters3_berlin
+34950,all,KRÜ,2-1,Group Stage: Opening (B),2021_masters3_berlin
+34951,50211,GMB,13-1,Group Stage: Opening (C),2021_masters3_berlin
+34951,50212,GMB,13-1,Group Stage: Opening (C),2021_masters3_berlin
+34951,all,GMB,2-0,Group Stage: Opening (C),2021_masters3_berlin
+34952,50214,100T,13-3,Group Stage: Opening (C),2021_masters3_berlin
+34952,50215,100T,13-6,Group Stage: Opening (C),2021_masters3_berlin
+34952,all,100T,2-0,Group Stage: Opening (C),2021_masters3_berlin
+34958,50223,VS,13-7,Group Stage: Winner's (A),2021_masters3_berlin
+34958,50224,VS,13-9,Group Stage: Winner's (A),2021_masters3_berlin
+34958,all,VS,2-0,Group Stage: Winner's (A),2021_masters3_berlin
+34959,50226,PRX,14-12,Group Stage: Elimination (A),2021_masters3_berlin
+34959,50227,SUP,13-2,Group Stage: Elimination (A),2021_masters3_berlin
+34959,50228,SUP,13-10,Group Stage: Elimination (A),2021_masters3_berlin
+34959,all,SUP,2-1,Group Stage: Elimination (A),2021_masters3_berlin
+34960,50229,SUP,13-6,Group Stage: Decider (A),2021_masters3_berlin
+34960,50230,ACE,13-7,Group Stage: Decider (A),2021_masters3_berlin
+34960,50231,ACE,13-10,Group Stage: Decider (A),2021_masters3_berlin
+34960,all,ACE,2-1,Group Stage: Decider (A),2021_masters3_berlin
+34961,50232,ENVY,13-9,Group Stage: Winner's (B),2021_masters3_berlin
+34961,50233,ENVY,13-2,Group Stage: Winner's (B),2021_masters3_berlin
+34961,all,ENVY,2-0,Group Stage: Winner's (B),2021_masters3_berlin
+34962,50235,VKS,13-3,Group Stage: Elimination (B),2021_masters3_berlin
+34962,50236,VKS,13-4,Group Stage: Elimination (B),2021_masters3_berlin
+34962,all,VKS,2-0,Group Stage: Elimination (B),2021_masters3_berlin
+34963,50238,KRÜ,13-11,Group Stage: Decider (B),2021_masters3_berlin
+34963,50239,KRÜ,13-11,Group Stage: Decider (B),2021_masters3_berlin
+34963,all,KRÜ,2-0,Group Stage: Decider (B),2021_masters3_berlin
+34964,50241,GMB,13-5,Group Stage: Winner's (C),2021_masters3_berlin
+34964,50242,100T,13-11,Group Stage: Winner's (C),2021_masters3_berlin
+34964,50243,100T,13-10,Group Stage: Winner's (C),2021_masters3_berlin
+34964,all,100T,2-1,Group Stage: Winner's (C),2021_masters3_berlin
+34965,50244,CR,13-9,Group Stage: Elimination (C),2021_masters3_berlin
+34965,50245,CR,13-8,Group Stage: Elimination (C),2021_masters3_berlin
+34965,all,CR,2-0,Group Stage: Elimination (C),2021_masters3_berlin
+34966,50248,GMB,14-12,Group Stage: Decider (C),2021_masters3_berlin
+34966,50249,GMB,13-8,Group Stage: Decider (C),2021_masters3_berlin
+34966,all,GMB,2-0,Group Stage: Decider (C),2021_masters3_berlin
+34973,50259,ACE,13-9,Playoffs: Quarterfinals,2021_masters3_berlin
+34973,50260,100T,13-8,Playoffs: Quarterfinals,2021_masters3_berlin
+34973,50261,100T,14-12,Playoffs: Quarterfinals,2021_masters3_berlin
+34973,all,100T,2-1,Playoffs: Quarterfinals,2021_masters3_berlin
+34974,50262,ENVY,15-13,Playoffs: Quarterfinals,2021_masters3_berlin
+34974,50263,ENVY,13-7,Playoffs: Quarterfinals,2021_masters3_berlin
+34974,all,ENVY,2-0,Playoffs: Quarterfinals,2021_masters3_berlin
+34975,50265,GMB,13-2,Playoffs: Quarterfinals,2021_masters3_berlin
+34975,50266,VS,13-7,Playoffs: Quarterfinals,2021_masters3_berlin
+34975,50267,GMB,13-8,Playoffs: Quarterfinals,2021_masters3_berlin
+34975,all,GMB,2-1,Playoffs: Quarterfinals,2021_masters3_berlin
+34976,50269,G2,13-7,Playoffs: Quarterfinals,2021_masters3_berlin
+34976,50270,G2,13-9,Playoffs: Quarterfinals,2021_masters3_berlin
+34976,all,G2,2-0,Playoffs: Quarterfinals,2021_masters3_berlin
+34977,50271,GMB,13-10,Playoffs: Semifinals,2021_masters3_berlin
+34977,50272,GMB,13-0,Playoffs: Semifinals,2021_masters3_berlin
+34977,all,GMB,2-0,Playoffs: Semifinals,2021_masters3_berlin
+34978,50274,ENVY,13-5,Playoffs: Semifinals,2021_masters3_berlin
+34978,50275,ENVY,13-8,Playoffs: Semifinals,2021_masters3_berlin
+34978,all,ENVY,2-0,Playoffs: Semifinals,2021_masters3_berlin
+34979,50277,GMB,15-13,Playoffs: Grand Final,2021_masters3_berlin
+34979,50278,GMB,13-11,Playoffs: Grand Final,2021_masters3_berlin
+34979,50279,GMB,13-9,Playoffs: Grand Final,2021_masters3_berlin
+34979,all,GMB,3-0,Playoffs: Grand Final,2021_masters3_berlin
+35938,51040,G2,13-5,Group Stage: Group D,2021_masters3_berlin
+35938,51041,F4Q,13-9,Group Stage: Group D,2021_masters3_berlin
+35938,51042,G2,13-8,Group Stage: Group D,2021_masters3_berlin
+35938,all,G2,2-1,Group Stage: Group D,2021_masters3_berlin
+35939,51043,SEN,13-6,Group Stage: Group D,2021_masters3_berlin
+35939,51044,G2,13-8,Group Stage: Group D,2021_masters3_berlin
+35939,51045,SEN,13-8,Group Stage: Group D,2021_masters3_berlin
+35939,all,SEN,2-1,Group Stage: Group D,2021_masters3_berlin
+35940,51046,SEN,13-9,Group Stage: Group D,2021_masters3_berlin
+35940,51047,SEN,13-4,Group Stage: Group D,2021_masters3_berlin
+35940,all,SEN,2-0,Group Stage: Group D,2021_masters3_berlin
+35941,51049,G2,13-3,Group Stage: Group D,2021_masters3_berlin
+35941,51050,G2,13-6,Group Stage: Group D,2021_masters3_berlin
+35941,all,G2,2-0,Group Stage: Group D,2021_masters3_berlin
+35942,51052,G2,13-3,Group Stage: Group D,2021_masters3_berlin
+35942,51053,G2,13-11,Group Stage: Group D,2021_masters3_berlin
+35942,all,G2,2-0,Group Stage: Group D,2021_masters3_berlin
+35943,51055,SEN,13-3,Group Stage: Group D,2021_masters3_berlin
+35943,51056,F4Q,13-9,Group Stage: Group D,2021_masters3_berlin
+35943,51057,SEN,13-4,Group Stage: Group D,2021_masters3_berlin
+35943,all,SEN,2-1,Group Stage: Group D,2021_masters3_berlin
+51266,57903,VKS,13-9,Group Stage: Opening (A),2021_champions
+51266,57904,ACE,13-3,Group Stage: Opening (A),2021_champions
+51266,59254,ACE,13-10,Group Stage: Opening (A),2021_champions
+51266,all,ACE,2-1,Group Stage: Opening (A),2021_champions
+51267,57906,ENVY,13-8,Group Stage: Opening (A),2021_champions
+51267,57907,ENVY,13-7,Group Stage: Opening (A),2021_champions
+51267,all,ENVY,2-0,Group Stage: Opening (A),2021_champions
+51268,57909,ACE,13-8,Group Stage: Winner's (A),2021_champions
+51268,57910,ACE,13-11,Group Stage: Winner's (A),2021_champions
+51268,all,ACE,2-0,Group Stage: Winner's (A),2021_champions
+51269,57912,X10,13-6,Group Stage: Elimination (A),2021_champions
+51269,57913,X10,13-5,Group Stage: Elimination (A),2021_champions
+51269,all,X10,2-0,Group Stage: Elimination (A),2021_champions
+51270,57915,ENVY,13-10,Group Stage: Decider (A),2021_champions
+51270,57916,X10,13-8,Group Stage: Decider (A),2021_champions
+51270,57917,X10,14-12,Group Stage: Decider (A),2021_champions
+51270,all,X10,2-1,Group Stage: Decider (A),2021_champions
+51272,57918,TL,13-5,Group Stage: Opening (B),2021_champions
+51272,57919,TL,13-8,Group Stage: Opening (B),2021_champions
+51272,all,TL,2-0,Group Stage: Opening (B),2021_champions
+51273,57921,SEN,13-9,Group Stage: Opening (B),2021_champions
+51273,57922,FUR,13-10,Group Stage: Opening (B),2021_champions
+51273,57923,SEN,13-9,Group Stage: Opening (B),2021_champions
+51273,all,SEN,2-1,Group Stage: Opening (B),2021_champions
+51274,57924,TL,14-12,Group Stage: Winner's (B),2021_champions
+51274,57925,SEN,13-2,Group Stage: Winner's (B),2021_champions
+51274,57926,TL,13-10,Group Stage: Winner's (B),2021_champions
+51274,all,TL,2-1,Group Stage: Winner's (B),2021_champions
+51275,57927,FUR,13-11,Group Stage: Elimination (B),2021_champions
+51275,57928,KRÜ,13-8,Group Stage: Elimination (B),2021_champions
+51275,57929,KRÜ,13-9,Group Stage: Elimination (B),2021_champions
+51275,all,KRÜ,2-1,Group Stage: Elimination (B),2021_champions
+51276,57930,SEN,13-7,Group Stage: Decider (B),2021_champions
+51276,57931,KRÜ,13-11,Group Stage: Decider (B),2021_champions
+51276,57932,KRÜ,13-11,Group Stage: Decider (B),2021_champions
+51276,all,KRÜ,2-1,Group Stage: Decider (B),2021_champions
+51277,57933,TS,13-6,Group Stage: Opening (C),2021_champions
+51277,57934,GMB,13-0,Group Stage: Opening (C),2021_champions
+51277,57935,GMB,13-6,Group Stage: Opening (C),2021_champions
+51277,all,GMB,2-1,Group Stage: Opening (C),2021_champions
+51278,57936,VKS,13-9,Group Stage: Opening (C),2021_champions
+51278,57937,VKS,13-8,Group Stage: Opening (C),2021_champions
+51278,all,VKS,2-0,Group Stage: Opening (C),2021_champions
+51279,57939,GMB,13-6,Group Stage: Winner's (C),2021_champions
+51279,57940,VKS,13-5,Group Stage: Winner's (C),2021_champions
+51279,57941,GMB,14-12,Group Stage: Winner's (C),2021_champions
+51279,all,GMB,2-1,Group Stage: Winner's (C),2021_champions
+51280,57942,TS,13-5,Group Stage: Elimination (C),2021_champions
+51280,57943,TS,13-2,Group Stage: Elimination (C),2021_champions
+51280,all,TS,2-0,Group Stage: Elimination (C),2021_champions
+51281,57945,TS,13-6,Group Stage: Decider (C),2021_champions
+51281,57946,TS,13-7,Group Stage: Decider (C),2021_champions
+51281,all,TS,2-0,Group Stage: Decider (C),2021_champions
+51282,57948,VS,13-5,Group Stage: Opening (D),2021_champions
+51282,57949,VS,13-5,Group Stage: Opening (D),2021_champions
+51282,all,VS,2-0,Group Stage: Opening (D),2021_champions
+51283,57951,FNC,13-11,Group Stage: Opening (D),2021_champions
+51283,57952,C9,13-11,Group Stage: Opening (D),2021_champions
+51283,57953,FNC,14-12,Group Stage: Opening (D),2021_champions
+51283,all,FNC,2-1,Group Stage: Opening (D),2021_champions
+51284,57954,FNC,13-10,Group Stage: Winner's (D),2021_champions
+51284,57955,VS,13-10,Group Stage: Winner's (D),2021_champions
+51284,57956,FNC,13-6,Group Stage: Winner's (D),2021_champions
+51284,all,FNC,2-1,Group Stage: Winner's (D),2021_champions
+51285,57957,C9,13-7,Group Stage: Elimination (D),2021_champions
+51285,57958,C9,14-12,Group Stage: Elimination (D),2021_champions
+51285,all,C9,2-0,Group Stage: Elimination (D),2021_champions
+51286,57960,C9,13-10,Group Stage: Decider (D),2021_champions
+51286,57961,VS,13-9,Group Stage: Decider (D),2021_champions
+51286,57962,C9,13-11,Group Stage: Decider (D),2021_champions
+51286,all,C9,2-1,Group Stage: Decider (D),2021_champions
+51290,57963,ACE,13-8,Playoffs: Quarterfinals,2021_champions
+51290,57964,ACE,13-6,Playoffs: Quarterfinals,2021_champions
+51290,all,ACE,2-0,Playoffs: Quarterfinals,2021_champions
+51291,57966,TL,13-10,Playoffs: Quarterfinals,2021_champions
+51291,57967,TL,13-11,Playoffs: Quarterfinals,2021_champions
+51291,all,TL,2-0,Playoffs: Quarterfinals,2021_champions
+51292,57969,GMB,13-7,Playoffs: Quarterfinals,2021_champions
+51292,57970,X10,13-7,Playoffs: Quarterfinals,2021_champions
+51292,57971,GMB,13-7,Playoffs: Quarterfinals,2021_champions
+51292,all,GMB,2-1,Playoffs: Quarterfinals,2021_champions
+51293,57972,KRÜ,15-13,Playoffs: Quarterfinals,2021_champions
+51293,57973,FNC,13-6,Playoffs: Quarterfinals,2021_champions
+51293,57974,KRÜ,13-8,Playoffs: Quarterfinals,2021_champions
+51293,all,KRÜ,2-1,Playoffs: Quarterfinals,2021_champions
+51294,57975,ACE,13-6,Playoffs: Semifinals,2021_champions
+51294,57976,ACE,13-5,Playoffs: Semifinals,2021_champions
+51294,all,ACE,2-0,Playoffs: Semifinals,2021_champions
+51295,57978,GMB,13-8,Playoffs: Semifinals,2021_champions
+51295,57979,KRÜ,13-7,Playoffs: Semifinals,2021_champions
+51295,57980,GMB,18-16,Playoffs: Semifinals,2021_champions
+51295,all,GMB,2-1,Playoffs: Semifinals,2021_champions
+51296,57981,GMB,13-11,Playoffs: Grand Final,2021_champions
+51296,57982,ACE,13-7,Playoffs: Grand Final,2021_champions
+51296,57983,GMB,13-3,Playoffs: Grand Final,2021_champions
+51296,57984,ACE,14-12,Playoffs: Grand Final,2021_champions
+51296,57985,ACE,13-8,Playoffs: Grand Final,2021_champions
+51296,all,ACE,3-2,Playoffs: Grand Final,2021_champions
+84371,77014,NIP,13-7,Group Stage: Opening (A),2022_masters1_reykjavik
+84371,77015,NIP,13-8,Group Stage: Opening (A),2022_masters1_reykjavik
+84371,all,NIP,2-0,Group Stage: Opening (A),2022_masters1_reykjavik
+84372,77017,KRX,13-2,Group Stage: Opening (A),2022_masters1_reykjavik
+84372,77018,KRX,13-3,Group Stage: Opening (A),2022_masters1_reykjavik
+84372,all,KRX,2-0,Group Stage: Opening (A),2022_masters1_reykjavik
+84373,77020,XIA,13-10,Group Stage: Opening (B),2022_masters1_reykjavik
+84373,77021,XIA,13-10,Group Stage: Opening (B),2022_masters1_reykjavik
+84373,all,XIA,2-0,Group Stage: Opening (B),2022_masters1_reykjavik
+84374,77023,TL,13-5,Group Stage: Opening (B),2022_masters1_reykjavik
+84374,77024,TL,16-14,Group Stage: Opening (B),2022_masters1_reykjavik
+84374,all,TL,2-0,Group Stage: Opening (B),2022_masters1_reykjavik
+84644,77225,KRX,13-4,Group Stage: Winner's (A),2022_masters1_reykjavik
+84644,77226,KRX,13-8,Group Stage: Winner's (A),2022_masters1_reykjavik
+84644,all,KRX,2-0,Group Stage: Winner's (A),2022_masters1_reykjavik
+84645,77228,ZETA,13-7,Group Stage: Elimination (A),2022_masters1_reykjavik
+84645,77229,ZETA,13-11,Group Stage: Elimination (A),2022_masters1_reykjavik
+84645,all,ZETA,2-0,Group Stage: Elimination (A),2022_masters1_reykjavik
+84646,77231,NIP,13-6,Group Stage: Decider (A),2022_masters1_reykjavik
+84646,77233,ZETA,14-12,Group Stage: Decider (A),2022_masters1_reykjavik
+84646,77715,ZETA,13-10,Group Stage: Decider (A),2022_masters1_reykjavik
+84646,all,ZETA,2-1,Group Stage: Decider (A),2022_masters1_reykjavik
+84647,77234,TL,13-7,Group Stage: Winner's (B),2022_masters1_reykjavik
+84647,77235,XIA,13-11,Group Stage: Winner's (B),2022_masters1_reykjavik
+84647,77236,TL,17-15,Group Stage: Winner's (B),2022_masters1_reykjavik
+84647,all,TL,2-1,Group Stage: Winner's (B),2022_masters1_reykjavik
+84648,77237,OPTC,13-5,Group Stage: Elimination (B),2022_masters1_reykjavik
+84648,77238,OPTC,13-10,Group Stage: Elimination (B),2022_masters1_reykjavik
+84648,all,OPTC,2-0,Group Stage: Elimination (B),2022_masters1_reykjavik
+84649,77240,OPTC,13-9,Group Stage: Decider (B),2022_masters1_reykjavik
+84649,77241,OPTC,13-6,Group Stage: Decider (B),2022_masters1_reykjavik
+84649,all,OPTC,2-0,Group Stage: Decider (B),2022_masters1_reykjavik
+85523,77482,G2,13-7,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85523,77483,G2,13-10,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85523,all,G2,2-0,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85524,77485,OPTC,13-7,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85524,77486,TGRD,13-7,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85524,77487,OPTC,13-11,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85524,all,OPTC,2-1,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85525,77488,PRX,13-10,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85525,77489,KRX,13-8,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85525,77490,KRX,13-8,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85525,all,KRX,2-1,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85526,77491,LOUD,13-10,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85526,77492,TL,13-3,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85526,77493,LOUD,13-10,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85526,all,LOUD,2-1,Playoffs: Upper Quarterfinals,2022_masters1_reykjavik
+85527,77494,LOUD,13-5,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85527,77495,LOUD,13-11,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85527,all,LOUD,2-0,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85528,77497,KRX,13-8,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85528,77498,OPTC,13-11,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85528,77499,OPTC,15-13,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85528,all,OPTC,2-1,Playoffs: Upper Semifinals,2022_masters1_reykjavik
+85529,77500,OPTC,13-2,Playoffs: Upper Final,2022_masters1_reykjavik
+85529,77501,LOUD,13-8,Playoffs: Upper Final,2022_masters1_reykjavik
+85529,77502,LOUD,13-11,Playoffs: Upper Final,2022_masters1_reykjavik
+85529,all,LOUD,2-1,Playoffs: Upper Final,2022_masters1_reykjavik
+85530,77503,OPTC,13-9,Playoffs: Grand Final,2022_masters1_reykjavik
+85530,77504,OPTC,14-12,Playoffs: Grand Final,2022_masters1_reykjavik
+85530,77505,OPTC,15-13,Playoffs: Grand Final,2022_masters1_reykjavik
+85530,all,OPTC,3-0,Playoffs: Grand Final,2022_masters1_reykjavik
+85531,77508,ZETA,13-7,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85531,77509,TL,13-4,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85531,77510,ZETA,13-7,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85531,all,ZETA,2-1,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85532,77511,PRX,13-10,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85532,77512,PRX,13-8,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85532,all,PRX,2-0,Playoffs: Lower Round 1,2022_masters1_reykjavik
+85533,77514,ZETA,13-11,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85533,77515,KRX,13-10,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85533,77516,ZETA,13-4,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85533,all,ZETA,2-1,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85534,77517,PRX,13-10,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85534,77518,PRX,13-7,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85534,all,PRX,2-0,Playoffs: Lower Round 2,2022_masters1_reykjavik
+85535,77520,PRX,13-6,Playoffs: Lower Round 3,2022_masters1_reykjavik
+85535,77521,ZETA,13-2,Playoffs: Lower Round 3,2022_masters1_reykjavik
+85535,77522,ZETA,13-10,Playoffs: Lower Round 3,2022_masters1_reykjavik
+85535,all,ZETA,2-1,Playoffs: Lower Round 3,2022_masters1_reykjavik
+85536,77523,OPTC,15-13,Playoffs: Lower Final,2022_masters1_reykjavik
+85536,77524,OPTC,13-5,Playoffs: Lower Final,2022_masters1_reykjavik
+85536,77525,OPTC,13-8,Playoffs: Lower Final,2022_masters1_reykjavik
+85536,all,OPTC,3-0,Playoffs: Lower Final,2022_masters1_reykjavik
+112282,90553,GLD,13-11,Group Stage: Opening (A),2022_masters2_copenhagen
+112282,90554,GLD,16-14,Group Stage: Opening (A),2022_masters2_copenhagen
+112282,all,GLD,2-0,Group Stage: Opening (A),2022_masters2_copenhagen
+112283,90556,LOUD,13-10,Group Stage: Opening (A),2022_masters2_copenhagen
+112283,90557,KRÜ,13-9,Group Stage: Opening (A),2022_masters2_copenhagen
+112283,90558,KRÜ,13-10,Group Stage: Opening (A),2022_masters2_copenhagen
+112283,all,KRÜ,2-1,Group Stage: Opening (A),2022_masters2_copenhagen
+112284,90559,KRÜ,14-12,Group Stage: Winner's (A),2022_masters2_copenhagen
+112284,90560,GLD,13-6,Group Stage: Winner's (A),2022_masters2_copenhagen
+112284,90561,GLD,16-14,Group Stage: Winner's (A),2022_masters2_copenhagen
+112284,all,GLD,2-1,Group Stage: Winner's (A),2022_masters2_copenhagen
+112285,90562,LOUD,13-8,Group Stage: Elimination (A),2022_masters2_copenhagen
+112285,90563,OPTC,13-8,Group Stage: Elimination (A),2022_masters2_copenhagen
+112285,90564,OPTC,14-12,Group Stage: Elimination (A),2022_masters2_copenhagen
+112285,all,OPTC,2-1,Group Stage: Elimination (A),2022_masters2_copenhagen
+112286,90565,OPTC,13-7,Group Stage: Decider (A),2022_masters2_copenhagen
+112286,90566,OPTC,13-6,Group Stage: Decider (A),2022_masters2_copenhagen
+112286,all,OPTC,2-0,Group Stage: Decider (A),2022_masters2_copenhagen
+112287,90568,FPX,14-12,Group Stage: Opening (B),2022_masters2_copenhagen
+112287,90569,XIA,13-9,Group Stage: Opening (B),2022_masters2_copenhagen
+112287,90570,FPX,13-10,Group Stage: Opening (B),2022_masters2_copenhagen
+112287,all,FPX,2-1,Group Stage: Opening (B),2022_masters2_copenhagen
+112288,90571,KRX,13-8,Group Stage: Opening (B),2022_masters2_copenhagen
+112288,90572,KRX,13-1,Group Stage: Opening (B),2022_masters2_copenhagen
+112288,all,KRX,2-0,Group Stage: Opening (B),2022_masters2_copenhagen
+112289,90574,FPX,13-8,Group Stage: Winner's (B),2022_masters2_copenhagen
+112289,90575,KRX,13-6,Group Stage: Winner's (B),2022_masters2_copenhagen
+112289,90576,KRX,13-6,Group Stage: Winner's (B),2022_masters2_copenhagen
+112289,all,KRX,2-1,Group Stage: Winner's (B),2022_masters2_copenhagen
+112290,90577,XIA,13-9,Group Stage: Elimination (B),2022_masters2_copenhagen
+112290,90578,NTH,13-8,Group Stage: Elimination (B),2022_masters2_copenhagen
+112290,90579,NTH,15-13,Group Stage: Elimination (B),2022_masters2_copenhagen
+112290,all,NTH,2-1,Group Stage: Elimination (B),2022_masters2_copenhagen
+112291,90580,FPX,13-9,Group Stage: Decider (B),2022_masters2_copenhagen
+112291,90581,FPX,13-9,Group Stage: Decider (B),2022_masters2_copenhagen
+112291,all,FPX,2-0,Group Stage: Decider (B),2022_masters2_copenhagen
+112320,90637,PRX,13-4,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112320,90638,PRX,14-12,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112320,all,PRX,2-0,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112321,90640,FNC,13-10,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112321,90641,FNC,13-4,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112321,all,FNC,2-0,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112322,90643,LEV,13-6,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112322,90644,KRX,13-5,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112322,90645,KRX,13-11,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112322,all,KRX,2-1,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112323,90646,OPTC,13-7,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112323,90647,OPTC,13-6,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112323,all,OPTC,2-0,Playoffs: Upper Quarterfinals,2022_masters2_copenhagen
+112324,90649,PRX,13-11,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112324,90650,PRX,13-10,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112324,all,PRX,2-0,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112325,90652,KRX,13-4,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112325,90653,OPTC,13-4,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112325,90654,OPTC,13-11,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112325,all,OPTC,2-1,Playoffs: Upper Semifinals,2022_masters2_copenhagen
+112326,90655,PRX,13-3,Playoffs: Upper Final,2022_masters2_copenhagen
+112326,90656,OPTC,13-9,Playoffs: Upper Final,2022_masters2_copenhagen
+112326,90657,PRX,13-5,Playoffs: Upper Final,2022_masters2_copenhagen
+112326,all,PRX,2-1,Playoffs: Upper Final,2022_masters2_copenhagen
+112327,90658,FPX,13-3,Playoffs: Grand Final,2022_masters2_copenhagen
+112327,90659,PRX,13-7,Playoffs: Grand Final,2022_masters2_copenhagen
+112327,90660,FPX,13-7,Playoffs: Grand Final,2022_masters2_copenhagen
+112327,90661,PRX,13-7,Playoffs: Grand Final,2022_masters2_copenhagen
+112327,90662,FPX,13-9,Playoffs: Grand Final,2022_masters2_copenhagen
+112327,all,FPX,3-2,Playoffs: Grand Final,2022_masters2_copenhagen
+112328,90663,FPX,13-11,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112328,91833,GLD,13-3,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112328,91834,FPX,13-4,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112328,all,FPX,2-1,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112329,90664,XSET,13-9,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112329,91835,LEV,15-13,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112329,91836,LEV,16-14,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112329,all,LEV,2-1,Playoffs: Lower Round 1,2022_masters2_copenhagen
+112330,90665,FPX,13-9,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112330,90666,FPX,13-5,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112330,all,FPX,2-0,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112331,90668,FNC,14-12,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112331,90669,LEV,13-10,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112331,90670,FNC,17-15,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112331,all,FNC,2-1,Playoffs: Lower Round 2,2022_masters2_copenhagen
+112332,90671,FNC,15-13,Playoffs: Lower Round 3,2022_masters2_copenhagen
+112332,90672,FPX,13-7,Playoffs: Lower Round 3,2022_masters2_copenhagen
+112332,90673,FPX,13-5,Playoffs: Lower Round 3,2022_masters2_copenhagen
+112332,all,FPX,2-1,Playoffs: Lower Round 3,2022_masters2_copenhagen
+112334,90674,FPX,13-6,Playoffs: Lower Final,2022_masters2_copenhagen
+112334,90675,FPX,13-8,Playoffs: Lower Final,2022_masters2_copenhagen
+112334,90676,OPTC,13-6,Playoffs: Lower Final,2022_masters2_copenhagen
+112334,90677,FPX,13-7,Playoffs: Lower Final,2022_masters2_copenhagen
+112334,all,FPX,3-1,Playoffs: Lower Final,2022_masters2_copenhagen
+130617,95029,PRX,13-11,Group Stage: Opening (A),2022_champions
+130617,95030,EDG,13-5,Group Stage: Opening (A),2022_champions
+130617,95031,PRX,13-8,Group Stage: Opening (A),2022_champions
+130617,all,PRX,2-1,Group Stage: Opening (A),2022_champions
+130618,95032,LEV,13-10,Group Stage: Opening (A),2022_champions
+130618,95033,LEV,13-10,Group Stage: Opening (A),2022_champions
+130618,all,LEV,2-0,Group Stage: Opening (A),2022_champions
+130619,95035,LEV,13-8,Group Stage: Winner's (A),2022_champions
+130619,95036,LEV,13-11,Group Stage: Winner's (A),2022_champions
+130619,all,LEV,2-0,Group Stage: Winner's (A),2022_champions
+130620,95038,TL,13-5,Group Stage: Elimination (A),2022_champions
+130620,95039,TL,14-12,Group Stage: Elimination (A),2022_champions
+130620,all,TL,2-0,Group Stage: Elimination (A),2022_champions
+130621,95041,TL,15-13,Group Stage: Decider (A),2022_champions
+130621,95042,PRX,13-4,Group Stage: Decider (A),2022_champions
+130621,95043,TL,13-8,Group Stage: Decider (A),2022_champions
+130621,all,TL,2-1,Group Stage: Decider (A),2022_champions
+130622,95044,BME,18-16,Group Stage: Opening (B),2022_champions
+130622,95045,OPTC,13-5,Group Stage: Opening (B),2022_champions
+130622,95046,OPTC,13-3,Group Stage: Opening (B),2022_champions
+130622,all,OPTC,2-1,Group Stage: Opening (B),2022_champions
+130623,95047,LOUD,13-8,Group Stage: Opening (B),2022_champions
+130623,95048,LOUD,13-9,Group Stage: Opening (B),2022_champions
+130623,all,LOUD,2-0,Group Stage: Opening (B),2022_champions
+130624,95050,LOUD,13-7,Group Stage: Winner's (B),2022_champions
+130624,95051,OPTC,13-10,Group Stage: Winner's (B),2022_champions
+130624,95052,OPTC,13-3,Group Stage: Winner's (B),2022_champions
+130624,all,OPTC,2-1,Group Stage: Winner's (B),2022_champions
+130625,95053,BME,13-11,Group Stage: Elimination (B),2022_champions
+130625,95054,ZETA,13-11,Group Stage: Elimination (B),2022_champions
+130625,95055,ZETA,13-2,Group Stage: Elimination (B),2022_champions
+130625,all,ZETA,2-1,Group Stage: Elimination (B),2022_champions
+130626,95056,LOUD,13-11,Group Stage: Decider (B),2022_champions
+130626,95057,LOUD,13-5,Group Stage: Decider (B),2022_champions
+130626,all,LOUD,2-0,Group Stage: Decider (B),2022_champions
+130627,95059,FPX,14-12,Group Stage: Opening (C),2022_champions
+130627,95060,FPX,13-10,Group Stage: Opening (C),2022_champions
+130627,all,FPX,2-0,Group Stage: Opening (C),2022_champions
+130628,95062,XSET,13-11,Group Stage: Opening (C),2022_champions
+130628,95063,XSET,13-10,Group Stage: Opening (C),2022_champions
+130628,all,XSET,2-0,Group Stage: Opening (C),2022_champions
+130629,95065,XSET,13-7,Group Stage: Winner's (C),2022_champions
+130629,95066,FPX,13-4,Group Stage: Winner's (C),2022_champions
+130629,95067,XSET,13-5,Group Stage: Winner's (C),2022_champions
+130629,all,XSET,2-1,Group Stage: Winner's (C),2022_champions
+130630,95068,KRÜ,13-4,Group Stage: Elimination (C),2022_champions
+130630,95069,XIA,13-7,Group Stage: Elimination (C),2022_champions
+130630,95070,KRÜ,13-6,Group Stage: Elimination (C),2022_champions
+130630,all,KRÜ,2-1,Group Stage: Elimination (C),2022_champions
+130631,95071,FPX,13-9,Group Stage: Decider (C),2022_champions
+130631,95072,FPX,13-4,Group Stage: Decider (C),2022_champions
+130631,all,FPX,2-0,Group Stage: Decider (C),2022_champions
+130632,95074,KRX,16-14,Group Stage: Opening (D),2022_champions
+130632,95075,KRX,13-4,Group Stage: Opening (D),2022_champions
+130632,all,KRX,2-0,Group Stage: Opening (D),2022_champions
+130633,95077,100T,13-10,Group Stage: Opening (D),2022_champions
+130633,95078,FNC,13-7,Group Stage: Opening (D),2022_champions
+130633,95079,100T,13-7,Group Stage: Opening (D),2022_champions
+130633,all,100T,2-1,Group Stage: Opening (D),2022_champions
+130634,95080,KRX,18-16,Group Stage: Winner's (D),2022_champions
+130634,95081,KRX,13-9,Group Stage: Winner's (D),2022_champions
+130634,all,KRX,2-0,Group Stage: Winner's (D),2022_champions
+130635,95083,FUR,13-9,Group Stage: Elimination (D),2022_champions
+130635,95084,FNC,13-7,Group Stage: Elimination (D),2022_champions
+130635,95085,FNC,13-11,Group Stage: Elimination (D),2022_champions
+130635,all,FNC,2-1,Group Stage: Elimination (D),2022_champions
+130636,95086,FNC,13-5,Group Stage: Decider (D),2022_champions
+130636,95087,FNC,13-7,Group Stage: Decider (D),2022_champions
+130636,all,FNC,2-0,Group Stage: Decider (D),2022_champions
+130678,95110,KRX,19-17,Playoffs: Upper Quarterfinals,2022_champions
+130678,95111,KRX,13-5,Playoffs: Upper Quarterfinals,2022_champions
+130678,all,KRX,2-0,Playoffs: Upper Quarterfinals,2022_champions
+130679,95113,LOUD,14-12,Playoffs: Upper Quarterfinals,2022_champions
+130679,95114,LOUD,13-6,Playoffs: Upper Quarterfinals,2022_champions
+130679,all,LOUD,2-0,Playoffs: Upper Quarterfinals,2022_champions
+130680,95116,TL,13-7,Playoffs: Upper Quarterfinals,2022_champions
+130680,95117,OPTC,13-8,Playoffs: Upper Quarterfinals,2022_champions
+130680,95118,OPTC,13-8,Playoffs: Upper Quarterfinals,2022_champions
+130680,all,OPTC,2-1,Playoffs: Upper Quarterfinals,2022_champions
+130681,95119,XSET,13-8,Playoffs: Upper Quarterfinals,2022_champions
+130681,95120,XSET,13-11,Playoffs: Upper Quarterfinals,2022_champions
+130681,all,XSET,2-0,Playoffs: Upper Quarterfinals,2022_champions
+130682,95122,LOUD,13-11,Playoffs: Upper Semifinals,2022_champions
+130682,95123,LOUD,13-6,Playoffs: Upper Semifinals,2022_champions
+130682,all,LOUD,2-0,Playoffs: Upper Semifinals,2022_champions
+130683,95125,OPTC,13-9,Playoffs: Upper Semifinals,2022_champions
+130683,95126,XSET,13-11,Playoffs: Upper Semifinals,2022_champions
+130683,95127,OPTC,13-8,Playoffs: Upper Semifinals,2022_champions
+130683,all,OPTC,2-1,Playoffs: Upper Semifinals,2022_champions
+130684,95128,LOUD,13-10,Playoffs: Upper Final,2022_champions
+130684,95129,LOUD,13-3,Playoffs: Upper Final,2022_champions
+130684,all,LOUD,2-0,Playoffs: Upper Final,2022_champions
+130685,95131,LOUD,15-13,Playoffs: Grand Final,2022_champions
+130685,95132,OPTC,13-6,Playoffs: Grand Final,2022_champions
+130685,95133,LOUD,16-14,Playoffs: Grand Final,2022_champions
+130685,95134,LOUD,13-5,Playoffs: Grand Final,2022_champions
+130685,all,LOUD,3-1,Playoffs: Grand Final,2022_champions
+130686,95136,FPX,13-6,Playoffs: Lower Round 1,2022_champions
+130686,95137,FPX,13-11,Playoffs: Lower Round 1,2022_champions
+130686,all,FPX,2-0,Playoffs: Lower Round 1,2022_champions
+130687,95139,FNC,13-6,Playoffs: Lower Round 1,2022_champions
+130687,95140,FNC,13-7,Playoffs: Lower Round 1,2022_champions
+130687,all,FNC,2-0,Playoffs: Lower Round 1,2022_champions
+130688,95142,XSET,13-11,Playoffs: Lower Round 2,2022_champions
+130688,95143,FPX,13-10,Playoffs: Lower Round 2,2022_champions
+130688,95144,FPX,13-11,Playoffs: Lower Round 2,2022_champions
+130688,all,FPX,2-1,Playoffs: Lower Round 2,2022_champions
+130689,95145,FNC,13-7,Playoffs: Lower Round 2,2022_champions
+130689,95146,KRX,14-12,Playoffs: Lower Round 2,2022_champions
+130689,95147,KRX,13-9,Playoffs: Lower Round 2,2022_champions
+130689,all,KRX,2-1,Playoffs: Lower Round 2,2022_champions
+130690,95148,KRX,13-11,Playoffs: Lower Round 3,2022_champions
+130690,95149,KRX,13-9,Playoffs: Lower Round 3,2022_champions
+130690,all,KRX,2-0,Playoffs: Lower Round 3,2022_champions
+130691,95151,OPTC,13-8,Playoffs: Lower Final,2022_champions
+130691,95152,OPTC,13-5,Playoffs: Lower Final,2022_champions
+130691,95153,KRX,13-8,Playoffs: Lower Final,2022_champions
+130691,95154,KRX,13-6,Playoffs: Lower Final,2022_champions
+130691,95155,OPTC,13-10,Playoffs: Lower Final,2022_champions
+130691,all,OPTC,3-2,Playoffs: Lower Final,2022_champions

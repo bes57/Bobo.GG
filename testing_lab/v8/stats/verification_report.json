@@ -1,0 +1,295 @@
+{
+ "mechanical": {
+  "per_event": {
+   "2021_champions": {
+    "n_series": 27,
+    "ok": 27
+   },
+   "2021_masters2_reykjavik": {
+    "n_series": 18,
+    "ok": 18
+   },
+   "2021_masters3_berlin": {
+    "n_series": 28,
+    "ok": 28
+   },
+   "2022_champions": {
+    "n_series": 34,
+    "ok": 34
+   },
+   "2022_masters1_reykjavik": {
+    "n_series": 24,
+    "ok": 24
+   },
+   "2022_masters2_copenhagen": {
+    "n_series": 24,
+    "ok": 24
+   },
+   "2023_china_champions_qual": {
+    "n_series": 12,
+    "ok": 12
+   },
+   "2023_china_evo_1": {
+    "n_series": 13,
+    "ok": 13
+   },
+   "2023_china_evo_3": {
+    "n_series": 12,
+    "ok": 12
+   },
+   "2023_convergence": {
+    "n_series": 5,
+    "ok": 5
+   },
+   "2023_lcq": {
+    "n_series": 26,
+    "ok": 26
+   },
+   "2023_rbhg": {
+    "n_series": 10,
+    "ok": 10
+   },
+   "2023_ten_global": {
+    "n_series": 9,
+    "ok": 9
+   },
+   "2024_fgc_inv": {
+    "n_series": 18,
+    "ok": 18
+   },
+   "2024_radiant_asia": {
+    "n_series": 16,
+    "ok": 16
+   },
+   "2024_rbhg": {
+    "n_series": 20,
+    "ok": 20
+   },
+   "2024_shanghai_masters": {
+    "n_series": 3,
+    "ok": 3
+   },
+   "2024_ten_asia": {
+    "n_series": 9,
+    "ok": 9
+   },
+   "2025_acl": {
+    "n_series": 7,
+    "ok": 7
+   },
+   "2025_china_evo_1": {
+    "n_series": 12,
+    "ok": 12
+   },
+   "2025_china_evo_2": {
+    "n_series": 12,
+    "ok": 12
+   },
+   "2025_china_evo_3": {
+    "n_series": 12,
+    "ok": 12
+   },
+   "2025_china_evo_epilogue": {
+    "n_series": 7,
+    "ok": 7
+   },
+   "2025_ewc": {
+    "n_series": 28,
+    "ok": 28
+   },
+   "2025_ewc_qual": {
+    "n_series": 49,
+    "ok": 49
+   },
+   "2025_radiant_intl": {
+    "n_series": 15,
+    "ok": 15
+   },
+   "2025_rbhg": {
+    "n_series": 12,
+    "ok": 12
+   },
+   "2025_shanghai_masters": {
+    "n_series": 3,
+    "ok": 3
+   },
+   "2025_super_champions_cup": {
+    "n_series": 10,
+    "ok": 10
+   },
+   "2025_ten_global": {
+    "n_series": 9,
+    "ok": 9
+   },
+   "2026_china_evo_1": {
+    "n_series": 6,
+    "ok": 6
+   }
+  },
+  "total_series": 490,
+  "total_maps_checked": 1134,
+  "failures": [],
+  "pass": true
+ },
+ "sample": {
+  "per_event": {
+   "2021_champions": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2021_masters2_reykjavik": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2021_masters3_berlin": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2022_champions": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2022_masters1_reykjavik": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2022_masters2_copenhagen": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2023_china_champions_qual": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2023_china_evo_1": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2023_china_evo_3": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2023_convergence": {
+    "n": 5,
+    "ok": 5,
+    "done": true
+   },
+   "2023_lcq": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2023_rbhg": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2023_ten_global": {
+    "n": 9,
+    "ok": 9,
+    "done": true
+   },
+   "2024_fgc_inv": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2024_radiant_asia": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2024_rbhg": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2024_shanghai_masters": {
+    "n": 3,
+    "ok": 3,
+    "done": true
+   },
+   "2024_ten_asia": {
+    "n": 9,
+    "ok": 9,
+    "done": true
+   },
+   "2025_acl": {
+    "n": 7,
+    "ok": 7,
+    "done": true
+   },
+   "2025_china_evo_1": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_china_evo_2": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_china_evo_3": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_china_evo_epilogue": {
+    "n": 7,
+    "ok": 7,
+    "done": true
+   },
+   "2025_ewc": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_ewc_qual": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_radiant_intl": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_rbhg": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_shanghai_masters": {
+    "n": 3,
+    "ok": 3,
+    "done": true
+   },
+   "2025_super_champions_cup": {
+    "n": 10,
+    "ok": 10,
+    "done": true
+   },
+   "2025_ten_global": {
+    "n": 9,
+    "ok": 9,
+    "done": true
+   },
+   "2026_china_evo_1": {
+    "n": 6,
+    "ok": 6,
+    "done": true
+   }
+  },
+  "failures": [],
+  "pass": true
+ }
+}

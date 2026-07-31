@@ -1,0 +1,262 @@
+{
+ "279601": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/279601/fut-esports-vs-team-heretics-red-bull-home-ground-4-emea-qualifier-round-robin",
+  "maps": {
+   "144297": [
+    "FUT",
+    "13-6"
+   ]
+  },
+  "series": [
+   "FUT",
+   "1-0"
+  ],
+  "match_name": "EMEA Qualifier: Round Robin Stage",
+  "utc_ts": "2023-10-14 09:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "TH"
+  ]
+ },
+ "283088": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283088/cloud9-vs-zeta-division-red-bull-home-ground-4-r1",
+  "maps": {
+   "147359": [
+    "ZETA",
+    "13-11"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 1",
+  "utc_ts": "2023-11-02 23:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "ZETA"
+  ]
+ },
+ "283089": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283089/fut-esports-vs-100-thieves-red-bull-home-ground-4-r1",
+  "maps": {
+   "147360": [
+    "FUT",
+    "13-3"
+   ]
+  },
+  "series": [
+   "FUT",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 1",
+  "utc_ts": "2023-11-03 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "FUT"
+  ]
+ },
+ "283093": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283093/fnatic-vs-zeta-division-red-bull-home-ground-4-r2",
+  "maps": {
+   "147364": [
+    "FNC",
+    "13-5"
+   ]
+  },
+  "series": [
+   "FNC",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 2",
+  "utc_ts": "2023-11-03 05:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "ZETA"
+  ]
+ },
+ "283095": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283095/drx-vs-fut-esports-red-bull-home-ground-4-r2",
+  "maps": {
+   "147366": [
+    "FUT",
+    "13-8"
+   ]
+  },
+  "series": [
+   "FUT",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 2",
+  "utc_ts": "2023-11-03 07:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "KRX"
+  ]
+ },
+ "283097": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283097/cloud9-vs-zeta-division-red-bull-home-ground-4-qf",
+  "maps": {
+   "147367": [
+    "ZETA",
+    "13-8"
+   ],
+   "147368": [
+    "C9",
+    "13-2"
+   ],
+   "147369": [
+    "C9",
+    "13-7"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2023-11-03 22:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "ZETA"
+  ]
+ },
+ "283098": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283098/drx-vs-100-thieves-red-bull-home-ground-4-qf",
+  "maps": {
+   "147370": [
+    "KRX",
+    "13-8"
+   ],
+   "147371": [
+    "KRX",
+    "13-11"
+   ]
+  },
+  "series": [
+   "KRX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2023-11-04 01:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "KRX"
+  ]
+ },
+ "283099": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283099/fut-esports-vs-cloud9-red-bull-home-ground-4-sf",
+  "maps": {
+   "147373": [
+    "C9",
+    "13-4"
+   ],
+   "147374": [
+    "FUT",
+    "13-9"
+   ],
+   "147375": [
+    "C9",
+    "13-10"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2023-11-04 05:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "FUT"
+  ]
+ },
+ "283100": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283100/fnatic-vs-drx-red-bull-home-ground-4-sf",
+  "maps": {
+   "147376": [
+    "FNC",
+    "13-3"
+   ],
+   "147377": [
+    "FNC",
+    "13-4"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2023-11-04 23:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "KRX"
+  ]
+ },
+ "283101": {
+  "event_id": "2023_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/283101/cloud9-vs-fnatic-red-bull-home-ground-4-gf",
+  "maps": {
+   "147379": [
+    "FNC",
+    "13-7"
+   ],
+   "147380": [
+    "C9",
+    "13-9"
+   ],
+   "147381": [
+    "C9",
+    "13-9"
+   ],
+   "147382": [
+    "FNC",
+    "13-8"
+   ],
+   "147383": [
+    "FNC",
+    "13-5"
+   ]
+  },
+  "series": [
+   "FNC",
+   "3-2"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2023-11-05 01:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "FNC"
+  ]
+ }
+}

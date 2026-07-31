@@ -1,0 +1,738 @@
+{
+ "510127": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510127/paper-rex-vs-bilibili-gaming-esports-world-cup-2025-opening-a",
+  "maps": {
+   "224966": [
+    "PRX",
+    "16-14"
+   ]
+  },
+  "series": [
+   "PRX",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2025-07-08 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "PRX"
+  ]
+ },
+ "510128": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510128/g2-esports-vs-karmine-corp-esports-world-cup-2025-opening-a",
+  "maps": {
+   "224969": [
+    "KC",
+    "13-6"
+   ]
+  },
+  "series": [
+   "KC",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (A)",
+  "utc_ts": "2025-07-08 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "KC"
+  ]
+ },
+ "510133": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510133/sentinels-vs-bbl-esports-esports-world-cup-2025-opening-b",
+  "maps": {
+   "224981": [
+    "BBL",
+    "14-12"
+   ]
+  },
+  "series": [
+   "BBL",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2025-07-08 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "SEN"
+  ]
+ },
+ "510134": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510134/drx-vs-xi-lai-gaming-esports-world-cup-2025-opening-b",
+  "maps": {
+   "224984": [
+    "KRX",
+    "13-6"
+   ]
+  },
+  "series": [
+   "KRX",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (B)",
+  "utc_ts": "2025-07-08 06:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "XLG"
+  ]
+ },
+ "510139": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510139/rex-regum-qeon-vs-titan-esports-club-esports-world-cup-2025-opening-c",
+  "maps": {
+   "224999": [
+    "RRQ",
+    "13-6"
+   ]
+  },
+  "series": [
+   "RRQ",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2025-07-08 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "RRQ",
+   "TEC"
+  ]
+ },
+ "510138": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510138/nrg-vs-team-heretics-esports-world-cup-2025-opening-c",
+  "maps": {
+   "224996": [
+    "NRG",
+    "13-4"
+   ]
+  },
+  "series": [
+   "NRG",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (C)",
+  "utc_ts": "2025-07-08 08:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "NRG",
+   "TH"
+  ]
+ },
+ "510144": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510144/gen-g-vs-edward-gaming-esports-world-cup-2025-opening-d",
+  "maps": {
+   "225014": [
+    "GEN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (D)",
+  "utc_ts": "2025-07-08 09:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "GEN"
+  ]
+ },
+ "510143": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510143/100-thieves-vs-fnatic-esports-world-cup-2025-opening-d",
+  "maps": {
+   "225011": [
+    "FNC",
+    "13-11"
+   ]
+  },
+  "series": [
+   "FNC",
+   "1-0"
+  ],
+  "match_name": "Group Stage: Opening (D)",
+  "utc_ts": "2025-07-08 09:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "FNC"
+  ]
+ },
+ "510129": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510129/paper-rex-vs-karmine-corp-esports-world-cup-2025-winners-a",
+  "maps": {
+   "224972": [
+    "PRX",
+    "13-10"
+   ],
+   "224973": [
+    "PRX",
+    "13-5"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (A)",
+  "utc_ts": "2025-07-08 10:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "KC",
+   "PRX"
+  ]
+ },
+ "510135": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510135/bbl-esports-vs-drx-esports-world-cup-2025-winners-b",
+  "maps": {
+   "224987": [
+    "BBL",
+    "14-12"
+   ],
+   "224988": [
+    "BBL",
+    "13-6"
+   ]
+  },
+  "series": [
+   "BBL",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (B)",
+  "utc_ts": "2025-07-08 11:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "KRX"
+  ]
+ },
+ "510145": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510145/fnatic-vs-gen-g-esports-world-cup-2025-winners-d",
+  "maps": {
+   "225017": [
+    "FNC",
+    "15-13"
+   ],
+   "225018": [
+    "FNC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (D)",
+  "utc_ts": "2025-07-08 12:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "GEN"
+  ]
+ },
+ "510140": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510140/nrg-vs-rex-regum-qeon-esports-world-cup-2025-winners-c",
+  "maps": {
+   "225002": [
+    "NRG",
+    "13-7"
+   ],
+   "225003": [
+    "NRG",
+    "13-8"
+   ]
+  },
+  "series": [
+   "NRG",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Winner's (C)",
+  "utc_ts": "2025-07-08 14:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "NRG",
+   "RRQ"
+  ]
+ },
+ "510131": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510131/bilibili-gaming-vs-g2-esports-esports-world-cup-2025-elim-a",
+  "maps": {
+   "224975": [
+    "BLG",
+    "13-3"
+   ],
+   "224976": [
+    "G2",
+    "13-4"
+   ],
+   "224977": [
+    "BLG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (A)",
+  "utc_ts": "2025-07-09 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "G2"
+  ]
+ },
+ "510136": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510136/sentinels-vs-xi-lai-gaming-esports-world-cup-2025-elim-b",
+  "maps": {
+   "224990": [
+    "SEN",
+    "13-9"
+   ],
+   "224991": [
+    "XLG",
+    "13-8"
+   ],
+   "224992": [
+    "SEN",
+    "13-9"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (B)",
+  "utc_ts": "2025-07-09 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "SEN",
+   "XLG"
+  ]
+ },
+ "510146": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510146/100-thieves-vs-edward-gaming-esports-world-cup-2025-elim-d",
+  "maps": {
+   "225020": [
+    "100T",
+    "13-11"
+   ],
+   "225021": [
+    "EDG",
+    "13-7"
+   ],
+   "225022": [
+    "EDG",
+    "13-10"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (D)",
+  "utc_ts": "2025-07-09 08:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "100T",
+   "EDG"
+  ]
+ },
+ "510141": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510141/team-heretics-vs-titan-esports-club-esports-world-cup-2025-elim-c",
+  "maps": {
+   "225005": [
+    "TEC",
+    "13-10"
+   ],
+   "225006": [
+    "TH",
+    "14-12"
+   ],
+   "225007": [
+    "TH",
+    "13-6"
+   ]
+  },
+  "series": [
+   "TH",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Elimination (C)",
+  "utc_ts": "2025-07-09 09:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "TH"
+  ]
+ },
+ "510132": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510132/karmine-corp-vs-bilibili-gaming-esports-world-cup-2025-decider-a",
+  "maps": {
+   "224978": [
+    "KC",
+    "13-5"
+   ],
+   "224979": [
+    "BLG",
+    "13-11"
+   ],
+   "224980": [
+    "KC",
+    "13-9"
+   ]
+  },
+  "series": [
+   "KC",
+   "2-1"
+  ],
+  "match_name": "Group Stage: Decider (A)",
+  "utc_ts": "2025-07-10 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "KC"
+  ]
+ },
+ "510137": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510137/drx-vs-sentinels-esports-world-cup-2025-decider-b",
+  "maps": {
+   "224993": [
+    "SEN",
+    "13-7"
+   ],
+   "224994": [
+    "SEN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "SEN",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (B)",
+  "utc_ts": "2025-07-10 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "KRX",
+   "SEN"
+  ]
+ },
+ "510142": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510142/rex-regum-qeon-vs-team-heretics-esports-world-cup-2025-decider-c",
+  "maps": {
+   "225008": [
+    "TH",
+    "13-3"
+   ],
+   "225009": [
+    "TH",
+    "15-13"
+   ]
+  },
+  "series": [
+   "TH",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (C)",
+  "utc_ts": "2025-07-10 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "RRQ",
+   "TH"
+  ]
+ },
+ "510147": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510147/gen-g-vs-edward-gaming-esports-world-cup-2025-decider-d",
+  "maps": {
+   "225023": [
+    "GEN",
+    "13-8"
+   ],
+   "225024": [
+    "GEN",
+    "13-4"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-0"
+  ],
+  "match_name": "Group Stage: Decider (D)",
+  "utc_ts": "2025-07-10 08:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "GEN"
+  ]
+ },
+ "510149": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510149/fnatic-vs-karmine-corp-esports-world-cup-2025-qf",
+  "maps": {
+   "225026": [
+    "FNC",
+    "14-12"
+   ],
+   "225027": [
+    "FNC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2025-07-11 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "KC"
+  ]
+ },
+ "510150": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510150/paper-rex-vs-sentinels-esports-world-cup-2025-qf",
+  "maps": {
+   "225029": [
+    "PRX",
+    "13-3"
+   ],
+   "225030": [
+    "PRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2025-07-11 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "PRX",
+   "SEN"
+  ]
+ },
+ "510151": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510151/nrg-vs-gen-g-esports-world-cup-2025-qf",
+  "maps": {
+   "225032": [
+    "GEN",
+    "13-6"
+   ],
+   "225033": [
+    "GEN",
+    "13-10"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2025-07-11 07:05:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "NRG"
+  ]
+ },
+ "510152": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510152/bbl-esports-vs-team-heretics-esports-world-cup-2025-qf",
+  "maps": {
+   "225035": [
+    "TH",
+    "13-3"
+   ],
+   "225036": [
+    "TH",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TH",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Quarterfinals",
+  "utc_ts": "2025-07-11 08:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "TH"
+  ]
+ },
+ "510153": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510153/fnatic-vs-paper-rex-esports-world-cup-2025-sf",
+  "maps": {
+   "225038": [
+    "PRX",
+    "13-10"
+   ],
+   "225039": [
+    "FNC",
+    "13-3"
+   ],
+   "225040": [
+    "FNC",
+    "13-8"
+   ]
+  },
+  "series": [
+   "FNC",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Semifinals",
+  "utc_ts": "2025-07-12 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "PRX"
+  ]
+ },
+ "510154": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510154/gen-g-vs-team-heretics-esports-world-cup-2025-sf",
+  "maps": {
+   "225041": [
+    "TH",
+    "13-7"
+   ],
+   "225042": [
+    "GEN",
+    "13-8"
+   ],
+   "225043": [
+    "TH",
+    "16-14"
+   ]
+  },
+  "series": [
+   "TH",
+   "2-1"
+  ],
+  "match_name": "Playoffs: Semifinals",
+  "utc_ts": "2025-07-12 08:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "TH"
+  ]
+ },
+ "510156": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510156/paper-rex-vs-gen-g-esports-world-cup-2025-cf",
+  "maps": {
+   "225049": [
+    "GEN",
+    "13-10"
+   ],
+   "225050": [
+    "GEN",
+    "13-8"
+   ]
+  },
+  "series": [
+   "GEN",
+   "2-0"
+  ],
+  "match_name": "Playoffs: Consolation Final",
+  "utc_ts": "2025-07-13 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "PRX"
+  ]
+ },
+ "510155": {
+  "event_id": "2025_ewc",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/510155/fnatic-vs-team-heretics-esports-world-cup-2025-gf",
+  "maps": {
+   "225044": [
+    "FNC",
+    "13-4"
+   ],
+   "225045": [
+    "FNC",
+    "13-1"
+   ],
+   "225046": [
+    "TH",
+    "13-11"
+   ],
+   "225047": [
+    "TH",
+    "13-10"
+   ],
+   "225048": [
+    "TH",
+    "13-10"
+   ]
+  },
+  "series": [
+   "TH",
+   "3-2"
+  ],
+  "match_name": "Playoffs: Grand Final",
+  "utc_ts": "2025-07-13 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "TH"
+  ]
+ }
+}

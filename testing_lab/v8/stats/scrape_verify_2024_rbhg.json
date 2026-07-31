@@ -1,0 +1,498 @@
+{
+ "408415": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/408415/sentinels-vs-cloud9-red-bull-home-ground-5-gf",
+  "maps": {
+   "186274": [
+    "C9",
+    "13-9"
+   ],
+   "186275": [
+    "C9",
+    "13-10"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-0"
+  ],
+  "match_name": "NA Play-ins: Grand Final",
+  "utc_ts": "2024-09-29 21:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "SEN"
+  ]
+ },
+ "414230": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414230/rex-regum-qeon-vs-detonation-focusme-red-bull-home-ground-5-g1",
+  "maps": {
+   "188578": [
+    "RRQ",
+    "13-10"
+   ]
+  },
+  "series": [
+   "RRQ",
+   "1-0"
+  ],
+  "match_name": "APAC Play-ins: Group 1",
+  "utc_ts": "2024-10-18 22:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "RRQ"
+  ]
+ },
+ "414231": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414231/talon-esports-vs-rex-regum-qeon-red-bull-home-ground-5-g1",
+  "maps": {
+   "188579": [
+    "TLN",
+    "13-11"
+   ]
+  },
+  "series": [
+   "TLN",
+   "1-0"
+  ],
+  "match_name": "APAC Play-ins: Group 1",
+  "utc_ts": "2024-10-19 01:35:00",
+  "parser": "ovw",
+  "orgs": [
+   "RRQ",
+   "TLN"
+  ]
+ },
+ "414235": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414235/zeta-division-vs-t1-red-bull-home-ground-5-g2",
+  "maps": {
+   "188582": [
+    "ZETA",
+    "13-7"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "1-0"
+  ],
+  "match_name": "APAC Play-ins: Group 2",
+  "utc_ts": "2024-10-19 03:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "T1",
+   "ZETA"
+  ]
+ },
+ "414232": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414232/talon-esports-vs-detonation-focusme-red-bull-home-ground-5-g1",
+  "maps": {
+   "188580": [
+    "DFM",
+    "13-10"
+   ]
+  },
+  "series": [
+   "DFM",
+   "1-0"
+  ],
+  "match_name": "APAC Play-ins: Group 1",
+  "utc_ts": "2024-10-19 04:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "TLN"
+  ]
+ },
+ "414238": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414238/rex-regum-qeon-vs-t1-red-bull-home-ground-5-sf",
+  "maps": {
+   "188584": [
+    "T1",
+    "13-3"
+   ],
+   "188585": [
+    "T1",
+    "13-9"
+   ]
+  },
+  "series": [
+   "T1",
+   "2-0"
+  ],
+  "match_name": "APAC Play-ins: Semifinals",
+  "utc_ts": "2024-10-19 07:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "RRQ",
+   "T1"
+  ]
+ },
+ "414239": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414239/zeta-division-vs-detonation-focusme-red-bull-home-ground-5-sf",
+  "maps": {
+   "188587": [
+    "DFM",
+    "13-7"
+   ],
+   "188588": [
+    "ZETA",
+    "13-6"
+   ],
+   "188589": [
+    "ZETA",
+    "15-13"
+   ]
+  },
+  "series": [
+   "ZETA",
+   "2-1"
+  ],
+  "match_name": "APAC Play-ins: Semifinals",
+  "utc_ts": "2024-10-19 22:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "DFM",
+   "ZETA"
+  ]
+ },
+ "414241": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/414241/t1-vs-zeta-division-red-bull-home-ground-5-gf",
+  "maps": {
+   "188591": [
+    "T1",
+    "13-10"
+   ],
+   "188592": [
+    "T1",
+    "13-5"
+   ],
+   "188593": [
+    "ZETA",
+    "13-7"
+   ],
+   "188594": [
+    "T1",
+    "13-3"
+   ]
+  },
+  "series": [
+   "T1",
+   "3-1"
+  ],
+  "match_name": "APAC Play-ins: Grand Final",
+  "utc_ts": "2024-10-20 03:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "T1",
+   "ZETA"
+  ]
+ },
+ "421597": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/421597/g2-esports-vs-bbl-esports-red-bull-home-ground-5-ubsf",
+  "maps": {
+   "192867": [
+    "G2",
+    "13-5"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "International Play-ins: Upper Semifinals",
+  "utc_ts": "2024-11-20 10:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "BBL",
+   "G2"
+  ]
+ },
+ "421599": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/421599/g2-esports-vs-fut-esports-red-bull-home-ground-5-ubf",
+  "maps": {
+   "192873": [
+    "FUT",
+    "13-11"
+   ]
+  },
+  "series": [
+   "FUT",
+   "1-0"
+  ],
+  "match_name": "International Play-ins: Upper Final",
+  "utc_ts": "2024-11-20 12:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "G2"
+  ]
+ },
+ "423621": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/423621/fnatic-vs-cloud9-red-bull-home-ground-5-r1",
+  "maps": {
+   "193708": [
+    "C9",
+    "13-11"
+   ]
+  },
+  "series": [
+   "C9",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 1",
+  "utc_ts": "2024-11-21 09:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "FNC"
+  ]
+ },
+ "423622": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/423622/g2-esports-vs-karmine-corp-red-bull-home-ground-5-r1",
+  "maps": {
+   "193709": [
+    "G2",
+    "13-7"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 1",
+  "utc_ts": "2024-11-21 10:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "KC"
+  ]
+ },
+ "423623": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/423623/fut-esports-vs-t1-red-bull-home-ground-5-r1",
+  "maps": {
+   "193710": [
+    "T1",
+    "13-7"
+   ]
+  },
+  "series": [
+   "T1",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 1",
+  "utc_ts": "2024-11-21 11:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "T1"
+  ]
+ },
+ "423972": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/423972/team-heretics-vs-cloud9-red-bull-home-ground-5-r2",
+  "maps": {
+   "193711": [
+    "C9",
+    "13-11"
+   ]
+  },
+  "series": [
+   "C9",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 2",
+  "utc_ts": "2024-11-21 13:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "TH"
+  ]
+ },
+ "423973": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/423973/g2-esports-vs-t1-red-bull-home-ground-5-r2",
+  "maps": {
+   "193712": [
+    "T1",
+    "13-11"
+   ]
+  },
+  "series": [
+   "T1",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 2",
+  "utc_ts": "2024-11-21 15:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "T1"
+  ]
+ },
+ "423975": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/423975/fut-esports-vs-karmine-corp-red-bull-home-ground-5-r2",
+  "maps": {
+   "193714": [
+    "FUT",
+    "13-5"
+   ]
+  },
+  "series": [
+   "FUT",
+   "1-0"
+  ],
+  "match_name": "Main Event: Round 2",
+  "utc_ts": "2024-11-21 15:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "KC"
+  ]
+ },
+ "424022": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/424022/fnatic-vs-g2-esports-red-bull-home-ground-5-r3",
+  "maps": {
+   "193729": [
+    "G2",
+    "13-9"
+   ],
+   "193730": [
+    "G2",
+    "13-2"
+   ]
+  },
+  "series": [
+   "G2",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round 3",
+  "utc_ts": "2024-11-22 09:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "FNC",
+   "G2"
+  ]
+ },
+ "424007": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/424007/g2-esports-vs-cloud9-red-bull-home-ground-5-sf",
+  "maps": {
+   "193718": [
+    "C9",
+    "13-5"
+   ],
+   "193719": [
+    "C9",
+    "13-4"
+   ]
+  },
+  "series": [
+   "C9",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2024-11-22 12:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "G2"
+  ]
+ },
+ "424006": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/424006/t1-vs-fut-esports-red-bull-home-ground-5-sf",
+  "maps": {
+   "193715": [
+    "T1",
+    "13-5"
+   ],
+   "193716": [
+    "FUT",
+    "13-3"
+   ],
+   "193717": [
+    "T1",
+    "13-10"
+   ]
+  },
+  "series": [
+   "T1",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2024-11-23 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "T1"
+  ]
+ },
+ "424008": {
+  "event_id": "2024_rbhg",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/424008/t1-vs-cloud9-red-bull-home-ground-5-gf",
+  "maps": {
+   "193721": [
+    "T1",
+    "13-10"
+   ],
+   "193722": [
+    "C9",
+    "13-8"
+   ],
+   "193723": [
+    "T1",
+    "13-8"
+   ],
+   "193724": [
+    "T1",
+    "13-6"
+   ]
+  },
+  "series": [
+   "T1",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2024-11-23 12:25:00",
+  "parser": "ovw",
+  "orgs": [
+   "C9",
+   "T1"
+  ]
+ }
+}

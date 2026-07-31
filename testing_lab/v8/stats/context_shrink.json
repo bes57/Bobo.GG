@@ -1,0 +1,204 @@
+{
+ "provenance": {
+  "agent": "context",
+  "written": "2026-07-28",
+  "frame": "v8/data/frame_expanded/series.csv sha256 ff772d41... (verified vs crn.json)",
+  "baseline_B0": {
+   "desc": "v6 champion replayed on expanded frame (consist 20/12, PO 1.6, champ x2, beta train-fit)",
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "n_test": 1217,
+   "n_train": 827
+  },
+  "mde_milli": {
+   "within": 1.773,
+   "cross": 5.889,
+   "source": "stats/power_mde_expanded.json"
+  },
+  "selection_rule": "train NLL only; holdout curves shown are transparency, never selection"
+ },
+ "preregistered": "preregister.context.md 3e",
+ "mechanism": "z' = beta*rdiff*exp(-k*X); X1 stand-in load (1-integ_w)+(1-integ_l); X2 |dlog1p(dso)|",
+ "ewc_bucket_baselines": {
+  "published_oldframe_legacy2026": {
+   "ll": 0.69182,
+   "n": 109
+  },
+  "B0_expanded_legacy2026": {
+   "ll": 0.68633,
+   "n": 115
+  },
+  "B0_expanded_fullclass": {
+   "ll": 0.67224,
+   "n": 291
+  }
+ },
+ "fit_X1_standin": {
+  "name": "3e shrink X1=stand-in load",
+  "ll_test": 0.64256,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.402,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.0004019390572233421,
+   "ci_lo": -0.002050170197110284,
+   "ci_hi": 0.0013288038030133062,
+   "p_better": 0.3125
+  },
+  "boot_block": {
+   "mean_delta": -0.0004019390572233421,
+   "ci_lo": -0.002767984127949236,
+   "ci_hi": 0.0024272468100436833,
+   "p_better": 0.38975
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0009,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68506,
+   "ll_B0": 0.68633,
+   "dll_milli": 1.26
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.66878,
+   "ll_B0": 0.67224,
+   "dll_milli": 3.46
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1251,
+   "k_standin": 0.3466
+  },
+  "ll_train": 0.6478
+ },
+ "fit_X2_prepasym": {
+  "name": "3e shrink X2=|dlog dso|",
+  "ll_test": 0.64217,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.008,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -7.9346443477125e-06,
+   "ci_lo": -6.350591505704001e-05,
+   "ci_hi": 4.6257825668966453e-05,
+   "p_better": 0.39275
+  },
+  "boot_block": {
+   "mean_delta": -7.9346443477125e-06,
+   "ci_lo": -7.062540020383988e-05,
+   "ci_hi": 6.80668567142439e-05,
+   "p_better": 0.3985
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68627,
+   "ll_B0": 0.68633,
+   "dll_milli": 0.05
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.67219,
+   "ll_B0": 0.67224,
+   "dll_milli": 0.05
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1148,
+   "k_prep": -0.0067
+  },
+  "ll_train": 0.64823
+ },
+ "fit_joint": {
+  "name": "3e shrink X1+X2",
+  "ll_test": 0.64267,
+  "ll_test_B0": 0.64216,
+  "dll_milli": -0.503,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": -0.000503368398201588,
+   "ci_lo": -0.002240326489825312,
+   "ci_hi": 0.0013225415901434922,
+   "p_better": 0.2805
+  },
+  "boot_block": {
+   "mean_delta": -0.000503368398201588,
+   "ci_lo": -0.0029291127329460916,
+   "ci_hi": 0.002453620860436233,
+   "p_better": 0.36775
+  },
+  "expected_roi_delta": 0.0,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": -0.0011,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68458,
+   "ll_B0": 0.68633,
+   "dll_milli": 1.75
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.66811,
+   "ll_B0": 0.67224,
+   "dll_milli": 4.13
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.123,
+   "k_standin": 0.3739,
+   "k_prep": -0.0488
+  },
+  "ll_train": 0.64776
+ },
+ "falsifier_class_dummy": {
+  "name": "3e FALSIFIER class dummy",
+  "ll_test": 0.64166,
+  "ll_test_B0": 0.64216,
+  "dll_milli": 0.5,
+  "pair_mde_milli": 1.773,
+  "mde_family": "within (v6-family variant, power_mde_expanded)",
+  "boot_iid": {
+   "mean_delta": 0.0004996689553613162,
+   "ci_lo": -0.003055126062789416,
+   "ci_hi": 0.004329696051889426,
+   "p_better": 0.61325
+  },
+  "boot_block": {
+   "mean_delta": 0.0004996689553613162,
+   "ci_lo": -0.003916156776732222,
+   "ci_hi": 0.003978062070565511,
+   "p_better": 0.622
+  },
+  "expected_roi_delta": 0.0004,
+  "roi_at_op": 0.0021,
+  "delta_logit_equiv": 0.0011,
+  "bucket_ewc_legacy2026": {
+   "n": 115,
+   "ll": 0.68299,
+   "ll_B0": 0.68633,
+   "dll_milli": 3.34
+  },
+  "bucket_ewc_fullclass": {
+   "n": 291,
+   "ll": 0.676,
+   "ll_B0": 0.67224,
+   "dll_milli": -3.76
+  },
+  "verdict": "INSIDE NOISE FLOOR",
+  "coef": {
+   "beta": 0.1278,
+   "k_ewc_dummy": 0.8595
+  },
+  "ll_train": 0.64585,
+  "role": "falsifier control \u2014 never a candidate"
+ },
+ "verdict_summary": "3e INSIDE NOISE FLOOR everywhere (overall: X1 -0.402m, X2 -0.008m, joint -0.503m, dummy +0.500m; floor 1.773m). Mechanism sign correct (k_standin +0.347 train). Buckets: X1 improves the EWC class it targets (+3.46m full n=291, +1.26m legacy-2026 n=115); the class-dummy falsifier (k=+0.860) SPLITS - legacy-2026 +3.34m better but full class -3.76m worse, with its overall +0.50m coming from beta re-inflation on non-EWC rows. On the preregistered primary bucket (full class) the observable mechanism beats the dummy; on the 2026-only slice it does not. No promotable effect; stand-in shrink kept as a Phase-5 lead with this bucket-definition sensitivity flagged."
+}

@@ -1,0 +1,226 @@
+{
+ "methods": {
+  "pairing": "(var(l_cand)+var(l_v6))/var(d): unpaired two-sample variance of the mean difference vs paired, equal n. Effective-n multiplier of pairing.",
+  "cv_l6": "control variate x = l_v6 - mean(l_v6); multiplier = 1/(1-rho^2). Valid design number for candidate-vs-candidate tests / CUPED; for cand-vs-v6 the covariate is a component of d (bootstrap dispersion shrinks; point estimate unchanged).",
+  "cv_multivariate": "OLS residualization of d on [1, l_v6, |rd_v6|, p_fav_v6]; var(d)/var(resid).",
+  "blocking": "DEFF = var(block-bootstrap means)/var(iid-bootstrap means); >1 means iid CIs understate uncertainty (an inflation, not a reduction)."
+ },
+ "per_pair": [
+  {
+   "config": "v5_asym_W20L12",
+   "regime": "within",
+   "pairing_multiplier": 60.57,
+   "rho_d_l6": 0.156,
+   "cv_l6_multiplier": 1.025,
+   "cv_multivariate_multiplier": 1.028,
+   "deff_block_over_iid": 0.664
+  },
+  {
+   "config": "consist_16_10",
+   "regime": "within",
+   "pairing_multiplier": 377.35,
+   "rho_d_l6": -0.0443,
+   "cv_l6_multiplier": 1.002,
+   "cv_multivariate_multiplier": 1.003,
+   "deff_block_over_iid": 0.725
+  },
+  {
+   "config": "consist_14_8",
+   "regime": "within",
+   "pairing_multiplier": 115.34,
+   "rho_d_l6": -0.0904,
+   "cv_l6_multiplier": 1.008,
+   "cv_multivariate_multiplier": 1.01,
+   "deff_block_over_iid": 0.771
+  },
+  {
+   "config": "consist_12_8",
+   "regime": "within",
+   "pairing_multiplier": 64.76,
+   "rho_d_l6": 0.0633,
+   "cv_l6_multiplier": 1.004,
+   "cv_multivariate_multiplier": 1.005,
+   "deff_block_over_iid": 0.653
+  },
+  {
+   "config": "v6_consist_20_12+form3",
+   "regime": "within",
+   "pairing_multiplier": 1340.09,
+   "rho_d_l6": 0.0941,
+   "cv_l6_multiplier": 1.009,
+   "cv_multivariate_multiplier": 1.01,
+   "deff_block_over_iid": 1.07
+  },
+  {
+   "config": "v6_consist_20_12+form5",
+   "regime": "within",
+   "pairing_multiplier": 48930.02,
+   "rho_d_l6": -0.1917,
+   "cv_l6_multiplier": 1.038,
+   "cv_multivariate_multiplier": 1.039,
+   "deff_block_over_iid": 1.0
+  },
+  {
+   "config": "v6_consist_20_12+form8",
+   "regime": "within",
+   "pairing_multiplier": 163301.95,
+   "rho_d_l6": -0.362,
+   "cv_l6_multiplier": 1.151,
+   "cv_multivariate_multiplier": 1.156,
+   "deff_block_over_iid": 1.083
+  },
+  {
+   "config": "sym_6",
+   "regime": "cross",
+   "pairing_multiplier": 8.48,
+   "rho_d_l6": 0.3513,
+   "cv_l6_multiplier": 1.141,
+   "cv_multivariate_multiplier": 1.145,
+   "deff_block_over_iid": 0.479
+  },
+  {
+   "config": "sym_8",
+   "regime": "cross",
+   "pairing_multiplier": 14.82,
+   "rho_d_l6": 0.3033,
+   "cv_l6_multiplier": 1.101,
+   "cv_multivariate_multiplier": 1.105,
+   "deff_block_over_iid": 0.457
+  },
+  {
+   "config": "sym_10",
+   "regime": "cross",
+   "pairing_multiplier": 24.35,
+   "rho_d_l6": 0.2959,
+   "cv_l6_multiplier": 1.096,
+   "cv_multivariate_multiplier": 1.1,
+   "deff_block_over_iid": 0.462
+  },
+  {
+   "config": "sym_12",
+   "regime": "cross",
+   "pairing_multiplier": 37.17,
+   "rho_d_l6": 0.3208,
+   "cv_l6_multiplier": 1.115,
+   "cv_multivariate_multiplier": 1.12,
+   "deff_block_over_iid": 0.473
+  },
+  {
+   "config": "sym_14",
+   "regime": "cross",
+   "pairing_multiplier": 51.48,
+   "rho_d_l6": 0.366,
+   "cv_l6_multiplier": 1.155,
+   "cv_multivariate_multiplier": 1.163,
+   "deff_block_over_iid": 0.494
+  },
+  {
+   "config": "sym_16",
+   "regime": "cross",
+   "pairing_multiplier": 63.19,
+   "rho_d_l6": 0.4161,
+   "cv_l6_multiplier": 1.209,
+   "cv_multivariate_multiplier": 1.222,
+   "deff_block_over_iid": 0.532
+  },
+  {
+   "config": "sym_20",
+   "regime": "cross",
+   "pairing_multiplier": 67.6,
+   "rho_d_l6": 0.4823,
+   "cv_l6_multiplier": 1.303,
+   "cv_multivariate_multiplier": 1.322,
+   "deff_block_over_iid": 0.64
+  },
+  {
+   "config": "sym_24",
+   "regime": "cross",
+   "pairing_multiplier": 56.49,
+   "rho_d_l6": 0.4994,
+   "cv_l6_multiplier": 1.332,
+   "cv_multivariate_multiplier": 1.352,
+   "deff_block_over_iid": 0.741
+  },
+  {
+   "config": "surprise_12_20",
+   "regime": "cross",
+   "pairing_multiplier": 12.15,
+   "rho_d_l6": 0.4711,
+   "cv_l6_multiplier": 1.285,
+   "cv_multivariate_multiplier": 1.301,
+   "deff_block_over_iid": 0.533
+  },
+  {
+   "config": "surprise_16_24",
+   "regime": "cross",
+   "pairing_multiplier": 19.39,
+   "rho_d_l6": 0.5035,
+   "cv_l6_multiplier": 1.34,
+   "cv_multivariate_multiplier": 1.36,
+   "deff_block_over_iid": 0.612
+  },
+  {
+   "config": "boxexp_c3_hl8",
+   "regime": "cross",
+   "pairing_multiplier": 16.87,
+   "rho_d_l6": 0.2912,
+   "cv_l6_multiplier": 1.093,
+   "cv_multivariate_multiplier": 1.097,
+   "deff_block_over_iid": 0.449
+  },
+  {
+   "config": "boxexp_c5_hl10",
+   "regime": "cross",
+   "pairing_multiplier": 28.54,
+   "rho_d_l6": 0.3123,
+   "cv_l6_multiplier": 1.108,
+   "cv_multivariate_multiplier": 1.114,
+   "deff_block_over_iid": 0.514
+  },
+  {
+   "config": "power_t6_a15",
+   "regime": "cross",
+   "pairing_multiplier": 13.15,
+   "rho_d_l6": 0.3616,
+   "cv_l6_multiplier": 1.15,
+   "cv_multivariate_multiplier": 1.155,
+   "deff_block_over_iid": 0.762
+  },
+  {
+   "config": "sym_20+form3",
+   "regime": "cross",
+   "pairing_multiplier": 65.4,
+   "rho_d_l6": 0.4872,
+   "cv_l6_multiplier": 1.311,
+   "cv_multivariate_multiplier": 1.331,
+   "deff_block_over_iid": 0.609
+  },
+  {
+   "config": "sym_20+form5",
+   "regime": "cross",
+   "pairing_multiplier": 57.6,
+   "rho_d_l6": 0.4797,
+   "cv_l6_multiplier": 1.299,
+   "cv_multivariate_multiplier": 1.32,
+   "deff_block_over_iid": 0.581
+  },
+  {
+   "config": "sym_20+form8",
+   "regime": "cross",
+   "pairing_multiplier": 52.46,
+   "rho_d_l6": 0.4723,
+   "cv_l6_multiplier": 1.287,
+   "cv_multivariate_multiplier": 1.308,
+   "deff_block_over_iid": 0.642
+  }
+ ],
+ "medians": {
+  "pairing_multiplier_within": 377.35,
+  "pairing_multiplier_cross": 32.855,
+  "cv_l6_multiplier_within": 1.009,
+  "cv_l6_multiplier_cross": 1.182,
+  "cv_multivariate_multiplier_within": 1.01,
+  "cv_multivariate_multiplier_cross": 1.192,
+  "deff_block_over_iid_median": 0.612
+ }
+}

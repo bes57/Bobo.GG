@@ -1,0 +1,428 @@
+{
+ "source": "data/upcoming_matches.json priced by trading_model/predict.py",
+ "model_version": "benpom-v6-2026-07-22",
+ "generated": "2026-07-28 23:24",
+ "no_v8_column_note": "No v8 column: no candidate was promoted by this program (all three compose stacks HOLD; v6 stands). The flag rule stays for the future: when a promoted candidate exists, this table carries its column plus a divergence flag on every match where |candidate \u2212 v6| \u2265 5 pts.",
+ "rows": [
+  {
+   "date": "2026-07-29",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "GX",
+   "b": "TL",
+   "team_a": "GIANTX",
+   "team_b": "Team Liquid",
+   "p_a_v6": 0.2953
+  },
+  {
+   "date": "2026-07-29",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "M8",
+   "b": "VIT",
+   "team_a": "Gentle Mates",
+   "team_b": "Team Vitality",
+   "p_a_v6": 0.4728
+  },
+  {
+   "date": "2026-07-30",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "KR\u00dc",
+   "b": "G2",
+   "team_a": "KR\u00dc Esports",
+   "team_b": "G2 Esports",
+   "p_a_v6": 0.2895
+  },
+  {
+   "date": "2026-07-30",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "100T",
+   "b": "SEN",
+   "team_a": "100 Thieves",
+   "team_b": "Sentinels",
+   "p_a_v6": 0.7249
+  },
+  {
+   "date": "2026-07-30",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "NAVI",
+   "b": "PCF",
+   "team_a": "Natus Vincere",
+   "team_b": "PCIFIC Esports",
+   "p_a_v6": 0.7611
+  },
+  {
+   "date": "2026-07-30",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "EF",
+   "b": "FNC",
+   "team_a": "Eternal Fire",
+   "team_b": "FNATIC",
+   "p_a_v6": 0.4974
+  },
+  {
+   "date": "2026-07-30",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "VL",
+   "b": "DFM",
+   "team_a": "VARREL",
+   "team_b": "DetonatioN FocusMe",
+   "p_a_v6": 0.503
+  },
+  {
+   "date": "2026-07-30",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "FS",
+   "b": "ZETA",
+   "team_a": "FULL SENSE",
+   "team_b": "ZETA DIVISION",
+   "p_a_v6": 0.7222
+  },
+  {
+   "date": "2026-07-31",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "C9",
+   "b": "LOUD",
+   "team_a": "Cloud9",
+   "team_b": "LOUD",
+   "p_a_v6": 0.4379
+  },
+  {
+   "date": "2026-07-31",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "EG",
+   "b": "MIBR",
+   "team_a": "Evil Geniuses",
+   "team_b": "MIBR",
+   "p_a_v6": 0.3722
+  },
+  {
+   "date": "2026-07-31",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "BBL",
+   "b": "M8",
+   "team_a": "BBL Esports",
+   "team_b": "Gentle Mates",
+   "p_a_v6": 0.5727
+  },
+  {
+   "date": "2026-07-31",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "GX",
+   "b": "TH",
+   "team_a": "GIANTX",
+   "team_b": "Team Heretics",
+   "p_a_v6": 0.2675
+  },
+  {
+   "date": "2026-07-31",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "TS",
+   "b": "PRX",
+   "team_a": "Team Secret",
+   "team_b": "Paper Rex",
+   "p_a_v6": 0.2219
+  },
+  {
+   "date": "2026-07-31",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "GE",
+   "b": "GEN",
+   "team_a": "Global Esports",
+   "team_b": "Gen.G",
+   "p_a_v6": 0.4153
+  },
+  {
+   "date": "2026-08-01",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "ENVY",
+   "b": "FUR",
+   "team_a": "ENVY",
+   "team_b": "FURIA",
+   "p_a_v6": 0.385
+  },
+  {
+   "date": "2026-08-01",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "LEV",
+   "b": "NRG",
+   "team_a": "LEVIAT\u00c1N",
+   "team_b": "NRG",
+   "p_a_v6": 0.4459
+  },
+  {
+   "date": "2026-08-01",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "FUT",
+   "b": "VIT",
+   "team_a": "FUT Esports",
+   "team_b": "Team Vitality",
+   "p_a_v6": 0.3779
+  },
+  {
+   "date": "2026-08-01",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "KC",
+   "b": "TL",
+   "team_a": "Karmine Corp",
+   "team_b": "Team Liquid",
+   "p_a_v6": 0.5118
+  },
+  {
+   "date": "2026-08-01",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "T1",
+   "b": "DFM",
+   "team_a": "T1",
+   "team_b": "DetonatioN FocusMe",
+   "p_a_v6": 0.7107
+  },
+  {
+   "date": "2026-08-01",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "FS",
+   "b": "RRQ",
+   "team_a": "FULL SENSE",
+   "team_b": "Rex Regum Qeon",
+   "p_a_v6": 0.5606
+  },
+  {
+   "date": "2026-08-02",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "C9",
+   "b": "KR\u00dc",
+   "team_a": "Cloud9",
+   "team_b": "KR\u00dc Esports",
+   "p_a_v6": 0.4681
+  },
+  {
+   "date": "2026-08-02",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "G2",
+   "b": "SEN",
+   "team_a": "G2 Esports",
+   "team_b": "Sentinels",
+   "p_a_v6": 0.5922
+  },
+  {
+   "date": "2026-08-02",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "BBL",
+   "b": "PCF",
+   "team_a": "BBL Esports",
+   "team_b": "PCIFIC Esports",
+   "p_a_v6": 0.8266
+  },
+  {
+   "date": "2026-08-02",
+   "event": "2026 Stage 2 \u2014 EMEA",
+   "format": "bo3",
+   "a": "FNC",
+   "b": "TH",
+   "team_a": "FNATIC",
+   "team_b": "Team Heretics",
+   "p_a_v6": 0.5092
+  },
+  {
+   "date": "2026-08-02",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "VL",
+   "b": "KRX",
+   "team_a": "VARREL",
+   "team_b": "KIWOOM DRX",
+   "p_a_v6": 0.3508
+  },
+  {
+   "date": "2026-08-02",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "ZETA",
+   "b": "NS",
+   "team_a": "ZETA DIVISION",
+   "team_b": "Nongshim RedForce",
+   "p_a_v6": 0.1478
+  },
+  {
+   "date": "2026-08-06",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "EG",
+   "b": "FUR",
+   "team_a": "Evil Geniuses",
+   "team_b": "FURIA",
+   "p_a_v6": 0.4722
+  },
+  {
+   "date": "2026-08-06",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "ENVY",
+   "b": "NRG",
+   "team_a": "ENVY",
+   "team_b": "NRG",
+   "p_a_v6": 0.1819
+  },
+  {
+   "date": "2026-08-06",
+   "event": "2026 Stage 2 \u2014 CN",
+   "format": "bo3",
+   "a": "FPX",
+   "b": "JDG",
+   "team_a": "FunPlus Phoenix",
+   "team_b": "JDG Esports",
+   "p_a_v6": 0.5943
+  },
+  {
+   "date": "2026-08-06",
+   "event": "2026 Stage 2 \u2014 CN",
+   "format": "bo3",
+   "a": "WOL",
+   "b": "DRG",
+   "team_a": "Wolves Esports",
+   "team_b": "Dragon Ranger Gaming",
+   "p_a_v6": 0.4673
+  },
+  {
+   "date": "2026-08-07",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "100T",
+   "b": "C9",
+   "team_a": "100 Thieves",
+   "team_b": "Cloud9",
+   "p_a_v6": 0.838
+  },
+  {
+   "date": "2026-08-07",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "G2",
+   "b": "LOUD",
+   "team_a": "G2 Esports",
+   "team_b": "LOUD",
+   "p_a_v6": 0.6844
+  },
+  {
+   "date": "2026-08-07",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "TS",
+   "b": "DFM",
+   "team_a": "Team Secret",
+   "team_b": "DetonatioN FocusMe",
+   "p_a_v6": 0.5576
+  },
+  {
+   "date": "2026-08-07",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "GEN",
+   "b": "FS",
+   "team_a": "Gen.G",
+   "team_b": "FULL SENSE",
+   "p_a_v6": 0.5855
+  },
+  {
+   "date": "2026-08-08",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "KR\u00dc",
+   "b": "SEN",
+   "team_a": "KR\u00dc Esports",
+   "team_b": "Sentinels",
+   "p_a_v6": 0.3727
+  },
+  {
+   "date": "2026-08-08",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "LEV",
+   "b": "MIBR",
+   "team_a": "LEVIAT\u00c1N",
+   "team_b": "MIBR",
+   "p_a_v6": 0.5942
+  },
+  {
+   "date": "2026-08-08",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "KRX",
+   "b": "T1",
+   "team_a": "KIWOOM DRX",
+   "team_b": "T1",
+   "p_a_v6": 0.4336
+  },
+  {
+   "date": "2026-08-08",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "GE",
+   "b": "ZETA",
+   "team_a": "Global Esports",
+   "team_b": "ZETA DIVISION",
+   "p_a_v6": 0.7229
+  },
+  {
+   "date": "2026-08-09",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "EG",
+   "b": "NRG",
+   "team_a": "Evil Geniuses",
+   "team_b": "NRG",
+   "p_a_v6": 0.2438
+  },
+  {
+   "date": "2026-08-09",
+   "event": "2026 Stage 2 \u2014 Americas",
+   "format": "bo3",
+   "a": "LOUD",
+   "b": "100T",
+   "team_a": "LOUD",
+   "team_b": "100 Thieves",
+   "p_a_v6": 0.201
+  },
+  {
+   "date": "2026-08-09",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "VL",
+   "b": "PRX",
+   "team_a": "VARREL",
+   "team_b": "Paper Rex",
+   "p_a_v6": 0.1848
+  },
+  {
+   "date": "2026-08-09",
+   "event": "2026 Stage 2 \u2014 Pacific",
+   "format": "bo3",
+   "a": "NS",
+   "b": "RRQ",
+   "team_a": "Nongshim RedForce",
+   "team_b": "Rex Regum Qeon",
+   "p_a_v6": 0.7338
+  }
+ ]
+}

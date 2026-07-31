@@ -1,0 +1,106 @@
+{
+ "generated_by": "agent:power post-corpus addendum, 2026-07-28",
+ "preregistered": "preregister.power.md POST-CORPUS ADDENDUM (written before computing)",
+ "production_files_untouched": "data/rating_timeline*.json not rebuilt; counts from raw match_results.csv + maps/<event>.csv + match_dates.json only",
+ "prefranchise_excluded": "verified: no 2021-22 dates in match_dates.json",
+ "calibration": {
+  "raw_series_total": 2068,
+  "corpus_said_total": 2068,
+  "raw_2025plus": 1223,
+  "corpus_said_2025plus": 1223,
+  "raw_series_in_new_events": 335,
+  "corpus_said_added": 335
+ },
+ "n_holdout": {
+  "old_frozen_npz": 1007,
+  "expanded_scoreable": 1217,
+  "breakdown": {
+   "frozen_npz_era": 1007,
+   "organic_post_npz_timeline": 28,
+   "corpus_additions": 182
+  }
+ },
+ "scoreability_failures_all_raw": {
+  "org(s) not in ORG_REGIONS (non-franchise/junk parse)": 7,
+  "org count != 2": 3
+ },
+ "scoreability_failures_new_events_only": {},
+ "new_events": {
+  "2023_china_champions_qual": "intl",
+  "2023_china_evo_1": "ewc_offseason",
+  "2023_china_evo_3": "ewc_offseason",
+  "2023_convergence": "ewc_offseason",
+  "2023_lcq": "vct_domestic",
+  "2023_rbhg": "ewc_offseason",
+  "2023_ten_global": "ewc_offseason",
+  "2024_fgc_inv": "ewc_offseason",
+  "2024_radiant_asia": "ewc_offseason",
+  "2024_rbhg": "ewc_offseason",
+  "2024_shanghai_masters": "intl",
+  "2024_ten_asia": "ewc_offseason",
+  "2025_acl": "ewc_offseason",
+  "2025_china_evo_1": "ewc_offseason",
+  "2025_china_evo_2": "ewc_offseason",
+  "2025_china_evo_3": "ewc_offseason",
+  "2025_china_evo_epilogue": "ewc_offseason",
+  "2025_ewc": "ewc_offseason",
+  "2025_ewc_qual": "ewc_offseason",
+  "2025_radiant_intl": "ewc_offseason",
+  "2025_rbhg": "ewc_offseason",
+  "2025_shanghai_masters": "intl",
+  "2025_super_champions_cup": "intl",
+  "2025_ten_global": "ewc_offseason",
+  "2026_china_evo_1": "ewc_offseason"
+ },
+ "composition_scoreable_2025plus_additions": {
+  "ewc_offseason": 169,
+  "intl": 13
+ },
+ "composition_expanded_holdout": {
+  "vct_domestic": 804,
+  "ewc_offseason": 278,
+  "intl": 135
+ },
+ "class_sigmas_from_frozen_v7_pairs": {
+  "intl": {
+   "n_old_holdout": 122,
+   "within": 0.02342706994992478,
+   "cross": 0.07199000208229689
+  },
+  "ewc_offseason": {
+   "n_old_holdout": 109,
+   "within": 0.023802720730011957,
+   "cross": 0.07960644404111544
+  },
+  "vct_domestic": {
+   "n_old_holdout": 776,
+   "within": 0.02120192842459842,
+   "cross": 0.07125967552118051
+  }
+ },
+ "mde": {
+  "within": {
+   "mde_old_n1007_milli": 1.925,
+   "mde_naive_scaled_milli": 1.751,
+   "sigma_adj": 0.02207,
+   "mde_composition_adjusted_milli": 1.773
+  },
+  "cross": {
+   "mde_old_n1007_milli": 6.374,
+   "mde_naive_scaled_milli": 5.798,
+   "sigma_adj": 0.07333,
+   "mde_composition_adjusted_milli": 5.889
+  }
+ },
+ "checkpoint_quote": {
+  "rule": "preregistered: quote the composition-adjusted number",
+  "within_milli": 1.773,
+  "cross_milli": 5.889
+ },
+ "assumptions": [
+  "class sigmas transfer old->new within class; new off-season events are assigned the measured EWC-class sigma (likely an understatement of their true noise)",
+  "d-distributions stationary across corpus growth; regime sigmas from frozen v7 pairs",
+  "intl classification uses the harness substring rule (masters/champions/lock_in), so champions-qualifier events fall in 'intl' exactly as a future rebuild would classify them",
+  "MDE ignores any rating-quality improvement from +2023-24 training series (would shrink sigma slightly; direction favorable, magnitude unknown until rebuild)"
+ ]
+}

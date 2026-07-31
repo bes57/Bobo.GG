@@ -1,0 +1,68 @@
+[T0] 2026-07-28 agent:bias-h2 start. Read wave2_common.md, bias_h2.md, README.md, engine.py,
+  referee.py (per_team_bias/bucketed/paired_bootstrap_crn/expected_roi_of_dll), crn.json.
+  Frame verified: sha256 ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142 ==
+  crn.json frame_expanded block. MATCH. n=2058 (841 train / 1217 holdout).
+  v6 config recovered from trading_model/model_snapshot.json + run_floorfix.py BASE:
+  decay games consistency (20,12), rd |rd|^0.75*2.5, playoff w_custom 1.6, region_prior_ridge 1.5,
+  roster year 0.3, ridge 0.5, champ_mult 2.0, beta train-fit (engine bounds 0.03-0.6).
+  Named teams (bias_h1 brief + out/v6_profile.json, OLD-frame bias): elite T1 -7.6 / PRX -7.3 /
+  100T -6.9 / NRG -6.9 / TL -6.5; floor TS +16.3 / JDG +12.6 / TE +10.4 / C9 +9.2 prob-pts.
+  Writing preregister.bias_h2.md BEFORE any engine run.
+[T1-e1] frame loaded n=2058; building engine (expanded corpus)
+[T1-e1] engine: 5140 games, 73 teams, 637 pred days
+[T1-e1] v6 baseline: beta=0.1152 ll_train=0.64823 ll_test=0.64216 n_test=1217
+[T1-e1] per_team_bias: 43 teams (min_n=25), max|bias|=0.1478 mean|bias|=0.0473
+[T2-e1] holdout months: 2025-01, 2025-02, 2025-03, 2025-04, 2025-05, 2025-06, 2025-07, 2025-08, 2025-09, 2025-10, 2025-11, 2025-12, 2026-01, 2026-02, 2026-03, 2026-04, 2026-05, 2026-06, 2026-07
+  [T2-e1] 2025-01-01: graph teams w/ games=54
+  [T2-e1] 2025-02-01: graph teams w/ games=58
+  [T2-e1] 2025-03-01: graph teams w/ games=58
+  [T2-e1] 2025-04-01: graph teams w/ games=59
+  [T2-e1] 2025-05-01: graph teams w/ games=59
+  [T2-e1] 2025-06-01: graph teams w/ games=59
+  [T2-e1] 2025-07-01: graph teams w/ games=59
+  [T2-e1] 2025-08-01: graph teams w/ games=59
+  [T2-e1] 2025-09-01: graph teams w/ games=67
+  [T2-e1] 2025-10-01: graph teams w/ games=67
+  [T2-e1] 2025-11-01: graph teams w/ games=67
+  [T2-e1] 2025-12-01: graph teams w/ games=67
+  [T2-e1] 2026-01-01: graph teams w/ games=67
+  [T2-e1] 2026-02-01: graph teams w/ games=72
+  [T2-e1] 2026-03-01: graph teams w/ games=72
+  [T2-e1] 2026-04-01: graph teams w/ games=72
+  [T2-e1] 2026-05-01: graph teams w/ games=73
+  [T2-e1] 2026-06-01: graph teams w/ games=73
+  [T2-e1] 2026-07-01: graph teams w/ games=73
+[T3-e1] scatter table built: 43 teams
+  [T4-e1] bias ~ eig_centrality: pearson -0.277 [-0.518,0.002]  spearman -0.304 [-0.566,0.005]
+  [T4-e1] bias ~ opp_count: pearson -0.345 [-0.554,-0.094]  spearman -0.314 [-0.575,-0.007]
+  [T4-e1] bias ~ opp_diversity: pearson -0.133 [-0.353,0.163]  spearman -0.076 [-0.379,0.249]
+  [T4-e1] bias ~ xregion_share: pearson -0.420 [-0.595,-0.210]  spearman -0.431 [-0.640,-0.157]
+  [T4-e1] abs_bias ~ eig_centrality: pearson -0.139 [-0.444,0.197]  spearman -0.077 [-0.421,0.281]
+  [T4-e1] abs_bias ~ opp_count: pearson -0.072 [-0.330,0.232]  spearman -0.043 [-0.316,0.263]
+  [T4-e1] abs_bias ~ opp_diversity: pearson -0.037 [-0.334,0.272]  spearman -0.010 [-0.335,0.335]
+  [T4-e1] abs_bias ~ xregion_share: pearson -0.053 [-0.325,0.251]  spearman 0.052 [-0.254,0.367]
+  [T4-e1] partial spearman bias~eig | rating: -0.188 [-0.491,0.161]
+[T5-e1] GATE: DEAD — no bias-centrality relationship; stop
+[T6-e1] centrality shift @2026-07-01: mean|delta| over bias-table teams = 0.0985
+    T1 (elite): 0.433 -> 0.356 (rank 17 -> 19)
+    PRX (elite): 0.774 -> 0.695 (rank 5 -> 11)
+    100T (elite): 0.404 -> 0.295 (rank 25 -> 27)
+    NRG (elite): 0.705 -> 0.524 (rank 9 -> 16)
+    TL (elite): 0.356 -> 0.246 (rank 30 -> 30)
+    TS (floor): 0.191 -> 0.160 (rank 43 -> 42)
+    JDG (floor): 0.613 -> 0.775 (rank 12 -> 8)
+    TE (floor): 0.559 -> 0.740 (rank 14 -> 10)
+    C9 (floor): 0.304 -> 0.221 (rank 33 -> 32)
+[T7-e1] wrote stats/h2_centrality.json — gate FAIL (H2 dead)
+[T8] Gate FAILED per preregistered rule: spearman(|bias|,eig) -0.077 [-0.421,+0.281] null;
+  spearman(bias,eig) -0.304 [-0.566,+0.005] near-miss but CI includes 0. H2 DEAD; E2/E3 NOT RUN
+  (no rescue fits, per brief). Signed opp_count/xregion_share correlations exclude 0 but are
+  composition (elite travel / floor insular): partial rho | rating = -0.188 [-0.49,+0.16];
+  PRX top named centrality 0.894 yet most under-rated -10.2 pts; C9/FUR over-rated in the
+  well-connected Americas pool; per-region mean signed bias <= 2.7 pts.
+[T9] Outputs: stats/h2_centrality.json (scatter+correlations+gate+expansion shift),
+  stats/h2_bias_caterpillar.json (v6 caterpillar, 43 teams; variants absent by design),
+  stats/h2_ridge_ablation.json + stats/h2_hierarchical.json (NOT-RUN markers), phase5_h2.md,
+  preregister outcomes appended. Holdout scorings: 1 (v6 baseline). No writes outside declared
+  paths; no network; market data untouched; crn seed used for team bootstrap (documented
+  adaptation). DONE.

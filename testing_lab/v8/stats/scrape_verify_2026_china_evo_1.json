@@ -1,0 +1,170 @@
+{
+ "640019": {
+  "event_id": "2026_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/640019/funplus-phoenix-vs-nova-esports-china-evolution-series-2026-act-1-ro12",
+  "maps": {
+   "257134": [
+    "FPX",
+    "13-6"
+   ],
+   "257135": [
+    "FPX",
+    "18-16"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2026-03-17 07:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "NOVA"
+  ]
+ },
+ "640021": {
+  "event_id": "2026_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/640021/tyloo-vs-titan-esports-club-china-evolution-series-2026-act-1-qf",
+  "maps": {
+   "257140": [
+    "TEC",
+    "13-6"
+   ],
+   "257141": [
+    "TYL",
+    "16-14"
+   ],
+   "257142": [
+    "TYL",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2026-03-18 08:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "TYL"
+  ]
+ },
+ "640022": {
+  "event_id": "2026_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/640022/trace-esports-vs-jdg-esports-china-evolution-series-2026-act-1-qf",
+  "maps": {
+   "257143": [
+    "JDG",
+    "13-5"
+   ],
+   "257144": [
+    "JDG",
+    "13-7"
+   ]
+  },
+  "series": [
+   "JDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2026-03-19 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "TE"
+  ]
+ },
+ "640023": {
+  "event_id": "2026_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/640023/bilibili-gaming-vs-funplus-phoenix-china-evolution-series-2026-act-1-qf",
+  "maps": {
+   "257146": [
+    "BLG",
+    "13-1"
+   ],
+   "257147": [
+    "BLG",
+    "13-5"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2026-03-19 06:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "FPX"
+  ]
+ },
+ "640025": {
+  "event_id": "2026_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/640025/jdg-esports-vs-bilibili-gaming-china-evolution-series-2026-act-1-sf",
+  "maps": {
+   "257152": [
+    "BLG",
+    "13-9"
+   ],
+   "257153": [
+    "BLG",
+    "13-9"
+   ]
+  },
+  "series": [
+   "BLG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2026-03-20 06:50:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "JDG"
+  ]
+ },
+ "640026": {
+  "event_id": "2026_china_evo_1",
+  "region": "CN",
+  "url": "https://www.vlr.gg/640026/tyloo-vs-bilibili-gaming-china-evolution-series-2026-act-1-gf",
+  "maps": {
+   "257155": [
+    "BLG",
+    "13-9"
+   ],
+   "257156": [
+    "TYL",
+    "13-9"
+   ],
+   "257157": [
+    "BLG",
+    "13-4"
+   ],
+   "257158": [
+    "BLG",
+    "13-5"
+   ]
+  },
+  "series": [
+   "BLG",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2026-03-22 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TYL"
+  ]
+ }
+}

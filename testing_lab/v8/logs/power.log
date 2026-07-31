@@ -1,0 +1,78 @@
+[2026-07-28 T0] agent:power start. Read brief + README + harness.py + engine.py (rdiff/test_mask/beta-fit)
+  + run_v7_stage{1,2,3}.py + out/v7_stage{1,2}.json + gen_final_model.py (ledger source) + v6_profile.json.
+  Confirmed conventions: npz probs are P(assigned to eventual series WINNER); per-series loss = -log(p);
+  rdiff = r_winner - r_loser pre-match; engine deterministic (linalg solve, no RNG); holdout = date>2024-12-31,
+  n_test=1007 of 1695; historical boot = harness.paired_bootstrap(n_boot=4000, seed=7, iid over series);
+  mean_delta = mean(loss_B - loss_A) with A=candidate, B=v6 champ (positive = candidate better).
+  Ledger: gen_final_model.py REJECTED list = 32 entries; published HTML also 32 rows. Brief said 33 —
+  discrepancy to be reported honestly (no 33rd entry exists on disk).
+  Next: join verification gate (reconstruct masks from harness.load_series vs npz), then crn.json.
+[T1] JOIN GATE PASSED. load_series() today = 1723 rows (28 new since v7 run, dates 2026-07-23..26,
+  clean prefix); first 1695 rows reproduce npz masks exactly (test 1007 / train 688 / y26).
+  All 18 stage-1 + 6 stage-2 published ll_test reproduced to 5 dp with reconstructed mask.
+  paired_bootstrap(seed 7, 4000) reproduces published sym_20 (-1.6541m, p .1420) and
+  consist_16_10 (-0.3922m, p .2848) to machine precision. Per-config holdout valid n = 1007 for all.
+  Holdout span 2025-01-11 (mid 430837) .. 2026-07-23 (mid 701057), 18 events.
+  Next: crn.json (holdout_order + shared seeds), then preregister.
+[T2] crn.json written (iid seed 20260728 / block 20260729 / 64 mc_seeds / holdout_order n=1007 + sha256s).
+  Prefix-integrity assertion added: all 28 post-npz load_series rows sort strictly after (2026-07-23, 701057).
+[T3] preregister.power.md written BEFORE any MDE/reclass computation. Estimator 2.8016*sd/sqrt(n),
+  two regimes (within-family / cross-family), sim verification 400x2000 on consist_16_10 + sym_20,
+  verdict rule |mean d| >= MDE_pair, ledger status semantics fixed, variance-reduction designs fixed.
+[T4] Ledger archaeology complete. Source (gen_final_model.py) = 32 entries (brief said 33; both the
+  generator and published HTML have 32 — will report). Magnitudes recovered from: experiments1/3/4/5/6/7/8,
+  hour, carryover, floorfix, floorfix2, margin1/2/3, ensemble, series_mc2, veto_eval, maplevel, pickside,
+  belt/belt2, favorites_fix, deep1, revalidate. Non-JSON recoveries: entry 'Margin-fitted x-region offsets'
+  = -14m cross-region from gen_report.py:428 session table; 'H2H/rematch' = winrate 53.2 vs 53.8 implied
+  (gen_report.py:513) with NO series-level dLL on disk -> UNRECOVERABLE magnitude; 'Recency-weighted
+  x-region offsets' text-only (gen_report.py:514) -> UNRECOVERABLE. Era n's: old-scrape era n_test=890
+  (experiments1-5), native era n~999 (exp6-8/hour/margin/floorfix/belt), v7 era n=1007; deep1 rolling
+  evaluated on 2024+ slice n=1324 (not the holdout) — flagged. Map-level tests n=2287 maps.
+[T5] Main analysis run (CRN verified vs crn.json sha256s, both matrices).
+  Per-pair d stats, MDE80, iid-CRN + block CIs, legacy seed-7 reproduction 23/23 exact.
+  Regime medians: within sd=0.0218 -> MDE 1.92m; cross sd=0.0722 -> MDE 6.38m (n=1007).
+  Simulation verification PASSED: power at mu=MDE = 0.795/0.795 (accept 0.74-0.86), size 0.062/0.058.
+  v7 re-adjudication: 0/23 DISTINGUISHABLE at pair-MDE rule. Secondary CI lens: iid excludes 0 for
+  sym_6 + surprise_12_20 only; block adds sym_8/10, surprise_16_24, boxexp pair.
+  Buckets: EWC-class n=109 reproduces profile exactly; post-break 145 vs profile 135 (profile built on
+  the older ~999-row holdout: every bucket differs by the same +6..10 growth; definition consistent);
+  format bo1 n=0 in holdout (all bo1s pre-2025). Worst promotion-rule buckets: bo5 cross-MDE 45.1m,
+  elite-vs-floor 39.5m, grand_final 33.0m.
+  Variance reduction: pairing 33x cross / 377x within; CV(l_v6) 1.18x cross / 1.01x within;
+  multivariate 1.19x; DEFF block/iid median 0.61 (iid conservative; DEFF>1.3 alarm did NOT fire).
+[T6] Ledger reclass: 32 entries (not 33 - discrepancy reported). Counts: 5 REFUTED (v5 asym [mech],
+  per-map+pick [mech], tanh [fit-collapse], margin-CDF link [-9.0m map], post-break dampener [-3.89m
+  vs within-MDE 2.05, caveat noted]); 27 UNRESOLVED (incl. 'reversed asym', 'margins matter',
+  '-14m x-region offsets' whose bucket floor is ~20m; 4 magnitudes UNRECOVERABLE, marked);
+  0 CONFIRMED. stats/ledger_reclass.json is sortable-table-ready.
+[T7] lineup_features.csv landed 18:29 (mid-run) -> roster-change-recency bucket computed (not PENDING):
+  coverage 1007/1007; change<=3 matches n=598 (MDE 2.5/7.8m), 4-10 n=304, stable>10 n=105.
+  power_mde.json updated in place.
+[T8] Deliverable phase0_power.md written. All outputs inside brief paths. No engine/harness/out/
+  modification, no VCTMM access, no network, no holdout tuning. DONE.
+[T9] Coordinator task: expanded-corpus MDE without touching production rating files.
+  Post-corpus prereg appended FIRST (E1 mechanical, E2 composition-adjusted, checkpoint quotes E2).
+  Raw-corpus scorer mirrors harness rules; validated by reproducing npz-era holdout = 1007 exactly
+  and corpus agent's counts exactly (2068 total / 1223 raw 2025+ / 335 new-event series).
+  GOTCHA found+fixed: MapNum=='all' aggregate row per match (series score) inflates winner map counts
+  if not filtered — first pass silently misscored (caught via 68 bo5-shaped failures). Filter applied.
+  Results: expanded holdout 1217 = 1007 npz + 28 organic + 182 corpus additions (169 ewc_offseason,
+  13 'intl'); 335/335 additions scoreable, the 10 raw failures are pre-existing old-event junk (=1733-1723).
+  Class sigmas: ewc 0.0796 vs vct_dom 0.0713 (cross) -> composition penalty small.
+  MDE: within 1.92->1.75 naive / 1.77 adjusted; cross 6.37->5.80 naive / 5.89 adjusted. CHECKPOINT
+  QUOTES E2: 1.77m within / 5.89m cross. No resampling used (point estimates), crn untouched.
+  Hazards logged: 'all'-row for raw-CSV consumers; shanghai_masters/super_champions_cup will be
+  misclassed intl by harness substring rule at rebuild.
+  crn note: my crn.json has been at testing_lab/v8/crn.json since 18:27; briefs/corpus.md never
+  states the path — corpus likely probed a different default (e.g. v8/data/) or checked pre-18:27.
+  Outputs: stats/power_mde_expanded.json + phase0_power.md addendum + prereg addendum.
+[T10] Coordinator: canonical Wave 2 frame emitted. v8/data/frame_expanded/series.csv (2058 rows =
+  841 train / 1217 holdout; exact harness columns; NEW exact-shape _is_intl_event re-imported and
+  asserted False for 2024/2025_shanghai_masters, 2025_super_champions_cup, 2023_china_champions_qual).
+  Row-level agreement with frozen production frame on all 1695 shared mids: 0 mismatches on
+  date/event_id/winner/loser/w_maps/l_maps/fmt/stage/n_maps_played/intl.
+  sha256 ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142; README.md with provenance
+  (source mtimes/hashes incl. maps-manifest hash) written; crn.json 'frame_expanded' block added.
+  Champ-vector confirmation: across all timeline+frozen event ids (31), the only ids containing
+  'champions' are exactly 2023/2024/2025_champions -> exact-shape fullmatch changes NO frozen game's
+  champ weight. Frozen npz solve unaffected.

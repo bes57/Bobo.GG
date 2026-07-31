@@ -1,0 +1,1060 @@
+{
+ "written_by": "agent:bias_h1",
+ "preregistered": "preregister.bias_h1.md E1 (gate said SKIP; run as labeled confirmatory kill \u2014 deviation documented in log + outcomes)",
+ "mechanism": "CAP right-censored at 17.113; OT interval-censored (0,4.204]; EM K<=4, sigma train-only",
+ "sigma_hat": 4.566,
+ "censoring_mass": {
+  "n_games": 5140,
+  "CAP": 12,
+  "OT": 575,
+  "CAP_share": 0.00233,
+  "OT_share": 0.11187
+ },
+ "em_history": {
+  "s1.0": [
+   {
+    "iter": 1,
+    "max_abs_dtarget": 2.8172,
+    "beta": 0.1161,
+    "ll_test": 0.64266,
+    "secs": 2.2
+   },
+   {
+    "iter": 2,
+    "max_abs_dtarget": 0.0466,
+    "beta": 0.1165,
+    "ll_test": 0.64262,
+    "secs": 2.2
+   }
+  ],
+  "s0.8": [
+   {
+    "iter": 1,
+    "max_abs_dtarget": 3.109,
+    "beta": 0.1163,
+    "ll_test": 0.64263,
+    "secs": 2.2
+   },
+   {
+    "iter": 2,
+    "max_abs_dtarget": 0.1679,
+    "beta": 0.1163,
+    "ll_test": 0.64263,
+    "secs": 2.3
+   },
+   {
+    "iter": 3,
+    "max_abs_dtarget": 0.0028,
+    "beta": 0.1163,
+    "ll_test": 0.64263,
+    "secs": 2.2
+   }
+  ],
+  "s1.25": [
+   {
+    "iter": 1,
+    "max_abs_dtarget": 2.7766,
+    "beta": 0.1166,
+    "ll_test": 0.64261,
+    "secs": 2.2
+   },
+   {
+    "iter": 2,
+    "max_abs_dtarget": 0.0711,
+    "beta": 0.1166,
+    "ll_test": 0.64261,
+    "secs": 2.2
+   },
+   {
+    "iter": 3,
+    "max_abs_dtarget": 0.0007,
+    "beta": 0.1166,
+    "ll_test": 0.64261,
+    "secs": 2.2
+   }
+  ]
+ },
+ "v6_ref": {
+  "beta": 0.1152,
+  "ll_test": 0.64216,
+  "bias": {
+   "teams": [
+    {
+     "team": "PRX",
+     "n": 86,
+     "ll": 0.6057,
+     "bias": -0.1016
+    },
+    {
+     "team": "NRG",
+     "n": 75,
+     "ll": 0.6246,
+     "bias": -0.0914
+    },
+    {
+     "team": "BBL",
+     "n": 53,
+     "ll": 0.689,
+     "bias": -0.0866
+    },
+    {
+     "team": "100T",
+     "n": 53,
+     "ll": 0.5715,
+     "bias": -0.0707
+    },
+    {
+     "team": "FNC",
+     "n": 63,
+     "ll": 0.6243,
+     "bias": -0.0651
+    },
+    {
+     "team": "NS",
+     "n": 54,
+     "ll": 0.7354,
+     "bias": -0.0631
+    },
+    {
+     "team": "TL",
+     "n": 60,
+     "ll": 0.6602,
+     "bias": -0.0617
+    },
+    {
+     "team": "MIBR",
+     "n": 52,
+     "ll": 0.6751,
+     "bias": -0.0587
+    },
+    {
+     "team": "LEV",
+     "n": 51,
+     "ll": 0.6839,
+     "bias": -0.0501
+    },
+    {
+     "team": "XLG",
+     "n": 69,
+     "ll": 0.6095,
+     "bias": -0.0494
+    },
+    {
+     "team": "G2",
+     "n": 80,
+     "ll": 0.6108,
+     "bias": -0.0469
+    },
+    {
+     "team": "NOVA",
+     "n": 52,
+     "ll": 0.7102,
+     "bias": -0.0416
+    },
+    {
+     "team": "TH",
+     "n": 63,
+     "ll": 0.6592,
+     "bias": -0.0402
+    },
+    {
+     "team": "KRX",
+     "n": 71,
+     "ll": 0.642,
+     "bias": -0.0398
+    },
+    {
+     "team": "T1",
+     "n": 60,
+     "ll": 0.6295,
+     "bias": -0.0271
+    },
+    {
+     "team": "AG",
+     "n": 53,
+     "ll": 0.6178,
+     "bias": -0.0174
+    },
+    {
+     "team": "EDG",
+     "n": 79,
+     "ll": 0.6019,
+     "bias": -0.0154
+    },
+    {
+     "team": "VIT",
+     "n": 50,
+     "ll": 0.6585,
+     "bias": -0.013
+    },
+    {
+     "team": "SEN",
+     "n": 56,
+     "ll": 0.589,
+     "bias": -0.0113
+    },
+    {
+     "team": "FPX",
+     "n": 55,
+     "ll": 0.664,
+     "bias": -0.0104
+    },
+    {
+     "team": "DRG",
+     "n": 54,
+     "ll": 0.6372,
+     "bias": -0.0086
+    },
+    {
+     "team": "BLG",
+     "n": 73,
+     "ll": 0.6872,
+     "bias": -0.0077
+    },
+    {
+     "team": "GX",
+     "n": 43,
+     "ll": 0.6505,
+     "bias": -0.0062
+    },
+    {
+     "team": "RRQ",
+     "n": 54,
+     "ll": 0.7021,
+     "bias": -0.0061
+    },
+    {
+     "team": "KC",
+     "n": 46,
+     "ll": 0.6528,
+     "bias": -0.0045
+    },
+    {
+     "team": "NAVI",
+     "n": 44,
+     "ll": 0.6436,
+     "bias": -0.0012
+    },
+    {
+     "team": "FUT",
+     "n": 47,
+     "ll": 0.7008,
+     "bias": -0.0002
+    },
+    {
+     "team": "GEN",
+     "n": 56,
+     "ll": 0.6946,
+     "bias": 0.0051
+    },
+    {
+     "team": "M8",
+     "n": 42,
+     "ll": 0.6653,
+     "bias": 0.0057
+    },
+    {
+     "team": "GE",
+     "n": 42,
+     "ll": 0.6461,
+     "bias": 0.006
+    },
+    {
+     "team": "TYL",
+     "n": 51,
+     "ll": 0.6353,
+     "bias": 0.0118
+    },
+    {
+     "team": "TEC",
+     "n": 53,
+     "ll": 0.6496,
+     "bias": 0.0393
+    },
+    {
+     "team": "DFM",
+     "n": 32,
+     "ll": 0.6021,
+     "bias": 0.0456
+    },
+    {
+     "team": "ZETA",
+     "n": 30,
+     "ll": 0.6111,
+     "bias": 0.0546
+    },
+    {
+     "team": "EG",
+     "n": 34,
+     "ll": 0.5599,
+     "bias": 0.06
+    },
+    {
+     "team": "KR\u00dc",
+     "n": 35,
+     "ll": 0.6629,
+     "bias": 0.0665
+    },
+    {
+     "team": "TE",
+     "n": 55,
+     "ll": 0.6436,
+     "bias": 0.0721
+    },
+    {
+     "team": "LOUD",
+     "n": 29,
+     "ll": 0.6854,
+     "bias": 0.0881
+    },
+    {
+     "team": "WOL",
+     "n": 60,
+     "ll": 0.6686,
+     "bias": 0.0941
+    },
+    {
+     "team": "JDG",
+     "n": 51,
+     "ll": 0.6681,
+     "bias": 0.1058
+    },
+    {
+     "team": "C9",
+     "n": 41,
+     "ll": 0.6226,
+     "bias": 0.1172
+    },
+    {
+     "team": "FUR",
+     "n": 33,
+     "ll": 0.4646,
+     "bias": 0.12
+    },
+    {
+     "team": "TS",
+     "n": 30,
+     "ll": 0.6145,
+     "bias": 0.1478
+    }
+   ],
+   "n_teams": 43,
+   "min_n": 25,
+   "max_abs_bias": 0.1478,
+   "mean_abs_bias": 0.0473
+  }
+ },
+ "primary_s1.0": {
+  "n_joint": 1217,
+  "beta": 0.1165,
+  "ll_test": 0.64262,
+  "dll_milli_vs_v6": -0.462,
+  "boot_iid": {
+   "mean_delta": -0.00046217242818496915,
+   "ci_lo": -0.0012737569928143284,
+   "ci_hi": 0.0003713041716830756,
+   "p_better": 0.1425,
+   "mode": "iid",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260728,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "crn_verify": "not-applicable (subset n != holdout n)"
+  },
+  "boot_block": {
+   "mean_delta": -0.00046217242818496915,
+   "ci_lo": -0.001378833446204223,
+   "ci_hi": 0.00041913799658503345,
+   "p_better": 0.14725,
+   "mode": "block_event",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260729,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "n_events": 31,
+   "crn_verify": "not-applicable (subset events != crn events)"
+  },
+  "expected_roi": {
+   "dll": -0.00046217242818496915,
+   "dll_milli": -0.462,
+   "mean_one_minus_p_ref": 0.4578,
+   "delta_logit_equiv": -0.001,
+   "delta_op": 0.0,
+   "roi_at_op": 0.0021,
+   "roi_at_op_plus_equiv": 0.0021,
+   "expected_roi_delta": 0.0,
+   "roi_ci_at_op_plus_equiv": [
+    -0.119,
+    0.126
+   ],
+   "ladder_points": [
+    [
+     0.0,
+     0.0021
+    ],
+    [
+     0.1,
+     0.0402
+    ],
+    [
+     0.2,
+     0.0604
+    ],
+    [
+     0.3,
+     0.088
+    ],
+    [
+     0.4,
+     0.1498
+    ],
+    [
+     0.6,
+     0.2911
+    ]
+   ],
+   "ladder_source": "out/quote_margin.json",
+   "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+  },
+  "bias": {
+   "teams": [
+    {
+     "team": "PRX",
+     "n": 86,
+     "ll": 0.6066,
+     "bias": -0.1008
+    },
+    {
+     "team": "NRG",
+     "n": 75,
+     "ll": 0.6247,
+     "bias": -0.0929
+    },
+    {
+     "team": "BBL",
+     "n": 53,
+     "ll": 0.6885,
+     "bias": -0.0867
+    },
+    {
+     "team": "100T",
+     "n": 53,
+     "ll": 0.5706,
+     "bias": -0.0741
+    },
+    {
+     "team": "FNC",
+     "n": 63,
+     "ll": 0.6275,
+     "bias": -0.0658
+    },
+    {
+     "team": "TL",
+     "n": 60,
+     "ll": 0.6613,
+     "bias": -0.0656
+    },
+    {
+     "team": "NS",
+     "n": 54,
+     "ll": 0.7356,
+     "bias": -0.065
+    },
+    {
+     "team": "MIBR",
+     "n": 52,
+     "ll": 0.6772,
+     "bias": -0.0581
+    },
+    {
+     "team": "LEV",
+     "n": 51,
+     "ll": 0.6824,
+     "bias": -0.052
+    },
+    {
+     "team": "XLG",
+     "n": 69,
+     "ll": 0.6093,
+     "bias": -0.047
+    },
+    {
+     "team": "G2",
+     "n": 80,
+     "ll": 0.6078,
+     "bias": -0.0445
+    },
+    {
+     "team": "KRX",
+     "n": 71,
+     "ll": 0.6414,
+     "bias": -0.0445
+    },
+    {
+     "team": "TH",
+     "n": 63,
+     "ll": 0.6617,
+     "bias": -0.043
+    },
+    {
+     "team": "NOVA",
+     "n": 52,
+     "ll": 0.7102,
+     "bias": -0.0402
+    },
+    {
+     "team": "T1",
+     "n": 60,
+     "ll": 0.6301,
+     "bias": -0.0231
+    },
+    {
+     "team": "AG",
+     "n": 53,
+     "ll": 0.6198,
+     "bias": -0.0207
+    },
+    {
+     "team": "EDG",
+     "n": 79,
+     "ll": 0.6023,
+     "bias": -0.0148
+    },
+    {
+     "team": "VIT",
+     "n": 50,
+     "ll": 0.6588,
+     "bias": -0.012
+    },
+    {
+     "team": "FPX",
+     "n": 55,
+     "ll": 0.6649,
+     "bias": -0.0107
+    },
+    {
+     "team": "KC",
+     "n": 46,
+     "ll": 0.6558,
+     "bias": -0.0095
+    },
+    {
+     "team": "SEN",
+     "n": 56,
+     "ll": 0.587,
+     "bias": -0.0092
+    },
+    {
+     "team": "DRG",
+     "n": 54,
+     "ll": 0.6369,
+     "bias": -0.0086
+    },
+    {
+     "team": "GX",
+     "n": 43,
+     "ll": 0.6542,
+     "bias": -0.007
+    },
+    {
+     "team": "BLG",
+     "n": 73,
+     "ll": 0.6893,
+     "bias": -0.0062
+    },
+    {
+     "team": "RRQ",
+     "n": 54,
+     "ll": 0.7025,
+     "bias": -0.0061
+    },
+    {
+     "team": "FUT",
+     "n": 47,
+     "ll": 0.6993,
+     "bias": 0.0004
+    },
+    {
+     "team": "NAVI",
+     "n": 44,
+     "ll": 0.6438,
+     "bias": 0.0051
+    },
+    {
+     "team": "M8",
+     "n": 42,
+     "ll": 0.6633,
+     "bias": 0.0068
+    },
+    {
+     "team": "GEN",
+     "n": 56,
+     "ll": 0.695,
+     "bias": 0.0076
+    },
+    {
+     "team": "GE",
+     "n": 42,
+     "ll": 0.6454,
+     "bias": 0.0098
+    },
+    {
+     "team": "TYL",
+     "n": 51,
+     "ll": 0.6335,
+     "bias": 0.0111
+    },
+    {
+     "team": "TEC",
+     "n": 53,
+     "ll": 0.6489,
+     "bias": 0.0389
+    },
+    {
+     "team": "DFM",
+     "n": 32,
+     "ll": 0.6029,
+     "bias": 0.042
+    },
+    {
+     "team": "ZETA",
+     "n": 30,
+     "ll": 0.6086,
+     "bias": 0.0536
+    },
+    {
+     "team": "EG",
+     "n": 34,
+     "ll": 0.5589,
+     "bias": 0.0569
+    },
+    {
+     "team": "KR\u00dc",
+     "n": 35,
+     "ll": 0.6668,
+     "bias": 0.0683
+    },
+    {
+     "team": "TE",
+     "n": 55,
+     "ll": 0.6447,
+     "bias": 0.0743
+    },
+    {
+     "team": "LOUD",
+     "n": 29,
+     "ll": 0.6863,
+     "bias": 0.089
+    },
+    {
+     "team": "WOL",
+     "n": 60,
+     "ll": 0.668,
+     "bias": 0.0957
+    },
+    {
+     "team": "JDG",
+     "n": 51,
+     "ll": 0.671,
+     "bias": 0.1046
+    },
+    {
+     "team": "C9",
+     "n": 41,
+     "ll": 0.6193,
+     "bias": 0.1135
+    },
+    {
+     "team": "FUR",
+     "n": 33,
+     "ll": 0.4648,
+     "bias": 0.1204
+    },
+    {
+     "team": "TS",
+     "n": 30,
+     "ll": 0.6172,
+     "bias": 0.1492
+    }
+   ],
+   "n_teams": 43,
+   "min_n": 25,
+   "max_abs_bias": 0.1492,
+   "mean_abs_bias": 0.0478
+  }
+ },
+ "sensitivity": {
+  "s0.8": {
+   "dll_milli_vs_v6": -0.47,
+   "ll_test": 0.64263,
+   "beta": 0.1163
+  },
+  "s1.25": {
+   "dll_milli_vs_v6": -0.451,
+   "ll_test": 0.64261,
+   "beta": 0.1166
+  }
+ },
+ "elite_five_bias_v6": {
+  "T1": {
+   "team": "T1",
+   "n": 60,
+   "ll": 0.6295,
+   "bias": -0.0271
+  },
+  "PRX": {
+   "team": "PRX",
+   "n": 86,
+   "ll": 0.6057,
+   "bias": -0.1016
+  },
+  "100T": {
+   "team": "100T",
+   "n": 53,
+   "ll": 0.5715,
+   "bias": -0.0707
+  },
+  "NRG": {
+   "team": "NRG",
+   "n": 75,
+   "ll": 0.6246,
+   "bias": -0.0914
+  },
+  "TL": {
+   "team": "TL",
+   "n": 60,
+   "ll": 0.6602,
+   "bias": -0.0617
+  }
+ },
+ "elite_five_bias_tobit": {
+  "T1": {
+   "team": "T1",
+   "n": 60,
+   "ll": 0.6301,
+   "bias": -0.0231
+  },
+  "PRX": {
+   "team": "PRX",
+   "n": 86,
+   "ll": 0.6066,
+   "bias": -0.1008
+  },
+  "100T": {
+   "team": "100T",
+   "n": 53,
+   "ll": 0.5706,
+   "bias": -0.0741
+  },
+  "NRG": {
+   "team": "NRG",
+   "n": 75,
+   "ll": 0.6247,
+   "bias": -0.0929
+  },
+  "TL": {
+   "team": "TL",
+   "n": 60,
+   "ll": 0.6613,
+   "bias": -0.0656
+  }
+ },
+ "weak_quartet_bias_v6": {
+  "TS": {
+   "team": "TS",
+   "n": 30,
+   "ll": 0.6145,
+   "bias": 0.1478
+  },
+  "JDG": {
+   "team": "JDG",
+   "n": 51,
+   "ll": 0.6681,
+   "bias": 0.1058
+  },
+  "TE": {
+   "team": "TE",
+   "n": 55,
+   "ll": 0.6436,
+   "bias": 0.0721
+  },
+  "C9": {
+   "team": "C9",
+   "n": 41,
+   "ll": 0.6226,
+   "bias": 0.1172
+  }
+ },
+ "weak_quartet_bias_tobit": {
+  "TS": {
+   "team": "TS",
+   "n": 30,
+   "ll": 0.6172,
+   "bias": 0.1492
+  },
+  "JDG": {
+   "team": "JDG",
+   "n": 51,
+   "ll": 0.671,
+   "bias": 0.1046
+  },
+  "TE": {
+   "team": "TE",
+   "n": 55,
+   "ll": 0.6447,
+   "bias": 0.0743
+  },
+  "C9": {
+   "team": "C9",
+   "n": 41,
+   "ll": 0.6193,
+   "bias": 0.1135
+  }
+ },
+ "buckets": {
+  "buckets": [
+   {
+    "name": "year 2025",
+    "n": 674,
+    "ll": 0.63864,
+    "fav_acc": 0.628,
+    "ll_ref": 0.63796,
+    "delta_milli": -0.68
+   },
+   {
+    "name": "year 2026",
+    "n": 543,
+    "ll": 0.64757,
+    "fav_acc": 0.628,
+    "ll_ref": 0.64738,
+    "delta_milli": -0.19
+   },
+   {
+    "name": "format bo1",
+    "n": 55,
+    "ll": 0.65452,
+    "fav_acc": 0.636,
+    "ll_ref": 0.65327,
+    "delta_milli": -1.25
+   },
+   {
+    "name": "format bo3",
+    "n": 1074,
+    "ll": 0.64128,
+    "fav_acc": 0.626,
+    "ll_ref": 0.64095,
+    "delta_milli": -0.33
+   },
+   {
+    "name": "format bo5",
+    "n": 53,
+    "ll": 0.64892,
+    "fav_acc": 0.66,
+    "ll_ref": 0.64835,
+    "delta_milli": -0.57
+   },
+   {
+    "name": "format bo5_gf",
+    "n": 35,
+    "ll": 0.65566,
+    "fav_acc": 0.629,
+    "ll_ref": 0.65258,
+    "delta_milli": -3.08
+   },
+   {
+    "name": "stage groups",
+    "n": 568,
+    "ll": 0.61039,
+    "fav_acc": 0.669,
+    "ll_ref": 0.61038,
+    "delta_milli": -0.01
+   },
+   {
+    "name": "stage playoffs",
+    "n": 541,
+    "ll": 0.67523,
+    "fav_acc": 0.582,
+    "ll_ref": 0.67447,
+    "delta_milli": -0.76
+   },
+   {
+    "name": "stage grand_final",
+    "n": 39,
+    "ll": 0.65722,
+    "fav_acc": 0.615,
+    "ll_ref": 0.65624,
+    "delta_milli": -0.98
+   },
+   {
+    "name": "international",
+    "n": 122,
+    "ll": 0.6417,
+    "fav_acc": 0.615,
+    "ll_ref": 0.64221,
+    "delta_milli": 0.51
+   },
+   {
+    "name": "domestic",
+    "n": 1095,
+    "ll": 0.64273,
+    "fav_acc": 0.629,
+    "ll_ref": 0.64216,
+    "delta_milli": -0.57
+   },
+   {
+    "name": "CN involved",
+    "n": 394,
+    "ll": 0.64097,
+    "fav_acc": 0.629,
+    "ll_ref": 0.6403,
+    "delta_milli": -0.67
+   },
+   {
+    "name": "cross-region",
+    "n": 194,
+    "ll": 0.63907,
+    "fav_acc": 0.649,
+    "ll_ref": 0.63812,
+    "delta_milli": -0.95
+   },
+   {
+    "name": "domestic Americas",
+    "n": 233,
+    "ll": 0.60124,
+    "fav_acc": 0.721,
+    "ll_ref": 0.60183,
+    "delta_milli": 0.59
+   },
+   {
+    "name": "domestic EMEA",
+    "n": 242,
+    "ll": 0.64819,
+    "fav_acc": 0.616,
+    "ll_ref": 0.64716,
+    "delta_milli": -1.03
+   },
+   {
+    "name": "domestic Pacific",
+    "n": 237,
+    "ll": 0.6605,
+    "fav_acc": 0.586,
+    "ll_ref": 0.65975,
+    "delta_milli": -0.75
+   },
+   {
+    "name": "domestic CN",
+    "n": 311,
+    "ll": 0.65789,
+    "fav_acc": 0.585,
+    "ll_ref": 0.65761,
+    "delta_milli": -0.28
+   },
+   {
+    "name": "close matchups (gap<1.5)",
+    "n": 434,
+    "ll": 0.69128,
+    "fav_acc": 0.544,
+    "ll_ref": 0.68919,
+    "delta_milli": -2.09
+   },
+   {
+    "name": "mid gap [1.5,4)",
+    "n": 516,
+    "ll": 0.65633,
+    "fav_acc": 0.632,
+    "ll_ref": 0.6567,
+    "delta_milli": 0.37
+   },
+   {
+    "name": "big gap [4,7)",
+    "n": 216,
+    "ll": 0.55854,
+    "fav_acc": 0.741,
+    "ll_ref": 0.55869,
+    "delta_milli": 0.15
+   },
+   {
+    "name": "huge gap (7+)",
+    "n": 51,
+    "ll": 0.44601,
+    "fav_acc": 0.824,
+    "ll_ref": 0.44833,
+    "delta_milli": 2.32
+   },
+   {
+    "name": "post-break (rest>45d)",
+    "n": 130,
+    "ll": 0.64387,
+    "fav_acc": 0.592,
+    "ll_ref": 0.64343,
+    "delta_milli": -0.44
+   },
+   {
+    "name": "elite vs floor",
+    "n": 29,
+    "ll": 0.47341,
+    "fav_acc": 0.828,
+    "ll_ref": 0.4718,
+    "delta_milli": -1.61
+   },
+   {
+    "name": "form shift",
+    "n": 168,
+    "ll": 0.65349,
+    "fav_acc": 0.637,
+    "ll_ref": 0.6522,
+    "delta_milli": -1.29
+   },
+   {
+    "name": "EWC-class events",
+    "n": 115,
+    "ll": 0.68862,
+    "fav_acc": 0.583,
+    "ll_ref": 0.68633,
+    "delta_milli": -2.29
+   },
+   {
+    "name": "favorite [0.5,0.6)",
+    "n": 649,
+    "ll": 0.67982,
+    "fav_acc": 0.573,
+    "ll_ref": 0.67867,
+    "delta_milli": -1.15
+   },
+   {
+    "name": "favorite [0.6,0.7)",
+    "n": 395,
+    "ll": 0.66501,
+    "fav_acc": 0.62,
+    "ll_ref": 0.66513,
+    "delta_milli": 0.12
+   },
+   {
+    "name": "favorite [0.7,0.8)",
+    "n": 140,
+    "ll": 0.46223,
+    "fav_acc": 0.843,
+    "ll_ref": 0.46232,
+    "delta_milli": 0.09
+   },
+   {
+    "name": "favorite [0.8,0.9)",
+    "n": 30,
+    "ll": 0.4,
+    "fav_acc": 0.867,
+    "ll_ref": 0.40373,
+    "delta_milli": 3.73
+   }
+  ],
+  "pending": [
+   "roster-recency buckets: PENDING DATA (no match_id + recency column among ('days_since_roster_change', 'days_since_change', 'days_since_lineup_change', 'roster_age_days', 'lineup_age_days') in lineup_features.csv)"
+  ]
+ },
+ "mde_quote": {
+  "within_family_milli": 1.773,
+  "cross_family_milli": 5.889,
+  "source": "stats/power_mde_expanded.json"
+ }
+}

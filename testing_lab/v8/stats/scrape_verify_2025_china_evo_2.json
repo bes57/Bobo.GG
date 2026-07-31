@@ -1,0 +1,338 @@
+{
+ "485370": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485370/funplus-phoenix-vs-all-gamers-china-evolution-series-act-2-x-asian-champions-league-ro12",
+  "maps": {
+   "216244": [
+    "AG",
+    "13-9"
+   ],
+   "216245": [
+    "FPX",
+    "13-5"
+   ],
+   "216246": [
+    "FPX",
+    "13-1"
+   ]
+  },
+  "series": [
+   "FPX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-05-08 00:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "AG",
+   "FPX"
+  ]
+ },
+ "485371": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485371/nova-esports-vs-xi-lai-gaming-china-evolution-series-act-2-x-asian-champions-league-ro12",
+  "maps": {
+   "216247": [
+    "NOVA",
+    "13-2"
+   ],
+   "216248": [
+    "XLG",
+    "13-10"
+   ],
+   "216249": [
+    "NOVA",
+    "13-5"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "2-1"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-05-08 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "XLG"
+  ]
+ },
+ "485372": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485372/titan-esports-club-vs-bilibili-gaming-china-evolution-series-act-2-x-asian-champions-league-ro12",
+  "maps": {
+   "216250": [
+    "TEC",
+    "13-2"
+   ],
+   "216251": [
+    "TEC",
+    "13-4"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-05-08 04:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "TEC"
+  ]
+ },
+ "485373": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485373/jdg-esports-vs-tyloo-china-evolution-series-act-2-x-asian-champions-league-ro12",
+  "maps": {
+   "216253": [
+    "TYL",
+    "13-7"
+   ],
+   "216254": [
+    "TYL",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TYL",
+   "2-0"
+  ],
+  "match_name": "Main Event: Round of 12",
+  "utc_ts": "2025-05-08 06:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "JDG",
+   "TYL"
+  ]
+ },
+ "485374": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485374/edward-gaming-vs-funplus-phoenix-china-evolution-series-act-2-x-asian-champions-league-qf",
+  "maps": {
+   "216256": [
+    "EDG",
+    "13-11"
+   ]
+  },
+  "series": [
+   "EDG",
+   "1-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-05-09 00:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "FPX"
+  ]
+ },
+ "485375": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485375/trace-esports-vs-nova-esports-china-evolution-series-act-2-x-asian-champions-league-qf",
+  "maps": {
+   "216259": [
+    "NOVA",
+    "13-11"
+   ],
+   "216260": [
+    "TE",
+    "13-7"
+   ],
+   "216261": [
+    "TE",
+    "13-5"
+   ]
+  },
+  "series": [
+   "TE",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-05-09 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "TE"
+  ]
+ },
+ "485376": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485376/dragon-ranger-gaming-vs-titan-esports-club-china-evolution-series-act-2-x-asian-champions-league",
+  "maps": {
+   "216262": [
+    "TEC",
+    "13-11"
+   ],
+   "216263": [
+    "TEC",
+    "13-7"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-0"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-05-09 04:40:00",
+  "parser": "ovw",
+  "orgs": [
+   "DRG",
+   "TEC"
+  ]
+ },
+ "485377": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485377/wolves-esports-vs-tyloo-china-evolution-series-act-2-x-asian-champions-league-qf",
+  "maps": {
+   "216265": [
+    "TYL",
+    "13-5"
+   ],
+   "216266": [
+    "WOL",
+    "13-3"
+   ],
+   "216267": [
+    "WOL",
+    "13-10"
+   ]
+  },
+  "series": [
+   "WOL",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinals",
+  "utc_ts": "2025-05-09 06:55:00",
+  "parser": "ovw",
+  "orgs": [
+   "TYL",
+   "WOL"
+  ]
+ },
+ "485378": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485378/edward-gaming-vs-trace-esports-china-evolution-series-act-2-x-asian-champions-league-sf",
+  "maps": {
+   "216268": [
+    "EDG",
+    "14-12"
+   ],
+   "216269": [
+    "EDG",
+    "14-12"
+   ]
+  },
+  "series": [
+   "EDG",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-05-10 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "TE"
+  ]
+ },
+ "485379": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485379/titan-esports-club-vs-wolves-esports-china-evolution-series-act-2-x-asian-champions-league-sf",
+  "maps": {
+   "216271": [
+    "TEC",
+    "14-12"
+   ],
+   "216272": [
+    "WOL",
+    "13-7"
+   ],
+   "216273": [
+    "TEC",
+    "13-8"
+   ]
+  },
+  "series": [
+   "TEC",
+   "2-1"
+  ],
+  "match_name": "Main Event: Semifinals",
+  "utc_ts": "2025-05-10 07:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "TEC",
+   "WOL"
+  ]
+ },
+ "485381": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485381/trace-esports-vs-wolves-esports-china-evolution-series-act-2-x-asian-champions-league-cf",
+  "maps": {
+   "216279": [
+    "TE",
+    "13-11"
+   ],
+   "216280": [
+    "TE",
+    "13-11"
+   ],
+   "216281": [
+    "TE",
+    "13-9"
+   ]
+  },
+  "series": [
+   "TE",
+   "3-0"
+  ],
+  "match_name": "Main Event: Consolation Final",
+  "utc_ts": "2025-05-11 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "TE",
+   "WOL"
+  ]
+ },
+ "485380": {
+  "event_id": "2025_china_evo_2",
+  "region": "CN",
+  "url": "https://www.vlr.gg/485380/edward-gaming-vs-titan-esports-club-china-evolution-series-act-2-x-asian-champions-league-gf",
+  "maps": {
+   "216274": [
+    "EDG",
+    "13-9"
+   ],
+   "216275": [
+    "EDG",
+    "13-7"
+   ],
+   "216276": [
+    "EDG",
+    "13-10"
+   ]
+  },
+  "series": [
+   "EDG",
+   "3-0"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-05-12 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "EDG",
+   "TEC"
+  ]
+ }
+}

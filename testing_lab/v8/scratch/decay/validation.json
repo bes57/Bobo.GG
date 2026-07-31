@@ -1,0 +1,10 @@
+{
+ "same_nan_pattern": true,
+ "max_abs_rdiff_diff": 0.0,
+ "beta_engine": 0.1152,
+ "beta_mine": 0.1152,
+ "ll_test_engine": 0.64216,
+ "ll_test_mine": 0.64216,
+ "n_test": 1217,
+ "pass": true
+}

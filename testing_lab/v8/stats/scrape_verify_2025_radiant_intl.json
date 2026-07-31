@@ -1,0 +1,356 @@
+{
+ "590624": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590624/nova-esports-vs-paper-rex-valorant-radiant-international-invitational-d1",
+  "maps": {
+   "243127": [
+    "PRX",
+    "13-5"
+   ]
+  },
+  "series": [
+   "PRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2025-12-18 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "NOVA",
+   "PRX"
+  ]
+ },
+ "590625": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590625/funplus-phoenix-vs-paper-rex-valorant-radiant-international-invitational-d1",
+  "maps": {
+   "243128": [
+    "FPX",
+    "15-13"
+   ]
+  },
+  "series": [
+   "FPX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2025-12-18 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "PRX"
+  ]
+ },
+ "590626": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590626/funplus-phoenix-vs-gen-g-valorant-radiant-international-invitational-d1",
+  "maps": {
+   "243129": [
+    "GEN",
+    "13-6"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2025-12-18 03:20:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "GEN"
+  ]
+ },
+ "590627": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590627/bilibili-gaming-vs-gen-g-valorant-radiant-international-invitational-d1",
+  "maps": {
+   "243130": [
+    "GEN",
+    "13-5"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2025-12-18 04:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "GEN"
+  ]
+ },
+ "590628": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590628/bilibili-gaming-vs-g2-esports-valorant-radiant-international-invitational-d1",
+  "maps": {
+   "243131": [
+    "G2",
+    "13-3"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2025-12-18 06:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "G2"
+  ]
+ },
+ "590629": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590629/nova-esports-vs-g2-esports-valorant-radiant-international-invitational-d1",
+  "maps": {
+   "243132": [
+    "G2",
+    "13-7"
+   ]
+  },
+  "series": [
+   "G2",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2025-12-18 07:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "NOVA"
+  ]
+ },
+ "590630": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590630/nova-esports-vs-funplus-phoenix-valorant-radiant-international-invitational-d2",
+  "maps": {
+   "243133": [
+    "FPX",
+    "13-6"
+   ]
+  },
+  "series": [
+   "FPX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2025-12-19 01:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "NOVA"
+  ]
+ },
+ "590631": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590631/g2-esports-vs-funplus-phoenix-valorant-radiant-international-invitational-d2",
+  "maps": {
+   "243134": [
+    "FPX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "FPX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2025-12-19 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "G2"
+  ]
+ },
+ "590632": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590632/g2-esports-vs-gen-g-valorant-radiant-international-invitational-d2",
+  "maps": {
+   "243135": [
+    "GEN",
+    "13-7"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2025-12-19 03:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "GEN"
+  ]
+ },
+ "590633": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590633/paper-rex-vs-gen-g-valorant-radiant-international-invitational-d2",
+  "maps": {
+   "243136": [
+    "GEN",
+    "13-11"
+   ]
+  },
+  "series": [
+   "GEN",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2025-12-19 04:45:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "PRX"
+  ]
+ },
+ "590634": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590634/paper-rex-vs-bilibili-gaming-valorant-radiant-international-invitational-d2",
+  "maps": {
+   "243137": [
+    "PRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "PRX",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2025-12-19 06:10:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "PRX"
+  ]
+ },
+ "590635": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590635/nova-esports-vs-bilibili-gaming-valorant-radiant-international-invitational-d2",
+  "maps": {
+   "243138": [
+    "NOVA",
+    "13-11"
+   ]
+  },
+  "series": [
+   "NOVA",
+   "1-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2025-12-19 07:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "BLG",
+   "NOVA"
+  ]
+ },
+ "590636": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590636/g2-esports-vs-paper-rex-valorant-radiant-international-invitational-qf",
+  "maps": {
+   "243139": [
+    "PRX",
+    "13-10"
+   ],
+   "243140": [
+    "G2",
+    "13-10"
+   ],
+   "243141": [
+    "PRX",
+    "13-2"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-1"
+  ],
+  "match_name": "Main Event: Quarterfinal",
+  "utc_ts": "2025-12-20 03:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "G2",
+   "PRX"
+  ]
+ },
+ "590637": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590637/funplus-phoenix-vs-paper-rex-valorant-radiant-international-invitational-sf",
+  "maps": {
+   "243142": [
+    "PRX",
+    "13-4"
+   ],
+   "243143": [
+    "PRX",
+    "13-7"
+   ]
+  },
+  "series": [
+   "PRX",
+   "2-0"
+  ],
+  "match_name": "Main Event: Semifinal",
+  "utc_ts": "2025-12-20 06:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FPX",
+   "PRX"
+  ]
+ },
+ "590638": {
+  "event_id": "2025_radiant_intl",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/590638/gen-g-vs-paper-rex-valorant-radiant-international-invitational-gf",
+  "maps": {
+   "243145": [
+    "GEN",
+    "13-5"
+   ],
+   "243146": [
+    "PRX",
+    "13-5"
+   ],
+   "243147": [
+    "PRX",
+    "13-3"
+   ],
+   "243148": [
+    "PRX",
+    "13-9"
+   ]
+  },
+  "series": [
+   "PRX",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2025-12-21 05:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GEN",
+   "PRX"
+  ]
+ }
+}

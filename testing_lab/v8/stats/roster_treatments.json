@@ -1,0 +1,1072 @@
+{
+ "read1_b_continuity": {
+  "label": "(b) change-point continuity gamma=2.0",
+  "epistemic_status": "EXPLORATORY \u2014 the holdout is spent (398 recorded looks before this file; adversary_report.md). This read is counted in stats/roster_looks.json, is NOT confirmatory and NOT promotable; adjudication requires the preregistered prospective test on fresh series (roster_integration.json).",
+  "n_scored": 1217,
+  "ll_holdout": 0.64605,
+  "ll_v6_same_rows": 0.64216,
+  "delta_milli": -3.889,
+  "iid": {
+   "mean_delta": -0.003888756565919824,
+   "ci_lo": -0.008463619223926667,
+   "ci_hi": 0.00034725454312589356,
+   "p_better": 0.03725,
+   "mode": "iid",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260728,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "crn_verify": "not-applicable (subset n != holdout n)"
+  },
+  "block_event": {
+   "mean_delta": -0.003888756565919824,
+   "ci_lo": -0.007769801835498593,
+   "ci_hi": -0.0002596703118851873,
+   "p_better": 0.018,
+   "mode": "block_event",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260729,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "n_events": 31,
+   "crn_verify": "not-applicable (subset events != crn events)"
+  },
+  "expected_roi": {
+   "dll": -0.003888756565919824,
+   "dll_milli": -3.889,
+   "mean_one_minus_p_ref": 0.4578,
+   "delta_logit_equiv": -0.0085,
+   "delta_op": 0.0,
+   "roi_at_op": 0.0021,
+   "roi_at_op_plus_equiv": 0.0021,
+   "expected_roi_delta": 0.0,
+   "roi_ci_at_op_plus_equiv": [
+    -0.119,
+    0.126
+   ],
+   "ladder_points": [
+    [
+     0.0,
+     0.0021
+    ],
+    [
+     0.1,
+     0.0402
+    ],
+    [
+     0.2,
+     0.0604
+    ],
+    [
+     0.3,
+     0.088
+    ],
+    [
+     0.4,
+     0.1498
+    ],
+    [
+     0.6,
+     0.2911
+    ]
+   ],
+   "ladder_source": "out/quote_margin.json",
+   "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+  },
+  "buckets": [
+   {
+    "name": "post-change <=3 (either team, power def)",
+    "n": 731,
+    "delta_milli": -4.95,
+    "ci_lo_milli": -11.72,
+    "ci_hi_milli": 1.55,
+    "p_better": 0.06725
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep4",
+    "n": 375,
+    "delta_milli": -0.62,
+    "ci_lo_milli": -7.31,
+    "ci_hi_milli": 6.41,
+    "p_better": 0.4385
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep3",
+    "n": 112,
+    "delta_milli": -6.23,
+    "ci_lo_milli": -22.14,
+    "ci_hi_milli": 8.61,
+    "p_better": 0.22825
+   },
+   {
+    "name": "post-change <=3 \u00b7 overhaul",
+    "n": 67,
+    "delta_milli": -14.46,
+    "ci_lo_milli": -57.89,
+    "ci_hi_milli": 23.12,
+    "p_better": 0.24275
+   },
+   {
+    "name": "post-change 4-10",
+    "n": 352,
+    "delta_milli": -3.15,
+    "ci_lo_milli": -8.5,
+    "ci_hi_milli": 2.34,
+    "p_better": 0.13075
+   },
+   {
+    "name": "stable (>10)",
+    "n": 134,
+    "delta_milli": -0.07,
+    "ci_lo_milli": -5.33,
+    "ci_hi_milli": 5.34,
+    "p_better": 0.494
+   },
+   {
+    "name": "gated (first-3 of sustained ov<=0.6 change)",
+    "n": 202,
+    "delta_milli": -1.66,
+    "ci_lo_milli": -18.48,
+    "ci_hi_milli": 13.85,
+    "p_better": 0.42925
+   },
+   {
+    "name": "improvement cases (retrospective slice)",
+    "n": 202,
+    "delta_milli": -8.87,
+    "ci_lo_milli": -21.36,
+    "ci_hi_milli": 3.71,
+    "p_better": 0.08525
+   },
+   {
+    "name": "degradation cases (retrospective slice)",
+    "n": 155,
+    "delta_milli": -6.28,
+    "ci_lo_milli": -19.16,
+    "ci_hi_milli": 5.66,
+    "p_better": 0.1515
+   }
+  ],
+  "mde_context": {
+   "within_milli": 1.773,
+   "cross_milli": 5.889,
+   "post_le3_within_milli": 2.52,
+   "post_le3_cross_milli": 7.81,
+   "sources": [
+    "stats/power_mde_expanded.json checkpoint_quote (n=1217)",
+    "stats/power_mde.json bucket 'roster change <=3 matches ago' (n=598, frozen-npz holdout)"
+   ]
+  },
+  "spec": {
+   "replaces": "v6 year-boundary continuity (roster_mode year, 0.3)",
+   "factor": "prod over sustained-at-D episodes e with g.date < d_e <= D of max(ov_e, 0.2)^gamma",
+   "gamma_grid_train_only": [
+    {
+     "gamma": 2.0,
+     "beta": 0.1227,
+     "ll_train": 0.64463
+    },
+    {
+     "gamma": 1.0,
+     "beta": 0.1203,
+     "ll_train": 0.6456
+    },
+    {
+     "gamma": 0.5,
+     "beta": 0.1177,
+     "ll_train": 0.64668
+    }
+   ],
+   "selected_gamma": 2.0,
+   "train_tie_lt_0p1m": false,
+   "beta_refit_train": 0.1227
+  },
+  "expected_roi_both_units": {
+   "referee_ladder_at_signed_dll": 0.0,
+   "note": "the quote-margin ladder is defined for improvements (delta>=0); a negative dLL clamps at the operating point. Symmetric first-order reading below: expected ROI change of a |dLL| improvement, sign flipped.",
+   "symmetric_reading_roi_delta": -0.0032,
+   "dll_milli": -3.889,
+   "delta_logit_equiv_abs": 0.0085,
+   "ladder_source": "out/quote_margin.json"
+  }
+ },
+ "read2_c_coldstart": {
+  "label": "(c) partial cold start a0=1.0 M=6",
+  "epistemic_status": "EXPLORATORY \u2014 the holdout is spent (398 recorded looks before this file; adversary_report.md). This read is counted in stats/roster_looks.json, is NOT confirmatory and NOT promotable; adjudication requires the preregistered prospective test on fresh series (roster_integration.json).",
+  "n_scored": 1217,
+  "ll_holdout": 0.64358,
+  "ll_v6_same_rows": 0.64216,
+  "delta_milli": -1.423,
+  "iid": {
+   "mean_delta": -0.0014228650590382577,
+   "ci_lo": -0.003543002115688392,
+   "ci_hi": 0.0007458559483637114,
+   "p_better": 0.09875,
+   "mode": "iid",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260728,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "crn_verify": "not-applicable (subset n != holdout n)"
+  },
+  "block_event": {
+   "mean_delta": -0.0014228650590382577,
+   "ci_lo": -0.00516999796201297,
+   "ci_hi": 0.0017839255420198563,
+   "p_better": 0.22525,
+   "mode": "block_event",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260729,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "n_events": 31,
+   "crn_verify": "not-applicable (subset events != crn events)"
+  },
+  "expected_roi": {
+   "dll": -0.0014228650590382577,
+   "dll_milli": -1.423,
+   "mean_one_minus_p_ref": 0.4578,
+   "delta_logit_equiv": -0.0031,
+   "delta_op": 0.0,
+   "roi_at_op": 0.0021,
+   "roi_at_op_plus_equiv": 0.0021,
+   "expected_roi_delta": 0.0,
+   "roi_ci_at_op_plus_equiv": [
+    -0.119,
+    0.126
+   ],
+   "ladder_points": [
+    [
+     0.0,
+     0.0021
+    ],
+    [
+     0.1,
+     0.0402
+    ],
+    [
+     0.2,
+     0.0604
+    ],
+    [
+     0.3,
+     0.088
+    ],
+    [
+     0.4,
+     0.1498
+    ],
+    [
+     0.6,
+     0.2911
+    ]
+   ],
+   "ladder_source": "out/quote_margin.json",
+   "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+  },
+  "buckets": [
+   {
+    "name": "post-change <=3 (either team, power def)",
+    "n": 731,
+    "delta_milli": -2.83,
+    "ci_lo_milli": -6.36,
+    "ci_hi_milli": 0.58,
+    "p_better": 0.05225
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep4",
+    "n": 375,
+    "delta_milli": 0.8,
+    "ci_lo_milli": -1.84,
+    "ci_hi_milli": 3.55,
+    "p_better": 0.7325
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep3",
+    "n": 112,
+    "delta_milli": -8.93,
+    "ci_lo_milli": -18.01,
+    "ci_hi_milli": 0.19,
+    "p_better": 0.02775
+   },
+   {
+    "name": "post-change <=3 \u00b7 overhaul",
+    "n": 67,
+    "delta_milli": -2.38,
+    "ci_lo_milli": -24.72,
+    "ci_hi_milli": 21.74,
+    "p_better": 0.415
+   },
+   {
+    "name": "post-change 4-10",
+    "n": 352,
+    "delta_milli": 0.92,
+    "ci_lo_milli": -0.73,
+    "ci_hi_milli": 2.59,
+    "p_better": 0.86175
+   },
+   {
+    "name": "stable (>10)",
+    "n": 134,
+    "delta_milli": 0.08,
+    "ci_lo_milli": -1.46,
+    "ci_hi_milli": 1.59,
+    "p_better": 0.55275
+   },
+   {
+    "name": "gated (first-3 of sustained ov<=0.6 change)",
+    "n": 202,
+    "delta_milli": -6.59,
+    "ci_lo_milli": -16.39,
+    "ci_hi_milli": 3.73,
+    "p_better": 0.10175
+   },
+   {
+    "name": "improvement cases (retrospective slice)",
+    "n": 202,
+    "delta_milli": -4.41,
+    "ci_lo_milli": -10.8,
+    "ci_hi_milli": 2.0,
+    "p_better": 0.0895
+   },
+   {
+    "name": "degradation cases (retrospective slice)",
+    "n": 155,
+    "delta_milli": -3.37,
+    "ci_lo_milli": -10.56,
+    "ci_hi_milli": 3.54,
+    "p_better": 0.1705
+   }
+  ],
+  "mde_context": {
+   "within_milli": 1.773,
+   "cross_milli": 5.889,
+   "post_le3_within_milli": 2.52,
+   "post_le3_cross_milli": 7.81,
+   "sources": [
+    "stats/power_mde_expanded.json checkpoint_quote (n=1217)",
+    "stats/power_mde.json bucket 'roster change <=3 matches ago' (n=598, frozen-npz holdout)"
+   ]
+  },
+  "spec": {
+   "trigger": "sustained-at-D episode, ov<=0.6, n_since<M, day-granularity walk-forward",
+   "blend": "r' = (1-a) r + a region_mean(day); a = a0 (1-ov)(1-n_since/M)",
+   "grid_train_only": [
+    {
+     "a0": 1.0,
+     "M": 6,
+     "beta": 0.12016658138512003,
+     "ll_train": 0.646955,
+     "n_team_adjustments": 624
+    },
+    {
+     "a0": 0.6,
+     "M": 6,
+     "beta": 0.11864745594023324,
+     "ll_train": 0.647286,
+     "n_team_adjustments": 624
+    },
+    {
+     "a0": 0.3,
+     "M": 6,
+     "beta": 0.1170813526580464,
+     "ll_train": 0.647694,
+     "n_team_adjustments": 624
+    },
+    {
+     "a0": 0.6,
+     "M": 3,
+     "beta": 0.11639571313300812,
+     "ll_train": 0.648042,
+     "n_team_adjustments": 296
+    },
+    {
+     "a0": 1.0,
+     "M": 3,
+     "beta": 0.11682025193200943,
+     "ll_train": 0.64806,
+     "n_team_adjustments": 296
+    },
+    {
+     "a0": 0.3,
+     "M": 3,
+     "beta": 0.11587688795434085,
+     "ll_train": 0.648104,
+     "n_team_adjustments": 296
+    }
+   ],
+   "selected": {
+    "a0": 1.0,
+    "M": 6
+   },
+   "train_tie_lt_0p1m": false,
+   "beta_refit_train": 0.12016658138512003
+  },
+  "expected_roi_both_units": {
+   "referee_ladder_at_signed_dll": 0.0,
+   "note": "the quote-margin ladder is defined for improvements (delta>=0); a negative dLL clamps at the operating point. Symmetric first-order reading below: expected ROI change of a |dLL| improvement, sign flipped.",
+   "symmetric_reading_roi_delta": -0.0012,
+   "dll_milli": -1.423,
+   "delta_logit_equiv_abs": 0.0031,
+   "ladder_source": "out/quote_margin.json"
+  }
+ },
+ "read3_d_phase_reset": {
+  "label": "(d) phase-reset filter g=0.5",
+  "epistemic_status": "EXPLORATORY \u2014 the holdout is spent (398 recorded looks before this file; adversary_report.md). This read is counted in stats/roster_looks.json, is NOT confirmatory and NOT promotable; adjudication requires the preregistered prospective test on fresh series (roster_integration.json).",
+  "n_scored": 1217,
+  "ll_holdout": 0.66144,
+  "ll_v6_same_rows": 0.64216,
+  "delta_milli": -19.275,
+  "iid": {
+   "mean_delta": -0.01927540303510243,
+   "ci_lo": -0.029333831265401632,
+   "ci_hi": -0.009404596959243082,
+   "p_better": 0.0,
+   "mode": "iid",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260728,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "crn_verify": "not-applicable (subset n != holdout n)"
+  },
+  "block_event": {
+   "mean_delta": -0.01927540303510243,
+   "ci_lo": -0.026883351736199018,
+   "ci_hi": -0.012429631788701372,
+   "p_better": 0.0,
+   "mode": "block_event",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260729,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "n_events": 31,
+   "crn_verify": "not-applicable (subset events != crn events)"
+  },
+  "expected_roi": {
+   "dll": -0.01927540303510243,
+   "dll_milli": -19.275,
+   "mean_one_minus_p_ref": 0.4578,
+   "delta_logit_equiv": -0.0421,
+   "delta_op": 0.0,
+   "roi_at_op": 0.0021,
+   "roi_at_op_plus_equiv": 0.0021,
+   "expected_roi_delta": 0.0,
+   "roi_ci_at_op_plus_equiv": [
+    -0.119,
+    0.126
+   ],
+   "ladder_points": [
+    [
+     0.0,
+     0.0021
+    ],
+    [
+     0.1,
+     0.0402
+    ],
+    [
+     0.2,
+     0.0604
+    ],
+    [
+     0.3,
+     0.088
+    ],
+    [
+     0.4,
+     0.1498
+    ],
+    [
+     0.6,
+     0.2911
+    ]
+   ],
+   "ladder_source": "out/quote_margin.json",
+   "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+  },
+  "buckets": [
+   {
+    "name": "post-change <=3 (either team, power def)",
+    "n": 731,
+    "delta_milli": -23.79,
+    "ci_lo_milli": -38.13,
+    "ci_hi_milli": -9.09,
+    "p_better": 0.00075
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep4",
+    "n": 375,
+    "delta_milli": -27.18,
+    "ci_lo_milli": -45.57,
+    "ci_hi_milli": -8.36,
+    "p_better": 0.00175
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep3",
+    "n": 112,
+    "delta_milli": -11.16,
+    "ci_lo_milli": -48.15,
+    "ci_hi_milli": 21.97,
+    "p_better": 0.27275
+   },
+   {
+    "name": "post-change <=3 \u00b7 overhaul",
+    "n": 67,
+    "delta_milli": -35.17,
+    "ci_lo_milli": -94.44,
+    "ci_hi_milli": 20.04,
+    "p_better": 0.115
+   },
+   {
+    "name": "post-change 4-10",
+    "n": 352,
+    "delta_milli": -13.59,
+    "ci_lo_milli": -28.02,
+    "ci_hi_milli": 0.51,
+    "p_better": 0.03075
+   },
+   {
+    "name": "stable (>10)",
+    "n": 134,
+    "delta_milli": -9.62,
+    "ci_lo_milli": -32.28,
+    "ci_hi_milli": 12.89,
+    "p_better": 0.20275
+   },
+   {
+    "name": "gated (first-3 of sustained ov<=0.6 change)",
+    "n": 202,
+    "delta_milli": -9.58,
+    "ci_lo_milli": -39.92,
+    "ci_hi_milli": 19.14,
+    "p_better": 0.26275
+   },
+   {
+    "name": "improvement cases (retrospective slice)",
+    "n": 202,
+    "delta_milli": -42.73,
+    "ci_lo_milli": -72.81,
+    "ci_hi_milli": -14.13,
+    "p_better": 0.00175
+   },
+   {
+    "name": "degradation cases (retrospective slice)",
+    "n": 155,
+    "delta_milli": -22.1,
+    "ci_lo_milli": -50.45,
+    "ci_hi_milli": 5.48,
+    "p_better": 0.05775
+   }
+  ],
+  "mde_context": {
+   "within_milli": 1.773,
+   "cross_milli": 5.889,
+   "post_le3_within_milli": 2.52,
+   "post_le3_cross_milli": 7.81,
+   "sources": [
+    "stats/power_mde_expanded.json checkpoint_quote (n=1217)",
+    "stats/power_mde.json bucket 'roster change <=3 matches ago' (n=598, frozen-npz holdout)"
+   ]
+  },
+  "spec": {
+   "operator_amendment": "phase-reset filter: mean kept (reference point), variance injected dq = g*(1-ov)*R at the team's first map of the change match; elevated Kalman gain over-reacts to first post-change results in whichever direction they point, decaying as evidence accumulates",
+   "base": {
+    "family": "h3 core 1b (train-selected primary, reused)",
+    "q_over_R": 0.0028231080866430855,
+    "V0_over_R": 1.7982594383647081,
+    "q_cal_week_abs": 0.11293301971678328,
+    "stored_ll_train": 0.644845,
+    "stored_ll_holdout": 0.653913,
+    "stored_note": "1b holdout number was already recorded by bias_h3 (one of the 398) \u2014 reused, not a new look"
+   },
+   "g_grid_train_only": [
+    {
+     "g": 0.5,
+     "beta": 0.09129142935517079,
+     "ll_train": 0.644307
+    },
+    {
+     "g": 1.0,
+     "beta": 0.08856176129588497,
+     "ll_train": 0.645004
+    },
+    {
+     "g": 2.0,
+     "beta": 0.08402247964800932,
+     "ll_train": 0.646756
+    },
+    {
+     "g": 4.0,
+     "beta": 0.07807000018652034,
+     "ll_train": 0.64947
+    }
+   ],
+   "selected_g": 0.5,
+   "train_tie_lt_0p1m": false,
+   "beta_refit_train": 0.09129142935517079,
+   "n_injections": 489,
+   "injection_rule": "every rotation-guarded change event (alive at injection by construction; later-transient episodes cannot be un-injected \u2014 walk-forward honesty)",
+   "attribution_caveat": "CONFOUNDED TEST of the mechanism: the no-injection state-space base is itself \u221211.75m vs v6 (stored), so (d) could not cleanly falsify phase-reset-on-v6. The clean attribution is read4_e_v6_overreact."
+  },
+  "vs_own_base_1b": {
+   "note": "injection's marginal effect vs the stored no-injection filter (mechanism view; base holdout was already recorded by bias_h3)",
+   "delta_milli": -7.524,
+   "ci_lo_milli": -12.08,
+   "ci_hi_milli": -3.34,
+   "p_better": 0.00025
+  },
+  "expected_roi_both_units": {
+   "referee_ladder_at_signed_dll": 0.0,
+   "note": "the quote-margin ladder is defined for improvements (delta>=0); a negative dLL clamps at the operating point. Symmetric first-order reading below: expected ROI change of a |dLL| improvement, sign flipped.",
+   "symmetric_reading_roi_delta": -0.016,
+   "dll_milli": -19.275,
+   "delta_logit_equiv_abs": 0.0421,
+   "ladder_source": "out/quote_margin.json"
+  }
+ },
+ "contrast_d_vs_c": {
+  "prediction": "variance-spike (d) beats mean-blend (c) on improvement cases; (c) pre-judges toward the prior",
+  "sign_convention": "positive = (d) better than (c)",
+  "improvement cases": {
+   "n": 202,
+   "d_minus_c_milli": -38.32,
+   "ci_lo_milli": -68.25,
+   "ci_hi_milli": -9.17
+  },
+  "degradation cases": {
+   "n": 155,
+   "d_minus_c_milli": -18.73,
+   "ci_lo_milli": -48.16,
+   "ci_hi_milli": 10.77
+  },
+  "post-change <=3 (all)": {
+   "n": 731,
+   "d_minus_c_milli": -20.96,
+   "ci_lo_milli": -36.2,
+   "ci_hi_milli": -6.1
+  },
+  "note": "improvement/degradation classified retrospectively from each episode's own first-3 outcomes \u2014 diagnostic slice of already-counted vectors, not a new look"
+ },
+ "learning_rate_curve": {
+  "label": "DESCRIPTIVE filter telemetry at the train-selected g (operator-required chart: 'overreact a bit, scaled by continuity')",
+  "gain_definition": "Kalman gain k = v/S per team-map update; x = matches since change of that team at that match",
+  "by_magnitude": [
+   {
+    "magnitude": "keep4",
+    "points": [
+     {
+      "m": 0,
+      "n": 503,
+      "gain": 0.1767
+     },
+     {
+      "m": 1,
+      "n": 473,
+      "gain": 0.1364
+     },
+     {
+      "m": 2,
+      "n": 455,
+      "gain": 0.1176
+     },
+     {
+      "m": 3,
+      "n": 420,
+      "gain": 0.1085
+     },
+     {
+      "m": 4,
+      "n": 360,
+      "gain": 0.0991
+     },
+     {
+      "m": 5,
+      "n": 298,
+      "gain": 0.1018
+     },
+     {
+      "m": 6,
+      "n": 241,
+      "gain": 0.1001
+     },
+     {
+      "m": 7,
+      "n": 225,
+      "gain": 0.0961
+     },
+     {
+      "m": 8,
+      "n": 194,
+      "gain": 0.0938
+     },
+     {
+      "m": 9,
+      "n": 161,
+      "gain": 0.092
+     }
+    ]
+   },
+   {
+    "magnitude": "keep3",
+    "points": [
+     {
+      "m": 0,
+      "n": 180,
+      "gain": 0.2341
+     },
+     {
+      "m": 1,
+      "n": 170,
+      "gain": 0.1693
+     },
+     {
+      "m": 2,
+      "n": 180,
+      "gain": 0.1329
+     },
+     {
+      "m": 3,
+      "n": 175,
+      "gain": 0.1116
+     },
+     {
+      "m": 4,
+      "n": 114,
+      "gain": 0.1008
+     },
+     {
+      "m": 5,
+      "n": 100,
+      "gain": 0.1035
+     },
+     {
+      "m": 6,
+      "n": 82,
+      "gain": 0.1012
+     },
+     {
+      "m": 7,
+      "n": 80,
+      "gain": 0.0963
+     },
+     {
+      "m": 8,
+      "n": 63,
+      "gain": 0.0945
+     },
+     {
+      "m": 9,
+      "n": 60,
+      "gain": 0.0952
+     }
+    ]
+   },
+   {
+    "magnitude": "overhaul",
+    "points": [
+     {
+      "m": 0,
+      "n": 129,
+      "gain": 0.294
+     },
+     {
+      "m": 1,
+      "n": 98,
+      "gain": 0.2069
+     },
+     {
+      "m": 2,
+      "n": 120,
+      "gain": 0.1606
+     },
+     {
+      "m": 3,
+      "n": 113,
+      "gain": 0.1296
+     },
+     {
+      "m": 4,
+      "n": 89,
+      "gain": 0.1126
+     },
+     {
+      "m": 5,
+      "n": 98,
+      "gain": 0.1059
+     },
+     {
+      "m": 6,
+      "n": 73,
+      "gain": 0.0958
+     },
+     {
+      "m": 7,
+      "n": 63,
+      "gain": 0.0961
+     },
+     {
+      "m": 8,
+      "n": 58,
+      "gain": 0.0944
+     },
+     {
+      "m": 9,
+      "n": 53,
+      "gain": 0.0893
+     }
+    ]
+   }
+  ],
+  "stable_reference_gain": {
+   "n": 3016,
+   "gain": 0.09
+  },
+  "selected_g": 0.5
+ },
+ "read4_reserve": {
+  "used": true,
+  "used_for": "read 4 (e) by OPERATOR DIRECTIVE (preregister ADDENDUM 2), not the tie rule",
+  "rule": "only on a <0.1m train tie in Read 1 or Read 2 grids (addendum: also g tie)",
+  "ties": {
+   "read1_b": false,
+   "read2_c": false,
+   "read3_d": false
+  }
+ },
+ "_meta": {
+  "written_by": "agent:roster",
+  "written": "2026-07-28 23:57:58",
+  "epistemic_status": "EXPLORATORY \u2014 the holdout is spent (398 recorded looks before this file; adversary_report.md). This read is counted in stats/roster_looks.json, is NOT confirmatory and NOT promotable; adjudication requires the preregistered prospective test on fresh series (roster_integration.json).",
+  "preregistered": "preregister.roster.md (+ operator addendum, ordering in logs/roster.log)",
+  "baseline": "stored scratch/bias_h3/v6_baseline.npz (beta 0.1152, holdout LL 0.64216, n=1217)",
+  "frame_sha256": "ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142",
+  "n_holdout": 1217,
+  "crn": "referee.paired_bootstrap_crn (iid + block_event), crn.json governs",
+  "runtime_s": 6.5
+ },
+ "read4_e_v6_overreact": {
+  "label": "(e) v6 + post-change overreaction a=2.0 tau=5.0 (operator-directed)",
+  "epistemic_status": "EXPLORATORY \u2014 spent holdout; operator-directed clean mechanism test on v6 (preregister ADDENDUM 2); read 4 of 4, tallied in stats/roster_looks.json; not confirmatory, not promotable.",
+  "n_scored": 1217,
+  "ll_holdout": 0.64256,
+  "ll_v6_same_rows": 0.64216,
+  "delta_milli": -0.395,
+  "iid": {
+   "mean_delta": -0.0003952163603467494,
+   "ci_lo": -0.0031262131741553955,
+   "ci_hi": 0.0023049665349873416,
+   "p_better": 0.39125,
+   "mode": "iid",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260728,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "crn_verify": "not-applicable (subset n != holdout n)"
+  },
+  "block_event": {
+   "mean_delta": -0.0003952163603467494,
+   "ci_lo": -0.002318724149700973,
+   "ci_hi": 0.0013514601542718376,
+   "p_better": 0.33725,
+   "mode": "block_event",
+   "crn_file": "/Users/benny_es1/PythonTest/testing_lab/v8/crn.json",
+   "n": 1217,
+   "seed": 20260729,
+   "n_boot": 4000,
+   "generator": "numpy PCG64",
+   "n_events": 31,
+   "crn_verify": "not-applicable (subset events != crn events)"
+  },
+  "expected_roi": {
+   "dll": -0.0003952163603467494,
+   "dll_milli": -0.395,
+   "mean_one_minus_p_ref": 0.4578,
+   "delta_logit_equiv": -0.0009,
+   "delta_op": 0.0,
+   "roi_at_op": 0.0021,
+   "roi_at_op_plus_equiv": 0.0021,
+   "expected_roi_delta": 0.0,
+   "roi_ci_at_op_plus_equiv": [
+    -0.119,
+    0.126
+   ],
+   "ladder_points": [
+    [
+     0.0,
+     0.0021
+    ],
+    [
+     0.1,
+     0.0402
+    ],
+    [
+     0.2,
+     0.0604
+    ],
+    [
+     0.3,
+     0.088
+    ],
+    [
+     0.4,
+     0.1498
+    ],
+    [
+     0.6,
+     0.2911
+    ]
+   ],
+   "ladder_source": "out/quote_margin.json",
+   "formula": "delta_equiv = dll / mean(1 - p_ref); ROI = interp(quote_margin logit ladder); first-order, preregister.referee.md \u00a72.6"
+  },
+  "expected_roi_both_units": {
+   "referee_ladder_at_signed_dll": 0.0,
+   "note": "ladder defined for improvements; symmetric first-order reading below (sign flipped when dLL<0)",
+   "symmetric_reading_roi_delta": -0.0003,
+   "dll_milli": -0.395,
+   "delta_logit_equiv_abs": 0.0009,
+   "ladder_source": "out/quote_margin.json"
+  },
+  "buckets": [
+   {
+    "name": "post-change <=3 (either team, power def)",
+    "n": 731,
+    "delta_milli": -0.19,
+    "ci_lo_milli": -4.38,
+    "ci_hi_milli": 3.95,
+    "p_better": 0.47825
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep4",
+    "n": 375,
+    "delta_milli": 2.69,
+    "ci_lo_milli": -1.62,
+    "ci_hi_milli": 6.95,
+    "p_better": 0.8885
+   },
+   {
+    "name": "post-change <=3 \u00b7 keep3",
+    "n": 112,
+    "delta_milli": -3.4,
+    "ci_lo_milli": -14.51,
+    "ci_hi_milli": 7.3,
+    "p_better": 0.27625
+   },
+   {
+    "name": "post-change <=3 \u00b7 overhaul",
+    "n": 67,
+    "delta_milli": -1.24,
+    "ci_lo_milli": -20.19,
+    "ci_hi_milli": 18.21,
+    "p_better": 0.4565
+   },
+   {
+    "name": "post-change 4-10",
+    "n": 352,
+    "delta_milli": -1.09,
+    "ci_lo_milli": -4.8,
+    "ci_hi_milli": 2.42,
+    "p_better": 0.276
+   },
+   {
+    "name": "stable (>10)",
+    "n": 134,
+    "delta_milli": 0.32,
+    "ci_lo_milli": -2.82,
+    "ci_hi_milli": 3.35,
+    "p_better": 0.586
+   },
+   {
+    "name": "gated (first-3 of sustained ov<=0.6 change)",
+    "n": 202,
+    "delta_milli": 2.57,
+    "ci_lo_milli": -6.85,
+    "ci_hi_milli": 11.71,
+    "p_better": 0.70525
+   },
+   {
+    "name": "improvement cases (retrospective slice)",
+    "n": 202,
+    "delta_milli": 4.12,
+    "ci_lo_milli": -3.99,
+    "ci_hi_milli": 12.36,
+    "p_better": 0.84075
+   },
+   {
+    "name": "degradation cases (retrospective slice)",
+    "n": 155,
+    "delta_milli": -0.62,
+    "ci_lo_milli": -8.36,
+    "ci_hi_milli": 6.56,
+    "p_better": 0.44875
+   }
+  ],
+  "mde_context": {
+   "within_milli": 1.773,
+   "cross_milli": 5.889,
+   "post_le3_within_milli": 2.52,
+   "post_le3_cross_milli": 7.81,
+   "sources": [
+    "stats/power_mde_expanded.json checkpoint_quote (n=1217)",
+    "stats/power_mde.json roster<=3 bucket (n=598, frozen-npz holdout)"
+   ]
+  },
+  "spec": {
+   "base": "v6 config EXACTLY (stored-baseline reproduction guard passed to 1e-12 before the grid)",
+   "mechanism": "post-change games of a team with a sustained-at-D episode get weight x m, m = 1 + a(1-ov) exp(-n_since/tau); pre-change games untouched ((b) adjudicated the discount side); per-side m^2 folded into the continuity vector; corpus-wide (deployable rule)",
+   "grid_train_only": [
+    {
+     "a": 2.0,
+     "tau": 5.0,
+     "beta": 0.1167,
+     "ll_train": 0.64582
+    },
+    {
+     "a": 1.0,
+     "tau": 5.0,
+     "beta": 0.1163,
+     "ll_train": 0.64685
+    },
+    {
+     "a": 2.0,
+     "tau": 2.0,
+     "beta": 0.1155,
+     "ll_train": 0.64743
+    },
+    {
+     "a": 0.5,
+     "tau": 5.0,
+     "beta": 0.1158,
+     "ll_train": 0.64749
+    },
+    {
+     "a": 1.0,
+     "tau": 2.0,
+     "beta": 0.1154,
+     "ll_train": 0.64779
+    },
+    {
+     "a": 0.5,
+     "tau": 2.0,
+     "beta": 0.1153,
+     "ll_train": 0.648
+    }
+   ],
+   "selected": {
+    "a": 2.0,
+    "tau": 5.0
+   },
+   "train_tie_lt_0p1m": false,
+   "beta_refit_train": 0.1167,
+   "attribution_note": "read (d) confounded base-model replacement (state-space base \u221211.75m vs v6 stored) with the mechanism; (e) is the clean attribution ON v6 \u2014 operator directive, preregister ADDENDUM 2"
+  }
+ }
+}

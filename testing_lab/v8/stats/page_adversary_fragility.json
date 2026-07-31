@@ -1,0 +1,282 @@
+{
+ "source": "scratch/adversary/recompute_{eclass_cold,3e,compose,core}.json (verbatim copies)",
+ "eclass_cold": {
+  "eclass_overall_milli_mine": 0.239,
+  "published": 0.239,
+  "mask_n_mine_vs_pub": {
+   "S3": [
+    130,
+    130
+   ],
+   "S4": [
+    1118,
+    1118
+   ],
+   "S5": [
+    1189,
+    1189
+   ]
+  },
+  "eclass_S3_milli_mine": 1.025,
+  "eclass_S4_milli_mine": 0.373,
+  "eclass_S5_milli_mine": 0.267,
+  "overlap": {
+   "S4_and_S5_frac_of_holdout": 0.896,
+   "S5_frac": 0.977,
+   "S4_frac": 0.919
+  },
+  "eclass_drop_top5pct_milli": -1.241,
+  "eclass_jackknife": {
+   "n_events": 31,
+   "n_events_flip_nonpos": 1,
+   "flips": {
+    "2026_china_kickoff": -0.002
+   },
+   "min": -0.002,
+   "max": 0.396
+  },
+  "eclass_delta_split": {
+   "on_2026_ewc_class_rows_milli": -0.058,
+   "n_in": 115,
+   "elsewhere_milli": 0.27,
+   "n_out": 1102
+  },
+  "cold_buckets_mine": {
+   "debut(either0)": {
+    "n": 10,
+    "dll_5d_milli": 58.17,
+    "bucket_mde_cross": 65.0,
+    "drop_top1_milli": 29.47,
+    "drop_top5pct_milli": 29.47,
+    "jackknife_min": -18.16,
+    "jackknife_min_event": "2025_kickoff",
+    "n_events": 3
+   },
+   "cold(<10)": {
+    "n": 39,
+    "dll_5d_milli": 71.7,
+    "bucket_mde_cross": 32.9,
+    "drop_top1_milli": 61.0,
+    "drop_top5pct_milli": 53.13,
+    "jackknife_min": 66.02,
+    "jackknife_min_event": "2025_kickoff",
+    "n_events": 4
+   },
+   "thin(<30)": {
+    "n": 117,
+    "dll_5d_milli": 28.03,
+    "bucket_mde_cross": 19.0,
+    "drop_top1_milli": 24.15,
+    "drop_top5pct_milli": 12.7,
+    "jackknife_min": 21.03,
+    "jackknife_min_event": "2026_kickoff",
+    "n_events": 9
+   }
+  }
+ },
+ "shrink_3e": {
+  "fit_X1_mine": {
+   "beta": 0.1251,
+   "k": 0.3466,
+   "ll_train": 0.6478,
+   "ll_test": 0.64256,
+   "published": {
+    "beta": 0.1251,
+    "k": 0.3466,
+    "ll_train": 0.6478,
+    "ll_test": 0.64256
+   }
+  },
+  "fit_dummy_mine": {
+   "beta": 0.1278,
+   "k": 0.8595,
+   "ll_test": 0.64166,
+   "published": {
+    "beta": 0.1278,
+    "k": 0.8595,
+    "ll_test": 0.64166
+   }
+  },
+  "bucket_counts_holdout_valid": {
+   "legacy2026": 115,
+   "eclass_ewc_offseason": 291,
+   "union": 291,
+   "legacy_not_in_eclass": 0
+  },
+  "eclass_events_holdout": [
+   "2025_acl",
+   "2025_china_evo_1",
+   "2025_china_evo_2",
+   "2025_china_evo_3",
+   "2025_china_evo_epilogue",
+   "2025_ewc",
+   "2025_ewc_qual",
+   "2025_radiant_intl",
+   "2025_rbhg",
+   "2025_shanghai_masters",
+   "2025_super_champions_cup",
+   "2025_ten_global",
+   "2026_china_evo_1",
+   "2026_china_evo_2",
+   "2026_ewc",
+   "2026_ewc_qual"
+  ],
+  "legacy_events_holdout": [
+   "2026_china_evo_1",
+   "2026_china_evo_2",
+   "2026_ewc",
+   "2026_ewc_qual"
+  ],
+  "bucket_legacy2026": {
+   "n": 115,
+   "ll_B0": 0.68633,
+   "ll_X1": 0.68506,
+   "dll_X1_milli": 1.26,
+   "dll_dummy_milli": 3.34
+  },
+  "bucket_fullclass": {
+   "n": 291,
+   "ll_B0": 0.67224,
+   "ll_X1": 0.66878,
+   "dll_X1_milli": 3.46,
+   "dll_dummy_milli": -3.76
+  },
+  "bucket_union": {
+   "n": 291,
+   "ll_B0": 0.67224,
+   "ll_X1": 0.66878,
+   "dll_X1_milli": 3.46,
+   "dll_dummy_milli": -3.76
+  },
+  "fullclass_drop_top5pct": {
+   "k_dropped": 15,
+   "delta_milli_after": -2.96
+  },
+  "fullclass_jackknife_by_event": {
+   "2025_acl": 3.47,
+   "2025_china_evo_1": 2.35,
+   "2025_china_evo_2": 2.47,
+   "2025_china_evo_3": 2.59,
+   "2025_china_evo_epilogue": 2.75,
+   "2025_ewc": 3.78,
+   "2025_ewc_qual": 5.38,
+   "2025_radiant_intl": 3.62,
+   "2025_rbhg": 3.58,
+   "2025_shanghai_masters": 3.56,
+   "2025_super_champions_cup": 3.7,
+   "2025_ten_global": 3.67,
+   "2026_china_evo_1": 3.68,
+   "2026_china_evo_2": 2.89,
+   "2026_ewc": 3.85,
+   "2026_ewc_qual": 4.58
+  },
+  "bucket_mde_within_at_n291": 3.63
+ },
+ "compose": {
+  "gate_counts": {
+   "train": 344,
+   "holdout": 178,
+   "published": [
+    330,
+    178
+   ]
+  },
+  "S1": {
+   "delta_milli_mine": 1.958,
+   "published": 1.958,
+   "iid": {
+    "p_better": 0.96575,
+    "lo": -0.00015100523890662754,
+    "hi": 0.004206100025043042
+   },
+   "block": {
+    "p_better": 0.88825,
+    "lo": -0.0011881112973386539,
+    "hi": 0.004941784231505707
+   },
+   "gated_rows_delta_milli": 13.39,
+   "n_gated_hold": 178,
+   "drop_top5pct_milli": -3.963,
+   "jackknife_flips": {},
+   "jackknife_min": 0.903,
+   "gate_thin_overlap_holdout": {
+    "n_gate": 178,
+    "n_thin": 117,
+    "n_both": 68
+   }
+  },
+  "S2": {
+   "beta": 0.1252,
+   "k": 0.3524,
+   "delta_milli_mine": -0.14,
+   "published": -0.14,
+   "n": 1217
+  },
+  "S3": {
+   "beta": 0.1174,
+   "k": 1.8695,
+   "delta_milli_mine": -7.874,
+   "published": -7.874,
+   "S3_vs_minS1S2_anti_synergy_falsifier_fired": true
+  }
+ },
+ "core": {
+  "frame_sha_ok": true,
+  "n": 2058,
+  "n_holdout": 1217,
+  "B0_mine": {
+   "beta": 0.1152,
+   "ll_train": 0.64823,
+   "ll_test": 0.64216,
+   "n_train": 827,
+   "n_test": 1217
+  },
+  "stored_baseline_vs_mine": {
+   "bias_h3": {
+    "max_abs_prob_diff": 0.0,
+    "beta_stored": 0.1152
+   },
+   "bias_h2": {
+    "max_abs_prob_diff": 0.0,
+    "beta_stored": 0.1152
+   },
+   "bias_h4": {
+    "max_abs_rdiff_diff": 0.0,
+    "beta_stored": 0.1152
+   },
+   "bias_h1": {
+    "max_abs_rdiff_diff": 0.0,
+    "beta_stored": 0.1152
+   }
+  },
+  "h3_check": {
+   "ll_v6_hold": 0.642162,
+   "ll_1a_hold": 0.651033,
+   "ll_5d_hold": 0.647483,
+   "delta_5d_vs_v6_milli": -5.321,
+   "delta_5d_vs_1a_milli": 3.55,
+   "boot_iid_5d_vs_1a": {
+    "mean": 0.003550399020101208,
+    "lo": -0.0006628140114090356,
+    "hi": 0.007843472949093778,
+    "p_better": 0.94625
+   },
+   "boot_block_5d_vs_1a": {
+    "mean": 0.003550399020101208,
+    "lo": 0.00014388586245811172,
+    "hi": 0.006738300491260698,
+    "p_better": 0.979
+   }
+  },
+  "h3_5d_vs_1a_drop_top5pct": {
+   "k_dropped": 61,
+   "delta_milli_after": -6.338
+  },
+  "h3_5d_vs_1a_jackknife_min_max": {
+   "min_event": "2025_kickoff",
+   "min": 2.852,
+   "max_event": "2025_stage1",
+   "max": 4.344
+  }
+ }
+}

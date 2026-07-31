@@ -1,0 +1,148 @@
+{
+ "289448": {
+  "event_id": "2023_convergence",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/289448/global-esports-vs-team-vitality-convergence-2023-d1",
+  "maps": {
+   "151606": [
+    "VIT",
+    "13-5"
+   ],
+   "151607": [
+    "VIT",
+    "13-7"
+   ]
+  },
+  "series": [
+   "VIT",
+   "2-0"
+  ],
+  "match_name": "Main Event: Day 1",
+  "utc_ts": "2023-12-14 08:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "GE",
+   "VIT"
+  ]
+ },
+ "289450": {
+  "event_id": "2023_convergence",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/289450/furia-vs-team-vitality-convergence-2023-d2",
+  "maps": {
+   "151612": [
+    "VIT",
+    "13-8"
+   ],
+   "151613": [
+    "VIT",
+    "13-9"
+   ]
+  },
+  "series": [
+   "VIT",
+   "2-0"
+  ],
+  "match_name": "Main Event: Day 2",
+  "utc_ts": "2023-12-15 06:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "VIT"
+  ]
+ },
+ "289451": {
+  "event_id": "2023_convergence",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/289451/fut-esports-vs-gen-g-convergence-2023-d3",
+  "maps": {
+   "151615": [
+    "GEN",
+    "13-4"
+   ],
+   "151616": [
+    "FUT",
+    "13-6"
+   ],
+   "151617": [
+    "FUT",
+    "14-12"
+   ]
+  },
+  "series": [
+   "FUT",
+   "2-1"
+  ],
+  "match_name": "Main Event: Day 3",
+  "utc_ts": "2023-12-16 02:00:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "GEN"
+  ]
+ },
+ "289452": {
+  "event_id": "2023_convergence",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/289452/global-esports-vs-furia-convergence-2023-d3",
+  "maps": {
+   "151618": [
+    "GE",
+    "13-8"
+   ],
+   "151619": [
+    "FUR",
+    "14-12"
+   ],
+   "151620": [
+    "GE",
+    "13-11"
+   ]
+  },
+  "series": [
+   "GE",
+   "2-1"
+  ],
+  "match_name": "Main Event: Day 3",
+  "utc_ts": "2023-12-16 06:15:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUR",
+   "GE"
+  ]
+ },
+ "289453": {
+  "event_id": "2023_convergence",
+  "region": "Mixed",
+  "url": "https://www.vlr.gg/289453/team-vitality-vs-fut-esports-convergence-2023-gf",
+  "maps": {
+   "151621": [
+    "VIT",
+    "13-11"
+   ],
+   "151622": [
+    "FUT",
+    "13-11"
+   ],
+   "151623": [
+    "FUT",
+    "13-11"
+   ],
+   "151626": [
+    "FUT",
+    "13-8"
+   ]
+  },
+  "series": [
+   "FUT",
+   "3-1"
+  ],
+  "match_name": "Main Event: Grand Final",
+  "utc_ts": "2023-12-17 03:30:00",
+  "parser": "ovw",
+  "orgs": [
+   "FUT",
+   "VIT"
+  ]
+ }
+}
