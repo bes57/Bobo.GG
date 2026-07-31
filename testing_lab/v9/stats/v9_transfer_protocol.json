@@ -1,0 +1,63 @@
+{
+ "written_by": "agent:v9-design",
+ "written": "2026-07-29",
+ "status": "FROZEN — the internal selection referee for all v9 candidates. Preregistered in v9/preregister.design.md section 2 BEFORE the gate autopsy ran; constants below are quoted from there verbatim. Changes require a new preregistered amendment.",
+ "epistemic_status": "selection-grade only. Runs entirely on pre-2026-07-28 data, including the SPENT 1217-row holdout demoted to validation targets. No result here confirms anything; confirmation belongs exclusively to v9_prospective_protocol.json.",
+ "frame": {
+  "path": "testing_lab/v8/data/frame_expanded/series.csv",
+  "series_csv_sha256": "ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142",
+  "precondition": "verify sha256 before every run; abort loudly on mismatch"
+ },
+ "candidate_definition": {
+  "candidate": "mechanism + frozen hyperparameters (one JSON blob per candidate)",
+  "hyperparameter_discipline": "every data-driven choice (grids, CV, shrinkage, tau, caps) uses rows dated <= 2024-12-31 ONLY; a candidate is frozen before its transfer evaluation",
+  "one_shot_rule": "ONE transfer evaluation per candidate, appended to stats/v9_looks.json selection_reads before the numbers are used anywhere; re-tuning a candidate after seeing its transfer scores and re-evaluating is fitting on validation by other means and is forbidden — the retuned config is a NEW candidate and must be disclosed as informed-by-a-prior-look",
+  "solve_side_prior": "a <= 6.0 HARD, no widening (v9/README law); prediction-layer candidates must prove exact pre-change identity (fixture) before evaluation"
+ },
+ "windows": {
+  "FIT1": {"rule": "date <= '2024-12-31'", "n": 841, "n_events": 25},
+  "VAL1": {"rule": "'2024-12-31' < date <= '2025-12-31'", "n": 674, "n_events": 21},
+  "FIT2": {"rule": "date <= '2025-12-31'", "n": 1515, "n_events": 46},
+  "VAL2": {"rule": "'2025-12-31' < date <= '2026-07-28'", "n": 543, "n_events": 10},
+  "note": "walk-forward engine state always uses the full corpus causally; the windows govern FITTED SCALARS and scoring rows only"
+ },
+ "beta_discipline": {
+  "method": "scipy.optimize.minimize_scalar, bounds (0.001, 1.0), method bounded, xatol 1e-6, objective mean series-NLL of p_series_closed(beta, rdiff, fmt) over fit-window valid rows",
+  "rule": "refit per candidate per fit-window; v6 baseline refit identically on the same window (paired); NEVER on validation rows",
+  "fixture": "beta(FIT1, v6) must equal 0.1152 within 1e-3 or the run aborts (realized 0.115199)"
+ },
+ "scoring": {
+  "T1": "beta from FIT1; paired per-series d = NLL_v6 - NLL_cand on VAL1 rows (referee.delta_vector; d>0 = candidate better)",
+  "T2": "beta from FIT2; same on VAL2 rows",
+  "pooled": "concatenation of the two era-legal window d vectors (n=1217)",
+  "judge": "testing_lab/v8/referee.paired_bootstrap_crn, iid AND block_event modes, crn.json seeds 20260728/20260729, n_boot 4000; block_event is primary",
+  "SE_blk": "(ci_hi - ci_lo)/3.92 of the block_event 95% CI (percentile-normal approximation, disclosed)",
+  "both_units": "every delta quoted in milli-LL AND referee.expected_roi_of_dll; window MDE printed alongside; |delta| < MDE reported as INSIDE NOISE FLOOR"
+ },
+ "advance_rule": {
+  "A1": "delta_VAL1 >= 1.0 * SE_blk(VAL1)",
+  "A2": "delta_VAL2 >= 1.0 * SE_blk(VAL2)",
+  "A3": "pooled block_event 95% CI lower bound > 0",
+  "A4": "pooled point delta >= 1.773 milli (within-family pair-MDE at n=1217; cross-family candidates additionally quote 5.889m as context, floor unchanged)",
+  "A5": "fragility, only evaluated when A1-A4 all pass: (i) drop-top-5% — remove ceil(0.05*n) pooled rows with largest d, recomputed pooled mean > 0; (ii) era-jackknife — leave-one-event-out over the 31 pooled events, min recomputed pooled mean > 0. Per-window versions reported as non-gating diagnostics.",
+  "verdict": "ADVANCE iff A1 and A2 and A3 and A4 and A5; otherwise BLOCK",
+  "justification_summary": "1.0xSE + conjunction: null false-advance ~2%, power ~0.75-0.9 vs a true uniform +2.5m; A4 is the covenant noise-floor law; A5(ii) pooled so no single event exceeds ~15% of rows (a diffuse true effect survives, fold-3-style concentration dies). Full arithmetic in preregister.design.md C3."
+ },
+ "measured_context_from_autopsy": {
+  "note": "realized bar heights on the v8 configs (config-dependent by design — noisy candidates face higher bars)",
+  "SE_blk_VAL1_range_milli": [2.93, 4.38],
+  "SE_blk_VAL2_range_milli": [2.08, 4.75],
+  "mde_milli": {"VAL1": 2.382, "VAL2": 2.654, "pooled": 1.773}
+ },
+ "concentration_flag_C5": {
+  "rule": "any candidate carrying an inner-CV/gate score from its search stage must report leave-one-fold-out means; if dropping any single fold takes the gate mean below its firing bar, the candidate is flagged CONCENTRATED at nomination",
+  "consequence": "flag, not auto-kill (transfer adjudicates); the flag and its folds appear in the candidate's nomination blob",
+  "validation": "on the v8 records this flag fires for the a=28 ship only (drop-fold-2: 5.47m < 6.78m SE; drop-fold-3: 1.70m < 3.23m SE) and not for the a=4.5 configs — see v9_gate_autopsy.json gate_jackknife_C5"
+ },
+ "survivors": {
+  "max_to_ladder": 3,
+  "ranking": "pooled point delta, descending",
+  "ladder_order": "conservative -> aggressive by mean|p_cand - p_v6| on VAL2, ascending, recorded at freeze in stats/v9_ladder.json"
+ },
+ "disclosure": "every transfer evaluation appends {candidate, date, T1, T2, pooled, verdict, clauses_failed} to stats/v9_looks.json selection_reads at run time"
+}

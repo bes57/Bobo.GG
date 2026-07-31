@@ -1,0 +1,4 @@
+[2026-07-29 13:14:30] run start: live frame 2058 rows (excl {'org not in ORG_REGIONS': 7, 'org count != 2': 3}); settled post-2026-07-28: 0
+[2026-07-29 13:14:41] run done in 11.4s: n_settled=0 n_scored=0 dropped=0 next_checkpoint=100 verdict='accumulating (n=0)' statuses={v6:BASELINE, B_continuity:ACCUMULATING, C_coldstart:ACCUMULATING, D_phase_reset:NOT_SCOREABLE_LIVE, E_atlas_replication:ACCUMULATING, F_v6_overreact:ACCUMULATING, H_specrun:ACCUMULATING}
+[2026-07-29 13:14:51] run start: live frame 2058 rows (excl {'org not in ORG_REGIONS': 7, 'org count != 2': 3}); settled post-2026-07-28: 0
+[2026-07-29 13:15:02] run done in 11.2s: n_settled=0 n_scored=0 dropped=0 next_checkpoint=100 verdict='accumulating (n=0)' statuses={v6:BASELINE, B_continuity:ACCUMULATING, C_coldstart:ACCUMULATING, D_phase_reset:NOT_SCOREABLE_LIVE, E_atlas_replication:ACCUMULATING, F_v6_overreact:ACCUMULATING, H_specrun:ACCUMULATING}

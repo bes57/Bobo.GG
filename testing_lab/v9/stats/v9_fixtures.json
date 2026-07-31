@@ -1,0 +1,438 @@
+{
+ "written_by": "agent:v9-family",
+ "preregistered": "v9/preregister.family.md (2026-07-29 11:32) + ADDENDUM 1 (11:40), both before implementation",
+ "order": "fixtures ran BEFORE any v9 fitting/scoring exists (logs/family.log)",
+ "assertions": [
+  {
+   "name": "V1 hook-path a=s=0: sha256(rdiff) == pure v6",
+   "expected": "'da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14'",
+   "got": "'da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14'",
+   "pass": true
+  },
+  {
+   "name": "V1 hook-path a=s=0: sha256(daily ratings) == pure v6",
+   "expected": "'47f09871bfbb494a2d1ad2a6f3810d094a5c6e021a317aa47ae79d915a709f37'",
+   "got": "'47f09871bfbb494a2d1ad2a6f3810d094a5c6e021a317aa47ae79d915a709f37'",
+   "pass": true
+  },
+  {
+   "name": "V1 solve_side_run a=s=0: sha256(rdiff) == pure v6",
+   "expected": "'da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14'",
+   "got": "'da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14'",
+   "pass": true
+  },
+  {
+   "name": "V1 solve_side_run a=s=0: sha256(daily) == pure v6",
+   "expected": "'47f09871bfbb494a2d1ad2a6f3810d094a5c6e021a317aa47ae79d915a709f37'",
+   "got": "'47f09871bfbb494a2d1ad2a6f3810d094a5c6e021a317aa47ae79d915a709f37'",
+   "pass": true
+  },
+  {
+   "name": "V1 hybrid a=s=b=0: p_all bit-identical to v6",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V1 overlay b=0: zero affected rows",
+   "expected": "0",
+   "got": "0",
+   "pass": true
+  },
+  {
+   "name": "V1 overlay b=0: p_all bit-identical to v6",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V1 overlay: rdiff passes through as the SAME object (never re-solved)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V1 series_from_pm(sigmoid(beta*rdiff)) bitwise == base p_all",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V2 data: marved fielded in m706350",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w3c5: no boundary at the marved match",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w3c5: zero boundaries dated >= 2026-05-01",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w5c5: no boundary at the marved match",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w5c5: zero boundaries dated >= 2026-05-01",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w5c5: marved game IS a deviation (o=0.8)",
+   "expected": "0.8",
+   "got": "0.8",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w8c5: no boundary at the marved match",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V2 p1w8c5: zero boundaries dated >= 2026-05-01",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V2 delta2: overlay p_all bit-identical, real vs marved-reverted corpus (one-off sub contributes nothing)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V2 delta1: overlay p_all bit-identical, real vs marved-reverted corpus (one-off sub contributes nothing)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V3 p1w3c5: zero boundaries",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V3 p1w5c5: zero boundaries",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V3 p1w8c5: zero boundaries",
+   "expected": "[]",
+   "got": "[]",
+   "pass": true
+  },
+  {
+   "name": "V3 p3w5: frozen o flags exactly the one sub game",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "V3 p1w5c5 mini-solve: max|dR| before/during/after == 0.0 exactly",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w3c5: exactly one detection",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w3c5: boundary index j == 5",
+   "expected": "5",
+   "got": "5",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w3c5: detected at match index 6, never earlier",
+   "expected": "'2024-02-15'",
+   "got": "'2024-02-15'",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w3c5: k == 3",
+   "expected": "3",
+   "got": "3",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w3c5: one final boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: exactly one detection",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: boundary index j == 5",
+   "expected": "5",
+   "got": "5",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: detected at match index 7, never earlier",
+   "expected": "'2024-02-22'",
+   "got": "'2024-02-22'",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: k == 3",
+   "expected": "3",
+   "got": "3",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: one final boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w8c5: exactly one detection",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w8c5: boundary index j == 5",
+   "expected": "5",
+   "got": "5",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w8c5: detected at match index 8, never earlier",
+   "expected": "'2024-03-01'",
+   "got": "'2024-03-01'",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w8c5: k == 3",
+   "expected": "3",
+   "got": "3",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w8c5: one final boundary at j=5, k=3",
+   "expected": "[(5, 3, False)]",
+   "got": "[(5, 3, False)]",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: new-phase games o==1 (not penalized)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5: per-game n counts from the boundary",
+   "expected": "[0, 1, 2, 3, 4, 5, 6]",
+   "got": "[0, 1, 2, 3, 4, 5, 6]",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5 mini-solve: ALL teams identical through detection date",
+   "expected": "0.0",
+   "got": "0.0",
+   "pass": true
+  },
+  {
+   "name": "V4 p1w5c5 mini-solve: featured team moves after detection",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta2: per-team overlay touches NO row outside the team (all 53 changed orgs)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta2: adj identically 0 outside the team",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta2: exact pre-change identity \u2014 every row of the team dated <= its first detection is bit-identical",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta2 full overlay: every changed row has an active-phase side",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta2 full overlay: all rows dated <= first detection anywhere (2023-04-01) bit-identical",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta1: per-team overlay touches NO row outside the team (all 53 changed orgs)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta1: adj identically 0 outside the team",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta1: exact pre-change identity \u2014 every row of the team dated <= its first detection is bit-identical",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta1 full overlay: every changed row has an active-phase side",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5 delta1 full overlay: all rows dated <= first detection anywhere (2023-04-01) bit-identical",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V5: base rdiff sha unchanged after all overlay work (no mutation, no re-solve)",
+   "expected": "'da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14'",
+   "got": "'da4ed8d6d56fa18aa6d943a3c24254bd4baffba76dde84eaad57f2a3405c9a14'",
+   "pass": true
+  },
+  {
+   "name": "V5: base p_all sha unchanged (overlays copy, never write back)",
+   "expected": "'efd4c8b73a62c7b85c72c5829357d30b761fda6f37e42e5bc536dfc1b59ae26b'",
+   "got": "'efd4c8b73a62c7b85c72c5829357d30b761fda6f37e42e5bc536dfc1b59ae26b'",
+   "pass": true
+  },
+  {
+   "name": "V6 solve_side_run(a=6.000001) raises",
+   "expected": "'AssertionError'",
+   "got": "'AssertionError'",
+   "pass": true
+  },
+  {
+   "name": "V6 solve_side_run(a=-0.1) raises",
+   "expected": "'AssertionError'",
+   "got": "'AssertionError'",
+   "pass": true
+  },
+  {
+   "name": "V6 multipliers(a=7) raises at the hook path",
+   "expected": "'AssertionError'",
+   "got": "'AssertionError'",
+   "pass": true
+  },
+  {
+   "name": "V6 multipliers(s=1.5) raises",
+   "expected": "'AssertionError'",
+   "got": "'AssertionError'",
+   "pass": true
+  },
+  {
+   "name": "V6 overlay b<0 raises",
+   "expected": "'AssertionError'",
+   "got": "'AssertionError'",
+   "pass": true
+  },
+  {
+   "name": "V6 a=6.0 exactly is accepted (cap inclusive), multipliers finite",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V6 source: single A_CAP = 6.0 constant",
+   "expected": "1",
+   "got": "1",
+   "pass": true
+  },
+  {
+   "name": "V6 source: no environment/flag bypass of the cap (os.environ/getenv absent; prose mentions of 'environment' don't count)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V7 found a case: org with 2+ delta1-affected rows at distinct dates and an active phase the day after",
+   "expected": "True",
+   "got": "True ('2G', 1035, '2025-04-11', 1372, '2025-08-16', '2025-08-17')",
+   "pass": true
+  },
+  {
+   "name": "V7 2G: price of the earlier affected row (2025-04-11) bit-identical after flipping the 2025-08-16 score",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V7 2G: EVERY row dated <= the flipped match is bit-identical (covers same-day: date-strict evidence)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  },
+  {
+   "name": "V7 2G: the flip IS visible to evidence priced after it (E -1.1760 -> -1.8988)",
+   "expected": "True",
+   "got": "True",
+   "pass": true
+  }
+ ],
+ "v2_sen_note": {
+  "expected_behavior": "SEN carries a REAL confirmed boundary 2026-04-19 (k=3) \u2014 active in the window by design; the marved one-off creates no boundary and no delta difference (counterfactual identity above)",
+  "sen_state_at_window_start": {
+   "n": 2,
+   "k": 3
+  }
+ },
+ "v5_counts": {
+  "delta2": {
+   "orgs_with_events": 53,
+   "affected_rows_sum_per_team_runs": 2938,
+   "full_overlay_changed_rows": 1741
+  },
+  "delta1": {
+   "orgs_with_events": 53,
+   "affected_rows_sum_per_team_runs": 2938,
+   "full_overlay_changed_rows": 1757
+  }
+ },
+ "v7_case": {
+  "org": "2G",
+  "early_row_date": "2025-04-11",
+  "flipped_row_date": "2025-08-16",
+  "probe_date": "2025-08-17",
+  "note": "in-code assert d_i < D ran on every evidence row of every delta1 overlay in this suite"
+ },
+ "status": "PASSED",
+ "n_pass": 67,
+ "n_fail": 0
+}

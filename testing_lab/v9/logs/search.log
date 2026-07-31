@@ -1,0 +1,69 @@
+[2026-07-29 12:21:30] agent:v9-search session start — briefs/search.md + DESIGN.md + v9_transfer_protocol.json + v9lib.py + wave2_common.md read; windows verified vs frame (FIT1 841/25ev, VAL1 674/21ev, VAL2 543/10ev)
+[2026-07-29 12:21:30] preregister.search.md LOCKED — grid (3240 overlay configs, FIT1-only scoring), selection rule (eligibility dF>=1.0m & era_min>0 & loeo_min>0; nominate top-era_min per variant family, <=3), 3 solve-side verification points (a in {0.5,1,2}, p1w5c5, tau/s by manifest ll_train argmin), predictions P1-P6, fixtures S1-S4. No grid run, no VAL aggregation, no transfer evaluation has occurred yet.
+[2026-07-29 12:23:16] grid start — frame sha OK, windows OK [0s]
+[2026-07-29 12:23:19] v6 base run: beta=0.1152 valid=2044/2058 [3s]
+[2026-07-29 12:23:19] plans + overlays built for ['p1w3c5', 'p1w5c5', 'p1w8c5', 'p3w5c5'] [3s]
+[2026-07-29 12:23:19] fixture PASS: S1 nesting delta1: run_general(gamma=1,m=0) p_all bitwise == family Overlay.run 
+[2026-07-29 12:23:19] fixture PASS: S1 nesting delta2: run_general(gamma=1,m=0) p_all bitwise == family Overlay.run 
+[2026-07-29 12:23:19] state tables built (24, via real active_state/evidence path — leak assert executed on every evidence row) [3s]
+[2026-07-29 12:23:19] FIT1 valid rows 827 (2023: 327, 2024: 500), 25 events; MDE(FIT1)=2.15m
+[2026-07-29 12:23:19] fixture PASS: S2 cache equivalence delta2(m=0): adj + p_all bitwise 
+[2026-07-29 12:23:19] fixture PASS: S2 cache equivalence delta1(m=0): adj + p_all bitwise 
+[2026-07-29 12:23:19] fixture PASS: S2 cache equivalence hybrid(m=3): adj + p_all bitwise 
+[2026-07-29 12:23:19] fixture PASS: S3 beta(FIT1, v6) protocol fixture = 0.1152 +/- 1e-3 realized 0.115199
+[2026-07-29 12:23:19] S4 p3w5c5 active pricings at tau=5: 0 (v6-identity rows will be reported plainly)
+[2026-07-29 12:23:19]   p1w3c5 tau=2.0: 135 configs done [4s]
+[2026-07-29 12:23:20]   p1w3c5 tau=3.0: 270 configs done [4s]
+[2026-07-29 12:23:20]   p1w3c5 tau=5.0: 405 configs done [4s]
+[2026-07-29 12:23:20]   p1w3c5 tau=8.0: 540 configs done [4s]
+[2026-07-29 12:23:20]   p1w3c5 tau=13.0: 675 configs done [5s]
+[2026-07-29 12:23:21]   p1w3c5 tau=21.0: 810 configs done [5s]
+[2026-07-29 12:23:21]   p1w5c5 tau=2.0: 945 configs done [5s]
+[2026-07-29 12:23:21]   p1w5c5 tau=3.0: 1080 configs done [6s]
+[2026-07-29 12:23:21]   p1w5c5 tau=5.0: 1215 configs done [6s]
+[2026-07-29 12:23:22]   p1w5c5 tau=8.0: 1350 configs done [6s]
+[2026-07-29 12:23:22]   p1w5c5 tau=13.0: 1485 configs done [6s]
+[2026-07-29 12:23:22]   p1w5c5 tau=21.0: 1620 configs done [7s]
+[2026-07-29 12:23:23]   p1w8c5 tau=2.0: 1755 configs done [7s]
+[2026-07-29 12:23:23]   p1w8c5 tau=3.0: 1890 configs done [7s]
+[2026-07-29 12:23:23]   p1w8c5 tau=5.0: 2025 configs done [7s]
+[2026-07-29 12:23:23]   p1w8c5 tau=8.0: 2160 configs done [8s]
+[2026-07-29 12:23:24]   p1w8c5 tau=13.0: 2295 configs done [8s]
+[2026-07-29 12:23:24]   p1w8c5 tau=21.0: 2430 configs done [8s]
+[2026-07-29 12:23:24]   p3w5c5 tau=2.0: 2565 configs done [8s]
+[2026-07-29 12:23:24]   p3w5c5 tau=3.0: 2700 configs done [9s]
+[2026-07-29 12:23:24]   p3w5c5 tau=5.0: 2835 configs done [9s]
+[2026-07-29 12:23:24]   p3w5c5 tau=8.0: 2970 configs done [9s]
+[2026-07-29 12:23:25]   p3w5c5 tau=13.0: 3105 configs done [9s]
+[2026-07-29 12:23:25]   p3w5c5 tau=21.0: 3240 configs done [9s]
+[2026-07-29 12:23:25] grid complete: 3240 configs, 231 eligible [9s]
+[2026-07-29 12:23:25] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_search_grid.json [9s]
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.65 tau=13.0 g=0.5 dF=+5.47 d23=+3.83 d24=+6.53 loeo=+3.90
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.65 tau=21.0 g=0.5 dF=+4.96 d23=+3.82 d24=+5.70 loeo=+2.92
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.45 tau=21.0 g=0.5 dF=+4.77 d23=+3.77 d24=+5.42 loeo=+3.25
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.9 tau=8.0 g=0.5 dF=+5.51 d23=+3.67 d24=+6.72 loeo=+4.04
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.65 tau=8.0 g=0.5 dF=+5.33 d23=+3.58 d24=+6.46 loeo=+4.24
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=1.2 tau=5.0 g=0.5 dF=+4.87 d23=+3.49 d24=+5.78 loeo=+3.05
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.45 tau=13.0 g=0.5 dF=+4.83 d23=+3.47 d24=+5.72 loeo=+3.68
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.9 tau=5.0 g=0.5 dF=+5.02 d23=+3.47 d24=+6.03 loeo=+3.62
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.9 tau=13.0 g=0.5 dF=+4.96 d23=+3.28 d24=+6.05 loeo=+2.95
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.3 tau=21.0 g=0.5 dF=+3.84 d23=+3.08 d24=+4.35 loeo=+2.78
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.65 tau=5.0 g=0.5 dF=+4.45 d23=+3.02 d24=+5.38 loeo=+3.42
+[2026-07-29 12:23:25]   top: p1w5c5 delta2(m=0) b=0.45 tau=8.0 g=0.5 dF=+4.43 d23=+3.00 d24=+5.37 loeo=+3.68
+[2026-07-29 12:25:48] GRID DONE: 3240 configs, 231 eligible (delta2: 147, hybrid(m=6): 84, delta1: 0 — best delta1 dF +0.81m, LOEO negative; nominates NOTHING, per rule). p3w5c5 fully v6-identity (0 active pricings; classifier yields no boundaries) — reported plainly, not dropped.
+[2026-07-29 12:25:48] P5 red-flag investigation (FIT1-side only) of flagged winners: delta2 p1w5c5 b0.65 t13 g0.5 dF+5.47m — drop_top5 -7.29m, top10 rows carry 74.8% of gain, 5-fold C5 CLEAN (drop-one-fold means all >+3.6m); hybrid(6) p1w5c5 b0.2 t21 g0.5 dF+2.88m — drop_top5 -3.76m, top10 72.5%, C5 CLEAN. Verdict: not a bug; heavy-tailed real FIT1 gain. Preregistered rule proceeds unchanged; tail-shape carried in nomination blobs; pooled A5 drop-top-5% at transfer adjudicates.
+[2026-07-29 12:25:48] NOMINATIONS FROZEN (before any VAL contact): N1 delta2 p1w5c5 b=0.65 tau=13 gamma=0.5; N2 hybrid(m=6) p1w5c5 b=0.2 tau=21 gamma=0.5; delta1 family nominates nothing. Solve-side verification points: p1w5c5 a in {0.5,1.0,2.0}, (tau,s) = manifest ll_train argmin per a (computed in-script, FIT1-legal). Total ledger spend: 5 one-shot transfer evaluations.
+[2026-07-29 12:27:02] solve-side a=0.5: manifest ll_train argmin -> p1w5c5_a0.5_t13.0_s0.7 (ll_train=0.64619)
+[2026-07-29 12:27:02] solve-side a=1.0: manifest ll_train argmin -> p1w5c5_a1.0_t13.0_s0.7 (ll_train=0.64527)
+[2026-07-29 12:27:02] solve-side a=2.0: manifest ll_train argmin -> p1w5c5_a2.0_t13.0_s0.7 (ll_train=0.64398)
+[2026-07-29 12:27:02] beta(FIT1,v6)=0.115199 (fixture PASS) beta(FIT2,v6)=0.126079 [3s]
+[2026-07-29 12:27:02] SOLVE p1w5c5 a=0.5 t=13.0 s=0.7 cap=None (manifest argmin; verification point): T1 +0.21m (bar 1.91) | T2 -1.75m (bar 2.93) | pooled -0.67m blkCI [-3.71, 2.48] | DIE failed=['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde'] [3s]
+[2026-07-29 12:27:02] SOLVE p1w5c5 a=1.0 t=13.0 s=0.7 cap=None (manifest argmin; verification point): T1 +0.76m (bar 2.13) | T2 -2.98m (bar 3.05) | pooled -0.91m blkCI [-4.46, 2.66] | DIE failed=['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde'] [3s]
+[2026-07-29 12:27:02] SOLVE p1w5c5 a=2.0 t=13.0 s=0.7 cap=None (manifest argmin; verification point): T1 +1.17m (bar 2.47) | T2 -5.25m (bar 3.32) | pooled -1.70m blkCI [-5.96, 2.64] | DIE failed=['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde'] [3s]
+[2026-07-29 12:27:02] OVERLAY delta2(m=0) p1w5c5 b=0.65 tau=13.0 gamma=0.5: T1 -6.98m (bar 3.09) | T2 -3.40m (bar 2.81) | pooled -5.38m blkCI [-9.29, -1.03] | DIE failed=['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde'] [3s]
+[2026-07-29 12:27:02] OVERLAY hybrid(m=6) p1w5c5 b=0.2 tau=21.0 gamma=0.5: T1 -2.20m (bar 2.00) | T2 -1.70m (bar 2.84) | pooled -1.98m blkCI [-5.21, 1.12] | DIE failed=['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde'] [3s]
+[2026-07-29 12:27:02] hybrid solve+delta clause: SKIPPED — preregister 1c requires BOTH parents to advance; solve-side advanced: 0, prediction-layer advanced: 0
+[2026-07-29 12:27:02] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_candidates.json — 0 advanced of 5 evaluated
+[2026-07-29 12:27:02] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_ladder.json: the ladder is v6 alone (beta_v6_full=0.128512) [3s]
+[2026-07-29 12:27:02] looks ledger: 5 selection_reads appended this phase
+[2026-07-29 12:29:22] PHASE COMPLETE: 5/5 candidates DIE (A1-A4 each; A5 never reached). THE LADDER IS V6 ALONE (v9_ladder.json arm 0, beta 0.128512 frozen on <=2026-07-28). Outcomes appended to preregister.search.md; phase_search.md written. Ledger: 5 selection_reads, exploratory 0/3 untouched, prospective 0/3 untouched.

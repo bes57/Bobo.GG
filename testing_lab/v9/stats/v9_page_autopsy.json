@@ -1,0 +1,24 @@
+{
+ "written_by": "agent:v9-finish (gen_v9_report.py)",
+ "source": "stats/v9_gate_autopsy.json (gate CV strings + per_config pooled) + stats/v9_looks.json autopsy_methodological_reads (holdout column)",
+ "configs": [
+  {
+   "label": "p1w3c5 a=4.5 (gate-selected)",
+   "gate_cv_milli": 4.9695,
+   "transfer_pooled_milli": -4.585,
+   "holdout_milli": -4.004
+  },
+  {
+   "label": "p1w5c5 a=4.5 (gate-selected)",
+   "gate_cv_milli": 4.8829,
+   "transfer_pooled_milli": -3.833,
+   "holdout_milli": -3.308
+  },
+  {
+   "label": "p1w8c5 a=28 (THE SHIP)",
+   "gate_cv_milli": 6.4161,
+   "transfer_pooled_milli": -12.206,
+   "holdout_milli": -11.595
+  }
+ ]
+}

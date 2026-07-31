@@ -1,0 +1,88 @@
+Loading all scraped games with actual dates...
+  Loaded 2068 match dates from match_dates.json
+Loaded 5140 map games across all events
+
+Building v6 walk-forward solve (2023-now)...
+  73 teams, 2058 valid series, 637 grid days
+  Day 100/637: 2023-07-16 — 42 teams rated
+  Day 200/637: 2024-04-23 — 46 teams rated
+  Day 300/637: 2024-11-10 — 48 teams rated
+  Day 400/637: 2025-05-17 — 50 teams rated
+  Day 500/637: 2025-12-20 — 60 teams rated
+  Day 600/637: 2026-05-30 — 49 teams rated
+  Day 637/637: 2026-07-26 — 49 teams rated
+
+beta refit (all 2044 valid series): 0.128512
+  gate B pass: 0.115 <= 0.128512 <= 0.145
+cross-region offsets (372 series): {'Americas': 2.0966, 'EMEA': 1.9045, 'Pacific': 2.4482, 'CN': 0.0}
+region priors (25th pct): {'Americas': -2.048, 'EMEA': 0.9151, 'Pacific': -2.1692, 'CN': -3.6521}
+b_pick: 0.0937
+  candidate rating_timeline_2023.json: 154 checkpoints, 343 match events
+  candidate rating_timeline_2024.json: 158 checkpoints, 502 match events
+  candidate rating_timeline_2025.json: 189 checkpoints, 680 match events
+  candidate rating_timeline.json: 136 checkpoints, 543 match events
+  [gate A] running engine probe: /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 /Users/benny_es1/PythonTest/testing_lab/v9/scratch/deploy/engine_probe.py --timelines /Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2023.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2024.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2025.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline.json --days /var/folders/r5/580_sxgx5mvg61tgqj9j14_80000gn/T/benpom_parity_b6lb986n/request.json --out /var/folders/r5/580_sxgx5mvg61tgqj9j14_80000gn/T/benpom_parity_b6lb986n/engine_out.json
+  [gate A] max |native - engine| over sampled days: 1.193e+01 (tol 1e-09) -> FAIL
+  evidence: /Users/benny_es1/PythonTest/testing_lab/v9/stats/deploy_solve_parity.json
+GATE A FAILED — candidates left in /Users/benny_es1/PythonTest/data/.tl_candidates_tmp, no outputs promoted.
+===== run 2 (fixed stale-engine resolution in probe) Thu Jul 30 17:03:23 EDT 2026 =====
+Loading all scraped games with actual dates...
+  Loaded 2068 match dates from match_dates.json
+Loaded 5140 map games across all events
+
+Building v6 walk-forward solve (2023-now)...
+  73 teams, 2058 valid series, 637 grid days
+  Day 100/637: 2023-07-16 — 42 teams rated
+  Day 200/637: 2024-04-23 — 46 teams rated
+  Day 300/637: 2024-11-10 — 48 teams rated
+  Day 400/637: 2025-05-17 — 50 teams rated
+  Day 500/637: 2025-12-20 — 60 teams rated
+  Day 600/637: 2026-05-30 — 49 teams rated
+  Day 637/637: 2026-07-26 — 49 teams rated
+
+beta refit (all 2044 valid series): 0.128512
+  gate B pass: 0.115 <= 0.128512 <= 0.145
+cross-region offsets (372 series): {'Americas': 2.0966, 'EMEA': 1.9045, 'Pacific': 2.4482, 'CN': 0.0}
+region priors (25th pct): {'Americas': -2.048, 'EMEA': 0.9151, 'Pacific': -2.1692, 'CN': -3.6521}
+b_pick: 0.0937
+  candidate rating_timeline_2023.json: 154 checkpoints, 343 match events
+  candidate rating_timeline_2024.json: 158 checkpoints, 502 match events
+  candidate rating_timeline_2025.json: 189 checkpoints, 680 match events
+  candidate rating_timeline.json: 136 checkpoints, 543 match events
+  [gate A] running engine probe: /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 /Users/benny_es1/PythonTest/testing_lab/v9/scratch/deploy/engine_probe.py --timelines /Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2023.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2024.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2025.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline.json --days /var/folders/r5/580_sxgx5mvg61tgqj9j14_80000gn/T/benpom_parity_wfvzh69i/request.json --out /var/folders/r5/580_sxgx5mvg61tgqj9j14_80000gn/T/benpom_parity_wfvzh69i/engine_out.json
+  [gate A] max |native - engine| over sampled days: 0.000e+00 (tol 1e-09) -> PASS
+  evidence: /Users/benny_es1/PythonTest/testing_lab/v9/stats/deploy_solve_parity.json
+
+[--dry-run] gates passed; candidates in /Users/benny_es1/PythonTest/data/.tl_candidates_tmp, data/ untouched.
+===== run 3 (promotion) Thu Jul 30 17:04:25 EDT 2026 =====
+Loading all scraped games with actual dates...
+  Loaded 2068 match dates from match_dates.json
+Loaded 5140 map games across all events
+
+Building v6 walk-forward solve (2023-now)...
+  73 teams, 2058 valid series, 637 grid days
+  Day 100/637: 2023-07-16 — 42 teams rated
+  Day 200/637: 2024-04-23 — 46 teams rated
+  Day 300/637: 2024-11-10 — 48 teams rated
+  Day 400/637: 2025-05-17 — 50 teams rated
+  Day 500/637: 2025-12-20 — 60 teams rated
+  Day 600/637: 2026-05-30 — 49 teams rated
+  Day 637/637: 2026-07-26 — 49 teams rated
+
+beta refit (all 2044 valid series): 0.128512
+  gate B pass: 0.115 <= 0.128512 <= 0.145
+cross-region offsets (372 series): {'Americas': 2.0966, 'EMEA': 1.9045, 'Pacific': 2.4482, 'CN': 0.0}
+region priors (25th pct): {'Americas': -2.048, 'EMEA': 0.9151, 'Pacific': -2.1692, 'CN': -3.6521}
+b_pick: 0.0937
+  candidate rating_timeline_2023.json: 154 checkpoints, 343 match events
+  candidate rating_timeline_2024.json: 158 checkpoints, 502 match events
+  candidate rating_timeline_2025.json: 189 checkpoints, 680 match events
+  candidate rating_timeline.json: 136 checkpoints, 543 match events
+  [gate A] running engine probe: /Library/Frameworks/Python.framework/Versions/3.13/bin/python3 /Users/benny_es1/PythonTest/testing_lab/v9/scratch/deploy/engine_probe.py --timelines /Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2023.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2024.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline_2025.json,/Users/benny_es1/PythonTest/data/.tl_candidates_tmp/rating_timeline.json --days /var/folders/r5/580_sxgx5mvg61tgqj9j14_80000gn/T/benpom_parity_61plpd_h/request.json --out /var/folders/r5/580_sxgx5mvg61tgqj9j14_80000gn/T/benpom_parity_61plpd_h/engine_out.json
+  [gate A] max |native - engine| over sampled days: 0.000e+00 (tol 1e-09) -> PASS
+  evidence: /Users/benny_es1/PythonTest/testing_lab/v9/stats/deploy_solve_parity.json
+  Saved rating_timeline_2023.json
+  Saved rating_timeline_2024.json
+  Saved rating_timeline_2025.json
+  Saved rating_timeline.json
+  Saved site_model.json (beta 0.128512, as of 2026-07-30)

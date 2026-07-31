@@ -1,0 +1,181 @@
+{
+ "written_by": "agent:v9-design",
+ "initialized": "2026-07-29",
+ "governing_law": "v9/README.md law 1 + preregister.design.md section 4",
+ "spent_status": {
+  "holdout": "2025-26 rows (the 1217-row frame_expanded holdout and any subset)",
+  "prior_recorded_looks": 403,
+  "meaning": "the pooled-holdout confirmatory instrument is retired; nothing is ever confirmed, denied, or shipped on a pre-2026-07-28 number"
+ },
+ "exploratory_budget": {
+  "max": 3,
+  "spent": 0,
+  "rule": "frozen ladder candidates only; sanity (sign/magnitude plausibility of an implementation), never selection; disclosed here within 24h; each entry must record config, number seen, date, justification",
+  "entries": []
+ },
+ "selection_reads": {
+  "rule": "every transfer evaluation (fit FIT1 -> VAL1, fit FIT2 -> VAL2) is appended here by the agent that runs it; one evaluation per candidate, no iteration against validation scores",
+  "entries": [
+   {
+    "candidate": "SOLVE p1w5c5 a=0.5 t=13.0 s=0.7 cap=None (manifest argmin; verification point)",
+    "date": "2026-07-29",
+    "T1": 0.211,
+    "T2": -1.751,
+    "pooled": -0.665,
+    "verdict": "DIE",
+    "clauses_failed": [
+     "A1_val1_ge_1se",
+     "A2_val2_ge_1se",
+     "A3_pooled_ci_gt0",
+     "A4_pooled_ge_mde"
+    ],
+    "agent": "v9-search",
+    "note": "one-shot solve-side verification (preregister 1b)"
+   },
+   {
+    "candidate": "SOLVE p1w5c5 a=1.0 t=13.0 s=0.7 cap=None (manifest argmin; verification point)",
+    "date": "2026-07-29",
+    "T1": 0.762,
+    "T2": -2.98,
+    "pooled": -0.908,
+    "verdict": "DIE",
+    "clauses_failed": [
+     "A1_val1_ge_1se",
+     "A2_val2_ge_1se",
+     "A3_pooled_ci_gt0",
+     "A4_pooled_ge_mde"
+    ],
+    "agent": "v9-search",
+    "note": "one-shot solve-side verification (preregister 1b)"
+   },
+   {
+    "candidate": "SOLVE p1w5c5 a=2.0 t=13.0 s=0.7 cap=None (manifest argmin; verification point)",
+    "date": "2026-07-29",
+    "T1": 1.169,
+    "T2": -5.254,
+    "pooled": -1.696,
+    "verdict": "DIE",
+    "clauses_failed": [
+     "A1_val1_ge_1se",
+     "A2_val2_ge_1se",
+     "A3_pooled_ci_gt0",
+     "A4_pooled_ge_mde"
+    ],
+    "agent": "v9-search",
+    "note": "one-shot solve-side verification (preregister 1b)"
+   },
+   {
+    "candidate": "OVERLAY delta2(m=0) p1w5c5 b=0.65 tau=13.0 gamma=0.5",
+    "date": "2026-07-29",
+    "T1": -6.977,
+    "T2": -3.403,
+    "pooled": -5.382,
+    "verdict": "DIE",
+    "clauses_failed": [
+     "A1_val1_ge_1se",
+     "A2_val2_ge_1se",
+     "A3_pooled_ci_gt0",
+     "A4_pooled_ge_mde"
+    ],
+    "agent": "v9-search",
+    "note": "one-shot; nominated by grid rule (delta2 family top era_min)"
+   },
+   {
+    "candidate": "OVERLAY hybrid(m=6) p1w5c5 b=0.2 tau=21.0 gamma=0.5",
+    "date": "2026-07-29",
+    "T1": -2.201,
+    "T2": -1.704,
+    "pooled": -1.979,
+    "verdict": "DIE",
+    "clauses_failed": [
+     "A1_val1_ge_1se",
+     "A2_val2_ge_1se",
+     "A3_pooled_ci_gt0",
+     "A4_pooled_ge_mde"
+    ],
+    "agent": "v9-search",
+    "note": "one-shot; nominated by grid rule (hybrid family top era_min)"
+   }
+  ]
+ },
+ "autopsy_methodological_reads": {
+  "rule": "commissioned by briefs/design.md work item 2 as design input for the validator; these further contaminate the spent holdout, which is acceptable because it adjudicates nothing forever",
+  "planned_before_computation": [
+   "p1w3c5 a4.5 t13 s1.0 capNone: VAL1, VAL2, pooled-holdout columns",
+   "p1w5c5 a4.5 t13 s0.7 capNone: VAL1, VAL2, pooled-holdout columns",
+   "p1w8c5 a28 t13 s0.7 nmin3 cap1.5 (the ship): VAL1, VAL2, pooled-holdout reproduction vs recorded -11.595m",
+   "p1w8c5 a28 capNone sensitivity (stored stage array)",
+   "EXTRA p1w8c5 a6 t13 s0.7 capNone (v9 a-cap boundary; no verdict weight)"
+  ],
+  "entries": [
+   {
+    "config": "p1w3c5 a=4.5 t=13 s=1.0 cap=None (gate-selected)",
+    "date": "2026-07-29",
+    "T1_val2025_milli": -0.147,
+    "T2_val2026H1_milli": -10.094,
+    "pooled_validation_milli": -4.585,
+    "holdout_v8_method_milli": -4.004,
+    "justification": "preregistered autopsy read (design input for the validator)"
+   },
+   {
+    "config": "p1w5c5 a=4.5 t=13 s=0.7 cap=None (gate-selected)",
+    "date": "2026-07-29",
+    "T1_val2025_milli": 0.83,
+    "T2_val2026H1_milli": -9.62,
+    "pooled_validation_milli": -3.833,
+    "holdout_v8_method_milli": -3.308,
+    "justification": "preregistered autopsy read (design input for the validator)"
+   },
+   {
+    "config": "p1w8c5 a=28 t=13 s=0.7 n_min=3 cap=1.5 (SHIPPED)",
+    "date": "2026-07-29",
+    "T1_val2025_milli": -5.083,
+    "T2_val2026H1_milli": -21.047,
+    "pooled_validation_milli": -12.206,
+    "holdout_v8_method_milli": -11.595,
+    "justification": "preregistered autopsy read (design input for the validator)"
+   },
+   {
+    "config": "p1w8c5 a=28 cap=None (stage array; sensitivity)",
+    "date": "2026-07-29",
+    "T1_val2025_milli": -5.342,
+    "T2_val2026H1_milli": -20.974,
+    "pooled_validation_milli": -12.317,
+    "holdout_v8_method_milli": -11.694,
+    "justification": "preregistered autopsy read (design input for the validator)"
+   },
+   {
+    "config": "EXTRA p1w8c5 a=6 t=13 s=0.7 cap=None (v9 cap boundary)",
+    "date": "2026-07-29",
+    "T1_val2025_milli": -1.022,
+    "T2_val2026H1_milli": -10.788,
+    "pooled_validation_milli": -5.379,
+    "holdout_v8_method_milli": -4.888,
+    "justification": "preregistered autopsy read (design input for the validator)"
+   }
+  ],
+  "count": 5
+ },
+ "prospective_reads": {
+  "rule": "exactly the 3 checkpoint reads of stats/v9_prospective_protocol.json (n in {100,200,400}); anything else is a protocol violation",
+  "entries": []
+ },
+ "decomposition_reads": {
+  "rule": "per-match decomposition of ALREADY-LEDGERED selection_reads (briefs/decompose.md); same rows, same frozen configs, same windows \u2014 zero new information about any un-evaluated config; never a selection input",
+  "entries": [
+   {
+    "type": "decomposition-of-existing-reads",
+    "date": "2026-07-29",
+    "agent": "v9-decompose",
+    "candidates": [
+     "N1_delta2",
+     "S_a1.0",
+     "N2_hybrid6"
+    ],
+    "new_looks": 0,
+    "tie_out": "PASS (all 9 window/pooled totals reproduced exactly)",
+    "artifact": "stats/v9_case_decomposition.json"
+   }
+  ]
+ }
+}

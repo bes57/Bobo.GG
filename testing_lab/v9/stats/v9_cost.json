@@ -1,0 +1,34 @@
+{
+ "written_by": "agent:v9-family",
+ "written": "2026-07-29 11:44:37",
+ "preregistered": "v9/preregister.family.md section 5",
+ "machine": {
+  "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "cpu": "Apple M5",
+  "cores": 10,
+  "python": "3.13.7",
+  "numpy": "2.4.4"
+ },
+ "timings_s": {
+  "engine_load_s": 0.61,
+  "v6_run_s": 2.19,
+  "specplan_build_s": {
+   "p1w3c5": 0.08,
+   "p1w5c5": 0.06,
+   "p1w8c5": 0.06,
+   "p3w5c5": 0.03
+  },
+  "solve_side_run_s": 2.56,
+  "overlay_index_build_s": 0.0,
+  "overlay_delta2_full_s": 0.0,
+  "overlay_delta1_full_s": 0.02
+ },
+ "budget_guidance": {
+  "solve_side_per_config": "one full engine walk-forward run (~2.56s) per (a,tau,s,n_min,cap) config; beta refits inside the run (train-only) at no extra step",
+  "prediction_layer_per_config": "ONE shared pure-v6 base run (~2.19s, amortized), then ~0.02s per (b,tau,variant) overlay config",
+  "per_policy_overhead": "one SpecPlan build per (policy,W) (~0.08s worst observed), reusable across every config of that policy",
+  "solve_side_configs_per_hour": 1406,
+  "prediction_layer_configs_per_hour": 180000,
+  "note": "walk-forward era-transfer protocol (laws #2) multiplies solve-side cost by the number of fit/validate splits; prediction-layer overlays reuse one base run per split."
+ }
+}

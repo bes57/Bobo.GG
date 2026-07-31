@@ -1,0 +1,111 @@
+{
+ "generated_utc": "2026-07-30 21:04:29",
+ "method": "testing_lab/engine.py run in a subprocess with harness.TIMELINE_FILES pointed at the candidate timeline JSONs (pre-promotion), v6 champion config, daily_out; compared to the native solver's chain solves",
+ "frame": {
+  "engine_file": "/Users/benny_es1/PythonTest/testing_lab/engine.py",
+  "n_games": 5140,
+  "engine_n_games": 5140,
+  "n_valid_series": 2058,
+  "n_grid_days": 637,
+  "n_solved_days": 632,
+  "engine_n_valid_series": 2058,
+  "engine_beta_all_refit": 0.1285119525517703
+ },
+ "gate_a": {
+  "tolerance": 1e-09,
+  "n_sampled_days": 20,
+  "global_max_abs_diff": 0.0,
+  "days": [
+   {
+    "date": "2023-02-22",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2023-04-21",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2023-05-26",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2023-07-23",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2023-11-04",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2024-03-16",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2024-04-29",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2024-06-24",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2024-08-08",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2024-11-25",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2025-02-14",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2025-04-09",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2025-05-24",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2025-07-25",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2025-09-15",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2026-01-18",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2026-03-10",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2026-05-01",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2026-06-09",
+    "max_abs_diff": 0.0
+   },
+   {
+    "date": "2026-07-30",
+    "max_abs_diff": 0.0
+   }
+  ],
+  "pass": true
+ },
+ "gate_b": {
+  "beta": 0.1285119525517703,
+  "bounds": [
+   0.115,
+   0.145
+  ],
+  "v9_reference_refit": 0.128512,
+  "pass": true
+ }
+}

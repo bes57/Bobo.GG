@@ -1,0 +1,49 @@
+[2026-07-29 13:05] agent:v9-finish START. Read (in order): v9/README.md, DESIGN.md,
+  stats/v9_prospective_protocol.json (to implement verbatim), stats/v9_ladder.json
+  (THE LADDER IS V6 ALONE, beta 0.128512), briefs/finish.md, v8/briefs/wave2_common.md,
+  stats/{v9_candidates,v9_search_grid(header),v9_gate_autopsy(head),v9_fixtures,v9_cost,
+  v9_looks,v9_transfer_protocol}.json, phase_search.md, v8/stats/roster_integration.json
+  (reference arms), spec_run/{runner,speclib}.py, run_treatments.py (B/C mechanisms),
+  run_treatment_e.py (F mechanism), build_changes.py (episode defs), engine.py,
+  harness.py (_stage/_is_intl_event/ORG_REGIONS), referee.py (CRN boot, bucketed,
+  per_team_bias, roi), crn.json (incl. v9 block), frame_expanded/README.md (recipe),
+  TestingLab.py (routes+hub nav), gen_v8_report.py + gen_roster_report.py (house style),
+  all 7 served report pages' nav blocks.
+[2026-07-29 13:05] Plan: (1) preregister.finish.md; (2) v9/score_prospective.py
+  (idempotent standing evaluator, protocol verbatim; arms = ladder v6 + reference arms
+  B/C/D/E/F/H from roster_integration.json; D registered NOT_SCOREABLE_LIVE with reason
+  — its base is the h3 round-level state-space stack, round enrichment absent for CN +
+  live corpus); run once -> stats/v9_prospective_scoreboard.json + logs/prospective.log
+  (expect n=0: match_dates.json has ZERO matches dated > 2026-07-28 right now);
+  (3) testing_lab/gen_v9_report.py -> out/reports/v9_lab.html (§0-§5 per brief);
+  (4) TestingLab.py /testing/v9/stats/ route (mirror of v8_stats) + hub nav tab;
+  (5) assert-exactly-once nav patches on the 7 served pages + NAV constants in
+  gen_v8_report.py / gen_roster_report.py sources (NO regeneration of older pages);
+  (6) v9/v9_report.md answer-first mirror.
+[2026-07-29 13:20] score_prospective.py written + run twice (idempotency verified):
+  live frame 2058 rows, exclusions {'org not in ORG_REGIONS': 7, 'org count != 2': 3}
+  == frozen README exactly; frame fixture 2058/2058 common rows, 0 column mismatches;
+  n_settled post-2026-07-28 = 0 -> scoreboard ACCUMULATING (n=0), no aggregate computed;
+  beta freeze: v6 ladder 0.128512 reproduced by protocol refit on live frame (gap 0.000,
+  2044 rows); reference arms frozen once: B 0.127363, C 0.131629, F 0.125735, H 0.094734;
+  E non-model (no beta); D NOT_SCOREABLE_LIVE (h3-1b round-level base, disclosed).
+  Second run reused all frozen betas (no recompute). prospective_reads still 0/3.
+[2026-07-29 13:21] gen_v9_report.py written + run -> out/reports/v9_lab.html (93,739 B).
+  Derived page JSONs (mine): stats/v9_page_grid.json (3,240 pts verbatim from
+  v9_search_grid), stats/v9_page_autopsy.json (gate CV / transfer pooled / holdout).
+  Struck-draft disclosure located by regex in preregister.design.md and embedded VERBATIM.
+  dataviz skill loaded before chart code; house palette/plugins reused (s1/d5/a1/v6 with
+  legends + adjacent tables everywhere — identity never color-alone; node unavailable so
+  the palette validator script could not run here; the set is the sibling pages' exact
+  established assignment, each chart <=3 series).
+[2026-07-29 13:22] TestingLab.py: /testing/v9/stats/<name>.json route added (same auth
+  gate + regex as v8 route); hub labtabs + v9 Lab. Nav patches applied assert-exactly-once
+  to 7 served pages + gen_v8_report.py + gen_roster_report.py NAV constants (9 files,
+  0 skips, no older page regenerated). Flask restarted and left running (port 5001).
+  HTTP verify: v9_lab 200 (93,823 B), stats route 200, unauth 302, bad name 404,
+  tab present on hub/v8/roster pages. Headless-Chrome screenshots (isolated
+  --user-data-dir, no Chrome killed): full page renders top to bottom, both charts drawn,
+  disclosure block + ledger tables intact.
+[2026-07-29 13:28] v9_report.md written (answer-first). preregister.finish.md outcomes
+  appended at write time (P1, P2 CONFIRMED). DONE. Deliverables complete; no post-07/28
+  aggregate computed anywhere; exploratory 0/3, prospective 0/3.

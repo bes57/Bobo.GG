@@ -1,0 +1,1071 @@
+{
+ "written_by": "agent:v9-design",
+ "written": "2026-07-29",
+ "preregistered": "v9/preregister.design.md section 3 (locked before this run)",
+ "epistemic_status": "autopsy on SPENT data \u2014 selection-grade only, adjudicates nothing; commissioned by briefs/design.md work item 2 as validator design input",
+ "protocol": "v9_transfer_protocol.json applied verbatim to the v8 gate-selected configs",
+ "windows": {
+  "FIT1": 827,
+  "VAL1": 674,
+  "FIT2": 1501,
+  "VAL2": 543
+ },
+ "headline_verdict": {
+  "question": "would era-transfer have blocked the a=28 ship?",
+  "answer": "YES \u2014 BLOCKED",
+  "detail": "BLOCK \u2014 VAL1 -5.08m vs bar 4.37m; VAL2 -21.05m vs bar 2.48m; pooled -12.21m blkCI [-18.99, -5.58]; failed ['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde']"
+ },
+ "table_gate_transfer_holdout": {
+  "p1w3c5": {
+   "gate_said": "FIRED: CV +4.9695m (SE 2.8856m), a_shrunk=4.5",
+   "transfer_would_have_said": "BLOCK \u2014 VAL1 -0.15m vs bar 3.17m; VAL2 -10.09m vs bar 4.75m; pooled -4.58m blkCI [-10.82, 1.3]; failed ['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde']",
+   "holdout_said": "-4.00m blkCI [-9.96, 1.62]"
+  },
+  "p1w5c5": {
+   "gate_said": "FIRED: CV +4.8829m (SE 2.4872m), a_shrunk=4.5",
+   "transfer_would_have_said": "BLOCK \u2014 VAL1 +0.83m vs bar 2.93m; VAL2 -9.62m vs bar 3.69m; pooled -3.83m blkCI [-9.13, 1.62]; failed ['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde']",
+   "holdout_said": "-3.31m blkCI [-8.39, 1.88]"
+  },
+  "p1w8c5 (the a=28 ship)": {
+   "gate_said": "FIRED: CV +6.4161m (SE 5.3392m), a_shrunk=28.0",
+   "transfer_would_have_said": "BLOCK \u2014 VAL1 -5.08m vs bar 4.37m; VAL2 -21.05m vs bar 2.48m; pooled -12.21m blkCI [-18.99, -5.58]; failed ['A1_val1_ge_1se', 'A2_val2_ge_1se', 'A3_pooled_ci_gt0', 'A4_pooled_ge_mde']",
+   "holdout_said": "-11.60m blkCI [-18.18, -5.2]"
+  },
+  "p3w5": {
+   "gate_said": "did not fire (CV +0.0m; s-profile monotone worse)",
+   "transfer_would_have_said": "N/A \u2014 nothing advanced; config is v6 identity (a=s=0)",
+   "holdout_said": "N/A \u2014 no ship, delta==0 by construction"
+  }
+ },
+ "per_config": {
+  "p1w3c5": {
+   "label": "p1w3c5 a=4.5 t=13 s=1.0 cap=None (gate-selected)",
+   "T1_fit2324_val2025": {
+    "delta_milli": -0.147,
+    "n": 674,
+    "iid_ci_milli": [
+     -6.97,
+     6.27
+    ],
+    "blk_ci_milli": [
+     -7.38,
+     5.03
+    ],
+    "p_better_iid": 0.48975,
+    "p_better_blk": 0.4655,
+    "se_blk_milli": 3.168,
+    "beta_cand": 0.110265,
+    "beta_v6": 0.115199,
+    "mde_milli": 2.382,
+    "diagnostics": {
+     "drop_top5_milli": -9.752,
+     "n_dropped": 34,
+     "jackknife_min_milli": -2.467,
+     "jackknife_min_event": "2025_stage1",
+     "jackknife_all": {
+      "2025_china_kickoff": -0.95,
+      "2025_kickoff": -0.402,
+      "2025_china_evo_1": 0.865,
+      "2025_masters_bangkok": -0.004,
+      "2025_china_stage1": -0.357,
+      "2025_stage1": -2.467,
+      "2025_china_evo_2": -0.622,
+      "2025_acl": -0.103,
+      "2025_ewc_qual": -0.398,
+      "2025_masters_toronto": 0.209,
+      "2025_china_stage2": -1.171,
+      "2025_ewc": -0.167,
+      "2025_stage2": 0.37,
+      "2025_china_evo_3": 0.71,
+      "2025_champions": 0.666,
+      "2025_ten_global": -0.322,
+      "2025_china_evo_epilogue": 0.732,
+      "2025_rbhg": 0.315,
+      "2025_super_champions_cup": -0.056,
+      "2025_shanghai_masters": -0.147,
+      "2025_radiant_intl": -0.17
+     }
+    }
+   },
+   "T2_fit2325_val2026H1": {
+    "delta_milli": -10.094,
+    "n": 543,
+    "iid_ci_milli": [
+     -20.13,
+     0.07
+    ],
+    "blk_ci_milli": [
+     -18.37,
+     0.24
+    ],
+    "p_better_iid": 0.02625,
+    "p_better_blk": 0.027,
+    "se_blk_milli": 4.747,
+    "beta_cand": 0.116071,
+    "beta_v6": 0.126079,
+    "mde_milli": 2.653,
+    "diagnostics": {
+     "drop_top5_milli": -22.055,
+     "n_dropped": 28,
+     "jackknife_min_milli": -11.941,
+     "jackknife_min_event": "2026_china_kickoff",
+     "jackknife_all": {
+      "2026_kickoff": -6.131,
+      "2026_china_kickoff": -11.941,
+      "2026_masters_santiago": -10.096,
+      "2026_china_evo_1": -10.85,
+      "2026_stage1": -10.11,
+      "2026_ewc_qual": -9.091,
+      "2026_china_evo_2": -10.014,
+      "2026_masters_london": -10.167,
+      "2026_ewc": -10.736,
+      "2026_stage2": -11.375
+     }
+    }
+   },
+   "pooled_validation": {
+    "delta_milli": -4.585,
+    "n": 1217,
+    "iid_ci_milli": [
+     -10.55,
+     1.3
+    ],
+    "blk_ci_milli": [
+     -10.82,
+     1.3
+    ],
+    "p_better_iid": 0.06025,
+    "p_better_blk": 0.06825,
+    "se_blk_milli": 3.09,
+    "mde_milli": 1.772,
+    "note": "concat of era-legal window d vectors"
+   },
+   "pooled_fragility": {
+    "drop_top5_milli": -15.175,
+    "n_dropped": 61,
+    "jackknife_min_milli": -6.263,
+    "jackknife_min_event": "2025_stage1",
+    "jackknife_all": {
+     "2025_china_kickoff": -5.105,
+     "2025_kickoff": -4.975,
+     "2025_china_evo_1": -4.073,
+     "2025_masters_bangkok": -4.566,
+     "2025_china_stage1": -4.857,
+     "2025_stage1": -6.263,
+     "2025_china_evo_2": -4.89,
+     "2025_acl": -4.587,
+     "2025_ewc_qual": -4.906,
+     "2025_masters_toronto": -4.481,
+     "2025_china_stage2": -5.295,
+     "2025_ewc": -4.7,
+     "2025_stage2": -4.838,
+     "2025_china_evo_3": -4.159,
+     "2025_champions": -4.273,
+     "2025_ten_global": -4.714,
+     "2025_china_evo_epilogue": -4.126,
+     "2025_rbhg": -4.376,
+     "2025_super_champions_cup": -4.572,
+     "2025_shanghai_masters": -4.596,
+     "2025_radiant_intl": -4.653,
+     "2026_kickoff": -2.552,
+     "2026_china_kickoff": -5.244,
+     "2026_masters_santiago": -4.475,
+     "2026_china_evo_1": -4.893,
+     "2026_stage1": -3.671,
+     "2026_ewc_qual": -3.84,
+     "2026_china_evo_2": -4.495,
+     "2026_masters_london": -4.506,
+     "2026_ewc": -4.733,
+     "2026_stage2": -4.684
+    }
+   },
+   "advance_rule": {
+    "A1_val1_ge_1se": false,
+    "A2_val2_ge_1se": false,
+    "A3_pooled_ci_gt0": false,
+    "A4_pooled_ge_mde": false,
+    "A5_fragility": null,
+    "ADVANCE": false
+   },
+   "holdout_v8_method": {
+    "delta_milli": -4.004,
+    "n": 1217,
+    "iid_ci_milli": [
+     -9.85,
+     1.74
+    ],
+    "blk_ci_milli": [
+     -9.96,
+     1.62
+    ],
+    "p_better_iid": 0.08275,
+    "p_better_blk": 0.08475,
+    "se_blk_milli": 2.954,
+    "mde_milli": 1.772,
+    "note": "engine train-fit betas, pooled spent holdout"
+   },
+   "pooled_roi_translation": {
+    "expected_roi_delta": 0.0,
+    "delta_logit_equiv": -0.01,
+    "ladder_source": "out/quote_margin.json"
+   }
+  },
+  "p1w5c5": {
+   "label": "p1w5c5 a=4.5 t=13 s=0.7 cap=None (gate-selected)",
+   "T1_fit2324_val2025": {
+    "delta_milli": 0.83,
+    "n": 674,
+    "iid_ci_milli": [
+     -5.19,
+     6.65
+    ],
+    "blk_ci_milli": [
+     -5.91,
+     5.57
+    ],
+    "p_better_iid": 0.61075,
+    "p_better_blk": 0.604,
+    "se_blk_milli": 2.929,
+    "beta_cand": 0.11107,
+    "beta_v6": 0.115199,
+    "mde_milli": 2.382,
+    "diagnostics": {
+     "drop_top5_milli": -7.399,
+     "n_dropped": 34,
+     "jackknife_min_milli": -1.377,
+     "jackknife_min_event": "2025_stage1",
+     "jackknife_all": {
+      "2025_china_kickoff": 0.479,
+      "2025_kickoff": 1.151,
+      "2025_china_evo_1": 1.916,
+      "2025_masters_bangkok": 1.113,
+      "2025_china_stage1": 0.502,
+      "2025_stage1": -1.377,
+      "2025_china_evo_2": 0.563,
+      "2025_acl": 0.823,
+      "2025_ewc_qual": 0.505,
+      "2025_masters_toronto": 1.021,
+      "2025_china_stage2": -0.092,
+      "2025_ewc": 0.952,
+      "2025_stage2": 0.968,
+      "2025_china_evo_3": 1.429,
+      "2025_champions": 1.633,
+      "2025_ten_global": 0.676,
+      "2025_china_evo_epilogue": 1.798,
+      "2025_rbhg": 0.58,
+      "2025_super_champions_cup": 0.91,
+      "2025_shanghai_masters": 0.988,
+      "2025_radiant_intl": 0.514
+     }
+    }
+   },
+   "T2_fit2325_val2026H1": {
+    "delta_milli": -9.62,
+    "n": 543,
+    "iid_ci_milli": [
+     -18.42,
+     -1.01
+    ],
+    "blk_ci_milli": [
+     -15.16,
+     -0.7
+    ],
+    "p_better_iid": 0.0135,
+    "p_better_blk": 0.01925,
+    "se_blk_milli": 3.69,
+    "beta_cand": 0.117291,
+    "beta_v6": 0.126079,
+    "mde_milli": 2.653,
+    "diagnostics": {
+     "drop_top5_milli": -20.373,
+     "n_dropped": 28,
+     "jackknife_min_milli": -11.492,
+     "jackknife_min_event": "2026_china_kickoff",
+     "jackknife_all": {
+      "2026_kickoff": -7.042,
+      "2026_china_kickoff": -11.492,
+      "2026_masters_santiago": -9.875,
+      "2026_china_evo_1": -10.004,
+      "2026_stage1": -8.882,
+      "2026_ewc_qual": -9.111,
+      "2026_china_evo_2": -9.365,
+      "2026_masters_london": -9.357,
+      "2026_ewc": -10.403,
+      "2026_stage2": -10.173
+     }
+    }
+   },
+   "pooled_validation": {
+    "delta_milli": -3.833,
+    "n": 1217,
+    "iid_ci_milli": [
+     -8.79,
+     1.05
+    ],
+    "blk_ci_milli": [
+     -9.13,
+     1.62
+    ],
+    "p_better_iid": 0.0615,
+    "p_better_blk": 0.08825,
+    "se_blk_milli": 2.742,
+    "mde_milli": 1.772,
+    "note": "concat of era-legal window d vectors"
+   },
+   "pooled_fragility": {
+    "drop_top5_milli": -13.148,
+    "n_dropped": 61,
+    "jackknife_min_milli": -5.48,
+    "jackknife_min_event": "2025_stage1",
+    "jackknife_all": {
+     "2025_china_kickoff": -4.11,
+     "2025_kickoff": -3.93,
+     "2025_china_evo_1": -3.282,
+     "2025_masters_bangkok": -3.74,
+     "2025_china_stage1": -4.176,
+     "2025_stage1": -5.48,
+     "2025_china_evo_2": -4.026,
+     "2025_acl": -3.864,
+     "2025_ewc_qual": -4.202,
+     "2025_masters_toronto": -3.823,
+     "2025_china_stage2": -4.495,
+     "2025_ewc": -3.876,
+     "2025_stage2": -4.302,
+     "2025_china_evo_3": -3.55,
+     "2025_champions": -3.533,
+     "2025_ten_global": -3.952,
+     "2025_china_evo_epilogue": -3.326,
+     "2025_rbhg": -4.017,
+     "2025_super_champions_cup": -3.827,
+     "2025_shanghai_masters": -3.757,
+     "2025_radiant_intl": -4.064,
+     "2026_kickoff": -2.334,
+     "2026_china_kickoff": -4.495,
+     "2026_masters_santiago": -3.827,
+     "2026_china_evo_1": -3.974,
+     "2026_stage1": -2.606,
+     "2026_ewc_qual": -3.274,
+     "2026_china_evo_2": -3.662,
+     "2026_masters_london": -3.602,
+     "2026_ewc": -4.035,
+     "2026_stage2": -3.616
+    }
+   },
+   "advance_rule": {
+    "A1_val1_ge_1se": false,
+    "A2_val2_ge_1se": false,
+    "A3_pooled_ci_gt0": false,
+    "A4_pooled_ge_mde": false,
+    "A5_fragility": null,
+    "ADVANCE": false
+   },
+   "holdout_v8_method": {
+    "delta_milli": -3.308,
+    "n": 1217,
+    "iid_ci_milli": [
+     -8.15,
+     1.49
+    ],
+    "blk_ci_milli": [
+     -8.39,
+     1.88
+    ],
+    "p_better_iid": 0.08525,
+    "p_better_blk": 0.10575,
+    "se_blk_milli": 2.619,
+    "mde_milli": 1.772,
+    "note": "engine train-fit betas, pooled spent holdout"
+   },
+   "pooled_roi_translation": {
+    "expected_roi_delta": 0.0,
+    "delta_logit_equiv": -0.0084,
+    "ladder_source": "out/quote_margin.json"
+   }
+  },
+  "p1w8c5_ship": {
+   "label": "p1w8c5 a=28 t=13 s=0.7 n_min=3 cap=1.5 (SHIPPED)",
+   "T1_fit2324_val2025": {
+    "delta_milli": -5.083,
+    "n": 674,
+    "iid_ci_milli": [
+     -14.29,
+     3.83
+    ],
+    "blk_ci_milli": [
+     -15.31,
+     1.82
+    ],
+    "p_better_iid": 0.1385,
+    "p_better_blk": 0.08375,
+    "se_blk_milli": 4.371,
+    "beta_cand": 0.096712,
+    "beta_v6": 0.115199,
+    "mde_milli": 2.382,
+    "diagnostics": {
+     "drop_top5_milli": -18.726,
+     "n_dropped": 34,
+     "jackknife_min_milli": -7.21,
+     "jackknife_min_event": "2025_kickoff",
+     "jackknife_all": {
+      "2025_china_kickoff": -5.617,
+      "2025_kickoff": -7.21,
+      "2025_china_evo_1": -3.592,
+      "2025_masters_bangkok": -4.691,
+      "2025_china_stage1": -5.524,
+      "2025_stage1": -6.454,
+      "2025_china_evo_2": -5.616,
+      "2025_acl": -4.919,
+      "2025_ewc_qual": -5.445,
+      "2025_masters_toronto": -5.181,
+      "2025_china_stage2": -6.202,
+      "2025_ewc": -5.206,
+      "2025_stage2": -4.714,
+      "2025_china_evo_3": -5.282,
+      "2025_champions": -2.972,
+      "2025_ten_global": -4.937,
+      "2025_china_evo_epilogue": -4.136,
+      "2025_rbhg": -5.19,
+      "2025_super_champions_cup": -3.796,
+      "2025_shanghai_masters": -5.126,
+      "2025_radiant_intl": -5.333
+     }
+    }
+   },
+   "T2_fit2325_val2026H1": {
+    "delta_milli": -21.047,
+    "n": 543,
+    "iid_ci_milli": [
+     -33.07,
+     -8.24
+    ],
+    "blk_ci_milli": [
+     -25.64,
+     -15.9
+    ],
+    "p_better_iid": 0.00025,
+    "p_better_blk": 0.0,
+    "se_blk_milli": 2.485,
+    "beta_cand": 0.100107,
+    "beta_v6": 0.126079,
+    "mde_milli": 2.653,
+    "diagnostics": {
+     "drop_top5_milli": -37.955,
+     "n_dropped": 28,
+     "jackknife_min_milli": -22.329,
+     "jackknife_min_event": "2026_ewc",
+     "jackknife_all": {
+      "2026_kickoff": -20.738,
+      "2026_china_kickoff": -21.852,
+      "2026_masters_santiago": -21.151,
+      "2026_china_evo_1": -21.018,
+      "2026_stage1": -22.199,
+      "2026_ewc_qual": -20.062,
+      "2026_china_evo_2": -20.917,
+      "2026_masters_london": -20.515,
+      "2026_ewc": -22.329,
+      "2026_stage2": -19.768
+     }
+    }
+   },
+   "pooled_validation": {
+    "delta_milli": -12.206,
+    "n": 1217,
+    "iid_ci_milli": [
+     -19.84,
+     -4.82
+    ],
+    "blk_ci_milli": [
+     -18.99,
+     -5.58
+    ],
+    "p_better_iid": 0.001,
+    "p_better_blk": 0.0,
+    "se_blk_milli": 3.419,
+    "mde_milli": 1.772,
+    "note": "concat of era-legal window d vectors"
+   },
+   "pooled_fragility": {
+    "drop_top5_milli": -27.175,
+    "n_dropped": 61,
+    "jackknife_min_milli": -13.738,
+    "jackknife_min_event": "2025_kickoff",
+    "jackknife_all": {
+     "2025_china_kickoff": -12.628,
+     "2025_kickoff": -13.738,
+     "2025_china_evo_1": -11.458,
+     "2025_masters_bangkok": -12.086,
+     "2025_china_stage1": -12.698,
+     "2025_stage1": -13.717,
+     "2025_china_evo_2": -12.57,
+     "2025_acl": -12.157,
+     "2025_ewc_qual": -12.699,
+     "2025_masters_toronto": -12.402,
+     "2025_china_stage2": -13.062,
+     "2025_ewc": -12.44,
+     "2025_stage2": -12.843,
+     "2025_china_evo_3": -12.386,
+     "2025_champions": -11.268,
+     "2025_ten_global": -12.178,
+     "2025_china_evo_epilogue": -11.725,
+     "2025_rbhg": -12.335,
+     "2025_super_champions_cup": -11.557,
+     "2025_shanghai_masters": -12.247,
+     "2025_radiant_intl": -12.431,
+     "2026_kickoff": -11.376,
+     "2026_china_kickoff": -12.33,
+     "2026_masters_santiago": -12.073,
+     "2026_china_evo_1": -12.149,
+     "2026_stage1": -11.139,
+     "2026_ewc_qual": -11.268,
+     "2026_china_evo_2": -12.061,
+     "2026_masters_london": -11.797,
+     "2026_ewc": -12.553,
+     "2026_stage2": -11.017
+    }
+   },
+   "advance_rule": {
+    "A1_val1_ge_1se": false,
+    "A2_val2_ge_1se": false,
+    "A3_pooled_ci_gt0": false,
+    "A4_pooled_ge_mde": false,
+    "A5_fragility": null,
+    "ADVANCE": false
+   },
+   "holdout_v8_method": {
+    "delta_milli": -11.595,
+    "n": 1217,
+    "iid_ci_milli": [
+     -18.99,
+     -4.39
+    ],
+    "blk_ci_milli": [
+     -18.18,
+     -5.2
+    ],
+    "p_better_iid": 0.00075,
+    "p_better_blk": 0.0,
+    "se_blk_milli": 3.312,
+    "mde_milli": 1.772,
+    "note": "engine train-fit betas, pooled spent holdout"
+   },
+   "pooled_roi_translation": {
+    "expected_roi_delta": 0.0,
+    "delta_logit_equiv": -0.0267,
+    "ladder_source": "out/quote_margin.json"
+   }
+  },
+  "p1w8c5_capNone": {
+   "label": "p1w8c5 a=28 cap=None (stage array; sensitivity)",
+   "T1_fit2324_val2025": {
+    "delta_milli": -5.342,
+    "n": 674,
+    "iid_ci_milli": [
+     -14.54,
+     3.61
+    ],
+    "blk_ci_milli": [
+     -15.43,
+     1.76
+    ],
+    "p_better_iid": 0.12325,
+    "p_better_blk": 0.07425,
+    "se_blk_milli": 4.385,
+    "beta_cand": 0.096048,
+    "beta_v6": 0.115199,
+    "mde_milli": 2.382,
+    "diagnostics": {
+     "drop_top5_milli": -18.994,
+     "n_dropped": 34,
+     "jackknife_min_milli": -7.525,
+     "jackknife_min_event": "2025_kickoff",
+     "jackknife_all": {
+      "2025_china_kickoff": -5.868,
+      "2025_kickoff": -7.525,
+      "2025_china_evo_1": -3.881,
+      "2025_masters_bangkok": -4.953,
+      "2025_china_stage1": -5.786,
+      "2025_stage1": -6.256,
+      "2025_china_evo_2": -5.881,
+      "2025_acl": -5.172,
+      "2025_ewc_qual": -5.706,
+      "2025_masters_toronto": -5.439,
+      "2025_china_stage2": -6.675,
+      "2025_ewc": -5.474,
+      "2025_stage2": -4.969,
+      "2025_china_evo_3": -5.558,
+      "2025_champions": -3.251,
+      "2025_ten_global": -5.201,
+      "2025_china_evo_epilogue": -4.415,
+      "2025_rbhg": -5.449,
+      "2025_super_champions_cup": -4.073,
+      "2025_shanghai_masters": -5.384,
+      "2025_radiant_intl": -5.599
+     }
+    }
+   },
+   "T2_fit2325_val2026H1": {
+    "delta_milli": -20.974,
+    "n": 543,
+    "iid_ci_milli": [
+     -32.97,
+     -8.22
+    ],
+    "blk_ci_milli": [
+     -25.56,
+     -15.83
+    ],
+    "p_better_iid": 0.00025,
+    "p_better_blk": 0.0,
+    "se_blk_milli": 2.48,
+    "beta_cand": 0.099686,
+    "beta_v6": 0.126079,
+    "mde_milli": 2.653,
+    "diagnostics": {
+     "drop_top5_milli": -37.86,
+     "n_dropped": 28,
+     "jackknife_min_milli": -22.247,
+     "jackknife_min_event": "2026_ewc",
+     "jackknife_all": {
+      "2026_kickoff": -20.67,
+      "2026_china_kickoff": -21.778,
+      "2026_masters_santiago": -21.072,
+      "2026_china_evo_1": -20.941,
+      "2026_stage1": -22.111,
+      "2026_ewc_qual": -20.026,
+      "2026_china_evo_2": -20.856,
+      "2026_masters_london": -20.451,
+      "2026_ewc": -22.247,
+      "2026_stage2": -19.665
+     }
+    }
+   },
+   "pooled_validation": {
+    "delta_milli": -12.317,
+    "n": 1217,
+    "iid_ci_milli": [
+     -19.87,
+     -4.9
+    ],
+    "blk_ci_milli": [
+     -18.94,
+     -5.64
+    ],
+    "p_better_iid": 0.00075,
+    "p_better_blk": 0.0,
+    "se_blk_milli": 3.392,
+    "mde_milli": 1.772,
+    "note": "concat of era-legal window d vectors"
+   },
+   "pooled_fragility": {
+    "drop_top5_milli": -27.285,
+    "n_dropped": 61,
+    "jackknife_min_milli": -13.87,
+    "jackknife_min_event": "2025_kickoff",
+    "jackknife_all": {
+     "2025_china_kickoff": -12.732,
+     "2025_kickoff": -13.87,
+     "2025_china_evo_1": -11.583,
+     "2025_masters_bangkok": -12.197,
+     "2025_china_stage1": -12.805,
+     "2025_stage1": -13.581,
+     "2025_china_evo_2": -12.682,
+     "2025_acl": -12.264,
+     "2025_ewc_qual": -12.804,
+     "2025_masters_toronto": -12.51,
+     "2025_china_stage2": -13.283,
+     "2025_ewc": -12.553,
+     "2025_stage2": -12.935,
+     "2025_china_evo_3": -12.505,
+     "2025_champions": -11.386,
+     "2025_ten_global": -12.291,
+     "2025_china_evo_epilogue": -11.846,
+     "2025_rbhg": -12.445,
+     "2025_super_champions_cup": -11.676,
+     "2025_shanghai_masters": -12.357,
+     "2025_radiant_intl": -12.544,
+     "2026_kickoff": -11.503,
+     "2026_china_kickoff": -12.445,
+     "2026_masters_santiago": -12.185,
+     "2026_china_evo_1": -12.259,
+     "2026_stage1": -11.275,
+     "2026_ewc_qual": -11.405,
+     "2026_china_evo_2": -12.178,
+     "2026_masters_london": -11.915,
+     "2026_ewc": -12.664,
+     "2026_stage2": -11.13
+    }
+   },
+   "advance_rule": {
+    "A1_val1_ge_1se": false,
+    "A2_val2_ge_1se": false,
+    "A3_pooled_ci_gt0": false,
+    "A4_pooled_ge_mde": false,
+    "A5_fragility": null,
+    "ADVANCE": false
+   },
+   "holdout_v8_method": {
+    "delta_milli": -11.694,
+    "n": 1217,
+    "iid_ci_milli": [
+     -19.09,
+     -4.51
+    ],
+    "blk_ci_milli": [
+     -18.12,
+     -5.36
+    ],
+    "p_better_iid": 0.00075,
+    "p_better_blk": 0.0,
+    "se_blk_milli": 3.254,
+    "mde_milli": 1.772,
+    "note": "engine train-fit betas, pooled spent holdout"
+   },
+   "pooled_roi_translation": {
+    "expected_roi_delta": 0.0,
+    "delta_logit_equiv": -0.027,
+    "ladder_source": "out/quote_margin.json"
+   }
+  },
+  "EXTRA_p1w8c5_a6": {
+   "label": "EXTRA p1w8c5 a=6 t=13 s=0.7 cap=None (v9 cap boundary)",
+   "T1_fit2324_val2025": {
+    "delta_milli": -1.022,
+    "n": 674,
+    "iid_ci_milli": [
+     -7.66,
+     5.49
+    ],
+    "blk_ci_milli": [
+     -8.07,
+     3.5
+    ],
+    "p_better_iid": 0.38075,
+    "p_better_blk": 0.3595,
+    "se_blk_milli": 2.953,
+    "beta_cand": 0.106987,
+    "beta_v6": 0.115199,
+    "mde_milli": 2.382,
+    "diagnostics": {
+     "drop_top5_milli": -10.479,
+     "n_dropped": 34,
+     "jackknife_min_milli": -2.124,
+     "jackknife_min_event": "2025_stage1",
+     "jackknife_all": {
+      "2025_china_kickoff": -1.521,
+      "2025_kickoff": -1.917,
+      "2025_china_evo_1": 0.232,
+      "2025_masters_bangkok": -0.813,
+      "2025_china_stage1": -1.385,
+      "2025_stage1": -2.124,
+      "2025_china_evo_2": -1.472,
+      "2025_acl": -0.985,
+      "2025_ewc_qual": -1.27,
+      "2025_masters_toronto": -0.877,
+      "2025_china_stage2": -1.968,
+      "2025_ewc": -1.127,
+      "2025_stage2": -1.119,
+      "2025_china_evo_3": -0.696,
+      "2025_champions": 0.081,
+      "2025_ten_global": -0.905,
+      "2025_china_evo_epilogue": -0.061,
+      "2025_rbhg": -1.201,
+      "2025_super_champions_cup": -0.233,
+      "2025_shanghai_masters": -1.306,
+      "2025_radiant_intl": -1.133
+     }
+    }
+   },
+   "T2_fit2325_val2026H1": {
+    "delta_milli": -10.788,
+    "n": 543,
+    "iid_ci_milli": [
+     -19.26,
+     -1.85
+    ],
+    "blk_ci_milli": [
+     -14.35,
+     -6.19
+    ],
+    "p_better_iid": 0.00875,
+    "p_better_blk": 0.0005,
+    "se_blk_milli": 2.084,
+    "beta_cand": 0.112271,
+    "beta_v6": 0.126079,
+    "mde_milli": 2.653,
+    "diagnostics": {
+     "drop_top5_milli": -22.882,
+     "n_dropped": 28,
+     "jackknife_min_milli": -11.809,
+     "jackknife_min_event": "2026_ewc",
+     "jackknife_all": {
+      "2026_kickoff": -11.411,
+      "2026_china_kickoff": -11.484,
+      "2026_masters_santiago": -10.506,
+      "2026_china_evo_1": -10.928,
+      "2026_stage1": -10.737,
+      "2026_ewc_qual": -9.607,
+      "2026_china_evo_2": -10.566,
+      "2026_masters_london": -10.584,
+      "2026_ewc": -11.809,
+      "2026_stage2": -10.145
+     }
+    }
+   },
+   "pooled_validation": {
+    "delta_milli": -5.379,
+    "n": 1217,
+    "iid_ci_milli": [
+     -10.82,
+     -0.04
+    ],
+    "blk_ci_milli": [
+     -10.09,
+     -0.96
+    ],
+    "p_better_iid": 0.024,
+    "p_better_blk": 0.00875,
+    "se_blk_milli": 2.327,
+    "mde_milli": 1.772,
+    "note": "concat of era-legal window d vectors"
+   },
+   "pooled_fragility": {
+    "drop_top5_milli": -15.924,
+    "n_dropped": 61,
+    "jackknife_min_milli": -6.436,
+    "jackknife_min_event": "2025_stage1",
+    "jackknife_all": {
+     "2025_china_kickoff": -5.732,
+     "2025_kickoff": -6.102,
+     "2025_china_evo_1": -4.734,
+     "2025_masters_bangkok": -5.323,
+     "2025_china_stage1": -5.73,
+     "2025_stage1": -6.436,
+     "2025_china_evo_2": -5.67,
+     "2025_acl": -5.384,
+     "2025_ewc_qual": -5.695,
+     "2025_masters_toronto": -5.388,
+     "2025_china_stage2": -6.044,
+     "2025_ewc": -5.539,
+     "2025_stage2": -5.931,
+     "2025_china_evo_3": -5.244,
+     "2025_champions": -4.908,
+     "2025_ten_global": -5.347,
+     "2025_china_evo_epilogue": -4.875,
+     "2025_rbhg": -5.521,
+     "2025_super_champions_cup": -4.981,
+     "2025_shanghai_masters": -5.547,
+     "2025_radiant_intl": -5.494,
+     "2026_kickoff": -5.198,
+     "2026_china_kickoff": -5.544,
+     "2026_masters_santiago": -5.148,
+     "2026_china_evo_1": -5.415,
+     "2026_stage1": -4.459,
+     "2026_ewc_qual": -4.567,
+     "2026_china_evo_2": -5.228,
+     "2026_masters_london": -5.182,
+     "2026_ewc": -5.695,
+     "2026_stage2": -4.709
+    }
+   },
+   "advance_rule": {
+    "A1_val1_ge_1se": false,
+    "A2_val2_ge_1se": false,
+    "A3_pooled_ci_gt0": false,
+    "A4_pooled_ge_mde": false,
+    "A5_fragility": null,
+    "ADVANCE": false
+   },
+   "holdout_v8_method": {
+    "delta_milli": -4.888,
+    "n": 1217,
+    "iid_ci_milli": [
+     -10.16,
+     0.3
+    ],
+    "blk_ci_milli": [
+     -9.49,
+     -0.66
+    ],
+    "p_better_iid": 0.034,
+    "p_better_blk": 0.01175,
+    "se_blk_milli": 2.252,
+    "mde_milli": 1.772,
+    "note": "engine train-fit betas, pooled spent holdout"
+   },
+   "pooled_roi_translation": {
+    "expected_roi_delta": 0.0,
+    "delta_logit_equiv": -0.0118,
+    "ladder_source": "out/quote_margin.json"
+   }
+  }
+ },
+ "gate_jackknife_C5": {
+  "p1w3c5": {
+   "recorded_folds_milli": [
+    -5.1616,
+    6.2059,
+    12.7693,
+    6.1973,
+    4.8364
+   ],
+   "recorded_fired": true,
+   "leave_one_fold_out": {
+    "drop_fold_1": {
+     "mean_milli": 7.502,
+     "se_milli": 1.785,
+     "would_fire": true
+    },
+    "drop_fold_2": {
+     "mean_milli": 4.66,
+     "se_milli": 3.704,
+     "would_fire": true
+    },
+    "drop_fold_3": {
+     "mean_milli": 3.019,
+     "se_milli": 2.746,
+     "would_fire": true
+    },
+    "drop_fold_4": {
+     "mean_milli": 4.662,
+     "se_milli": 3.704,
+     "would_fire": true
+    },
+    "drop_fold_5": {
+     "mean_milli": 5.003,
+     "se_milli": 3.725,
+     "would_fire": true
+    }
+   },
+   "concentration_flag_C5": false
+  },
+  "p1w5c5": {
+   "recorded_folds_milli": [
+    -1.2783,
+    5.9305,
+    13.6381,
+    2.2317,
+    3.8923
+   ],
+   "recorded_fired": true,
+   "leave_one_fold_out": {
+    "drop_fold_1": {
+     "mean_milli": 6.423,
+     "se_milli": 2.521,
+     "would_fire": true
+    },
+    "drop_fold_2": {
+     "mean_milli": 4.621,
+     "se_milli": 3.193,
+     "would_fire": true
+    },
+    "drop_fold_3": {
+     "mean_milli": 2.694,
+     "se_milli": 1.525,
+     "would_fire": true
+    },
+    "drop_fold_4": {
+     "mean_milli": 5.546,
+     "se_milli": 3.095,
+     "would_fire": true
+    },
+    "drop_fold_5": {
+     "mean_milli": 5.131,
+     "se_milli": 3.195,
+     "would_fire": true
+    }
+   },
+   "concentration_flag_C5": false
+  },
+  "p1w8c5": {
+   "recorded_folds_milli": [
+    -4.8315,
+    10.2122,
+    25.2879,
+    -1.278,
+    2.6899
+   ],
+   "recorded_fired": true,
+   "leave_one_fold_out": {
+    "drop_fold_1": {
+     "mean_milli": 9.228,
+     "se_milli": 5.86,
+     "would_fire": true
+    },
+    "drop_fold_2": {
+     "mean_milli": 5.467,
+     "se_milli": 6.783,
+     "would_fire": false
+    },
+    "drop_fold_3": {
+     "mean_milli": 1.698,
+     "se_milli": 3.227,
+     "would_fire": false
+    },
+    "drop_fold_4": {
+     "mean_milli": 8.34,
+     "se_milli": 6.43,
+     "would_fire": true
+    },
+    "drop_fold_5": {
+     "mean_milli": 7.348,
+     "se_milli": 6.787,
+     "would_fire": true
+    }
+   },
+   "concentration_flag_C5": true
+  },
+  "p3w5": {
+   "recorded_folds_milli": [
+    0.0,
+    0.0,
+    -0.0,
+    -0.0,
+    -0.0
+   ],
+   "recorded_fired": false,
+   "leave_one_fold_out": {
+    "drop_fold_1": {
+     "mean_milli": 0.0,
+     "se_milli": 0.0,
+     "would_fire": false
+    },
+    "drop_fold_2": {
+     "mean_milli": 0.0,
+     "se_milli": 0.0,
+     "would_fire": false
+    },
+    "drop_fold_3": {
+     "mean_milli": 0.0,
+     "se_milli": 0.0,
+     "would_fire": false
+    },
+    "drop_fold_4": {
+     "mean_milli": 0.0,
+     "se_milli": 0.0,
+     "would_fire": false
+    },
+    "drop_fold_5": {
+     "mean_milli": 0.0,
+     "se_milli": 0.0,
+     "would_fire": false
+    }
+   },
+   "concentration_flag_C5": false
+  }
+ },
+ "reproduction_fixture": {
+  "beta_fit1_v6": 0.115199,
+  "engine_beta_v6": 0.1152,
+  "ship_holdout_mine_milli": -11.595,
+  "ship_holdout_recorded_milli": -11.595,
+  "gap_milli": 0.0,
+  "bar_milli": 0.5,
+  "pass": true
+ },
+ "mde_context_milli": {
+  "VAL1": 2.382,
+  "VAL2": 2.653,
+  "pooled": 1.772,
+  "source": "sigma_within 0.02207, z 2.8016 (power_mde_expanded.json)"
+ }
+}

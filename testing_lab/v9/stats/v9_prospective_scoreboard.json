@@ -1,0 +1,189 @@
+{
+ "written_by": "agent:v9-finish (testing_lab/v9/score_prospective.py)",
+ "last_run": "2026-07-29 13:15:02",
+ "protocol": "stats/v9_prospective_protocol.json \u2014 implemented verbatim; this file is the standing scoreboard it feeds",
+ "run_cadence": "manual or cron weekly; idempotent, read-only over data/, refits nothing",
+ "ladder": {
+  "file": "stats/v9_ladder.json",
+  "verdict_sentence": "the ladder is v6 alone",
+  "n_candidate_arms_beyond_v6": 0,
+  "note": "zero of 5 v9 candidates advanced; there is nothing to promote"
+ },
+ "candidates": [],
+ "arms": [
+  {
+   "id": "v6",
+   "role": "baseline",
+   "scoreable": true,
+   "label": "pure v6 (baseline; always arm 0)",
+   "config": {
+    "mechanism": "v6",
+    "note": "pure v6 (a=s=0)"
+   },
+   "beta_frozen": 0.128512,
+   "beta_provenance": "stats/v9_ladder.json verbatim (frozen by agent:v9-search)",
+   "live_status": {
+    "status": "BASELINE"
+   }
+  },
+  {
+   "id": "B_continuity",
+   "role": "reference",
+   "scoreable": true,
+   "label": "read-1 spec, gamma=2.0 (exploratory read was -3.889m; expectation LOW)",
+   "config": {
+    "mechanism": "change_continuity",
+    "gamma": 2.0,
+    "floor": 0.2
+   },
+   "beta_frozen": 0.127363,
+   "beta_provenance": "frozen ONCE at first init (2026-07-29) on 2023-01-01..2026-07-28 (2044 rows), protocol beta method; reused verbatim on every later run",
+   "live_status": {
+    "status": "ACCUMULATING"
+   }
+  },
+  {
+   "id": "C_coldstart",
+   "role": "reference",
+   "scoreable": true,
+   "label": "read-2 spec, a0=1.0 M=6 (exploratory -1.423m, inside floor)",
+   "config": {
+    "mechanism": "coldstart_blend",
+    "a0": 1.0,
+    "M": 6
+   },
+   "beta_frozen": 0.131629,
+   "beta_provenance": "frozen ONCE at first init (2026-07-29) on 2023-01-01..2026-07-28 (2044 rows), protocol beta method; reused verbatim on every later run",
+   "live_status": {
+    "status": "ACCUMULATING"
+   }
+  },
+  {
+   "id": "D_phase_reset",
+   "role": "reference",
+   "scoreable": false,
+   "label": "read-3' spec, g=0.5 on h3-1b base (operator shape; exploratory read NEGATIVE with falsifier fired \u2014 carried prospectively because the frame evidence is exploratory-only, expectation LOW)",
+   "config": {
+    "mechanism": "phase_reset_filter",
+    "g": 0.5,
+    "base": "h3-1b"
+   },
+   "status_note": "NOT_SCOREABLE_LIVE \u2014 base is the h3-1b round-level state-space filter; round enrichment absent for CN events and the live post-freeze corpus (disclosed in preregister.finish.md; never silently substituted)",
+   "live_status": {
+    "status": "NOT_SCOREABLE_LIVE"
+   }
+  },
+  {
+   "id": "E_atlas_replication",
+   "role": "reference",
+   "scoreable": true,
+   "label": "NON-MODEL check: does the +4-6pp first-3-matches post-change outperformance replicate? (mean(won - p_v6) on post-change team-observations, msc<=2, sustained episodes)",
+   "config": {
+    "mechanism": "non_model_check",
+    "stat": "mean(won - p_v6), team-obs with msc<=2 in sustained episodes",
+    "replicates_iff": "pooled bias > 0 with 95% CI excluding 0"
+   },
+   "beta_frozen": null,
+   "live_status": {
+    "status": "ACCUMULATING"
+   }
+  },
+  {
+   "id": "F_v6_overreact",
+   "role": "reference",
+   "scoreable": true,
+   "label": "read-4 spec, a=2.0 tau=5.0 on v6 (operator-directed clean mechanism test; exploratory read -0.395m)",
+   "config": {
+    "mechanism": "v6_overreact",
+    "a": 2.0,
+    "tau": 5.0
+   },
+   "beta_frozen": 0.125735,
+   "beta_provenance": "frozen ONCE at first init (2026-07-29) on 2023-01-01..2026-07-28 (2044 rows), protocol beta method; reused verbatim on every later run",
+   "live_status": {
+    "status": "ACCUMULATING"
+   }
+  },
+  {
+   "id": "H_specrun",
+   "role": "reference",
+   "scoreable": true,
+   "label": "SPEC RUN gate-selected config, FROZEN: P1 W=8 c=5, a=28.0 tau=13.0 s=0.7 n_min=3 cap=1.5 (lambda_hat=0 by inner-CV; gate fired +6.42m CV vs 5.34m SE). Exploratory holdout read: -11.595m [-18.99,-4.39] \u2014 FALSIFIER FIRED on the spent frame; expectations LOW; carried for prospective adjudication per spec 6 (decision rule unchanged: dLL >= MDE80 at realized n AND p_better >= .95 both CRN modes AND no G3 regression).",
+   "config": {
+    "mechanism": "solve_side_spec",
+    "policy": "p1",
+    "W": 8,
+    "c": 5,
+    "a": 28.0,
+    "tau": 13.0,
+    "s": 0.7,
+    "n_min": 3,
+    "cap": 1.5
+   },
+   "beta_frozen": 0.094734,
+   "beta_provenance": "frozen ONCE at first init (2026-07-29) on 2023-01-01..2026-07-28 (2044 rows), protocol beta method; reused verbatim on every later run",
+   "live_status": {
+    "status": "ACCUMULATING"
+   }
+  }
+ ],
+ "population": {
+  "rule": "settled series date > 2026-07-28, frame recipe verbatim",
+  "n_settled_post_cutoff": 0,
+  "n_scored_paired": 0,
+  "n_dropped_pairing": 0,
+  "frame_fixture": {
+   "frozen_rows": 2058,
+   "common_rows": 2058,
+   "column_mismatches": 0,
+   "live_rows_le_cutoff": 2058,
+   "live_rows_post_cutoff": 0
+  },
+  "exclusions": {
+   "org not in ORG_REGIONS": 7,
+   "org count != 2": 3
+  }
+ },
+ "beta_freeze_fixture": {
+  "ladder_beta_v6": 0.128512,
+  "protocol_refit_on_live_frame": 0.128512,
+  "n_freeze_rows": 2044,
+  "gap": 0.0,
+  "rule": "ladder value used VERBATIM regardless; gap > 0.001 would be logged loudly"
+ },
+ "checkpoints": {
+  "at_scored_n": [
+   100,
+   200,
+   400
+  ],
+  "G1_thresholds": {
+   "100": 0.999,
+   "200": 0.995,
+   "400": 0.975
+  },
+  "alpha_spend": "one-sided alpha per look {0.001, 0.005, 0.025}, union bound 0.031 <= 0.05 per arm; conservative under positive correlation of sequential looks; O'Brien-Fleming-shaped (early promotion demands near-certainty because MDE(100)=6.18m)",
+  "mde_within_milli": {
+   "100": 6.183,
+   "200": 4.372,
+   "400": 3.091
+  },
+  "mde_cross_milli": {
+   "100": 20.543,
+   "200": 14.526,
+   "400": 10.271
+  },
+  "kill_rule": "at any checkpoint, an arm whose block_event 95% CI has ci_hi < 0 is KILLED: never promotable in v9; it continues to be scored and reported through n=400 for the record",
+  "next_checkpoint": 100,
+  "reads_taken": [],
+  "reads_remaining": "these 3 checkpoint reads are the only permitted reads of post-07/28 performance; each appends to stats/v9_looks.json prospective_reads"
+ },
+ "checkpoint_reads": [],
+ "per_series": [],
+ "no_peeking": "no aggregate over post-cutoff rows exists outside checkpoint_reads; per-series predictions above are stored without aggregation (protocol integrity clause)",
+ "termination": {
+  "no_promotion_by_400": "v9 ends in NO SHIP; any revival requires a new preregistered cycle on NEW prospective data (never a re-test on the same 400)",
+  "early_promotion": "a promotion at n in {100,200} does not end scoring; the remaining checkpoints are still evaluated and reported (the promoted arm can still be killed by the kill rule at a later checkpoint, which retracts the promotion)"
+ },
+ "verdict": "accumulating (n=0)"
+}

@@ -1,0 +1,18 @@
+{
+ "written_by": "agent:v9-search",
+ "written": "2026-07-29 12:27:02",
+ "status": "FROZEN \u2014 consumed verbatim by the prospective evaluator (stats/v9_prospective_protocol.json). Betas refit once on 2023-01-01..2026-07-28 and never again.",
+ "ladder_rule": "survivors ranked by pooled delta; ladder order conservative -> aggressive by mean|p_cand - p_v6| on VAL2 ascending (protocol survivors clause)",
+ "n_arms": 1,
+ "arms": [
+  {
+   "arm": 0,
+   "id": "v6",
+   "label": "pure v6 (baseline; always arm 0)",
+   "mechanism": "v6",
+   "beta_frozen": 0.128512,
+   "beta_window": "2023-01-01..2026-07-28 (n_valid rows 2044), protocol beta method"
+  }
+ ],
+ "verdict_sentence": "the ladder is v6 alone"
+}

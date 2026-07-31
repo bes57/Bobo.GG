@@ -1,0 +1,517 @@
+{
+ "generated": "2026-07-30T21:26:57.780659Z",
+ "site_model_version": "benpom-v6-site-2026-07-30",
+ "ratings_checkpoint": "2026-07-26",
+ "n_pairs_backend": 40,
+ "max_abs_diff_backend": 0.0,
+ "backend_tolerance": 1e-09,
+ "backend_pass": true,
+ "n_pairs_frontend": 10,
+ "max_abs_diff_frontend": 0.0,
+ "frontend_tolerance": 1e-06,
+ "frontend_pass": true,
+ "pairs_backend": [
+  {
+   "a": "G2",
+   "b": "MIBR",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.536333654063495,
+   "p_site_backend": 0.536333654063495,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "MIBR",
+   "b": "100T",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.3373960121075982,
+   "p_site_backend": 0.3373960121075982,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "LEV",
+   "b": "LOUD",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.8556094147017475,
+   "p_site_backend": 0.8556094147017475,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "G2",
+   "b": "SEN",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.637057148217667,
+   "p_site_backend": 0.637057148217667,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "TL",
+   "b": "KC",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.48669893413646914,
+   "p_site_backend": 0.48669893413646914,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "TH",
+   "b": "FUT",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.5775537622328214,
+   "p_site_backend": 0.5775537622328214,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "EF",
+   "b": "KC",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.36472540783157226,
+   "p_site_backend": 0.36472540783157226,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "M8",
+   "b": "BBL",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.46436760123048465,
+   "p_site_backend": 0.46436760123048465,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "ZETA",
+   "b": "TS",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-Pacific",
+   "p_predict": 0.46511116408618525,
+   "p_site_backend": 0.46511116408618525,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "GEN",
+   "b": "NS",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Pacific",
+   "p_predict": 0.4004606751249955,
+   "p_site_backend": 0.4004606751249955,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "RRQ",
+   "b": "VL",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "same-Pacific",
+   "p_predict": 0.5244888995896226,
+   "p_site_backend": 0.5244888995896226,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "ZETA",
+   "b": "VL",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Pacific",
+   "p_predict": 0.4370511871957868,
+   "p_site_backend": 0.4370511871957868,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "TE",
+   "b": "TEC",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-CN",
+   "p_predict": 0.47884029346137064,
+   "p_site_backend": 0.47884029346137064,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "FPX",
+   "b": "BLG",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-CN",
+   "p_predict": 0.4535849108492898,
+   "p_site_backend": 0.4535849108492898,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "NOVA",
+   "b": "TE",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "same-CN",
+   "p_predict": 0.8334292248626618,
+   "p_site_backend": 0.8334292248626618,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "EDG",
+   "b": "TEC",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-CN",
+   "p_predict": 0.7796621920684925,
+   "p_site_backend": 0.7796621920684925,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "BBL",
+   "b": "C9",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "xreg-AmericasvEMEA",
+   "p_predict": 0.8564615273409261,
+   "p_site_backend": 0.8564615273409261,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "LOUD",
+   "b": "TS",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "xreg-AmericasvPacific",
+   "p_predict": 0.5077261689738692,
+   "p_site_backend": 0.5077261689738692,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "LOUD",
+   "b": "XLG",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-AmericasvCN",
+   "p_predict": 0.5255797234498661,
+   "p_site_backend": 0.5255797234498661,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "FNC",
+   "b": "VL",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-EMEAvPacific",
+   "p_predict": 0.697779607160395,
+   "p_site_backend": 0.697779607160395,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "JDG",
+   "b": "GX",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "xreg-EMEAvCN",
+   "p_predict": 0.23221069679113954,
+   "p_site_backend": 0.23221069679113954,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "GEN",
+   "b": "WOL",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "xreg-PacificvCN",
+   "p_predict": 0.7600344337628535,
+   "p_site_backend": 0.7600344337628535,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "G2",
+   "b": "FNC",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-AmericasvEMEA",
+   "p_predict": 0.5621171923440447,
+   "p_site_backend": 0.5621171923440447,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "ENVY",
+   "b": "T1",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-AmericasvPacific",
+   "p_predict": 0.24684838425707856,
+   "p_site_backend": 0.24684838425707856,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "TYL",
+   "b": "G2",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "xreg-AmericasvCN",
+   "p_predict": 0.14479671209679762,
+   "p_site_backend": 0.14479671209679762,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "GEN",
+   "b": "BBL",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "xreg-EMEAvPacific",
+   "p_predict": 0.45895906617736604,
+   "p_site_backend": 0.45895906617736604,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "WOL",
+   "b": "TH",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-EMEAvCN",
+   "p_predict": 0.14447162368723634,
+   "p_site_backend": 0.14447162368723634,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "KRX",
+   "b": "AG",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-PacificvCN",
+   "p_predict": 0.5940053447067998,
+   "p_site_backend": 0.5940053447067998,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "VIT",
+   "b": "LEV",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "xreg-AmericasvEMEA",
+   "p_predict": 0.36726889113553,
+   "p_site_backend": 0.36726889113553,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "DFM",
+   "b": "KR\u00dc",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "xreg-AmericasvPacific",
+   "p_predict": 0.48863828256402664,
+   "p_site_backend": 0.48863828256402664,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "FUR",
+   "b": "BLG",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-AmericasvCN",
+   "p_predict": 0.6468455464694834,
+   "p_site_backend": 0.6468455464694834,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "KC",
+   "b": "DFM",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "xreg-EMEAvPacific",
+   "p_predict": 0.7604086496047123,
+   "p_site_backend": 0.7604086496047123,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "BBL",
+   "b": "KC",
+   "fmt": "bo5_gf",
+   "upper": "BBL",
+   "tag": "gf-upper-a-same",
+   "p_predict": 0.5748785726496723,
+   "p_site_backend": 0.5748785726496723,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "BBL",
+   "b": "KC",
+   "fmt": "bo5_gf",
+   "upper": "KC",
+   "tag": "gf-upper-b-same",
+   "p_predict": 0.4506076116360604,
+   "p_site_backend": 0.4506076116360604,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "SEN",
+   "b": "FPX",
+   "fmt": "bo5_gf",
+   "upper": "SEN",
+   "tag": "gf-upper-a-xreg",
+   "p_predict": 0.8366310598299691,
+   "p_site_backend": 0.8366310598299691,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "SEN",
+   "b": "FPX",
+   "fmt": "bo5_gf",
+   "upper": "FPX",
+   "tag": "gf-upper-b-xreg",
+   "p_predict": 0.7564606720994967,
+   "p_site_backend": 0.7564606720994967,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "GIA",
+   "b": "ENVY",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "unknown-org-GIA",
+   "p_predict": 0.7068352594636617,
+   "p_site_backend": 0.7068352594636617,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "MKOI",
+   "b": "KC",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "unknown-org-MKOI",
+   "p_predict": 0.3680181698300913,
+   "p_site_backend": 0.3680181698300913,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "2G",
+   "b": "T1",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "unknown-org-2G",
+   "p_predict": 0.3169836268342844,
+   "p_site_backend": 0.3169836268342844,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "ZZZQ",
+   "b": "TL",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "unknown-org-noregion",
+   "p_predict": 0.34564935663621676,
+   "p_site_backend": 0.34564935663621676,
+   "abs_diff": 0.0
+  }
+ ],
+ "pairs_frontend": [
+  {
+   "a": "G2",
+   "b": "MIBR",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.536333654063495,
+   "p_js_replica": 0.536333654063495,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "MIBR",
+   "b": "100T",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.3373960121075982,
+   "p_js_replica": 0.3373960121075982,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "LEV",
+   "b": "LOUD",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.8556094147017475,
+   "p_js_replica": 0.8556094147017475,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "G2",
+   "b": "SEN",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Americas",
+   "p_predict": 0.637057148217667,
+   "p_js_replica": 0.637057148217667,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "TL",
+   "b": "KC",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.48669893413646914,
+   "p_js_replica": 0.48669893413646914,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "TH",
+   "b": "FUT",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.5775537622328214,
+   "p_js_replica": 0.5775537622328214,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "EF",
+   "b": "KC",
+   "fmt": "bo5",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.36472540783157226,
+   "p_js_replica": 0.36472540783157226,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "M8",
+   "b": "BBL",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-EMEA",
+   "p_predict": 0.46436760123048465,
+   "p_js_replica": 0.46436760123048465,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "ZETA",
+   "b": "TS",
+   "fmt": "bo1",
+   "upper": null,
+   "tag": "same-Pacific",
+   "p_predict": 0.46511116408618525,
+   "p_js_replica": 0.46511116408618525,
+   "abs_diff": 0.0
+  },
+  {
+   "a": "GEN",
+   "b": "NS",
+   "fmt": "bo3",
+   "upper": null,
+   "tag": "same-Pacific",
+   "p_predict": 0.4004606751249955,
+   "p_js_replica": 0.4004606751249955,
+   "abs_diff": 0.0
+  }
+ ]
+}

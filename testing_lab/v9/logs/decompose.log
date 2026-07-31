@@ -1,0 +1,44 @@
+[2026-07-29 13:56:56] DECOMPOSE START — per-match decomposition of the 3 ledgered evaluations (brief: v9/briefs/decompose.md; zero new looks)
+[2026-07-29 13:56:59] frame sha OK; beta(FIT1,v6)=0.115199 (fixture PASS) beta(FIT2,v6)=0.126079 [3s]
+[2026-07-29 13:56:59] N1_delta2: VAL1 -6.977m vs ledgered -6.977m | VAL2 -3.403m vs -3.403m | locality PASS (5 no-phase rows, max|d|=0.0) [3s]
+[2026-07-29 13:56:59] N2_hybrid6: VAL1 -2.201m vs ledgered -2.201m | VAL2 -1.704m vs -1.704m | locality PASS (5 no-phase rows, max|d|=0.0) [3s]
+[2026-07-29 13:56:59] S_a1.0: VAL1 +0.762m vs ledgered +0.762m | VAL2 -2.980m vs -2.980m [3s]
+[2026-07-29 13:56:59] TIE-OUT PASS: all 9 recomputed window/pooled totals equal the ledgered numbers (3 candidates x VAL1/VAL2/pooled)
+[2026-07-29 13:56:59] LOCALITY N1_delta2: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 13:56:59] LOCALITY N2_hybrid6: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 13:57:00] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_case_decomposition.json (2504 KB) [3s]
+[2026-07-29 13:57:00] disclosure appended to stats/v9_looks.json (decomposition_reads, new_looks=0)
+[2026-07-29 13:57:00] DECOMPOSE DONE [3s]
+[2026-07-29 14:00:39] DECOMPOSE START — per-match decomposition of the 3 ledgered evaluations (brief: v9/briefs/decompose.md; zero new looks)
+[2026-07-29 14:00:42] frame sha OK; beta(FIT1,v6)=0.115199 (fixture PASS) beta(FIT2,v6)=0.126079 [3s]
+[2026-07-29 14:00:42] N1_delta2: VAL1 -6.977m vs ledgered -6.977m | VAL2 -3.403m vs -3.403m | locality PASS (5 no-phase rows, max|d|=0.0) [4s]
+[2026-07-29 14:00:42] N2_hybrid6: VAL1 -2.201m vs ledgered -2.201m | VAL2 -1.704m vs -1.704m | locality PASS (5 no-phase rows, max|d|=0.0) [4s]
+[2026-07-29 14:00:42] S_a1.0: VAL1 +0.762m vs ledgered +0.762m | VAL2 -2.980m vs -2.980m [4s]
+[2026-07-29 14:00:42] TIE-OUT PASS: all 9 recomputed window/pooled totals equal the ledgered numbers (3 candidates x VAL1/VAL2/pooled)
+[2026-07-29 14:00:42] LOCALITY N1_delta2: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 14:00:42] LOCALITY N2_hybrid6: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 14:00:42] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_case_decomposition.json (2683 KB) [4s]
+[2026-07-29 14:00:42] disclosure appended to stats/v9_looks.json (decomposition_reads, new_looks=0)
+[2026-07-29 14:00:42] DECOMPOSE DONE [4s]
+[2026-07-29 14:02:01] DECOMPOSE START — per-match decomposition of the 3 ledgered evaluations (brief: v9/briefs/decompose.md; zero new looks)
+[2026-07-29 14:02:04] frame sha OK; beta(FIT1,v6)=0.115199 (fixture PASS) beta(FIT2,v6)=0.126079 [3s]
+[2026-07-29 14:02:04] N1_delta2: VAL1 -6.977m vs ledgered -6.977m | VAL2 -3.403m vs -3.403m | locality PASS (5 no-phase rows, max|d|=0.0) [3s]
+[2026-07-29 14:02:04] N2_hybrid6: VAL1 -2.201m vs ledgered -2.201m | VAL2 -1.704m vs -1.704m | locality PASS (5 no-phase rows, max|d|=0.0) [3s]
+[2026-07-29 14:02:04] S_a1.0: VAL1 +0.762m vs ledgered +0.762m | VAL2 -2.980m vs -2.980m [3s]
+[2026-07-29 14:02:04] TIE-OUT PASS: all 9 recomputed window/pooled totals equal the ledgered numbers (3 candidates x VAL1/VAL2/pooled)
+[2026-07-29 14:02:04] LOCALITY N1_delta2: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 14:02:04] LOCALITY N2_hybrid6: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 14:02:04] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_case_decomposition.json (2688 KB) [3s]
+[2026-07-29 14:02:04] disclosure appended to stats/v9_looks.json (decomposition_reads, new_looks=0)
+[2026-07-29 14:02:04] DECOMPOSE DONE [3s]
+[2026-07-29 14:02:37] DECOMPOSE START — per-match decomposition of the 3 ledgered evaluations (brief: v9/briefs/decompose.md; zero new looks)
+[2026-07-29 14:02:40] frame sha OK; beta(FIT1,v6)=0.115199 (fixture PASS) beta(FIT2,v6)=0.126079 [3s]
+[2026-07-29 14:02:41] N1_delta2: VAL1 -6.977m vs ledgered -6.977m | VAL2 -3.403m vs -3.403m | locality PASS (5 no-phase rows, max|d|=0.0) [3s]
+[2026-07-29 14:02:41] N2_hybrid6: VAL1 -2.201m vs ledgered -2.201m | VAL2 -1.704m vs -1.704m | locality PASS (5 no-phase rows, max|d|=0.0) [3s]
+[2026-07-29 14:02:41] S_a1.0: VAL1 +0.762m vs ledgered +0.762m | VAL2 -2.980m vs -2.980m [3s]
+[2026-07-29 14:02:41] TIE-OUT PASS: all 9 recomputed window/pooled totals equal the ledgered numbers (3 candidates x VAL1/VAL2/pooled)
+[2026-07-29 14:02:41] LOCALITY N1_delta2: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 14:02:41] LOCALITY N2_hybrid6: 5 scored rows with no active phase, max|Δ| = 0.0 (exactly 0) — PASS
+[2026-07-29 14:02:41] wrote /Users/benny_es1/PythonTest/testing_lab/v9/stats/v9_case_decomposition.json (2688 KB) [3s]
+[2026-07-29 14:02:41] disclosure appended to stats/v9_looks.json (decomposition_reads, new_looks=0)
+[2026-07-29 14:02:41] DECOMPOSE DONE [3s]

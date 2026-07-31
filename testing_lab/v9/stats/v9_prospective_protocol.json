@@ -1,0 +1,55 @@
+{
+ "written_by": "agent:v9-design",
+ "written": "2026-07-29",
+ "status": "FROZEN — the ONLY confirmatory instrument in v9. The evaluator agent implements this file verbatim; any deviation is a protocol violation logged in v9/logs/. Frozen before any post-2026-07-28 row was examined by the author (asserted: no data file with post-07/28 rows was opened in Phase 0).",
+ "arms": {
+  "control": "v6 exactly (a=s=0)",
+  "candidates": "the <= 3 transfer survivors from v9_transfer_protocol.json, in ladder order (conservative first)",
+  "freeze_file": "stats/v9_ladder.json must exist BEFORE the first post-07/28 series is scored and must record per arm: full config blob, code identity (file paths + sha256 of speclib/runner/engine equivalents used), beta (4 decimals), mean|p_arm - p_v6| on VAL2, C5 flag status"
+ },
+ "beta_freeze": {
+  "window": "2023-01-01 <= date <= 2026-07-28",
+  "method": "identical to v9_transfer_protocol.json beta_discipline (minimize_scalar bounded (0.001,1.0), xatol 1e-6, mean series-NLL)",
+  "rule": "refit once per arm on the freeze window, frozen to 4 decimals in v9_ladder.json; NOTHING is refit after 2026-07-28 — no beta, no hyperparameter, no engine constant"
+ },
+ "scoring_population": {
+  "rule": "settled series with date > '2026-07-28', constructed by the frame_expanded README recipe verbatim: per-map winners from match_results.csv excluding MapNum=='all'; org pair from data/maps/<event>.csv; both orgs in ORG_REGIONS; series score w_maps > l_maps, w_maps in {1,2,3} (drops forfeits/incomplete); fmt bo1/bo3/bo5 from w_maps, bo5+grand_final => bo5_gf; stage via harness._stage; intl via exact-shape harness._is_intl_event; sort (date, match_id), dedup match_id keep-first",
+  "walk_forward": "engine ratings update from settled results only; the prediction for a series uses ratings as of its date (engine semantics); p = p_series_closed(beta_arm, rdiff, fmt)",
+  "pairing": "a series with NaN rdiff for ANY arm is dropped for ALL arms; dropped count disclosed at every checkpoint",
+  "expected_flow": "Stage 2 is live; Champions lands Sep-Oct (n=400 expected around late 2026)"
+ },
+ "checkpoints": {
+  "at_scored_n": [100, 200, 400],
+  "reads": "these 3 checkpoint reads are the only permitted reads of post-07/28 performance; each appends to stats/v9_looks.json prospective_reads",
+  "at_each": "per candidate arm vs v6: paired d vector; referee.paired_bootstrap_crn iid + block_event (crn.json seeds 20260728/20260729 on the scored rows); point delta in milli-LL AND expected_roi_of_dll; MDE-at-n printed next to every number",
+  "mde_at_n_milli": {"within_family": {"100": 6.183, "200": 4.372, "400": 3.091},
+                     "cross_family": {"100": 20.543, "200": 14.526, "400": 10.271},
+                     "formula": "2.8016 * sigma / sqrt(n); sigma_within 0.02207, sigma_cross 0.07333 (power_mde_expanded.json)"}
+ },
+ "promotion_rule": {
+  "G1_sequential_evidence": {
+   "rule": "one-sided p_better >= threshold(n) in BOTH block_event and iid modes",
+   "thresholds": {"100": 0.999, "200": 0.995, "400": 0.975},
+   "alpha_spending": "one-sided alpha per look {0.001, 0.005, 0.025}, union bound 0.031 <= 0.05 per arm; conservative under positive correlation of sequential looks; O'Brien-Fleming-shaped (early promotion demands near-certainty because MDE(100)=6.18m)"
+  },
+  "G2_noise_floor": "point delta >= within-family MDE at that n (6.183 / 4.372 / 3.091 milli)",
+  "G3_no_bucket_catastrophe": "referee.bucketed(frame_post0728, p_arm, p_ref=p_v6): no bucket with n>=100 worse by >= 4.0 milli, none with 30 <= n < 100 worse by >= 8.0 milli (v8 preregistered G3 bars reused verbatim; n<30 exempt)",
+  "G4_team_bias": "referee.per_team_bias (min_n 10 at n in {100,200}, 15 at 400): arm max_abs_bias <= v6 max_abs_bias + 0.02 (2pp tolerance = ~+1.25 paired SE; arithmetic in preregister.design.md section 5)",
+  "G5_ordering": "if >= 2 arms pass at the same checkpoint, promote the MOST CONSERVATIVE passer only (ladder order, anti-winner's-curse)",
+  "verdict": "PROMOTE iff G1 and G2 and G3 and G4 (and G5 selects the arm); promotion means promotion within the lab's promotion flow ONLY — nothing on the public site regardless (standing law), and VCTMM remains hands-off"
+ },
+ "kill_rule": {
+  "rule": "at any checkpoint, an arm whose block_event 95% CI has ci_hi < 0 is KILLED: never promotable in v9; it continues to be scored and reported through n=400 for the record",
+  "error_arithmetic": "per-arm worst-case false-kill 3 x 0.025 = 7.5%; acceptable because a false kill leaves v6 shipping (the safe direction)"
+ },
+ "termination": {
+  "no_promotion_by_400": "v9 ends in NO SHIP; any revival requires a new preregistered cycle on NEW prospective data (never a re-test on the same 400)",
+  "early_promotion": "a promotion at n in {100,200} does not end scoring; the remaining checkpoints are still evaluated and reported (the promoted arm can still be killed by the kill rule at a later checkpoint, which retracts the promotion)"
+ },
+ "integrity": {
+  "one_writer": "the evaluator owns stats/v9_prospective_* result artifacts; this protocol file is owned by agent:v9-design and is read-only for everyone else",
+  "journal": "every checkpoint: log the scored-series ledger (match_ids, dates, dropped count) to v9/logs/ before computing any delta",
+  "no_peeking": "computing or displaying any post-07/28 aggregate between checkpoints is a violation; per-series predictions may be generated and stored without aggregation",
+  "market_data": "never a fitting target, never a selection signal (v8 standing rule 9)"
+ }
+}
