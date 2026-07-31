@@ -8,3 +8,4 @@ __pycache__/
 # Derived cache: recent-records precompute, regenerated on demand + keyed on
 # data mtimes (which differ per checkout, so committing it gives no benefit).
 data/recent_records.json
+testing_lab/v8/data/vctmm_live.db
