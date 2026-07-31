@@ -237,8 +237,11 @@ PAGE_HTML = """
   .top-nav { padding:32px 32px 0; position:relative; z-index:1; }
   .home-logo { height:80px; width:auto; display:block; opacity:.85; transition:opacity .2s; }
   .home-logo:hover { opacity:1; }
-  /* Column-anchored + room-gated (see AspasGreatestPrime.py note). */
-  .toc { position:fixed; top:32px; left:calc(50% + 450px); right:auto; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; width:max-content; max-width:min(240px, calc(50vw - 450px - 20px)); }
+  /* Anchored at the viewport's right edge, but its width is clamped to the
+     space actually available beside the centered 860px article
+     (50vw - 430 - 32 - 20 gutter), so at any resolution/zoom it narrows in
+     place rather than ever reaching the text. Hidden when no room remains. */
+  .toc { position:fixed; top:32px; right:32px; background:white; border-radius:16px; padding:20px 24px; box-shadow:0 4px 24px #0000000f; display:flex; flex-direction:column; gap:6px; z-index:100; width:max-content; max-width:min(240px, calc(50vw - 482px)); }
   .toc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.77rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
   .toc a { font-size:.78rem; color:var(--soft); text-decoration:none; font-weight:400; transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
