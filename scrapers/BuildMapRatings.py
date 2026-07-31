@@ -41,6 +41,15 @@ OUT_PATH = os.path.join(DATA_DIR, 'map_ratings.json')
 INTL_EVENTS = {e['id'] for e in ALL_EVENTS
                if 'International' in (e.get('regions') or {})}
 
+
+def _is_champions_event(eid):
+    """The year-end Champions is exactly "YYYY_champions". Substring tests
+    would also catch off-season/qualifier ids added in the 2026-07-28 corpus
+    backfill (2025_super_champions_cup, 2023_china_champions_qual) and hand
+    them the Champions prestige multiplier."""
+    import re as _re
+    return bool(_re.fullmatch(r"\d{4}_champions", eid or ""))
+
 # VCT franchised-era regional assignments (org abbreviation → league region)
 TEAM_REGIONS = {
     # EMEA
@@ -590,7 +599,7 @@ def massey_ratings(games, lambda_decay, ref_date, min_games=0):
         if g['winner'] not in idx or g['loser'] not in idx:
             continue
         is_intl = g.get('event_id') in INTL_EVENTS
-        is_champions = 'champions' in g.get('event_id', '')
+        is_champions = _is_champions_event(g.get('event_id', ''))
         # Effective age per team — roster-intact teams age slower, so their
         # old games stay relevant. Across-boundary continuity also still
         # applies as a hard penalty on roster turnover.
@@ -1120,7 +1129,7 @@ def _compute_intl_weights(games, lam, ref_date):
     for g in games:
         if g.get('event_id') not in INTL_EVENTS:
             continue
-        is_champions = 'champions' in g.get('event_id', '')
+        is_champions = _is_champions_event(g.get('event_id', ''))
         eff_w = _effective_weeks_ago(g['winner'], g['date'], ref_date)
         eff_l = _effective_weeks_ago(g['loser'],  g['date'], ref_date)
         base_w = math.sqrt(math.exp(-lam * eff_w) * math.exp(-lam * eff_l))
@@ -1184,7 +1193,7 @@ def _compute_long_intl_weights(games, ref_date, anchor_hl_weeks=CN_ANCHOR_HL_WEE
     for g in games:
         if g.get('event_id') not in INTL_EVENTS:
             continue
-        is_champions = 'champions' in g.get('event_id', '')
+        is_champions = _is_champions_event(g.get('event_id', ''))
         eff_w = _effective_weeks_ago(g['winner'], g['date'], ref_date)
         eff_l = _effective_weeks_ago(g['loser'],  g['date'], ref_date)
         base_w = math.sqrt(math.exp(-lam_long * eff_w) * math.exp(-lam_long * eff_l))

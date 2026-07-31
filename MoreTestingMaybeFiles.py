@@ -27,6 +27,158 @@ OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "data", "headshots.json")
 # matches for every live event automatically.  To onboard a brand-new event, add one
 # entry below with the correct VLR IDs and dates; no other code changes are needed.
 ALL_EVENTS = [
+    # ── EWC-class events (added 2026-07-22) ──────────────────────────
+    # ratings_only: feed BenPom team ratings but hidden from all player-facing
+    # UIs (leaderboards, dropdowns) — same treatment as CN-only events.
+    # vct_only: ScrapeMatchData keeps only matches where BOTH teams are known
+    # VCT orgs (these events include tier-2 guests we don't rate).
+    # NOTE: deliberately NOT tagged "International" — that key would pull them
+    # into INTL_EVENTS (CN-shrinkage intl weights), which is untested for
+    # non-VCT events. All are past events; live-scrape never triggers on them.
+    # The four regional EWC qualifiers ran the same window as one qualifying
+    # circuit, so they're modelled as ONE multi-region event (like Stage 2) —
+    # not four single-region ones. Merged 2026-07-28; the per-region CSVs were
+    # concatenated into data/{,maps/,series/}2026_ewc_qual.csv (no overlapping
+    # rows, so every game still rates exactly once and ratings are unchanged).
+    {"id": "2026_ewc_qual", "label": "2026 EWC Qualifiers",
+     "year": 2026, "start": "2026-05-16", "end": "2026-06-01",
+     "ratings_only": True, "vct_only": True,
+     "regions": {
+         "Americas": "https://www.vlr.gg/event/stats/2953/esports-world-cup-2026-americas-qualifier",
+         "EMEA":     "https://www.vlr.gg/event/stats/2954/esports-world-cup-2026-emea-qualifier",
+         "Pacific":  "https://www.vlr.gg/event/stats/2955/esports-world-cup-2026-pacific-qualifier",
+         "CN":       "https://www.vlr.gg/event/stats/2956/esports-world-cup-2026-china-qualifier"}},
+    {"id": "2026_china_evo_2", "label": "2026 China Evolution Series Act 2",
+     "year": 2026, "start": "2026-05-21", "end": "2026-05-31",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2988/china-evolution-series-2026-act-2"}},
+    {"id": "2026_ewc", "label": "2026 Esports World Cup",
+     "year": 2026, "start": "2026-07-02", "end": "2026-07-12",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2952/esports-world-cup-2026"}},
+    # ── v8 corpus backfill (added 2026-07-28, agent:corpus) ──────────
+    # Same treatment as the EWC-class block above: ratings_only + vct_only,
+    # NOT International-tagged. All past events — live-scrape never triggers.
+    # Decisions + provenance: testing_lab/v8/stats/corpus_diff.json.
+    # NOTE on the 2025 EWC pair: VLR models the 2025 regional qualifiers as
+    # series STAGES inside event 2449 (unlike 2026's separate events), so
+    # 2025_ewc and 2025_ewc_qual share vlr id 2449. The maps/series CSVs were
+    # split by VLR series_id (main: playoffs 4960 + group stage 4758; quals:
+    # EMEA 4759 / Americas 4760 / Pacific-x-ACL 4757) and are DISJOINT — no
+    # map is rated twice. Do NOT re-scrape either entry with ScrapeMatchData
+    # (its match-list fetch is unfiltered and would conflate the two); the
+    # ?series_id= params below only scope the event-stats pages.
+    {"id": "2025_ewc", "label": "2025 Esports World Cup",
+     "year": 2025, "start": "2025-07-08", "end": "2025-07-13",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2449/esports-world-cup-2025"}},
+    {"id": "2025_ewc_qual", "label": "2025 EWC Qualifiers",
+     "year": 2025, "start": "2025-05-16", "end": "2025-05-26",
+     "ratings_only": True, "vct_only": True,
+     "regions": {
+         "Americas": "https://www.vlr.gg/event/stats/2449/esports-world-cup-2025?series_id=4760",
+         "EMEA":     "https://www.vlr.gg/event/stats/2449/esports-world-cup-2025?series_id=4759",
+         "Pacific":  "https://www.vlr.gg/event/stats/2449/esports-world-cup-2025?series_id=4757"}},
+    {"id": "2025_china_evo_2", "label": "2025 China Evolution Series Act 2",
+     # end = last match date on VLR (485380 played May 12; the archive's
+     # "May 8-10" range undershoots by two days)
+     "year": 2025, "start": "2025-05-08", "end": "2025-05-12",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2450/china-evolution-series-act-2-x-asian-champions-league"}},
+    {"id": "2023_lcq", "label": "2023 Last Chance Qualifiers",
+     "year": 2023, "start": "2023-07-15", "end": "2023-07-23",
+     "ratings_only": True, "vct_only": True,
+     "regions": {
+         "Americas": "https://www.vlr.gg/event/stats/1658/champions-tour-2023-americas-last-chance-qualifier",
+         "EMEA":     "https://www.vlr.gg/event/stats/1659/champions-tour-2023-emea-last-chance-qualifier",
+         "Pacific":  "https://www.vlr.gg/event/stats/1660/champions-tour-2023-pacific-last-chance-qualifier"}},
+    {"id": "2023_china_champions_qual", "label": "2023 Champions China Qualifier",
+     "year": 2023, "start": "2023-06-01", "end": "2023-07-16",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/1664/champions-tour-2023-champions-china-qualifier"}},
+    {"id": "2023_china_evo_1", "label": "2023 China Evolution Series Act 1",
+     "year": 2023, "start": "2023-09-07", "end": "2023-10-01",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/1747/china-evolution-series-act-1-variation"}},
+    {"id": "2023_china_evo_3", "label": "2023 China Evolution Series Act 3",
+     "year": 2023, "start": "2023-11-02", "end": "2023-11-26",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/1880/china-evolution-series-act-3-heritability"}},
+    {"id": "2023_rbhg", "label": "2023 Red Bull Home Ground #4",
+     "year": 2023, "start": "2023-09-11", "end": "2023-11-06",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/1752/red-bull-home-ground-4"}},
+    {"id": "2023_ten_global", "label": "2023 TEN Global Invitational",
+     "year": 2023, "start": "2023-10-07", "end": "2023-10-08",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/1807/ten-global-invitational-2023"}},
+    {"id": "2023_convergence", "label": "2023 Convergence",
+     "year": 2023, "start": "2023-12-14", "end": "2023-12-17",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/1911/convergence-2023"}},
+    {"id": "2024_fgc_inv", "label": "2024 FGC Invitational",
+     "year": 2024, "start": "2024-10-30", "end": "2024-11-10",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2234/fgc-invitational-2024"}},
+    {"id": "2024_ten_asia", "label": "2024 TEN Valorant Asia Invitational",
+     "year": 2024, "start": "2024-10-26", "end": "2024-10-27",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2219/ten-valorant-asia-invitational"}},
+    {"id": "2024_rbhg", "label": "2024 Red Bull Home Ground #5",
+     # start = first match on the event's own VLR match list (its Sep-Oct
+     # qualifier phase lives under the main event id, unlike the archive's
+     # "Nov 20-23" main-stage-only date range)
+     "year": 2024, "start": "2024-09-29", "end": "2024-11-23",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2171/red-bull-home-ground-5"}},
+    {"id": "2024_radiant_asia", "label": "2024 Valorant Radiant Asia Invitational",
+     "year": 2024, "start": "2024-11-21", "end": "2024-12-01",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2228/valorant-radiant-asia-invitational"}},
+    {"id": "2024_shanghai_masters", "label": "2024 Shanghai Esports Masters",
+     "year": 2024, "start": "2024-12-06", "end": "2024-12-07",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2265/shanghai-esports-masters-2024"}},
+    {"id": "2025_china_evo_1", "label": "2025 China Evolution Series Act 1",
+     "year": 2025, "start": "2025-02-08", "end": "2025-02-16",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2339/china-evolution-series-act-1"}},
+    {"id": "2025_acl", "label": "2025 Asian Champions League",
+     "year": 2025, "start": "2025-05-14", "end": "2025-05-25",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2402/hero-esports-asian-champions-league-2025"}},
+    {"id": "2025_china_evo_3", "label": "2025 China Evolution Series Act 3",
+     "year": 2025, "start": "2025-08-28", "end": "2025-09-07",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2590/china-evolution-series-act-3"}},
+    {"id": "2025_ten_global", "label": "2025 TEN Global Invitational",
+     "year": 2025, "start": "2025-11-07", "end": "2025-11-09",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2667/ten-global-invitational-2025"}},
+    {"id": "2025_china_evo_epilogue", "label": "2025 China Evolution Series Epilogue",
+     "year": 2025, "start": "2025-11-11", "end": "2025-11-16",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2720/china-evolution-series-epilogue"}},
+    {"id": "2025_rbhg", "label": "2025 Red Bull Home Ground",
+     "year": 2025, "start": "2025-11-13", "end": "2025-11-16",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2602/red-bull-home-ground-2025"}},
+    {"id": "2025_super_champions_cup", "label": "2025 China Esports Festival Super Champions Cup",
+     "year": 2025, "start": "2025-11-28", "end": "2025-11-30",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2735/china-esports-festival-super-champions-cup"}},
+    {"id": "2025_shanghai_masters", "label": "2025 Shanghai Esports Masters",
+     "year": 2025, "start": "2025-12-03", "end": "2025-12-05",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2734/shanghai-esports-masters-2025"}},
+    {"id": "2025_radiant_intl", "label": "2025 Valorant Radiant International Invitational",
+     "year": 2025, "start": "2025-12-17", "end": "2025-12-21",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2740/valorant-radiant-international-invitational"}},
+    {"id": "2026_china_evo_1", "label": "2026 China Evolution Series Act 1",
+     "year": 2026, "start": "2026-03-16", "end": "2026-03-22",
+     "ratings_only": True, "vct_only": True,
+     "regions": {"CN": "https://www.vlr.gg/event/stats/2894/china-evolution-series-2026-act-1"}},
     # ── 2026 ──────────────────────────────────────────────────────────
     {
         "id": "2026_champions",
