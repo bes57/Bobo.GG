@@ -6427,6 +6427,8 @@ def _event_bands_for_year(year):
             start = min(start, cn[0])
             end   = max(end,   cn[1])
         label = e['label'].replace(f"{year_int} ", "", 1)
+        if e['id'] in ('2025_ewc', '2026_ewc'):
+            label = 'EWC'
         bands.append({
             "id":    e['id'],
             "label": label,
@@ -7043,7 +7045,7 @@ MHUB_EVENT_BANDS = [
     {"id": "santiago",  "label": "Masters Santiago", "start": "2026-02-28", "end": "2026-03-15"},
     {"id": "stage1",    "label": "Stage 1",          "start": "2026-04-01", "end": "2026-05-25"},
     {"id": "london",    "label": "Masters London",   "start": "2026-06-05", "end": "2026-06-21"},
-    {"id": "ewc",       "label": "Esports World Cup", "start": "2026-07-02", "end": "2026-07-12"},
+    {"id": "ewc",       "label": "EWC",               "start": "2026-07-02", "end": "2026-07-12"},
     {"id": "stage2",    "label": "Stage 2",          "start": "2026-07-15", "end": "2026-09-06"},
     {"id": "champions", "label": "Champions",        "start": "2026-09-24", "end": "2026-10-18"},
 ]

@@ -1006,11 +1006,11 @@ ALPHA_HTML = """
   .rec-tlogo{height:15px;width:auto;object-fit:contain;flex:0 0 auto}
   .rec-tinit{height:15px;min-width:15px;padding:0 3px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800;color:#fff;flex:0 0 auto}
   .rec-desc{font-size:.74rem;font-weight:700;color:#7c4dd6;margin-top:2px;line-height:1.3}
-  .rec-foot{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:4px;font-size:.7rem;color:var(--soft);font-weight:600}
+  .rec-foot{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin-top:4px}
   .rec-foot .rec-vs{display:inline-flex;align-items:center;gap:4px}
   .rec-foot .rec-vs img{height:13px;width:auto}
   .rec-date{color:var(--soft);font-size:.68rem;font-weight:600;white-space:nowrap}
-  .rec-ev{color:#9a93a6}
+  .rec-ev{color:#9a93a6;white-space:nowrap}
   .rec-map{background:#f0ecf4;border-radius:99px;padding:1px 8px;color:var(--soft)}
   .rec-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.32rem;color:var(--ink);flex:0 0 auto;padding-left:6px}
   .pl-stat{display:flex;align-items:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:.82rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none;padding:0 4px 9px;border-bottom:1px solid var(--line);margin-bottom:5px;transition:color .14s}
@@ -1510,15 +1510,15 @@ function recCard(r){
   var pa={headshot:r.headshot,org:r.org,name:r.player};
   var vs=r.opp?'<span class="rec-vs">vs '+logoOrInit(r.opp,'rec-tlogo','rec-tinit')+esc(r.opp)+'</span>':'';
   var mp=r.map_name?'<span class="rec-map">'+esc(r.map_name)+'</span>':'';
-  var ev=r.event?'<span class="rec-ev">'+esc(r.event)+'</span>':'';
-  var dt=r.date?'<span class="rec-date">'+esc(shortDate(r.date))+'</span>':'';
+  var ev=r.event?'<span class="rec-ev">'+esc(r.event)+(r.date?' &middot; '+esc(shortDate(r.date)):'')+'</span>'
+       :(r.date?'<span class="rec-ev">'+esc(shortDate(r.date))+'</span>':'');
   return '<a class="rec-card" href="'+esc(recHref(r))+'" target="_blank" rel="noopener" title="'+esc(r.player)+' — '+esc(r.desc)+'">'
     +'<span class="rec-rankbadge">#'+r.rank+'</span>'
     +avatar(pa,'rec-av','rec-av-ph')
     +'<span class="rec-info">'
       +'<span class="rec-name">'+esc(r.player)+(r.org?logoOrInit(r.org,'rec-tlogo','rec-tinit'):'')+'</span>'
       +'<span class="rec-desc">'+esc(r.desc)+'</span>'
-      +'<span class="rec-foot">'+vs+ev+dt+mp+'</span>'
+      +'<span class="rec-foot">'+vs+ev+mp+'</span>'
     +'</span>'
     +'<span class="rec-val">'+esc(r.value)+'</span>'
   +'</a>';}
