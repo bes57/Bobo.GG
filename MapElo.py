@@ -1709,7 +1709,12 @@ MAPELO_HOME_HTML = """
   .yr-tick.active { background:var(--ink); border-color:var(--ink); transform:translate(-50%,-50%) scale(1.4); }
   .yr-tick:hover { transform:translate(-50%,-50%) scale(1.3); }
   .yr-knob { position:absolute; top:50%; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,#5a2a7a,#9a4ab4); transform:translate(-50%,-50%); box-shadow:0 4px 12px #5a2a7a55, 0 0 0 4px white; transition:left .35s cubic-bezier(.5,1.6,.4,1); pointer-events:none; }
-  .yr-labels { display:flex; justify-content:space-between; font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; padding:0 4px; }
+  /* Labels share the track's coordinate system: each span is absolutely
+     positioned at the same left%% as its tick and centered under it (they
+     were a space-between flex row before — endpoint labels edge-aligned and
+     interior ones drifting off their dots). */
+  .yr-labels { position:relative; height:16px; font-family:'Plus Jakarta Sans',sans-serif; font-size:.65rem; font-weight:800; color:var(--soft); margin-top:8px; }
+  .yr-labels span { position:absolute; transform:translateX(-50%); white-space:nowrap; }
   .yr-labels span { cursor:pointer; padding:2px 4px; transition:color .15s; }
   .yr-labels span.active { color:var(--ink); }
   .yr-labels span:hover { color:var(--ink); }
@@ -2089,10 +2094,10 @@ MAPELO_HOME_HTML = """
             <div class="yr-knob" id="yr-knob" style="left:66.66%"></div>
           </div>
           <div class="yr-labels">
-            <span data-year="2023">2023</span>
-            <span data-year="2024">2024</span>
-            <span class="active" data-year="2025">2025</span>
-            <span data-year="2026">2026</span>
+            <span data-year="2023" style="left:0%">2023</span>
+            <span data-year="2024" style="left:33.33%">2024</span>
+            <span class="active" data-year="2025" style="left:66.66%">2025</span>
+            <span data-year="2026" style="left:100%">2026</span>
           </div>
         </div>
       </div>
@@ -6390,6 +6395,8 @@ def _event_bands_for_year(year):
     for e in ALL_EVENTS:
         if e.get('year') != year_int:
             continue
+        if e.get('ratings_only'):
+            continue  # EWC-class/off-season: feeds ratings, hidden from player UIs
         if list((e.get('regions') or {}).keys()) != ['CN']:
             continue
         parent_id = e['id'].replace('_china_', '_')
@@ -6402,6 +6409,8 @@ def _event_bands_for_year(year):
     for e in ALL_EVENTS:
         if e.get('year') != year_int:
             continue
+        if e.get('ratings_only'):
+            continue  # EWC-class/off-season: not part of the season ribbon
         if list((e.get('regions') or {}).keys()) == ['CN']:
             continue
         start, end = _span_for(e)
