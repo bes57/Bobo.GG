@@ -1073,6 +1073,160 @@ match_id,map_num,map_name,org,pistol_won,eco_n,eco_won,semi_eco_n,semi_eco_won,s
 220454,132736,PearlPICK,PRX,0,3,0,0,0,12,5,4,1,2023-06-23,Champions Tour 2023: Masters Tokyo
 220454,132737,Ascent,EG,1,3,1,3,2,2,1,13,9,2023-06-23,Champions Tour 2023: Masters Tokyo
 220454,132737,Ascent,PRX,1,3,1,0,0,7,2,11,5,2023-06-23,Champions Tour 2023: Masters Tokyo
+221178,133131,SplitPICK,NOVA,1,3,1,3,1,3,3,11,2,2023-06-03,Champions Tour 2023: Champions China Qualifier
+221178,133131,SplitPICK,TYL,1,3,1,1,1,2,2,14,9,2023-06-03,Champions Tour 2023: Champions China Qualifier
+221178,133132,BindPICK,NOVA,0,4,0,1,0,2,1,11,4,2023-06-03,Champions Tour 2023: Champions China Qualifier
+221178,133132,BindPICK,TYL,2,2,2,0,0,4,4,12,7,2023-06-03,Champions Tour 2023: Champions China Qualifier
+221843,133538,BindPICK,DRG,2,2,2,2,0,8,2,8,3,2023-06-06,Champions Tour 2023: Champions China Qualifier
+221843,133538,BindPICK,TYL,0,4,1,0,0,4,3,12,9,2023-06-06,Champions Tour 2023: Champions China Qualifier
+221843,133539,AscentPICK,DRG,2,2,2,2,0,9,3,9,4,2023-06-06,Champions Tour 2023: Champions China Qualifier
+221843,133539,AscentPICK,TYL,0,4,0,1,1,3,2,14,10,2023-06-06,Champions Tour 2023: Champions China Qualifier
+232729,134548,BindPICK,MIBR,1,3,1,2,0,5,2,10,4,2023-07-15,Champions Tour 2023: Americas Last Chance Qualifier
+232729,134548,BindPICK,KRÜ,1,3,1,0,0,3,3,14,9,2023-07-15,Champions Tour 2023: Americas Last Chance Qualifier
+232729,134549,LotusPICK,MIBR,0,4,0,2,0,5,3,10,5,2023-07-15,Champions Tour 2023: Americas Last Chance Qualifier
+232729,134549,LotusPICK,KRÜ,2,2,2,2,1,4,2,13,8,2023-07-15,Champions Tour 2023: Americas Last Chance Qualifier
+232730,134551,PearlPICK,SEN,1,3,1,1,1,6,3,16,7,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232730,134551,PearlPICK,100T,1,4,1,1,0,8,4,13,9,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232730,134552,SplitPICK,SEN,1,2,1,1,1,4,2,13,9,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232730,134552,SplitPICK,100T,1,4,1,2,0,4,0,10,6,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232730,134553,Bind,SEN,1,3,1,0,0,3,2,14,10,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232730,134553,Bind,100T,1,3,1,2,1,3,1,12,4,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232731,134554,SplitPICK,FUR,2,2,2,1,0,8,3,15,9,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232731,134554,SplitPICK,KRÜ,0,4,0,0,0,4,2,18,10,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232731,134555,AscentPICK,FUR,2,3,2,1,0,8,1,5,1,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232731,134555,AscentPICK,KRÜ,0,4,2,0,0,0,0,13,11,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232731,134556,Bind,FUR,0,5,1,1,1,4,1,15,8,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232731,134556,Bind,KRÜ,2,4,3,0,0,10,4,11,7,2023-07-16,Champions Tour 2023: Americas Last Chance Qualifier
+232732,134557,PearlPICK,C9,2,2,2,1,0,5,5,13,6,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232732,134557,PearlPICK,SEN,0,3,0,2,0,4,2,12,6,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232732,134558,FracturePICK,C9,0,4,0,2,1,5,1,7,3,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232732,134558,FracturePICK,SEN,2,2,2,0,0,6,6,10,5,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232732,134559,Split,C9,2,2,2,2,1,9,5,8,5,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232732,134559,Split,SEN,0,4,0,2,2,4,2,11,4,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232733,134560,SplitPICK,LEV,1,2,1,1,0,9,3,6,1,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232733,134560,SplitPICK,KRÜ,1,3,1,1,0,3,3,11,9,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232733,134561,LotusPICK,LEV,0,3,0,2,1,6,2,9,4,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232733,134561,LotusPICK,KRÜ,2,2,2,0,0,5,3,13,8,2023-07-17,Champions Tour 2023: Americas Last Chance Qualifier
+232734,134563,AscentPICK,C9,1,3,1,0,0,3,3,11,9,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232734,134563,AscentPICK,KRÜ,1,3,1,1,0,8,2,5,1,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232734,134564,PearlPICK,C9,1,3,1,3,0,5,1,6,2,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232734,134564,PearlPICK,KRÜ,1,3,1,0,0,3,2,11,10,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232734,134565,Haven,C9,2,2,2,1,0,7,2,9,2,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232734,134565,Haven,KRÜ,0,3,0,1,0,1,1,14,12,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134566,SplitPICK,KRÜ,1,3,2,0,0,2,2,13,9,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134566,SplitPICK,LEV,1,3,1,2,1,8,1,5,2,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134567,PearlPICK,KRÜ,1,3,1,1,0,4,0,13,7,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134567,PearlPICK,LEV,1,3,2,0,0,9,3,9,8,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134568,AscentPICK,KRÜ,1,3,1,1,0,1,1,14,11,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134568,AscentPICK,LEV,1,2,1,1,0,11,3,5,2,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134569,LotusPICK,KRÜ,1,3,1,2,1,3,3,15,8,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232735,134569,LotusPICK,LEV,1,3,1,0,0,14,7,6,2,2023-07-23,Champions Tour 2023: Americas Last Chance Qualifier
+232736,134571,FracturePICK,SEN,0,4,0,1,0,5,0,11,8,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232736,134571,FracturePICK,LEV,2,2,2,1,0,10,4,8,7,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232736,134572,SplitPICK,SEN,1,3,1,1,0,7,2,6,1,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232736,134572,SplitPICK,LEV,1,3,2,0,0,2,2,12,9,2023-07-18,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134574,LotusPICK,C9,2,2,2,0,0,6,4,12,7,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134574,LotusPICK,LEV,0,4,0,0,0,10,4,6,3,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134575,PearlPICK,C9,1,3,1,1,1,6,4,12,7,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134575,PearlPICK,LEV,1,3,1,1,0,7,5,11,3,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134576,SplitPICK,C9,1,3,1,3,0,6,4,12,6,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134576,SplitPICK,LEV,1,3,1,1,0,4,2,16,10,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134577,HavenPICK,C9,0,4,1,3,0,3,1,13,8,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134577,HavenPICK,LEV,2,3,2,1,0,7,1,12,10,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134578,Bind,C9,0,5,0,0,0,6,2,9,5,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+232737,134578,Bind,LEV,2,2,2,0,0,5,3,13,8,2023-07-22,Champions Tour 2023: Americas Last Chance Qualifier
+235363,135070,FracturePICK,TH,1,3,1,1,0,7,3,10,4,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235363,135070,FracturePICK,MKOI,1,3,1,1,0,9,6,8,6,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235363,135071,PearlPICK,TH,2,2,2,1,0,7,4,13,7,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235363,135071,PearlPICK,MKOI,0,4,0,0,0,9,4,10,6,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235363,135072,Haven,TH,0,4,0,1,1,6,3,8,2,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235363,135072,Haven,MKOI,2,2,2,0,0,7,6,10,5,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235364,135073,HavenPICK,BBL,0,3,0,2,0,9,5,12,9,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235364,135073,HavenPICK,KC,2,2,2,2,0,7,3,15,7,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235364,135074,LotusPICK,BBL,2,2,2,0,0,10,3,10,4,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235364,135074,LotusPICK,KC,0,3,0,2,0,2,2,15,11,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235364,135075,Bind,BBL,1,3,1,1,0,9,4,13,7,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235364,135075,Bind,KC,1,3,1,0,0,7,3,16,10,2023-07-19,Champions Tour 2023: EMEA Last Chance Qualifier
+235365,135076,SplitPICK,NAVI,0,4,0,1,0,7,4,7,2,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235365,135076,SplitPICK,MKOI,2,2,2,1,1,8,5,8,5,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235365,135077,LotusPICK,NAVI,0,4,0,0,0,7,2,5,1,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235365,135077,LotusPICK,MKOI,2,2,2,0,0,9,7,5,4,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235366,135079,PearlPICK,GIA,1,3,1,1,0,12,7,8,5,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235366,135079,PearlPICK,KC,1,3,1,2,0,11,6,8,4,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235366,135080,SplitPICK,GIA,2,2,2,1,0,5,3,10,8,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235366,135080,SplitPICK,KC,0,4,0,1,0,7,4,6,1,2023-07-20,Champions Tour 2023: EMEA Last Chance Qualifier
+235367,135082,HavenPICK,MKOI,1,3,1,0,0,12,6,11,5,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235367,135082,HavenPICK,GIA,1,3,1,0,0,8,6,15,7,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235367,135083,PearlPICK,MKOI,0,3,1,1,0,6,1,8,3,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235367,135083,PearlPICK,GIA,2,2,2,1,0,4,3,11,8,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235368,135085,BindPICK,GIA,1,3,1,3,1,4,3,14,8,2023-07-23,Champions Tour 2023: EMEA Last Chance Qualifier
+235368,135085,BindPICK,NAVI,1,3,1,1,0,9,6,11,4,2023-07-23,Champions Tour 2023: EMEA Last Chance Qualifier
+235368,135086,LotusPICK,GIA,1,3,1,1,1,5,4,11,7,2023-07-23,Champions Tour 2023: EMEA Last Chance Qualifier
+235368,135086,LotusPICK,NAVI,1,3,2,3,0,5,3,9,2,2023-07-23,Champions Tour 2023: EMEA Last Chance Qualifier
+235368,135087,HavenPICK,GIA,1,3,2,1,0,5,4,13,7,2023-07-23,Champions Tour 2023: EMEA Last Chance Qualifier
+235368,135087,HavenPICK,NAVI,1,3,1,1,0,6,1,12,7,2023-07-23,Champions Tour 2023: EMEA Last Chance Qualifier
+235371,135096,LotusPICK,NAVI,1,3,2,0,0,4,4,12,7,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235371,135096,LotusPICK,KC,1,3,1,1,0,9,3,6,2,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235371,135097,AscentPICK,NAVI,0,4,0,2,1,7,4,7,2,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235371,135097,AscentPICK,KC,2,2,2,1,0,6,4,11,7,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235371,135098,Pearl,NAVI,1,3,1,1,1,7,5,9,6,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235371,135098,Pearl,KC,1,2,1,2,1,9,3,7,2,2023-07-21,Champions Tour 2023: EMEA Last Chance Qualifier
+235372,135099,SplitPICK,MKOI,1,3,1,2,1,8,4,13,6,2023-07-22,Champions Tour 2023: EMEA Last Chance Qualifier
+235372,135099,SplitPICK,NAVI,1,3,1,0,0,7,5,16,8,2023-07-22,Champions Tour 2023: EMEA Last Chance Qualifier
+235372,135100,PearlPICK,MKOI,1,3,1,2,0,6,3,12,6,2023-07-22,Champions Tour 2023: EMEA Last Chance Qualifier
+235372,135100,PearlPICK,NAVI,1,3,1,1,0,4,1,15,11,2023-07-22,Champions Tour 2023: EMEA Last Chance Qualifier
+235372,135101,FracturePICK,MKOI,0,4,0,1,0,4,3,13,6,2023-07-22,Champions Tour 2023: EMEA Last Chance Qualifier
+235372,135101,FracturePICK,NAVI,2,2,2,1,0,6,3,13,8,2023-07-22,Champions Tour 2023: EMEA Last Chance Qualifier
+237266,135648,FracturePICK,TLN,2,2,2,1,0,6,5,11,6,2023-07-18,Champions Tour 2023: Pacific Last Chance Qualifier
+237266,135648,FracturePICK,DFM,0,4,0,1,1,4,1,11,5,2023-07-18,Champions Tour 2023: Pacific Last Chance Qualifier
+237266,135649,AscentPICK,TLN,1,3,1,0,0,5,4,13,8,2023-07-18,Champions Tour 2023: Pacific Last Chance Qualifier
+237266,135649,AscentPICK,DFM,1,2,1,1,0,7,2,11,5,2023-07-18,Champions Tour 2023: Pacific Last Chance Qualifier
+237267,135651,SplitPICK,RRQ,2,3,2,0,0,9,5,11,6,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237267,135651,SplitPICK,GE,0,3,0,1,1,8,3,11,6,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237267,135652,AscentPICK,RRQ,0,4,0,1,1,4,3,14,9,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237267,135652,AscentPICK,GE,2,3,2,1,0,8,5,11,3,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237268,135654,PearlPICK,GEN,1,3,1,1,0,10,5,10,5,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237268,135654,PearlPICK,TLN,1,3,1,1,0,3,3,17,9,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237268,135655,SplitPICK,GEN,1,4,1,0,0,7,4,12,8,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237268,135655,SplitPICK,TLN,1,3,2,2,0,5,2,13,6,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237268,135656,Haven,GEN,2,3,3,0,0,12,6,13,6,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237268,135656,Haven,TLN,0,3,0,3,1,5,1,17,11,2023-07-19,Champions Tour 2023: Pacific Last Chance Qualifier
+237269,135657,HavenPICK,ZETA,0,3,0,1,0,4,1,7,1,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237269,135657,HavenPICK,RRQ,2,2,2,0,0,3,3,10,8,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237269,135658,SplitPICK,ZETA,1,2,1,2,0,4,4,13,8,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237269,135658,SplitPICK,RRQ,1,3,1,1,0,10,4,7,3,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237269,135659,Ascent,ZETA,1,3,1,3,2,4,2,30,16,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237269,135659,Ascent,RRQ,1,3,1,0,0,13,6,24,12,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237270,135660,HavenPICK,TS,1,3,1,0,0,3,2,13,10,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237270,135660,HavenPICK,GEN,1,3,1,2,0,10,5,4,0,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237270,135661,AscentPICK,TS,2,2,2,1,1,7,4,11,6,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237270,135661,AscentPICK,GEN,0,4,1,1,0,9,3,7,4,2023-07-20,Champions Tour 2023: Pacific Last Chance Qualifier
+237271,135663,LotusPICK,ZETA,1,3,1,1,1,4,3,14,8,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237271,135663,LotusPICK,TS,1,3,1,3,0,3,2,13,6,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237271,135664,FracturePICK,ZETA,1,3,1,1,1,3,2,13,9,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237271,135664,FracturePICK,TS,1,3,1,2,1,6,4,9,1,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237272,135666,HavenPICK,RRQ,0,4,0,2,0,10,4,3,2,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237272,135666,HavenPICK,GEN,2,2,2,0,0,4,4,13,7,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237272,135667,LotusPICK,RRQ,2,2,2,0,0,6,5,7,6,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237272,135667,LotusPICK,GEN,0,3,0,0,0,10,1,2,1,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237272,135668,Ascent,RRQ,0,3,0,2,1,5,2,10,4,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237272,135668,Ascent,GEN,2,3,2,1,1,6,4,10,6,2023-07-21,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135669,HavenPICK,TS,1,3,1,2,0,4,3,14,6,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135669,HavenPICK,GEN,1,3,1,1,0,7,5,12,7,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135670,PearlPICK,TS,2,2,2,0,0,8,4,14,7,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135670,PearlPICK,GEN,0,4,0,1,1,6,1,13,9,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135671,AscentPICK,TS,2,2,2,0,0,4,4,9,7,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135671,AscentPICK,GEN,0,3,0,1,0,8,2,3,0,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135672,LotusPICK,TS,1,3,2,0,0,3,1,13,10,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237273,135672,LotusPICK,GEN,1,3,1,1,0,9,2,6,3,2023-07-22,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135674,FracturePICK,ZETA,1,3,2,0,0,3,1,20,11,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135674,FracturePICK,TS,1,3,1,1,0,7,2,15,9,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135675,AscentPICK,ZETA,0,4,0,0,0,7,2,11,7,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135675,AscentPICK,TS,2,2,2,1,0,7,4,12,7,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135676,SplitPICK,ZETA,1,4,1,0,0,3,3,13,9,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135676,SplitPICK,TS,1,3,1,0,0,5,1,12,5,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135677,LotusPICK,ZETA,2,2,2,0,0,5,4,12,7,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
+237274,135677,LotusPICK,TS,0,4,0,2,0,2,0,11,6,2023-07-23,Champions Tour 2023: Pacific Last Chance Qualifier
 247075,137350,SplitPICK,PRX,0,4,0,0,0,3,3,13,10,2023-08-09,Valorant Champions 2023
 247075,137350,SplitPICK,KRÜ,2,2,2,3,0,4,2,11,3,2023-08-09,Valorant Champions 2023
 247075,137351,PearlPICK,PRX,1,3,1,0,0,3,3,15,9,2023-08-09,Valorant Champions 2023
@@ -1239,6 +1393,100 @@ match_id,map_num,map_name,org,pistol_won,eco_n,eco_won,semi_eco_n,semi_eco_won,s
 248283,137662,SplitPICK,LOUD,2,3,2,2,1,6,3,9,7,2023-08-25,Valorant Champions 2023
 248283,137663,Bind,EG,1,3,2,0,0,4,3,14,8,2023-08-25,Valorant Champions 2023
 248283,137663,Bind,LOUD,1,3,1,2,0,6,4,10,3,2023-08-25,Valorant Champions 2023
+278589,143487,Breeze,KRX,2,2,2,2,1,5,3,17,6,2023-10-07,TEN Global Invitational 2023
+278589,143487,Breeze,EDG,0,4,1,0,0,8,5,14,8,2023-10-07,TEN Global Invitational 2023
+278590,143488,Sunset,T1,1,3,1,1,0,5,2,14,10,2023-10-07,TEN Global Invitational 2023
+278590,143488,Sunset,C9,1,3,1,0,0,8,3,12,6,2023-10-07,TEN Global Invitational 2023
+278593,143489,Haven,T1,0,4,1,2,0,4,2,12,6,2023-10-07,TEN Global Invitational 2023
+278593,143489,Haven,EDG,2,2,2,2,0,5,3,13,8,2023-10-07,TEN Global Invitational 2023
+278594,143490,Lotus,KRX,0,4,1,1,0,4,2,15,8,2023-10-07,TEN Global Invitational 2023
+278594,143490,Lotus,C9,2,3,2,1,0,9,4,11,7,2023-10-07,TEN Global Invitational 2023
+278595,143491,Lotus,KRX,2,2,2,0,0,4,2,14,9,2023-10-07,TEN Global Invitational 2023
+278595,143491,Lotus,T1,0,3,0,2,0,4,2,11,5,2023-10-07,TEN Global Invitational 2023
+278596,143492,Sunset,C9,0,3,0,0,0,10,4,11,9,2023-10-07,TEN Global Invitational 2023
+278596,143492,Sunset,EDG,2,2,2,0,0,7,4,15,5,2023-10-07,TEN Global Invitational 2023
+278614,143493,Split,KRX,1,2,1,1,0,8,6,11,6,2023-10-08,TEN Global Invitational 2023
+278614,143493,Split,T1,1,3,1,1,0,6,2,12,6,2023-10-08,TEN Global Invitational 2023
+278615,143494,LotusPICK,EDG,1,3,1,0,0,11,3,16,12,2023-10-08,TEN Global Invitational 2023
+278615,143494,LotusPICK,KRX,1,3,1,1,0,10,6,16,7,2023-10-08,TEN Global Invitational 2023
+278615,143495,BreezePICK,EDG,0,3,0,2,1,10,5,7,3,2023-10-08,TEN Global Invitational 2023
+278615,143495,BreezePICK,KRX,2,2,2,0,0,6,5,14,6,2023-10-08,TEN Global Invitational 2023
+278615,143496,Split,EDG,1,3,1,0,0,12,2,2,1,2023-10-08,TEN Global Invitational 2023
+278615,143496,Split,KRX,1,3,1,0,0,3,3,11,9,2023-10-08,TEN Global Invitational 2023
+278616,143497,SplitPICK,C9,2,2,2,2,0,11,7,11,3,2023-10-08,TEN Global Invitational 2023
+278616,143497,SplitPICK,KRX,0,4,0,0,0,1,0,21,14,2023-10-08,TEN Global Invitational 2023
+278616,143498,AscentPICK,C9,2,2,2,0,0,5,5,8,6,2023-10-08,TEN Global Invitational 2023
+278616,143498,AscentPICK,KRX,0,3,0,3,1,5,1,4,0,2023-10-08,TEN Global Invitational 2023
+278616,143499,Lotus,C9,2,2,2,2,0,10,4,8,7,2023-10-08,TEN Global Invitational 2023
+278616,143499,Lotus,KRX,0,4,1,1,0,6,1,11,7,2023-10-08,TEN Global Invitational 2023
+279601,144297,Ascent,FUT,2,2,2,1,1,5,3,11,7,2023-10-14,Red Bull Home Ground #4
+279601,144297,Ascent,TH,0,5,0,0,0,5,2,9,4,2023-10-14,Red Bull Home Ground #4
+283088,147359,Haven,C9,0,3,0,0,0,8,5,13,6,2023-11-02,Red Bull Home Ground #4
+283088,147359,Haven,ZETA,2,3,2,2,1,5,3,14,7,2023-11-02,Red Bull Home Ground #4
+283089,147360,Haven,FUT,2,2,2,0,0,3,3,11,8,2023-11-03,Red Bull Home Ground #4
+283089,147360,Haven,100T,0,3,0,3,2,4,0,6,1,2023-11-03,Red Bull Home Ground #4
+283093,147364,Lotus,FNC,1,2,1,1,0,5,4,10,8,2023-11-03,Red Bull Home Ground #4
+283093,147364,Lotus,ZETA,1,3,1,0,0,8,3,7,1,2023-11-03,Red Bull Home Ground #4
+283095,147366,Split,KRX,1,3,1,2,0,2,1,14,6,2023-11-03,Red Bull Home Ground #4
+283095,147366,Split,FUT,1,3,1,1,0,5,3,12,9,2023-11-03,Red Bull Home Ground #4
+283097,147367,AscentPICK,C9,2,2,2,1,0,10,4,8,2,2023-11-03,Red Bull Home Ground #4
+283097,147367,AscentPICK,ZETA,0,4,0,1,0,3,1,13,12,2023-11-03,Red Bull Home Ground #4
+283097,147368,BindPICK,C9,1,3,1,0,0,2,2,10,10,2023-11-03,Red Bull Home Ground #4
+283097,147368,BindPICK,ZETA,1,2,1,1,0,7,1,5,0,2023-11-03,Red Bull Home Ground #4
+283097,147369,Lotus,C9,2,2,2,0,0,8,5,10,6,2023-11-03,Red Bull Home Ground #4
+283097,147369,Lotus,ZETA,0,4,0,2,2,5,2,9,3,2023-11-03,Red Bull Home Ground #4
+283098,147370,LotusPICK,KRX,1,3,1,0,0,6,3,12,9,2023-11-04,Red Bull Home Ground #4
+283098,147370,LotusPICK,100T,1,3,1,1,1,7,2,10,4,2023-11-04,Red Bull Home Ground #4
+283098,147371,AscentPICK,KRX,0,4,0,1,0,6,4,13,9,2023-11-04,Red Bull Home Ground #4
+283098,147371,AscentPICK,100T,2,2,2,2,0,5,2,15,7,2023-11-04,Red Bull Home Ground #4
+283099,147373,SunsetPICK,FUT,1,3,1,2,0,8,2,4,1,2023-11-04,Red Bull Home Ground #4
+283099,147373,SunsetPICK,C9,1,2,1,0,0,7,7,8,5,2023-11-04,Red Bull Home Ground #4
+283099,147374,LotusPICK,FUT,1,3,1,0,0,10,6,9,6,2023-11-04,Red Bull Home Ground #4
+283099,147374,LotusPICK,C9,1,2,1,2,0,8,2,10,6,2023-11-04,Red Bull Home Ground #4
+283099,147375,Haven,FUT,0,4,0,2,2,5,2,12,6,2023-11-04,Red Bull Home Ground #4
+283099,147375,Haven,C9,2,2,2,0,0,10,6,11,5,2023-11-04,Red Bull Home Ground #4
+283100,147376,BreezePICK,FNC,1,3,1,0,0,5,5,8,7,2023-11-04,Red Bull Home Ground #4
+283100,147376,BreezePICK,KRX,1,3,1,0,0,7,2,6,0,2023-11-04,Red Bull Home Ground #4
+283100,147377,AscentPICK,FNC,2,2,2,0,0,5,4,10,7,2023-11-04,Red Bull Home Ground #4
+283100,147377,AscentPICK,KRX,0,4,0,1,0,7,2,5,2,2023-11-04,Red Bull Home Ground #4
+283101,147379,BindPICK,C9,0,3,0,1,0,7,4,9,3,2023-11-05,Red Bull Home Ground #4
+283101,147379,BindPICK,FNC,2,2,2,1,0,6,2,11,9,2023-11-05,Red Bull Home Ground #4
+283101,147380,BreezePICK,C9,2,2,2,0,0,8,4,12,7,2023-11-05,Red Bull Home Ground #4
+283101,147380,BreezePICK,FNC,0,4,0,0,0,10,5,8,4,2023-11-05,Red Bull Home Ground #4
+283101,147381,AscentPICK,C9,2,2,2,0,0,9,6,11,5,2023-11-05,Red Bull Home Ground #4
+283101,147381,AscentPICK,FNC,0,4,0,0,0,9,3,9,6,2023-11-05,Red Bull Home Ground #4
+283101,147382,LotusPICK,C9,0,2,0,1,0,10,4,8,4,2023-11-05,Red Bull Home Ground #4
+283101,147382,LotusPICK,FNC,2,2,2,3,1,8,4,8,6,2023-11-05,Red Bull Home Ground #4
+283101,147383,Haven,C9,1,2,1,3,0,10,3,3,1,2023-11-05,Red Bull Home Ground #4
+283101,147383,Haven,FNC,1,2,1,1,0,4,4,11,8,2023-11-05,Red Bull Home Ground #4
+289448,151606,SunsetPICK,GE,1,3,1,0,0,13,3,2,1,2023-12-14,Convergence 2023
+289448,151606,SunsetPICK,VIT,1,3,1,0,0,5,4,10,8,2023-12-14,Convergence 2023
+289448,151607,BreezePICK,GE,0,4,0,1,0,7,3,8,4,2023-12-14,Convergence 2023
+289448,151607,BreezePICK,VIT,2,2,2,1,0,9,5,8,6,2023-12-14,Convergence 2023
+289450,151612,BreezePICK,FUR,0,4,2,0,0,3,0,14,6,2023-12-15,Convergence 2023
+289450,151612,BreezePICK,VIT,2,2,2,2,0,5,2,12,9,2023-12-15,Convergence 2023
+289450,151613,LotusPICK,FUR,1,4,1,2,0,2,0,14,8,2023-12-15,Convergence 2023
+289450,151613,LotusPICK,VIT,1,3,2,1,0,10,4,8,7,2023-12-15,Convergence 2023
+289451,151615,HavenPICK,FUT,0,4,1,0,0,10,2,3,1,2023-12-16,Convergence 2023
+289451,151615,HavenPICK,GEN,2,2,2,2,2,3,2,10,7,2023-12-16,Convergence 2023
+289451,151616,AscentPICK,FUT,2,2,2,0,0,7,5,10,6,2023-12-16,Convergence 2023
+289451,151616,AscentPICK,GEN,0,4,0,2,1,4,0,9,5,2023-12-16,Convergence 2023
+289451,151617,Lotus,FUT,0,4,1,1,0,8,3,13,10,2023-12-16,Convergence 2023
+289451,151617,Lotus,GEN,2,3,2,2,1,7,2,14,7,2023-12-16,Convergence 2023
+289452,151618,SunsetPICK,GE,2,2,2,0,0,9,6,10,5,2023-12-16,Convergence 2023
+289452,151618,SunsetPICK,FUR,0,4,0,2,0,2,1,13,7,2023-12-16,Convergence 2023
+289452,151619,BreezePICK,GE,0,3,0,0,0,12,8,11,4,2023-12-16,Convergence 2023
+289452,151619,BreezePICK,FUR,2,3,2,1,0,6,2,16,10,2023-12-16,Convergence 2023
+289452,151620,Haven,GE,1,3,1,2,0,5,3,14,9,2023-12-16,Convergence 2023
+289452,151620,Haven,FUR,1,3,2,3,1,4,2,14,6,2023-12-16,Convergence 2023
+289453,151621,AscentPICK,VIT,2,2,2,1,0,9,3,12,8,2023-12-17,Convergence 2023
+289453,151621,AscentPICK,FUT,0,5,1,0,0,4,2,15,8,2023-12-17,Convergence 2023
+289453,151622,SunsetPICK,VIT,1,3,1,1,0,10,5,10,5,2023-12-17,Convergence 2023
+289453,151622,SunsetPICK,FUT,1,3,1,3,1,4,1,14,10,2023-12-17,Convergence 2023
+289453,151623,LotusPICK,VIT,2,2,2,2,0,10,2,10,7,2023-12-17,Convergence 2023
+289453,151623,LotusPICK,FUT,0,3,0,2,0,7,3,12,10,2023-12-17,Convergence 2023
+289453,151626,HavenPICK,VIT,0,4,0,2,0,6,3,9,5,2023-12-17,Convergence 2023
+289453,151626,HavenPICK,FUT,2,2,2,0,0,6,4,13,7,2023-12-17,Convergence 2023
 295605,153722,BreezePICK,NRG,0,4,0,0,0,4,4,15,9,2024-02-16,Champions Tour 2024: Americas Kickoff
 295605,153722,BreezePICK,FUR,2,2,2,2,0,9,5,10,3,2024-02-16,Champions Tour 2024: Americas Kickoff
 295605,153723,AscentPICK,NRG,1,3,1,2,1,2,2,14,9,2024-02-16,Champions Tour 2024: Americas Kickoff
@@ -2869,8 +3117,60 @@ match_id,map_num,map_name,org,pistol_won,eco_n,eco_won,semi_eco_n,semi_eco_won,s
 378836,180457,AbyssPICK,TH,0,4,0,3,1,3,0,12,8,2024-08-24,Valorant Champions 2024
 378836,180458,LotusPICK,LEV,1,3,1,1,0,6,1,6,1,2024-08-24,Valorant Champions 2024
 378836,180458,LotusPICK,TH,1,3,1,0,0,1,1,12,11,2024-08-24,Valorant Champions 2024
+408415,186274,LotusPICK,SEN,2,2,2,1,0,11,4,8,3,2024-09-29,Red Bull Home Ground #5
+408415,186274,LotusPICK,C9,0,4,0,0,0,6,3,12,10,2024-09-29,Red Bull Home Ground #5
+408415,186275,BindPICK,SEN,1,3,1,2,1,4,1,14,7,2024-09-29,Red Bull Home Ground #5
+408415,186275,BindPICK,C9,1,3,1,1,0,5,4,14,8,2024-09-29,Red Bull Home Ground #5
+414230,188578,Haven,RRQ,2,2,2,0,0,12,5,9,6,2024-10-18,Red Bull Home Ground #5
+414230,188578,Haven,DFM,0,4,0,2,1,7,2,10,7,2024-10-18,Red Bull Home Ground #5
+414231,188579,Sunset,TLN,1,3,1,3,0,5,3,13,9,2024-10-19,Red Bull Home Ground #5
+414231,188579,Sunset,RRQ,1,3,2,1,0,7,2,13,7,2024-10-19,Red Bull Home Ground #5
+414232,188580,Lotus,TLN,1,3,2,2,0,6,2,12,6,2024-10-19,Red Bull Home Ground #5
+414232,188580,Lotus,DFM,1,4,1,1,0,4,2,14,10,2024-10-19,Red Bull Home Ground #5
+414235,188582,Lotus,ZETA,1,3,1,1,0,3,2,13,10,2024-10-19,Red Bull Home Ground #5
+414235,188582,Lotus,T1,1,3,1,2,0,8,3,7,3,2024-10-19,Red Bull Home Ground #5
+414238,188584,AscentPICK,RRQ,0,4,0,0,0,5,0,7,3,2024-10-19,Red Bull Home Ground #5
+414238,188584,AscentPICK,T1,2,2,2,0,0,4,4,10,7,2024-10-19,Red Bull Home Ground #5
+414238,188585,IceboxPICK,RRQ,0,4,0,0,0,8,4,10,5,2024-10-19,Red Bull Home Ground #5
+414238,188585,IceboxPICK,T1,2,3,3,0,0,8,4,11,6,2024-10-19,Red Bull Home Ground #5
+414239,188587,AscentPICK,ZETA,2,2,2,2,1,7,1,9,3,2024-10-19,Red Bull Home Ground #5
+414239,188587,AscentPICK,DFM,0,4,1,0,0,6,5,10,7,2024-10-19,Red Bull Home Ground #5
+414239,188588,SunsetPICK,ZETA,0,4,0,0,0,2,2,13,11,2024-10-19,Red Bull Home Ground #5
+414239,188588,SunsetPICK,DFM,2,2,2,0,0,12,3,5,1,2024-10-19,Red Bull Home Ground #5
+414239,188589,Haven,ZETA,0,4,0,1,0,4,3,19,12,2024-10-19,Red Bull Home Ground #5
+414239,188589,Haven,DFM,2,2,2,0,0,13,5,13,6,2024-10-19,Red Bull Home Ground #5
+414241,188591,HavenPICK,T1,1,3,1,1,0,6,3,13,9,2024-10-20,Red Bull Home Ground #5
+414241,188591,HavenPICK,ZETA,1,3,1,1,0,8,4,11,5,2024-10-20,Red Bull Home Ground #5
+414241,188592,AscentPICK,T1,1,3,1,0,0,3,3,12,9,2024-10-20,Red Bull Home Ground #5
+414241,188592,AscentPICK,ZETA,1,3,1,3,1,5,2,7,1,2024-10-20,Red Bull Home Ground #5
+414241,188593,SunsetPICK,T1,1,3,1,2,0,9,4,6,2,2024-10-20,Red Bull Home Ground #5
+414241,188593,SunsetPICK,ZETA,1,2,1,1,1,3,3,14,8,2024-10-20,Red Bull Home Ground #5
+414241,188594,BindPICK,T1,1,3,1,0,0,3,3,10,9,2024-10-20,Red Bull Home Ground #5
+414241,188594,BindPICK,ZETA,1,2,1,3,0,7,1,4,1,2024-10-20,Red Bull Home Ground #5
+415852,189737,Ascent,GEN,2,3,2,1,1,3,1,13,9,2024-10-26,TEN Valorant Asia Invitational
+415852,189737,Ascent,FPX,0,4,1,2,2,6,0,8,4,2024-10-26,TEN Valorant Asia Invitational
+415853,189738,Ascent,KRX,0,4,1,1,0,4,2,17,11,2024-10-26,TEN Valorant Asia Invitational
+415853,189738,Ascent,FPX,2,3,2,1,1,6,2,16,7,2024-10-26,TEN Valorant Asia Invitational
+415854,189739,Haven,KRX,1,3,1,3,1,4,1,11,5,2024-10-26,TEN Valorant Asia Invitational
+415854,189739,Haven,TLN,1,2,1,2,2,3,1,14,9,2024-10-26,TEN Valorant Asia Invitational
+415855,189740,Bind,GEN,2,2,2,0,0,6,4,13,7,2024-10-26,TEN Valorant Asia Invitational
+415855,189740,Bind,TLN,0,4,0,0,0,5,3,12,5,2024-10-26,TEN Valorant Asia Invitational
+415856,189741,Ascent,GEN,1,3,1,2,1,8,4,11,5,2024-10-26,TEN Valorant Asia Invitational
+415856,189741,Ascent,KRX,1,3,1,2,0,6,3,13,9,2024-10-26,TEN Valorant Asia Invitational
+415857,189742,Haven,TLN,2,3,2,0,0,6,4,12,7,2024-10-26,TEN Valorant Asia Invitational
+415857,189742,Haven,FPX,0,4,0,1,1,2,1,14,6,2024-10-26,TEN Valorant Asia Invitational
 415858,189743,Abyss,KRX,1,3,1,1,0,2,1,12,11,2024-10-27,TEN Valorant Asia Invitational
 415858,189743,Abyss,FPX,1,3,1,1,0,8,1,6,3,2024-10-27,TEN Valorant Asia Invitational
+415859,189744,AscentPICK,TLN,2,3,2,0,0,3,3,11,8,2024-10-27,TEN Valorant Asia Invitational
+415859,189744,AscentPICK,KRX,0,3,0,2,0,5,3,7,1,2024-10-27,TEN Valorant Asia Invitational
+415859,189745,SunsetPICK,TLN,1,3,1,0,0,3,3,11,9,2024-10-27,TEN Valorant Asia Invitational
+415859,189745,SunsetPICK,KRX,1,3,1,2,0,6,1,6,2,2024-10-27,TEN Valorant Asia Invitational
+415860,189747,AbyssPICK,GEN,1,3,1,0,0,3,3,14,9,2024-10-27,TEN Valorant Asia Invitational
+415860,189747,AbyssPICK,TLN,1,3,1,1,0,6,2,10,4,2024-10-27,TEN Valorant Asia Invitational
+415860,189748,BindPICK,GEN,0,4,0,0,0,2,1,17,9,2024-10-27,TEN Valorant Asia Invitational
+415860,189748,BindPICK,TLN,2,2,2,3,2,7,5,11,4,2024-10-27,TEN Valorant Asia Invitational
+415860,189749,Lotus,GEN,2,2,2,0,0,4,3,9,8,2024-10-27,TEN Valorant Asia Invitational
+415860,189749,Lotus,TLN,0,4,0,1,0,6,0,4,2,2024-10-27,TEN Valorant Asia Invitational
 421597,192867,Sunset,G2,2,2,2,1,0,4,3,11,8,2024-11-20,Red Bull Home Ground #5
 421597,192867,Sunset,BBL,0,4,0,2,1,5,1,7,3,2024-11-20,Red Bull Home Ground #5
 421599,192873,Haven,G2,1,4,2,1,0,3,1,16,8,2024-11-20,Red Bull Home Ground #5
@@ -7009,6 +7309,16 @@ match_id,map_num,map_name,org,pistol_won,eco_n,eco_won,semi_eco_n,semi_eco_won,s
 698903,273257,SunsetPICK,ZETA,2,2,2,2,0,5,4,14,7,2026-07-30,VCT 2026: Pacific Stage 2
 698903,273258,Haven,FS,1,3,1,3,0,5,5,13,5,2026-07-30,VCT 2026: Pacific Stage 2
 698903,273258,Haven,ZETA,1,4,1,0,0,4,4,16,8,2026-07-30,VCT 2026: Pacific Stage 2
+698904,273259,SummitPICK,TS,2,3,2,1,0,9,5,10,3,2026-07-31,VCT 2026: Pacific Stage 2
+698904,273259,SummitPICK,PRX,0,4,1,1,0,3,2,15,10,2026-07-31,VCT 2026: Pacific Stage 2
+698904,273260,AscentPICK,TS,1,4,1,0,0,4,3,13,4,2026-07-31,VCT 2026: Pacific Stage 2
+698904,273260,AscentPICK,PRX,1,3,1,1,0,3,1,14,11,2026-07-31,VCT 2026: Pacific Stage 2
+698905,273262,BreezePICK,GE,2,2,2,0,0,9,8,10,3,2026-07-31,VCT 2026: Pacific Stage 2
+698905,273262,BreezePICK,GEN,0,4,0,1,0,5,3,11,5,2026-07-31,VCT 2026: Pacific Stage 2
+698905,273263,SunsetPICK,GE,1,3,1,2,1,3,1,18,9,2026-07-31,VCT 2026: Pacific Stage 2
+698905,273263,SunsetPICK,GEN,1,3,1,0,0,4,3,19,10,2026-07-31,VCT 2026: Pacific Stage 2
+698905,273264,Summit,GE,0,4,0,2,1,5,2,13,8,2026-07-31,VCT 2026: Pacific Stage 2
+698905,273264,Summit,GEN,2,2,2,1,1,7,4,14,6,2026-07-31,VCT 2026: Pacific Stage 2
 706349,275064,HavenPICK,LEV,2,2,2,1,0,6,4,12,7,2026-07-16,VCT 2026: Americas Stage 2
 706349,275064,HavenPICK,FUR,0,4,0,1,0,3,2,13,6,2026-07-16,VCT 2026: Americas Stage 2
 706349,275065,SunsetPICK,LEV,0,3,0,1,0,5,0,5,1,2026-07-16,VCT 2026: Americas Stage 2

@@ -13861,3 +13861,17 @@ MatchID,step,team,action,map
 706365,5,100T,ban,Summit
 706365,6,SEN,ban,Split
 706365,7,,remains,Breeze
+698904,1,PRX,ban,Haven
+698904,2,TS,ban,Lotus
+698904,3,PRX,pick,Summit
+698904,4,TS,pick,Ascent
+698904,5,PRX,ban,Split
+698904,6,TS,ban,Breeze
+698904,7,,remains,Sunset
+698905,1,GE,ban,Lotus
+698905,2,GEN,ban,Ascent
+698905,3,GE,pick,Breeze
+698905,4,GEN,pick,Sunset
+698905,5,GE,ban,Haven
+698905,6,GEN,ban,Split
+698905,7,,remains,Summit

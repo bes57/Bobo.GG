@@ -52,32 +52,6 @@
     "match_name": "Week 3 Group Stage"
   },
   {
-    "match_id": "698904",
-    "team_a": "Team Secret",
-    "team_b": "Paper Rex",
-    "org_a": "TS",
-    "org_b": "PRX",
-    "date": "2026-07-31",
-    "datetime": "2026-07-31 08:00:00",
-    "region": "Pacific",
-    "event": "2026 Stage 2 \u2014 Pacific",
-    "format": "bo3",
-    "match_name": "Week 3 Group Stage"
-  },
-  {
-    "match_id": "698905",
-    "team_a": "Global Esports",
-    "team_b": "Gen.G",
-    "org_a": "GE",
-    "org_b": "GEN",
-    "date": "2026-07-31",
-    "datetime": "2026-07-31 10:00:00",
-    "region": "Pacific",
-    "event": "2026 Stage 2 \u2014 Pacific",
-    "format": "bo3",
-    "match_name": "Week 3 Group Stage"
-  },
-  {
     "match_id": "706368",
     "team_a": "ENVY",
     "team_b": "FURIA",
