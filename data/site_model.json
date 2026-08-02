@@ -1,20 +1,20 @@
 {
- "model_version": "benpom-v6-site-2026-07-31",
- "generated_utc": "2026-07-31 13:52:33",
- "beta": 0.129146,
+ "model_version": "benpom-v6-site-2026-08-02",
+ "generated_utc": "2026-08-02 22:57:29",
+ "beta": 0.129248,
  "xregion_offsets": {
-  "Americas": 2.0737,
-  "EMEA": 1.8842,
-  "Pacific": 2.4269,
+  "Americas": 2.07,
+  "EMEA": 1.881,
+  "Pacific": 2.4235,
   "CN": 0.0
  },
  "region_priors": {
-  "Americas": -2.2426,
-  "EMEA": 0.9062,
-  "Pacific": -1.9785,
-  "CN": -3.6356
+  "Americas": -2.2342,
+  "EMEA": 0.5778,
+  "Pacific": -1.7964,
+  "CN": -3.6197
  },
  "gf_upper_logit": 0.25,
- "b_pick": 0.0945,
- "ratings_as_of": "2026-07-31"
+ "b_pick": 0.0968,
+ "ratings_as_of": "2026-08-02"
 }

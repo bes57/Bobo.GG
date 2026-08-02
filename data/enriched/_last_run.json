@@ -1,8 +1,8 @@
 {
-  "at": "2026-07-31T14:14:41Z",
-  "seconds": 0.0,
-  "enriched": 0,
+  "at": "2026-08-01T02:06:35Z",
+  "seconds": 11.2,
+  "enriched": 3,
   "tombstoned": 0,
   "failed": 0,
-  "comps": 0
+  "comps": 3
 }
