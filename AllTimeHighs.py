@@ -62,11 +62,20 @@ STAT_COLS = {
     "Kills/Map":        "K",
     "Deaths/Map":       "D",
     "Assists/Map":      "A",
+    # Per-round normalizations — valid for every format. Rounds come from the
+    # per-map Score rows in match_results.csv ("13-11" → 24 rounds); a series'
+    # round total is the sum across its maps.
+    "Kills/Round":      "K",
+    "Deaths/Round":     "D",
+    "Assists/Round":    "A",
 }
 
 # Stats that divide the raw column by the series map count. Only valid when
 # format is bo3 / bo5 / all_series (not "One Map" — already per-map by def).
 PER_MAP_STATS = {"Kills/Map", "Deaths/Map", "Assists/Map"}
+
+# Stats that divide the raw column by rounds played.
+PER_ROUND_STATS = {"Kills/Round", "Deaths/Round", "Assists/Round"}
 
 MATCH_UNSUPPORTED_STATS = set()
 
@@ -214,6 +223,54 @@ def _load_match_results():
     return _match_results
 
 
+_ROUNDS_CACHE = {}   # group -> (mtime_key, DataFrame)
+
+
+def _rounds_lookup(grp):
+    """Rounds played, from the per-map Score rows of match_results.csv
+    ("13-11" → 24 rounds).
+
+    grp="map"    → columns [MatchID, MapNum, Rounds]
+    grp="series" → columns [MatchID, Rounds]  (summed across the series' maps)
+
+    Returns None if match_results is unusable. Note the series total counts
+    every map of the series, so a player who sat a map is measured against the
+    full series' rounds — the same simplification the /Map stats already make.
+    The >5-players-per-team filter in _rank_df drops most sub-heavy matches."""
+    try:
+        key = os.path.getmtime(os.path.join(DATA_DIR, "match_results.csv"))
+    except OSError:
+        key = 0.0
+    cached = _ROUNDS_CACHE.get(grp)
+    if cached and cached[0] == key:
+        return cached[1]
+
+    mr = _load_match_results()
+    if mr.empty or "Score" not in mr.columns:
+        return None
+
+    def _round_total(score):
+        try:
+            a, b = str(score).split("-")
+            return int(a) + int(b)
+        except Exception:
+            return None
+
+    per_map = mr[mr["MapNum"] != "all"][["MatchID", "MapNum", "Score"]].copy()
+    per_map["Rounds"] = per_map["Score"].apply(_round_total)
+    per_map = per_map.dropna(subset=["Rounds"])
+    per_map["MatchID"] = per_map["MatchID"].astype(str).str.strip()
+    per_map["MapNum"]  = per_map["MapNum"].astype(str).str.strip()
+
+    if grp == "map":
+        out = per_map[["MatchID", "MapNum", "Rounds"]].drop_duplicates(subset=["MatchID", "MapNum"])
+    else:
+        out = per_map.groupby("MatchID", as_index=False)["Rounds"].sum()
+
+    _ROUNDS_CACHE[grp] = (key, out)
+    return out
+
+
 PAGE_HTML = """
 <!DOCTYPE html>
 <html lang="en">
@@ -349,6 +406,9 @@ PAGE_HTML = """
         <option value="Kills/Map">Kills/Map</option>
         <option value="Deaths/Map">Deaths/Map</option>
         <option value="Assists/Map">Assists/Map</option>
+        <option value="Kills/Round">Kills/Round</option>
+        <option value="Deaths/Round">Deaths/Round</option>
+        <option value="Assists/Round">Assists/Round</option>
       </select>
     </div>
     <div class="filter-group">
@@ -408,6 +468,10 @@ PAGE_HTML = """
 <script>
 const MATCH_UNSUPPORTED = new Set(["# of Clutches"]);
 const PER_MAP_STATS = new Set(["Kills/Map", "Deaths/Map", "Assists/Map"]);
+// Per-round stats work in every format (map and series alike), so unlike the
+// /Map stats they never restrict the Format dropdown.
+const PER_ROUND_STATS = new Set(["Kills/Round", "Deaths/Round", "Assists/Round"]);
+const DECIMAL_STATS = new Set(["VLR Rating", "Kills/Round", "Deaths/Round", "Assists/Round"]);
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -562,13 +626,18 @@ function fetchResults() {
         const mapCell = showMap ? `<td>${esc(row.map_name||'')}</td>` : '';
         const curStat = document.getElementById('f-stat').value;
         const isKD = curStat === 'Kill/Death Ratio';
-        // VLR Rating is conventionally shown to the hundredths (1.00, 1.45).
-        const valStr = (curStat === 'VLR Rating' && typeof row.value === 'number')
+        // VLR Rating and the per-round rates are conventionally shown to the
+        // hundredths (1.00, 1.45 / 0.85 KPR).
+        const valStr = (DECIMAL_STATS.has(curStat) && typeof row.value === 'number')
           ? row.value.toFixed(2)
           : String(row.value);
-        const valDisplay = (isKD && row.kills != null && row.deaths != null)
-          ? `${esc(valStr)} <span style="font-size:.75rem;font-weight:400;color:var(--soft)">(${row.kills}/${row.deaths})</span>`
-          : esc(valStr);
+        const sub = (t) => ` <span style="font-size:.75rem;font-weight:400;color:var(--soft)">(${t})</span>`;
+        let valDisplay = esc(valStr);
+        if (isKD && row.kills != null && row.deaths != null) {
+          valDisplay += sub(`${row.kills}/${row.deaths}`);
+        } else if (PER_ROUND_STATS.has(curStat) && row.raw != null && row.rounds != null) {
+          valDisplay += sub(`${row.raw} / ${row.rounds} rds`);
+        }
         let resultCell = '<td></td>';
         if (row.result) {
           const won = (row.won != null) ? row.won : row.result.startsWith('W');
@@ -771,6 +840,10 @@ def _rank_df(direction, stat_name, fmt, year, context):
     if is_per_map and fmt not in ("bo3", "bo5", "all_series"):
         return None, None, None
 
+    is_per_round = stat_name in PER_ROUND_STATS
+    if is_per_round and fmt not in ("map", "bo3", "bo5", "all_series"):
+        return None, None, None
+
     if fmt == "map":
         df = _load_map_data()
     elif fmt in ("bo3", "bo5", "all_series"):
@@ -841,6 +914,29 @@ def _rank_df(direction, stat_name, fmt, year, context):
         df = df.dropna(subset=["MapCount"])
         derived_col = f"__{col}_per_map"
         df[derived_col] = df[col] / df["MapCount"]
+        col = derived_col
+
+    if is_per_round:
+        rounds = _rounds_lookup("map" if fmt == "map" else "series")
+        if rounds is None or rounds.empty:
+            return None, None, None
+        df = df.copy()
+        df["MatchID"] = df["MatchID"].astype(str).str.strip()
+        if fmt == "map":
+            df["MapNum"] = df["MapNum"].astype(str).str.strip()
+            df = df.merge(rounds, on=["MatchID", "MapNum"], how="left")
+        else:
+            df = df.merge(rounds, on="MatchID", how="left")
+        df = df[df["Rounds"].notna() & (df["Rounds"] > 0)]
+        # A player can die at most once per round, so D > Rounds means the stat
+        # row and the map score disagree (a dozen such rows exist upstream out
+        # of ~42k). Their round count can't be trusted for any per-round rate.
+        if "D" in df.columns:
+            df = df[df["D"].isna() | (df["D"] <= df["Rounds"])]
+        if df.empty:
+            return None, None, None
+        derived_col = f"__{col}_per_round"
+        df[derived_col] = df[col] / df["Rounds"]
         col = derived_col
 
     if year != "all":
@@ -1009,6 +1105,16 @@ def _format_entries(df, fmt, col, is_kd):
             try:
                 entry["kills"]  = int(row["K"])
                 entry["deaths"] = int(row["D"])
+            except Exception:
+                pass
+
+        # Per-round values are opaque on their own — ship the raw total and the
+        # rounds played so the page can show "1.23 (29 / 24 rds)".
+        if isinstance(col, str) and col.endswith("_per_round"):
+            raw_col = col[2:-len("_per_round")]
+            try:
+                entry["raw"]    = int(row[raw_col])
+                entry["rounds"] = int(row["Rounds"])
             except Exception:
                 pass
 
