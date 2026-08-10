@@ -3966,3 +3966,751 @@ Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
 127.0.0.1 - - [02/Aug/2026 18:57:21] "[36mGET /logos/PCF.png HTTP/1.1[0m" 304 -
 127.0.0.1 - - [02/Aug/2026 18:57:21] "[36mGET /logos/MKOI.png HTTP/1.1[0m" 304 -
 127.0.0.1 - - [02/Aug/2026 18:57:21] "[36mGET /logos/FPX.png HTTP/1.1[0m" 304 -
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+Live event — rebuilding 2026_stage2 event-stats CSV...
+Scraping Americas — https://www.vlr.gg/event/stats/2977/vct-2026-americas-stage-2...
+Scraping EMEA — https://www.vlr.gg/event/stats/2976/vct-2026-emea-stage-2...
+Scraping Pacific — https://www.vlr.gg/event/stats/2776/vct-2026-pacific-stage-2...
+Scraping CN — https://www.vlr.gg/event/stats/2978/vct-2026-china-stage-2...
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [02/Aug/2026 20:03:14] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:14] "GET /highs/api/results?direction=high&stat=Kills&format=map&year=all&context=all HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:29] "GET /highs/?stat=Kills/Round&format=map&direction=high HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:29] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:29] "GET /static/base.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:29] "GET /static/alpha-nav.js?v=1784747724 HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /highs/api/results?direction=high&stat=Kills/Round&format=map&year=all&context=all HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /favicon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/ZETA.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/FNC.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/G2.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/GE.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/NRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/DFM.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/FUT.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/LOUD.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/100T.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TL.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/SEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/KRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/M8.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/RRQ.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TH.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/BBL.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/PRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/NAVI.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/GX.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TYL.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/VIT.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/EG.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/EDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/ENVY.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/BLD.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/KRÜ.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/C9.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/NS.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/T1.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/PCF.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/WOL.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/DRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/MKOI.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/KC.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/EF.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/LEV.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/FPX.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/MIBR.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TE.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/FUR.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TLN.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TEC.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:30] "GET /logos/TS.png HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:03:45] "GET / HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+Live event — rebuilding 2026_stage2 event-stats CSV...
+Scraping Americas — https://www.vlr.gg/event/stats/2977/vct-2026-americas-stage-2...
+Scraping EMEA — https://www.vlr.gg/event/stats/2976/vct-2026-emea-stage-2...
+Scraping Pacific — https://www.vlr.gg/event/stats/2776/vct-2026-pacific-stage-2...
+Scraping CN — https://www.vlr.gg/event/stats/2978/vct-2026-china-stage-2...
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [02/Aug/2026 20:04:35] "GET /highs/api/results?direction=high&stat=Kills&format=map&year=2023&context=all HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:04:35] "GET /highs/api/results?direction=high&stat=Kills/Round&format=map&year=2023&context=all HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:04:47] "GET /highs/ HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/AllTimeHighs.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [02/Aug/2026 20:05:08] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [02/Aug/2026 20:05:17] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:27] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:27] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:27] "GET /static/alpha-nav.js?v=1784747724 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:27] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /highs/api/results?direction=high&stat=VLR%20Rating&format=map&year=all&context=all HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/GE.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/NAVI.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/DFM.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/GX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/BBL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/100T.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/LOUD.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/M8.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/FNC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/TH.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/G2.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/NRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/TL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/VIT.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/PRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/RRQ.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/KRÜ.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/KC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/KRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/ZETA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/FUT.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/ENVY.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/EG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/LEV.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/FUR.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/EF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/SEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/XLG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/MIBR.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/TYL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/DRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/EDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/TS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/WOL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/TLN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/BME.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/BLD.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:28] "GET /logos/TE.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /favicon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /aspas25corrode.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /chronlondon.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /prxpacstage1win.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /patmen.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/PRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/BBL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/VIT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/G2.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/TL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/KC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/M8.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/EF.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/FNC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/EDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/TE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/ZETA.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/KRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logos/NS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logos/GEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logos/NOVA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logos/TEC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logos/FPX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "GET /logos/JDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/WOL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:29] "[36mGET /logos/DRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:45:31] "GET /alpha/auto-refresh HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:45:46] "GET /alpha/version HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 15:47:43] "GET /team/LEV HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:43] "[36mGET /logos/ENVY.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "GET /logos/C9.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/KRÜ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/VIT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/FUR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/G2.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/PRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/EDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/GE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:47:51] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 15:48:02] "GET /team/100T HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /logos/C9.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /logos/KRÜ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:02] "[36mGET /logos/LOUD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "GET /team/NRG HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /logos/ENVY.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:05] "[36mGET /logos/FUR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/LOUD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/KRÜ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/VIT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/PRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/XLG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/G2.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/FUT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/BBL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:07] "[36mGET /logos/M8.png HTTP/1.1[0m" 304 -
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 15:48:12] "GET /team/LEV HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /logos/ENVY.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:48:12] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 15:48:53] "[35m[1mGET / HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/benny_es1/PythonTest/BobosHome.py", line 2479, in alpha_home
+    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/templating.py", line 162, in render_template_string
+    template = app.jinja_env.from_string(source)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 267, in template
+jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
+127.0.0.1 - - [10/Aug/2026 15:49:08] "[35m[1mGET / HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/benny_es1/PythonTest/BobosHome.py", line 2479, in alpha_home
+    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/templating.py", line 162, in render_template_string
+    template = app.jinja_env.from_string(source)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 267, in template
+jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
+127.0.0.1 - - [10/Aug/2026 15:49:15] "GET /team/MIBR HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /logos/ENVY.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:15] "[36mGET /logos/FUR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:17] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:49:17] "GET /logos/AG.png HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+Live event — rebuilding 2026_stage2 event-stats CSV...
+Scraping Americas — https://www.vlr.gg/event/stats/2977/vct-2026-americas-stage-2...
+Scraping EMEA — https://www.vlr.gg/event/stats/2976/vct-2026-emea-stage-2...
+Scraping Pacific — https://www.vlr.gg/event/stats/2776/vct-2026-pacific-stage-2...
+Scraping CN — https://www.vlr.gg/event/stats/2978/vct-2026-china-stage-2...
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 15:49:28] "[35m[1mGET / HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/benny_es1/PythonTest/BobosHome.py", line 2480, in alpha_home
+    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/templating.py", line 162, in render_template_string
+    template = app.jinja_env.from_string(source)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 267, in template
+jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
+127.0.0.1 - - [10/Aug/2026 15:49:28] "[35m[1mGET / HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/benny_es1/PythonTest/BobosHome.py", line 2480, in alpha_home
+    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/templating.py", line 162, in render_template_string
+    template = app.jinja_env.from_string(source)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 267, in template
+jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
+127.0.0.1 - - [10/Aug/2026 15:49:35] "[35m[1mGET / HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/benny_es1/PythonTest/BobosHome.py", line 2480, in alpha_home
+    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/flask/templating.py", line 162, in render_template_string
+    template = app.jinja_env.from_string(source)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 267, in template
+jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
+ * Detected change in '/Users/benny_es1/PythonTest/BobosHome.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 15:49:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:49:57] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:50:05] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /chronlondon.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /prxpacstage1win.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /aspas25corrode.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /static/base.css HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /static/alpha-nav.js?v=1784747724 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /patmen.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/LEV.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/NRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/100T.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/VIT.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/PRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/BBL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/NS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/G2.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/TH.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/KC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/TL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/MIBR.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/GEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/EF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/T1.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/TEC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/FNC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/M8.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/NOVA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/TE.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/DRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/AG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/JDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /logos/EDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:26] "GET /favicon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:27] "GET /logos/NAVI.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:28] "GET /alpha/auto-refresh HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:33] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:33] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:33] "GET /logos/EG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:33] "[36mGET /logos/NS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:33] "GET /logos/ZETA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 15:51:34] "[36mGET /logos/FNC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:34] "[36mGET /logos/EDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:34] "[36mGET /logos/KC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:34] "[36mGET /logos/NOVA.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:34] "[36mGET /logos/TL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 15:51:50] "GET /highs/ HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/scrapers/BuildMapRatings.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/scrapers/BuildMapRatings.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/scrapers/BuildMapRatings.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/scrapers/BuildMapRatings.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/scrapers/BuildMapRatings.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [10/Aug/2026 16:00:55] "GET /api/team/LEV HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "GET /team/LEV HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "GET /logos/ENVY.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:01:13] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:01:34] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:34] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:34] "GET /mapelo/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:34] "GET /team/LEV HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:34] "GET /api/team/G2 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:01:35] "GET /api/team/G2 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:02:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:02:12] "GET /team/LEV HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:02:12] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /static/base.css HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /static/alpha-nav.js?v=1784747724 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /aspas25corrode.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /patmen.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /chronlondon.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /prxpacstage1win.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/100T.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/LEV.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/BBL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/VIT.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/NS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/PRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/NRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/G2.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/TH.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/KC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/TL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/MIBR.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/GEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/T1.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/EF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/EDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/FNC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/NOVA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/TEC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/JDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/AG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/TE.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/DRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/M8.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /logos/NAVI.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:12] "GET /favicon.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:14] "GET /alpha/auto-refresh HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:15] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:15] "GET /logos/ZETA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:17] "GET /logos/FS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:18] "GET /logos/PCF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:22] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:22] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:22] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:22] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "GET /highs/api/results?direction=high&stat=VLR%20Rating&format=map&year=all&context=all HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/GE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/NAVI.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/DFM.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/BBL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[33mGET /logos/FF.png HTTP/1.1[0m" 404 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/M8.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/GX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/LOUD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/FNC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/G2.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/TL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/VIT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/KRÜ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/KRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/PRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/RRQ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/KC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/ZETA.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/ENVY.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/FUT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/EF.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/FUR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/XLG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/DRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/TYL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/WOL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/EDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/TLN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/BME.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/TS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/BLD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:23] "[36mGET /logos/TE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "GET /mapelo/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "GET /static/MastersShanghaiFinal-full.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/FNC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/LOUD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/KRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/PRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/G2.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/GEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/EDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/WOL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "GET /static/Champs25Arena.jpg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/T1.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:28] "[36mGET /logos/NS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:29] "GET /mapelo/modern/ HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:29] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:29] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:29] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:29] "GET /mapelo/modern/data HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:32] "GET /mapelo/modern/data HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/100T.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/LEV.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/NRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/PRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/VIT.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/NS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/BBL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/G2.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/TH.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/KC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/TL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/MIBR.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/GEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/EF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/M8.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/T1.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/FNC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/NOVA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/AG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/GE.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/SEN.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/NAVI.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/EDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/FUT.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/XLG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/VL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/LOUD.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/TYL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/BLG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/FS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/RRQ.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/DFM.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/C9.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/KRX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/EG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/KRÜ.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/FUR.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/TS.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/GX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/DRG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/FPX.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/ZETA.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/ENVY.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/JDG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/TE.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/TEC.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/WOL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:36] "GET /static/logos/PCF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "GET /mapelo/matchup/?lockCurrent=1 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "GET /logos/BLG.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/BBL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/AG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/DFM.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/C9.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/EDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/ENVY.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/FUT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/GEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/KC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/LEV.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/KRÜ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/LOUD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/EF.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/NAVI.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/GX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/FNC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/MIBR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/EG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/FS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/G2.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/JDG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/KRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/M8.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/GE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/FUR.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/DRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/NRG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/NOVA.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/NS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/FPX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/PCF.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/PRX.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/RRQ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/T1.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/TE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/TEC.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/TH.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "GET /logos/ULF.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/TL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "GET /logos/VL.png HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/TS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/VIT.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/TYL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/WOL.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/XLG.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:42] "[36mGET /logos/ZETA.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "GET /team/100T HTTP/1.1" 200 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /logos/LOUD.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /logos/SEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /logos/100T.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /logos/C9.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [10/Aug/2026 16:03:55] "[36mGET /logos/KRÜ.png HTTP/1.1[0m" 304 -

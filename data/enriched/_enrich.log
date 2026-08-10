@@ -1,16 +1,5 @@
-[enrich] 12 match(es) to process (refresh=False)
-  [1/12] 698908  · 3 map(s) VL vs KRX  (VCT 2026: Pacific Stage 2)
-  [2/12] 698909  · 3 map(s) ZETA vs NS  (VCT 2026: Pacific Stage 2)
-  [3/12] 706370  · 2 map(s) C9 vs KRÜ  (VCT 2026: Americas Stage 2)
-  [4/12] 712832  · 3 map(s) BBL vs PCF  (VCT 2026: EMEA Stage 2)
-  [5/12] 712833  · 2 map(s) FNC vs TH  (VCT 2026: EMEA Stage 2)
-  [6/12] 698906  · 3 map(s) T1 vs DFM  (VCT 2026: Pacific Stage 2)
-  [7/12] 698907  · 3 map(s) FS vs RRQ  (VCT 2026: Pacific Stage 2)
-  [8/12] 706368  · 3 map(s) ENVY vs FUR  (VCT 2026: Americas Stage 2)
-  [9/12] 706369  · 3 map(s) LEV vs NRG  (VCT 2026: Americas Stage 2)
-  [10/12] 712830  · 3 map(s) FUT vs VIT  (VCT 2026: EMEA Stage 2)
-  [11/12] 712831  · 3 map(s) KC vs TL  (VCT 2026: EMEA Stage 2)
-  [12/12] 706367  · 2 map(s) EG vs MIBR  (VCT 2026: Americas Stage 2)
-[enrich] done: 12 enriched, 0 tombstoned, 0 deferred, 0 failed
-[csv] 2070 matches -> 109227 rounds, 7740 econ rows, 38660 player rows, 96675 matrix rows
-[comps] 12 match(es) to collect
+[enrich] 0 match(es) to process (refresh=False)
+[enrich] done: 0 enriched, 0 tombstoned, 0 deferred, 0 failed
+[comps] 0 match(es) to collect
+[comps] done: 0 collected, 0 failed
+[enrich-new] 0 enriched, 0 comps, 0.0s
