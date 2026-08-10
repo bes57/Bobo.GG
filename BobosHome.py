@@ -60,6 +60,10 @@ try:
 except Exception:
     ALPHA_LOGOS = {}
 
+# Recent-VCT-records pool shipped to the home page. The rail shows 8; the extra
+# depth is what makes the Recency sort meaningful (see _alpha_payload).
+RECORDS_POOL = 24
+
 # ── v6 site model (data/site_model.json) ─────────────────────────────────────
 # Import-light mtime-cached loader — the single source of truth for every
 # probability this file renders (β, cross-region offsets, region priors,
@@ -320,10 +324,14 @@ def _build_alpha_data():
         pass
 
     # Recent all-time records (performances from the latest event that cracked an
-    # all-time top-50) — previewed beneath the player leaders.
+    # all-time top-50) — previewed beneath the player leaders. We ship a POOL of
+    # records rather than the 8 shown: the card rail can be sorted by Ranking or
+    # Recency, and "most recent" is only meaningful if the client can look past
+    # the 8 best-ranked. Building 24 costs the same as 8 (the scan runs in full
+    # either way; `limit` only truncates the tail).
     try:
         from AllTimeHighs import build_recent_records
-        records = build_recent_records(8)
+        records = build_recent_records(RECORDS_POOL)
     except Exception:
         records = []
 
@@ -991,6 +999,12 @@ ALPHA_HTML = """
   .pl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
   .pl-card{border:1px solid var(--line);border-radius:15px;padding:13px 13px 9px;background:#fff}
   #records-panel{margin-top:22px}
+  .rec-sort{display:inline-flex;align-items:center;gap:2px;margin-right:auto;background:#f0ecf4;border:1px solid var(--line);border-radius:999px;padding:2px}
+  .rec-sort button{border:0;background:transparent;font-family:inherit;font-size:.66rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--soft);padding:4px 11px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,box-shadow .15s}
+  .rec-sort button:hover{color:var(--accent)}
+  .rec-sort button.on{background:#fff;color:var(--accent);box-shadow:0 1px 4px #00000012}
+  /* NB: keep the space after the brace — brace-then-hash opens a Jinja comment */
+  @media (max-width:700px){ #records-panel .phead{flex-wrap:wrap}.rec-sort{order:3;margin-right:0}}
   .rec-wrap{display:flex;align-items:center;gap:8px}
   .rec-nav{flex:0 0 30px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:#7c4dd6;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 3px 12px #00000014;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s,box-shadow .15s}
   .rec-nav:hover{background:#f1ebfb;transform:scale(1.1);box-shadow:0 5px 16px #7c4dd633}
@@ -1149,7 +1163,12 @@ ALPHA_HTML = """
   </div>
 
   <div class="panel" id="records-panel">
-    <div class="phead"><div class="ptitle">Recent VCT Records</div><a class="plink" href="/highs/">Full VCT Records &rarr;</a></div>
+    <div class="phead"><div class="ptitle">Recent VCT Records</div>
+      <div class="rec-sort" id="rec-sort" role="group" aria-label="Sort recent records">
+        <button type="button" data-sort="rank" class="on">Ranking</button>
+        <button type="button" data-sort="date">Recency</button>
+      </div>
+      <a class="plink" href="/highs/">Full VCT Records &rarr;</a></div>
     <div class="psub" id="records-sub"></div>
     <div id="records-body"></div>
   </div>
@@ -1522,9 +1541,20 @@ function recCard(r){
     +'</span>'
     +'<span class="rec-val">'+esc(r.value)+'</span>'
   +'</a>';}
-var _recTimer=null;
+var _recTimer=null,REC_SHOW=8,REC_SORT='rank';
+// DATA.records is a deeper pool than the rail shows (see RECORDS_POOL), so
+// Recency can surface genuinely-latest records instead of just reshuffling the
+// 8 best-ranked. 'rank' reproduces the server's own (rank, player) order.
+function recList(){
+  var rs=(DATA.records||[]).slice();
+  rs.sort(REC_SORT==='date'
+    ? function(a,b){var da=a.date||'',db=b.date||'';       // newest first; undated last
+        return da!==db?(da<db?1:-1):(a.rank||99)-(b.rank||99);}
+    : function(a,b){return (a.rank||99)-(b.rank||99)
+        || ((a.player||'')<(b.player||'')?-1:1);});
+  return rs.slice(0,REC_SHOW);}
 function renderRecords(){
-  var rs=DATA.records||[];
+  var rs=recList();
   var sub=document.getElementById('records-sub');
   if(sub)sub.textContent=rs.length?'Latest performances that cracked an all-time top 50':'';
   var body=document.getElementById('records-body');
@@ -1538,6 +1568,16 @@ function renderRecords(){
     +'<button class="rec-nav rec-next" type="button" aria-label="Next record">&#8250;</button>'
     +'</div>';
   _recSlideshow(rs.length);}
+(function(){
+  var box=document.getElementById('rec-sort'); if(!box)return;
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('button[data-sort]');
+    if(!b||b.dataset.sort===REC_SORT)return;
+    REC_SORT=b.dataset.sort;
+    [].forEach.call(box.querySelectorAll('button'),function(c){c.classList.toggle('on',c===b);});
+    renderRecords();
+  });
+})();
 function _recSlideshow(n){
   if(_recTimer){clearTimeout(_recTimer);_recTimer=null;}
   var track=document.getElementById('rec-track'); if(!track)return;
@@ -2491,7 +2531,7 @@ def alpha_bust_cache():
     # and the disk JSON is fresh for every other worker. No-op/fast if unchanged.
     try:
         from AllTimeHighs import build_recent_records
-        build_recent_records(8)
+        build_recent_records(RECORDS_POOL)
         cleared.append("records")
     except Exception:
         pass

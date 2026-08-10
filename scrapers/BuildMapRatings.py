@@ -163,6 +163,65 @@ SHRINK_K          = 5      # James-Stein shrinkage for per-map ratings.
 MC_N_SIMS         = 10000 # Monte Carlo veto simulations per team per snapshot
 VETO_NOISE_STD    = 2.0  # Gaussian noise on map advantages during veto (round diff units)
 
+
+# ── v6 anchor for per-map ratings ──────────────────────────────────────────────
+# Per-map ratings are the legacy per-map Massey solve shrunk toward an overall
+# rating. That anchor USED to be this file's own decay-weighted Massey, which is
+# also what the site displayed — so the two agreed. Since the v6 promotion
+# (2026-07-30, see BuildRatingTimeline.py) the site's headline BenPom comes from
+# rating_timeline*.json instead, and the anchor drifted: LEV read +5.80 overall
+# while every one of its map bars sat near the old +2.92 scale, so a 0-8 Breeze
+# still rendered as clearly positive.
+#
+# Fix: keep the CV-tuned per-map DEVIATION (shrink_k stays 5) and re-anchor it on
+# the v6 rating, scaling the deviation by the ratio of the two systems' logistic
+# β so a given distance from the headline means the same win-probability edge in
+# both. Both βs are fitted on the SAME game set, so the ratio is exactly the
+# scale conversion between the rating systems for that snapshot.
+_TIMELINE_CACHE = {}
+
+
+def _load_v6_timeline(year):
+    """Checkpoint list for `year` from rating_timeline_<year>.json, falling back
+    to the current-year rating_timeline.json. Returns [] when unavailable — the
+    caller then leaves that snapshot on the legacy anchor rather than guessing."""
+    if year in _TIMELINE_CACHE:
+        return _TIMELINE_CACHE[year]
+    cps = []
+    for name in (f'rating_timeline_{year}.json', 'rating_timeline.json'):
+        path = os.path.join(ROOT, 'data', name)
+        if not os.path.exists(path):
+            continue
+        try:
+            with open(path) as f:
+                tl = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if int(tl.get('year', -1)) != int(year):
+            continue
+        cps = tl.get('checkpoints') or []
+        break
+    _TIMELINE_CACHE[year] = cps
+    return cps
+
+
+def _v6_ratings_at(ref_date):
+    """v6 ratings from the latest checkpoint at or before ref_date. Snapshot
+    ref_dates are event END dates and can sit in the future (e.g. after_stage2 is
+    2026-09-06 while the timeline ends 2026-08-10), so an exact match is never
+    required — the most recent checkpoint that exists wins."""
+    if ref_date is None:
+        return {}
+    cps = _load_v6_timeline(ref_date.year)
+    if not cps:
+        return {}
+    ref_s = ref_date.strftime('%Y-%m-%d')
+    usable = [cp for cp in cps if cp.get('date', '') <= ref_s]
+    if not usable:
+        return {}
+    return max(usable, key=lambda cp: cp['date']).get('ratings') or {}
+
+
 # Per-year snapshot configuration.
 # Snapshots are named for the last international included:
 #   before_1st  = data up to (not including) the 1st international
@@ -666,12 +725,24 @@ def massey_ratings(games, lambda_decay, ref_date, min_games=0):
 # ── Per-map ratings with shrinkage ─────────────────────────────────────────────
 
 def compute_per_map_ratings(games, overall_ratings, lambda_decay,
-                            shrink_k=5, min_map_games=4):
+                            shrink_k=5, min_map_games=4,
+                            anchor_ratings=None, dev_scale=1.0):
     """
     Separate Massey solve per map, blended with overall via James-Stein shrinkage:
         rating = (n_eff / (n_eff + k)) * map_rating + (k / (n_eff + k)) * overall_rating
 
     Decay uses date-based weeks_ago measured from the most recent game on that map.
+
+    The blend above is algebraically ``overall + alpha * (map_rating - overall)``.
+    When ``anchor_ratings`` is supplied (the v6 BenPom rating the site actually
+    displays) the shrunk DEVIATION is kept as-is and re-based onto that anchor:
+
+        rating = anchor + dev_scale * alpha * (map_rating - overall)
+
+    so map bars centre on the headline rating instead of on the legacy Massey
+    scale. ``dev_scale`` converts a deviation between the two rating systems'
+    units (β_legacy / β_v6). Teams absent from ``anchor_ratings`` fall through to
+    the original legacy blend rather than being anchored on a guess.
     """
     all_maps = sorted({g['map_name'] for g in games})
     result = {}
@@ -703,7 +774,12 @@ def compute_per_map_ratings(games, overall_ratings, lambda_decay,
             alpha  = n_eff / (n_eff + shrink_k)
             map_r  = map_rtgs.get(team, 0.0)
             ovr_r  = overall_ratings.get(team, 0.0)
-            blended[team] = alpha * map_r + (1 - alpha) * ovr_r
+            dev    = alpha * (map_r - ovr_r)
+            anchor = (anchor_ratings or {}).get(team)
+            if anchor is None:
+                blended[team] = ovr_r + dev
+            else:
+                blended[team] = anchor + dev_scale * dev
 
         result[map_name] = blended
 
@@ -1377,7 +1453,19 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
         rtgs = rtgs_all
 
     beta     = fit_beta(games, rtgs)
-    map_rtgs = compute_per_map_ratings(games, rtgs, lam, shrink_k=shrink_k)
+    # Re-anchor per-map ratings on the v6 BenPom rating the site displays (see
+    # the _v6_ratings_at block above). β_v6 is fitted on THIS snapshot's games so
+    # the two βs are directly comparable; if the v6 timeline doesn't cover this
+    # ref_date we simply keep the legacy anchor.
+    v6_anchor = _v6_ratings_at(ref_date)
+    dev_scale = 1.0
+    if v6_anchor:
+        beta_v6 = fit_beta(games, v6_anchor)
+        if beta_v6 > 1e-6:
+            dev_scale = beta / beta_v6
+    map_rtgs = compute_per_map_ratings(games, rtgs, lam, shrink_k=shrink_k,
+                                       anchor_ratings=v6_anchor,
+                                       dev_scale=dev_scale)
     records  = build_records(games)  # snapshot W-L only — don't pollute with priors
     eff_cnts = effective_counts(games, lam, ref_date)
 
@@ -1390,16 +1478,17 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
         vals = list(map_rtgs[m].values())
         avg_map_rtgs[m] = float(np.mean(vals)) if vals else 0.0
 
-    # Headline overall_rating = raw decay-weighted Massey — same number the
-    # live BenPom rating (rating_timeline.json) uses, so the historical
-    # rankings page agrees with the modern hub & simulator on what an
-    # "overall rating" means. The earlier Monte Carlo pick/ban adjustment
-    # (pb_adjusted_rating) sometimes produced large deviations from a
-    # team's actual record (e.g. TLN 27-27 rated +2.58) which read as a
-    # bug to users even though the math was internally consistent. The
-    # per-map ratings stored below are still shrunken toward this same
-    # rtgs anchor (see compute_per_map_ratings), so the whole stack is
-    # self-consistent.
+    # Headline overall_rating = raw decay-weighted Massey. The earlier Monte
+    # Carlo pick/ban adjustment (pb_adjusted_rating) sometimes produced large
+    # deviations from a team's actual record (e.g. TLN 27-27 rated +2.58) which
+    # read as a bug to users even though the math was internally consistent.
+    #
+    # NOTE: this is NOT the number the site shows as BenPom. Since the v6
+    # promotion the live rating comes from rating_timeline*.json, and this value
+    # is a separate, more compressed intermediate (MapElo only borrows the
+    # per-map breakdowns from this file — see the "must NEVER be shown" note in
+    # MapElo.BuildLeaderboard). The per-map ratings stored below are anchored on
+    # the v6 rating, not on this one, so the bars agree with the headline.
     pb_ratings = {}
     for team in rtgs:
         rec = records.get(team, {'w': 0, 'l': 0, 'maps': {}})

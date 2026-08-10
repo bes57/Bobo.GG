@@ -83,6 +83,15 @@ INTERNATIONAL_IDS = {e["id"] for e in ALL_EVENTS if list(e["regions"].keys()) ==
 # CN-only events feed BenPom (team ratings) but their player stats are hidden
 # from this page — user wants CN integration scoped to ratings, not leaderboards.
 CN_ONLY_IDS = {e["id"] for e in ALL_EVENTS if list(e["regions"].keys()) == ["CN"]}
+# Off-circuit events (EWC + qualifiers, Red Bull Home Ground, Evolution Series,
+# ACL, Shanghai Masters, …) are registered `ratings_only`: they feed BenPom but
+# stay out of every player-facing UI. These records are franchised VCT only.
+RATINGS_ONLY_IDS = {e["id"] for e in ALL_EVENTS if e.get("ratings_only")}
+# …except the 2023 LCQ, which was an official franchised VCT event (the regional
+# Last Chance Qualifiers into Champions). It carries `ratings_only` for BenPom
+# corpus reasons, but its records belong on this page.
+FRANCHISED_RATINGS_ONLY = {"2023_lcq"}
+HIDDEN_IDS = CN_ONLY_IDS | (RATINGS_ONLY_IDS - FRANCHISED_RATINGS_ONLY)
 YEAR_MAP  = {e["id"]: e["year"]  for e in ALL_EVENTS}
 LABEL_MAP = {e["id"]: e["label"] for e in ALL_EVENTS}
 
@@ -119,7 +128,7 @@ def _read_event_csvs(subdir=None):
 
     frames = []
     for event in ALL_EVENTS:
-        if event["id"] in CN_ONLY_IDS:
+        if event["id"] in HIDDEN_IDS:
             continue
         csv_path = os.path.join(folder, f"{event['id']}.csv")
         if not os.path.exists(csv_path):
@@ -796,18 +805,28 @@ fetchResults();
 
 
 def _latest_event_label():
-    """Most recent non-CN-only event whose maps CSV exists. ALL_EVENTS is
-    most-recent-first, so the first match wins. We check the maps CSV (not
-    the top-level event CSV) because the live scrape pipeline only writes
-    maps/series/match_results — never the top-level event CSV (that's
-    ScrapeAllEvents only). Without this, the subtitle stays stuck at the
-    last full-scrape event even after live data has been pulled."""
+    """Latest-ending player-facing event whose maps CSV exists. Sorted by date
+    rather than list position: ALL_EVENTS is only *roughly* most-recent-first —
+    the off-circuit block sits at the top regardless of year, so the 2023 LCQ
+    would otherwise win. We check the maps CSV (not the top-level event CSV)
+    because the live scrape pipeline only writes maps/series/match_results —
+    never the top-level event CSV (that's ScrapeAllEvents only). Without this,
+    the subtitle stays stuck at the last full-scrape event even after live data
+    has been pulled."""
+    best = None
     for event in ALL_EVENTS:
-        if event["id"] in CN_ONLY_IDS:
+        if event["id"] in HIDDEN_IDS:
             continue
-        if os.path.exists(os.path.join(MAPS_DIR, f"{event['id']}.csv")):
-            return event["label"]
-    return "2023"
+        if not os.path.exists(os.path.join(MAPS_DIR, f"{event['id']}.csv")):
+            continue
+        raw = str(event.get("end") or event.get("start") or "")[:10]
+        try:
+            when = _dt.date.fromisoformat(raw)
+        except ValueError:
+            continue
+        if best is None or when > best[0]:
+            best = (when, event["label"])
+    return best[1] if best else "2023"
 
 
 @highs_bp.route("/")
@@ -1151,7 +1170,7 @@ def _recent_event_ids(window_days=21):
     'recent' performances whose top-50 entries we show off."""
     dated = []
     for e in ALL_EVENTS:
-        if e["id"] in CN_ONLY_IDS:
+        if e["id"] in HIDDEN_IDS:
             continue
         if not os.path.exists(os.path.join(MAPS_DIR, f"{e['id']}.csv")):
             continue
