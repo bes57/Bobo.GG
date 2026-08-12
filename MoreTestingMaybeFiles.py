@@ -123,10 +123,11 @@ ALL_EVENTS = [
      "year": 2023, "start": "2023-11-02", "end": "2023-11-26",
      "ratings_only": True, "vct_only": True,
      "regions": {"CN": "https://www.vlr.gg/event/stats/1880/china-evolution-series-act-3-heritability"}},
-    {"id": "2023_rbhg", "label": "2023 Red Bull Home Ground #4",
-     "year": 2023, "start": "2023-09-11", "end": "2023-11-06",
-     "ratings_only": True, "vct_only": True,
-     "regions": {"Mixed": "https://www.vlr.gg/event/stats/1752/red-bull-home-ground-4"}},
+    # Red Bull Home Ground (2023 #4, 2024 #5, 2025) is deliberately EXCLUDED
+    # from the rating corpus — operator decision, 2026-08-12. The CSVs remain
+    # in data/{,maps/,series/} but no registry entry points at them, so no
+    # builder loads them. Re-adding an entry is all it takes to bring them
+    # back.
     {"id": "2023_ten_global", "label": "2023 TEN Global Invitational",
      "year": 2023, "start": "2023-10-07", "end": "2023-10-08",
      "ratings_only": True, "vct_only": True,
@@ -143,13 +144,6 @@ ALL_EVENTS = [
      "year": 2024, "start": "2024-10-26", "end": "2024-10-27",
      "ratings_only": True, "vct_only": True,
      "regions": {"Mixed": "https://www.vlr.gg/event/stats/2219/ten-valorant-asia-invitational"}},
-    {"id": "2024_rbhg", "label": "2024 Red Bull Home Ground #5",
-     # start = first match on the event's own VLR match list (its Sep-Oct
-     # qualifier phase lives under the main event id, unlike the archive's
-     # "Nov 20-23" main-stage-only date range)
-     "year": 2024, "start": "2024-09-29", "end": "2024-11-23",
-     "ratings_only": True, "vct_only": True,
-     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2171/red-bull-home-ground-5"}},
     {"id": "2024_radiant_asia", "label": "2024 Valorant Radiant Asia Invitational",
      "year": 2024, "start": "2024-11-21", "end": "2024-12-01",
      "ratings_only": True, "vct_only": True,
@@ -178,10 +172,6 @@ ALL_EVENTS = [
      "year": 2025, "start": "2025-11-11", "end": "2025-11-16",
      "ratings_only": True, "vct_only": True,
      "regions": {"CN": "https://www.vlr.gg/event/stats/2720/china-evolution-series-epilogue"}},
-    {"id": "2025_rbhg", "label": "2025 Red Bull Home Ground",
-     "year": 2025, "start": "2025-11-13", "end": "2025-11-16",
-     "ratings_only": True, "vct_only": True,
-     "regions": {"Mixed": "https://www.vlr.gg/event/stats/2602/red-bull-home-ground-2025"}},
     {"id": "2025_super_champions_cup", "label": "2025 China Esports Festival Super Champions Cup",
      "year": 2025, "start": "2025-11-28", "end": "2025-11-30",
      "ratings_only": True, "vct_only": True,
