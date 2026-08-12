@@ -7121,12 +7121,24 @@ def _mhub_dynamic_bands():
 
 def _mhub_load():
     """Load rating_timeline.json + map_ratings.json and merge into hub payload."""
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+        _elabels = {e["id"]: e.get("label", e["id"]) for e in _AE}
+    except Exception:
+        _elabels = {}
     result = {
         "status":      "ready",
         "event_bands": _mhub_dynamic_bands(),
         "chart":       {"checkpoints": [], "match_events": []},
         "leaderboard": {"teams": [], "beta": get_site_model()["beta"],
                         "as_of_date": None},
+        # Fallback labels for every event id in ALL_EVENTS. The page's own
+        # EVENT_LABELS dict is hand-written and covers only the franchised
+        # circuit, so off-circuit events that still feed BenPom (EWC and its
+        # qualifiers, China Evolution, RBHG, …) rendered with a blank event
+        # name in match lists. Shipping the full map means a newly-added event
+        # is labelled without touching the JS.
+        "event_labels": _elabels,
     }
 
     # ── Chart data ─────────────────────────────────────────────────────────────
@@ -7977,18 +7989,39 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .tab.tab-disabled{opacity:.4;cursor:not-allowed;border-color:#e0d4ec}
 .tab.tab-disabled:hover{border-color:#e0d4ec;color:#444}
 
-.panels-outer{overflow:hidden;transition:height .55s cubic-bezier(.22,1,.36,1)}
+/* NB: height is deliberately NOT transitioned. It is a layout property, so
+   animating it forced a full relayout of a multi-thousand-pixel subtree on
+   every frame of the .panel-track transform — the transform itself is
+   compositor-only, but the concurrent height animation dragged tab switches
+   down to ~37fps. The height is now set imperatively (see the tab handler:
+   pinned to max(from,to) for the duration of the slide, then settled once). */
+.panels-outer{overflow:hidden}
 /* Slide curve = ease-out-quint. Snappier finish than the symmetric ease,
    so the panel "lands" without that mid-slide hesitation that read as
    a stutter. transform-only animation runs on the compositor. */
-.panel-track{display:flex;align-items:flex-start;width:400%;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
-.panel-track.show-b{transform:translate3d(-25%,0,0)}
-.panel-track.show-c{transform:translate3d(-50%,0,0)}
-.panel-track.show-d{transform:translate3d(-75%,0,0)}
+/* 5 panels: Team Ratings, Map Ratings, Upcoming, Recent, Simulator. The track
+   is (100 × n_panels)% wide and each panel is (100 / n_panels)%, so a step is
+   20%. Panel M sits between A and B in the DOM, matching the tab order. */
+.panel-track{display:flex;align-items:flex-start;width:500%;transition:transform .55s cubic-bezier(.22,1,.36,1);will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden}
+.panel-track.show-m{transform:translate3d(-20%,0,0)}
+.panel-track.show-b{transform:translate3d(-40%,0,0)}
+.panel-track.show-c{transform:translate3d(-60%,0,0)}
+.panel-track.show-d{transform:translate3d(-80%,0,0)}
 /* contain: isolates each panel's layout/paint from its neighbors so the
    simulator iframe (2400px tall) can't trigger a layout recalc of the
    sibling panels during the slide. */
-.panel{width:25%;min-width:0;contain:layout paint style}
+.panel{width:20%;min-width:0;contain:layout paint style}
+/* .panel-track is a flex row, so it is as tall as its TALLEST child, and
+   will-change:transform promotes that whole box to one compositing layer.
+   With Recent Matches at ~35,000px that was a ~7500x35000 (263 megapixel)
+   layer being re-rastered as it slid — 60-130ms of paint per tab switch even
+   though only ~1000px is ever on screen.
+   content-visibility:hidden drops a panel's rendering entirely, so an
+   off-screen panel contributes neither paint nor height. Applied only to the
+   tall DOM-heavy panels: panelA owns the Chart.js canvas (toggling
+   renderability there risks a 0-width resize) and panelD is a 638px iframe,
+   so neither is worth the risk for the saving. */
+.panel.cv-off{content-visibility:hidden}
 
 .region-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;transition:opacity .3s,max-height .5s cubic-bezier(.55,.06,.36,.98),margin-bottom .5s cubic-bezier(.55,.06,.36,.98);justify-content:center;padding:0 24px;overflow:hidden;max-height:60px}
 .region-pills.hidden-panel{opacity:0 !important;max-height:0;margin-bottom:0;pointer-events:none;transition:opacity .25s,max-height .45s cubic-bezier(.55,.06,.36,.98) .15s,margin-bottom .45s cubic-bezier(.55,.06,.36,.98) .15s}
@@ -8141,6 +8174,73 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-region.cn{background:rgba(219,39,119,.12);color:#be185d}
 .lb-chevron{color:#bbb;font-size:.62rem;text-align:center;transition:transform .2s}
 .lb-row.selected .lb-chevron{transform:rotate(180deg)}
+
+/* ── Map Ratings panel ────────────────────────────────────────────────────
+   Every team × map combination as one row. Same card/grid language as the
+   Current Rankings leaderboard, one extra column for the map name and one
+   for the season W-L. */
+.mr-card-wrap{padding:0 24px;max-width:860px;margin:0 auto}
+.mr-card{background:#fff;border-radius:16px;overflow:hidden}
+.mr-header-row{padding:14px 20px;display:flex;align-items:center;justify-content:center;position:relative;border-bottom:1px solid rgba(61,26,110,.1)}
+.mr-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:.95rem;color:#000;text-align:center}
+.mr-count{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:.7rem;color:#666}
+.mr-controls{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid rgba(61,26,110,.08)}
+.mr-lab{font-family:'Plus Jakarta Sans',sans-serif;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#888}
+.mr-mapchip{border:1px solid #e0d4ec;background:#fff;color:#444;border-radius:100px;padding:5px 12px;font-family:inherit;font-size:.72rem;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.mr-mapchip:hover{border-color:#b79ae0;color:#3d1a6e}
+.mr-mapchip.active{background:#3d1a6e;border-color:#3d1a6e;color:#fff}
+.mr-col-hdr{display:grid;grid-template-columns:44px 1.6fr 1.1fr .9fr .9fr .8fr 24px;align-items:center;padding:8px 24px;gap:10px;border-bottom:2px solid rgba(61,26,110,.1)}
+.mr-col-hdr span{font-family:'Plus Jakarta Sans',sans-serif;font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#888;text-align:center}
+.mr-col-hdr span.sortable{cursor:pointer;user-select:none;transition:color .15s}
+.mr-col-hdr span.sortable:hover{color:#3d1a6e}
+.mr-col-hdr span.sorted{color:#3d1a6e}
+.mr-arrow{font-size:.55rem;margin-left:3px}
+.mr-row{display:grid;grid-template-columns:44px 1.6fr 1.1fr .9fr .9fr .8fr 24px;align-items:center;padding:11px 24px;gap:10px;border-bottom:1px solid rgba(61,26,110,.06)}
+.mr-row:last-child{border-bottom:none}
+.mr-row:hover{background:rgba(61,26,110,.05)}
+.mr-rank{color:#aaa;font-size:.78rem;font-weight:600;text-align:center}
+.mr-team{display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;color:inherit;width:max-content;justify-self:center}
+.mr-team:hover .mr-name{text-decoration:underline;text-underline-offset:2px}
+.mr-team img{width:26px;height:26px;object-fit:contain;flex-shrink:0}
+.mr-name{font-weight:700;font-size:.9rem;color:#111}
+.mr-map{font-size:.82rem;font-weight:700;color:#444;text-align:center;justify-self:center}
+.mr-rating{font-weight:700;font-size:.95rem;text-align:center;justify-self:center;font-variant-numeric:tabular-nums;color:#111}
+.mr-rec{font-size:.82rem;text-align:center;justify-self:center;font-variant-numeric:tabular-nums;color:#555;font-weight:600}
+.mr-wpct{font-size:.8rem;text-align:center;justify-self:center;font-variant-numeric:tabular-nums;color:#777;font-weight:600}
+.mr-row{cursor:pointer;transition:background .15s}
+.mr-row.open{background:rgba(61,26,110,.08)}
+.mr-chev{color:#bbb;font-size:.6rem;text-align:center;justify-self:center;transition:transform .2s}
+.mr-row.open .mr-chev{transform:rotate(180deg)}
+/* Forces the out-of-pool maps onto their own line so the active pool always
+   occupies the first row of chips. */
+.mr-chipbreak{flex-basis:100%;height:0}
+.mr-lab-out{opacity:.75}
+.mr-mapchip.out{border-style:dashed;color:#8b7fa0}
+.mr-detail{background:rgba(61,26,110,.03);border-bottom:1px solid rgba(61,26,110,.06);animation:sd .18s ease;overflow:hidden}
+.mr-detail.closing{animation:su .22s ease forwards;pointer-events:none}
+.mr-detail-inner{padding:10px 24px 12px}
+.mr-detail-hdr{font-size:.66rem;font-weight:800;color:#777;text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px}
+.mr-detail .lb-map-game-row{border-radius:7px}
+.mr-detail .lb-map-game-row:hover{background:rgba(61,26,110,.05)}
+.mr-detail .lb-mg-inner{padding:5px 8px}
+/* Fixed widths on the trailing fields so score/diff/date form real columns —
+   .lb-mg-opp is flex:1, which otherwise leaves them ragged at every row. */
+.mr-detail .lb-mg-score{min-width:52px;text-align:right}
+.mr-detail .lb-mg-diff{min-width:34px}
+.mr-detail .lb-mg-meta{min-width:200px;text-align:right}
+@media (max-width:700px){.mr-detail .lb-mg-meta{min-width:0}}
+.mr-empty{padding:28px;text-align:center;color:#888;font-size:.85rem}
+.mr-more{padding:14px;text-align:center}
+.mr-morebtn{border:1px solid #e0d4ec;background:#fff;color:#3d1a6e;border-radius:100px;padding:8px 20px;font-family:inherit;font-size:.75rem;font-weight:800;cursor:pointer;transition:background .15s,border-color .15s}
+.mr-morebtn:hover{background:#f4eefb;border-color:#b79ae0}
+@media (max-width:700px){
+  .mr-card-wrap{padding:0 10px}
+  .mr-col-hdr,.mr-row{grid-template-columns:32px 1.4fr 1fr .8fr .8fr 18px;padding-left:10px;padding-right:10px;gap:6px}
+  .mr-col-hdr span:nth-child(6),.mr-wpct{display:none}
+  .mr-detail-inner{padding:10px 10px 12px}
+  .mr-team img{width:22px;height:22px}
+  .mr-name{font-size:.82rem}
+}
 
 .lb-detail{border-bottom:1px solid rgba(61,26,110,.07);animation:sd .18s ease}
 @keyframes sd{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:none}}
@@ -8400,7 +8500,8 @@ body:has(.flying)::after{animation-play-state:paused}
   </div>
 
   <div class="tab-bar" id="tabBar" style="opacity:0">
-    <button class="tab active" data-panel="a">BenPom Ratings</button>
+    <button class="tab active" data-panel="a">Team Ratings</button>
+    <button class="tab tab-disabled" data-panel="m" title="Available once data finishes loading">Map Ratings</button>
     <button class="tab tab-disabled" data-panel="b" title="Available once data finishes loading">Upcoming Matches</button>
     <button class="tab tab-disabled" data-panel="c" title="Available once data finishes loading">Recent Matches</button>
     <button class="tab tab-disabled" data-panel="d" title="Available once data finishes loading">Simulator</button>
@@ -8470,8 +8571,23 @@ body:has(.flying)::after{animation-play-state:paused}
         </div>
       </div>
 
+      <!-- Panel M — Map Ratings (every team × map combination) -->
+      <div class="panel cv-off" id="panelM">
+        <div class="mr-card-wrap">
+          <div class="mr-card">
+            <div class="mr-header-row">
+              <span class="mr-title">Map Ratings</span>
+              <span class="mr-count" id="mrCount"></span>
+            </div>
+            <div class="mr-controls" id="mrControls"></div>
+            <div class="mr-col-hdr" id="mrColHdr"></div>
+            <div id="mrBody"><div class="mr-empty">Loading&hellip;</div></div>
+          </div>
+        </div>
+      </div>
+
       <!-- Panel B -->
-      <div class="panel" id="panelB">
+      <div class="panel cv-off" id="panelB">
         <div class="upcoming-panel">
           <div class="upcoming-heading">Upcoming Matches</div>
           <div class="upcoming-sub">Next 2 weeks across all regions</div>
@@ -8480,7 +8596,7 @@ body:has(.flying)::after{animation-play-state:paused}
       </div>
 
       <!-- Panel C — Recent Matches -->
-      <div class="panel" id="panelC">
+      <div class="panel cv-off" id="panelC">
         <div class="upcoming-panel">
           <div class="past-heading">Recent Matches</div>
           <div class="past-sub">Last 2 weeks &middot; projected probability uses ratings from the morning before each match</div>
@@ -8759,7 +8875,7 @@ const SKIP_INTRO = /(?:^|[#&])(team=|panel=)/i.test(location.hash);
 // broken/blank and won't recover). Mark every non-active panel `inert` so Tab
 // can never enter it, and zero any stray focus-scroll on the container.
 function updatePanelInert() {
-  const idMap = {a:'panelA', b:'panelB', c:'panelC', d:'panelD'};
+  const idMap = {a:'panelA', m:'panelM', b:'panelB', c:'panelC', d:'panelD'};
   Object.keys(idMap).forEach(p => {
     const el = document.getElementById(idMap[p]);
     if (!el) return;
@@ -8771,6 +8887,55 @@ function updatePanelInert() {
 }
 updatePanelInert();
 
+// ── Panel render bookkeeping ─────────────────────────────────────────────────
+// Panels keep their DOM between switches, so re-rendering on every tab click
+// was pure waste — and worse, it ran on the same frame the slide started,
+// which is what produced the 130ms stalls (renderPast in particular kicks off
+// per-match Monte Carlo sims). Render only when the underlying data or the
+// region filter actually changed, and always BEFORE the transition begins so
+// the work can never eat animation frames.
+let _panelRenderKey = {};
+let _panelSliding   = false;
+let _slideEndTimer  = null;
+
+function _panelRenderState() {
+  return (hubData ? (hubData.as_of_date || '') : '') + '|' + activeRegion;
+}
+function _ensurePanelRendered(p) {
+  if (!hubData) return;
+  const key = _panelRenderState();
+  if (_panelRenderKey[p] === key) return;
+  if      (p === 'm') renderMapRatings(hubData);
+  else if (p === 'b') renderUpcoming(hubData);
+  else if (p === 'c') renderPast(hubData);
+  else return;                     // 'a' and 'd' manage their own lifecycle
+  _panelRenderKey[p] = key;
+}
+function _panelHeightOf(p) {
+  const idMap = {a:'panelA', m:'panelM', b:'panelB', c:'panelC', d:'panelD'};
+  const el = document.getElementById(idMap[p] || 'panelA');
+  return el ? el.scrollHeight : 0;
+}
+
+// Panels whose rendering we toggle. panelA (Chart.js canvas) and panelD
+// (iframe) are deliberately excluded — see the .cv-off comment in the CSS.
+const _CV_PANELS = {m:'panelM', b:'panelB', c:'panelC'};
+
+// Make a panel renderable (must happen before measuring it or sliding it in).
+function _panelRenderable(p) {
+  const el = document.getElementById(_CV_PANELS[p] || '');
+  if (el) el.classList.remove('cv-off');
+}
+// Drop every panel except `keep` (and the one mid-slide) out of rendering.
+function _collapseIdlePanels(keep) {
+  Object.keys(_CV_PANELS).forEach(p => {
+    const el = document.getElementById(_CV_PANELS[p]);
+    if (!el) return;
+    if (p === keep) el.classList.remove('cv-off');
+    else el.classList.add('cv-off');
+  });
+}
+
 // ── Tab switching ────────────────────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -8778,27 +8943,51 @@ document.querySelectorAll('.tab').forEach(btn => {
     // status:"ready" (see enableHubTabs()) — ignore clicks on them until
     // then instead of rendering against a still-building dataset.
     if (btn.classList.contains('tab-disabled')) return;
+    if (btn.dataset.panel === activePanel) return;
     document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+
+    const outer = document.querySelector('.panels-outer');
+    const fromH = outer ? outer.offsetHeight : 0;
+
     activePanel = btn.dataset.panel;
     updatePanelInert();
+
+    // All layout-touching work happens here, before the slide starts: make the
+    // incoming panel renderable, build it if it's stale, measure it, then pin
+    // the container to the taller of the two panels so its height cannot
+    // change mid-slide. Only the outgoing + incoming panels are renderable for
+    // the duration of the slide; the rest stay collapsed out of the layer.
+    _panelRenderable(activePanel);
+    _ensurePanelRendered(activePanel);
+    const toH = _panelHeightOf(activePanel);
+    _panelSliding = true;
+    if (outer && (fromH || toH)) outer.style.height = Math.max(fromH, toH) + 'px';
+
     const track = document.getElementById('panelTrack');
+    track.classList.toggle('show-m', activePanel === 'm');
     track.classList.toggle('show-b', activePanel === 'b');
     track.classList.toggle('show-c', activePanel === 'c');
     track.classList.toggle('show-d', activePanel === 'd');
     const rp = document.getElementById('regionPills');
     // Override the inline transition (set by fadeIn) so max-height + margin animate too
     rp.style.transition = 'opacity .25s ease, max-height .5s cubic-bezier(.55,.06,.36,.98), margin-bottom .5s cubic-bezier(.55,.06,.36,.98)';
-    rp.classList.toggle('hidden-panel', activePanel !== 'a');
-    if (activePanel === 'b' && hubData) renderUpcoming(hubData);
-    if (activePanel === 'c' && hubData) renderPast(hubData);
+    // Map Ratings filters by region too, so the pills stay up for it.
+    rp.classList.toggle('hidden-panel', activePanel !== 'a' && activePanel !== 'm');
     // Sim is normally preloaded on init; if the user clicks before that
     // happens, defer the iframe-src assignment until after the slide so
     // the transform animation keeps the main thread to itself.
     if (activePanel === 'd' && !_simInitialized) {
       setTimeout(renderSimulator, 560);
     }
-    syncPanelsHeight();
+    // Once the slide has finished, drop the panel we slid away from back out
+    // of rendering and settle to the incoming panel's true height.
+    clearTimeout(_slideEndTimer);
+    _slideEndTimer = setTimeout(() => {
+      _panelSliding = false;
+      _collapseIdlePanels(activePanel);
+      syncPanelsHeight();
+    }, 580);
   });
 });
 
@@ -8808,10 +8997,34 @@ document.querySelectorAll('.tab').forEach(btn => {
 // align-items:flex-start keeps panels top-aligned; this fn pins .panels-outer
 // to just the active panel's natural height. Called on tab switch, data
 // render, sim-iframe resize, and window resize.
+var _syncQueued = false;
 function syncPanelsHeight() {
+  // Inert while a slide is in flight. The container is already pinned to
+  // max(from,to) by the tab handler, and every call here does a forced layout
+  // (read scrollHeight) followed by a layout invalidation (write height) —
+  // the ResizeObserver below fires on any panel mutation, so during a
+  // transition this turned into a read/write thrash loop on every frame.
+  if (_panelSliding) return;
+  // Coalesce to one measurement per frame. Expanding a match card animates
+  // max-height, so the observer fires continuously for the length of that
+  // animation; un-batched, each callback forced a fresh layout of a
+  // multi-thousand-pixel panel and cost a ~130ms stall on open.
+  if (_syncQueued) return;
+  _syncQueued = true;
+  requestAnimationFrame(function() {
+    _syncQueued = false;
+    syncPanelsHeightNow();
+  });
+}
+// Immediate variant, for the few callers that must have the container at its
+// final height before the very next statement (the chart intro measures scroll
+// targets against document height — if that height lands a frame late the
+// browser clamps the smooth-scroll and the page stays at scrollY=0).
+function syncPanelsHeightNow() {
+  if (_panelSliding) return;
   var outer = document.querySelector('.panels-outer');
   if (!outer) return;
-  var idMap = {a:'panelA', b:'panelB', c:'panelC', d:'panelD'};
+  var idMap = {a:'panelA', m:'panelM', b:'panelB', c:'panelC', d:'panelD'};
   var panel = document.getElementById(idMap[activePanel] || 'panelA');
   if (!panel) return;
   var h = panel.scrollHeight;
@@ -8824,7 +9037,7 @@ window.addEventListener('resize', syncPanelsHeight);
 if (window.ResizeObserver) {
   var _panelRO = new ResizeObserver(function(){ syncPanelsHeight(); });
   document.addEventListener('DOMContentLoaded', function(){
-    ['panelA','panelB','panelC','panelD'].forEach(function(id){
+    ['panelA','panelM','panelB','panelC','panelD'].forEach(function(id){
       var el = document.getElementById(id);
       if (el) _panelRO.observe(el);
     });
@@ -8849,9 +9062,214 @@ document.querySelectorAll('.pill').forEach(btn => {
       }
       buildChart(hubData);
       renderLeaderboard(hubData);
+      // The region is part of the panel render key, so drop the cache and
+      // rebuild whichever panel is on screen; the rest rebuild lazily on their
+      // next visit (see _ensurePanelRendered).
+      _panelRenderKey = {};
+      _ensurePanelRendered(activePanel);
     }
   });
 });
+
+// ── Map Ratings ──────────────────────────────────────────────────────────────
+// One row per (team, map) combination, built from the same leaderboard payload
+// the Team Ratings panel uses — team.all_maps carries the per-map rating plus
+// that team's W-L on the map for the current season.
+let mrMap    = 'All';     // 'All' or a single map name
+let mrSort   = 'rating';  // rating | team | map | rec | wpct
+let mrDesc   = true;
+let mrLimit  = 100;       // grows via "Show more"; 542 rows at once is a wall
+
+function mrRows(data) {
+  const teams = data.leaderboard.teams || [];
+  const visible = activeRegion === 'All' ? teams
+    : activeRegion === 'Top10'           ? teams.slice(0, 10)
+    : teams.filter(t => t.region === activeRegion);
+  const rows = [];
+  visible.forEach(t => {
+    (t.all_maps || []).forEach(m => {
+      if (mrMap !== 'All' && m.map !== mrMap) return;
+      const g = (m.w || 0) + (m.l || 0);
+      rows.push({org: t.org, region: t.region || '', map: m.map,
+                 rating: m.rating, w: m.w || 0, l: m.l || 0,
+                 games: g, wpct: g ? (m.w || 0) / g : 0});
+    });
+  });
+  const dir = mrDesc ? 1 : -1;
+  const cmp = {
+    rating: (a, b) => (b.rating - a.rating) * dir,
+    team:   (a, b) => a.org.localeCompare(b.org) * -dir || b.rating - a.rating,
+    map:    (a, b) => a.map.localeCompare(b.map) * -dir || b.rating - a.rating,
+    rec:    (a, b) => (b.w - a.w) * dir || b.rating - a.rating,
+    wpct:   (a, b) => (b.wpct - a.wpct) * dir || (b.games - a.games) * dir,
+  }[mrSort];
+  rows.sort(cmp);
+  return rows;
+}
+
+// Maps in the ACTIVE competitive pool, derived from play rather than hardcoded
+// so a pool rotation needs no code change: take the most recent ~200 map-games
+// and keep the maps holding at least a 5% share. The share floor drops maps
+// that only linger from the tail of the previous pool. Falls back to "all maps"
+// if match_events aren't loaded yet.
+let _poolCache = null;
+function _currentMapPool() {
+  if (_poolCache) return _poolCache;
+  const mes = (hubData?.chart?.match_events || []).slice()
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '')
+                 || (b.match_id || 0) - (a.match_id || 0));
+  const counts = {};
+  let tot = 0;
+  for (const me of mes) {
+    for (const m of (me.maps || [])) {
+      if (tot >= 200) break;
+      counts[m.map] = (counts[m.map] || 0) + 1;
+      tot++;
+    }
+    if (tot >= 200) break;
+  }
+  if (!tot) return null;
+  _poolCache = new Set(Object.keys(counts).filter(m => counts[m] / tot >= 0.05));
+  return _poolCache;
+}
+
+function renderMapRatings(data) {
+  if (!data || !data.leaderboard) return;
+  const teams = data.leaderboard.teams || [];
+  const allMaps = [...new Set(teams.flatMap(t => (t.all_maps || []).map(m => m.map)))].sort();
+  const pool    = _currentMapPool();
+  const inPool  = pool ? allMaps.filter(m => pool.has(m))  : allMaps;
+  const outPool = pool ? allMaps.filter(m => !pool.has(m)) : [];
+
+  const chip = (m, cls) =>
+    `<button class="mr-mapchip${cls || ''}${m === mrMap ? ' active' : ''}" data-map="${m}">`
+    + `${m === 'All' ? 'All Maps' : m}</button>`;
+  const ctl = document.getElementById('mrControls');
+  ctl.innerHTML = '<span class="mr-lab">Map</span>'
+    + chip('All') + inPool.map(m => chip(m)).join('')
+    + (outPool.length
+        ? '<span class="mr-chipbreak"></span><span class="mr-lab mr-lab-out">Out of pool</span>'
+          + outPool.map(m => chip(m, ' out')).join('')
+        : '');
+  ctl.querySelectorAll('.mr-mapchip').forEach(b => {
+    b.onclick = () => {
+      mrMap = b.dataset.map;
+      mrLimit = 100;
+      // Picking a single map means "rank teams on this map" — rating order is
+      // the only sensible default there.
+      if (mrMap !== 'All') { mrSort = 'rating'; mrDesc = true; }
+      renderMapRatings(data);
+    };
+  });
+
+  const COLS = [
+    {key: null,     label: '#'},
+    {key: 'team',   label: 'Team'},
+    {key: 'map',    label: 'Map'},
+    {key: 'rating', label: 'Rating'},
+    {key: 'rec',    label: 'W-L'},
+    {key: 'wpct',   label: 'Win%'},
+  ];
+  const hdr = document.getElementById('mrColHdr');
+  hdr.innerHTML = COLS.map(c => {
+    if (!c.key) return `<span>${c.label}</span>`;
+    const on = mrSort === c.key;
+    return `<span class="sortable${on ? ' sorted' : ''}" data-sort="${c.key}">${c.label}`
+         + (on ? `<span class="mr-arrow">${mrDesc ? '\\u25BC' : '\\u25B2'}</span>` : '') + '</span>';
+  }).join('');
+  hdr.querySelectorAll('.sortable').forEach(s => {
+    s.onclick = () => {
+      const k = s.dataset.sort;
+      if (mrSort === k) mrDesc = !mrDesc; else { mrSort = k; mrDesc = true; }
+      renderMapRatings(data);
+    };
+  });
+
+  const rows = mrRows(data);
+  const body = document.getElementById('mrBody');
+  document.getElementById('mrCount').textContent =
+    rows.length + ' combination' + (rows.length === 1 ? '' : 's')
+    + (mrMap === 'All' ? '' : ' \\u00b7 ' + mrMap);
+
+  if (!rows.length) {
+    body.innerHTML = '<div class="mr-empty">No map data for this filter.</div>';
+    syncPanelsHeight();
+    return;
+  }
+  const shown = rows.slice(0, mrLimit);
+  body.innerHTML = shown.map((r, i) => {
+    const rStr = (r.rating >= 0 ? '+' : '') + r.rating.toFixed(2);
+    return `<div class="mr-row" id="mrrow_${i}" data-org="${r.org}" data-map="${r.map}"
+                 title="Click for ${r.org}'s games on ${r.map}">
+      <div class="mr-rank">${i + 1}</div>
+      <a class="mr-team" href="/team/${encodeURIComponent(r.org)}" onclick="event.stopPropagation()" title="${r.org} \\u2014 full team profile">
+        <img src="/static/logos/${r.org}.png" onerror="this.style.display='none'" alt="${r.org}">
+        <span class="mr-name">${r.org}</span>
+      </a>
+      <div class="mr-map">${r.map}</div>
+      <div class="mr-rating">${rStr}</div>
+      <div class="mr-rec">${r.w}-${r.l}</div>
+      <div class="mr-wpct">${r.games ? Math.round(r.wpct * 100) + '%' : '\\u2014'}</div>
+      <div class="mr-chev">\\u25BC</div>
+    </div>`;
+  }).join('')
+  + (rows.length > shown.length
+      ? `<div class="mr-more"><button class="mr-morebtn" id="mrMore">Show more (${rows.length - shown.length} left)</button></div>`
+      : '');
+  body.querySelectorAll('.mr-row').forEach(row => {
+    row.onclick = () => _toggleMapRatingRow(row);
+  });
+  const more = document.getElementById('mrMore');
+  if (more) more.onclick = () => { mrLimit += 200; renderMapRatings(data); };
+  syncPanelsHeight();
+}
+
+// Expand one (team, map) row into that team's games on that map, most recent
+// first. Inserted as a sibling rather than re-rendering the table, so the page
+// doesn't jump. One row open at a time, matching the leaderboard's behaviour.
+function _toggleMapRatingRow(row) {
+  const detId = row.id + '_d';
+  const open  = document.getElementById(detId);
+  if (open) {
+    row.classList.remove('open');
+    open.classList.add('closing');
+    setTimeout(() => open.remove(), 220);
+    setTimeout(syncPanelsHeight, 240);
+    return;
+  }
+  document.querySelectorAll('#mrBody .mr-detail').forEach(d => d.remove());
+  document.querySelectorAll('#mrBody .mr-row.open').forEach(r => r.classList.remove('open'));
+
+  const org = row.dataset.org, map = row.dataset.map;
+  const games = _mapGamesFor(org, map);
+  const rec = row.querySelector('.mr-rec').textContent;
+  let inner;
+  if (!games.length) {
+    inner = '<div class="lb-map-no-games">No recorded games</div>';
+  } else {
+    inner = games.map(me => {
+      const g = _mapGameInfo(me, org, map);
+      return `<div class="lb-map-game-row ${g.won ? 'win' : 'loss'}"><div class="lb-mg-inner">
+        <span class="lb-mg-result">${g.won ? 'W' : 'L'}</span>
+        <img class="lb-mg-logo" src="/static/logos/${g.opp}.png" onerror="this.style.display='none'" alt="">
+        <span class="lb-mg-opp">${g.opp}</span>
+        <span class="lb-mg-score">${g.orgRd}\\u2013${g.oppRd}</span>
+        <span class="lb-mg-diff ${g.diffCls}">${g.diffStr}</span>
+        <span class="lb-mg-meta">${g.date}${g.evt ? ' \\u00b7 ' + g.evt : ''}</span>
+      </div></div>`;
+    }).join('');
+  }
+  const det = document.createElement('div');
+  det.id = detId;
+  det.className = 'mr-detail';
+  det.innerHTML = `<div class="mr-detail-inner">
+      <div class="mr-detail-hdr">${org} on ${map} \\u00b7 ${rec} this season</div>${inner}
+    </div>`;
+  det.onclick = e => e.stopPropagation();
+  row.classList.add('open');
+  row.after(det);
+  syncPanelsHeight();
+}
 
 // ── Intro animation ──────────────────────────────────────────────────────────
 async function introAnimation() {
@@ -9978,23 +10396,35 @@ async function showChartAndLeaderboard(data, fast) {
   const chartCard = document.querySelector('.chart-card');
   if (chartCard) chartCard.classList.add('entering');
 
-  // Wait for the slide-in to finish so the chart card is in its FINAL
-  // position before we measure / scroll. Doing this before the slide-in
-  // completes can race with the .panels-outer height transition + the
-  // ResizeObserver-driven height syncs, which were intermittently leaving
-  // the page at scrollY=0. Matches the chartEnter animation duration (1.4s)
-  // plus a small buffer.
-  await sleep(1500);
-
-  // Auto-scroll: smooth-center the chart card in the viewport. Browser
-  // handles the math (rect + height + innerHeight) and respects scroll
-  // anchoring. Then wait for the smooth scroll to settle before line
-  // drawing begins, so lines reveal on an already-centered page.
+  // Auto-scroll runs CONCURRENTLY with the slide-in, not after it — the two
+  // together used to cost 1500 + 650ms of dead time before the line draw.
+  //
+  // Waiting was never about the card's position: chartEnter is a purely
+  // horizontal translate (-100vw → 0), so the card's VERTICAL position is
+  // final the moment chartSection is shown. The real race was document
+  // height — .panels-outer animates its height over .55s, so the page wasn't
+  // tall enough yet and the browser clamped the scroll target to the current
+  // max, which is what intermittently left the page at scrollY=0.
+  //
+  // Snapping .panels-outer straight to its final height (transition
+  // suppressed for one frame) removes the clamp, so the smooth scroll can be
+  // kicked off immediately and glide while the card slides in.
   if (chartCard) {
+    const outer = document.querySelector('.panels-outer');
+    if (outer) {
+      const prevTransition = outer.style.transition;
+      outer.style.transition = 'none';
+      syncPanelsHeightNow();          // must land before the scroll is issued
+      void outer.offsetHeight;        // flush layout at the final height
+      outer.style.transition = prevTransition;
+    }
     try { chartCard.scrollIntoView({behavior:'smooth', block:'center'}); }
     catch(e) { chartCard.scrollIntoView(); }
-    await sleep(650);
   }
+
+  // One wait now covers both the 1.4s slide-in and the smooth scroll running
+  // alongside it, instead of a wait per phase.
+  await sleep(1500);
 
   // Rebuild with real lines, then immediately sweep curtain from left
   buildChart(data);
@@ -10072,6 +10502,34 @@ async function init() {
   // settled. Lets the click-to-open animation slide a fully-rendered panel
   // instead of doing a network fetch + layout pass mid-slide.
   preloadSimulator();
+
+  // Same idea for the other panels. Measured: a tab switch into an
+  // already-rendered panel holds a steady 60fps, while the FIRST switch into a
+  // cold one dropped 5-7 frames — building it (Recent Matches is ~170 cards)
+  // has to happen somewhere, and doing it on the click stalls the opening of
+  // the slide. Build them during idle time instead, staggered so they don't
+  // form one long task, and only once each (see _ensurePanelRendered's key).
+  _warmPanels(['m', 'b', 'c']);
+}
+
+// Build panels ahead of first use, one per idle slot. requestIdleCallback keeps
+// this off the critical path; the setTimeout fallback covers Safari.
+function _warmPanels(list) {
+  const idle = window.requestIdleCallback
+    || (fn => setTimeout(() => fn({timeRemaining: () => 50}), 200));
+  let i = 0;
+  (function next() {
+    if (i >= list.length) return;
+    const p = list[i++];
+    idle(() => {
+      // Never build while a slide is running — that's the jank we're avoiding.
+      if (_panelSliding) { setTimeout(next, 300); return; }
+      try { _ensurePanelRendered(p); } catch (e) {}
+      // Heights changed underneath the active panel's sibling; re-pin.
+      syncPanelsHeight();
+      next();
+    });
+  })();
 }
 
 // ── Leaderboard ──────────────────────────────────────────────────────────────
@@ -10180,7 +10638,7 @@ function buildDetailHTML(team) {
   const recentHtml = recent.map(m => {
     const d    = (m.delta >= 0 ? '+' : '') + parseFloat(m.delta).toFixed(2);
     const won  = m.result === 'W';
-    const evt  = EVENT_LABELS[m.event_id] || '';
+    const evt  = _eventLabel(m.event_id);
     const chips = mapChips(m.maps || [], org);
     const scoreParts = (m.score||'').split('-');
     const displayScore = (!won && scoreParts.length===2)
@@ -10225,6 +10683,39 @@ function buildDetailHTML(team) {
   </div>`;
 }
 
+// Event display name. EVENT_LABELS is a hand-written dict of short circuit
+// names ("Masters London"); anything it lacks — off-circuit events that still
+// feed BenPom, or a newly added one — falls back to the full label shipped in
+// the payload, so match lists never render a bare date.
+function _eventLabel(id) {
+  if (!id) return '';
+  return EVENT_LABELS[id] || (hubData && hubData.event_labels && hubData.event_labels[id]) || '';
+}
+
+// Every game `org` played on `map`, most recent first. Shared by the team-expand
+// panel's Map Breakdown and the Map Ratings tab's row expansion.
+function _mapGamesFor(org, map) {
+  return (hubData?.chart?.match_events || []).filter(me =>
+    (me.winner === org || me.loser === org) &&
+    (me.maps || []).some(m => m.map === map)
+  ).sort((a, b) => (b.match_id || 0) - (a.match_id || 0));
+}
+
+// One game's display fields from a match_event. W/L reflects the MAP outcome
+// (not the series) — a team can lose the series but win this specific map.
+function _mapGameInfo(me, org, map) {
+  const mInfo = (me.maps || []).find(m => m.map === map);
+  const won   = mInfo ? (mInfo.winner === org) : (me.winner === org);
+  const opp   = (me.winner === org) ? me.loser : me.winner;
+  const orgRd = mInfo ? (mInfo.winner === org ? mInfo.wr : mInfo.lr) : '?';
+  const oppRd = mInfo ? (mInfo.winner === org ? mInfo.lr : mInfo.wr) : '?';
+  const diff  = (typeof orgRd === 'number' && typeof oppRd === 'number') ? orgRd - oppRd : null;
+  return {won, opp, orgRd, oppRd, diff,
+          diffStr: diff !== null ? (diff >= 0 ? '+' : '') + diff : '',
+          diffCls: diff !== null ? (diff >= 0 ? 'pos' : 'neg') : '',
+          evt: _eventLabel(me.event_id), date: me.date};
+}
+
 function _expandMapRow(encOrg, encMap, rowId) {
   const org    = decodeURIComponent(encOrg);
   const map    = decodeURIComponent(encMap);
@@ -10244,37 +10735,22 @@ function _expandMapRow(encOrg, encMap, rowId) {
     return;
   }
   tr.classList.add('open');
-  const events = (hubData?.chart?.match_events || []);
-  const games  = events.filter(me =>
-    (me.winner === org || me.loser === org) &&
-    (me.maps  || []).some(m => m.map === map)
-  ).sort((a, b) => (b.match_id || 0) - (a.match_id || 0));
+  const games = _mapGamesFor(org, map);
 
   let innerHtml;
   if (!games.length) {
     innerHtml = `<td colspan="4" class="lb-map-no-games">No recorded games</td>`;
   } else {
     const rows = games.map(me => {
-      const mInfo  = (me.maps || []).find(m => m.map === map);
-      // W/L reflects the MAP outcome (not the series outcome) — a team can lose
-      // the series but win this specific map. Falls back to series winner only
-      // if per-map info is missing.
-      const won    = mInfo ? (mInfo.winner === org) : (me.winner === org);
-      const opp    = (me.winner === org) ? me.loser : me.winner;
-      const orgRd  = mInfo ? (mInfo.winner === org ? mInfo.wr : mInfo.lr) : '?';
-      const oppRd  = mInfo ? (mInfo.winner === org ? mInfo.lr : mInfo.wr) : '?';
-      const diff   = (typeof orgRd === 'number' && typeof oppRd === 'number') ? orgRd - oppRd : null;
-      const diffStr = diff !== null ? (diff >= 0 ? '+' : '') + diff : '';
-      const diffCls = diff !== null ? (diff >= 0 ? 'pos' : 'neg') : '';
-      const evt    = EVENT_LABELS[me.event_id] || '';
-      return `<tr class="lb-map-game-row ${won?'win':'loss'}">
+      const g = _mapGameInfo(me, org, map);
+      return `<tr class="lb-map-game-row ${g.won?'win':'loss'}">
         <td colspan="4"><div class="lb-mg-inner">
-          <span class="lb-mg-result">${won?'W':'L'}</span>
-          <img class="lb-mg-logo" src="/static/logos/${opp}.png" onerror="this.style.display='none'" alt="">
-          <span class="lb-mg-opp">${opp}</span>
-          <span class="lb-mg-score">${orgRd}–${oppRd}</span>
-          <span class="lb-mg-diff ${diffCls}">${diffStr}</span>
-          <span class="lb-mg-meta">${me.date}${evt?' · '+evt:''}</span>
+          <span class="lb-mg-result">${g.won?'W':'L'}</span>
+          <img class="lb-mg-logo" src="/static/logos/${g.opp}.png" onerror="this.style.display='none'" alt="">
+          <span class="lb-mg-opp">${g.opp}</span>
+          <span class="lb-mg-score">${g.orgRd}–${g.oppRd}</span>
+          <span class="lb-mg-diff ${g.diffCls}">${g.diffStr}</span>
+          <span class="lb-mg-meta">${g.date}${g.evt?' · '+g.evt:''}</span>
         </div></td>
       </tr>`;
     }).join('');
@@ -10321,7 +10797,7 @@ function _matchTooltipHTML(m, won) {
   const d    = won ? m.winner_delta : m.loser_delta;
   const rat  = won ? m.winner_after  : m.loser_after;
   const dStr = (d >= 0 ? '+' : '') + d.toFixed(2);
-  const evt  = EVENT_LABELS[m.event_id] || m.event_id || '';
+  const evt  = _eventLabel(m.event_id) || m.event_id || '';
   // Series score always shown as [org score]-[opp score]
   const rawParts = (m.series_score || '0-0').split('-');
   const displayScore = won
@@ -10726,7 +11202,12 @@ function renderUpcoming(data) {
     // slide-in animation actually paints and the UI stays responsive.
     setTimeout(function(){ processMatch(idx + 1); }, 0);
   }
-  processMatch(0);
+  // Don't start the per-match MC chain while a panel slide is in flight: each
+  // match is a 20k-sim block and the setTimeout(0) chain would run those
+  // between animation frames, which is what still cost ~10 frames on the
+  // switch into this panel. Wait for the slide, then stream the cards in.
+  if (_panelSliding) setTimeout(function(){ processMatch(0); }, 600);
+  else processMatch(0);
 }
 
 // ── Past matches ─────────────────────────────────────────────────────────────
@@ -11032,25 +11513,53 @@ function renderPast(data) {
   // then process each match's 20k-sim MC one at a time via setTimeout. Each
   // card gets inserted + slid in from the right as its sim completes.
   // Result: no main-thread block on tab switch; the user sees cards stream in.
-  var groups = [];
-  var curDate = null;
-  past.forEach(function(m, i) {
-    if (m.date !== curDate) {
-      curDate = m.date;
-      groups.push({date: m.date, indices: []});
-    }
-    groups[groups.length-1].indices.push(i);
-  });
+  // Render in batches. "Last 2 weeks across all regions" is ~200 matches; all
+  // of them at once made this panel ~35,000px of DOM, which is what dominated
+  // tab-switch cost — the .panel-track layer is sized to its tallest panel, so
+  // one huge panel taxed EVERY transition, and laying it out on demand cost
+  // ~75ms. Same Show-more pattern as the Map Ratings table.
+  var PAST_BATCH = 40;
+  var _pastLimit = Math.min(PAST_BATCH, past.length);
+
   // Sanitize date for use as a CSS id (no spaces / weird chars expected, but safe).
   function _groupId(d) { return 'past-group-' + (d || 'undated').replace(/[^a-zA-Z0-9_-]/g, '_'); }
-  var groupedHtml = groups.map(function(g) {
-    var dateLabel = g.date ? new Date(g.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) : '';
-    return '<div class="upc-day-group" id="'+_groupId(g.date)+'">'+
-      '<div class="upc-day-label">'+dateLabel+'</div>'+
-      '<div class="upc-day-cards"></div>'+
-    '</div>';
-  }).join('');
-  body.innerHTML = '<div class="upc-list">'+groupedHtml+'</div>';
+  body.innerHTML = '<div class="upc-list"></div>';
+  var listEl = body.querySelector('.upc-list');
+
+  // Day-group frames are created as their first card arrives, so a batch never
+  // leaves empty date headers hanging below the last rendered match.
+  function _ensureGroup(date) {
+    var id = _groupId(date);
+    var el = document.getElementById(id);
+    if (el) return el;
+    var dateLabel = date
+      ? new Date(date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})
+      : '';
+    var g = document.createElement('div');
+    g.className = 'upc-day-group';
+    g.id = id;
+    g.innerHTML = '<div class="upc-day-label">'+dateLabel+'</div><div class="upc-day-cards"></div>';
+    listEl.appendChild(g);
+    return g;
+  }
+
+  function _renderPastMoreBtn() {
+    var old = document.getElementById('pastMoreWrap');
+    if (old) old.remove();
+    if (_pastLimit >= past.length) return;
+    var w = document.createElement('div');
+    w.id = 'pastMoreWrap';
+    w.className = 'mr-more';
+    w.innerHTML = '<button class="mr-morebtn" id="pastMore">Show more ('
+                + (past.length - _pastLimit) + ' left)</button>';
+    listEl.appendChild(w);
+    w.querySelector('#pastMore').onclick = function() {
+      var from = _pastLimit;
+      _pastLimit = Math.min(_pastLimit + PAST_BATCH, past.length);
+      w.remove();
+      processMatch(from);
+    };
+  }
 
   // Heading fly-in fires immediately (cheap, no MC). The list-level fly-in is
   // skipped — we handle per-card reveal below.
@@ -11065,10 +11574,10 @@ function renderPast(data) {
   }
 
   function processMatch(idx) {
-    if (idx >= past.length) return;
+    if (idx >= _pastLimit) { _renderPastMoreBtn(); syncPanelsHeight(); return; }
     var m = past[idx];
     var cardHtml = buildCard(m);  // 20k sims for this one match
-    var groupEl = document.getElementById(_groupId(m.date));
+    var groupEl = _ensureGroup(m.date);
     if (groupEl) {
       var container = groupEl.querySelector('.upc-day-cards');
       if (container) {
@@ -11093,7 +11602,12 @@ function renderPast(data) {
     // slide-in animation actually paints and the UI stays responsive.
     setTimeout(function(){ processMatch(idx + 1); }, 0);
   }
-  processMatch(0);
+  // Don't start the per-match MC chain while a panel slide is in flight: each
+  // match is a 20k-sim block and the setTimeout(0) chain would run those
+  // between animation frames, which is what still cost ~10 frames on the
+  // switch into this panel. Wait for the slide, then stream the cards in.
+  if (_panelSliding) setTimeout(function(){ processMatch(0); }, 600);
+  else processMatch(0);
 }
 
 // ── Match Simulator (iframes the historical matchup tool, locked to current) ─
@@ -11273,10 +11787,12 @@ function _flyInPanel(panelSel, headingSel, subSel, opts) {
   }, totalDur);
 }
 function triggerUpcomingFlyIn() {
-  // skipList: cards no longer fly in as one batch — each reveals individually
-  // via .card-loaded as its own MC sim completes (see renderUpcoming's
-  // progressive render loop), same as triggerPastFlyIn's cards.
-  _flyInPanel('#panelB', '.upcoming-heading', '.upcoming-sub', {skipList: true});
+  // Upcoming Matches heading + subtitle render statically (no letter fly-in) —
+  // per user preference, matching triggerPastFlyIn. Leaving this a no-op means
+  // _flyInPanel never splits the text into .fly-char spans, so the opacity:0
+  // start state never applies and the text simply paints. The match cards still
+  // reveal individually via the progressive-load path in renderUpcoming
+  // (.card-loaded per match), which is independent of this function.
 }
 function triggerPastFlyIn() {
   // Recent Matches heading + subtitle render statically (no letter fly-in) —
