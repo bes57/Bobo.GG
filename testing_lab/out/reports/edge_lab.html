@@ -1,0 +1,357 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Edge vs Market — is the model beating Kalshi?</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --badbg:#fbeaea;
+         --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:940px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 18px; flex-wrap:wrap; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ .banner { background:var(--goodbg); border:1px solid #cfe8da; border-left:6px solid var(--good);
+   border-radius:14px; padding:14px 20px; margin:0 0 18px; font-size:.92rem; }
+ .banner b { color:var(--good); letter-spacing:.4px; }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.72rem; min-width:24px;
+        height:24px; padding:0 4px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ h3 { font-size:.93rem; font-weight:700; margin:16px 0 6px; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); } .good { color:var(--good); } .bad { color:var(--bad); }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:12px 0; }
+ .card { border:1px solid var(--line); border-radius:14px; padding:13px 15px; }
+ .card .lbl { font-size:.68rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--dim); }
+ .card .big { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.3rem; margin:2px 0; }
+ .card .sub { font-size:.76rem; color:var(--dim); }
+ table { width:100%; border-collapse:collapse; font-size:.84rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+ tr:last-child td { border-bottom:0; }
+ .verd { font-weight:700; border-radius:999px; padding:2px 9px; font-size:.68rem; white-space:nowrap; }
+ .verd.dead { background:var(--badbg); color:var(--bad); }
+ .verd.hold { background:#f1f0f4; color:var(--dim); }
+ .verd.lead { background:var(--goodbg); color:var(--good); }
+ .verd.warn { background:var(--warnbg); color:var(--warn); }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg);
+            border-radius:0 12px 12px 0; padding:11px 15px; margin:10px 0; font-size:.88rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ .callout.bad { border-color:var(--bad); background:var(--badbg); }
+ canvas { max-height:340px; }
+ .chartbox { margin:14px 0 2px; }
+ .chartbox.tall { height:420px; } .chartbox.tall canvas { max-height:none; height:100% !important; }
+ .dl { display:block; text-align:right; font-size:.72rem; margin:2px 0 10px; }
+ .dl a { color:var(--acc); text-decoration:none; font-weight:700; }
+ .dl a:hover { text-decoration:underline; }
+ .cap { font-size:.78rem; color:var(--dim); margin:4px 0 8px; }
+ code { font-family:'JetBrains Mono',monospace; font-size:.8em; background:#f4f2f8;
+        border:1px solid var(--line); border-radius:6px; padding:1px 6px; }
+ ul, ol { font-size:.9rem; margin:8px 0 8px 20px; } li { margin:5px 0; }
+ .disc { border:2px solid var(--warn); border-radius:14px; padding:16px 18px; margin:14px 0;
+        background:#fffdfa; }
+ .disc .dhead { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:var(--warn);
+        font-size:.9rem; margin-bottom:8px; }
+ .disc pre { white-space:pre-wrap; font-family:'JetBrains Mono',monospace; font-size:.76rem;
+        line-height:1.6; color:var(--ink); }
+ .scroll { overflow-x:auto; }
+ @media (max-width:640px) { section { padding:18px 14px; } }
+
+.banner b { color:var(--warn); }</style></head><body><div class="wrap">
+
+<h1>Edge vs Market</h1>
+<div class="tagline">Where does BenPom beat Kalshi, and how sure can we be?</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab">Favorites Lab</a>
+<a href="/testing/report/final_model">Final Model</a>
+<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v8_lab">v8 Lab</a>
+<a href="/testing/report/roster_adaptation">Roster</a>
+<a href="/testing/report/v9_lab">v9 Lab</a>
+<a href="/testing/report/v10_lab">v10 Lab</a>
+<a href="/testing/report/edge_lab" class="on">Edge vs Market</a>
+</div>
+
+<div class="banner" style="background:var(--warnbg);border-color:#eddcc9;border-left-color:var(--warn)">
+<b>THE ANSWER — NO DEMONSTRATED MODEL EDGE, AND THIS WAS ALREADY TESTED WITH REAL MONEY.</b>
+Two independent findings, either of which is sufficient. <b>(1)</b> Backing
+<em>every</em> market underdog blindly, model switched off, returned
+<b>+32.55%</b> against the model's <b>+34.71%</b> &mdash;
+the model is worth about <b>+2.2 points</b> on top of ignoring it, and it
+is slightly <em>worse</em> at picking winners (59.7% vs
+60.1%). <b>(2)</b> This exact thesis traded live for a week in
+July: <b>719 fills, $308.69 lost</b>, and a
+bootstrap says that is real underperformance, not variance
+(p&nbsp;=&nbsp;0.000). The backtest edge did
+not survive contact with a real order book.
+</div>
+
+<section>
+<h2><span class="n">1</span>The question, and the control that answers it</h2>
+<p>The v10 lab reported +34.71% ROI at a &ge;5c edge and
+flagged that 178 of 196 bets
+were on the underdog. That pattern has two possible explanations, and they have
+completely different consequences:</p>
+<ol>
+<li><b>The model finds mispriced underdogs.</b> Real edge, worth trading.</li>
+<li><b>Underdogs were simply cheap.</b> A market-wide bias any coin could have
+harvested; the model is incidental.</li>
+</ol>
+<p>These are trivially separable, and the separating test is the one the
+original read was missing: <b>back every underdog at the market price with the
+model switched off</b>. If that returns roughly the same, hypothesis 2 wins.</p>
+<div class="cards">
+  <div class="card"><div class="lbl">Sample</div><div class="big">253</div>
+    <div class="sub">settled tier-1 matches</div></div>
+  <div class="card"><div class="lbl">Window</div><div class="big">3 months</div>
+    <div class="sub">2026-05-15 .. 2026-08-12</div></div>
+  <div class="card"><div class="lbl">Blind underdog</div>
+    <div class="big good">+32.55%</div><div class="sub">no model at all</div></div>
+  <div class="card"><div class="lbl">Model adds</div>
+    <div class="big warn">+2.2 pts</div><div class="sub">over blind</div></div>
+</div>
+</section>
+
+<section>
+<h2><span class="n">2</span>The control result</h2>
+<div class="chartbox"><canvas id="c_ctrl"></canvas></div>
+<p class="cap">ROI with 95% bootstrap intervals. The first bar uses no model
+whatsoever. The gap between it and the model's bets is
+<b>+2.2 points</b> &mdash; well inside the intervals, i.e. not
+distinguishable from zero contribution.</p>
+<div class="dl"><a href="/testing/edge/stats/v10_page_edge_control.json" download>&#8681; v10_page_edge_control.json</a></div>
+<div class="callout warn">Backing every <b>favourite</b> returned
+<b>-14.03%</b> (60.1% hit). That is the same fact stated
+from the other side: in this window the market's favourites were systematically
+overpriced. A model that is under-confident will disagree with those favourites
+by construction and look clever for doing so.</div>
+</section>
+
+<section>
+<h2><span class="n">3</span>The part that settles it: it was traded, and it lost</h2>
+<p>Everything above is a backtest. The lab already has the thing a backtest is a
+substitute for &mdash; a week of real fills against this exact market, recorded in
+the v8 phase-7 autopsy.</p>
+<div class="cards">
+  <div class="card"><div class="lbl">Real fills</div><div class="big">719</div>
+    <div class="sub">8,143 contracts, 37 events</div></div>
+  <div class="card"><div class="lbl">Deployed</div>
+    <div class="big">$3,803</div><div class="sub">2026-07-21 .. 2026-07-28</div></div>
+  <div class="card"><div class="lbl">Realized</div>
+    <div class="big bad">-$308.69</div>
+    <div class="sub">fees $0.00 &mdash; not a cost problem</div></div>
+  <div class="card"><div class="lbl">Primary side ROI</div>
+    <div class="big bad">-26.1%</div>
+    <div class="sub">on $1,634</div></div>
+</div>
+<p>The simulation that authorised those trades expected
+<b>+$109</b>. A common-random-number bootstrap
+over 4,000 resamples, unit = settled event, put the observed
+result at <b>p = 0.000</b> under that
+hypothesis. The lab's own verdict:
+<span class="mono">"real underperformance (p<0.05)"</span> &mdash; the loss was
+not bad luck.</p>
+<h3>Why: adverse selection, not fees and not the spread</h3>
+<p>Fees were <b>$0.00</b> (this series pays no maker fee), and the
+market-making markouts were fine &mdash; the spread was being captured. The damage
+is in <em>which</em> orders got filled:</p>
+<div class="scroll"><table>
+<thead><tr><th>Measure</th><th>Value</th></tr></thead><tbody>
+<tr><td>Gap on filled contracts (realized &minus; predicted)</td><td class="mono bad">-4.55 pts</td></tr>
+<tr><td>Same gap, unconditional benchmark (had you not needed a fill)</td><td class="mono good">+3.94 pts</td></tr>
+<tr><td><b>Adverse selection</b></td><td class="mono bad"><b>-8.49c per contract</b></td></tr>
+</tbody></table></div>
+<div class="dl"><a href="/testing/edge/stats/v10_live_autopsy.json" download>&#8681; v10_live_autopsy.json</a></div>
+<div class="callout bad">This is the number that kills the backtest. A simulation
+buys at the quoted price on every match it likes. Reality fills you
+<b>preferentially when you are wrong</b> &mdash; 8.5c
+per contract of it here, against a mid-price backtest edge of
+35% on an average 29c contract. The
+slippage curve in &sect;7 models a fixed haircut; adverse selection is worse than a
+haircut, because it is correlated with the outcome.</div>
+</section>
+
+<section>
+<h2><span class="n">4</span>Is it just under-confidence? Mostly, yes</h2>
+<p>BenPom assigns the eventual winner an average probability of
+<b>0.5357</b>; Kalshi assigns <b>0.5701</b>.
+The model is systematically less sure of itself, so it disagrees toward the
+underdog on nearly every match &mdash; not because it has information, but
+because it hedges.</p>
+<p>To test that directly, sharpen the model: scale its log-odds by
+<b>&times;2.525</b> so its average confidence exactly matches the
+market's, changing nothing about which team it prefers. Its ranking of matchups
+is untouched; only its certainty moves.</p>
+<div class="cards">
+  <div class="card"><div class="lbl">As-is, &ge;5c</div>
+    <div class="big good">+34.71%</div>
+    <div class="sub">CI [12, 59]</div></div>
+  <div class="card"><div class="lbl">Sharpened to market confidence</div>
+    <div class="big">+12.33%</div>
+    <div class="sub">CI [-3, 28] &mdash; includes zero</div></div>
+</div>
+<p>Sharpening costs roughly two-thirds of the return and pushes the interval
+across zero. So most of the apparent edge is the hedging, not the opinion.</p>
+</section>
+
+<section>
+<h2><span class="n">5</span>Does it pick <em>better</em> underdogs?</h2>
+<p>This is the one place the model looks genuinely additive, and it deserves a
+careful read rather than a headline.</p>
+<div class="scroll"><table>
+<thead><tr><th>Underdog bets</th><th>n</th><th>Hit</th><th>ROI</th></tr></thead><tbody>
+<tr><td>the model liked (&ge;5c)</td><td class="mono">178</td>
+    <td class="mono">37.1%</td><td class="mono good">+42.76%</td></tr>
+<tr><td>the model did NOT like</td><td class="mono">75</td>
+    <td class="mono">46.7%</td><td class="mono">+16.79%</td></tr>
+</tbody></table></div>
+<p>The underdogs it liked returned +42.76% against
++16.79% for the ones it passed on &mdash; but note the hit rates
+run the <em>other</em> way (37.1% vs 46.7%). The model
+is not picking underdogs that win more often; it is picking <em>longer-priced</em>
+ones that pay more when they do. That is a price-selection effect, and with
+75 matches in the comparison group it is nowhere near conclusive.</p>
+</section>
+
+<section>
+<h2><span class="n">6</span>Discrimination &mdash; the uncomfortable number</h2>
+<div class="cards">
+  <div class="card"><div class="lbl">Picks the winner</div>
+    <div class="big">59.7%</div><div class="sub">BenPom</div></div>
+  <div class="card"><div class="lbl">Picks the winner</div>
+    <div class="big">60.1%</div><div class="sub">Kalshi &mdash; better</div></div>
+  <div class="card"><div class="lbl">Log-loss</div>
+    <div class="big">0.66035</div><div class="sub">BenPom &mdash; better</div></div>
+  <div class="card"><div class="lbl">Log-loss</div>
+    <div class="big">0.67486</div><div class="sub">Kalshi</div></div>
+</div>
+<p>BenPom wins on log-loss and loses on accuracy. That combination has one
+explanation: it is better calibrated in the sense of being less confident, and
+log-loss rewards hedging when the market's confident calls go wrong. It is not
+seeing matchups more clearly &mdash; on the only metric that measures that, it is
+0.4 points behind.</p>
+</section>
+
+<section>
+<h2><span class="n">7</span>How assured is any of this?</h2>
+<h3>The anomaly is persistent, not one hot streak</h3>
+<div class="chartbox"><canvas id="c_mon"></canvas></div>
+<div class="scroll"><table>
+<thead><tr><th>Month</th><th>n</th><th>Underdog won</th><th>Blind dog ROI</th><th>Model ROI</th></tr></thead>
+<tbody><tr><td class="mono">2026-05</td><td class="mono">73</td><td class="mono">31.5%</td><td class="mono">+6.70%</td><td class="mono">+25.02%</td></tr><tr><td class="mono">2026-06</td><td class="mono">24</td><td class="mono">50.0%</td><td class="mono">+58.61%</td><td class="mono">+54.93%</td></tr><tr><td class="mono">2026-07</td><td class="mono">119</td><td class="mono">40.3%</td><td class="mono">+34.38%</td><td class="mono">+34.23%</td></tr><tr><td class="mono">2026-08</td><td class="mono">37</td><td class="mono">48.6%</td><td class="mono">+58.46%</td><td class="mono">+38.46%</td></tr></tbody></table></div>
+<p class="cap">Positive in all four months, so it is not a single weekend. But
+the monthly samples are small and the spread is enormous
+(+7% to
++59%), which is exactly what a
+small-sample, high-variance bet looks like.</p>
+<div class="dl"><a href="/testing/edge/stats/v10_page_edge_month.json" download>&#8681; v10_page_edge_month.json</a></div>
+<h3>Against a fair-market null</h3>
+<p>If every contract were priced fairly, 196 bets of this size and
+shape would give an ROI standard deviation of <b>10.52%</b>, so
+anything under <b>+17.31%</b> is indistinguishable from luck at
+this sample size. The observed +34.71% sits above that
+(one-sided p = 0.0005).</p>
+<div class="callout"><b>Read that carefully.</b> It says the <em>prices</em> were
+not fair. It does not say the model is good &mdash; the blind-underdog control
+clears the same bar without any model at all.</div>
+<h3>Slippage</h3>
+<div class="chartbox"><canvas id="c_slip"></canvas></div>
+<p class="cap">You never transact at the mid. Both lines survive
+6c of adverse fill, and the gap between them barely moves
+&mdash; slippage does not change the conclusion, it just scales both down.</p>
+<div class="dl"><a href="/testing/edge/stats/v10_page_edge_slip.json" download>&#8681; v10_page_edge_slip.json</a></div>
+</section>
+
+<section>
+<h2><span class="n">8</span>Segments, with the caveat that matters</h2>
+<div class="scroll"><table>
+<thead><tr><th>Segment</th><th>n</th><th>Hit</th><th>ROI</th><th>95% CI</th></tr></thead>
+<tbody><tr><td>Bo3</td><td class="mono">175</td><td class="mono">40.0%</td><td class="mono good">+36.29%</td><td class="mono dim">[13, 61]</td></tr><tr><td>Bo5</td><td class="mono">21</td><td class="mono">28.6%</td><td class="mono good">+18.73%</td><td class="mono dim">[-52, 91]</td></tr><tr><td>international</td><td class="mono">21</td><td class="mono">47.6%</td><td class="mono good">+54.93%</td><td class="mono dim">[-20, 134]</td></tr><tr><td>domestic</td><td class="mono">175</td><td class="mono">37.7%</td><td class="mono good">+32.10%</td><td class="mono dim">[9, 58]</td></tr><tr><td>high volume</td><td class="mono">104</td><td class="mono">46.2%</td><td class="mono good">+63.51%</td><td class="mono dim">[27, 101]</td></tr><tr><td>low volume</td><td class="mono">92</td><td class="mono">30.4%</td><td class="mono good">+3.48%</td><td class="mono dim">[-26, 34]</td></tr><tr><td>price 1-20c</td><td class="mono">66</td><td class="mono">25.8%</td><td class="mono good">+119.98%</td><td class="mono dim">[32, 211]</td></tr><tr><td>price 20-40c</td><td class="mono">79</td><td class="mono">43.0%</td><td class="mono good">+37.33%</td><td class="mono dim">[4, 71]</td></tr><tr><td>price 40-50c</td><td class="mono">51</td><td class="mono">49.0%</td><td class="mono good">+4.47%</td><td class="mono dim">[-25, 34]</td></tr></tbody></table></div>
+<div class="callout bad"><b>Do not stock-pick from this table.</b> These are
+9 overlapping slices of 253 matches. At this sample
+size several will look strong by chance alone, and choosing the best one after
+seeing it is how backtests get invented. Any segment worth trading has to be
+named in advance and tested on data that did not suggest it.</div>
+</section>
+
+<section>
+<h2><span class="n">9</span>What would actually settle it</h2>
+<ol>
+<li><b>Trade the control, not the model.</b> If the thesis is "underdogs are
+underpriced", the honest instrument is a flat underdog rule. It returned
++32.55% here and needs no model at all. Everything the model adds is
+inside the noise.</li>
+<li><b>Sharpen BenPom and re-measure.</b> The &times;2.525 scaling
+is a one-parameter fix that costs nothing and would make the probabilities
+honest. If a sharpened model still disagrees with the book profitably, that is a
+real signal; the current evidence says it mostly would not.</li>
+<li><b>Preregister and go forward.</b> Fix the rule, the threshold and the stake
+before the next match, then score it prospectively. At 196 bets per
+three months, an effect the size of the model's marginal contribution
+(+2.2 pts) would need <b>years</b> to separate from noise &mdash; which is
+itself the answer about how much to size it.</li>
+</ol>
+<div class="callout warn"><b>Standing.</b> This is a reporting exercise on a
+three-month window. Market data is never a fitting target and never a selection
+signal, nothing here was tuned, and nothing here promotes or demotes any model.
+The deployed model is unchanged.</div>
+</section>
+
+<script>
+const PAL = {"s1": "#7c4dd6", "d5": "#c96a2a", "a1": "#3a90cc", "v6": "#6f6a7c", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b", "ink": "#16121d"}, CTRL = {"labels": ["Back every underdog\\n(model ignored)", "Model, >=5c edge", "Model, underdog side only", "Back every favourite\\n(model ignored)"], "roi": [32.55, 34.71, 42.76, -14.03], "lo": [13.37, 11.52, 16.22, -22.48], "hi": [52.78, 59.46, 71.02, -5.67]}, MON = {"labels": ["2026-05", "2026-06", "2026-07", "2026-08"], "blind": [6.7, 58.61, 34.38, 58.46], "model": [25.02, 54.93, 34.23, 38.46], "n": [73, 24, 119, 37]}, SLIP = {"slip": [0, 1, 2, 3, 4, 5, 6], "model": [34.71, 30.19, 25.96, 22.0, 18.28, 14.78, 11.48], "blind": [32.55, 28.29, 24.29, 20.54, 17.01, 13.68, 10.53]};
+Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
+Chart.defaults.color = '#6b6478';
+Chart.defaults.animation = false;
+
+new Chart(document.getElementById('c_ctrl'), { type:'bar',
+ data:{ labels: CTRL.labels.map(l=>l.split('\n')), datasets:[
+  { label:'ROI %', data:CTRL.roi,
+     backgroundColor: CTRL.roi.map((v,i)=> i===0 ? PAL.d5 : (v>=0?PAL.a1:PAL.bad)),
+     borderRadius:4, maxBarThickness:64 } ] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{display:false},
+    tooltip:{callbacks:{label:(t)=>'ROI '+t.parsed.y.toFixed(1)+'%  CI ['
+      +CTRL.lo[t.dataIndex].toFixed(0)+', '+CTRL.hi[t.dataIndex].toFixed(0)+']'}} },
+  scales:{ x:{grid:{display:false}, ticks:{font:{size:10}}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI %'}} } } });
+
+new Chart(document.getElementById('c_mon'), { type:'bar',
+ data:{ labels: MON.labels, datasets:[
+  { label:'blind underdog', data:MON.blind, backgroundColor:PAL.d5, borderRadius:4, maxBarThickness:38 },
+  { label:'model >=5c', data:MON.model, backgroundColor:PAL.s1, borderRadius:4, maxBarThickness:38 } ] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}},
+    tooltip:{callbacks:{label:(t)=>t.dataset.label+': '+t.parsed.y.toFixed(1)+'%  (n='+MON.n[t.dataIndex]+')'}} },
+  scales:{ x:{grid:{display:false}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI %'}} } } });
+
+new Chart(document.getElementById('c_slip'), { type:'line',
+ data:{ labels: SLIP.slip.map(s=>s+'c'), datasets:[
+  { label:'model >=5c', data:SLIP.model, borderColor:PAL.s1, backgroundColor:'rgba(124,77,214,.10)',
+     fill:false, tension:.25, pointRadius:3 },
+  { label:'blind underdog', data:SLIP.blind, borderColor:PAL.d5, borderDash:[5,4],
+     fill:false, tension:.25, pointRadius:3 } ] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}},
+    tooltip:{callbacks:{label:(t)=>t.dataset.label+': '+t.parsed.y.toFixed(1)+'%'}} },
+  scales:{ x:{grid:{display:false}, title:{display:true, text:'cents of adverse fill per contract'}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI %'}} } } });
+</script>
+</div></body></html>

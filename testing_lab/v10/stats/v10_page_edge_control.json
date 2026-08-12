@@ -1,0 +1,26 @@
+{
+ "labels": [
+  "Back every underdog\\n(model ignored)",
+  "Model, >=5c edge",
+  "Model, underdog side only",
+  "Back every favourite\\n(model ignored)"
+ ],
+ "roi": [
+  32.55,
+  34.71,
+  42.76,
+  -14.03
+ ],
+ "lo": [
+  13.37,
+  11.52,
+  16.22,
+  -22.48
+ ],
+ "hi": [
+  52.78,
+  59.46,
+  71.02,
+  -5.67
+ ]
+}

@@ -1,0 +1,30 @@
+[
+ {
+  "month": "2026-05",
+  "n": 73,
+  "blind_dog_roi": 6.7,
+  "model_roi": 25.02,
+  "dog_hit_pct": 31.5
+ },
+ {
+  "month": "2026-06",
+  "n": 24,
+  "blind_dog_roi": 58.61,
+  "model_roi": 54.93,
+  "dog_hit_pct": 50.0
+ },
+ {
+  "month": "2026-07",
+  "n": 119,
+  "blind_dog_roi": 34.38,
+  "model_roi": 34.23,
+  "dog_hit_pct": 40.3
+ },
+ {
+  "month": "2026-08",
+  "n": 37,
+  "blind_dog_roi": 58.46,
+  "model_roi": 38.46,
+  "dog_hit_pct": 48.6
+ }
+]

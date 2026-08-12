@@ -1,0 +1,222 @@
+{
+ "n": 253,
+ "beta": 0.120155,
+ "window": [
+  "2026-05-15",
+  "2026-08-12"
+ ],
+ "blind_dog": {
+  "label": "back every underdog (no model)",
+  "n": 253,
+  "hit_pct": 39.9,
+  "mean_cost": 30.1,
+  "roi_pct": 32.55,
+  "ci95": [
+   13.37,
+   52.78
+  ],
+  "p_profit": 1.0
+ },
+ "blind_fav": {
+  "label": "back every favourite (no model)",
+  "n": 253,
+  "hit_pct": 60.1,
+  "mean_cost": 69.9,
+  "roi_pct": -14.03,
+  "ci95": [
+   -22.48,
+   -5.67
+  ],
+  "p_profit": 0.001
+ },
+ "model_5c": {
+  "label": "model, >=5c edge",
+  "n": 196,
+  "hit_pct": 38.8,
+  "mean_cost": 28.8,
+  "roi_pct": 34.71,
+  "ci95": [
+   11.52,
+   59.46
+  ],
+  "p_profit": 0.998
+ },
+ "model_dog_only": {
+  "label": "model, >=5c, underdog side only",
+  "n": 178,
+  "hit_pct": 37.1,
+  "mean_cost": 26.0,
+  "roi_pct": 42.76,
+  "ci95": [
+   16.22,
+   71.02
+  ],
+  "p_profit": 0.999
+ },
+ "dog_picked_by_model": {
+  "label": "underdogs the model liked",
+  "n": 178,
+  "hit_pct": 37.1,
+  "mean_cost": 26.0,
+  "roi_pct": 42.76,
+  "ci95": [
+   16.01,
+   70.96
+  ],
+  "p_profit": 0.999
+ },
+ "dog_not_picked": {
+  "label": "underdogs the model did NOT like",
+  "n": 75,
+  "hit_pct": 46.7,
+  "mean_cost": 40.0,
+  "roi_pct": 16.79,
+  "ci95": [
+   -10.44,
+   43.6
+  ],
+  "p_profit": 0.89
+ },
+ "sharpened": {
+  "label": "model sharpened x2.53, >=5c",
+  "n": 207,
+  "hit_pct": 50.7,
+  "mean_cost": 45.2,
+  "roi_pct": 12.33,
+  "ci95": [
+   -2.92,
+   28.36
+  ],
+  "p_profit": 0.944
+ },
+ "sharpen_slope": 2.525,
+ "mean_conf": {
+  "benpom": 0.5357,
+  "benpom_sharpened": 0.5701,
+  "kalshi": 0.5701
+ },
+ "discrimination": {
+  "benpom_acc": 59.7,
+  "kalshi_acc": 60.1,
+  "benpom_logloss": 0.66035,
+  "kalshi_logloss": 0.67486
+ },
+ "segments": [
+  {
+   "label": "Bo3",
+   "n": 175,
+   "hit_pct": 40.0,
+   "mean_cost": 29.3,
+   "roi_pct": 36.29,
+   "ci95": [
+    12.73,
+    61.46
+   ],
+   "p_profit": 0.999
+  },
+  {
+   "label": "Bo5",
+   "n": 21,
+   "hit_pct": 28.6,
+   "mean_cost": 24.1,
+   "roi_pct": 18.73,
+   "ci95": [
+    -52.22,
+    90.65
+   ],
+   "p_profit": 0.687
+  },
+  {
+   "label": "international",
+   "n": 21,
+   "hit_pct": 47.6,
+   "mean_cost": 30.7,
+   "roi_pct": 54.93,
+   "ci95": [
+    -20.29,
+    134.13
+   ],
+   "p_profit": 0.928
+  },
+  {
+   "label": "domestic",
+   "n": 175,
+   "hit_pct": 37.7,
+   "mean_cost": 28.5,
+   "roi_pct": 32.1,
+   "ci95": [
+    8.57,
+    57.93
+   ],
+   "p_profit": 0.995
+  },
+  {
+   "label": "high volume",
+   "n": 104,
+   "hit_pct": 46.2,
+   "mean_cost": 28.2,
+   "roi_pct": 63.51,
+   "ci95": [
+    27.17,
+    101.09
+   ],
+   "p_profit": 1.0
+  },
+  {
+   "label": "low volume",
+   "n": 92,
+   "hit_pct": 30.4,
+   "mean_cost": 29.4,
+   "roi_pct": 3.48,
+   "ci95": [
+    -26.3,
+    33.92
+   ],
+   "p_profit": 0.595
+  },
+  {
+   "label": "price 1-20c",
+   "n": 66,
+   "hit_pct": 25.8,
+   "mean_cost": 11.7,
+   "roi_pct": 119.98,
+   "ci95": [
+    31.85,
+    211.12
+   ],
+   "p_profit": 0.998
+  },
+  {
+   "label": "price 20-40c",
+   "n": 79,
+   "hit_pct": 43.0,
+   "mean_cost": 31.3,
+   "roi_pct": 37.33,
+   "ci95": [
+    4.09,
+    71.3
+   ],
+   "p_profit": 0.987
+  },
+  {
+   "label": "price 40-50c",
+   "n": 51,
+   "hit_pct": 49.0,
+   "mean_cost": 46.9,
+   "roi_pct": 4.47,
+   "ci95": [
+    -25.13,
+    33.79
+   ],
+   "p_profit": 0.621
+  }
+ ],
+ "null_test": {
+  "n_bets": 196,
+  "null_roi_sd": 10.52,
+  "null_roi_p95": 16.99,
+  "observed_roi": 34.71,
+  "p_value_one_sided": 0.0005,
+  "mde_roi_at_n": 17.31
+ }
+}

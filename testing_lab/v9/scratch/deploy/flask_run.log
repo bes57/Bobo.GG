@@ -15279,3 +15279,35 @@ Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
 127.0.0.1 - - [12/Aug/2026 17:18:38] "GET /alpha HTTP/1.1" 200 -
 127.0.0.1 - - [12/Aug/2026 17:18:38] "GET /mapelo/modern/ HTTP/1.1" 200 -
 127.0.0.1 - - [12/Aug/2026 17:18:38] "GET /team/LEV HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_roster_report.py', reloading
+Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/TestingLab.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [12/Aug/2026 17:38:39] "GET /testing/ HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:38:39] "GET /testing/report/edge_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:38:39] "GET /testing/edge/stats/v10_edge.json HTTP/1.1" 200 -
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_edge_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_edge_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_edge_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [12/Aug/2026 17:41:07] "GET /testing/report/edge_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:41:07] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 17:41:07] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:41:07] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Aug/2026 17:41:38] "GET /testing/ HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:41:38] "GET /testing/report/edge_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:41:38] "GET /testing/report/v10_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 17:41:38] "GET /testing/edge/stats/v10_live_autopsy.json HTTP/1.1" 200 -

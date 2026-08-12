@@ -128,6 +128,22 @@ def v10_stats(name):
                         headers={"Content-Disposition": f"attachment; filename={name}"})
 
 
+# Edge-vs-market lab chart data (testing_lab/v10/stats/*.json is shared with
+# the v10 lab; the edge study lives in the same stats dir).
+@testing_bp.route("/edge/stats/<name>")
+def edge_stats(name):
+    if not _authed():
+        return redirect("/testing/")
+    if not re.fullmatch(r"[A-Za-z0-9_\-]+\.json", name):
+        abort(404)
+    path = os.path.join(_V10_STATS, name)
+    if not os.path.exists(path):
+        abort(404)
+    with open(path) as f:
+        return Response(f.read(), mimetype="application/json",
+                        headers={"Content-Disposition": f"attachment; filename={name}"})
+
+
 def _render_lab():
     """Inject dynamic report links + status entries into the plan page."""
     html = _LAB_HTML
@@ -305,7 +321,7 @@ _LAB_HTML = """<!DOCTYPE html>
     <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
 <a href="/testing/report/v7_lab">v7 Lab</a>
-<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a><a href="/testing/report/v10_lab">v10 Lab</a>
+<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a><a href="/testing/report/v10_lab">v10 Lab</a><a href="/testing/report/edge_lab">Edge vs Market</a>
   </div>
 
   <section>

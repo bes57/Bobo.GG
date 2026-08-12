@@ -1,0 +1,37 @@
+{
+ "source": "testing_lab/v8/stats/autopsy_*.json (v8 phase-7 live autopsy)",
+ "window_utc": [
+  "2026-07-21T19:11:31+00:00",
+  "2026-07-28T21:36:48+00:00"
+ ],
+ "fills": 719,
+ "contracts": 8143.2,
+ "cost_dollars": 3803.32,
+ "events": 37,
+ "events_settled": 28,
+ "realized_total": -308.69,
+ "total_incl_open_mark": -313.35,
+ "fees": 0.0,
+ "side1_settled": {
+  "cost": 1633.66,
+  "pnl": -426.61,
+  "roi": -0.2611
+ },
+ "adverse_selection": {
+  "definition": "(realized-predicted NO-pay on filled contracts, frozen v6) - (same on unconditional NO-on-v6-favorite benchmark)",
+  "fill_gap_frozen_v6": -0.0455,
+  "fill_gap_bot_fv": -0.0609,
+  "uncond_gap": 0.0394,
+  "adverse_selection_pts": -0.0849,
+  "adverse_selection_cents_per_contract": -8.49,
+  "orientation_note": "fills are NO buys; negative = filled contracts pay less than model says vs baseline"
+ },
+ "variance_test": {
+  "observed": -315.75,
+  "H0_expected": 109.45,
+  "p_cum_le_observed": 0.0,
+  "verdict": "real underperformance (p<0.05)",
+  "unit": "settled event (n=28)",
+  "B": 4000
+ }
+}
