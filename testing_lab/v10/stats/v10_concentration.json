@@ -1,0 +1,109 @@
+{
+ "beta": {
+  "v6": 0.116948,
+  "A_iso_hard": 0.113033
+ },
+ "by_month": [
+  {
+   "month": "01",
+   "n": 102,
+   "delta_milli": -30.92
+  },
+  {
+   "month": "02",
+   "n": 172,
+   "delta_milli": -21.46
+  },
+  {
+   "month": "03",
+   "n": 121,
+   "delta_milli": 2.82
+  },
+  {
+   "month": "04",
+   "n": 367,
+   "delta_milli": -9.61
+  },
+  {
+   "month": "05",
+   "n": 390,
+   "delta_milli": -5.98
+  },
+  {
+   "month": "06",
+   "n": 140,
+   "delta_milli": -4.62
+  },
+  {
+   "month": "07",
+   "n": 338,
+   "delta_milli": -2.91
+  },
+  {
+   "month": "08",
+   "n": 213,
+   "delta_milli": 0.75
+  },
+  {
+   "month": "09",
+   "n": 47,
+   "delta_milli": -2.61
+  },
+  {
+   "month": "10",
+   "n": 26,
+   "delta_milli": 8.98
+  },
+  {
+   "month": "11",
+   "n": 67,
+   "delta_milli": 4.52
+  },
+  {
+   "month": "12",
+   "n": 27,
+   "delta_milli": -1.14
+  }
+ ],
+ "by_season_phase": [
+  {
+   "phase": "Jan-Feb",
+   "n": 274,
+   "delta_milli": -24.98
+  },
+  {
+   "phase": "Mar-Apr",
+   "n": 488,
+   "delta_milli": -6.52
+  },
+  {
+   "phase": "May-Jun",
+   "n": 530,
+   "delta_milli": -5.62
+  },
+  {
+   "phase": "Jul-Aug",
+   "n": 551,
+   "delta_milli": -1.49
+  },
+  {
+   "phase": "Sep-Dec",
+   "n": 167,
+   "delta_milli": 2.29
+  }
+ ],
+ "coinflip": {
+  "v6": {
+   "median_abs_rdiff": 2.1985,
+   "pct_within_0.5": 12.64,
+   "pct_within_1.0": 25.17,
+   "janfeb_pct_within_0.5": 16.79
+  },
+  "A_iso_hard": {
+   "median_abs_rdiff": 2.1757,
+   "pct_within_0.5": 12.99,
+   "pct_within_1.0": 25.47,
+   "janfeb_pct_within_0.5": 22.26
+  }
+ }
+}

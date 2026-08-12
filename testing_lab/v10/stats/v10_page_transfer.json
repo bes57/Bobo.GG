@@ -1,0 +1,19 @@
+{
+ "arms": [
+  "A_iso_hard",
+  "A_iso_none"
+ ],
+ "labels": [
+  "Year isolation (the proposal)",
+  "Full carryover (other endpoint)"
+ ],
+ "t1": [
+  -11.104,
+  -0.282
+ ],
+ "t2": [
+  -8.903,
+  -1.599
+ ],
+ "floor": 1.773
+}

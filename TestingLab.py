@@ -108,6 +108,26 @@ def v9_stats(name):
                         headers={"Content-Disposition": f"attachment; filename={name}"})
 
 
+# v10 Lab chart-data downloads: every figure on /testing/report/v10_lab reads
+# from testing_lab/v10/stats/*.json and links back here (same auth gate and
+# name regex as the v8/v9 routes above).
+_V10_STATS = os.path.join(_ROOT, "testing_lab", "v10", "stats")
+
+
+@testing_bp.route("/v10/stats/<name>")
+def v10_stats(name):
+    if not _authed():
+        return redirect("/testing/")
+    if not re.fullmatch(r"[A-Za-z0-9_\-]+\.json", name):
+        abort(404)
+    path = os.path.join(_V10_STATS, name)
+    if not os.path.exists(path):
+        abort(404)
+    with open(path) as f:
+        return Response(f.read(), mimetype="application/json",
+                        headers={"Content-Disposition": f"attachment; filename={name}"})
+
+
 def _render_lab():
     """Inject dynamic report links + status entries into the plan page."""
     html = _LAB_HTML
@@ -285,7 +305,7 @@ _LAB_HTML = """<!DOCTYPE html>
     <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
 <a href="/testing/report/v7_lab">v7 Lab</a>
-<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a>
+<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a><a href="/testing/report/v10_lab">v10 Lab</a>
   </div>
 
   <section>

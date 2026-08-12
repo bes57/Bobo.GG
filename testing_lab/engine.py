@@ -160,6 +160,10 @@ class Engine:
         self.rd_raw = np.array([g["wr"] - g["lr"] for g in self.games], dtype=float)
         self.g_date = np.array([g["date_s"] for g in self.games])
         self.g_dnum = pd.to_datetime(self.g_date).values.astype("datetime64[D]").astype(int)
+        # v10 year-isolation support: calendar year of each game, so a solve can
+        # be restricted to its own season. Cheap and always computed; only read
+        # when cfg["year_isolated"] is on.
+        self.g_year = self.g_date.astype("U4").astype(int)
         # Exact-shape predicate, not substring: the year-end Champions is
         # "YYYY_champions" exactly. Off-season ids like 2025_super_champions_cup
         # and 2023_china_champions_qual (corpus backfill, 2026-07-28) would
@@ -323,9 +327,25 @@ class Engine:
         for i, r in enumerate(s.itertuples(index=False)):
             s_by_day[r.date].append(i)
 
+        year_iso = bool(cfg.get("year_isolated", False))
+        _iso_prev_year = None
         for day in self.pred_days:
             day_num = int(np.datetime64(day, "D").astype(int))
             m_hist = self.g_dnum < day_num
+            if year_iso:
+                # v10: a solve sees only games from its own calendar year. This
+                # also makes the >=30 gate below mean "30 IN-YEAR games" rather
+                # than 30 global ones, which is the whole point — otherwise
+                # every January day passes on ~4000 prior-season games while
+                # having ~0 of its own.
+                m_hist = m_hist & (self.g_year == int(day[:4]))
+                # channel B: the region-prior chain is the dominant cross-year
+                # carrier (a team with no in-year data solves to 0.75x last
+                # year's regional mean). Isolation is not isolation unless the
+                # chain resets at the boundary too.
+                if int(day[:4]) != _iso_prev_year:
+                    self._prev_rvec = None
+                    _iso_prev_year = int(day[:4])
             if m_hist.sum() < 30:
                 continue
             weeks = (day_num - self.g_dnum[m_hist]) / 7.0

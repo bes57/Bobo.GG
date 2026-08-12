@@ -177,6 +177,7 @@ NAV = """<div class="labtabs">
 <a href="/testing/report/v8_lab">v8 Lab</a>
 <a href="/testing/report/roster_adaptation">Roster</a>
 <a href="/testing/report/v9_lab" class="on">v9 Lab</a>
+<a href="/testing/report/v10_lab">v10 Lab</a>
 </div>"""
 
 

@@ -1,0 +1,492 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>v10 Lab — Year Isolation</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+ * { box-sizing:border-box; margin:0; }
+ :root { --ink:#16121d; --dim:#6b6478; --line:#eceef2; --acc:#7c4dd6; --accbg:#f3eefb;
+         --good:#1e7a4f; --goodbg:#ecf8f1; --bad:#c0392b; --badbg:#fbeaea;
+         --warn:#b3541e; --warnbg:#fdf3ec; }
+ body { font-family:'DM Sans',system-ui,sans-serif; background:#faf9fc; color:var(--ink);
+        line-height:1.55; padding:30px 18px 90px; }
+ .wrap { max-width:940px; margin:0 auto; }
+ h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.55rem;
+      text-align:center; margin:6px 0 2px; }
+ .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
+ .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 18px; flex-wrap:wrap; }
+ .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+ .labtabs a:hover { color:var(--ink); background:var(--accbg); }
+ .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ .banner { background:var(--goodbg); border:1px solid #cfe8da; border-left:6px solid var(--good);
+   border-radius:14px; padding:14px 20px; margin:0 0 18px; font-size:.92rem; }
+ .banner b { color:var(--good); letter-spacing:.4px; }
+ section { background:#fff; border:1px solid var(--line); border-radius:18px;
+           padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }
+ h2 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
+      margin-bottom:10px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+ h2 .n { background:var(--acc); color:#fff; border-radius:8px; font-size:.72rem; min-width:24px;
+        height:24px; padding:0 4px; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+ h3 { font-size:.93rem; font-weight:700; margin:16px 0 6px; }
+ p { font-size:.9rem; margin:7px 0; }
+ .dim { color:var(--dim); } .good { color:var(--good); } .bad { color:var(--bad); }
+ .mono { font-family:'JetBrains Mono',monospace; font-size:.82em; }
+ .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin:12px 0; }
+ .card { border:1px solid var(--line); border-radius:14px; padding:13px 15px; }
+ .card .lbl { font-size:.68rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; color:var(--dim); }
+ .card .big { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.3rem; margin:2px 0; }
+ .card .sub { font-size:.76rem; color:var(--dim); }
+ table { width:100%; border-collapse:collapse; font-size:.84rem; margin:8px 0; }
+ th { text-align:left; color:var(--dim); font-size:.7rem; text-transform:uppercase;
+      letter-spacing:.5px; padding:6px 9px; border-bottom:2px solid var(--line); }
+ td { padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+ tr:last-child td { border-bottom:0; }
+ .verd { font-weight:700; border-radius:999px; padding:2px 9px; font-size:.68rem; white-space:nowrap; }
+ .verd.dead { background:var(--badbg); color:var(--bad); }
+ .verd.hold { background:#f1f0f4; color:var(--dim); }
+ .verd.lead { background:var(--goodbg); color:var(--good); }
+ .verd.warn { background:var(--warnbg); color:var(--warn); }
+ .callout { border-left:4px solid var(--acc); background:var(--accbg);
+            border-radius:0 12px 12px 0; padding:11px 15px; margin:10px 0; font-size:.88rem; }
+ .callout.good { border-color:var(--good); background:var(--goodbg); }
+ .callout.warn { border-color:var(--warn); background:var(--warnbg); }
+ .callout.bad { border-color:var(--bad); background:var(--badbg); }
+ canvas { max-height:340px; }
+ .chartbox { margin:14px 0 2px; }
+ .chartbox.tall { height:420px; } .chartbox.tall canvas { max-height:none; height:100% !important; }
+ .dl { display:block; text-align:right; font-size:.72rem; margin:2px 0 10px; }
+ .dl a { color:var(--acc); text-decoration:none; font-weight:700; }
+ .dl a:hover { text-decoration:underline; }
+ .cap { font-size:.78rem; color:var(--dim); margin:4px 0 8px; }
+ code { font-family:'JetBrains Mono',monospace; font-size:.8em; background:#f4f2f8;
+        border:1px solid var(--line); border-radius:6px; padding:1px 6px; }
+ ul, ol { font-size:.9rem; margin:8px 0 8px 20px; } li { margin:5px 0; }
+ .disc { border:2px solid var(--warn); border-radius:14px; padding:16px 18px; margin:14px 0;
+        background:#fffdfa; }
+ .disc .dhead { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; color:var(--warn);
+        font-size:.9rem; margin-bottom:8px; }
+ .disc pre { white-space:pre-wrap; font-family:'JetBrains Mono',monospace; font-size:.76rem;
+        line-height:1.6; color:var(--ink); }
+ .scroll { overflow-x:auto; }
+ @media (max-width:640px) { section { padding:18px 14px; } }
+</style></head><body><div class="wrap">
+
+<h1>v10 Lab — Year Isolation</h1>
+<div class="tagline">Should each season be solved from scratch, ignoring previous years?</div>
+<div class="labtabs">
+<a href="/testing/">Testing Lab</a>
+<a href="/testing/report/state_of_benpom">State of BenPom</a>
+<a href="/testing/playbook">Deployment Playbook</a>
+<a href="/testing/report/favorites_lab">Favorites Lab</a>
+<a href="/testing/report/final_model">Final Model</a>
+<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v8_lab">v8 Lab</a>
+<a href="/testing/report/roster_adaptation">Roster</a>
+<a href="/testing/report/v9_lab">v9 Lab</a>
+<a href="/testing/report/v10_lab" class="on">v10 Lab</a>
+</div>
+
+<div class="banner" style="background:var(--badbg);border-color:#e8cfcf;border-left-color:var(--bad)">
+<style>.banner b { color:var(--bad); }</style>
+<b>THE ANSWER — NO, AND BY A LOT.</b> Solving each year in isolation loses
+<b>-11.10 milli-LL</b> on 2025 and
+<b>-8.90</b> on 2026H1 — both eras lost, both
+several times the 1.773m noise floor, in the wrong direction.
+The damage is a cold-start problem: <b>-24.98m in
+Jan-Feb</b>, fading to roughly nothing by mid-season. But the
+hypothesis is not silly — see §5, where isolation is actually
+<b>+2.29m better</b> late in the season, and §2, where the
+premise turns out to be half right.
+</div>
+
+<section>
+<h2><span class="n">1</span>What was asked, and what was tested</h2>
+<p>The operator's hypothesis, verbatim: <em>"treat each year as a new year where
+you don't look back at match data from previous years &mdash; they're often with
+old rosters that shouldn't affect current ratings."</em></p>
+<p>That is a precise, falsifiable claim about the solver, so it was preregistered
+and run. The arm <code>A_iso_hard</code> sets the year-continuity factor to zero
+for <b>every</b> team at <b>every</b> January boundary, and &mdash; critically
+&mdash; also resets the region-prior chain, without which "isolation" leaks the
+previous season straight back in (§3).</p>
+<div class="cards">
+  <div class="card"><div class="lbl">2025 (VAL1)</div>
+    <div class="big bad">-11.10m</div>
+    <div class="sub">vs v6, n=650</div></div>
+  <div class="card"><div class="lbl">2026H1 (VAL2)</div>
+    <div class="big bad">-8.90m</div>
+    <div class="sub">vs v6, n=525</div></div>
+  <div class="card"><div class="lbl">Advance rule</div>
+    <div class="big">FAILED</div>
+    <div class="sub">needs &ge;+1.773m on BOTH</div></div>
+  <div class="card"><div class="lbl">p(better than v6)</div>
+    <div class="big">0.008</div>
+    <div class="sub">paired bootstrap, VAL1</div></div>
+</div>
+</section>
+
+<section>
+<h2><span class="n">2</span>The premise, measured</h2>
+<p>Before testing the cure, measure the disease. Two things had to be true for
+the hypothesis to have force: rosters must actually turn over at year
+boundaries, and old games must actually still matter.</p>
+<p><b>Both are true.</b> Teams keep 3.15/5 players across a January
+boundary on average, and <b>34.5%</b> of the average team's
+current rating weight still comes from pre-2026 games.</p>
+<div class="chartbox"><canvas id="c_roster"></canvas></div>
+<p class="cap">How many of its five players a team keeps across a year boundary,
+130 team-years. <b>32.3%</b> keep two or fewer &mdash;
+those are the real rebuilds the hypothesis is aimed at. But
+<b>23.8%</b> keep all five, and for them last season is the same
+team.</p>
+<div class="dl"><a href="/testing/v10/stats/v10_premise.json" download>&#8681; v10_premise.json</a></div>
+<div class="callout">The premise is <b>half right</b>, and that half is exactly
+why the blanket cure fails. A third of teams genuinely should forget last year.
+A quarter genuinely should not. v6 already tells them apart &mdash; see §3.</div>
+</section>
+
+<section>
+<h2><span class="n">3</span>What the champion already does (and a dead constant)</h2>
+<p>v6 is <em>already</em> a year-isolation model &mdash; a conditional one. At each
+boundary it computes</p>
+<p class="mono">year_cont = min(|roster(last event Y-1) &cap; roster(first event Y)| / 5, 1)</p>
+<p>so a team that kept 0/5 players <b>already has its prior-year games zeroed</b>,
+and one that kept 5/5 keeps them in full. The proposal is the
+<code>year_cont &equiv; 0</code> endpoint of a dial the champion already fits per
+team from data.</p>
+<div class="callout warn"><b>Correction to the record.</b>
+<code>ROSTER_CONT = 0.3</code> in <span class="mono">BuildRatingTimeline.py:132</span>
+is <b>dead code</b> &mdash; referenced only at its own definition, and the lab
+engine's <code>"year"</code> mode ignores the persistence argument entirely. The
+factor actually applied is the measured overlap, mean
+<b>0.63</b>, not 0.3. Lab documents describing v6 as
+"0.3 continuity" are wrong.</div>
+<h3>Isolation has to cut three channels, not one</h3>
+<table><thead><tr><th>#</th><th>Channel</th><th>Strength</th></tr></thead><tbody>
+<tr><td>A</td><td>prior-year games still in the fit</td><td>~11% weight at 1 year, ~1% at 2</td></tr>
+<tr><td>B</td><td><b>region-prior chain</b> (<code>_chain</code>, never reset)</td><td><b>dominant</b> &mdash; a team with no in-year data solves to 0.75 &times; last year's regional mean</td></tr>
+<tr><td>C</td><td>consistency classifier carries last year's winrate</td><td>weak (picks HL 20 vs 12)</td></tr>
+</tbody></table>
+<p class="cap">Cutting only the games (A) and calling it isolation would have
+been a null experiment: channel B would have carried the previous season back in
+regardless. The tested arm cuts A and B.</p>
+</section>
+
+<section>
+<h2><span class="n">4</span>The result &mdash; both eras, both lost</h2>
+<div class="chartbox"><canvas id="c_transfer"></canvas></div>
+<p class="cap">Era-transfer scores in milli log-loss versus v6; positive is
+better than v6. Grey band is the &plusmn;1.773m within-family
+noise floor. Year isolation is not close, and it loses on both eras &mdash; the
+protocol requires winning both.</p>
+<div class="dl"><a href="/testing/v10/stats/v10_page_transfer.json" download>&#8681; v10_page_transfer.json</a></div>
+<h3>The other endpoint, for scale</h3>
+<p>Running the dial the other way &mdash; <code>A_iso_none</code>, full carryover
+with no boundary discount at all &mdash; costs only
+-0.28m / -1.60m.
+So v6's fitted middle beats both ends, and the <b>isolation end is roughly seven
+times worse than the carryover end</b>. If the model is mis-set, it is not
+mis-set in the direction of remembering too much.</p>
+<div class="scroll"><table>
+<thead><tr><th>Arm</th><th>2025 &Delta;</th><th>95% CI</th><th>2026H1 &Delta;</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td class="mono">A_iso_hard</td><td class="bad">-11.10m</td>
+    <td class="mono">[-20.5, -2.1]</td>
+    <td class="bad">-8.90m</td>
+    <td><span class="verd dead">DEAD</span></td></tr>
+<tr><td class="mono">A_iso_none</td><td>-0.28m</td>
+    <td class="mono">[-3.4, 3.0]</td>
+    <td>-1.60m</td>
+    <td><span class="verd hold">no advance</span></td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2><span class="n">5</span>Where it loses &mdash; and the one place it wins</h2>
+<p>The preregistered prediction was that the damage would concentrate early in
+each season. It does, overwhelmingly.</p>
+<div class="chartbox"><canvas id="c_phase"></canvas></div>
+<p class="cap">Log-loss difference by season phase. Negative = isolation worse.
+The entire verdict is decided in Jan-Feb
+(-24.98m, n=274), when an isolated solve has almost
+no games of its own yet.</p>
+<div class="dl"><a href="/testing/v10/stats/v10_concentration.json" download>&#8681; v10_concentration.json</a></div>
+<div class="callout good"><b>The interesting part.</b> By
+Sep-Dec the sign flips: isolation is <b>+2.29m
+better</b> than v6. Once a season has enough of its own data, forgetting last
+year genuinely helps &mdash; the operator's intuition is right, it is just
+swamped by the cold-start cost of getting there. That is a real finding and it
+points somewhere better than either endpoint (§6).</div>
+<h3>Why the cold start is so expensive</h3>
+<p>With no history, every team solves to a rating near zero and every match is a
+coin flip. In January&ndash;February the isolated model has to price
+<b>22.26%</b> of series inside a
+half-point rating gap, against <b>16.79%</b>
+for v6 &mdash; it is guessing far more often, precisely when the schedule is
+busiest.</p>
+<div class="chartbox"><canvas id="c_month"></canvas></div>
+<p class="cap">Same measurement by calendar month.</p>
+</section>
+
+<section>
+<h2><span class="n">6</span>What this suggests instead</h2>
+<p>The result is not "the idea was worthless" &mdash; it is "the idea is right
+about staleness and wrong about the remedy." Three follow-ups are better
+motivated by this data than another blanket setting:</p>
+<ol>
+<li><b>Asymmetric decay by roster state, already fitted.</b> v6's conditional
+factor is the right shape; the late-season <b>+2.29m</b> gain
+suggests it may be too generous to old data <em>once the current season is
+established</em>. A factor that decays with in-year games played, rather than a
+constant per boundary, is untested.</li>
+<li><b>A cold-start prior instead of a cold start.</b> Most of the loss is
+January having nothing to say. Seeding a new season from the previous year's
+<em>regional</em> level while still zeroing team-specific history would keep the
+staleness fix and drop most of the cost.</li>
+<li><b>Leave it alone.</b> The honest default. Both endpoints lose, v6's fitted
+middle wins, and the corpus of prior labs already says memory was too short
+rather than too long.</li>
+</ol>
+</section>
+
+<section>
+<h2><span class="n">7</span>Standing, caveats, and what this does NOT establish</h2>
+<div class="callout bad"><b>This is selection-grade evidence only. It cannot
+promote or demote anything.</b> The virgin confirmatory window holds
+<b>53 settled series</b> against a first checkpoint of n=100, so no confirmatory
+read was available and none was taken.</div>
+<h3>Frame change &mdash; disclosed</h3>
+<p>The corpus moved under this program: 26 off-circuit events were synced in, Red
+Bull Home Ground was removed, and the EWC qualifiers were split into four
+regional events. The frame is therefore <b>n=2069</b>, not the v9
+frame's 2058, and the protocol's &beta; fixture
+(<span class="mono">&beta;(FIT1, v6) = 0.1152 &plusmn; 1e-3</span>) reads
+<b>0.116948</b> here. The v9 A1&ndash;A5 bar heights were
+calibrated on the old frame and do not transfer exactly.</p>
+<p>This matters for a marginal result. It does not rescue this one: the effect is
+6.3&times; the noise
+floor in the losing direction on one era and
+5.0&times; on the other,
+and the mechanism (§5) is legible and consistent across both.</p>
+<h3>Other limits</h3>
+<ul>
+<li>Three arms, no hyperparameter search &mdash; nothing here was tuned, so
+nothing here is overfit, but nor has the <em>space around</em> isolation been
+explored.</li>
+<li>The late-season sign flip (§5) is a slice of a losing arm, not a candidate.
+It is a hypothesis for a future preregistration, not a result.</li>
+<li>Promotion means promotion within the lab only. Nothing on the public site
+regardless of outcome, and VCTMM remains hands-off.</li>
+</ul>
+</section>
+
+<section>
+<h2><span class="n">8</span>Preregistration (frozen before scoring)</h2>
+<div class="disc"><div class="dhead">testing_lab/v10/preregister.v10.md</div>
+<pre># v10 PREREGISTRATION — unconditional year isolation
+
+Written before any VAL row was scored for this program. Governing law:
+`testing_lab/v9/stats/v9_transfer_protocol.json` and
+`v9_prospective_protocol.json`, unchanged. This document is bound by them; it
+does not amend them.
+
+Author: agent:v10-yeariso. Frozen 2026-08-12.
+
+---
+
+## 1. The operator's hypothesis
+
+&gt; "Treat each year as a new year where you don't look back at match data from
+&gt; previous years. Previous years are often with old rosters that shouldn't
+&gt; affect current ratings."
+
+Formally: at every calendar-year boundary, set the year-continuity factor to
+zero for **every** team, unconditionally — so a solve on day D in year Y uses
+only games played in year Y.
+
+## 2. What the champion already does (why this is an endpoint, not a new idea)
+
+v6 already implements year-boundary discounting, but **conditional on measured
+roster carryover**:
+
+    year_cont[(org, Y)] = min(|roster(last event Y-1) ∩ roster(first event Y)| / 5, 1)
+
+applied to each game as `sqrt(cw*cl)` (engine.py L408-420). So:
+
+- a team that kept **0/5** players already has its prior-year games **zeroed**;
+- a team that kept **5/5** keeps them at full weight;
+- everything between is interpolated from the data.
+
+The proposal is therefore the `year_cont ≡ 0` endpoint of a dial v6 already
+fits per team. Measured on this corpus (this program, §6): teams retain
+**3.15/5 players** on average across a boundary; **24%** keep all five and
+**32%** keep two or fewer. The hypothesis is right about the 32% — and v6
+already handles them. The question is what happens to the 24% whose history is
+genuinely continuous.
+
+## 3. Prior evidence (disclosed before running, because it is refuting)
+
+Recorded in earlier labs, all on the same frame:
+
+| prior experiment | what it did | result |
+| --- | --- | --- |
+| `g16_roster_none` (run_experiments7) | year_cont ≡ 1 (full carryover, the OTHER endpoint) | **−2.97 milli-LL** |
+| v8 Read 1(b) change-point continuity | replace year mode with graded change-points | **−3.889m**, falsifier fired |
+| v8 Read (d) phase-reset filter | hard reset at each roster change | **−19.275m**, falsifier fired |
+| `run_carryover.py` | import joining players' prior-org rating | −3.3m; fit ran to bound wanting **expansion** |
+| v8 decay lab | shorter calendar half-lives | worse everywhere; "memory was too short, not too long" |
+
+Standing ledger entry (`gen_final_model.py`): *"Lineup-overlap roster
+reweighting (3 schemes) — year-boundary continuity already covers real
+rebuilds."*
+
+Every coarser override of the measured overlap has lost. This program tests
+the one endpoint with no record of having been run. **The prior is that it
+loses**; it is run because it is cheap, it is the operator's question, and the
+endpoint is genuinely unmeasured.
+
+## 4. Arms (frozen)
+
+### Correction recorded before running
+
+`ROSTER_CONT = 0.3` (BuildRatingTimeline.py:132) is **dead code** — grep shows
+it is referenced only at its own definition, and mode `"year"` in the lab
+engine ignores the `persistence` argument entirely (engine.py:409 passes 1.0).
+The factor actually applied is the measured `min(overlap/5, 1)`, whose mean on
+this corpus is **0.62**, not 0.3. Any prose describing v6 as "0.3 continuity"
+is wrong, including in earlier lab documents.
+
+Consequently v6's real year boundary is a ~38% haircut per crossing, ~22% of
+org-boundaries are full carryover (factor 1.0), and only 10 of 130 are hard
+zeros.
+
+### The three cross-year channels
+
+Isolation must cut all three or it is not isolation:
+
+| # | channel | strength |
+| --- | --- | --- |
+| A | prior-year games still in the fit | ~11% weight at 1 year, ~1% at 2 |
+| B | **region-prior chain** (`self._chain`, never reset) | **dominant** — a team with no in-year data solves to 0.75 × last year's regional mean |
+| C | consistency classifier carries last year's winrate | weak (selects HL 20 vs 12) |
+
+| arm | definition |
+| --- | --- |
+| `v6` | deployed champion, `year_cont = min(overlap/5, 1)` measured per team |
+| `A_iso_hard` | `year_cont ≡ 0` at every boundary, all teams |
+| `A_iso_50` | `year_cont ≡ 0.5` — unconditional half-discount (spans the dial) |
+| `A_iso_floor` | `year_cont = min(overlap/5, 0.5)` — v6, capped so no team keeps full history |
+
+`A_iso_50` and `A_iso_floor` exist so the result is a **curve**, not a single
+point: if the optimum sits at v6's fitted position, that is a stronger and more
+informative answer than a lone endpoint failure.
+
+## 5. Evaluation plan (bound by v9 law)
+
+- Hyperparameters: **none are tuned.** Every arm is a re-parameterisation of an
+  existing mechanism; no grid, no search. This removes the FIT1 search
+  obligation entirely — there is nothing to fit.
+- β: refit per arm per fit-window, `minimize_scalar` bounded (0.001, 1.0),
+  xatol 1e-6, mean series-NLL, paired against v6 refit identically.
+  **Fixture: β(FIT1, v6) must equal 0.1152 ± 1e-3 or the run aborts.**
+- Frame: `testing_lab/v8/data/frame_expanded/series.csv`, sha256 verified
+  against `ff772d417b714844aa1b11426d8c04917e1b2848c9c8df811cd9988694d55142`;
+  abort loudly on mismatch.
+- Transfer: T1 (β on FIT1 → score VAL1) and T2 (β on FIT2 → score VAL2).
+  **ONE ledgered transfer evaluation per arm**, written to
+  `testing_lab/v9/stats/v9_looks.json` → `selection_reads` at run time.
+- Advance rule A1–A5 exactly as written in `v9_transfer_protocol.json`. This is
+  a **cross-family** change (engine state, not a nested v6 hyperparameter), so
+  cross-family MDE context of **5.889m at n=1217** is quoted next to every
+  number; the A4 gate floor stays **1.773m** as the protocol specifies.
+- Prospective: nothing. The virgin window holds **53 settled series** against a
+  first checkpoint of n=100, so no confirmatory read is available or attempted.
+  Any v10 result is **selection-grade only** and cannot promote anything.
+
+## 6. Disclosed prior look (exploratory)
+
+Before this preregistration was written, one implementation sanity check was
+run and is disclosed here rather than concealed: a 2026-only corpus was solved
+end-to-end with the production builder to check the variant was implementable
+and sign-plausible. It produced **β = 0.090819**, which fails the builder's own
+Gate B sanity band (0.115, 0.145), and the builder refused to write outputs.
+
+This scored **no VAL or holdout row** and ranked nothing; it is an
+implementation plausibility check of exactly the kind
+`exploratory_budget` describes. Logged against that budget (1 of 3).
+
+## 7. Predictions (recorded before scoring)
+
+1. `A_iso_hard` loses to v6 on both VAL1 and VAL2, by more than the 1.773m
+   floor. Stated because the prior evidence is one-directional and it should
+   cost something to be wrong.
+2. The loss is **concentrated in January–March** of each season, where an
+   isolated solve has the least history.
+3. `A_iso_floor` loses by less than `A_iso_hard`; the dial is monotone with the
+   optimum at or near v6's fitted position, not at either endpoint.
+
+## 8. Standing law restated
+
+Promotion means promotion **within the lab's flow only** — nothing on the
+public site regardless of outcome, and VCTMM remains hands-off. Market data is
+never a fitting target or a selection signal.
+</pre></div>
+</section>
+
+<script>
+const PAL = {"s1": "#7c4dd6", "d5": "#c96a2a", "a1": "#3a90cc", "v6": "#6f6a7c", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b", "ink": "#16121d"}, TRF = {"arms": ["A_iso_hard", "A_iso_none"], "labels": ["Year isolation (the proposal)", "Full carryover (other endpoint)"], "t1": [-11.104, -0.282], "t2": [-8.903, -1.599], "floor": 1.773}, PHA = {"labels": ["Jan-Feb", "Mar-Apr", "May-Jun", "Jul-Aug", "Sep-Dec"], "delta": [-24.98, -6.52, -5.62, -1.49, 2.29], "n": [274, 488, 530, 551, 167]}, MON = {"labels": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"], "delta": [-30.92, -21.46, 2.82, -9.61, -5.98, -4.62, -2.91, 0.75, -2.61, 8.98, 4.52, -1.14], "n": [102, 172, 121, 367, 390, 140, 338, 213, 47, 26, 67, 27]},
+      ROS = {"dist": [10, 10, 22, 28, 29, 31], "labels": ["0/5", "1/5", "2/5", "3/5", "4/5", "5/5"]}, WGT = {"orgs": ["TS", "KR\u00dc", "ZETA", "LOUD", "EG", "C9", "SEN", "KRX", "GEN", "FNC", "NAVI", "WOL", "GX", "FUR", "RRQ", "DFM", "NOVA", "KC", "MIBR", "BLG", "T1", "TL", "FUT", "TH", "FPX", "TE", "100T", "VIT", "BBL", "GE", "LEV", "TEC", "DRG", "G2", "M8", "TYL", "PRX", "JDG", "EDG", "NS", "XLG", "NRG", "AG", "EF", "ENVY", "FS", "PCF", "VL"], "share": [52.8, 52.0, 51.6, 50.4, 50.3, 48.3, 46.6, 46.2, 45.9, 45.7, 45.4, 45.2, 44.3, 43.9, 43.7, 43.6, 43.6, 43.6, 41.4, 40.8, 40.4, 39.9, 38.8, 38.1, 36.4, 36.2, 33.9, 33.8, 33.4, 33.3, 33.3, 31.9, 31.8, 31.5, 30.7, 28.7, 28.3, 28.2, 28.2, 26.0, 24.5, 23.5, 20.9, 0.0, 0.0, 0.0, 0.0, 0.0]};
+Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
+Chart.defaults.color = '#6b6478';
+Chart.defaults.animation = false;
+const floorBand = { id:'floorBand', beforeDatasetsDraw(c) {
+  const fb = c.options.plugins.floorBand; if (!fb || fb.lo === undefined) return;
+  const ax = fb.axis === 'x' ? c.scales.x : c.scales.y, ctx = c.ctx, ca = c.chartArea;
+  const p0 = ax.getPixelForValue(fb.lo), p1 = ax.getPixelForValue(fb.hi);
+  ctx.save(); ctx.fillStyle = 'rgba(154,147,166,0.16)';
+  if (fb.axis === 'x') ctx.fillRect(Math.min(p0,p1), ca.top, Math.abs(p1-p0), ca.bottom-ca.top);
+  else ctx.fillRect(ca.left, Math.min(p0,p1), ca.right-ca.left, Math.abs(p1-p0));
+  ctx.restore(); } };
+Chart.register(floorBand);
+
+new Chart(document.getElementById('c_transfer'), { type:'bar',
+ data:{ labels: TRF.labels, datasets:[
+   { label:'2025 (VAL1)', data:TRF.t1, backgroundColor:PAL.s1, borderRadius:4, maxBarThickness:54 },
+   { label:'2026H1 (VAL2)', data:TRF.t2, backgroundColor:PAL.d5, borderRadius:4, maxBarThickness:54 } ] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}},
+    floorBand:{axis:'y', lo:-TRF.floor, hi:TRF.floor},
+    tooltip:{callbacks:{label:(t)=>t.dataset.label+': '+(t.parsed.y>=0?'+':'')+t.parsed.y.toFixed(2)+'m'}} },
+  scales:{ x:{grid:{display:false}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'Δ log-loss vs v6, milli (>0 = better)'}} } } });
+
+new Chart(document.getElementById('c_phase'), { type:'bar',
+ data:{ labels: PHA.labels, datasets:[{ label:'Δ vs v6 (milli-LL)', data:PHA.delta,
+   backgroundColor: PHA.delta.map(v=>v>=0?PAL.good:PAL.bad), borderRadius:4, maxBarThickness:60 }] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{display:false}, floorBand:{axis:'y', lo:-TRF.floor, hi:TRF.floor},
+    tooltip:{callbacks:{label:(t)=>(t.parsed.y>=0?'+':'')+t.parsed.y.toFixed(2)+'m  (n='+PHA.n[t.dataIndex]+')'}} },
+  scales:{ x:{grid:{display:false}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'Δ log-loss vs v6, milli'}} } } });
+
+new Chart(document.getElementById('c_month'), { type:'line',
+ data:{ labels: MON.labels, datasets:[{ label:'Δ vs v6 (milli-LL)', data:MON.delta,
+   borderColor:PAL.s1, backgroundColor:'rgba(124,77,214,.10)', fill:true, tension:.3,
+   pointRadius:3, pointBackgroundColor:PAL.s1 }] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{display:false}, floorBand:{axis:'y', lo:-TRF.floor, hi:TRF.floor},
+    tooltip:{callbacks:{label:(t)=>(t.parsed.y>=0?'+':'')+t.parsed.y.toFixed(2)+'m  (n='+MON.n[t.dataIndex]+')'}} },
+  scales:{ x:{grid:{display:false}, title:{display:true, text:'calendar month'}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'Δ log-loss vs v6, milli'}} } } });
+
+new Chart(document.getElementById('c_roster'), { type:'bar',
+ data:{ labels: ROS.labels, datasets:[{ label:'team-years', data:ROS.dist,
+   backgroundColor: ROS.labels.map((_,i)=> i<=2 ? PAL.d5 : PAL.a1), borderRadius:4, maxBarThickness:60 }] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{display:false},
+    tooltip:{callbacks:{label:(t)=>t.parsed.y+' team-years kept '+ROS.labels[t.dataIndex]}} },
+  scales:{ x:{grid:{display:false}, title:{display:true, text:'players retained across the January boundary'}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'team-years'}} } } });
+</script>
+</div></body></html>

@@ -1,0 +1,280 @@
+{
+ "roster_boundaries": {
+  "n": 130,
+  "dist_kept_0_to_5": [
+   10,
+   10,
+   22,
+   28,
+   29,
+   31
+  ],
+  "mean_kept": 3.146,
+  "pct_full": 23.8,
+  "pct_half_or_less": 32.3,
+  "mean_continuity_factor": 0.629,
+  "by_year": [
+   {
+    "year": 2024,
+    "n": 39,
+    "mean_kept": 3.13
+   },
+   {
+    "year": 2025,
+    "n": 44,
+    "mean_kept": 3.27
+   },
+   {
+    "year": 2026,
+    "n": 47,
+    "mean_kept": 3.04
+   }
+  ]
+ },
+ "prior_year_weight": {
+  "mean_share": 0.3452,
+  "median_share": 0.3728,
+  "teams": [
+   {
+    "org": "TS",
+    "share": 0.5281,
+    "games": 67
+   },
+   {
+    "org": "KR\u00dc",
+    "share": 0.5203,
+    "games": 76
+   },
+   {
+    "org": "ZETA",
+    "share": 0.5159,
+    "games": 61
+   },
+   {
+    "org": "LOUD",
+    "share": 0.5038,
+    "games": 79
+   },
+   {
+    "org": "EG",
+    "share": 0.5026,
+    "games": 78
+   },
+   {
+    "org": "C9",
+    "share": 0.483,
+    "games": 78
+   },
+   {
+    "org": "SEN",
+    "share": 0.4663,
+    "games": 100
+   },
+   {
+    "org": "KRX",
+    "share": 0.4622,
+    "games": 139
+   },
+   {
+    "org": "GEN",
+    "share": 0.4586,
+    "games": 122
+   },
+   {
+    "org": "FNC",
+    "share": 0.4571,
+    "games": 117
+   },
+   {
+    "org": "NAVI",
+    "share": 0.4543,
+    "games": 85
+   },
+   {
+    "org": "WOL",
+    "share": 0.4521,
+    "games": 83
+   },
+   {
+    "org": "GX",
+    "share": 0.443,
+    "games": 58
+   },
+   {
+    "org": "FUR",
+    "share": 0.4389,
+    "games": 64
+   },
+   {
+    "org": "RRQ",
+    "share": 0.4369,
+    "games": 85
+   },
+   {
+    "org": "DFM",
+    "share": 0.4365,
+    "games": 63
+   },
+   {
+    "org": "NOVA",
+    "share": 0.4365,
+    "games": 72
+   },
+   {
+    "org": "KC",
+    "share": 0.4358,
+    "games": 84
+   },
+   {
+    "org": "MIBR",
+    "share": 0.414,
+    "games": 80
+   },
+   {
+    "org": "BLG",
+    "share": 0.4078,
+    "games": 111
+   },
+   {
+    "org": "T1",
+    "share": 0.4042,
+    "games": 104
+   },
+   {
+    "org": "TL",
+    "share": 0.3989,
+    "games": 96
+   },
+   {
+    "org": "FUT",
+    "share": 0.3876,
+    "games": 101
+   },
+   {
+    "org": "TH",
+    "share": 0.3812,
+    "games": 116
+   },
+   {
+    "org": "FPX",
+    "share": 0.3644,
+    "games": 109
+   },
+   {
+    "org": "TE",
+    "share": 0.3616,
+    "games": 104
+   },
+   {
+    "org": "100T",
+    "share": 0.3388,
+    "games": 92
+   },
+   {
+    "org": "VIT",
+    "share": 0.3378,
+    "games": 91
+   },
+   {
+    "org": "BBL",
+    "share": 0.3343,
+    "games": 78
+   },
+   {
+    "org": "GE",
+    "share": 0.3334,
+    "games": 70
+   },
+   {
+    "org": "LEV",
+    "share": 0.3334,
+    "games": 101
+   },
+   {
+    "org": "TEC",
+    "share": 0.3188,
+    "games": 77
+   },
+   {
+    "org": "DRG",
+    "share": 0.3177,
+    "games": 85
+   },
+   {
+    "org": "G2",
+    "share": 0.3147,
+    "games": 110
+   },
+   {
+    "org": "M8",
+    "share": 0.3066,
+    "games": 56
+   },
+   {
+    "org": "TYL",
+    "share": 0.2866,
+    "games": 74
+   },
+   {
+    "org": "PRX",
+    "share": 0.2835,
+    "games": 152
+   },
+   {
+    "org": "JDG",
+    "share": 0.2823,
+    "games": 72
+   },
+   {
+    "org": "EDG",
+    "share": 0.2819,
+    "games": 142
+   },
+   {
+    "org": "NS",
+    "share": 0.2597,
+    "games": 56
+   },
+   {
+    "org": "XLG",
+    "share": 0.2449,
+    "games": 77
+   },
+   {
+    "org": "NRG",
+    "share": 0.2353,
+    "games": 114
+   },
+   {
+    "org": "AG",
+    "share": 0.2092,
+    "games": 75
+   },
+   {
+    "org": "EF",
+    "share": 0.0,
+    "games": 16
+   },
+   {
+    "org": "ENVY",
+    "share": 0.0,
+    "games": 18
+   },
+   {
+    "org": "FS",
+    "share": 0.0,
+    "games": 23
+   },
+   {
+    "org": "PCF",
+    "share": 0.0,
+    "games": 15
+   },
+   {
+    "org": "VL",
+    "share": 0.0,
+    "games": 16
+   }
+  ]
+ }
+}
