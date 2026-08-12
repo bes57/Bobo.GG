@@ -104,6 +104,19 @@
     "match_name": "Upper Round 1 Play-Ins"
   },
   {
+    "match_id": "729678",
+    "team_a": "Eintracht Frankfurt",
+    "team_b": "Team Heretics",
+    "org_a": "Eintracht Frankfurt",
+    "org_b": "TH",
+    "date": "2026-08-14",
+    "datetime": "2026-08-14 15:00:00",
+    "region": "EMEA",
+    "event": "2026 Stage 2 \u2014 EMEA",
+    "format": "bo3",
+    "match_name": "Lower Round 2 Play-Ins"
+  },
+  {
     "match_id": "730537",
     "team_a": "FULL SENSE",
     "team_b": "QT DIG\u221e",

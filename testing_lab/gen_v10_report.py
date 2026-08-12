@@ -187,12 +187,15 @@ and one that kept 5/5 keeps them in full. The proposal is the
 <code>year_cont &equiv; 0</code> endpoint of a dial the champion already fits per
 team from data.</p>
 <div class="callout warn"><b>Correction to the record.</b>
-<code>ROSTER_CONT = 0.3</code> in <span class="mono">BuildRatingTimeline.py:132</span>
-is <b>dead code</b> &mdash; referenced only at its own definition, and the lab
+<code>ROSTER_CONT = 0.3</code> stood in
+<span class="mono">BuildRatingTimeline.py</span> until 2026-08-12 and was
+<b>dead code</b> &mdash; referenced only at its own definition, while the lab
 engine's <code>"year"</code> mode ignores the persistence argument entirely. The
 factor actually applied is the measured overlap, mean
 <b>{rb['mean_continuity_factor']:.2f}</b>, not 0.3. Lab documents describing v6 as
-"0.3 continuity" are wrong.</div>
+"0.3 continuity" are wrong. <b>It has since been deleted</b> (along with an
+equally unused <code>MIN_GAMES</code>), verified inert: rebuilding both the site
+and the trading model afterwards reproduced every rating to 12 decimals.</div>
 <h3>Isolation has to cut three channels, not one</h3>
 <table><thead><tr><th>#</th><th>Channel</th><th>Strength</th></tr></thead><tbody>
 <tr><td>A</td><td>prior-year games still in the fit</td><td>~11% weight at 1 year, ~1% at 2</td></tr>
@@ -323,7 +326,7 @@ frozen and fitted only on 2023&ndash;2024 data.</p>
 <tr><td>Decay</td><td class="mono">games, HL 20 / 12</td><td>by games played since, not calendar time; anomalous results age out faster</td></tr>
 <tr><td>Consistency</td><td class="mono">WR_HALF_LIFE 16</td><td>classifies a result against the team's decayed winrate at the time</td></tr>
 <tr><td>Margin</td><td class="mono">RD_POWER 0.75, RD_SCALE 2.5</td><td>round differential, compressed</td></tr>
-<tr><td>Year boundary</td><td class="mono">min(overlap/5, 1)</td><td>measured roster carryover &mdash; mean {rb['mean_continuity_factor']:.2f}, NOT the dead 0.3 constant</td></tr>
+<tr><td>Year boundary</td><td class="mono">min(overlap/5, 1)</td><td>measured roster carryover &mdash; mean {rb['mean_continuity_factor']:.2f}; the misleading 0.3 constant has been deleted</td></tr>
 <tr><td>Stakes</td><td class="mono">Champions &times;2.0, playoffs &times;1.6</td><td>bigger games count more</td></tr>
 <tr><td>Ridge</td><td class="mono">0.5 + region prior 1.5</td><td>borrowed strength for thin schedules</td></tr>
 <tr><td>&beta;</td><td class="mono">{RO['beta']:.4f}</td><td>rating gap &rarr; map probability, fit on FIT1 only</td></tr>

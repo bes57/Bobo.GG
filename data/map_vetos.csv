@@ -14242,3 +14242,10 @@ MatchID,step,team,action,map
 729674,5,SGE,ban,Ascent
 729674,6,M8,ban,Breeze
 729674,7,,remains,Sunset
+729675,1,NAVI,ban,Lotus
+729675,2,TH,ban,Split
+729675,3,NAVI,pick,Sunset
+729675,4,TH,pick,Haven
+729675,5,NAVI,ban,Ascent
+729675,6,TH,ban,Breeze
+729675,7,,remains,Summit

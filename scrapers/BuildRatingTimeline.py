@@ -129,9 +129,10 @@ RIDGE              = 0.5
 REGION_PRIOR_RIDGE = 1.5
 CHAMP_MULT         = 2.0
 PLAYOFF_MULT       = 1.6
-ROSTER_CONT        = 0.3    # documented v6 knob; year-mode continuity factors
-                            # are the measured roster carryover, applied as
-                            # sqrt(cw*cl) exactly like the engine's games branch
+# NB: there is no ROSTER_CONT knob. The year-boundary factor is the MEASURED
+# roster carryover, min(overlap/5, 1) (see _build_year_continuity) — mean 0.63
+# on this corpus. A `ROSTER_CONT = 0.3` constant sat here until 2026-08-12 and
+# was never read by anything; removed rather than left to mislead.
 MIN_HIST_GAMES     = 30     # days with fewer prior games get no chain solve
 BETA_FIT_BOUNDS    = (0.03, 0.6)
 BETA_GATE          = (0.115, 0.145)   # deploy gate B (v9 refit: 0.128512)
@@ -144,8 +145,6 @@ ENGINE_PROBE = os.path.join(ROOT, "testing_lab", "v9", "scratch", "deploy",
 # lambda_decay is kept as a top-level key for schema stability. Under v6 there
 # is no calendar decay; this reports the consistent-result games half-life.
 LAMBDA_DECAY = math.log(2) / HL_CONSISTENT
-MIN_GAMES    = 1   # retained for API compatibility; v6 emits a rating for any
-                   # org that has played a game in the checkpoint's year
 
 # Keep these dates in sync with BuildMapRatings._HISTORICAL_EVENT_DATES —
 # they're the real first/last match days per event (from match_dates.json).
