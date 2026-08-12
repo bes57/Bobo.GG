@@ -14899,3 +14899,11 @@ Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
 127.0.0.1 - - [12/Aug/2026 16:07:19] "GET /mapelo/modern/ HTTP/1.1" 200 -
 127.0.0.1 - - [12/Aug/2026 16:07:19] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [12/Aug/2026 16:07:19] "GET /highs/ HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "GET /team/GEN HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /static/base.css HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /logos/GE.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /logos/GEN.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /logos/FS.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /logos/RRQ.png HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:11:31] "[36mGET /logos/NS.png HTTP/1.1[0m" 304 -
