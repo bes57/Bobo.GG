@@ -1,0 +1,14 @@
+{
+ "labels": [
+  "at the mid,\\nno fee",
+  "pay the ask",
+  "+ Kalshi fee",
+  "maker bound\\n(optimistic)"
+ ],
+ "roi": [
+  0.12,
+  3.02,
+  -2.52,
+  2.95
+ ]
+}

@@ -56,6 +56,7 @@ NAV = """<div class="labtabs">
 <a href="/testing/report/v9_lab">v9 Lab</a>
 <a href="/testing/report/v10_lab" class="on">v10 Lab</a>
 <a href="/testing/report/edge_lab">Edge vs Market</a>
+<a href="/testing/report/playbook_bt">Playbook (backtested)</a>
 </div>"""
 
 
