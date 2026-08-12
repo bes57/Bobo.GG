@@ -118,7 +118,13 @@ VLR_NAME_TO_ORG = {
     '100 Thieves': '100T', 'BBL Esports': 'BBL', 'Cloud9': 'C9',
     'Dragon Ranger Gaming': 'DRG', 'Xi Lai Gaming': 'XLG',
     'EDward Gaming': 'EDG', 'Bilibili Gaming': 'BLG', 'Trace Esports': 'TE',
-    'FunPlus Phoenix': 'FPX', 'JDG Esports': 'JDG', 'TYLOO': 'TYL',
+    # JDG appears under BOTH names on VLR — "JDG Esports" on the match page,
+    # "JD Gaming" on the event matches list that feeds upcoming. Without the
+    # second spelling the org fell back to the literal "JD Gaming", which
+    # matches no rating and no logo, so the team rendered at +0.00 with a blank
+    # crest in Upcoming Matches.
+    'FunPlus Phoenix': 'FPX', 'JDG Esports': 'JDG', 'JD Gaming': 'JDG',
+    'TYLOO': 'TYL',
     'Nova Esports': 'NOVA', 'Titan Esports Club': 'TEC', 'All Gamers': 'AG',
     'Wolves Esports': 'WOL', 'Attacking Soul Esports': 'ASE',
     'DetonatioN FocusMe': 'DFM', 'ENVY': 'ENVY', 'Eternal Fire': 'EF',
