@@ -67,12 +67,27 @@ with open(os.path.join(KD, "kalshi_matches.csv"), newline="") as f:
     for r in csv.DictReader(f):
         meta[r["event_ticker"]] = r
 
-rows = []
+# market_ticker -> the team that market's YES refers to. The candle FILENAME
+# suffix is Kalshi's own short code (DRX, KRU, GM, TYLOO) and does NOT equal the
+# BenPom org (KRX, KRU-with-umlaut, M8, TYL) -- matching on it silently scored
+# both legs of 37 of 253 events as losses. yes_sub_title is the full team name,
+# which maps cleanly onto team_a_raw / team_b_raw in the CSV.
+yes_team = {}
+with open(os.path.join(KD, "markets_raw.jsonl")) as f:
+    for line in f:
+        try:
+            m = json.loads(line)
+        except ValueError:
+            continue
+        if m.get("ticker") and m.get("yes_sub_title"):
+            yes_team[m["ticker"]] = m["yes_sub_title"].strip()
+
+rows, unresolved = [], []
 for path in sorted(glob.glob(os.path.join(KD, "candles", "*.json"))):
     base = os.path.basename(path)[:-5]
     if "-" not in base:
         continue
-    ev, side = base.rsplit("-", 1)
+    ev, _suffix = base.rsplit("-", 1)
     mr = meta.get(ev)
     if not mr or mr.get("excluded") == "True" or not mr.get("winner_org"):
         continue
@@ -81,11 +96,28 @@ for path in sorted(glob.glob(os.path.join(KD, "candles", "*.json"))):
         continue
     with open(path) as f:
         cs = json.load(f).get("candlesticks") or []
+    # resolve which ORG this market's YES is, via the full team name
+    tname = yes_team.get(base)
+    if tname is None:
+        continue
+    if tname == (mr.get("team_a_raw") or "").strip():
+        side = mr["org_a"]
+    elif tname == (mr.get("team_b_raw") or "").strip():
+        side = mr["org_b"]
+    else:
+        unresolved.append((base, tname))
+        continue
+
     got = book_at(cs, st - 7200)
+    got1 = book_at(cs, st - 3600)          # also T-1h, per the simpler spec
     if not got:
         continue
     bid, ask, ts = got
+    b1, a1, ts1 = got1 if got1 else (None, None, None)
     rows.append({"event_ticker": ev, "side_org": side,
+                 "bid_1h": b1, "ask_1h": a1,
+                 "mid_1h": (round((b1 + a1) / 2, 4) if b1 is not None else None),
+                 "offset_1h_min": (round((ts1 - st) / 60, 1) if ts1 else None),
                  "org_a": mr["org_a"], "org_b": mr["org_b"],
                  "winner_org": mr["winner_org"],
                  "start_utc": st, "book_ts": ts,
@@ -102,6 +134,9 @@ with open(p, "w", newline="") as f:
     w.writeheader()
     w.writerows(rows)
 
+if unresolved:
+    print(f"  [warn] {len(unresolved)} market(s) whose team name matched neither "
+          f"side; skipped: {unresolved[:3]}")
 offs = [r["offset_min"] for r in rows]
 print(f"wrote {p}: {len(rows)} market-sides, "
       f"{len({r['event_ticker'] for r in rows})} events")

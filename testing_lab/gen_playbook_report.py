@@ -75,7 +75,7 @@ HTML = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <style>{CSS}
-.banner b {{ color:var(--bad); }}
+.banner b {{ color:var(--warn); }}
 .rule {{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.05rem;
         background:var(--accbg); border-left:6px solid var(--acc); border-radius:0 14px 14px 0;
         padding:16px 20px; margin:14px 0; line-height:1.5; }}</style></head><body><div class="wrap">
@@ -84,15 +84,16 @@ HTML = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <div class="tagline">One rule. Real pre-match prices, real costs, threshold chosen out-of-sample.</div>
 {NAV}
 
-<div class="banner" style="background:var(--badbg);border-color:#e8cfcf;border-left-color:var(--bad)">
-<b>THE ANSWER — DO NOT TRADE IT.</b> The rule below, with its threshold picked on
-the first half of the window and scored on the second, returns
-<b>{sg(te['roi'])}%</b> out-of-sample
-(p(profit)&nbsp;{te['p_profit']}). It is profitable before costs and unprofitable
-after them. Even the <em>optimistic</em> maker version &mdash; you post the bid,
-you always get filled, fees are zero &mdash; is {sg(mk['roi'])}% with an interval
-from {mk['ci'][0]:.0f} to {mk['ci'][1]:.0f}. There is no threshold on the curve
-that survives honest pricing.
+<div class="banner" style="background:var(--warnbg);border-color:#eddcc9;border-left-color:var(--warn)">
+<b>THE ANSWER — POSITIVE, BUT IT IS NOT THE MODEL'S EDGE.</b> The rule below,
+threshold picked on the first half of the window and scored on the second,
+returns <b>{sg(te['roi'])}%</b> out-of-sample
+(n={te['n']}, CI [{te['ci'][0]:.0f}, {te['ci'][1]:.0f}],
+p(profit)&nbsp;{te['p_profit']}). But backing every market underdog with the
+model switched off returns almost the same, because this book carries a real
+favourite&ndash;longshot bias: a 65c favourite wins 58.5% of the time. The rule
+works because it is mostly a way of buying underdogs, and the interval is wide
+enough that a losing quarter is entirely ordinary.
 </div>
 
 <section>
@@ -110,9 +111,9 @@ not scored on.</p>
   <div class="card"><div class="lbl">Threshold</div><div class="big">{T}c</div>
     <div class="sub">chosen on the train half only</div></div>
   <div class="card"><div class="lbl">Out-of-sample</div>
-    <div class="big bad">{sg(te['roi'])}%</div><div class="sub">n={te['n']} bets</div></div>
+    <div class="big good">{sg(te['roi'])}%</div><div class="sub">n={te['n']} bets</div></div>
   <div class="card"><div class="lbl">p(profitable)</div>
-    <div class="big">{te['p_profit']}</div><div class="sub">a coin flip</div></div>
+    <div class="big">{te['p_profit']}</div><div class="sub">CI [{te['ci'][0]:.0f}, {te['ci'][1]:.0f}]</div></div>
 </div>
 </section>
 
@@ -137,16 +138,18 @@ never needs to know who won in order to decide whether to bet.</p>
 <section>
 <h2><span class="n">3</span>Where the money goes</h2>
 <div class="chartbox"><canvas id="c_stack"></canvas></div>
-<p class="cap">Same {te['n']} bets, priced four ways. The rule clears a small
-profit at an untransactable mid, loses it to the spread, and goes negative on the
-fee. The fee is roughly 2c on a 30c ticket &mdash; 6&ndash;7% of stake.</p>
+<p class="cap">Same bets, priced four ways. The rule stays positive throughout,
+but the fee alone costs {nofee['roi'] - te['roi']:.1f} points &mdash; roughly 2c on
+a 34c ticket, 6&ndash;7% of stake. Costs do not kill this rule; they just take a
+third of it.</p>
 {dl('v10_page_pb_stack.json')}
-<div class="callout">The maker bound is the only positive column, and it is
-optimistic twice over: it assumes you are filled at your own bid on every bet you
-want, and it charges no fee. Real maker fills are the opposite of free &mdash;
-the live autopsy measured <b>{abs(LA['adverse_selection']['adverse_selection_cents_per_contract']):.1f}c
-per contract</b> of adverse selection, which is larger than the entire
-{sg(mk['roi'])}% it shows here.</div>
+<div class="callout warn">The maker column is optimistic twice over: it assumes
+you are filled at your own bid on every bet you want, and it charges no fee. Real
+maker fills are the opposite of free &mdash; the live autopsy measured
+<b>{abs(LA['adverse_selection']['adverse_selection_cents_per_contract']):.1f}c per
+contract</b> of adverse selection on a ~34c ticket, which is most of the margin
+shown here. That is the single biggest reason a backtest like this overstates
+what you would actually collect.</div>
 </section>
 
 <section>
@@ -166,17 +169,19 @@ seeing this table is precisely the error this page exists to avoid.</div>
 
 <section>
 <h2><span class="n">5</span>What would make this tradeable</h2>
-<p>Not a different threshold &mdash; the curve has no hiding place. The three
-things that would actually change the answer, in order of size:</p>
+<p>The rule is positive, so the question is whether the margin is real and
+collectable. Three things decide that, in order of size:</p>
 <ol>
-<li><b>Stop paying the spread and the fee.</b> Quoting as a maker rather than
-lifting the ask is worth roughly {mk['roi'] - te['roi']:.0f} points here. That is
-the entire gap between a losing rule and a break-even one, which is why the
-existing deployment playbook is a maker strategy. It is also where adverse
-selection lives, so the gain is not free.</li>
-<li><b>A model that discriminates better.</b> On this window BenPom picks the
-winner slightly less often than the market does. A rule built on it is trying to
-buy an information edge that the measurements do not show.</li>
+<li><b>Adverse selection, which this backtest cannot see.</b> Quoting as a maker
+looks worth {mk['roi'] - te['roi']:.0f} points, but the live week measured
+{abs(LA['adverse_selection']['adverse_selection_cents_per_contract']):.1f}c per
+contract of adverse fill &mdash; you get filled preferentially when you are wrong.
+That is correlated with the outcome, so no fixed haircut models it, and it is
+large enough to erase the margin.</li>
+<li><b>The model is barely involved.</b> Backing every underdog with the model
+switched off returns almost the same as the rule. What is being harvested is the
+book's favourite&ndash;longshot bias &mdash; a 65c favourite wins 58.5% &mdash;
+not a BenPom insight. If that bias closes, the rule closes with it.</li>
 <li><b>More data.</b> {PB['n_matches']} matches over three months is not enough to
 resolve an effect of the size in question; the intervals here are ±30 points.
 This market has not existed for long enough to answer the question yet.</li>

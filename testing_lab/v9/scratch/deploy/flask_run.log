@@ -15344,3 +15344,27 @@ Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
 127.0.0.1 - - [12/Aug/2026 17:58:58] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
 127.0.0.1 - - [12/Aug/2026 17:58:58] "GET /logo.svg HTTP/1.1" 200 -
 127.0.0.1 - - [12/Aug/2026 17:58:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/v10/build_prematch.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/v10/run_simple.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/v10/build_prematch.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_playbook_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_playbook_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [12/Aug/2026 18:14:01] "GET /testing/report/playbook_bt HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 18:14:01] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 18:14:01] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 18:14:01] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -

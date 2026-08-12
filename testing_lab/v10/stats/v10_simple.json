@@ -1,0 +1,168 @@
+{
+ "spec": "YES price 1-2h pre-match, bet on >=5pp model-vs-market gap, no fees",
+ "threshold_pp": 5.0,
+ "given_not_fitted": true,
+ "beta": 0.120155,
+ "n_matches": 253,
+ "n_legs": 506,
+ "window": [
+  "2026-05-15",
+  "2026-08-12"
+ ],
+ "T2h": {
+  "n_bets": 139,
+  "n_available": 506,
+  "hit_pct": 41.0,
+  "mean_price": 34.6,
+  "staked": 4806.5,
+  "profit": 893.5,
+  "roi_pct": 18.59,
+  "ci95": [
+   -4.0,
+   42.32
+  ],
+  "p_profit": 0.944
+ },
+ "T1h": {
+  "n_bets": 140,
+  "n_available": 506,
+  "hit_pct": 42.9,
+  "mean_price": 34.7,
+  "staked": 4859.5,
+  "profit": 1140.5,
+  "roi_pct": 23.47,
+  "ci95": [
+   0.83,
+   47.18
+  ],
+  "p_profit": 0.98
+ },
+ "T2h_paying_ask": {
+  "n_bets": 122,
+  "n_available": 506,
+  "hit_pct": 43.4,
+  "mean_price": 34.9,
+  "staked": 4255.0,
+  "profit": 1045.0,
+  "roi_pct": 24.56,
+  "ci95": [
+   0.27,
+   49.15
+  ],
+  "p_profit": 0.976
+ },
+ "halves": {
+  "first": {
+   "n_bets": 53,
+   "n_available": 214,
+   "hit_pct": 43.4,
+   "mean_price": 36.2,
+   "staked": 1919.0,
+   "profit": 381.0,
+   "roi_pct": 19.85,
+   "ci95": [
+    -14.23,
+    56.21
+   ],
+   "p_profit": 0.862
+  },
+  "second": {
+   "n_bets": 86,
+   "n_available": 292,
+   "hit_pct": 39.5,
+   "mean_price": 33.6,
+   "staked": 2887.5,
+   "profit": 512.5,
+   "roi_pct": 17.75,
+   "ci95": [
+    -11.24,
+    50.07
+   ],
+   "p_profit": 0.874
+  },
+  "split": "2026-07-04"
+ },
+ "by_month": [
+  {
+   "month": "2026-05",
+   "n_bets": 36,
+   "n_available": 146,
+   "hit_pct": 47.2,
+   "mean_price": 37.3,
+   "staked": 1344.0,
+   "profit": 356.0,
+   "roi_pct": 26.49,
+   "ci95": [
+    -13.73,
+    65.54
+   ],
+   "p_profit": 0.9
+  },
+  {
+   "month": "2026-06",
+   "n_bets": 12,
+   "n_available": 48,
+   "hit_pct": 25.0,
+   "mean_price": 33.5,
+   "staked": 401.5,
+   "profit": -101.5,
+   "roi_pct": -25.28,
+   "ci95": [
+    -100.0,
+    65.29
+   ],
+   "p_profit": 0.273
+  },
+  {
+   "month": "2026-07",
+   "n_bets": 73,
+   "n_available": 238,
+   "hit_pct": 39.7,
+   "mean_price": 35.1,
+   "staked": 2559.5,
+   "profit": 340.5,
+   "roi_pct": 13.3,
+   "ci95": [
+    -17.28,
+    43.34
+   ],
+   "p_profit": 0.791
+  },
+  {
+   "month": "2026-08",
+   "n_bets": 18,
+   "n_available": 74,
+   "hit_pct": 44.4,
+   "mean_price": 27.9,
+   "staked": 501.5,
+   "profit": 298.5,
+   "roi_pct": 59.52,
+   "ci95": [
+    -22.71,
+    147.58
+   ],
+   "p_profit": 0.911
+  }
+ ],
+ "on_underdogs": {
+  "n": 123,
+  "hit_pct": 39.8,
+  "roi_pct": 26.58
+ },
+ "on_favourites": {
+  "n": 16,
+  "hit_pct": 50.0,
+  "roi_pct": -14.48
+ },
+ "control_blind_underdog": {
+  "n": 253,
+  "hit_pct": 41.1,
+  "mean_price": 35.1,
+  "roi_pct": 17.13
+ },
+ "control_blind_favourite": {
+  "n": 253,
+  "hit_pct": 58.9,
+  "roi_pct": -9.72
+ }
+}
