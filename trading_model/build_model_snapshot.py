@@ -48,10 +48,35 @@ def main():
     # ── consistency gates (fail loudly, never ship a broken snapshot) ──
     assert 0.10 <= sm["beta"] <= 0.16, f"beta {sm['beta']} outside sane band"
     assert sm["xregion_offsets"].get("CN") == 0, "CN must be the pinned region"
-    assert len(ratings) >= 40, f"suspiciously few rated teams: {len(ratings)}"
-    missing = [t for t in ratings if not org_regions.get(t)]
-    if missing:
-        print(f"  [warn] {len(missing)} org(s) without region: {missing[:8]}")
+    n_solved = len(ratings)
+    assert n_solved >= 40, f"suspiciously few rated teams: {n_solved}"
+
+    # ── drop the orgs we have no gauge on ──────────────────────────────────
+    # From Stage 2 playoffs, non-franchised T2 sides can play in and can
+    # reach Champions. They arrive with no history, so the solve hands them
+    # a rating off one or two maps: 2026-08-11 had FF at +3.58 on two
+    # matches out of 1,796, which would have placed it top-8 overall, above
+    # VIT, G2, TH and KC. That is not a rating, it is one weekend of noise
+    # wearing a rating's clothes.
+    #
+    # TEAM_REGIONS is the list of sides we actually have a prior on, so
+    # absence from it IS the "no gauge" test. Dropping them here keeps a
+    # phantom out of the top of the table, out of the parity pins, and out
+    # of reach of any consumer that forgets to check the region.
+    #
+    # NOTE this does not un-contaminate the FIT: a franchised side that
+    # played one of these still carries that result, scored against a
+    # rating built from nothing. Excluding those matches from the solve is
+    # the upstream half of the same idea, and a separate decision.
+    ungauged = sorted(t for t in ratings if not org_regions.get(t))
+    if ungauged:
+        print(f"  [warn] dropping {len(ungauged)} org(s) with no region — "
+              f"no prior to gauge them on: {ungauged}")
+        for t in ungauged:
+            ratings.pop(t, None)
+            org_regions.pop(t, None)
+    assert len(ratings) >= 40, (
+        f"only {len(ratings)} rated orgs left after dropping ungauged ones")
 
     snapshot = {
         "model_version": f"{MODEL_VERSION_PREFIX}-{last['date']}",
@@ -62,6 +87,12 @@ def main():
         "beta": sm["beta"],
         "gf_upper_logit": sm["gf_upper_logit"],
         "b_pick": sm["b_pick"],
+        # what the SOLVE produced, before the ungauged orgs were dropped.
+        # A consumer's data-loss tripwire wants to know whether this host
+        # solved less than last time (missing research data); dropping
+        # ungauged sides is a deliberate quality filter and must not read
+        # as the host having lost its dataset.
+        "n_rated_solved": n_solved,
         "ratings": dict(sorted(ratings.items())),
         "region_priors": sm["region_priors"],
         "xregion_offsets": sm["xregion_offsets"],
@@ -87,7 +118,28 @@ def main():
     sys.path.insert(0, HERE)
     import predict
     m = snapshot
-    teams = sorted(ratings, key=lambda t: -ratings[t])[:8]
+    # Only orgs the model can actually PRICE take part. An org with no
+    # region is one a consumer refuses to quote at all — no region, no fair
+    # value, skip the market — so predict has no defined answer for it and
+    # requiring the closed form to reproduce one asserts on a case that is
+    # deliberately out of scope.
+    #
+    # 2026-08-11: FF was solved a rating but never added to TEAM_REGIONS,
+    # entered the top 8 on it, and predict returned ~0.500 against a closed
+    # form of 0.405. The assertion is doing its job on every pair it can
+    # judge, so it must not also fail on the ones it cannot: it froze the
+    # snapshot for two days, and every consumer kept quoting off a model
+    # that had stopped getting newer.
+    ranked = sorted(ratings, key=lambda t: -ratings[t])
+    teams = [t for t in ranked if org_regions.get(t)][:8]
+    # Report the HIGH-RATED unmapped orgs specifically. The bulk warning
+    # above lists every org missing a region; this one says which of them
+    # were good enough to reach the self-test, i.e. which are worth adding
+    # to TEAM_REGIONS before they show up in a market nobody can price.
+    top_unmapped = [t for t in ranked[:8] if not org_regions.get(t)]
+    if top_unmapped:
+        print(f"  [warn] parity self-test skipped top-rated org(s) with no "
+              f"region: {top_unmapped}")
     for a, b in zip(teams[::2], teams[1::2]):
         p = predict.series_probability(m, a, b, "bo3")
         ra, rb = ratings[a], ratings[b]

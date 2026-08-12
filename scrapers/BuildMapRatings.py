@@ -51,6 +51,11 @@ def _is_champions_event(eid):
     return bool(_re.fullmatch(r"\d{4}_champions", eid or ""))
 
 # VCT franchised-era regional assignments (org abbreviation → league region)
+# Events starting on or after this date exclude maps against a side with no
+# region — the start of the Stage 2 play-ins. Nothing earlier is touched; see
+# the filter in the games loop below.
+UNGAUGED_FROM = datetime(2026, 8, 1)
+
 TEAM_REGIONS = {
     # EMEA
     "TL": "EMEA", "FNC": "EMEA", "NAVI": "EMEA", "VIT": "EMEA",
@@ -422,6 +427,8 @@ def load_games(only_events=None):
     ).reset_index()
 
     games = []
+    # Maps dropped for involving a side we hold no prior on, by org.
+    ungauged_drops = {}
     for _, row in meta.iterrows():
         key = (int(row['MatchID']), row['MapNum'])
         if key not in mr_idx.index:
@@ -430,6 +437,27 @@ def load_games(only_events=None):
         winner = mr_row['WinnerOrg']
         losers = [o for o in row['orgs'] if o != winner]
         if not losers:
+            continue
+        # ── play-in sides do not enter the fit at all ─────────────────────
+        # From the Stage 2 play-ins, non-franchised T2 sides play into T1
+        # events and can reach Champions. They arrive with no history, so a
+        # rating for them is one weekend of noise, and a franchised side that
+        # plays one is scored against that noise. The match leaves the solve,
+        # and with no games the T2 side is solved no rating at all.
+        #
+        # TEAM_REGIONS is the list of sides we hold a prior on, so absence
+        # from it IS the no-gauge test — but ONLY from the play-ins onward.
+        # The same test matches ~20 maps of 2023-2025 parsing junk, and
+        # dropping those would re-solve three years of history, which is a
+        # separate cleanup. This loop has no per-game date yet (dates are
+        # interpolated below), so the EVENT's start date is the gate.
+        _ev = EVENT_DATES.get(row['event_id'])
+        _recent = bool(_ev) and _parse_date(_ev[0]) >= UNGAUGED_FROM
+        unknown = ([o for o in (winner, losers[0]) if o not in TEAM_REGIONS]
+                   if _recent else [])
+        if unknown:
+            for o in unknown:
+                ungauged_drops[o] = ungauged_drops.get(o, 0) + 1
             continue
         try:
             wr, lr = map(int, str(mr_row['Score']).split('-'))
@@ -445,6 +473,13 @@ def load_games(only_events=None):
             'lr':        lr,
             'date':      None,
         })
+
+    if ungauged_drops:
+        tot = sum(ungauged_drops.values())
+        detail = ', '.join(f'{o} {n}' for o, n in
+                           sorted(ungauged_drops.items(), key=lambda kv: -kv[1]))
+        print(f'  dropped {tot} map(s) involving {len(ungauged_drops)} '
+              f'ungauged side(s) — no prior to score against: {detail}')
 
     # Assign approximate dates: interpolate match_id rank within each event
     gdf = pd.DataFrame(games)

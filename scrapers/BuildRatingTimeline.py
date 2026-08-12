@@ -91,6 +91,21 @@ from MoreTestingMaybeFiles import ALL_EVENTS
 from BuildMapRatings import TEAM_REGIONS as ORG_REGIONS
 from BuildMapRatings import EVENT_DATES as BMR_EVENT_DATES
 
+# Matches on or after this date against a side with no region are excluded
+# from the fit. The date is the START OF THE STAGE 2 PLAY-INS (first map
+# 2026-08-05), which is the situation this rule is about: non-franchised T2
+# sides playing into a T1 event, and from there potentially into Champions.
+#
+# NOTHING BEFORE THE PLAY-INS IS TOUCHED, and that is the point of the gate,
+# not a side effect of it. The same "no region" test also matches ~20 maps
+# scattered through 2023-2025 — INTL, EMEA, CN, FRA, "Team", "tarik", parsing
+# artifacts that were never orgs — and excluding those re-solves three years
+# of history. Real, and a separate cleanup.
+#
+# Verified at the time of writing: 29 maps removed, all between 2026-08-05
+# and 2026-08-09, zero before.
+UNGAUGED_FROM = datetime(2026, 8, 1)
+
 DATA_DIR = os.path.join(ROOT, "data")
 OUT_PATH  = os.path.join(DATA_DIR, "rating_timeline.json")  # 2026 (live; used by Modern Hub)
 SITE_MODEL_PATH = os.path.join(DATA_DIR, "site_model.json")
@@ -200,6 +215,8 @@ def load_all_games():
     mr_idx = mr.set_index(["MatchID", "MapNum"])
 
     games = []
+    # Maps dropped for involving a side we hold no prior on, by org.
+    ungauged_drops = {}
 
     for event in ALL_EVENTS:
         eid  = event["id"]
@@ -237,6 +254,33 @@ def load_all_games():
             mid_str = str(int(row["MatchID"]))
             date_str = match_dates.get(mid_str)  # may be None
 
+            # ── play-in matches against sides we hold no prior on ─────────
+            # From the Stage 2 play-ins, non-franchised T2 sides play into
+            # T1 events and can reach Champions. They arrive with no
+            # history, so a franchised side that plays one is scored against
+            # a rating built from a single weekend, which moves ITS rating.
+            #
+            # They do not enter the fit, and with no games they are solved
+            # no rating at all — which is the point: nothing downstream
+            # should be able to look one up.
+            #
+            # Date-gated to the play-ins. The same "no region" test also
+            # matches ~20 maps of 2023-2025 junk (INTL, EMEA, "Team",
+            # "tarik" — parsing artifacts, never orgs); touching those
+            # re-solves three years of history and is a separate cleanup.
+            # An UNKNOWN date never qualifies: it would apply the rule to
+            # history through the back door.
+            _gd = (datetime.strptime(date_str, "%Y-%m-%d")
+                   if date_str else None)
+            unknown = ([] if (os.environ.get("BENPOM_KEEP_UNGAUGED") == "1"
+                              or _gd is None or _gd < UNGAUGED_FROM)
+                       else [o for o in (winner, losers[0])
+                             if o not in ORG_REGIONS])
+            if unknown:
+                for o in unknown:
+                    ungauged_drops[o] = ungauged_drops.get(o, 0) + 1
+                continue
+
             games.append({
                 "match_id":   int(row["MatchID"]),
                 "event_id":   eid,
@@ -248,6 +292,13 @@ def load_all_games():
                 "date":       datetime.strptime(date_str, "%Y-%m-%d") if date_str else None,
                 "_date_known": date_str is not None,
             })
+
+    if ungauged_drops:
+        tot = sum(ungauged_drops.values())
+        detail = ", ".join(f"{o} {n}" for o, n in
+                           sorted(ungauged_drops.items(), key=lambda kv: -kv[1]))
+        print(f"  dropped {tot} map(s) involving {len(ungauged_drops)} "
+              f"ungauged side(s) — no prior to score against: {detail}")
 
     # Fill interpolated dates for games without real dates
     gdf = pd.DataFrame(games)
