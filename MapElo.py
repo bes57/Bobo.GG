@@ -7483,6 +7483,20 @@ def _mhub_load():
             _m["win_prob_a"] = round(_p_up, 4)
             _m["win_prob_b"] = round(1.0 - _p_up, 4)
 
+    # Matches against a side the solve refuses to rate are dropped outright,
+    # not shown at +0.00. A T2 play-in side has no rating by design (see
+    # UNGAUGED_FROM in BuildRatingTimeline), so anything quoted for it is a
+    # projection against a number that deliberately does not exist — and
+    # "+0.00" reads as an average team rather than an unknown one.
+    #
+    # The test is membership in the solve's own output rather than a second
+    # copy of the region list, so this can never drift from the gate that
+    # produced the ratings: if the solve rated them, the match shows.
+    _rated = last_checkpoint_ratings or {}
+    if _rated:
+        upcoming_raw = [_m for _m in upcoming_raw
+                        if _m.get("org_a") in _rated and _m.get("org_b") in _rated]
+
     result["upcoming"] = upcoming_raw
 
     # (v6 removed the per-org intl-attendance lookup: the intl_exp/cn_dog
