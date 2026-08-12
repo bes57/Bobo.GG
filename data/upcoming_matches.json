@@ -1,70 +1,5 @@
 [
   {
-    "match_id": "724631",
-    "team_a": "JDG Esports",
-    "team_b": "EDward Gaming",
-    "org_a": "JDG",
-    "org_b": "EDG",
-    "date": "2026-08-11",
-    "datetime": "2026-08-11 08:00:00",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Lower Round 3 Play-Ins"
-  },
-  {
-    "match_id": "724632",
-    "team_a": "Dragon Ranger Gaming",
-    "team_b": "Trace Esports",
-    "org_a": "DRG",
-    "org_b": "TE",
-    "date": "2026-08-11",
-    "datetime": "2026-08-11 10:00:00",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Lower Round 3 Play-Ins"
-  },
-  {
-    "match_id": "729674",
-    "team_a": "Gentle Mates",
-    "team_b": "Eintracht Frankfurt",
-    "org_a": "M8",
-    "org_b": "Eintracht Frankfurt",
-    "date": "2026-08-12",
-    "datetime": "2026-08-12 15:00:00",
-    "region": "EMEA",
-    "event": "2026 Stage 2 \u2014 EMEA",
-    "format": "bo3",
-    "match_name": "Lower Round 1 Play-Ins"
-  },
-  {
-    "match_id": "729675",
-    "team_a": "Team Heretics",
-    "team_b": "Natus Vincere",
-    "org_a": "TH",
-    "org_b": "NAVI",
-    "date": "2026-08-12",
-    "datetime": "2026-08-12 18:00:00",
-    "region": "EMEA",
-    "event": "2026 Stage 2 \u2014 EMEA",
-    "format": "bo3",
-    "match_name": "Lower Round 1 Play-Ins"
-  },
-  {
-    "match_id": "724633",
-    "team_a": "All Gamers",
-    "team_b": "Titan Esports Club",
-    "org_a": "AG",
-    "org_b": "TEC",
-    "date": "2026-08-12",
-    "datetime": "2026-08-12 08:00:00",
-    "region": "CN",
-    "event": "2026 Stage 2 \u2014 CN",
-    "format": "bo3",
-    "match_name": "Upper Final Play-Ins"
-  },
-  {
     "match_id": "729742",
     "team_a": "KR\u00dc Esports",
     "team_b": "BESTIA",
@@ -195,6 +130,32 @@
     "match_name": "Upper Round 1 Play-Ins"
   },
   {
+    "match_id": "724639",
+    "team_a": "Nova Esports",
+    "team_b": "JD Gaming",
+    "org_a": "NOVA",
+    "org_b": "JDG",
+    "date": "2026-08-14",
+    "datetime": "2026-08-14 08:00:00",
+    "region": "CN",
+    "event": "2026 Stage 2 \u2014 CN",
+    "format": "bo3",
+    "match_name": "Upper Quarterfinals Playoffs"
+  },
+  {
+    "match_id": "724638",
+    "team_a": "TYLOO",
+    "team_b": "Titan Esports Club",
+    "org_a": "TYL",
+    "org_b": "TEC",
+    "date": "2026-08-14",
+    "datetime": "2026-08-14 10:00:00",
+    "region": "CN",
+    "event": "2026 Stage 2 \u2014 CN",
+    "format": "bo3",
+    "match_name": "Upper Quarterfinals Playoffs"
+  },
+  {
     "match_id": "729672",
     "team_a": "FUT Esports",
     "team_b": "Eternal Fire",
@@ -219,5 +180,31 @@
     "event": "2026 Stage 2 \u2014 EMEA",
     "format": "bo3",
     "match_name": "Upper Semifinals Play-Ins"
+  },
+  {
+    "match_id": "724641",
+    "team_a": "Bilibili Gaming",
+    "team_b": "Trace Esports",
+    "org_a": "BLG",
+    "org_b": "TE",
+    "date": "2026-08-15",
+    "datetime": "2026-08-15 08:00:00",
+    "region": "CN",
+    "event": "2026 Stage 2 \u2014 CN",
+    "format": "bo3",
+    "match_name": "Upper Quarterfinals Playoffs"
+  },
+  {
+    "match_id": "724640",
+    "team_a": "Xi Lai Gaming",
+    "team_b": "All Gamers",
+    "org_a": "XLG",
+    "org_b": "AG",
+    "date": "2026-08-15",
+    "datetime": "2026-08-15 10:00:00",
+    "region": "CN",
+    "event": "2026 Stage 2 \u2014 CN",
+    "format": "bo3",
+    "match_name": "Upper Quarterfinals Playoffs"
   }
 ]
