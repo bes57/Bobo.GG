@@ -35,19 +35,38 @@ ALL_EVENTS = [
     # NOTE: deliberately NOT tagged "International" — that key would pull them
     # into INTL_EVENTS (CN-shrinkage intl weights), which is untested for
     # non-VCT events. All are past events; live-scrape never triggers on them.
-    # The four regional EWC qualifiers ran the same window as one qualifying
-    # circuit, so they're modelled as ONE multi-region event (like Stage 2) —
-    # not four single-region ones. Merged 2026-07-28; the per-region CSVs were
-    # concatenated into data/{,maps/,series/}2026_ewc_qual.csv (no overlapping
-    # rows, so every game still rates exactly once and ratings are unchanged).
-    {"id": "2026_ewc_qual", "label": "2026 EWC Qualifiers",
-     "year": 2026, "start": "2026-05-16", "end": "2026-06-01",
+    # The four regional EWC qualifiers are FOUR separate single-region events,
+    # not one multi-region circuit. They were merged into a single entry on
+    # 2026-07-28 and split back on 2026-08-12: every one of the 184 map
+    # matchups is intra-regional (verified — zero cross-region pairings), so a
+    # single entry spanning four regions misdescribed them. Each region also
+    # ran its own window (CN finished 2026-05-20, the rest 05-31), which one
+    # merged start/end could not express.
+    #
+    # Ratings are unaffected either way: the v6 solve reads region from
+    # TEAM_REGIONS per team, never from the event's `regions` field, and these
+    # events are not in INTL_EVENTS. Verified by rebuild — identical output.
+    # Data lives in data/{,maps/,series/}2026_ewc_qual_<region>.csv.
+    {"id": "2026_ewc_qual_americas", "label": "2026 EWC Qualifier — Americas",
+     "year": 2026, "start": "2026-05-12", "end": "2026-05-31",
      "ratings_only": True, "vct_only": True,
      "regions": {
-         "Americas": "https://www.vlr.gg/event/stats/2953/esports-world-cup-2026-americas-qualifier",
-         "EMEA":     "https://www.vlr.gg/event/stats/2954/esports-world-cup-2026-emea-qualifier",
-         "Pacific":  "https://www.vlr.gg/event/stats/2955/esports-world-cup-2026-pacific-qualifier",
-         "CN":       "https://www.vlr.gg/event/stats/2956/esports-world-cup-2026-china-qualifier"}},
+         "Americas": "https://www.vlr.gg/event/stats/2953/esports-world-cup-2026-americas-qualifier"}},
+    {"id": "2026_ewc_qual_emea", "label": "2026 EWC Qualifier — EMEA",
+     "year": 2026, "start": "2026-05-11", "end": "2026-05-31",
+     "ratings_only": True, "vct_only": True,
+     "regions": {
+         "EMEA": "https://www.vlr.gg/event/stats/2954/esports-world-cup-2026-emea-qualifier"}},
+    {"id": "2026_ewc_qual_pacific", "label": "2026 EWC Qualifier — Pacific",
+     "year": 2026, "start": "2026-05-11", "end": "2026-05-31",
+     "ratings_only": True, "vct_only": True,
+     "regions": {
+         "Pacific": "https://www.vlr.gg/event/stats/2955/esports-world-cup-2026-pacific-qualifier"}},
+    {"id": "2026_ewc_qual_cn", "label": "2026 EWC Qualifier — China",
+     "year": 2026, "start": "2026-05-12", "end": "2026-05-20",
+     "ratings_only": True, "vct_only": True,
+     "regions": {
+         "CN": "https://www.vlr.gg/event/stats/2956/esports-world-cup-2026-china-qualifier"}},
     {"id": "2026_china_evo_2", "label": "2026 China Evolution Series Act 2",
      "year": 2026, "start": "2026-05-21", "end": "2026-05-31",
      "ratings_only": True, "vct_only": True,
