@@ -332,6 +332,12 @@ class Engine:
         for day in self.pred_days:
             day_num = int(np.datetime64(day, "D").astype(int))
             m_hist = self.g_dnum < day_num
+            if cfg.get("corpus_from"):
+                # v10 follow-up: keep only games on/after a date, so the solve
+                # runs on a rolling recent corpus instead of all history. Unlike
+                # year_isolated this does NOT reset at each January, so a 2026
+                # solve still carries all of 2025 -- no cold start.
+                m_hist = m_hist & (self.g_date >= cfg["corpus_from"])
             if year_iso:
                 # v10: a solve sees only games from its own calendar year. This
                 # also makes the >=30 gate below mean "30 IN-YEAR games" rather

@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Playbook (backtested) — one rule, tested honestly</title>
+<title>Playbook (backtested) — one rule, no fees</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&family=DM+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <style>
@@ -77,7 +77,7 @@
         padding:16px 20px; margin:14px 0; line-height:1.5; }</style></head><body><div class="wrap">
 
 <h1>Playbook (backtested)</h1>
-<div class="tagline">One rule. Real pre-match prices, real costs, threshold chosen out-of-sample.</div>
+<div class="tagline">One rule. Pre-match YES price, 5pp threshold, no fees.</div>
 <div class="labtabs">
 <a href="/testing/">Testing Lab</a>
 <a href="/testing/report/state_of_benpom">State of BenPom</a>
@@ -94,139 +94,132 @@
 </div>
 
 <div class="banner" style="background:var(--warnbg);border-color:#eddcc9;border-left-color:var(--warn)">
-<b>THE ANSWER — POSITIVE, BUT IT IS NOT THE MODEL'S EDGE.</b> The rule below,
-threshold picked on the first half of the window and scored on the second,
-returns <b>+13.14%</b> out-of-sample
-(n=44, CI [-26, 55],
-p(profit)&nbsp;0.733). But backing every market underdog with the
-model switched off returns almost the same, because this book carries a real
-favourite&ndash;longshot bias: a 65c favourite wins 58.5% of the time. The rule
-works because it is mostly a way of buying underdogs, and the interval is wide
-enough that a losing quarter is entirely ordinary.
+<b>THE ANSWER — IT MAKES MONEY, BUT ALMOST NONE OF IT IS THE MODEL.</b>
+The rule returns <b>+18.59%</b> on the T&minus;2h price and
+<b>+23.47%</b> on T&minus;1h, over 253 matches, stable
+across both halves of the window. But backing <em>every</em> market underdog with
+BenPom switched off returns <b>+17.13%</b>. The rule is worth about
+<b>+1.5 points</b> on top of that. What is being harvested is the book's
+favourite&ndash;longshot bias &mdash; a 65c favourite wins only 58.5% &mdash; not
+a model insight.
 </div>
 
 <section>
 <h2><span class="n">1</span>The rule</h2>
-<div class="rule">Two hours before a match, buy the side whose BenPom
-probability exceeds the Kalshi <em>ask</em> by at least 8 cents.
-One contract. Hold to settlement.</div>
-<p>That is the whole strategy. No sizing ladder, no windows, no regional
-carve-outs &mdash; those all came from slicing a small sample and are how the
-previous playbook got its numbers. One threshold, chosen once, on data it was
-not scored on.</p>
+<div class="rule">Take the YES price an hour or two before the match starts.
+Buy the side where BenPom differs from it by 5 percentage points or more.
+One contract. Hold to settlement. No fees.</div>
+<p>The 5pp threshold is <b>given, not fitted</b> &mdash; so there is no swept
+maximum here, no train/test split to argue about, and the whole sample counts.
+Prices come from the raw candle book rebuilt against the real scheduled start,
+so nothing is sampled after a match began.</p>
 <div class="cards">
-  <div class="card"><div class="lbl">Matches</div><div class="big">253</div>
-    <div class="sub">506 sides evaluated</div></div>
-  <div class="card"><div class="lbl">Threshold</div><div class="big">8c</div>
-    <div class="sub">chosen on the train half only</div></div>
-  <div class="card"><div class="lbl">Out-of-sample</div>
-    <div class="big good">+13.14%</div><div class="sub">n=44 bets</div></div>
-  <div class="card"><div class="lbl">p(profitable)</div>
-    <div class="big">0.733</div><div class="sub">CI [-26, 55]</div></div>
+  <div class="card"><div class="lbl">T&minus;1h price</div>
+    <div class="big good">+23.47%</div>
+    <div class="sub">n=140, CI [1, 47]</div></div>
+  <div class="card"><div class="lbl">T&minus;2h price</div>
+    <div class="big good">+18.59%</div>
+    <div class="sub">n=139, CI [-4, 42]</div></div>
+  <div class="card"><div class="lbl">Hit rate</div><div class="big">41.0%</div>
+    <div class="sub">at an average 34.6c</div></div>
+  <div class="card"><div class="lbl">Model's share</div>
+    <div class="big warn">+1.5 pts</div>
+    <div class="sub">over backing every underdog</div></div>
 </div>
 </section>
 
 <section>
-<h2><span class="n">2</span>What makes this backtest different</h2>
-<p>Three defects broke every previous read on this question. All are fixed here.</p>
+<h2><span class="n">2</span>The rule vs the control</h2>
+<div class="chartbox"><canvas id="c_bars"></canvas></div>
+<p class="cap">No fees anywhere on this chart. The third bar uses no model at all
+&mdash; it just buys whichever side the market has below 50c. It captures nearly
+the whole return.</p>
+<div class="dl"><a href="/testing/edge/stats/v10_page_pb_bars.json" download>&#8681; v10_page_pb_bars.json</a></div>
 <div class="scroll"><table>
-<thead><tr><th>Defect</th><th>Previous reads</th><th>Here</th></tr></thead><tbody>
-<tr><td>Price timestamp</td><td class="bad">T&minus;2h from market <em>close</em>, and these markets close when a winner is declared &mdash; 74% of prices were sampled mid-match</td>
-    <td class="good">T&minus;2h from the real scheduled start, rebuilt from raw candles; median offset &minus;120 min, nothing post-start</td></tr>
-<tr><td>Execution</td><td class="bad">transacted at the mid</td>
-    <td class="good">pays the ask, with the real book spread</td></tr>
-<tr><td>Fees</td><td class="bad">none</td>
-    <td class="good">Kalshi taker fee <span class="mono">ceil(0.07&middot;C&middot;P&middot;(1&minus;P))</span> on every ticket</td></tr>
-<tr><td>Threshold choice</td><td class="bad">swept, best reported</td>
-    <td class="good">chosen on the first half, scored on the second</td></tr>
+<thead><tr><th>What the rule bought</th><th>n</th><th>Hit</th><th>ROI</th></tr></thead><tbody>
+<tr><td>underdog side</td><td class="mono">123</td><td class="mono">39.8%</td>
+    <td class="mono good">+26.58%</td></tr>
+<tr><td>favourite side</td><td class="mono">16</td><td class="mono">50.0%</td>
+    <td class="mono bad">-14.48%</td></tr>
 </tbody></table></div>
-<p class="cap">Both sides of every match are evaluated independently, so the rule
-never needs to know who won in order to decide whether to bet.</p>
+<p class="cap">123 of the 139 bets are underdogs and they carry
+all the profit; the 16 favourite bets lose money. In practice the rule is
+an underdog filter.</p>
 </section>
 
 <section>
-<h2><span class="n">3</span>Where the money goes</h2>
-<div class="chartbox"><canvas id="c_stack"></canvas></div>
-<p class="cap">Same bets, priced four ways. The rule stays positive throughout,
-but the fee alone costs 6.4 points &mdash; roughly 2c on
-a 34c ticket, 6&ndash;7% of stake. Costs do not kill this rule; they just take a
-third of it.</p>
-<div class="dl"><a href="/testing/edge/stats/v10_page_pb_stack.json" download>&#8681; v10_page_pb_stack.json</a></div>
-<div class="callout warn">The maker column is optimistic twice over: it assumes
-you are filled at your own bid on every bet you want, and it charges no fee. Real
-maker fills are the opposite of free &mdash; the live autopsy measured
-<b>8.5c per
-contract</b> of adverse selection on a ~34c ticket, which is most of the margin
-shown here. That is the single biggest reason a backtest like this overstates
-what you would actually collect.</div>
-</section>
-
-<section>
-<h2><span class="n">4</span>The threshold curve &mdash; and why not to read it hopefully</h2>
-<div class="chartbox"><canvas id="c_curve"></canvas></div>
-<p class="cap">Out-of-sample ROI at every threshold, with the train half for
-comparison. The train curve peaked at 8c; the test curve does not agree, which
-is the normal fate of a swept threshold on a few hundred bets.</p>
-<div class="dl"><a href="/testing/edge/stats/v10_page_pb_curve.json" download>&#8681; v10_page_pb_curve.json</a></div>
+<h2><span class="n">3</span>Is it stable?</h2>
+<div class="cards">
+  <div class="card"><div class="lbl">First half</div>
+    <div class="big">+19.85%</div><div class="sub">n=53</div></div>
+  <div class="card"><div class="lbl">Second half</div>
+    <div class="big">+17.75%</div><div class="sub">n=86</div></div>
+</div>
+<p>Split the window down the middle and it returns +19.85% then
++17.75%. That is about as stable as a three-month sample can look.</p>
+<div class="chartbox"><canvas id="c_mon"></canvas></div>
 <div class="scroll"><table>
-<thead><tr><th>Threshold</th><th>Bets</th><th>Hit</th><th>ROI (test)</th><th>95% CI</th></tr></thead>
-<tbody><tr><td class="mono">0c</td><td class="mono">143</td><td class="mono">45.5%</td><td class="mono good">+11.36%</td><td class="mono dim">[-8, 31]</td></tr><tr><td class="mono">1c</td><td class="mono">126</td><td class="mono">43.7%</td><td class="mono good">+11.74%</td><td class="mono dim">[-10, 34]</td></tr><tr><td class="mono">2c</td><td class="mono">111</td><td class="mono">41.4%</td><td class="mono good">+10.05%</td><td class="mono dim">[-14, 35]</td></tr><tr><td class="mono">3c</td><td class="mono">103</td><td class="mono">42.7%</td><td class="mono good">+13.84%</td><td class="mono dim">[-10, 39]</td></tr><tr><td class="mono">4c</td><td class="mono">88</td><td class="mono">40.9%</td><td class="mono good">+12.43%</td><td class="mono dim">[-14, 40]</td></tr><tr><td class="mono">5c</td><td class="mono">82</td><td class="mono">41.5%</td><td class="mono good">+14.83%</td><td class="mono dim">[-13, 45]</td></tr><tr><td class="mono">6c</td><td class="mono">66</td><td class="mono">42.4%</td><td class="mono good">+17.40%</td><td class="mono dim">[-15, 51]</td></tr><tr><td class="mono">7c</td><td class="mono">58</td><td class="mono">43.1%</td><td class="mono good">+18.99%</td><td class="mono dim">[-16, 55]</td></tr><tr><td class="mono">8c</td><td class="mono">44</td><td class="mono">40.9%</td><td class="mono good">+13.14%</td><td class="mono dim">[-27, 52]</td></tr><tr><td class="mono">9c</td><td class="mono">35</td><td class="mono">42.9%</td><td class="mono good">+18.67%</td><td class="mono dim">[-26, 65]</td></tr><tr><td class="mono">10c</td><td class="mono">29</td><td class="mono">48.3%</td><td class="mono good">+36.45%</td><td class="mono dim">[-14, 87]</td></tr><tr><td class="mono">11c</td><td class="mono">20</td><td class="mono">45.0%</td><td class="mono good">+34.33%</td><td class="mono dim">[-27, 102]</td></tr><tr><td class="mono">12c</td><td class="mono">14</td><td class="mono">50.0%</td><td class="mono good">+50.86%</td><td class="mono dim">[-26, 128]</td></tr></tbody></table></div>
-<div class="callout bad">Two cells are positive. Both sit on tiny samples with
-intervals spanning fifty points or more, and picking either one <em>after</em>
-seeing this table is precisely the error this page exists to avoid.</div>
+<thead><tr><th>Month</th><th>Bets</th><th>Hit</th><th>ROI</th></tr></thead><tbody><tr><td class="mono">2026-05</td><td class="mono">36</td><td class="mono">47.2%</td><td class="mono good">+26.49%</td></tr><tr><td class="mono">2026-06</td><td class="mono">12</td><td class="mono">25.0%</td><td class="mono bad">-25.28%</td></tr><tr><td class="mono">2026-07</td><td class="mono">73</td><td class="mono">39.7%</td><td class="mono good">+13.30%</td></tr><tr><td class="mono">2026-08</td><td class="mono">18</td><td class="mono">44.4%</td><td class="mono good">+59.52%</td></tr></tbody></table></div>
+<p class="cap">Month to month is far less comfortable &mdash; one month at
+-25% and one at
++60%. With a dozen to seventy bets a
+month that spread is normal, and it is what a losing quarter would feel like.</p>
+<div class="dl"><a href="/testing/edge/stats/v10_simple.json" download>&#8681; v10_simple.json</a></div>
 </section>
 
 <section>
-<h2><span class="n">5</span>What would make this tradeable</h2>
-<p>The rule is positive, so the question is whether the margin is real and
-collectable. Three things decide that, in order of size:</p>
-<ol>
-<li><b>Adverse selection, which this backtest cannot see.</b> Quoting as a maker
-looks worth 15 points, but the live week measured
-8.5c per
-contract of adverse fill &mdash; you get filled preferentially when you are wrong.
-That is correlated with the outcome, so no fixed haircut models it, and it is
-large enough to erase the margin.</li>
-<li><b>The model is barely involved.</b> Backing every underdog with the model
-switched off returns almost the same as the rule. What is being harvested is the
-book's favourite&ndash;longshot bias &mdash; a 65c favourite wins 58.5% &mdash;
-not a BenPom insight. If that bias closes, the rule closes with it.</li>
-<li><b>More data.</b> 253 matches over three months is not enough to
-resolve an effect of the size in question; the intervals here are ±30 points.
-This market has not existed for long enough to answer the question yet.</li>
-</ol>
+<h2><span class="n">4</span>What this does and does not establish</h2>
+<p><b>Does:</b> over 253 matches from 2026-05-15 to
+2026-08-12, at pre-match prices taken against the real scheduled start,
+the rule was profitable and stable across halves. The bias driving it is
+measurable and in the expected direction &mdash; the market's favourites are
+priced at 65c and win 58.5%.</p>
+<p><b>Does not:</b></p>
+<ul>
+<li><b>Show a model edge.</b> +1.5 points over a no-model control, on a
+sample whose interval is roughly &plusmn;25 points, is not evidence that BenPom
+is beating the book. The honest description of this rule is "buy underdogs".</li>
+<li><b>Include fees.</b> None are charged, per the spec. For reference only:
+a taker paying Kalshi's
+<span class="mono">ceil(0.07&middot;C&middot;P&middot;(1&minus;P))</span> would
+give back roughly six points on a 34.6c ticket. Maker fees on this
+series are genuinely zero.</li>
+<li><b>Include adverse selection.</b> The live week measured
+<b>8.5c per
+contract</b> &mdash; you get filled preferentially when you are wrong. On a
+34.6c ticket that is most of the margin, and no backtest that
+assumes you transact at the quoted price can see it. That week lost
+<b>$309</b> over 719 fills.</li>
+<li><b>Cover a full season.</b> Three months, one title, top-tier VCT only.</li>
+</ul>
 <div class="callout warn"><b>Standing.</b> Reporting only. Market data is never a
-fitting target or a selection signal, and nothing here changes the deployed
-model or the trading configuration.</div>
+fitting target or a selection signal, and nothing here changes the deployed model
+or the trading configuration.</div>
 </section>
 
 <script>
-const PAL = {"s1": "#7c4dd6", "d5": "#c96a2a", "a1": "#3a90cc", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b"}, CURVE = {"T": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], "test": [11.36, 11.74, 10.05, 13.84, 12.43, 14.83, 17.4, 18.99, 13.14, 18.67, 36.45, 34.33, 50.86], "train": [1.37, 2.44, 9.13, 10.93, 14.03, 24.35, 19.43, 12.68, 26.58, 8.11, null, null, null], "n": [143, 126, 111, 103, 88, 82, 66, 58, 44, 35, 29, 20, 14]}, STACK = {"labels": ["at the mid,\\nno fee", "pay the ask", "+ Kalshi fee", "maker bound\\n(optimistic)"], "roi": [25.18, 19.52, 13.14, 28.21]};
+const PAL = {"s1": "#7c4dd6", "d5": "#c96a2a", "a1": "#3a90cc", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b"}, BARS = {"labels": ["The rule\\n(T-1h)", "The rule\\n(T-2h)", "Back every underdog\\n(no model)", "Back every favourite\\n(no model)"], "roi": [23.47, 18.59, 17.13, -9.72]}, MON = {"labels": ["2026-05", "2026-06", "2026-07", "2026-08"], "roi": [26.49, -25.28, 13.3, 59.52], "n": [36, 12, 73, 18]};
 Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
 Chart.defaults.color = '#6b6478';
 Chart.defaults.animation = false;
 
-new Chart(document.getElementById('c_stack'), { type:'bar',
- data:{ labels: STACK.labels.map(l=>l.split('\n')), datasets:[
-  { data: STACK.roi, borderRadius:4, maxBarThickness:64,
-     backgroundColor: STACK.roi.map((v,i)=> i===3 ? PAL.gray : (v>=0?PAL.a1:PAL.bad)) } ] },
+new Chart(document.getElementById('c_bars'), { type:'bar',
+ data:{ labels: BARS.labels.map(l=>l.split('\n')), datasets:[
+  { data: BARS.roi, borderRadius:4, maxBarThickness:62,
+     backgroundColor: BARS.roi.map((v,i)=> i<2 ? PAL.s1 : (v>=0?PAL.d5:PAL.bad)) } ] },
  options:{ responsive:true, maintainAspectRatio:false,
   plugins:{ legend:{display:false},
    tooltip:{callbacks:{label:(t)=>'ROI '+t.parsed.y.toFixed(2)+'%'}} },
   scales:{ x:{grid:{display:false}, ticks:{font:{size:10}}},
-   y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI %'}} } } });
+   y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI % (no fees)'}} } } });
 
-new Chart(document.getElementById('c_curve'), { type:'line',
- data:{ labels: CURVE.T.map(t=>t+'c'), datasets:[
-  { label:'out-of-sample (test half)', data:CURVE.test, borderColor:PAL.s1,
-     backgroundColor:'rgba(124,77,214,.10)', fill:true, tension:.25, pointRadius:3 },
-  { label:'train half (where T was chosen)', data:CURVE.train, borderColor:PAL.gray,
-     borderDash:[5,4], fill:false, tension:.25, pointRadius:2 } ] },
+new Chart(document.getElementById('c_mon'), { type:'bar',
+ data:{ labels: MON.labels, datasets:[{ data: MON.roi, borderRadius:4, maxBarThickness:54,
+   backgroundColor: MON.roi.map(v=>v>=0?PAL.good:PAL.bad) }] },
  options:{ responsive:true, maintainAspectRatio:false,
-  plugins:{ legend:{position:'bottom', labels:{boxWidth:14, boxHeight:3}},
-   tooltip:{callbacks:{label:(t)=>t.dataset.label+': '+t.parsed.y.toFixed(1)+'%'
-     +(t.datasetIndex===0?'  (n='+CURVE.n[t.dataIndex]+')':'')}} },
-  scales:{ x:{grid:{display:false}, title:{display:true, text:'minimum edge over the ask'}},
+  plugins:{ legend:{display:false},
+   tooltip:{callbacks:{label:(t)=>t.parsed.y.toFixed(1)+'%  (n='+MON.n[t.dataIndex]+')'}} },
+  scales:{ x:{grid:{display:false}},
    y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI %'}} } } });
 </script>
 </div></body></html>

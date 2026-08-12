@@ -1,0 +1,14 @@
+{
+ "labels": [
+  "The rule\\n(T-1h)",
+  "The rule\\n(T-2h)",
+  "Back every underdog\\n(no model)",
+  "Back every favourite\\n(no model)"
+ ],
+ "roi": [
+  23.47,
+  18.59,
+  17.13,
+  -9.72
+ ]
+}
