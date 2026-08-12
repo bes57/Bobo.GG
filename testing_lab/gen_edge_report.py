@@ -23,6 +23,7 @@ RO = rj("v10_roi.json")
 SL = rj("v10_slippage.json")
 MO = rj("v10_monthly.json")
 LA = rj("v10_live_autopsy.json")
+TA = rj("v10_timing_artifact.json")
 
 with open(os.path.join(HERE, "gen_v9_report.py")) as f:
     CSS = f.read().split('CSS = """', 1)[1].split('"""', 1)[0]
@@ -104,8 +105,16 @@ HTML = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 {NAV}
 
 <div class="banner" style="background:var(--warnbg);border-color:#eddcc9;border-left-color:var(--warn)">
-<b>THE ANSWER — NO DEMONSTRATED MODEL EDGE, AND THIS WAS ALREADY TESTED WITH REAL MONEY.</b>
-Two independent findings, either of which is sufficient. <b>(1)</b> Backing
+<b>THE ANSWER — THERE IS NO EDGE. THE +34.7% WAS A BROKEN TIMESTAMP.</b>
+The market price this study used, <span class="mono">prob_a_t2h</span>, is
+anchored two hours before the market <em>closes</em> &mdash; and these markets
+close <em>when a winner is declared</em>. So it is not a pre-match price:
+<b>{TA["pct_sampled_after_start"]}%</b> of the sample was taken
+<em>during</em> the match, a median of <b>{TA["median_offset_min"]:.0f} minutes</b>
+after the first map started (&sect;3). Priced honestly &mdash; pre-match only,
+paying the ask, paying Kalshi's fee &mdash; the whole thing returns
+<b>{sg(TA["cost_stack_honest_subsample"]["plus_ask_and_fees"]["roi"])}%</b>. Two
+further findings agree. <b>(1)</b> Backing
 <em>every</em> market underdog blindly, model switched off, returned
 <b>{sg(bd["roi_pct"])}%</b> against the model's <b>{sg(m5["roi_pct"])}%</b> &mdash;
 the model is worth about <b>{sg(gap, 1)} points</b> on top of ignoring it, and it
@@ -116,6 +125,13 @@ bootstrap says that is real underperformance, not variance
 (p&nbsp;=&nbsp;{LA["variance_test"]["p_cum_le_observed"]:.3f}). The backtest edge did
 not survive contact with a real order book.
 </div>
+
+<div class="callout bad" style="margin-bottom:16px"><b>Correction.</b> An earlier
+version of this page, and the v10 lab's &sect;9, described
+<span class="mono">prob_a_t2h</span> as a clean pre-match price and reported
++{RO['headline']['roi_pct']}% on that basis. That description was wrong and the
+number is not usable. The corrected read is &sect;3. The live-trading result
+(&sect;4) was already pointing the same way.</div>
 
 <section>
 <h2><span class="n">1</span>The question, and the control that answers it</h2>
@@ -159,7 +175,63 @@ by construction and look clever for doing so.</div>
 </section>
 
 <section>
-<h2><span class="n">3</span>The part that settles it: it was traded, and it lost</h2>
+<h2><span class="n">3</span>The timestamp is coupled to the outcome</h2>
+<p>Kalshi VALORANT markets carry
+<span class="mono">"This market will close and expire after a winner is
+declared"</span>. So <span class="mono">close_time</span> is not a schedule, it is
+the moment the match ended &mdash; and a price sampled at
+<span class="mono">close &minus; 2h</span> is sampled two hours before the
+<em>finish</em>, not before the start.</p>
+<p>Because match length varies, that sampling instant lands at wildly different
+points: <b>{TA['pct_sampled_after_start']}%</b> of prices were taken after the
+first map had begun, median <b>+{TA['median_offset_min']:.0f} minutes</b> in.
+And crucially, <em>long matches are the ones underdogs win</em>. The dataset
+therefore quotes a cheaper underdog price exactly when the underdog is likelier
+to win. That is not look-ahead in the ordinary sense &mdash; the sampling time is
+itself a function of the result.</p>
+<div class="scroll"><table>
+<thead><tr><th>When the price was sampled</th><th>n</th><th>Blind-underdog ROI</th><th>95% CI</th><th>Underdog won</th></tr></thead><tbody>
+<tr><td><b>before match start (usable)</b></td><td class="mono">{TA['by_timing']['pre_start']['n']}</td>
+    <td class="mono">{sg(TA['by_timing']['pre_start']['roi'])}%</td>
+    <td class="mono dim">[{TA['by_timing']['pre_start']['ci'][0]:.0f}, {TA['by_timing']['pre_start']['ci'][1]:.0f}]</td>
+    <td class="mono">{TA['dog_winrate_by_timing']['pre_start']}%</td></tr>
+<tr><td>after match start</td><td class="mono">{TA['by_timing']['post_start']['n']}</td>
+    <td class="mono bad">{sg(TA['by_timing']['post_start']['roi'])}%</td>
+    <td class="mono dim">[{TA['by_timing']['post_start']['ci'][0]:.0f}, {TA['by_timing']['post_start']['ci'][1]:.0f}]</td>
+    <td class="mono">{TA['dog_winrate_by_timing']['30_90min']}% (30-90m)</td></tr>
+<tr><td>&nbsp;&nbsp;&mdash; more than 30 min in</td><td class="mono">{TA['by_timing']['gt30min']['n']}</td>
+    <td class="mono bad">{sg(TA['by_timing']['gt30min']['roi'])}%</td>
+    <td class="mono dim">[{TA['by_timing']['gt30min']['ci'][0]:.0f}, {TA['by_timing']['gt30min']['ci'][1]:.0f}]</td>
+    <td class="mono">&mdash;</td></tr>
+</tbody></table></div>
+<p class="cap">The "edge" is entirely in the rows where the price was read
+mid-match. On the rows that are actually tradeable it is
+{sg(TA['by_timing']['pre_start']['roi'])}% with an interval straddling zero
+(p(profit) = {TA['by_timing']['pre_start']['p_profit']}).</p>
+<h3>And then the costs</h3>
+<div class="scroll"><table>
+<thead><tr><th>Pre-match subsample, n={TA['cost_stack_honest_subsample']['mid_no_costs']['n']}</th><th>ROI</th><th>95% CI</th><th>p(profit)</th></tr></thead><tbody>
+<tr><td>at the mid, no costs</td><td class="mono">{sg(TA['cost_stack_honest_subsample']['mid_no_costs']['roi'])}%</td>
+    <td class="mono dim">[{TA['cost_stack_honest_subsample']['mid_no_costs']['ci'][0]:.0f}, {TA['cost_stack_honest_subsample']['mid_no_costs']['ci'][1]:.0f}]</td>
+    <td class="mono">{TA['cost_stack_honest_subsample']['mid_no_costs']['p_profit']}</td></tr>
+<tr><td>+ buy at the ask</td><td class="mono">{sg(TA['cost_stack_honest_subsample']['plus_ask']['roi'])}%</td>
+    <td class="mono dim">[{TA['cost_stack_honest_subsample']['plus_ask']['ci'][0]:.0f}, {TA['cost_stack_honest_subsample']['plus_ask']['ci'][1]:.0f}]</td>
+    <td class="mono">{TA['cost_stack_honest_subsample']['plus_ask']['p_profit']}</td></tr>
+<tr><td><b>+ Kalshi fee ceil(0.07&middot;P&middot;(1&minus;P))</b></td>
+    <td class="mono"><b>{sg(TA['cost_stack_honest_subsample']['plus_ask_and_fees']['roi'])}%</b></td>
+    <td class="mono dim">[{TA['cost_stack_honest_subsample']['plus_ask_and_fees']['ci'][0]:.0f}, {TA['cost_stack_honest_subsample']['plus_ask_and_fees']['ci'][1]:.0f}]</td>
+    <td class="mono">{TA['cost_stack_honest_subsample']['plus_ask_and_fees']['p_profit']}</td></tr>
+</tbody></table></div>
+{dl('v10_timing_artifact.json')}
+<div class="callout bad">Nothing survives. The fee alone is roughly 2c on a 30c
+ticket &mdash; 6-7% of stake &mdash; and it was absent from every earlier number on
+this page and in the v10 lab. <b>{sg(TA['cost_stack_honest_subsample']['plus_ask_and_fees']['roi'])}%
+with p(profit) {TA['cost_stack_honest_subsample']['plus_ask_and_fees']['p_profit']}
+is a coin flip.</b></div>
+</section>
+
+<section>
+<h2><span class="n">4</span>It was also traded live, and it lost</h2>
 <p>Everything above is a backtest. The lab already has the thing a backtest is a
 substitute for &mdash; a week of real fills against this exact market, recorded in
 the v8 phase-7 autopsy.</p>
@@ -198,12 +270,12 @@ buys at the quoted price on every match it likes. Reality fills you
 <b>preferentially when you are wrong</b> &mdash; {abs(LA['adverse_selection']['adverse_selection_cents_per_contract']):.1f}c
 per contract of it here, against a mid-price backtest edge of
 {m5['roi_pct']:.0f}% on an average {RO['headline']['mean_cost'] if 'mean_cost' in RO['headline'] else 28.8:.0f}c contract. The
-slippage curve in &sect;7 models a fixed haircut; adverse selection is worse than a
+slippage curve in &sect;8 models a fixed haircut; adverse selection is worse than a
 haircut, because it is correlated with the outcome.</div>
 </section>
 
 <section>
-<h2><span class="n">4</span>Is it just under-confidence? Mostly, yes</h2>
+<h2><span class="n">5</span>Is it just under-confidence? Mostly, yes</h2>
 <p>BenPom assigns the eventual winner an average probability of
 <b>{ED['mean_conf']['benpom']}</b>; Kalshi assigns <b>{ED['mean_conf']['kalshi']}</b>.
 The model is systematically less sure of itself, so it disagrees toward the
@@ -226,7 +298,7 @@ across zero. So most of the apparent edge is the hedging, not the opinion.</p>
 </section>
 
 <section>
-<h2><span class="n">5</span>Does it pick <em>better</em> underdogs?</h2>
+<h2><span class="n">6</span>Does it pick <em>better</em> underdogs?</h2>
 <p>This is the one place the model looks genuinely additive, and it deserves a
 careful read rather than a headline.</p>
 <div class="scroll"><table>
@@ -245,7 +317,7 @@ ones that pay more when they do. That is a price-selection effect, and with
 </section>
 
 <section>
-<h2><span class="n">6</span>Discrimination &mdash; the uncomfortable number</h2>
+<h2><span class="n">7</span>Discrimination &mdash; the uncomfortable number</h2>
 <div class="cards">
   <div class="card"><div class="lbl">Picks the winner</div>
     <div class="big">{disc['benpom_acc']}%</div><div class="sub">BenPom</div></div>
@@ -264,7 +336,7 @@ seeing matchups more clearly &mdash; on the only metric that measures that, it i
 </section>
 
 <section>
-<h2><span class="n">7</span>How assured is any of this?</h2>
+<h2><span class="n">8</span>How assured is any of this?</h2>
 <h3>The anomaly is persistent, not one hot streak</h3>
 <div class="chartbox"><canvas id="c_mon"></canvas></div>
 <div class="scroll"><table>
@@ -294,7 +366,7 @@ clears the same bar without any model at all.</div>
 </section>
 
 <section>
-<h2><span class="n">8</span>Segments, with the caveat that matters</h2>
+<h2><span class="n">9</span>Segments, with the caveat that matters</h2>
 <div class="scroll"><table>
 <thead><tr><th>Segment</th><th>n</th><th>Hit</th><th>ROI</th><th>95% CI</th></tr></thead>
 <tbody>{segrows}</tbody></table></div>
@@ -306,7 +378,7 @@ named in advance and tested on data that did not suggest it.</div>
 </section>
 
 <section>
-<h2><span class="n">9</span>What would actually settle it</h2>
+<h2><span class="n">10</span>What would actually settle it</h2>
 <ol>
 <li><b>Trade the control, not the model.</b> If the thesis is "underdogs are
 underpriced", the honest instrument is a flat underdog rule. It returned

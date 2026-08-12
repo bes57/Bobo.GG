@@ -1,0 +1,78 @@
+{
+ "note": "t2h is anchored to market CLOSE (= when the match ended), not match start",
+ "pct_sampled_after_start": 74.3,
+ "median_offset_min": 39.0,
+ "by_timing": {
+  "pre_start": {
+   "n": 65,
+   "roi": 8.87,
+   "ci": [
+    -24.28,
+    43.13
+   ],
+   "p_profit": 0.701
+  },
+  "post_start": {
+   "n": 188,
+   "roi": 42.19,
+   "ci": [
+    17.86,
+    66.79
+   ],
+   "p_profit": 1.0
+  },
+  "gt30min": {
+   "n": 136,
+   "roi": 68.43,
+   "ci": [
+    36.68,
+    101.1
+   ],
+   "p_profit": 1.0
+  },
+  "gt60min": {
+   "n": 94,
+   "roi": 63.22,
+   "ci": [
+    21.66,
+    108.99
+   ],
+   "p_profit": 0.999
+  }
+ },
+ "dog_winrate_by_timing": {
+  "pre_start": 36.9,
+  "0_30min": 34.6,
+  "30_90min": 50.0,
+  "90plus": 35.0
+ },
+ "cost_stack_honest_subsample": {
+  "mid_no_costs": {
+   "n": 65,
+   "roi": 8.87,
+   "ci": [
+    -24.28,
+    43.13
+   ],
+   "p_profit": 0.701
+  },
+  "plus_ask": {
+   "n": 65,
+   "roi": 5.75,
+   "ci": [
+    -26.41,
+    38.95
+   ],
+   "p_profit": 0.642
+  },
+  "plus_ask_and_fees": {
+   "n": 65,
+   "roi": 0.19,
+   "ci": [
+    -30.33,
+    31.51
+   ],
+   "p_profit": 0.517
+  }
+ }
+}

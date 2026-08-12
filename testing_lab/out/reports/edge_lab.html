@@ -90,8 +90,16 @@
 </div>
 
 <div class="banner" style="background:var(--warnbg);border-color:#eddcc9;border-left-color:var(--warn)">
-<b>THE ANSWER — NO DEMONSTRATED MODEL EDGE, AND THIS WAS ALREADY TESTED WITH REAL MONEY.</b>
-Two independent findings, either of which is sufficient. <b>(1)</b> Backing
+<b>THE ANSWER — THERE IS NO EDGE. THE +34.7% WAS A BROKEN TIMESTAMP.</b>
+The market price this study used, <span class="mono">prob_a_t2h</span>, is
+anchored two hours before the market <em>closes</em> &mdash; and these markets
+close <em>when a winner is declared</em>. So it is not a pre-match price:
+<b>74.3%</b> of the sample was taken
+<em>during</em> the match, a median of <b>39 minutes</b>
+after the first map started (&sect;3). Priced honestly &mdash; pre-match only,
+paying the ask, paying Kalshi's fee &mdash; the whole thing returns
+<b>+0.19%</b>. Two
+further findings agree. <b>(1)</b> Backing
 <em>every</em> market underdog blindly, model switched off, returned
 <b>+32.55%</b> against the model's <b>+34.71%</b> &mdash;
 the model is worth about <b>+2.2 points</b> on top of ignoring it, and it
@@ -102,6 +110,13 @@ bootstrap says that is real underperformance, not variance
 (p&nbsp;=&nbsp;0.000). The backtest edge did
 not survive contact with a real order book.
 </div>
+
+<div class="callout bad" style="margin-bottom:16px"><b>Correction.</b> An earlier
+version of this page, and the v10 lab's &sect;9, described
+<span class="mono">prob_a_t2h</span> as a clean pre-match price and reported
++34.71% on that basis. That description was wrong and the
+number is not usable. The corrected read is &sect;3. The live-trading result
+(&sect;4) was already pointing the same way.</div>
 
 <section>
 <h2><span class="n">1</span>The question, and the control that answers it</h2>
@@ -145,7 +160,63 @@ by construction and look clever for doing so.</div>
 </section>
 
 <section>
-<h2><span class="n">3</span>The part that settles it: it was traded, and it lost</h2>
+<h2><span class="n">3</span>The timestamp is coupled to the outcome</h2>
+<p>Kalshi VALORANT markets carry
+<span class="mono">"This market will close and expire after a winner is
+declared"</span>. So <span class="mono">close_time</span> is not a schedule, it is
+the moment the match ended &mdash; and a price sampled at
+<span class="mono">close &minus; 2h</span> is sampled two hours before the
+<em>finish</em>, not before the start.</p>
+<p>Because match length varies, that sampling instant lands at wildly different
+points: <b>74.3%</b> of prices were taken after the
+first map had begun, median <b>+39 minutes</b> in.
+And crucially, <em>long matches are the ones underdogs win</em>. The dataset
+therefore quotes a cheaper underdog price exactly when the underdog is likelier
+to win. That is not look-ahead in the ordinary sense &mdash; the sampling time is
+itself a function of the result.</p>
+<div class="scroll"><table>
+<thead><tr><th>When the price was sampled</th><th>n</th><th>Blind-underdog ROI</th><th>95% CI</th><th>Underdog won</th></tr></thead><tbody>
+<tr><td><b>before match start (usable)</b></td><td class="mono">65</td>
+    <td class="mono">+8.87%</td>
+    <td class="mono dim">[-24, 43]</td>
+    <td class="mono">36.9%</td></tr>
+<tr><td>after match start</td><td class="mono">188</td>
+    <td class="mono bad">+42.19%</td>
+    <td class="mono dim">[18, 67]</td>
+    <td class="mono">50.0% (30-90m)</td></tr>
+<tr><td>&nbsp;&nbsp;&mdash; more than 30 min in</td><td class="mono">136</td>
+    <td class="mono bad">+68.43%</td>
+    <td class="mono dim">[37, 101]</td>
+    <td class="mono">&mdash;</td></tr>
+</tbody></table></div>
+<p class="cap">The "edge" is entirely in the rows where the price was read
+mid-match. On the rows that are actually tradeable it is
++8.87% with an interval straddling zero
+(p(profit) = 0.701).</p>
+<h3>And then the costs</h3>
+<div class="scroll"><table>
+<thead><tr><th>Pre-match subsample, n=65</th><th>ROI</th><th>95% CI</th><th>p(profit)</th></tr></thead><tbody>
+<tr><td>at the mid, no costs</td><td class="mono">+8.87%</td>
+    <td class="mono dim">[-24, 43]</td>
+    <td class="mono">0.701</td></tr>
+<tr><td>+ buy at the ask</td><td class="mono">+5.75%</td>
+    <td class="mono dim">[-26, 39]</td>
+    <td class="mono">0.642</td></tr>
+<tr><td><b>+ Kalshi fee ceil(0.07&middot;P&middot;(1&minus;P))</b></td>
+    <td class="mono"><b>+0.19%</b></td>
+    <td class="mono dim">[-30, 32]</td>
+    <td class="mono">0.517</td></tr>
+</tbody></table></div>
+<div class="dl"><a href="/testing/edge/stats/v10_timing_artifact.json" download>&#8681; v10_timing_artifact.json</a></div>
+<div class="callout bad">Nothing survives. The fee alone is roughly 2c on a 30c
+ticket &mdash; 6-7% of stake &mdash; and it was absent from every earlier number on
+this page and in the v10 lab. <b>+0.19%
+with p(profit) 0.517
+is a coin flip.</b></div>
+</section>
+
+<section>
+<h2><span class="n">4</span>It was also traded live, and it lost</h2>
 <p>Everything above is a backtest. The lab already has the thing a backtest is a
 substitute for &mdash; a week of real fills against this exact market, recorded in
 the v8 phase-7 autopsy.</p>
@@ -184,12 +255,12 @@ buys at the quoted price on every match it likes. Reality fills you
 <b>preferentially when you are wrong</b> &mdash; 8.5c
 per contract of it here, against a mid-price backtest edge of
 35% on an average 29c contract. The
-slippage curve in &sect;7 models a fixed haircut; adverse selection is worse than a
+slippage curve in &sect;8 models a fixed haircut; adverse selection is worse than a
 haircut, because it is correlated with the outcome.</div>
 </section>
 
 <section>
-<h2><span class="n">4</span>Is it just under-confidence? Mostly, yes</h2>
+<h2><span class="n">5</span>Is it just under-confidence? Mostly, yes</h2>
 <p>BenPom assigns the eventual winner an average probability of
 <b>0.5357</b>; Kalshi assigns <b>0.5701</b>.
 The model is systematically less sure of itself, so it disagrees toward the
@@ -212,7 +283,7 @@ across zero. So most of the apparent edge is the hedging, not the opinion.</p>
 </section>
 
 <section>
-<h2><span class="n">5</span>Does it pick <em>better</em> underdogs?</h2>
+<h2><span class="n">6</span>Does it pick <em>better</em> underdogs?</h2>
 <p>This is the one place the model looks genuinely additive, and it deserves a
 careful read rather than a headline.</p>
 <div class="scroll"><table>
@@ -231,7 +302,7 @@ ones that pay more when they do. That is a price-selection effect, and with
 </section>
 
 <section>
-<h2><span class="n">6</span>Discrimination &mdash; the uncomfortable number</h2>
+<h2><span class="n">7</span>Discrimination &mdash; the uncomfortable number</h2>
 <div class="cards">
   <div class="card"><div class="lbl">Picks the winner</div>
     <div class="big">59.7%</div><div class="sub">BenPom</div></div>
@@ -250,7 +321,7 @@ seeing matchups more clearly &mdash; on the only metric that measures that, it i
 </section>
 
 <section>
-<h2><span class="n">7</span>How assured is any of this?</h2>
+<h2><span class="n">8</span>How assured is any of this?</h2>
 <h3>The anomaly is persistent, not one hot streak</h3>
 <div class="chartbox"><canvas id="c_mon"></canvas></div>
 <div class="scroll"><table>
@@ -280,7 +351,7 @@ clears the same bar without any model at all.</div>
 </section>
 
 <section>
-<h2><span class="n">8</span>Segments, with the caveat that matters</h2>
+<h2><span class="n">9</span>Segments, with the caveat that matters</h2>
 <div class="scroll"><table>
 <thead><tr><th>Segment</th><th>n</th><th>Hit</th><th>ROI</th><th>95% CI</th></tr></thead>
 <tbody><tr><td>Bo3</td><td class="mono">175</td><td class="mono">40.0%</td><td class="mono good">+36.29%</td><td class="mono dim">[13, 61]</td></tr><tr><td>Bo5</td><td class="mono">21</td><td class="mono">28.6%</td><td class="mono good">+18.73%</td><td class="mono dim">[-52, 91]</td></tr><tr><td>international</td><td class="mono">21</td><td class="mono">47.6%</td><td class="mono good">+54.93%</td><td class="mono dim">[-20, 134]</td></tr><tr><td>domestic</td><td class="mono">175</td><td class="mono">37.7%</td><td class="mono good">+32.10%</td><td class="mono dim">[9, 58]</td></tr><tr><td>high volume</td><td class="mono">104</td><td class="mono">46.2%</td><td class="mono good">+63.51%</td><td class="mono dim">[27, 101]</td></tr><tr><td>low volume</td><td class="mono">92</td><td class="mono">30.4%</td><td class="mono good">+3.48%</td><td class="mono dim">[-26, 34]</td></tr><tr><td>price 1-20c</td><td class="mono">66</td><td class="mono">25.8%</td><td class="mono good">+119.98%</td><td class="mono dim">[32, 211]</td></tr><tr><td>price 20-40c</td><td class="mono">79</td><td class="mono">43.0%</td><td class="mono good">+37.33%</td><td class="mono dim">[4, 71]</td></tr><tr><td>price 40-50c</td><td class="mono">51</td><td class="mono">49.0%</td><td class="mono good">+4.47%</td><td class="mono dim">[-25, 34]</td></tr></tbody></table></div>
@@ -292,7 +363,7 @@ named in advance and tested on data that did not suggest it.</div>
 </section>
 
 <section>
-<h2><span class="n">9</span>What would actually settle it</h2>
+<h2><span class="n">10</span>What would actually settle it</h2>
 <ol>
 <li><b>Trade the control, not the model.</b> If the thesis is "underdogs are
 underpriced", the honest instrument is a flat underdog rule. It returned

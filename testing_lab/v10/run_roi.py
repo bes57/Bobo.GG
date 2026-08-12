@@ -9,8 +9,13 @@ Method
   - one row per Kalshi tier-1 VALORANT match with a settled winner
   - BenPom probability is the walk-forward pre-match number (never uses the
     result), taken from the same engine run the rest of this lab scores
-  - market price is the T-2h mid, so late-breaking news is not in it; the
-    T-5m close is reported alongside as a robustness check
+  - market price is prob_a_t2h. WARNING (established 2026-08-12): this is
+    T-2h from market CLOSE, and these markets close when a winner is
+    declared -- so 74% of the sample is taken DURING the match, median 39
+    min in. It is NOT a pre-match price and the ROI computed from it is not
+    tradeable. See testing_lab/v10/stats/v10_timing_artifact.json and the
+    Edge Lab section 3. prob_a_close is worse still: it is a settlement
+    label (72% of values are >=0.99 or <=0.01), not a robustness check.
   - edge = p_benpom - p_market, in cents, on whichever side BenPom prefers
   - stake 1 contract per qualifying match, buy at the quoted price, settle
     at 100 or 0. ROI = total profit / total staked.
