@@ -1,0 +1,243 @@
+{
+ "beta": 0.120155,
+ "n_matches": 253,
+ "window": [
+  "2026-05-15",
+  "2026-08-12"
+ ],
+ "median_volume": 160556,
+ "note": "reporting only; market data is never a fitting or selection target",
+ "headline": {
+  "threshold_cents": 5,
+  "n_bets": 196,
+  "n_won": 76,
+  "hit_rate": 38.8,
+  "staked_cents": 5641.6,
+  "profit_cents": 1958.4,
+  "roi_pct": 34.71,
+  "roi_ci95": [
+   11.96,
+   58.59
+  ],
+  "p_profitable": 0.999,
+  "roi_ci95_block_by_day": [
+   12.62,
+   56.83
+  ],
+  "p_profitable_block": 1.0
+ },
+ "by_threshold": {
+  "t2h": [
+   {
+    "threshold_cents": 0,
+    "n_bets": 253,
+    "n_won": 109,
+    "hit_rate": 43.1,
+    "staked_cents": 8265.6,
+    "profit_cents": 2634.4,
+    "roi_pct": 31.87,
+    "roi_ci95": [
+     13.81,
+     50.2
+    ],
+    "p_profitable": 1.0
+   },
+   {
+    "threshold_cents": 3,
+    "n_bets": 219,
+    "n_won": 89,
+    "hit_rate": 40.6,
+    "staked_cents": 6694.1,
+    "profit_cents": 2205.9,
+    "roi_pct": 32.95,
+    "roi_ci95": [
+     12.27,
+     53.41
+    ],
+    "p_profitable": 1.0
+   },
+   {
+    "threshold_cents": 5,
+    "n_bets": 196,
+    "n_won": 76,
+    "hit_rate": 38.8,
+    "staked_cents": 5641.6,
+    "profit_cents": 1958.4,
+    "roi_pct": 34.71,
+    "roi_ci95": [
+     11.96,
+     58.59
+    ],
+    "p_profitable": 0.999,
+    "roi_ci95_block_by_day": [
+     12.62,
+     56.83
+    ],
+    "p_profitable_block": 1.0
+   },
+   {
+    "threshold_cents": 7,
+    "n_bets": 178,
+    "n_won": 71,
+    "hit_rate": 39.9,
+    "staked_cents": 4970.7,
+    "profit_cents": 2129.3,
+    "roi_pct": 42.84,
+    "roi_ci95": [
+     16.94,
+     69.76
+    ],
+    "p_profitable": 0.999
+   },
+   {
+    "threshold_cents": 10,
+    "n_bets": 149,
+    "n_won": 61,
+    "hit_rate": 40.9,
+    "staked_cents": 3922.3,
+    "profit_cents": 2177.7,
+    "roi_pct": 55.52,
+    "roi_ci95": [
+     25.54,
+     86.59
+    ],
+    "p_profitable": 1.0
+   },
+   {
+    "threshold_cents": 15,
+    "n_bets": 110,
+    "n_won": 43,
+    "hit_rate": 39.1,
+    "staked_cents": 2630.0,
+    "profit_cents": 1670.0,
+    "roi_pct": 63.49,
+    "roi_ci95": [
+     27.09,
+     103.51
+    ],
+    "p_profitable": 1.0
+   }
+  ],
+  "close": [
+   {
+    "threshold_cents": 0,
+    "n_bets": 253,
+    "n_won": 1,
+    "hit_rate": 0.4,
+    "staked_cents": 870.0,
+    "profit_cents": -770.0,
+    "roi_pct": -88.51,
+    "roi_ci95": [
+     -100.0,
+     -64.92
+    ],
+    "p_profitable": 0.0
+   },
+   {
+    "threshold_cents": 3,
+    "n_bets": 253,
+    "n_won": 1,
+    "hit_rate": 0.4,
+    "staked_cents": 870.0,
+    "profit_cents": -770.0,
+    "roi_pct": -88.51,
+    "roi_ci95": [
+     -100.0,
+     -64.92
+    ],
+    "p_profitable": 0.0
+   },
+   {
+    "threshold_cents": 5,
+    "n_bets": 252,
+    "n_won": 1,
+    "hit_rate": 0.4,
+    "staked_cents": 844.0,
+    "profit_cents": -744.0,
+    "roi_pct": -88.15,
+    "roi_ci95": [
+     -100.0,
+     -63.55
+    ],
+    "p_profitable": 0.0
+   },
+   {
+    "threshold_cents": 7,
+    "n_bets": 252,
+    "n_won": 1,
+    "hit_rate": 0.4,
+    "staked_cents": 844.0,
+    "profit_cents": -744.0,
+    "roi_pct": -88.15,
+    "roi_ci95": [
+     -100.0,
+     -63.55
+    ],
+    "p_profitable": 0.0
+   },
+   {
+    "threshold_cents": 10,
+    "n_bets": 252,
+    "n_won": 1,
+    "hit_rate": 0.4,
+    "staked_cents": 844.0,
+    "profit_cents": -744.0,
+    "roi_pct": -88.15,
+    "roi_ci95": [
+     -100.0,
+     -63.55
+    ],
+    "p_profitable": 0.0
+   },
+   {
+    "threshold_cents": 15,
+    "n_bets": 247,
+    "n_won": 0,
+    "hit_rate": 0.0,
+    "staked_cents": 665.5,
+    "profit_cents": -665.5,
+    "roi_pct": -100.0,
+    "roi_ci95": [
+     -100.0,
+     -100.0
+    ],
+    "p_profitable": 0.0
+   }
+  ]
+ },
+ "discrimination": {
+  "benpom_fav_hit_pct": 59.7,
+  "kalshi_fav_hit_pct": 60.1,
+  "mean_p_on_winner_benpom": 0.5357,
+  "mean_p_on_winner_kalshi": 0.5701
+ },
+ "by_side": {
+  "underdog": {
+   "n": 178,
+   "hit_rate": 37.1,
+   "roi_pct": 42.76
+  },
+  "favourite": {
+   "n": 18,
+   "hit_rate": 55.6,
+   "roi_pct": -1.82
+  }
+ },
+ "ex_longshots": {
+  "n": 170,
+  "hit_rate": 41.2,
+  "roi_pct": 27.12
+ },
+ "prior_lab_benchmark": {
+  "source": "testing_lab/out/kalshi_compare.json",
+  "n": 86,
+  "benpom_ll": 0.68052,
+  "kalshi_t2h_ll": 0.66099,
+  "finding": "Kalshi BETTER than BenPom by ~19.5 milli-LL (p_better 0.678)"
+ },
+ "logloss": {
+  "benpom": 0.66035,
+  "kalshi_t2h": 0.67486,
+  "delta_milli": 14.51
+ }
+}

@@ -14951,3 +14951,34 @@ Loaded 1053 headshots from /Users/benny_es1/PythonTest/data/headshots.json
 127.0.0.1 - - [12/Aug/2026 16:35:49] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
 127.0.0.1 - - [12/Aug/2026 16:35:49] "GET /logo.svg HTTP/1.1" 200 -
 127.0.0.1 - - [12/Aug/2026 16:35:50] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Aug/2026 16:37:30] "GET /testing/ HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:37:30] "GET /static/alpha-nav.js?v=1784747724 HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:37:30] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:37:31] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:37:31] "GET /testing/report/v10_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:37:31] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:37:31] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:37:32] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/v10/run_roi.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_v10_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [12/Aug/2026 16:46:01] "GET /testing/report/v10_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:01] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:46:01] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:01] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+ * Detected change in '/Users/benny_es1/PythonTest/testing_lab/gen_v10_report.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 324-427-889
+127.0.0.1 - - [12/Aug/2026 16:46:50] "GET /testing/report/v10_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:50] "GET /testing/v10/stats/v10_roi.json HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:50] "GET /testing/v10/stats/v10_page_roi.json HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:53] "GET /testing/report/v10_lab HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:53] "[36mGET /static/alpha-nav.js?v=1784747724 HTTP/1.1[0m" 304 -
+127.0.0.1 - - [12/Aug/2026 16:46:53] "GET /logo.svg HTTP/1.1" 200 -
+127.0.0.1 - - [12/Aug/2026 16:46:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -

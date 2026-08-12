@@ -25,6 +25,7 @@ def rj(name, d=V10S):
 
 
 TR = rj("v10_transfer.json")
+RO = rj("v10_roi.json")
 CO = rj("v10_concentration.json")
 PR = rj("v10_premise.json")
 
@@ -94,6 +95,12 @@ page_roster = {"dist": rb["dist_kept_0_to_5"],
 page_weight = {"orgs": [t["org"] for t in pw["teams"]],
                "share": [round(100 * t["share"], 1) for t in pw["teams"]]}
 
+page_roi = {"thresh": [r["threshold_cents"] for r in RO["by_threshold"]["t2h"]],
+            "roi": [r["roi_pct"] for r in RO["by_threshold"]["t2h"]],
+            "n": [r["n_bets"] for r in RO["by_threshold"]["t2h"]],
+            "lo": [r["roi_ci95"][0] for r in RO["by_threshold"]["t2h"]],
+            "hi": [r["roi_ci95"][1] for r in RO["by_threshold"]["t2h"]]}
+json.dump(page_roi, open(os.path.join(V10S, "v10_page_roi.json"), "w"), indent=1)
 json.dump(page_transfer, open(os.path.join(V10S, "v10_page_transfer.json"), "w"), indent=1)
 json.dump(page_phase, open(os.path.join(V10S, "v10_page_phase.json"), "w"), indent=1)
 
@@ -306,14 +313,101 @@ regardless of outcome, and VCTMM remains hands-off.</li>
 </section>
 
 <section>
-<h2><span class="n">8</span>Preregistration (frozen before scoring)</h2>
+<h2><span class="n">8</span>The model we are sticking with</h2>
+<p>v10 is rejected, v9 rejected five candidates, v8 rejected the roster family.
+The champion is unchanged, and this is it in full &mdash; every number below is
+frozen and fitted only on 2023&ndash;2024 data.</p>
+<div class="scroll"><table>
+<thead><tr><th>Component</th><th>Setting</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Solver</td><td class="mono">walk-forward Massey</td><td>ratings for day D solved only from games before D</td></tr>
+<tr><td>Decay</td><td class="mono">games, HL 20 / 12</td><td>by games played since, not calendar time; anomalous results age out faster</td></tr>
+<tr><td>Consistency</td><td class="mono">WR_HALF_LIFE 16</td><td>classifies a result against the team's decayed winrate at the time</td></tr>
+<tr><td>Margin</td><td class="mono">RD_POWER 0.75, RD_SCALE 2.5</td><td>round differential, compressed</td></tr>
+<tr><td>Year boundary</td><td class="mono">min(overlap/5, 1)</td><td>measured roster carryover &mdash; mean {rb['mean_continuity_factor']:.2f}, NOT the dead 0.3 constant</td></tr>
+<tr><td>Stakes</td><td class="mono">Champions &times;2.0, playoffs &times;1.6</td><td>bigger games count more</td></tr>
+<tr><td>Ridge</td><td class="mono">0.5 + region prior 1.5</td><td>borrowed strength for thin schedules</td></tr>
+<tr><td>&beta;</td><td class="mono">{RO['beta']:.4f}</td><td>rating gap &rarr; map probability, fit on FIT1 only</td></tr>
+</tbody></table></div>
+<div class="callout">The deployed site and trading model refit &beta; on the live
+corpus each build; the {RO['beta']:.4f} above is the lab's FIT1-only refit used
+for every score on this page, so nothing here is fitted on data it is scored on.</div>
+</section>
+
+<section>
+<h2><span class="n">9</span>What it would have returned against Kalshi</h2>
+<p>Reporting only. Market data is never a fitting target and never a selection
+signal &mdash; this asks what the frozen model would have done against the book,
+it does not tune anything toward it.</p>
+<p><b>Window: {RO['window'][0]} to {RO['window'][1]}</b> &mdash;
+{RO['n_matches']} settled tier-1 matches, median volume
+{RO['median_volume']:,} contracts. That is roughly three months, <b>not a full
+year</b>; the Kalshi VALORANT market does not go back further than this.</p>
+<div class="cards">
+  <div class="card"><div class="lbl">&ge;5c edge, T-2h</div>
+    <div class="big">{RO['headline']['n_bets']} bets</div>
+    <div class="sub">of {RO['n_matches']} matches</div></div>
+  <div class="card"><div class="lbl">Hit rate</div>
+    <div class="big">{RO['headline']['hit_rate']}%</div>
+    <div class="sub">mostly longshots &mdash; see below</div></div>
+  <div class="card"><div class="lbl">ROI</div>
+    <div class="big good">+{RO['headline']['roi_pct']}%</div>
+    <div class="sub">block CI [{RO['headline']['roi_ci95_block_by_day'][0]}, {RO['headline']['roi_ci95_block_by_day'][1]}]</div></div>
+  <div class="card"><div class="lbl">Read this as</div>
+    <div class="big warn">ONE BET</div>
+    <div class="sub">not {RO['headline']['n_bets']} independent edges</div></div>
+</div>
+<div class="chartbox"><canvas id="c_roi"></canvas></div>
+<p class="cap">ROI by minimum edge, buying at the T-2h price. It rises with the
+threshold, which looks like a dose-response curve and is the single most
+seductive thing on this page. &sect;9.1 is why you should not believe it.</p>
+{dl('v10_page_roi.json')}
+
+<h3>9.1 &mdash; Why I do not believe this number</h3>
+<p>Three checks, all of which point the same way.</p>
+<p><b>It is 91% one bet.</b> Of the {RO['headline']['n_bets']} qualifying wagers,
+<b>{RO['by_side']['underdog']['n']} are on the underdog</b>
+(ROI +{RO['by_side']['underdog']['roi_pct']}%) and only
+{RO['by_side']['favourite']['n']} on the favourite
+(ROI {RO['by_side']['favourite']['roi_pct']}%). This is not a model finding
+edges in both directions; it is a single directional wager &mdash; "underdogs are
+underpriced" &mdash; repeated {RO['by_side']['underdog']['n']} times in one
+three-month window. A bootstrap over bets, or even over days, cannot tell you
+whether that direction survives; it only tells you the window was consistent.</p>
+<p><b>The model is worse at picking winners than the book it is beating.</b>
+BenPom's favourite won {RO['discrimination']['benpom_fav_hit_pct']}% of the time
+against Kalshi's {RO['discrimination']['kalshi_fav_hit_pct']}%, and the mean
+probability each assigned to the eventual winner was
+<b>{RO['discrimination']['mean_p_on_winner_benpom']}</b> for BenPom versus
+<b>{RO['discrimination']['mean_p_on_winner_kalshi']}</b> for Kalshi. BenPom scores
+the better log-loss here ({RO['logloss']['delta_milli']:+.1f}m) only because it is
+<em>less confident</em>, and log-loss rewards hedging. Being less confident than a
+market is exactly what makes a model disagree with it toward the underdog on
+almost every match.</p>
+<p><b>It contradicts the lab's own benchmark.</b> The earlier head-to-head
+(<span class="mono">out/kalshi_compare.json</span>, n={RO['prior_lab_benchmark']['n']})
+found the opposite: <b>{RO['prior_lab_benchmark']['finding']}</b>. Different
+window and a smaller sample, but a straight sign flip on the same question is a
+reason to hold the new number loosely, not to overwrite the old one with it.</p>
+<div class="callout bad"><b>Do not size anything off this.</b> The honest reading
+is: over one three-month window, taking the underdog wherever a
+deliberately-hedged model disagreed with the book by 5c or more happened to pay.
+That is a hypothesis about underdog pricing in this market, not a demonstrated
+model edge, and the discrimination numbers argue against the flattering
+interpretation. Dropping the sub-10c longshots leaves
+ROI +{RO['ex_longshots']['roi_pct']}% on {RO['ex_longshots']['n']} bets, so it is
+not purely a lottery-ticket artifact either &mdash; which makes it worth a
+preregistered prospective test, and nothing more until then.</div>
+</section>
+
+<section>
+<h2><span class="n">10</span>Preregistration (frozen before scoring)</h2>
 <div class="disc"><div class="dhead">testing_lab/v10/preregister.v10.md</div>
 <pre>{esc(PREREG)}</pre></div>
 </section>
 
 <script>
 const PAL = __PAL__, TRF = __TRF__, PHA = __PHA__, MON = __MON__,
-      ROS = __ROS__, WGT = __WGT__;
+      ROS = __ROS__, WGT = __WGT__, ROI = __ROI__;
 Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
 Chart.defaults.color = '#6b6478';
 Chart.defaults.animation = false;
@@ -357,6 +451,15 @@ new Chart(document.getElementById('c_month'), {{ type:'line',
   scales:{{ x:{{grid:{{display:false}}, title:{{display:true, text:'calendar month'}}}},
     y:{{grid:{{color:'#eceef2'}}, title:{{display:true, text:'Δ log-loss vs v6, milli'}}}} }} }} }});
 
+new Chart(document.getElementById('c_roi'), {{ type:'bar',
+ data:{{ labels: ROI.thresh.map(t=>'>='+t+'c'), datasets:[
+   {{ label:'ROI %', data:ROI.roi, backgroundColor:PAL.a1, borderRadius:4, maxBarThickness:52 }} ] }},
+ options:{{ responsive:true, maintainAspectRatio:false,
+  plugins:{{ legend:{{display:false}},
+    tooltip:{{callbacks:{{label:(t)=>'ROI '+t.parsed.y.toFixed(1)+'%  (n='+ROI.n[t.dataIndex]+' bets)'}}}} }},
+  scales:{{ x:{{grid:{{display:false}}, title:{{display:true, text:'minimum edge vs the T-2h price'}}}},
+    y:{{grid:{{color:'#eceef2'}}, title:{{display:true, text:'ROI %'}}}} }} }} }});
+
 new Chart(document.getElementById('c_roster'), {{ type:'bar',
  data:{{ labels: ROS.labels, datasets:[{{ label:'team-years', data:ROS.dist,
    backgroundColor: ROS.labels.map((_,i)=> i<=2 ? PAL.d5 : PAL.a1), borderRadius:4, maxBarThickness:60 }}] }},
@@ -373,7 +476,8 @@ html = (HTML.replace("__PAL__", json.dumps(C))
             .replace("__PHA__", json.dumps(page_phase))
             .replace("__MON__", json.dumps(page_month))
             .replace("__ROS__", json.dumps(page_roster))
-            .replace("__WGT__", json.dumps(page_weight)))
+            .replace("__WGT__", json.dumps(page_weight))
+            .replace("__ROI__", json.dumps(page_roi)))
 
 out = os.path.join(RD, "v10_lab.html")
 with open(out, "w") as f:

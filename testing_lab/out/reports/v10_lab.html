@@ -282,7 +282,94 @@ regardless of outcome, and VCTMM remains hands-off.</li>
 </section>
 
 <section>
-<h2><span class="n">8</span>Preregistration (frozen before scoring)</h2>
+<h2><span class="n">8</span>The model we are sticking with</h2>
+<p>v10 is rejected, v9 rejected five candidates, v8 rejected the roster family.
+The champion is unchanged, and this is it in full &mdash; every number below is
+frozen and fitted only on 2023&ndash;2024 data.</p>
+<div class="scroll"><table>
+<thead><tr><th>Component</th><th>Setting</th><th>What it does</th></tr></thead><tbody>
+<tr><td>Solver</td><td class="mono">walk-forward Massey</td><td>ratings for day D solved only from games before D</td></tr>
+<tr><td>Decay</td><td class="mono">games, HL 20 / 12</td><td>by games played since, not calendar time; anomalous results age out faster</td></tr>
+<tr><td>Consistency</td><td class="mono">WR_HALF_LIFE 16</td><td>classifies a result against the team's decayed winrate at the time</td></tr>
+<tr><td>Margin</td><td class="mono">RD_POWER 0.75, RD_SCALE 2.5</td><td>round differential, compressed</td></tr>
+<tr><td>Year boundary</td><td class="mono">min(overlap/5, 1)</td><td>measured roster carryover &mdash; mean 0.63, NOT the dead 0.3 constant</td></tr>
+<tr><td>Stakes</td><td class="mono">Champions &times;2.0, playoffs &times;1.6</td><td>bigger games count more</td></tr>
+<tr><td>Ridge</td><td class="mono">0.5 + region prior 1.5</td><td>borrowed strength for thin schedules</td></tr>
+<tr><td>&beta;</td><td class="mono">0.1202</td><td>rating gap &rarr; map probability, fit on FIT1 only</td></tr>
+</tbody></table></div>
+<div class="callout">The deployed site and trading model refit &beta; on the live
+corpus each build; the 0.1202 above is the lab's FIT1-only refit used
+for every score on this page, so nothing here is fitted on data it is scored on.</div>
+</section>
+
+<section>
+<h2><span class="n">9</span>What it would have returned against Kalshi</h2>
+<p>Reporting only. Market data is never a fitting target and never a selection
+signal &mdash; this asks what the frozen model would have done against the book,
+it does not tune anything toward it.</p>
+<p><b>Window: 2026-05-15 to 2026-08-12</b> &mdash;
+253 settled tier-1 matches, median volume
+160,556 contracts. That is roughly three months, <b>not a full
+year</b>; the Kalshi VALORANT market does not go back further than this.</p>
+<div class="cards">
+  <div class="card"><div class="lbl">&ge;5c edge, T-2h</div>
+    <div class="big">196 bets</div>
+    <div class="sub">of 253 matches</div></div>
+  <div class="card"><div class="lbl">Hit rate</div>
+    <div class="big">38.8%</div>
+    <div class="sub">mostly longshots &mdash; see below</div></div>
+  <div class="card"><div class="lbl">ROI</div>
+    <div class="big good">+34.71%</div>
+    <div class="sub">block CI [12.62, 56.83]</div></div>
+  <div class="card"><div class="lbl">Read this as</div>
+    <div class="big warn">ONE BET</div>
+    <div class="sub">not 196 independent edges</div></div>
+</div>
+<div class="chartbox"><canvas id="c_roi"></canvas></div>
+<p class="cap">ROI by minimum edge, buying at the T-2h price. It rises with the
+threshold, which looks like a dose-response curve and is the single most
+seductive thing on this page. &sect;9.1 is why you should not believe it.</p>
+<div class="dl"><a href="/testing/v10/stats/v10_page_roi.json" download>&#8681; v10_page_roi.json</a></div>
+
+<h3>9.1 &mdash; Why I do not believe this number</h3>
+<p>Three checks, all of which point the same way.</p>
+<p><b>It is 91% one bet.</b> Of the 196 qualifying wagers,
+<b>178 are on the underdog</b>
+(ROI +42.76%) and only
+18 on the favourite
+(ROI -1.82%). This is not a model finding
+edges in both directions; it is a single directional wager &mdash; "underdogs are
+underpriced" &mdash; repeated 178 times in one
+three-month window. A bootstrap over bets, or even over days, cannot tell you
+whether that direction survives; it only tells you the window was consistent.</p>
+<p><b>The model is worse at picking winners than the book it is beating.</b>
+BenPom's favourite won 59.7% of the time
+against Kalshi's 60.1%, and the mean
+probability each assigned to the eventual winner was
+<b>0.5357</b> for BenPom versus
+<b>0.5701</b> for Kalshi. BenPom scores
+the better log-loss here (+14.5m) only because it is
+<em>less confident</em>, and log-loss rewards hedging. Being less confident than a
+market is exactly what makes a model disagree with it toward the underdog on
+almost every match.</p>
+<p><b>It contradicts the lab's own benchmark.</b> The earlier head-to-head
+(<span class="mono">out/kalshi_compare.json</span>, n=86)
+found the opposite: <b>Kalshi BETTER than BenPom by ~19.5 milli-LL (p_better 0.678)</b>. Different
+window and a smaller sample, but a straight sign flip on the same question is a
+reason to hold the new number loosely, not to overwrite the old one with it.</p>
+<div class="callout bad"><b>Do not size anything off this.</b> The honest reading
+is: over one three-month window, taking the underdog wherever a
+deliberately-hedged model disagreed with the book by 5c or more happened to pay.
+That is a hypothesis about underdog pricing in this market, not a demonstrated
+model edge, and the discrimination numbers argue against the flattering
+interpretation. Dropping the sub-10c longshots leaves
+ROI +27.12% on 170 bets, so it is
+not purely a lottery-ticket artifact either &mdash; which makes it worth a
+preregistered prospective test, and nothing more until then.</div>
+</section>
+
+<section>
+<h2><span class="n">10</span>Preregistration (frozen before scoring)</h2>
 <div class="disc"><div class="dhead">testing_lab/v10/preregister.v10.md</div>
 <pre># v10 PREREGISTRATION — unconditional year isolation
 
@@ -436,7 +523,7 @@ never a fitting target or a selection signal.
 
 <script>
 const PAL = {"s1": "#7c4dd6", "d5": "#c96a2a", "a1": "#3a90cc", "v6": "#6f6a7c", "gray": "#9a93a6", "good": "#1e7a4f", "bad": "#c0392b", "ink": "#16121d"}, TRF = {"arms": ["A_iso_hard", "A_iso_none"], "labels": ["Year isolation (the proposal)", "Full carryover (other endpoint)"], "t1": [-11.104, -0.282], "t2": [-8.903, -1.599], "floor": 1.773}, PHA = {"labels": ["Jan-Feb", "Mar-Apr", "May-Jun", "Jul-Aug", "Sep-Dec"], "delta": [-24.98, -6.52, -5.62, -1.49, 2.29], "n": [274, 488, 530, 551, 167]}, MON = {"labels": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"], "delta": [-30.92, -21.46, 2.82, -9.61, -5.98, -4.62, -2.91, 0.75, -2.61, 8.98, 4.52, -1.14], "n": [102, 172, 121, 367, 390, 140, 338, 213, 47, 26, 67, 27]},
-      ROS = {"dist": [10, 10, 22, 28, 29, 31], "labels": ["0/5", "1/5", "2/5", "3/5", "4/5", "5/5"]}, WGT = {"orgs": ["TS", "KR\u00dc", "ZETA", "LOUD", "EG", "C9", "SEN", "KRX", "GEN", "FNC", "NAVI", "WOL", "GX", "FUR", "RRQ", "DFM", "NOVA", "KC", "MIBR", "BLG", "T1", "TL", "FUT", "TH", "FPX", "TE", "100T", "VIT", "BBL", "GE", "LEV", "TEC", "DRG", "G2", "M8", "TYL", "PRX", "JDG", "EDG", "NS", "XLG", "NRG", "AG", "EF", "ENVY", "FS", "PCF", "VL"], "share": [52.8, 52.0, 51.6, 50.4, 50.3, 48.3, 46.6, 46.2, 45.9, 45.7, 45.4, 45.2, 44.3, 43.9, 43.7, 43.6, 43.6, 43.6, 41.4, 40.8, 40.4, 39.9, 38.8, 38.1, 36.4, 36.2, 33.9, 33.8, 33.4, 33.3, 33.3, 31.9, 31.8, 31.5, 30.7, 28.7, 28.3, 28.2, 28.2, 26.0, 24.5, 23.5, 20.9, 0.0, 0.0, 0.0, 0.0, 0.0]};
+      ROS = {"dist": [10, 10, 22, 28, 29, 31], "labels": ["0/5", "1/5", "2/5", "3/5", "4/5", "5/5"]}, WGT = {"orgs": ["TS", "KR\u00dc", "ZETA", "LOUD", "EG", "C9", "SEN", "KRX", "GEN", "FNC", "NAVI", "WOL", "GX", "FUR", "RRQ", "DFM", "NOVA", "KC", "MIBR", "BLG", "T1", "TL", "FUT", "TH", "FPX", "TE", "100T", "VIT", "BBL", "GE", "LEV", "TEC", "DRG", "G2", "M8", "TYL", "PRX", "JDG", "EDG", "NS", "XLG", "NRG", "AG", "EF", "ENVY", "FS", "PCF", "VL"], "share": [52.8, 52.0, 51.6, 50.4, 50.3, 48.3, 46.6, 46.2, 45.9, 45.7, 45.4, 45.2, 44.3, 43.9, 43.7, 43.6, 43.6, 43.6, 41.4, 40.8, 40.4, 39.9, 38.8, 38.1, 36.4, 36.2, 33.9, 33.8, 33.4, 33.3, 33.3, 31.9, 31.8, 31.5, 30.7, 28.7, 28.3, 28.2, 28.2, 26.0, 24.5, 23.5, 20.9, 0.0, 0.0, 0.0, 0.0, 0.0]}, ROI = {"thresh": [0, 3, 5, 7, 10, 15], "roi": [31.87, 32.95, 34.71, 42.84, 55.52, 63.49], "n": [253, 219, 196, 178, 149, 110], "lo": [13.81, 12.27, 11.96, 16.94, 25.54, 27.09], "hi": [50.2, 53.41, 58.59, 69.76, 86.59, 103.51]};
 Chart.defaults.font.family = "'DM Sans',system-ui,sans-serif";
 Chart.defaults.color = '#6b6478';
 Chart.defaults.animation = false;
@@ -479,6 +566,15 @@ new Chart(document.getElementById('c_month'), { type:'line',
     tooltip:{callbacks:{label:(t)=>(t.parsed.y>=0?'+':'')+t.parsed.y.toFixed(2)+'m  (n='+MON.n[t.dataIndex]+')'}} },
   scales:{ x:{grid:{display:false}, title:{display:true, text:'calendar month'}},
     y:{grid:{color:'#eceef2'}, title:{display:true, text:'Δ log-loss vs v6, milli'}} } } });
+
+new Chart(document.getElementById('c_roi'), { type:'bar',
+ data:{ labels: ROI.thresh.map(t=>'>='+t+'c'), datasets:[
+   { label:'ROI %', data:ROI.roi, backgroundColor:PAL.a1, borderRadius:4, maxBarThickness:52 } ] },
+ options:{ responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{display:false},
+    tooltip:{callbacks:{label:(t)=>'ROI '+t.parsed.y.toFixed(1)+'%  (n='+ROI.n[t.dataIndex]+' bets)'}} },
+  scales:{ x:{grid:{display:false}, title:{display:true, text:'minimum edge vs the T-2h price'}},
+    y:{grid:{color:'#eceef2'}, title:{display:true, text:'ROI %'}} } } });
 
 new Chart(document.getElementById('c_roster'), { type:'bar',
  data:{ labels: ROS.labels, datasets:[{ label:'team-years', data:ROS.dist,
