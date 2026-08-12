@@ -295,22 +295,45 @@ def _build_alpha_data():
         pass
 
     # 2026 season timeline — every non-CN-only 2026 event, tagged done/live/next.
+    #
+    # Events that are one circuit split into per-region entries in the registry
+    # (the EWC qualifiers, which really did run separately per region — see
+    # MoreTestingMaybeFiles) collapse to ONE bubble here. The timeline is a
+    # season-at-a-glance strip, so four near-identical "EWC Qualifier — X" pips
+    # is noise; the split matters to the solver, not to this.
+    _REGION_SUFFIXES = (" — Americas", " — EMEA", " — Pacific",
+                        " — China", " — CN")
     season = []
     try:
         from MoreTestingMaybeFiles import ALL_EVENTS
-        seen = set()
+        grouped = {}
         for e in ALL_EVENTS:
             if e.get("year") != 2026 or list(e.get("regions", {}).keys()) == ["CN"]:
                 continue
             lbl = (e.get("label", "") or "").replace("2026 ", "")
-            if lbl in seen:
-                continue
-            seen.add(lbl)
+            stem = next((lbl[:-len(s)] for s in _REGION_SUFFIXES
+                         if lbl.endswith(s)), lbl)
             st, en = e.get("start", ""), e.get("end", "")
+            g = grouped.get(stem)
+            if g is None:
+                grouped[stem] = {"label": stem, "start": st, "end": en, "n": 1,
+                                 "intl": list(e.get("regions", {}).keys()) == ["International"]}
+            else:
+                # merged bubble spans the whole circuit
+                g["n"] += 1
+                if st and (not g["start"] or st < g["start"]):
+                    g["start"] = st
+                if en and (not g["end"] or en > g["end"]):
+                    g["end"] = en
+        for g in grouped.values():
+            # "EWC Qualifier" x4 reads better as one "EWC Qualifiers"
+            label = g["label"] + "s" if (g["n"] > 1 and
+                                         not g["label"].endswith("s")) else g["label"]
+            st, en = g["start"], g["end"]
             status = "done" if en and en < today else (
                 "live" if (st <= today <= en) else "upcoming")
-            season.append({"label": lbl, "start": st, "end": en, "status": status,
-                           "intl": list(e.get("regions", {}).keys()) == ["International"]})
+            season.append({"label": label, "start": st, "end": en,
+                           "status": status, "intl": g["intl"]})
         season.sort(key=lambda x: x["start"])
     except Exception:
         season = []

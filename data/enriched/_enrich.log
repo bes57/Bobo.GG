@@ -1,7 +1,5 @@
-[enrich] 1 match(es) to process (refresh=False)
-  [1/1] 729675  · 3 map(s) TH vs NAVI  (VCT 2026: EMEA Stage 2)
-[enrich] done: 1 enriched, 0 tombstoned, 0 deferred, 0 failed
-[csv] 2111 matches -> 111443 rounds, 7860 econ rows, 39260 player rows, 98175 matrix rows
-[comps] 1 match(es) to collect
-[comps] done: 1 collected, 0 failed
-[enrich-new] 1 enriched, 1 comps, 4.8s
+[enrich] 0 match(es) to process (refresh=False)
+[enrich] done: 0 enriched, 0 tombstoned, 0 deferred, 0 failed
+[comps] 0 match(es) to collect
+[comps] done: 0 collected, 0 failed
+[enrich-new] 0 enriched, 0 comps, 0.0s
