@@ -352,8 +352,10 @@ def _existing_match_ids(event_csv_id):
     the "all maps" row silently aggregates only the maps that were ready —
     a series row wearing one map's rating. Before this, the first scrape won
     permanently and that row sat on the all-time leaderboard forever.
-    MatchStatsIntegrity's ledger bounds the retries so a genuinely unrated
-    event costs a handful of fetches, not one per refresh."""
+    Returns (already_scraped_ids, stale_ids). Retries are bounded by match age
+    first and the recheck ledger second, so a match VLR is never going to
+    finish publishing stops costing fetches instead of being re-scraped on
+    every refresh forever."""
     import pandas as pd
     p = os.path.join(ROOT, "data", "maps", f"{event_csv_id}.csv")
     if not os.path.exists(p):
@@ -363,6 +365,7 @@ def _existing_match_ids(event_csv_id):
         ids = set(df["MatchID"].dropna().astype(str).tolist())
     except Exception:
         return set()
+    stale = set()
     try:
         import MatchStatsIntegrity as _msi
         stale = _msi.rescrapeable_ids(event_csv_id)
@@ -371,7 +374,7 @@ def _existing_match_ids(event_csv_id):
             ids -= stale
     except Exception as _e:
         print(f"  stats-integrity check unavailable: {_e}", flush=True)
-    return ids
+    return ids, stale
 
 
 def _scrape_match_page(url, region_tag):
@@ -933,11 +936,14 @@ def main():
     scan_steps = sum(len(t["regions"]) for t in targets) or 1
     step_idx = 0
 
+    all_stale = set()
     for t in targets:
-        existing = _existing_match_ids(t["event_csv_id"])
+        existing, stale = _existing_match_ids(t["event_csv_id"])
+        all_stale |= stale
         _write("checking", 8,
                f"Scanning {t['label']} — {len(existing)} match(es) on disk…",
-               [f"[{t['label']}] {len(existing)} match(es) already cached"])
+               [f"[{t['label']}] {len(existing)} match(es) already cached"
+                + (f", {len(stale)} being re-scraped for incomplete stats" if stale else "")])
 
         for region, vlr_id, slug in t["regions"]:
             step_idx += 1
@@ -1049,7 +1055,8 @@ def main():
 
     for i, (url, region, ev_id) in enumerate(all_new_urls, 1):
         pct = 36 + int(i / total_new * 32)
-        _write("scraping", pct, f"Scraping match {i}/{total_new}…")
+        kind = "Re-scraping" if _match_id_from_url(url) in all_stale else "Scraping"
+        _write("scraping", pct, f"{kind} match {i}/{total_new}…")
         mr, sr, display = _scrape_match_page(url, region)
         by_event_maps.setdefault(ev_id, []).extend(mr)
         by_event_series.setdefault(ev_id, []).extend(sr)
@@ -1069,8 +1076,9 @@ def main():
         suffix = ("  ⚠ no stats yet — will retry next refresh" if empty else
                   "  ⚠ VLR stats still publishing — will re-scrape"
                   if state == "partial" else "")
-        _write("scraping", pct, f"Scraping {i}/{total_new}…",
-               [f"  [{region}] {display}{suffix}"])
+        _write("scraping", pct, f"{kind} {i}/{total_new}…",
+               [f"  [{region}] {display}{suffix}"
+                + ("  (re-scrape — stats were incomplete)" if kind == "Re-scraping" else "")])
         time.sleep(0.25)  # was 0.7
 
     if empty_scrapes:

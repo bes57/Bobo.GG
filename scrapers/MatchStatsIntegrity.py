@@ -54,6 +54,14 @@ ROUND_STATS = ("R2.0", "ACS", "ADR")
 MAX_ATTEMPTS    = 6
 BACKOFF_MINUTES = (10, 30, 120, 360, 1440)
 
+# The real bound. VLR publishes round data within minutes of a match ending; if
+# it hasn't shown up days later it is never going to, and re-scraping that match
+# is pure waste on every refresh forever. The ledger alone can't hold this line
+# — it lives on disk, and on an ephemeral host (Render) every fresh container
+# starts the attempt count over, so a handful of permanently-broken matches get
+# re-scraped on every single deploy. Age is stateless and survives restarts.
+MAX_RESCRAPE_AGE_DAYS = 2
+
 
 def _blank(v):
     if v is None:
@@ -227,9 +235,47 @@ def record_attempt(match_id, state):
     _save_ledger(led)
 
 
+_dates_cache = (None, -1.0)
+
+
+def _match_dates():
+    """{match_id: "YYYY-MM-DD"} from data/match_dates.json, cached by mtime."""
+    global _dates_cache
+    path = os.path.join(DATA, "match_dates.json")
+    try:
+        cur = os.path.getmtime(path)
+    except OSError:
+        return {}
+    if _dates_cache[0] is not None and cur <= _dates_cache[1]:
+        return _dates_cache[0]
+    try:
+        with open(path) as f:
+            d = json.load(f)
+    except Exception:
+        d = {}
+    _dates_cache = (d, cur)
+    return d
+
+
+def recently_played(match_id, dates=None):
+    """Was this match played recently enough that VLR might still be working on
+    it? Unknown date means brand new — treat as recent."""
+    dates = _match_dates() if dates is None else dates
+    raw = dates.get(str(match_id))
+    if not raw:
+        return True
+    try:
+        played = datetime.date.fromisoformat(str(raw)[:10])
+    except Exception:
+        return True
+    return (datetime.date.today() - played).days <= MAX_RESCRAPE_AGE_DAYS
+
+
 def rescrapeable_ids(event_csv_id):
     """MatchIDs already on disk that should NOT count as 'already scraped',
-    because their stored stats are incomplete and they're due another try."""
+    because their stats are incomplete, they're recent enough that VLR may yet
+    fill them in, and they're due another try."""
     led = _load_ledger()
+    dates = _match_dates()
     return {mid for mid, _state in scan_event(event_csv_id)
-            if due_for_recheck(mid, led)}
+            if recently_played(mid, dates) and due_for_recheck(mid, led)}
