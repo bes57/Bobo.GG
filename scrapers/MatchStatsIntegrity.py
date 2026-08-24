@@ -46,9 +46,13 @@ LEDGER_PATH = os.path.join(DATA, "stats_recheck.json")
 ROUND_STATS = ("R2.0", "ACS", "ADR")
 
 # Bounds on re-scraping an incomplete match, so an event VLR never rates costs
-# a handful of fetches rather than one per refresh forever.
-MAX_ATTEMPTS   = 6
-COOLDOWN_HOURS = 6
+# a handful of fetches rather than one per refresh forever. The backoff starts
+# short on purpose: a match that just finished is usually complete on VLR
+# within minutes, and waiting hours to look again would leave a bad row on the
+# leaderboard for the whole evening. It stretches out fast so a permanently
+# broken match settles into one check a day and then stops.
+MAX_ATTEMPTS    = 6
+BACKOFF_MINUTES = (10, 30, 120, 360, 1440)
 
 
 def _blank(v):
@@ -195,14 +199,16 @@ def due_for_recheck(match_id, led=None):
     rec = led.get(str(match_id))
     if not rec:
         return True
-    if int(rec.get("attempts", 0)) >= MAX_ATTEMPTS:
+    n = int(rec.get("attempts", 0))
+    if n >= MAX_ATTEMPTS:
         return False
     try:
         last = datetime.datetime.fromisoformat(rec.get("last", ""))
     except Exception:
         return True
+    wait = BACKOFF_MINUTES[min(max(n - 1, 0), len(BACKOFF_MINUTES) - 1)]
     age = datetime.datetime.now(datetime.timezone.utc) - last
-    return age >= datetime.timedelta(hours=COOLDOWN_HOURS)
+    return age >= datetime.timedelta(minutes=wait)
 
 
 def record_attempt(match_id, state):

@@ -668,7 +668,16 @@ function fetchResults() {
   document.getElementById('stat-col-header').textContent = stat;
   document.getElementById('results-body').innerHTML = '<tr><td colspan="7" class="empty">Loading&hellip;</td></tr>';
 
-  fetch(`/highs/api/results?direction=${encodeURIComponent(direction)}&stat=${encodeURIComponent(stat)}&format=${encodeURIComponent(fmt)}&year=${encodeURIComponent(year)}&context=${encodeURIComponent(context)}`)
+  // Keep the address bar on the board you're actually looking at. The page has
+  // always READ these params (applyUrlParams, for the home page's record
+  // cards) but never wrote them, so /highs/ stayed bare no matter which
+  // filters you picked — a copied link, a bookmark or a reload all dropped you
+  // back on the default board. replaceState rather than pushState: filter
+  // changes shouldn't stack up as back-button history.
+  const qs = new URLSearchParams({direction, stat, format: fmt, year, context}).toString();
+  try { history.replaceState(null, '', location.pathname + '?' + qs); } catch (e) {}
+
+  fetch(`/highs/api/results?${qs}`)
     .then(r => r.json())
     .then(data => {
       if (!data.length) {

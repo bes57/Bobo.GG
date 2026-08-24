@@ -416,11 +416,16 @@ def _scrape_match_page_with_retry(url, region_tag, max_attempts=3):
                 state = _msi.classify_rows(map_rows, series_rows)
             except Exception:
                 state = "complete"
-            if state != "partial" or attempt == max_attempts:
+            # ONE short retry, not a long ladder: this runs in the user-facing
+            # page-load refresh, and VLR either finished publishing in the last
+            # few seconds or it hasn't. The real safety net is the recheck
+            # ledger — an incomplete match is re-scraped on a later refresh
+            # instead of costing wall-clock now.
+            if state != "partial" or attempt >= 2:
                 return map_rows, series_rows, display
             best = (map_rows, series_rows, display)
             attempt_results.append(f"attempt {attempt}: partial stats — VLR still publishing")
-            time.sleep(5 * attempt)
+            time.sleep(3)
             continue
         attempt_results.append(
             f"attempt {attempt}: 0 rows from valid HTML "
