@@ -1564,10 +1564,13 @@ function recCard(r){
     +'</span>'
     +'<span class="rec-val">'+esc(r.value)+'</span>'
   +'</a>';}
-var _recTimer=null,REC_SHOW=8,REC_SORT='rank';
-// DATA.records is a deeper pool than the rail shows (see RECORDS_POOL), so
-// Recency can surface genuinely-latest records instead of just reshuffling the
-// 8 best-ranked. 'rank' reproduces the server's own (rank, player) order.
+var _recTimer=null,REC_SORT='rank';
+// Both toggles show the SAME cards — the whole pool — and differ only in
+// order. This used to sort the pool and then slice the top 8, which made
+// Ranking and Recency two different sets of cards: Jieni7 sat at #2 on rank
+// but his match was three weeks old, so switching to Recency didn't reorder
+// him, it deleted him. A sort control that changes WHICH records exist reads
+// as a bug, because you can't tell a re-sort from a filter.
 function recList(){
   var rs=(DATA.records||[]).slice();
   rs.sort(REC_SORT==='date'
@@ -1575,7 +1578,7 @@ function recList(){
         return da!==db?(da<db?1:-1):(a.rank||99)-(b.rank||99);}
     : function(a,b){return (a.rank||99)-(b.rank||99)
         || ((a.player||'')<(b.player||'')?-1:1);});
-  return rs.slice(0,REC_SHOW);}
+  return rs;}
 function renderRecords(){
   var rs=recList();
   var sub=document.getElementById('records-sub');
