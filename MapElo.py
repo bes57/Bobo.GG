@@ -9236,20 +9236,28 @@ document.querySelectorAll('.pill').forEach(btn => {
 // One row per (team, map) combination, built from the same leaderboard payload
 // the Team Ratings panel uses — team.all_maps carries the per-map rating plus
 // that team's W-L on the map for the current season.
-let mrMap    = 'All';     // 'All' or a single map name
+// 'Pool' = every map in the ACTIVE pool (the default, and what the top chip
+// row shows), 'All' = every map ever played including retired ones, or a
+// single map name.
+let mrMap    = 'Pool';
 let mrSort   = 'rating';  // rating | team | map | rec | wpct
 let mrDesc   = true;
 let mrLimit  = 100;       // grows via "Show more"; 542 rows at once is a wall
 
 function mrRows(data) {
   const teams = data.leaderboard.teams || [];
+  const mrPool = _currentMapPool();   // null until match_events load; then 'Pool' == 'All'
   const visible = activeRegion === 'All' ? teams
     : activeRegion === 'Top10'           ? teams.slice(0, 10)
     : teams.filter(t => t.region === activeRegion);
   const rows = [];
   visible.forEach(t => {
     (t.all_maps || []).forEach(m => {
-      if (mrMap !== 'All' && m.map !== mrMap) return;
+      if (mrMap === 'Pool') {
+        if (mrPool && !mrPool.has(m.map)) return;
+      } else if (mrMap !== 'All' && m.map !== mrMap) {
+        return;
+      }
       const g = (m.w || 0) + (m.l || 0);
       rows.push({org: t.org, region: t.region || '', map: m.map,
                  rating: m.rating, w: m.w || 0, l: m.l || 0,
@@ -9302,15 +9310,19 @@ function renderMapRatings(data) {
   const inPool  = pool ? allMaps.filter(m => pool.has(m))  : allMaps;
   const outPool = pool ? allMaps.filter(m => !pool.has(m)) : [];
 
+  const CHIP_LABEL = {Pool: 'All Maps (In Map Pool)', All: 'All Maps'};
   const chip = (m, cls) =>
     `<button class="mr-mapchip${cls || ''}${m === mrMap ? ' active' : ''}" data-map="${m}">`
-    + `${m === 'All' ? 'All Maps' : m}</button>`;
+    + `${CHIP_LABEL[m] || m}</button>`;
   const ctl = document.getElementById('mrControls');
+  // Top row is the active pool and its own "all of these". The retired maps sit
+  // on the second row, and the everything-ever option sits with them — it's the
+  // only one that pulls those rows in, so that's where it belongs.
   ctl.innerHTML = '<span class="mr-lab">Map</span>'
-    + chip('All') + inPool.map(m => chip(m)).join('')
+    + chip('Pool') + inPool.map(m => chip(m)).join('')
     + (outPool.length
         ? '<span class="mr-chipbreak"></span><span class="mr-lab mr-lab-out">Out of pool</span>'
-          + outPool.map(m => chip(m, ' out')).join('')
+          + outPool.map(m => chip(m, ' out')).join('') + chip('All')
         : '');
   ctl.querySelectorAll('.mr-mapchip').forEach(b => {
     b.onclick = () => {
@@ -9318,7 +9330,7 @@ function renderMapRatings(data) {
       mrLimit = 100;
       // Picking a single map means "rank teams on this map" — rating order is
       // the only sensible default there.
-      if (mrMap !== 'All') { mrSort = 'rating'; mrDesc = true; }
+      if (mrMap !== 'All' && mrMap !== 'Pool') { mrSort = 'rating'; mrDesc = true; }
       renderMapRatings(data);
     };
   });
@@ -9350,7 +9362,7 @@ function renderMapRatings(data) {
   const body = document.getElementById('mrBody');
   document.getElementById('mrCount').textContent =
     rows.length + ' combination' + (rows.length === 1 ? '' : 's')
-    + (mrMap === 'All' ? '' : ' \\u00b7 ' + mrMap);
+    + (mrMap === 'All' ? '' : ' \\u00b7 ' + (mrMap === 'Pool' ? 'in map pool' : mrMap));
 
   if (!rows.length) {
     body.innerHTML = '<div class="mr-empty">No map data for this filter.</div>';
@@ -10201,7 +10213,14 @@ async function revealChart(duration = 2500, startFromLeft = false) {
   if (!myChart || !hubData) return;
   _isReplaying = true;
   const btn = document.getElementById('replayBtn');
-  if (btn) { btn.textContent = '⏸ Playing…'; btn.disabled = true; }
+  // DOUBLE VERTICAL LINE (U+2016), not PAUSE (U+23F8). iOS has no text glyph
+  // for U+23F8, so Safari falls back to Apple Color Emoji and the button
+  // sprouted a blue pause icon on phones, while desktop fonts cover it and
+  // rendered plain type. U+2016 is General Punctuation: every text font has
+  // it and no emoji font touches that block, so there is nothing to fall back
+  // to. Written as an escape because this JS lives inside a Python template —
+  // a literal glyph here would be re-interpreted at import time.
+  if (btn) { btn.textContent = '\\u2016 Playing\\u2026'; btn.disabled = true; }
 
   _isZoomed = false;
   _savedZoomMin = null; _savedZoomMax = null;
