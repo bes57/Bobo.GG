@@ -1834,6 +1834,16 @@ MAPELO_HOME_HTML = """
   .lb-mg-logo { width:16px; height:16px; object-fit:contain; flex-shrink:0; }
   .lb-mg-opp { font-size:.78rem; font-weight:600; color:#111; white-space:nowrap; }
   .lb-mg-score { font-size:.78rem; font-weight:700; font-variant-numeric:tabular-nums; }
+  /* The score is three cells, not one string. Right-aligning "13-10" and
+     "13-4" as text lines up their right edges, which puts the dashes in
+     different places and makes the column look crooked. Own-side score
+     right-aligns, dash sits in a fixed centre track, opponent score
+     left-aligns — so every dash stacks. b/i/u carry no semantics here,
+     they're just the shortest tags that keep the template one-liners. */
+  .lb-mg-score{display:grid;grid-template-columns:1fr 9px 1fr;align-items:baseline}
+  .lb-mg-score>b{font-weight:inherit;text-align:right}
+  .lb-mg-score>i{font-style:normal;text-align:center}
+  .lb-mg-score>u{text-decoration:none;text-align:left}
   .lb-map-game-row.win  .lb-mg-score { color:#16a34a; }
   .lb-map-game-row.loss .lb-mg-score { color:#dc2626; }
   .lb-mg-diff { font-size:.72rem; font-weight:600; font-variant-numeric:tabular-nums; min-width:28px; text-align:right; }
@@ -3588,7 +3598,7 @@ function _expandMapRow(encOrg, encMap, rowId) {
            +     '<span class="lb-mg-result">' + (won ? 'W' : 'L') + '</span>'
            +     '<img class="lb-mg-logo" src="/static/logos/' + opp + '.png" onerror="this.style.display=&quot;none&quot;" alt="">'
            +     '<span class="lb-mg-opp">' + opp + '</span>'
-           +     '<span class="lb-mg-score">' + orgRd + '–' + oppRd + '</span>'
+           +     '<span class="lb-mg-score"><b>' + orgRd + '</b><i>–</i><u>' + oppRd + '</u></span>'
            +     '<span class="lb-mg-diff ' + diffCls + '">' + diffStr + '</span>'
            +     '<span class="lb-mg-meta" title="' + me.date + (evt ? ' · ' + evt : '') + '">' + me.date + (evt ? ' · ' + evt : '') + '</span>'
            +   '</div></td>'
@@ -8106,8 +8116,6 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 @keyframes purpleFloat{0%{transform:translate(0,0) scale(1)}33%{transform:translate(10%,-9%) scale(1.14)}66%{transform:translate(-9%,12%) scale(.9)}100%{transform:translate(7%,5%) scale(1.1)}}
 
 .top-nav{padding:24px 32px 0;display:flex;align-items:center;gap:16px;position:relative;z-index:1}
-.home-logo{display:block;height:72px;width:auto;opacity:.85;transition:opacity .2s}
-.home-logo:hover{opacity:1}
 .back-btn{display:inline-flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:#7c3aed;text-decoration:none;padding:6px 14px;border-radius:99px;border:1.5px solid rgba(124,58,237,.25);background:rgba(124,58,237,.06);transition:background .18s,border-color .18s,color .18s;white-space:nowrap}
 .back-btn:hover{background:rgba(124,58,237,.12);border-color:rgba(124,58,237,.5);color:#5b21b6}
 .back-btn svg{flex-shrink:0}
@@ -8436,6 +8444,16 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-mg-logo{width:16px;height:16px;object-fit:contain;flex-shrink:0}
 .lb-mg-opp{font-size:.78rem;font-weight:600;color:#111;white-space:nowrap}
 .lb-mg-score{font-size:.78rem;font-weight:700;font-variant-numeric:tabular-nums}
+/* The score is three cells, not one string. Right-aligning "13-10" and
+   "13-4" as text lines up their right edges, which puts the dashes in
+   different places and makes the column look crooked. Own-side score
+   right-aligns, dash sits in a fixed centre track, opponent score
+   left-aligns — so every dash stacks. b/i/u carry no semantics here,
+   they're just the shortest tags that keep the template one-liners. */
+.lb-mg-score{display:grid;grid-template-columns:1fr 9px 1fr;align-items:baseline}
+.lb-mg-score>b{font-weight:inherit;text-align:right}
+.lb-mg-score>i{font-style:normal;text-align:center}
+.lb-mg-score>u{text-decoration:none;text-align:left}
 .lb-map-game-row.win .lb-mg-score{color:#16a34a}.lb-map-game-row.loss .lb-mg-score{color:#dc2626}
 .lb-mg-diff{font-size:.72rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
 .lb-mg-diff.pos{color:#16a34a}.lb-mg-diff.neg{color:#dc2626}
@@ -8595,7 +8613,6 @@ body:has(.flying)::after{animation-play-state:paused}
   /* ── Mobile (Modern VCT Hub) ─────────────────────────────── */
   @media (max-width:600px){
     .top-nav{padding:16px 14px 0;gap:10px;flex-wrap:wrap}
-    .home-logo{height:52px}
     .back-btn{font-size:.72rem;padding:5px 11px}
     .hub-main{padding:14px 0 48px}
     .tab-bar{gap:5px;flex-wrap:wrap;padding:0 10px}
@@ -8631,7 +8648,6 @@ body:has(.flying)::after{animation-play-state:paused}
 </head>
 <body>
 <div class="top-nav">
-  <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
   <a href="/mapelo/how-it-works/" class="back-btn" style="margin-left:auto;">How does BenPom work?</a>
 </div>
 
@@ -9394,7 +9410,7 @@ function _toggleMapRatingRow(row) {
         <span class="lb-mg-result">${g.won ? 'W' : 'L'}</span>
         <img class="lb-mg-logo" src="/static/logos/${g.opp}.png" onerror="this.style.display='none'" alt="">
         <span class="lb-mg-opp">${g.opp}</span>
-        <span class="lb-mg-score">${g.orgRd}\\u2013${g.oppRd}</span>
+        <span class="lb-mg-score"><b>${g.orgRd}</b><i>\\u2013</i><u>${g.oppRd}</u></span>
         <span class="lb-mg-diff ${g.diffCls}">${g.diffStr}</span>
         <span class="lb-mg-meta" title="${g.date}${g.evt ? ' \\u00b7 ' + g.evt : ''}">${g.date}${g.evt ? ' \\u00b7 ' + g.evt : ''}</span>
       </div></div>`;
@@ -10878,7 +10894,7 @@ function _expandMapRow(encOrg, encMap, rowId) {
           <span class="lb-mg-result">${g.won?'W':'L'}</span>
           <img class="lb-mg-logo" src="/static/logos/${g.opp}.png" onerror="this.style.display='none'" alt="">
           <span class="lb-mg-opp">${g.opp}</span>
-          <span class="lb-mg-score">${g.orgRd}–${g.oppRd}</span>
+          <span class="lb-mg-score"><b>${g.orgRd}</b><i>–</i><u>${g.oppRd}</u></span>
           <span class="lb-mg-diff ${g.diffCls}">${g.diffStr}</span>
           <span class="lb-mg-meta">${g.date}${g.evt?' · '+g.evt:''}</span>
         </div></td>
