@@ -50,7 +50,7 @@ NAV = """<div class="labtabs">
 <a href="/testing/playbook">Deployment Playbook</a>
 <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
-<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v7_lab">v7 Lab</a><span class="brk"></span>
 <a href="/testing/report/v8_lab">v8 Lab</a>
 <a href="/testing/report/roster_adaptation">Roster</a>
 <a href="/testing/report/v9_lab">v9 Lab</a>

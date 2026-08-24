@@ -300,11 +300,12 @@ _LAB_HTML = """<!DOCTYPE html>
           font-weight:700; font-size:.9rem; color:var(--acc); text-decoration:none;
           transition:background .15s, border-color .15s; }
   .repl:hover { background:var(--accbg); border-color:var(--acc); }
-  .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 26px; }
+  .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 26px; flex-wrap:wrap; }
   .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
-    padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+    padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; white-space:nowrap; }
   .labtabs a:hover { color:var(--ink); background:var(--accbg); }
   .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ .labtabs .brk { flex-basis:100%; height:0; margin:0; }
   @media (max-width:640px){ section{padding:20px 16px;} body{padding:22px 10px 60px;} }
 </style></head>
 <body>
@@ -320,7 +321,7 @@ _LAB_HTML = """<!DOCTYPE html>
     <a href="/testing/playbook">Deployment Playbook</a>
     <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
-<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v7_lab">v7 Lab</a><span class="brk"></span>
 <a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a><a href="/testing/report/v10_lab">v10 Lab</a><a href="/testing/report/edge_lab">Edge vs Market</a><a href="/testing/report/playbook_bt">Playbook (backtested)</a>
   </div>
 

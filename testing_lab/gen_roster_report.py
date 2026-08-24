@@ -49,9 +49,10 @@ CSS = """
  .tagline { text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }
  .labtabs { display:flex; justify-content:center; gap:6px; margin:0 0 18px; flex-wrap:wrap; }
  .labtabs a { font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
-   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; white-space:nowrap; }
  .labtabs a:hover { color:var(--ink); background:var(--accbg); }
  .labtabs a.on { color:#fff; background:var(--acc); border-color:var(--acc); }
+ .labtabs .brk { flex-basis:100%; height:0; margin:0; }
  .banner { background:var(--warnbg); border:1px solid #f0d9c7; border-left:6px solid var(--warn);
    border-radius:14px; padding:14px 20px; margin:0 0 18px; font-size:.92rem; }
  .banner b { color:var(--warn); letter-spacing:.4px; }
@@ -114,7 +115,7 @@ NAV = """<div class="labtabs">
 <a href="/testing/playbook">Deployment Playbook</a>
 <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
-<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v7_lab">v7 Lab</a><span class="brk"></span>
 <a href="/testing/report/v8_lab">v8 Lab</a>
 <a href="/testing/report/roster_adaptation" class="on">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a>
 <a href="/testing/report/v10_lab">v10 Lab</a>

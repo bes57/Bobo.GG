@@ -197,11 +197,12 @@ html = f"""<!DOCTYPE html>
 <body><div class="wrap">
 <h1>State of BenPom</h1>
 <style>
- .labtabs {{ display:flex; justify-content:center; gap:6px; margin:14px 0 20px; }}
+ .labtabs {{ display:flex; justify-content:center; gap:6px; margin:14px 0 20px; flex-wrap:wrap; }}
  .labtabs a {{ font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
-   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }}
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; white-space:nowrap; }}
  .labtabs a:hover {{ color:var(--ink); background:var(--accbg); }}
  .labtabs a.on {{ color:#fff; background:var(--acc); border-color:var(--acc); }}
+ .labtabs .brk {{ flex-basis:100%; height:0; margin:0; }}
 </style>
 <div class="tagline">Diagnosis + optimization rounds 1–8 + production EWC implementation ·
 generated 2026-07-22 · {rv['n_series']} walk-forward series 2023–2026 (EWC-class events
@@ -212,7 +213,13 @@ now native) · holdout = 2025–26</div>
 <a href="/testing/playbook">Deployment Playbook</a>
 <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
-<a href="/testing/report/v7_lab">v7 Lab</a>
+<a href="/testing/report/v7_lab">v7 Lab</a><span class="brk"></span>
+<a href="/testing/report/v8_lab">v8 Lab</a>
+<a href="/testing/report/roster_adaptation">Roster</a>
+<a href="/testing/report/v9_lab">v9 Lab</a>
+<a href="/testing/report/v10_lab">v10 Lab</a>
+<a href="/testing/report/edge_lab">Edge vs Market</a>
+<a href="/testing/report/playbook_bt">Playbook (backtested)</a>
 </div>
 
 <section>

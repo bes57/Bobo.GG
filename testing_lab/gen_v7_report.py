@@ -24,7 +24,13 @@ NAV = """<div class="labtabs">
 <a href="/testing/playbook">Deployment Playbook</a>
 <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
-<a href="/testing/report/v7_lab" class="on">v7 Lab</a>
+<a href="/testing/report/v7_lab" class="on">v7 Lab</a><span class="brk"></span>
+<a href="/testing/report/v8_lab">v8 Lab</a>
+<a href="/testing/report/roster_adaptation">Roster</a>
+<a href="/testing/report/v9_lab">v9 Lab</a>
+<a href="/testing/report/v10_lab">v10 Lab</a>
+<a href="/testing/report/edge_lab">Edge vs Market</a>
+<a href="/testing/report/playbook_bt">Playbook (backtested)</a>
 </div>"""
 
 ORDER = ["v6_consist_20_12", "v5_asym_W20L12", "consist_16_10", "consist_14_8",
@@ -127,9 +133,10 @@ html = f"""<!doctype html><html><head><meta charset="utf-8">
  .tagline {{ text-align:center; color:var(--dim); font-size:.9rem; margin-bottom:18px; }}
  .labtabs {{ display:flex; justify-content:center; gap:6px; margin:0 0 24px; flex-wrap:wrap; }}
  .labtabs a {{ font-size:.8rem; font-weight:700; color:var(--dim); text-decoration:none;
-   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; }}
+   padding:7px 15px; border-radius:999px; border:1px solid var(--line); background:#fff; white-space:nowrap; }}
  .labtabs a:hover {{ color:var(--ink); background:var(--accbg); }}
  .labtabs a.on {{ color:#fff; background:var(--acc); border-color:var(--acc); }}
+ .labtabs .brk {{ flex-basis:100%; height:0; margin:0; }}
  section {{ background:#fff; border:1px solid var(--line); border-radius:18px;
            padding:24px 28px; margin-bottom:16px; box-shadow:0 3px 14px #00000008; }}
  h2 {{ font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.08rem;
