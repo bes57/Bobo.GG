@@ -396,8 +396,11 @@ PAGE_HTML = """
   .event-badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:.7rem; font-weight:500; background:#f4edb8; color:#6a5a1a; }
   .map-badge { display:inline-block; padding:2px 8px; border-radius:99px; font-size:.7rem; font-weight:500; background:#d4f4e8; color:#1a5a3a; margin-left:4px; }
   .empty { text-align:center; padding:40px; color:var(--soft); font-size:.88rem; }
-  @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-  .page { animation:fadeDown .5s ease both; }
+  /* No entry animation. The page used to slide down and fade in over half a
+     second on every load, which is half a second of not being able to read it —
+     and it re-ran on every back-navigation. Leaderboards has never done this;
+     this page now matches. (Its fadeDown keyframes went with it — nothing else
+     referenced them.) */
   .refresh-bar { margin-top:14px; display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap; }
   .refresh-btn { background:transparent; border:1.5px solid var(--accent); color:var(--accent); padding:6px 14px; border-radius:99px; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
   .refresh-btn:hover:not(:disabled) { background:var(--accent); color:#fff; }
