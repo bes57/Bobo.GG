@@ -1478,6 +1478,11 @@ MAPELO_HOME_HTML = """
   /* Hide the "How does BenPom work?" link in the top nav when you're
      already on that page — no point linking to yourself. */
   body.page-howitworks .top-nav a[href="/mapelo/how-it-works/"] { display: none; }
+  /* "Back to BenPom" belongs on How It Works — you arrive there FROM the hub.
+     The rankings page shares this template but is reached from the Historical
+     VCT Tools nav, so a "back" to somewhere you never were is just noise. */
+  .top-nav a.back-link[href="/mapelo/modern/"] { display: none; }
+  body.page-howitworks .top-nav a.back-link[href="/mapelo/modern/"] { display: inline-flex; }
   body.page-howitworks .ranks-controls,
   body.page-howitworks .filter-row,
   body.page-howitworks .filter-row-maps,
@@ -4150,7 +4155,6 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <div id="content-wrap">
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-    <a class="back-link" href="/mapelo/modern/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
     <a class="back-link" href="/mapelo/how-it-works/" style="margin-left:auto;">How does BenPom work?</a>
   </div>
   <div class="page">
