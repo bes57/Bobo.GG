@@ -3,7 +3,7 @@ import json as _json
 import re as _re
 import math as _math
 import datetime as _datetime
-from flask import Flask, render_template_string, send_from_directory
+from flask import Flask, render_template_string, send_from_directory, request
 from flask_compress import Compress
 from EventLeaderboards import vct_bp
 from AllTimeHighs import highs_bp
@@ -2594,6 +2594,38 @@ def _anav_ver():
         return str(int(os.path.getmtime(os.path.join(STATIC_DIR, "alpha-nav.js"))))
     except Exception:
         return "0"
+
+
+@app.after_request
+def _no_store_dynamic(resp):
+    """Tell caches not to keep dynamic pages or data.
+
+    Nothing here sent a Cache-Control header at all, and "no header" is not
+    "don't cache" — it licenses heuristic caching. Desktop browsers mostly
+    revalidate anyway; iOS Safari does not, and it will happily serve a
+    days-old /mapelo/modern/data (and the page around it) from its own cache
+    on repeat visits, which is why the site looked frozen on mobile while
+    desktop tracked live. Pull-to-refresh doesn't necessarily help either —
+    the cached entry is still considered fresh.
+
+    Static assets keep their long max-age (set on send_from_directory); they
+    are content-addressed by ?v= query strings and SHOULD be cached hard.
+    Anything that already declared its own policy is left alone."""
+    try:
+        if resp.direct_passthrough:
+            return resp
+        if resp.headers.get("Cache-Control"):
+            return resp
+        if (request.path or "").startswith("/static/"):
+            return resp
+        ctype = resp.headers.get("Content-Type", "")
+        if "text/html" in ctype or "application/json" in ctype:
+            resp.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+            resp.headers["Pragma"]        = "no-cache"
+            resp.headers["Expires"]       = "0"
+    except Exception:
+        pass
+    return resp
 
 
 @app.after_request

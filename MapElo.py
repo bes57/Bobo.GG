@@ -6755,6 +6755,108 @@ def mapelo_mvp_stat(org):
 
 # ─── Modern VCT Hub — backend ────────────────────────────────────────────────
 
+_ungauged_cache = (None, -1.0, None)
+
+
+def _ungauged_events(known_ids):
+    """Completed matches that are NOT in the rating timeline, shaped like its
+    `match_events` so the team panel can show them.
+
+    BuildRatingTimeline drops any map involving a side it holds no prior on —
+    the T2 teams that play into Stage 2 through the play-ins. That is correct
+    for the RATING: a franchised team scored against a side whose rating is
+    built from one weekend would have its own rating moved by noise. But
+    `recent_matches` is built from that same fit, so "excluded from the fit"
+    silently became "did not happen": Vitality beat Fnatic Rising and EP in the
+    Stage 2 playoffs on Aug 20 and 22, and the panel showed their last match as
+    Aug 1. 42 matches of the 2026 season were invisible this way.
+
+    These come back with no rating delta, because they genuinely have none.
+    The fit is untouched — this reads the same match_results.csv the fit reads
+    and adds nothing to it."""
+    global _ungauged_cache
+    mr_path = os.path.join(ROOT, "data", "match_results.csv")
+    try:
+        stamp = os.path.getmtime(mr_path)
+    except OSError:
+        return []
+    cached_ids, cached_stamp, cached_val = _ungauged_cache
+    if cached_val is not None and cached_stamp == stamp and cached_ids == known_ids:
+        return cached_val
+
+    out = []
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS
+        with open(os.path.join(ROOT, "data", "match_dates.json")) as f:
+            dates = json.load(f)
+
+        mr = pd.read_csv(mr_path, dtype=str)
+        mr["MatchID"] = mr["MatchID"].str.strip()
+        mr["MapNum"]  = mr["MapNum"].str.strip()
+        all_rows = mr[mr["MapNum"] == "all"].set_index("MatchID")
+        map_rows = mr[mr["MapNum"] != "all"]
+        mni      = _build_map_name_index()
+
+        # Only the current season — older ungauged rows are the parsing junk
+        # BuildRatingTimeline's comment calls out ("INTL", "Team", "tarik"),
+        # not real matches, and they are not what any panel is showing.
+        years = [e["id"] for e in ALL_EVENTS
+                 if os.path.exists(os.path.join(ROOT, "data", "series", f"{e['id']}.csv"))]
+        cur_year = max((str(e.get("year") or "") for e in ALL_EVENTS if e["id"] in years),
+                       default="")
+        for eid in [e["id"] for e in ALL_EVENTS
+                    if e["id"] in years and str(e.get("year") or "") == cur_year]:
+            spath = os.path.join(ROOT, "data", "series", f"{eid}.csv")
+            try:
+                sdf = pd.read_csv(spath, usecols=["MatchID", "Org"], dtype=str)
+            except Exception:
+                continue
+            sdf["MatchID"] = sdf["MatchID"].str.strip()
+            for mid, grp in sdf.groupby("MatchID"):
+                if mid in known_ids or mid not in all_rows.index:
+                    continue
+                orgs = [o for o in grp["Org"].unique() if o]
+                srow = all_rows.loc[mid]
+                if hasattr(srow, "iloc") and getattr(srow, "ndim", 1) > 1:
+                    srow = srow.iloc[0]
+                winner = str(srow.get("WinnerOrg") or "")
+                loser  = next((o for o in orgs if o != winner), "")
+                if not winner or not loser:
+                    continue
+                maps = []
+                for _, mrow in map_rows[map_rows["MatchID"] == mid].iterrows():
+                    try:
+                        wr, lr = [int(x) for x in str(mrow["Score"]).split("-")]
+                    except Exception:
+                        continue
+                    try:
+                        mname = mni.get((int(mid), int(mrow["MapNum"])), "")
+                    except (ValueError, TypeError):
+                        mname = ""
+                    maps.append({"map": mname, "wr": wr, "lr": lr,
+                                 "winner": str(mrow.get("WinnerOrg") or "")})
+                out.append({
+                    "match_id":     int(mid) if mid.isdigit() else mid,
+                    "date":         dates.get(mid, ""),
+                    "event_id":     eid,
+                    "winner":       winner,
+                    "loser":        loser,
+                    "series_score": str(srow.get("Score") or ""),
+                    "maps":         maps,
+                    # No delta: these never entered the fit, and inventing one
+                    # would be worse than showing none.
+                    "winner_before": None, "winner_after": None, "winner_delta": None,
+                    "loser_before":  None, "loser_after":  None, "loser_delta":  None,
+                    "unrated":       True,
+                })
+    except Exception:
+        out = []
+
+    out = [m for m in out if m.get("date")]
+    _ungauged_cache = (set(known_ids), stamp, out)
+    return out
+
+
 _RATING_TIMELINE_PATH = os.path.join(ROOT, "data", "rating_timeline.json")
 _MAP_RATINGS_PATH     = os.path.join(ROOT, "data", "map_ratings.json")
 
@@ -7218,9 +7320,16 @@ def _mhub_load():
     except Exception:
         _match_times = {}
 
+    # Matches the rating fit deliberately excludes still happened, and the
+    # team panel is a match history, not a fit log. See _ungauged_events.
+    _extra_events = _ungauged_events({str(me.get("match_id"))
+                                      for me in result["chart"]["match_events"]})
+
     # Build per-team recent-matches from match_events (include maps + event)
     recent_by_org: dict = {}
-    for me in reversed(result["chart"]["match_events"]):
+    _merged = sorted(result["chart"]["match_events"] + _extra_events,
+                     key=lambda m: (str(m.get("date") or ""), str(m.get("match_id") or "")))
+    for me in reversed(_merged):
         for role in ("winner", "loser"):
             org = me[role]
             if org not in recent_by_org:
@@ -8272,7 +8381,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-mscore{font-weight:700;font-size:.9rem;font-variant-numeric:tabular-nums}
 .lb-match-card.win .lb-mscore{color:#16a34a}.lb-match-card.loss .lb-mscore{color:#dc2626}
 .lb-mdelta{font-weight:600;font-size:.8rem;font-variant-numeric:tabular-nums}
-.lb-mdelta.pos{color:#16a34a}.lb-mdelta.neg{color:#dc2626}
+.lb-mdelta.pos{color:#16a34a}.lb-mdelta.neg{color:#dc2626}.lb-mdelta.none{color:#b9b2bd;font-weight:500}
 .lb-mmeta{display:flex;gap:10px;font-size:.7rem;color:#666;margin-bottom:6px}
 .lb-mmaps{display:flex;flex-wrap:wrap;gap:5px}
 .lb-mmap-chip{font-size:.72rem;padding:3px 8px;border-radius:6px;font-weight:500;font-variant-numeric:tabular-nums}
@@ -10650,7 +10759,11 @@ function buildDetailHTML(team) {
     }).join('')}</div>` : '';
 
   const recentHtml = recent.map(m => {
-    const d    = (m.delta >= 0 ? '+' : '') + parseFloat(m.delta).toFixed(2);
+    // Matches the rating fit excluded (T2 play-in sides we hold no prior on)
+    // carry no delta. Render the match, leave the number blank — `null >= 0`
+    // is true in JS, so without this they'd show a green "+NaN".
+    const hasDelta = (m.delta !== null && m.delta !== undefined && m.delta !== '');
+    const d    = hasDelta ? ((m.delta >= 0 ? '+' : '') + parseFloat(m.delta).toFixed(2)) : '';
     const won  = m.result === 'W';
     const evt  = _eventLabel(m.event_id);
     const chips = mapChips(m.maps || [], org);
@@ -10663,7 +10776,7 @@ function buildDetailHTML(team) {
         <img class="lb-mlogo" src="/static/logos/${m.opponent}.png" onerror="this.style.display='none'" alt="">
         <span class="lb-mopp">vs ${m.opponent}</span>
         <span class="lb-mscore">${displayScore}</span>
-        <span class="lb-mdelta ${m.delta >= 0 ? 'pos' : 'neg'}">${d}</span>
+        <span class="lb-mdelta ${!hasDelta ? 'none' : (m.delta >= 0 ? 'pos' : 'neg')}" ${!hasDelta ? 'title="Not rated — opponent has no BenPom rating"' : ''}>${hasDelta ? d : '&mdash;'}</span>
       </div>
       <div class="lb-mmeta">${evt ? `<span>${evt}</span>` : ''}<span>${m.date}</span></div>
       ${chips ? `<div class="lb-mmaps">${chips}</div>` : ''}
