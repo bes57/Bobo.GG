@@ -42,9 +42,12 @@
   }
 
   // A nav entry is either a link [href, label] or a dropdown {label, items:[...]}.
+  // A link may carry a third element: the path prefix used for ACTIVE matching,
+  // when that differs from where the tab points. BenPom points at the live hub
+  // but should stay lit on every /mapelo/ page (how-it-works, etc.).
   var links = [
     ['/', 'Home'],
-    ['/mapelo/', 'BenPom'],
+    ['/mapelo/modern/', 'BenPom', '/mapelo/'],   // href, label, active-match prefix
     ['/articles/', 'Articles'],
     ['/vct/', 'Leaderboards'],
     ['/highs/', 'All-Time Highs/Lows'],
@@ -63,7 +66,7 @@
   var activeI = -1, activeChild = -1, bestLen = 0;
   links.forEach(function (l, i) {
     if (Array.isArray(l)) {
-      var base = l[0].split('#')[0];
+      var base = (l[2] || l[0]).split('#')[0];
       if (base && p.indexOf(base) === 0 && base.length > bestLen) {
         bestLen = base.length; activeI = i; activeChild = -1;
       }

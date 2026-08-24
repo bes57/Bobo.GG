@@ -577,7 +577,7 @@ HOME_HTML = """
     <summary>AI Disclosure</summary>
     <div class="ai-disclosure-body">All narrative, text, mathematical equations, and ideas are my own creation. AI was/is only used for writing code.</div>
   </details>
-  <a class="benpom-hero" href="/mapelo/">
+  <a class="benpom-hero" href="/mapelo/modern/">
     <div class="benpom-hero-banner">
       <div class="benpom-hero-img"></div>
       <div class="benpom-hero-content">
@@ -2115,7 +2115,7 @@ TEAM_PROFILE_HTML = """
 <div class="wrap">
   <div id="profile"></div>
 </div>
-<footer>Team profile &middot; BenPom &middot; <a href="/mapelo/" style="text-decoration:underline">full ratings</a></footer>
+<footer>Team profile &middot; BenPom &middot; <a href="/mapelo/modern/" style="text-decoration:underline">full ratings</a></footer>
 <script>
 var D = {{ data_json | safe }};
 var COL=D.colors||{}, LOGOS=D.logos||{}, EL=D.event_labels||{};

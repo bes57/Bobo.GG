@@ -7,7 +7,7 @@ import math as _math_mod
 import pandas as pd
 import numpy as np
 from scipy.optimize import minimize_scalar
-from flask import Blueprint, Response
+from flask import Blueprint, Response, redirect
 
 mapelo_bp = Blueprint('mapelo_bp', __name__)
 
@@ -1886,7 +1886,7 @@ MAPELO_HOME_HTML = """
 <div id="content-wrap">
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-    <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+    <a class="back-link" href="/mapelo/modern/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
     <a class="back-link" href="/mapelo/how-it-works/" style="margin-left:auto;">How does BenPom work?</a>
   </div>
   <div class="page">
@@ -4134,7 +4134,7 @@ MAPELO_MATCHUP_HTML = """<!DOCTYPE html>
 <div id="content-wrap">
   <div class="top-nav">
     <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-    <a class="back-link" href="/mapelo/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+    <a class="back-link" href="/mapelo/modern/"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
     <a class="back-link" href="/mapelo/how-it-works/" style="margin-left:auto;">How does BenPom work?</a>
   </div>
   <div class="page">
@@ -6233,6 +6233,19 @@ SHARED_FOOTER
 
 @mapelo_bp.route('/')
 def mapelo_hub():
+    """BenPom lands on the live hub.
+
+    This used to be a splash page whose job was to route you onward — to the
+    Modern VCT Hub, or to the historical tools. The historical tools have their
+    own nav entries now, so the splash was one click between you and the only
+    thing on it you actually wanted. Redirect rather than re-point every link,
+    so old bookmarks and anything linking /mapelo/ land in the right place too."""
+    return redirect('/mapelo/modern/', code=302)
+
+
+@mapelo_bp.route('/landing/')
+def mapelo_landing():
+    """The old splash, kept reachable but no longer linked from anywhere."""
     return MAPELO_HUB_HTML
 
 def _render_mapelo_home(body_class: str, page_title: str, page_sub: str):
@@ -8613,7 +8626,7 @@ body:has(.flying)::after{animation-play-state:paused}
 <body>
 <div class="top-nav">
   <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-  <a href="/mapelo/" class="back-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
+  <a href="/mapelo/modern/" class="back-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
   <a href="/mapelo/how-it-works/" class="back-btn" style="margin-left:auto;">How does BenPom work?</a>
 </div>
 
