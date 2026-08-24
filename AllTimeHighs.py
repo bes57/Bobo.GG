@@ -1257,6 +1257,17 @@ def _ordinal(n):
     return f"{n}{suf}"
 
 
+def _rank_phrase(rank, verb):
+    """Lead-in for a record's one-line description.
+
+    Rank 1 reads "Highest rating…" / "Most kills…", not "1st-highest rating…"
+    — nothing is the first-highest of anything. Every other rank keeps the
+    ordinal ("2nd-most assists…"), which is how they're actually said."""
+    if rank == 1:
+        return verb.capitalize()
+    return f"{_ordinal(rank)}-{verb}"
+
+
 def _rec_scope(fmt, context):
     ctx = {t for t in str(context).split(",") if t and t != "all"}
     noun   = _REC_FMT_NOUN.get(fmt, fmt)
@@ -1338,7 +1349,7 @@ def build_recent_records(limit=8):
                                 context=context, direction="high",
                                 scope=scope, matchid=mid, mapnum=mnum,
                                 date=_mdates.get(mid, ""),
-                                desc=f"{_ordinal(rank)}-{verb} {word} in {art} {scope} of all time")
+                                desc=f"{_rank_phrase(rank, verb)} {word} in {art} {scope} of all time")
 
     # One headline per (match, STAT) — keyed without format or context, so the
     # same stat can't produce near-duplicate cards off one match.
