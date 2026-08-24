@@ -81,6 +81,9 @@ def _get_cloudscraper():
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
+# Sibling modules (MatchStatsIntegrity) must resolve however this file is
+# reached — as a script, or imported by EventLeaderboards/ScrapeMatchData.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from MoreTestingMaybeFiles import ALL_EVENTS, live_events_today, _parse_vlr_stats_url
 
@@ -340,15 +343,35 @@ def _match_id_from_url(url):
 
 
 def _existing_match_ids(event_csv_id):
+    """MatchIDs that count as already scraped — i.e. on disk AND complete.
+
+    A match whose stored stats are incomplete is deliberately left OUT, so the
+    next refresh picks it up again as "new" and re-scrapes it. VLR publishes
+    rating2/ACS/ADR from round data minutes after the scoreboard is final;
+    scrape inside that window and the unprocessed maps come back empty while
+    the "all maps" row silently aggregates only the maps that were ready —
+    a series row wearing one map's rating. Before this, the first scrape won
+    permanently and that row sat on the all-time leaderboard forever.
+    MatchStatsIntegrity's ledger bounds the retries so a genuinely unrated
+    event costs a handful of fetches, not one per refresh."""
     import pandas as pd
     p = os.path.join(ROOT, "data", "maps", f"{event_csv_id}.csv")
     if not os.path.exists(p):
         return set()
     try:
         df = pd.read_csv(p, usecols=["MatchID"])
-        return set(df["MatchID"].dropna().astype(str).tolist())
+        ids = set(df["MatchID"].dropna().astype(str).tolist())
     except Exception:
         return set()
+    try:
+        import MatchStatsIntegrity as _msi
+        stale = _msi.rescrapeable_ids(event_csv_id)
+        if stale:
+            print(f"  {len(stale)} match(es) have incomplete stats — re-scraping", flush=True)
+            ids -= stale
+    except Exception as _e:
+        print(f"  stats-integrity check unavailable: {_e}", flush=True)
+    return ids
 
 
 def _scrape_match_page(url, region_tag):
@@ -371,6 +394,7 @@ def _scrape_match_page(url, region_tag):
 def _scrape_match_page_with_retry(url, region_tag, max_attempts=3):
     attempt_results = []
     last_soup_text = None
+    best = None
     for attempt in range(1, max_attempts + 1):
         soup = _fetch(url)
         if soup is None:
@@ -383,13 +407,34 @@ def _scrape_match_page_with_retry(url, region_tag, max_attempts=3):
         map_rows, series_rows, display = _parse_match_html(soup, url, region_tag)
         last_soup_text = str(soup)
         if map_rows or series_rows:
-            return map_rows, series_rows, display
+            # Rows came back — but VLR may still be publishing the round data
+            # that rating2/ACS/ADR come from, in which case some maps are blank
+            # and the "all maps" row is an aggregate of only the maps that were
+            # ready. Give it another few seconds rather than banking that.
+            try:
+                import MatchStatsIntegrity as _msi
+                state = _msi.classify_rows(map_rows, series_rows)
+            except Exception:
+                state = "complete"
+            if state != "partial" or attempt == max_attempts:
+                return map_rows, series_rows, display
+            best = (map_rows, series_rows, display)
+            attempt_results.append(f"attempt {attempt}: partial stats — VLR still publishing")
+            time.sleep(5 * attempt)
+            continue
         attempt_results.append(
             f"attempt {attempt}: 0 rows from valid HTML "
             f"(size={len(last_soup_text)}, display={display!r})"
         )
         if attempt < max_attempts:
             time.sleep(5 * attempt)
+
+    if best is not None:
+        # Every attempt came back partial. Take the rows anyway (they're better
+        # than nothing for K/D/A), logged and ledgered so the next refresh
+        # tries again.
+        _error_entries.append(f"partial stats after {max_attempts} attempts on {url}")
+        return best
 
     # All attempts produced 0 rows. Dump HTML + log so we can see what VLR
     # actually served. The pipeline already retries this URL next refresh
@@ -1006,7 +1051,19 @@ def main():
         empty = not mr and not sr
         if empty:
             empty_scrapes.append((url, region, display))
-        suffix = "  ⚠ no stats yet — will retry next refresh" if empty else ""
+        # Record how complete this scrape came back. Anything short of
+        # "complete" stays eligible for a bounded re-scrape next refresh
+        # instead of being frozen in as final.
+        state = "empty"
+        try:
+            import MatchStatsIntegrity as _msi
+            state = _msi.classify_rows(mr, sr)
+            _msi.record_attempt(_match_id_from_url(url) or "", state)
+        except Exception:
+            pass
+        suffix = ("  ⚠ no stats yet — will retry next refresh" if empty else
+                  "  ⚠ VLR stats still publishing — will re-scrape"
+                  if state == "partial" else "")
         _write("scraping", pct, f"Scraping {i}/{total_new}…",
                [f"  [{region}] {display}{suffix}"])
         time.sleep(0.25)  # was 0.7
@@ -1021,31 +1078,30 @@ def main():
                f"{len(empty_scrapes)} pending stats",
                lines)
 
-    # Persist per event
+    # Persist per event. A re-scraped match REPLACES its stored rows rather
+    # than appending: concat+drop_duplicates only collapses rows identical on
+    # every column, so an incomplete first scrape would otherwise survive
+    # alongside its own repaired copy and both would rank.
+    def _persist(sub, ev_id, rows):
+        path = os.path.join(ROOT, "data", sub, f"{ev_id}.csv")
+        new_df = pd.DataFrame(rows)
+        if os.path.exists(path):
+            old_df = pd.read_csv(path)
+            if "MatchID" in old_df.columns and "MatchID" in new_df.columns:
+                touched = set(new_df["MatchID"].astype(str).str.strip())
+                old_df = old_df[~old_df["MatchID"].astype(str).str.strip().isin(touched)]
+            combined = pd.concat([old_df, new_df], ignore_index=True).drop_duplicates()
+        else:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            combined = new_df
+        combined.to_csv(path, index=False)
+
     for ev_id, rows in by_event_maps.items():
-        if not rows:
-            continue
-        path = os.path.join(ROOT, "data", "maps", f"{ev_id}.csv")
-        new_df = pd.DataFrame(rows)
-        if os.path.exists(path):
-            old_df = pd.read_csv(path)
-            combined = pd.concat([old_df, new_df], ignore_index=True).drop_duplicates()
-        else:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            combined = new_df
-        combined.to_csv(path, index=False)
+        if rows:
+            _persist("maps", ev_id, rows)
     for ev_id, rows in by_event_series.items():
-        if not rows:
-            continue
-        path = os.path.join(ROOT, "data", "series", f"{ev_id}.csv")
-        new_df = pd.DataFrame(rows)
-        if os.path.exists(path):
-            old_df = pd.read_csv(path)
-            combined = pd.concat([old_df, new_df], ignore_index=True).drop_duplicates()
-        else:
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-            combined = new_df
-        combined.to_csv(path, index=False)
+        if rows:
+            _persist("series", ev_id, rows)
 
     # ── Step 4: Rebuild match_results.csv ────────────────────────────────────
     _write("building", 70, "Rebuilding match_results.csv…",

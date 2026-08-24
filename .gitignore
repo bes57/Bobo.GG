@@ -9,3 +9,6 @@ __pycache__/
 # data mtimes (which differ per checkout, so committing it gives no benefit).
 data/recent_records.json
 testing_lab/v8/data/vctmm_live.db
+# Per-host retry ledger for match stats re-scrapes (MatchStatsIntegrity).
+# Attempt counts/timestamps are local runtime state, not shared data.
+data/stats_recheck.json

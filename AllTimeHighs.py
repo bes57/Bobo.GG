@@ -210,6 +210,55 @@ def _load_series_data():
     return _series_data
 
 
+# Columns VLR derives from per-round data rather than the scoreboard. These
+# are the ones that can go missing on a map — and whose series aggregate goes
+# wrong when they do (see _untrusted_series_matches).
+_ROUND_DERIVED_COLS = ("R2.0", "ACS", "ADR")
+_untrusted_series   = None
+_untrusted_mtime    = -1.0
+
+
+def _untrusted_series_matches():
+    """MatchIDs whose MapNum="all" row is not a real series aggregate.
+
+    VLR computes rating 2.0 (and ACS/ADR) from per-round data, ingested
+    separately from — and later than — the scoreboard that gives K/D/A. For a
+    small number of matches one map's round data never arrives, and VLR's "all
+    maps" tab then aggregates only the maps that DID arrive. The row that comes
+    back carries the full series' kills and deaths next to a SINGLE map's
+    rating: VLR itself reports AAAAY at 1.88 for FPX 2-1 TYLOO when 1.88 is
+    only his Bind. Ranked as a series performance, a one-map explosion lands at
+    the top of the all-time Bo3 board, which is exactly what it was doing.
+
+    Signature: partial coverage — some maps of the match carry the column and
+    others don't. A match where NO map carries it is an event VLR never rated
+    (most CN qualifiers); those have no series rating to rank anyway.
+
+    Cached against the maps-dir mtime, like every other loader here, so a live
+    scrape that fills the gap in clears the match without a restart."""
+    global _untrusted_series, _untrusted_mtime
+    cur = _csv_dir_mtime(MAPS_DIR)
+    if _untrusted_series is not None and cur <= _untrusted_mtime:
+        return _untrusted_series
+
+    bad = set()
+    mp = _load_map_data()
+    if mp is not None and not mp.empty and "MatchID" in mp.columns:
+        mp = mp[["MatchID", "MapNum"] + [c for c in _ROUND_DERIVED_COLS if c in mp.columns]].copy()
+        mp["MatchID"] = mp["MatchID"].astype(str).str.strip()
+        for col in _ROUND_DERIVED_COLS:
+            if col not in mp.columns:
+                continue
+            per_map = mp.groupby(["MatchID", "MapNum"])[col].apply(lambda s: s.notna().any())
+            cover   = per_map.groupby(level=0).agg(["sum", "count"])
+            partial = cover[(cover["sum"] > 0) & (cover["sum"] < cover["count"])]
+            bad.update(partial.index.astype(str))
+
+    _untrusted_series = bad
+    _untrusted_mtime  = cur
+    return _untrusted_series
+
+
 def _load_match_results():
     global _match_results, _match_results_mtime
     path = os.path.join(DATA_DIR, "match_results.csv")
@@ -886,6 +935,10 @@ def _rank_df(direction, stat_name, fmt, year, context):
             else:
                 keep = set(ss.loc[ss["MaxScore"].isin([2, 3]), "MatchID"])
             df = df[df["MatchID"].astype(str).str.strip().isin(keep)]
+        if col in _ROUND_DERIVED_COLS:
+            drop = _untrusted_series_matches()
+            if drop and df is not None and not df.empty:
+                df = df[~df["MatchID"].astype(str).str.strip().isin(drop)]
     else:
         df = _load_event_data()
 
