@@ -87,7 +87,7 @@
     "border-bottom:1px solid #eceef2;box-shadow:0 2px 12px #0000000d;font-family:'DM Sans',system-ui,sans-serif;}" +
     ".alpha-navbar .an-brand{display:flex;align-items:center;gap:7px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1rem;color:#16121d;text-decoration:none;flex-shrink:0;}" +
     '.alpha-navbar .an-brand img{height:1.35em;width:auto;}' +
-    '.alpha-navbar .an-links{display:flex;gap:5px;overflow-x:auto;flex:1;scrollbar-width:none;}' +
+    '.alpha-navbar .an-links{display:flex;gap:5px;overflow-x:auto;overflow-y:hidden;flex:1 1 auto;min-width:0;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;}' +
     '.alpha-navbar .an-links::-webkit-scrollbar{display:none;}' +
     '.alpha-navbar .an-link{flex:0 0 auto;font-size:.8rem;font-weight:700;color:#6b6478;text-decoration:none;padding:6px 12px;border-radius:999px;white-space:nowrap;transition:color .15s,background .15s;}' +
     '.alpha-navbar .an-link:hover{color:#16121d;background:#f3eefb;}' +
@@ -99,15 +99,17 @@
     '.an-dd-menu a{display:block;padding:9px 13px;border-radius:9px;font-size:.8rem;font-weight:700;color:#6b6478;text-decoration:none;white-space:nowrap;transition:color .12s,background .12s;}' +
     '.an-dd-menu a:hover{background:#f3eefb;color:#16121d;}' +
     '.an-dd-menu a.active{color:#7c4dd6;background:#f3eefb;}' +
-    // Phones: the 7 nav items can't fit one row at a readable size, so shrink
-    // the text and let the links WRAP (brand + toggle on row 1, pills below)
-    // instead of horizontal-scrolling — every option stays visible. pad() keys
-    // off bar.offsetHeight, so the taller wrapped nav reserves its own space.
+    // Phones: ONE row that scrolls sideways, same as every wider screen.
+    // This used to wrap the pills onto three stacked rows so nothing was
+    // hidden, but that ate a third of the screen above the fold and read as
+    // broken next to the pages whose own width kept the bar on one line. Only
+    // the type scale changes here — the single-row + overflow-x:auto behaviour
+    // comes from the base .an-links rule and is deliberately NOT overridden.
+    // pad() keys off bar.offsetHeight, so the shorter bar reserves less space.
     '@media(max-width:600px){' +
-      '.alpha-navbar{gap:7px 9px;padding:7px 11px;flex-wrap:wrap;}' +
+      '.alpha-navbar{gap:9px;padding:7px 11px;}' +
       '.alpha-navbar .an-brand{font-size:.9rem;}' +
-      '.alpha-navbar .an-links{flex:1 1 100%;order:3;overflow-x:visible;flex-wrap:wrap;gap:5px;}' +
-      '.alpha-navbar .an-link{font-size:.7rem;padding:5px 9px;}' +
+      '.alpha-navbar .an-link{font-size:.75rem;padding:5px 10px;}' +
       '.alpha-navbar .an-caret{font-size:.82rem;}' +
     '}';
 
