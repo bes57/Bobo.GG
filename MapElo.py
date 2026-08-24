@@ -8109,8 +8109,6 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .hub-main{padding:20px 0 60px;width:100%;position:relative;z-index:1}
 .hub-header{text-align:center;margin-bottom:20px}
 .hub-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;letter-spacing:-.03em;color:#000;line-height:1;min-height:1.2em;transition:opacity .2s}
-.ht-char{display:inline-block;opacity:0;will-change:transform,opacity,filter;animation:htCharIn .58s cubic-bezier(.2,.75,.25,1) both}
-@keyframes htCharIn{0%{opacity:0;transform:translateY(.55em) scale(.82) rotate(-7deg);filter:blur(9px)}55%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0);filter:blur(0)}}
 .hub-sub{color:#444;font-size:.9rem;margin-top:6px;transition:opacity .5s}
 
 .tab-bar{display:flex;gap:8px;justify-content:center;margin-bottom:16px;transition:opacity .5s}
@@ -8626,13 +8624,12 @@ body:has(.flying)::after{animation-play-state:paused}
 <body>
 <div class="top-nav">
   <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
-  <a href="/mapelo/modern/" class="back-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Back to BenPom</a>
   <a href="/mapelo/how-it-works/" class="back-btn" style="margin-left:auto;">How does BenPom work?</a>
 </div>
 
 <main class="hub-main">
   <div class="hub-header">
-    <h1 class="hub-title" id="hubTitle" style="opacity:0">&middot;</h1>
+    <h1 class="hub-title" id="hubTitle">VCT Hub 2026</h1>
   </div>
 
   <div class="tab-bar" id="tabBar" style="opacity:0">
@@ -9407,37 +9404,13 @@ function _toggleMapRatingRow(row) {
   syncPanelsHeight();
 }
 
-// ── Intro animation ──────────────────────────────────────────────────────────
+// ── Intro ────────────────────────────────────────────────────────────────────
+// The heading used to fly in letter by letter — each char rising, un-blurring
+// and settling — which held the tab bar behind ~1.2s of decoration on every
+// load and left a half-blurred "2026" on screen if you looked mid-flight. The
+// title is plain HTML now and simply there; this only reveals the tab bar.
 async function introAnimation() {
-  const title = document.getElementById('hubTitle');
-  const text  = 'VCT Hub 2026';
-
-  if (SKIP_INTRO) {
-    title.style.opacity = '1';
-    title.textContent = text;
-    fadeIn('tabBar', 0.1);
-    return;
-  }
-
-  // Staggered per-letter reveal — each char rises up, un-blurs and settles
-  // into place one after another (replaces the old typewriter effect).
-  const STEP = 55;   // ms between letters
-  const DUR  = 580;  // ms per-letter animation (matches .ht-char CSS)
-  title.style.opacity = '1';
-  title.innerHTML = '';
-  [...text].forEach(function(ch, i) {
-    const span = document.createElement('span');
-    span.className = 'ht-char';
-    span.textContent = ch === ' ' ? ' ' : ch;
-    span.style.animationDelay = (i * STEP) + 'ms';
-    title.appendChild(span);
-  });
-  await sleep((text.length - 1) * STEP + DUR);
-
-  // Fade rest in
-  fadeIn('tabBar', 0.5);
-  await sleep(80);
-  // regionPills start invisible; shown later after chart is ready
+  fadeIn('tabBar', 0.1);
 }
 
 // ── Data fetch ───────────────────────────────────────────────────────────────
