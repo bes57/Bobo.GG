@@ -1825,12 +1825,14 @@ MAPELO_HOME_HTML = """
   .lb-map-games-wrap { padding:2px 0 6px 4px; animation:sd .15s ease; overflow:hidden; }
   .lb-map-games-wrap.closing { animation:su .2s ease forwards; }
   .lb-map-games-tbl { width:100%; border-collapse:collapse; }
-  .lb-mg-inner { display:flex; align-items:center; gap:7px; padding:4px 8px; }
+  .lb-mg-inner { display:grid;grid-template-columns:12px 16px minmax(0,1fr) 56px 40px minmax(0,250px);align-items:center;gap:7px; padding:4px 8px; }   /* grid so rows line up — see hub copy */
+  .lb-mg-opp, .lb-mg-score, .lb-mg-diff, .lb-mg-meta { min-width:0; overflow:hidden; text-overflow:ellipsis; }
+  .lb-mg-score, .lb-mg-diff, .lb-mg-meta { text-align:right; }
   .lb-mg-result { font-weight:700; font-size:.76rem; min-width:11px; }
   .lb-map-game-row.win  .lb-mg-result { color:#16a34a; }
   .lb-map-game-row.loss .lb-mg-result { color:#dc2626; }
   .lb-mg-logo { width:16px; height:16px; object-fit:contain; flex-shrink:0; }
-  .lb-mg-opp { font-size:.78rem; font-weight:600; flex:1; color:#111; }
+  .lb-mg-opp { font-size:.78rem; font-weight:600; color:#111; white-space:nowrap; }
   .lb-mg-score { font-size:.78rem; font-weight:700; font-variant-numeric:tabular-nums; }
   .lb-map-game-row.win  .lb-mg-score { color:#16a34a; }
   .lb-map-game-row.loss .lb-mg-score { color:#dc2626; }
@@ -3559,7 +3561,11 @@ function _expandMapRow(encOrg, encMap, rowId) {
   var games  = events.filter(function(me) {
     if (me.winner !== org && me.loser !== org) return false;
     return (me.maps || []).some(function(mp) { return mp.map === map; });
-  }).sort(function(a, b) { return (b.match_id || 0) - (a.match_id || 0); });
+  }).sort(function(a, b) {          // by DATE — match_id is creation order, not play order
+    var da = a.date || '', db = b.date || '';
+    if (da !== db) return da < db ? 1 : -1;
+    return (b.match_id || 0) - (a.match_id || 0);
+  });
 
   var innerHtml;
   if (!games.length) {
@@ -3584,7 +3590,7 @@ function _expandMapRow(encOrg, encMap, rowId) {
            +     '<span class="lb-mg-opp">' + opp + '</span>'
            +     '<span class="lb-mg-score">' + orgRd + '–' + oppRd + '</span>'
            +     '<span class="lb-mg-diff ' + diffCls + '">' + diffStr + '</span>'
-           +     '<span class="lb-mg-meta">' + me.date + (evt ? ' · ' + evt : '') + '</span>'
+           +     '<span class="lb-mg-meta" title="' + me.date + (evt ? ' · ' + evt : '') + '">' + me.date + (evt ? ' · ' + evt : '') + '</span>'
            +   '</div></td>'
            + '</tr>';
     }).join('');
@@ -8357,12 +8363,6 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .mr-detail .lb-map-game-row{border-radius:7px}
 .mr-detail .lb-map-game-row:hover{background:rgba(61,26,110,.05)}
 .mr-detail .lb-mg-inner{padding:5px 8px}
-/* Fixed widths on the trailing fields so score/diff/date form real columns —
-   .lb-mg-opp is flex:1, which otherwise leaves them ragged at every row. */
-.mr-detail .lb-mg-score{min-width:52px;text-align:right}
-.mr-detail .lb-mg-diff{min-width:34px}
-.mr-detail .lb-mg-meta{min-width:200px;text-align:right}
-@media (max-width:700px){.mr-detail .lb-mg-meta{min-width:0}}
 .mr-empty{padding:28px;text-align:center;color:#888;font-size:.85rem}
 .mr-more{padding:14px;text-align:center}
 .mr-morebtn{border:1px solid #e0d4ec;background:#fff;color:#3d1a6e;border-radius:100px;padding:8px 20px;font-family:inherit;font-size:.75rem;font-weight:800;cursor:pointer;transition:background .15s,border-color .15s}
@@ -8422,11 +8422,19 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-map-games-wrap{padding:2px 0 6px 4px;animation:sd .15s ease;overflow:hidden}
 .lb-map-games-wrap.closing{animation:su .2s ease forwards}
 .lb-map-games-tbl{width:100%;border-collapse:collapse}
-.lb-mg-inner{display:flex;align-items:center;gap:7px;padding:4px 8px}
+/* A grid, not flex. Flex + min-width let a long event name push the meta
+   cell wider, squeeze the flex:1 opponent cell, and drag score and diff
+   left on that row alone — so no two rows in a map history lined up.
+   Fixed tracks make every row identical whatever it contains. */
+.lb-mg-inner{display:grid;grid-template-columns:12px 16px minmax(0,1fr) 56px 40px minmax(0,250px);align-items:center;gap:7px;padding:4px 8px}
+.lb-mg-opp,.lb-mg-score,.lb-mg-diff,.lb-mg-meta{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.lb-mg-score,.lb-mg-diff,.lb-mg-meta{text-align:right}
+/* Must follow the base rule: same specificity, so source order decides. */
+@media (max-width:700px){.lb-mg-inner{grid-template-columns:12px 16px minmax(0,1fr) 48px 34px minmax(0,116px);gap:5px}}
 .lb-mg-result{font-weight:700;font-size:.76rem;min-width:11px}
 .lb-map-game-row.win .lb-mg-result{color:#16a34a}.lb-map-game-row.loss .lb-mg-result{color:#dc2626}
 .lb-mg-logo{width:16px;height:16px;object-fit:contain;flex-shrink:0}
-.lb-mg-opp{font-size:.78rem;font-weight:600;flex:1;color:#111}
+.lb-mg-opp{font-size:.78rem;font-weight:600;color:#111;white-space:nowrap}
 .lb-mg-score{font-size:.78rem;font-weight:700;font-variant-numeric:tabular-nums}
 .lb-map-game-row.win .lb-mg-score{color:#16a34a}.lb-map-game-row.loss .lb-mg-score{color:#dc2626}
 .lb-mg-diff{font-size:.72rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:28px;text-align:right}
@@ -9388,7 +9396,7 @@ function _toggleMapRatingRow(row) {
         <span class="lb-mg-opp">${g.opp}</span>
         <span class="lb-mg-score">${g.orgRd}\\u2013${g.oppRd}</span>
         <span class="lb-mg-diff ${g.diffCls}">${g.diffStr}</span>
-        <span class="lb-mg-meta">${g.date}${g.evt ? ' \\u00b7 ' + g.evt : ''}</span>
+        <span class="lb-mg-meta" title="${g.date}${g.evt ? ' \\u00b7 ' + g.evt : ''}">${g.date}${g.evt ? ' \\u00b7 ' + g.evt : ''}</span>
       </div></div>`;
     }).join('');
   }
@@ -10808,10 +10816,19 @@ function _eventLabel(id) {
 // Every game `org` played on `map`, most recent first. Shared by the team-expand
 // panel's Map Breakdown and the Map Ratings tab's row expansion.
 function _mapGamesFor(org, map) {
+  // Newest first BY DATE. This sorted on match_id, which VLR assigns when a
+  // match is CREATED, not when it's played — so an event bracketed early
+  // outranks one played months later. NRG's Lotus list opened on 2026-07-11
+  // with the 2026-08-09 game buried fifth, which reads as stale data rather
+  // than a bad sort. match_id only breaks ties within a day now.
   return (hubData?.chart?.match_events || []).filter(me =>
     (me.winner === org || me.loser === org) &&
     (me.maps || []).some(m => m.map === map)
-  ).sort((a, b) => (b.match_id || 0) - (a.match_id || 0));
+  ).sort((a, b) => {
+    const da = a.date || '', db = b.date || '';
+    if (da !== db) return da < db ? 1 : -1;
+    return (b.match_id || 0) - (a.match_id || 0);
+  });
 }
 
 // One game's display fields from a match_event. W/L reflects the MAP outcome
