@@ -1340,19 +1340,30 @@ def build_recent_records(limit=8):
                                 date=_mdates.get(mid, ""),
                                 desc=f"{_ordinal(rank)}-{verb} {word} in {art} {scope} of all time")
 
-    # Collapse to one headline per actual performance (best stat-rank), then
-    # order by rank and cap repeats from a single player for variety.
+    # One headline per (match, STAT) — keyed without format or context, so the
+    # same stat can't produce near-duplicate cards off one match.
+    #
+    # This used to collapse per PERFORMANCE, which meant a match that set
+    # records in several stats surfaced only its best-ranked one. Meiy's
+    # 54-16 over ZETA earned twelve top-50 entries; the rail showed one. Both
+    # his rating AND his K/D ranked #1, the tie broke on _REC_STATS order, and
+    # the 2nd-highest K/D in VCT history simply vanished. Different stats are
+    # different records and each earns a card; the same stat re-framed across
+    # bo3/map or all/domestic/win is one record, and keeps its best framing.
     by_perf = {}
     for r in best.values():
-        pk = (r.get("player", ""), r.get("matchid", ""), r.get("mapnum", ""), r.get("fmt", ""))
+        pk = (r.get("player", ""), r.get("matchid", ""), r.get("stat", ""))
         if pk not in by_perf or r["rank"] < by_perf[pk]["rank"]:
             by_perf[pk] = r
 
+    # Variety guard, now that one match can legitimately yield several cards:
+    # a player gets at most 4 in the pool (was 2, which would have re-hidden
+    # the very cards this change exists to surface).
     ordered = sorted(by_perf.values(), key=lambda r: (r["rank"], r.get("player", "")))
     out, per_player = [], {}
     for r in ordered:
         p = r.get("player", "")
-        if per_player.get(p, 0) >= 2:
+        if per_player.get(p, 0) >= 4:
             continue
         per_player[p] = per_player.get(p, 0) + 1
         out.append(r)
