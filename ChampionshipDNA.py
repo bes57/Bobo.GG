@@ -93,7 +93,11 @@ PAGE_HTML = """
      at any readable size inside 860px, and the scatter is dense enough that
      the extra width helps it too. Centred on the viewport, capped so it never
      runs to the screen edge. */
-  .fig { margin:34px 0 40px; width:min(1120px, calc(100vw - 56px));
+  /* Centred on the CONTENT column, not the viewport. Using 100vw here counted
+     the scrollbar, so the wide charts sat a few px right of the body text and
+     the images that sit between them — visible as everything looking slightly
+     off-centre against everything else. */
+  .fig { margin:34px 0 40px; width:min(1120px, calc(100% + 260px));
          margin-left:50%; transform:translateX(-50%); }
   .fig-wrap { position:relative; width:100%; aspect-ratio:1.25/1; background:#fff;
               border:1px solid #ece6f2; box-shadow:0 4px 24px #0000000a;
@@ -332,7 +336,11 @@ const bands = {
     // open space rather than on the diagonal's ends.
     ctx.save();
     c.$bands.forEach(b => {
-      const m = (b.lo + Math.min(b.hi, 1.40)) / 2;
+      // Clamp the open-ended sides before taking a midpoint. The bottom band
+      // runs from 0 and the top to 2.0; using those raw puts the midpoint
+      // nowhere near the plot and the range test below drops the label — which
+      // is exactly how T1 Tier lost its title.
+      const m = (Math.max(b.lo, 0.80) + Math.min(b.hi, 1.40)) / 2;
       let x0 = Math.max(0.40, m - 0.70), x1 = Math.min(0.70, m - 0.40);
       if (x1 <= x0) return;
       // Near the LEFT end of the strip rather than its middle: a diagonal band's
