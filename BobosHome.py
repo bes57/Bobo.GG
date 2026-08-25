@@ -12,6 +12,7 @@ from AmericasStage1Playoffs import article_americas_stage1_bp
 from MastersLondonPreview import article_masters_london_bp
 from MastersLondonPlayoffsPreview import article_masters_london_playoffs_bp
 from AspasGreatestPrime import article_aspas_prime_bp
+from ChampionshipDNA import article_championship_dna_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 from MatchDataExplorer import match_data_bp
@@ -26,6 +27,7 @@ app.register_blueprint(article_americas_stage1_bp, url_prefix="/articles/america
 app.register_blueprint(article_masters_london_bp, url_prefix="/articles/masters-london-preview")
 app.register_blueprint(article_masters_london_playoffs_bp, url_prefix="/articles/masters-london-playoffs-preview")
 app.register_blueprint(article_aspas_prime_bp, url_prefix="/articles/greatest-prime")
+app.register_blueprint(article_championship_dna_bp, url_prefix="/articles/championship-dna")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 app.register_blueprint(match_data_bp, url_prefix="/match-data")
@@ -1862,6 +1864,13 @@ ARTICLES_HTML = """
     <button class="afbtn" data-f="research" type="button">Research</button>
   </div>
   <div class="alist">
+    <a class="acard" href="/articles/championship-dna/">
+      <img src="/championshipdna.jpg" alt="">
+      <div class="ab">
+        <div class="at">Championship DNA: What Makes A Trophy-Winning Team in VCT?</div>
+        <div class="adate">Aug 25, 2026</div>
+      </div>
+    </a>
     <a class="acard" data-cat="research opinion" href="/articles/greatest-prime/">
       <span class="acats"><span class="acat research">Research</span><span class="acat opinion">Opinion</span></span>
       <img src="/aspas25corrode.jpg" alt="">
@@ -2455,6 +2464,10 @@ def logo():
 @app.route("/patmen.jpg")
 def patmen():
     return send_from_directory(os.path.dirname(__file__), "Patmen.jpg", mimetype="image/jpeg")
+
+@app.route("/championshipdna.jpg")
+def championshipdna_img():
+    return send_from_directory(os.path.dirname(__file__), "ChampionshipDNA.jpg", mimetype="image/jpeg")
 
 @app.route("/aspas25corrode.jpg")
 def aspas25corrode():
