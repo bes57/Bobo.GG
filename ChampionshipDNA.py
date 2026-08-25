@@ -101,6 +101,9 @@ PAGE_HTML = """
   /* Scoped under .content: `.content p` is class+element, which outranks a bare
      .fig-note class, so an unscoped rule here silently lost every property to
      the body-paragraph style. */
+  .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
+                  text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
+  .content .pin:hover { color:#5b21b6; background:#f3eefb; }
   .content .fig-note { font-size:.68rem; font-weight:300; color:var(--soft);
                        text-align:center; margin:0 0 14px; line-height:1.5; }
   .fig-filter { margin-bottom:14px; }
@@ -159,6 +162,12 @@ PAGE_HTML = """
         </div>
         <div class="fig-wrap"><canvas id="sideLandscape"></canvas></div>
       </figure>
+
+      <p>We can see teams that were expected to do better than they did (e.g. <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">Loud at Tokyo</a>)</p>
+
+      <p>We can see which teams overshot their previous domestic performance (e.g. <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is obvious, but also <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are worth mentioning)</p>
+
+      <p>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 2-0 in their respective events)</p>
     </div>
   </div>
 </div>
@@ -216,7 +225,7 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
 };
 const pct = v => (v * 100).toFixed(1) + '%';
 
-let hovered = null, active = 'All', winnersOn = true, chart;
+let hovered = null, pinned = null, active = 'All', winnersOn = true, chart;
 const HOVER_PX = 20;   // cursor must be this close to a mark to isolate it
 
 // White plate behind everything, so the figure reads as its own card instead of
@@ -260,10 +269,11 @@ const marks = {
     // Paint back-to-front: greyed-out marks, then lit ones, then the hovered
     // one. Without this a dimmed neighbour drawn later sat on top of a
     // highlighted winner, which is exactly backwards.
+    const focusIdx = hovered !== null ? hovered : pinned;
     const rank = i => {
-      if (i === hovered) return 2;
+      if (i === focusIdx) return 2;
       const p = c.data.datasets[0].data[i].p;
-      const lit = hovered !== null ? false : (!winnersOn || p.won);
+      const lit = focusIdx !== null ? false : (!winnersOn || p.won);
       return lit ? 1 : 0;
     };
     const order = meta.data.map((_, i) => i).sort((a, b) => rank(a) - rank(b));
@@ -271,11 +281,11 @@ const marks = {
       const pt = meta.data[i];
       const p = c.data.datasets[0].data[i].p;
       const img = logo(p.org);
-      const on  = hovered === i;
-      // Hover wins over the winners toggle: while isolating one team, that is
-      // the only thing lit. With nothing hovered, the toggle greys the field
-      // down to the trophy winners — they stay in the plot either way.
-      const dim = hovered !== null ? !on : (winnersOn && !p.won);
+      // Hover beats a pin beats the winners toggle. A pin is just a hover that
+      // survives the cursor leaving, so the two share one code path.
+      const focus = hovered !== null ? hovered : pinned;
+      const on  = focus === i;
+      const dim = focus !== null ? !on : (winnersOn && !p.won);
       const S = (p.won ? 30 : 25) * (on ? 1.7 : 1);
       const src = dim ? grey(p.org) : img;
       ctx.save();
@@ -322,6 +332,7 @@ function draw() {
   if (chart) {
     chart.data.datasets[0].data = data;
     chart.data.datasets[0].hitRadius = hitRadii(data);
+    chart.data.datasets[0].hitRadius = hitRadii(chart.data.datasets[0].data);
     hovered = null; chart.update(); return;
   }
   chart = new Chart(document.getElementById('sideLandscape'), {
@@ -406,7 +417,7 @@ function draw() {
     b.className = 'lsb' + (name === 'All' ? ' on' : '');
     b.textContent = name;
     b.onclick = () => {
-      active = name;
+      active = name; pinned = null;
       evBtns.forEach(c => c.classList.toggle('on', c === b));
       draw();
     };
@@ -424,7 +435,7 @@ function draw() {
   w.className = 'lsb lsb-win on';
   setLabel();
   w.onclick = () => {
-    winnersOn = !winnersOn;
+    winnersOn = !winnersOn; pinned = null;
     w.classList.toggle('on', winnersOn);
     setLabel();
     draw();
@@ -447,6 +458,24 @@ function draw() {
   fitRow();
   addEventListener('resize', fitRow);
   draw();
+
+  // In-text mentions ("Loud at Tokyo") pin their point: show every entry, light
+  // that one, and bring the figure into view. Winners-highlight is switched off
+  // on the way so the pinned team isn't competing with nine gold marks.
+  document.querySelectorAll('.pin').forEach(a => {
+    a.addEventListener('click', ev => {
+      ev.preventDefault();
+      active = 'All';
+      evBtns.forEach(c => c.classList.toggle('on', c.textContent === 'All'));
+      if (winnersOn) { winnersOn = false; w.classList.remove('on'); setLabel(); }
+      draw();
+      const org = a.dataset.org, intl = a.dataset.intl;
+      const i = chart.data.datasets[0].data.findIndex(d => d.p.org === org && d.p.intl === intl);
+      pinned = i >= 0 ? i : null;
+      chart.draw();
+      document.querySelector('.fig').scrollIntoView({behavior: 'smooth', block: 'center'});
+    });
+  });
 })();
 </script>
 </body>
