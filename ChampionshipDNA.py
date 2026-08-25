@@ -101,9 +101,12 @@ PAGE_HTML = """
   /* Scoped under .content: `.content p` is class+element, which outranks a bare
      .fig-note class, so an unscoped rule here silently lost every property to
      the body-paragraph style. */
+  .content ul.notes { margin:0 0 24px; padding-left:22px; }
+  .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
+                         margin-bottom:12px; }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
-  .content .pin:hover { color:#5b21b6; background:#f3eefb; }
+  .content .pin:hover { color:#5b21b6; }
   .content .fig-note { font-size:.68rem; font-weight:300; color:var(--soft);
                        text-align:center; margin:0 0 14px; line-height:1.5; }
   .fig-filter { margin-bottom:14px; }
@@ -163,11 +166,13 @@ PAGE_HTML = """
         <div class="fig-wrap"><canvas id="sideLandscape"></canvas></div>
       </figure>
 
-      <p>We can see teams that were expected to do better than they did (e.g. <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">Loud at Tokyo</a>)</p>
+      <p>This is an awesome visualization that's fun to play around with! Some notes:</p>
 
-      <p>We can see which teams overshot their previous domestic performance (e.g. <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is obvious, but also <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are worth mentioning)</p>
-
-      <p>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 2-0 in their respective events)</p>
+      <ul class="notes">
+        <li>We can see teams that were expected to do better than they did (e.g. <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">Loud at Tokyo</a>)</li>
+        <li>We can see which teams overshot their previous domestic performance (e.g. <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is obvious, but also <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are worth mentioning)</li>
+        <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 2-0 in their respective events)</li>
+      </ul>
     </div>
   </div>
 </div>
