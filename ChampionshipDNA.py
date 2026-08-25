@@ -104,8 +104,8 @@ PAGE_HTML = """
   /* Centred in the bullet, and pulled back over the list indent so it lines up
      with the body column rather than sitting off to the right. */
   .inline-fig { margin:18px 0 18px -22px; }
-  .inline-fig img { display:block; width:100%; max-width:760px; height:auto;
-                    margin:0 auto; border:1px solid #ece6f2; border-radius:4px; }
+  .inline-fig-wrap { position:relative; width:100%; max-width:760px; aspect-ratio:1.15/1;
+                     margin:0 auto; background:#fff; border:1px solid #ece6f2; overflow:hidden; }
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
@@ -177,7 +177,7 @@ PAGE_HTML = """
         <li>We can see teams that were expected to do better than they did: for example, <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">LOUD at Tokyo</a>. This is a favorite example of mine, with a great narrative. 2023 LOUD was an amazing team with intense success before Masters Tokyo (2nd at LOCK//IN and then won Americas Stage 1) and after Masters Tokyo (3rd at Champions LA). They were a consensus top-2 favorite to win the event (Platchat put them above FNATIC, in fact, as favorites for the event.) Their flop at Tokyo was shocking and historic - what happened? As I recall, Masters Tokyo was the start of a rift between Less/Saadhak and Aspas, a reminder that this game cannot be just broken down into numbers. Also, it’s a reminder that Valorant is random.</li>
         <li>We can also see which teams overshot their previous domestic performance! <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is the most obvious one. I mean seriously, how did they win this tournament:
           <figure class="inline-fig">
-            <img src="/championshipdna-bangkok.jpg" alt="The landscape filtered to Masters Bangkok 2025">
+            <div class="inline-fig-wrap"><canvas id="bangkokInset"></canvas></div>
           </figure>
           <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are also worth mentioning, though!</li>
         <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 0-2 in their respective events)</li>
@@ -283,11 +283,12 @@ const marks = {
     // Paint back-to-front: greyed-out marks, then lit ones, then the hovered
     // one. Without this a dimmed neighbour drawn later sat on top of a
     // highlighted winner, which is exactly backwards.
-    const focusIdx = hovered !== null ? hovered : pinned;
+    const st = c.$state ? c.$state() : {hovered: null, pinned: null, winnersOn: false};
+    const focusIdx = st.hovered !== null ? st.hovered : st.pinned;
     const rank = i => {
       if (i === focusIdx) return 2;
       const p = c.data.datasets[0].data[i].p;
-      const lit = focusIdx !== null ? false : (!winnersOn || p.won);
+      const lit = focusIdx !== null ? false : (!st.winnersOn || p.won);
       return lit ? 1 : 0;
     };
     const order = meta.data.map((_, i) => i).sort((a, b) => rank(a) - rank(b));
@@ -297,9 +298,9 @@ const marks = {
       const img = logo(p.org);
       // Hover beats a pin beats the winners toggle. A pin is just a hover that
       // survives the cursor leaving, so the two share one code path.
-      const focus = hovered !== null ? hovered : pinned;
+      const focus = focusIdx;
       const on  = focus === i;
-      const dim = focus !== null ? !on : (winnersOn && !p.won);
+      const dim = focus !== null ? !on : (st.winnersOn && !p.won);
       const S = (p.won ? 30 : 25) * (on ? 1.7 : 1);
       const src = dim ? grey(p.org) : img;
       ctx.save();
@@ -417,10 +418,44 @@ function draw() {
     },
     plugins: [plate, fifty, marks]
   });
+  chart.$state = () => ({hovered, pinned, winnersOn});
   chart.canvas.addEventListener('mouseleave', () => {
     if (hovered !== null) { hovered = null; chart.draw(); }
   });
 }
+
+// Rendered live rather than shipped as a screenshot: crisp at any resolution
+// and any pixel density, and it cannot fall out of step with the data above it.
+(function () {
+  const el = document.getElementById('bangkokInset');
+  if (!el) return;
+  const pts = LS.points.filter(p => p.intl === 'Masters Bangkok 2025')
+                       .map(p => ({x: p.dfn, y: p.atk, p}));
+  const c = new Chart(el, {
+    type: 'scatter',
+    data: {datasets: [{data: pts, pointRadius: 0, pointHoverRadius: 0, hitRadius: 0}]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 12, right: 14, bottom: 2, left: 2}},
+      events: [],
+      scales: {
+        x: {min: 0.40, max: 0.70,
+            title: {display: true, text: 'Defense win%',
+                    font: {family: "'DM Sans',sans-serif", size: 10, weight: 600}, color: '#7a6e7e'},
+            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 9}, color: '#9a8fa4'},
+            grid: {color: 'rgba(0,0,0,.05)'}},
+        y: {min: 0.40, max: 0.70,
+            title: {display: true, text: 'Attack win%',
+                    font: {family: "'DM Sans',sans-serif", size: 10, weight: 600}, color: '#7a6e7e'},
+            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 9}, color: '#9a8fa4'},
+            grid: {color: 'rgba(0,0,0,.05)'}}
+      },
+      plugins: {legend: {display: false}, tooltip: {enabled: false}}
+    },
+    plugins: [plate, fifty, marks]
+  });
+  c.$state = () => ({hovered: null, pinned: null, winnersOn: false});
+})();
 
 (function () {
   const box = document.getElementById('lsEvents');
