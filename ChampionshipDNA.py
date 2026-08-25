@@ -192,11 +192,18 @@ const logoCache = {}, greyCache = {}, wCache = {};
 // Logos load async. The first draw usually beats them, and nothing else
 // repaints on its own, so without this the marks stay blank until some other
 // interaction forces a redraw. One coalesced repaint per frame as they arrive.
+// Every chart on the page registers here. This used to redraw only the main
+// chart, and the inset is built first — so when its logos arrived there was
+// nothing to repaint and it rendered as labels with no marks.
+const charts = [];
 let redrawQueued = false;
 function queueRedraw() {
-  if (redrawQueued || !chart) return;
+  if (redrawQueued) return;
   redrawQueued = true;
-  requestAnimationFrame(() => { redrawQueued = false; if (chart) chart.draw(); });
+  requestAnimationFrame(() => {
+    redrawQueued = false;
+    charts.forEach(c => { try { c.draw(); } catch (e) {} });
+  });
 }
 function logo(org) {
   if (!logoCache[org]) {
@@ -419,6 +426,7 @@ function draw() {
     plugins: [plate, fifty, marks]
   });
   chart.$state = () => ({hovered, pinned, winnersOn});
+  charts.push(chart);
   chart.canvas.addEventListener('mouseleave', () => {
     if (hovered !== null) { hovered = null; chart.draw(); }
   });
@@ -455,6 +463,7 @@ function draw() {
     plugins: [plate, fifty, marks]
   });
   c.$state = () => ({hovered: null, pinned: null, winnersOn: false});
+  charts.push(c);
 })();
 
 (function () {
