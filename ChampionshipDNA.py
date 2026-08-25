@@ -391,11 +391,18 @@ const bands = {
         const ls = wrap(maxW);
         const bw = Math.max(w, ls.length ? maxW : 0);
         const bh = 28 + (ls.length ? ls.length * 12 + 4 : 0);
-        for (let step = 0; step <= 40; step++) {
-          const cx = xlo + (xhi - xlo) * (step / 40), cy = t - cx;
+        // The block is LEFT-ALIGNED on the anchor, not centred on it. Centred,
+        // half of it hung past the left axis whenever the anchor sat there, the
+        // bounds check rejected it, and the search slid the title away down the
+        // band — which is how Believers ended up in the bottom-right corner of
+        // its own tier. And the slide is short: staying at the tier's top-left
+        // matters more than finding perfectly clear space further along.
+        const STEPS = 12;
+        for (let step = 0; step <= STEPS; step++) {
+          const cx = xlo + (xhi - xlo) * 0.22 * (step / STEPS), cy = t - cx;
           const sx = x.getPixelForValue(cx), sy = y.getPixelForValue(cy);
-          const r = {l: sx - bw / 2, r: sx + bw / 2, t: sy - 14, b: sy - 14 + bh};
-          if (r.l < a.left + 6 || r.r > a.right - 6 || r.t < a.top + 4 || r.b > a.bottom - 4) continue;
+          const r = {l: sx, r: sx + bw, t: sy - 12, b: sy - 12 + bh};
+          if (r.r > a.right - 6 || r.t < a.top + 4 || r.b > a.bottom - 4) continue;
           if (!fallback) { fallback = r; subLines = ls; blockW = bw; blockH = bh; }
           if (!hits(r)) { best = r; subLines = ls; blockW = bw; blockH = bh; break; }
         }
