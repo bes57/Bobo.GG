@@ -196,7 +196,7 @@ PAGE_HTML = """
         <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 0-2 in their respective events)</li>
       </ul>
 
-      <p>Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph that he uses to put teams in tiers of favoritism to win the NCAA Tournament.</p>
+      <p>Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph which includes tiers of favoritism to win the NCAA tournament.</p>
 
       <figure class="inline-fig wide">
         <img src="/evanmiya-landscape.jpg" alt="EvanMiya&rsquo;s March Madness Predicted Efficiency Landscape">
