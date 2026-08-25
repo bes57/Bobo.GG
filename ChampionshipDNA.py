@@ -104,6 +104,8 @@ PAGE_HTML = """
   /* Centred in the bullet, and pulled back over the list indent so it lines up
      with the body column rather than sitting off to the right. */
   .inline-fig { margin:18px 0 18px -22px; }
+  .inline-fig.wide img { display:block; width:100%; max-width:820px; height:auto; margin:0 auto;
+                        border:1px solid #ece6f2; }
   .inline-fig-wrap { position:relative; width:100%; max-width:760px; aspect-ratio:1.15/1;
                      margin:0 auto; background:#fff; border:1px solid #ece6f2; overflow:hidden; }
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
@@ -182,6 +184,22 @@ PAGE_HTML = """
           <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are also worth mentioning, though!</li>
         <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 0-2 in their respective events)</li>
       </ul>
+
+      <p>Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph that he uses to put teams in tiers of favoritism to win the NCAA Tournament.</p>
+
+      <figure class="inline-fig wide">
+        <img src="/evanmiya-landscape.jpg" alt="EvanMiya&rsquo;s March Madness Predicted Efficiency Landscape">
+      </figure>
+
+      <p>In continuation, let&rsquo;s make our own bands of favoritism to win VCT tournaments based on this graph.</p>
+
+      <figure class="fig">
+        <div class="fig-filter">
+          <div class="ls-win" id="tierWin"></div>
+          <div class="ls-events" id="tierEvents"></div>
+        </div>
+        <div class="fig-wrap"><canvas id="tierLandscape"></canvas></div>
+      </figure>
     </div>
   </div>
 </div>
@@ -189,12 +207,6 @@ PAGE_HTML = """
 <script>
 const LS = __LANDSCAPE_JSON__;
 const logoCache = {}, greyCache = {}, wCache = {};
-// Logos load async. The first draw usually beats them, and nothing else
-// repaints on its own, so without this the marks stay blank until some other
-// interaction forces a redraw. One coalesced repaint per frame as they arrive.
-// Every chart on the page registers here. This used to redraw only the main
-// chart, and the inset is built first — so when its logos arrived there was
-// nothing to repaint and it rendered as labels with no marks.
 const charts = [];
 let redrawQueued = false;
 function queueRedraw() {
@@ -214,9 +226,8 @@ function logo(org) {
   }
   return logoCache[org];
 }
-// Greyscale is baked once per logo into an offscreen canvas. Doing it with
-// ctx.filter='grayscale(1)' instead costs a full filter pass PER IMAGE PER
-// FRAME — with 122 marks that alone was what made hovering crawl.
+// Greyscale baked once per logo. Doing it with ctx.filter per image per frame
+// is a full filter pass 100+ times a frame, which is what made hovering crawl.
 function grey(org) {
   const img = logo(org);
   if (!img.complete || !img.naturalWidth) return null;
@@ -235,41 +246,29 @@ function textW(ctx, t, font) {
   if (wCache[k] === undefined) { ctx.font = font; wCache[k] = ctx.measureText(t).width; }
   return wCache[k];
 }
-// Masters get the site purple, Champions gold.
+const pct = v => (v * 100).toFixed(1) + '%';
 const ringFor = intl => intl.indexOf('Champions') === 0 ? '#d8a93a' : '#7c4dd6';
-// Anchor the tooltip above the mark. The hovered logo grows to ~51px, so
-// sit clear of its top edge rather than landing on top of it.
+
 Chart.Tooltip.positioners.aboveMark = function (items) {
   if (!items.length) return false;
   const e = items[0].element;
   return {x: e.x, y: e.y - 30};
 };
-const pct = v => (v * 100).toFixed(1) + '%';
 
-let hovered = null, pinned = null, active = 'All', winnersOn = true, chart;
-const HOVER_PX = 20;   // cursor must be this close to a mark to isolate it
-
-// White plate behind everything, so the figure reads as its own card instead of
-// sitting on the page's gradient.
 const plate = {
   id: 'plate',
   beforeDraw(c) {
     const {ctx} = c;
-    ctx.save(); ctx.fillStyle = '#fff';
-    ctx.fillRect(0, 0, c.width, c.height); ctx.restore();
+    ctx.save(); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); ctx.restore();
   }
 };
 
-
-// The even-split lines. Both axes cross at 50%, so these mark the point where a
-// team is winning exactly half its rounds on that side.
 const fifty = {
   id: 'fifty',
   beforeDatasetsDraw(c) {
     const {ctx, chartArea: a, scales: {x, y}} = c;
     ctx.save();
-    ctx.strokeStyle = 'rgba(61,26,110,.38)';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(61,26,110,.38)'; ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(a.left, y.getPixelForValue(0.5)); ctx.lineTo(a.right, y.getPixelForValue(0.5));
     ctx.moveTo(x.getPixelForValue(0.5), a.top);  ctx.lineTo(x.getPixelForValue(0.5), a.bottom);
@@ -278,20 +277,81 @@ const fifty = {
   }
 };
 
-// Logos and their event labels are drawn here rather than via pointStyle. Two
-// reasons: Chart.js swaps the point for its hover style on hover, which made the
-// logo vanish under the cursor, and drawing by hand is what lets everything
-// except the hovered team drop to greyscale.
+// Tiers of favouritism, EvanMiya-style. A band is a range of attack% + defense%,
+// so every boundary is the same diagonal slope — a team can reach a tier by
+// being strong on either side or balanced across both. Thresholds are set from
+// the teams the author named: 1.18 sits between FPX at Shanghai (1.160) and
+// Nongshim at Santiago (1.190) and just above G2 at Bangkok (1.176); 1.08 sits
+// just under NRG at Champions 2025 (1.086) and PRX at Toronto (1.084); 1.015
+// sits just above T1 at Bangkok (1.008), who names the floor tier.
+const BANDS = [
+  {lo: 1.18,  hi: 2.00, label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.16)',  ink: '#8a6a1a'},
+  {lo: 1.08,  hi: 1.18, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.13)',  ink: '#5b21b6'},
+  {lo: 1.015, hi: 1.08, label: 'Trophy Believers',  fill: 'rgba(124,77,214,.06)',  ink: '#7c4dd6'},
+  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',          fill: 'rgba(120,110,130,.07)', ink: '#7a6e7e'}
+];
+
+const bands = {
+  id: 'bands',
+  beforeDatasetsDraw(c) {
+    if (!c.$bands) return;
+    const {ctx, chartArea: a, scales: {x, y}} = c;
+    const px = (vx, vy) => [x.getPixelForValue(vx), y.getPixelForValue(vy)];
+    ctx.save();
+    ctx.beginPath(); ctx.rect(a.left, a.top, a.right - a.left, a.bottom - a.top); ctx.clip();
+    // Each band is the strip between two constant-sum diagonals. Drawn as a
+    // parallelogram running well past the axes and clipped to the plot.
+    c.$bands.forEach(b => {
+      const p1 = px(0.20, b.hi - 0.20), p2 = px(0.90, b.hi - 0.90);
+      const p3 = px(0.90, b.lo - 0.90), p4 = px(0.20, b.lo - 0.20);
+      ctx.beginPath();
+      ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]);
+      ctx.lineTo(p3[0], p3[1]); ctx.lineTo(p4[0], p4[1]);
+      ctx.closePath();
+      ctx.fillStyle = b.fill; ctx.fill();
+      if (b.lo > 0.01) {
+        const l1 = px(0.20, b.lo - 0.20), l2 = px(0.90, b.lo - 0.90);
+        ctx.beginPath(); ctx.moveTo(l1[0], l1[1]); ctx.lineTo(l2[0], l2[1]);
+        ctx.setLineDash([6, 5]); ctx.lineWidth = 1.25;
+        ctx.strokeStyle = 'rgba(61,26,110,.35)'; ctx.stroke(); ctx.setLineDash([]);
+      }
+    });
+    ctx.restore();
+
+    // Titles, placed at the middle of each band's visible run so they sit in
+    // open space rather than on the diagonal's ends.
+    ctx.save();
+    c.$bands.forEach(b => {
+      const m = (b.lo + Math.min(b.hi, 1.40)) / 2;
+      let x0 = Math.max(0.40, m - 0.70), x1 = Math.min(0.70, m - 0.40);
+      if (x1 <= x0) return;
+      const cx = (x0 + x1) / 2, cy = m - cx;
+      if (cy < 0.40 || cy > 0.70) return;
+      const [sx, sy] = px(cx, cy);
+      const font = "800 11px 'DM Sans',sans-serif";
+      const w = textW(ctx, b.label, font) + 18;
+      ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,.88)';
+      ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.lineWidth = 1;
+      const h = 22, rx = sx - w / 2, ry = sy - h / 2;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(rx, ry, w, h, 11);
+      else ctx.rect(rx, ry, w, h);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = b.ink;
+      ctx.fillText(b.label, sx, sy + 0.5);
+    });
+    ctx.restore();
+  }
+};
+
 const marks = {
   id: 'marks',
   afterDatasetsDraw(c) {
     const {ctx} = c;
-    const meta = c.getDatasetMeta(0);
-    // Paint back-to-front: greyed-out marks, then lit ones, then the hovered
-    // one. Without this a dimmed neighbour drawn later sat on top of a
-    // highlighted winner, which is exactly backwards.
     const st = c.$state ? c.$state() : {hovered: null, pinned: null, winnersOn: false};
     const focusIdx = st.hovered !== null ? st.hovered : st.pinned;
+    const meta = c.getDatasetMeta(0);
     const rank = i => {
       if (i === focusIdx) return 2;
       const p = c.data.datasets[0].data[i].p;
@@ -303,11 +363,8 @@ const marks = {
       const pt = meta.data[i];
       const p = c.data.datasets[0].data[i].p;
       const img = logo(p.org);
-      // Hover beats a pin beats the winners toggle. A pin is just a hover that
-      // survives the cursor leaving, so the two share one code path.
-      const focus = focusIdx;
-      const on  = focus === i;
-      const dim = focus !== null ? !on : (st.winnersOn && !p.won);
+      const on  = focusIdx === i;
+      const dim = focusIdx !== null ? !on : (st.winnersOn && !p.won);
       const S = (p.won ? 30 : 25) * (on ? 1.7 : 1);
       const src = dim ? grey(p.org) : img;
       ctx.save();
@@ -321,153 +378,92 @@ const marks = {
       ctx.font = font;
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       const ly = pt.y + S / 2 + 3;
-      {
-        // Outline carries the event type: purple = Masters, gold = Champions.
-        ctx.lineWidth = on ? 3.5 : 2;
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = dim ? 'rgba(190,184,196,.5)' : ringFor(p.intl);
-        ctx.strokeText(p.intl, pt.x, ly);
-        ctx.fillStyle = dim ? 'rgba(150,142,158,.55)' : '#ffffff';
-        ctx.fillText(p.intl, pt.x, ly);
-      }
+      ctx.lineWidth = on ? 3.5 : 2;
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = dim ? 'rgba(190,184,196,.5)' : ringFor(p.intl);
+      ctx.strokeText(p.intl, pt.x, ly);
+      ctx.fillStyle = dim ? 'rgba(150,142,158,.55)' : '#ffffff';
+      ctx.fillText(p.intl, pt.x, ly);
       ctx.restore();
     });
   }
 };
 
-function visible() {
-  return LS.points.filter(p => active === 'All' || p.intl === active)
-                  .map(p => ({x: p.dfn, y: p.atk, p}));
-}
+const AXIS = title => ({
+  min: 0.40, max: 0.70,
+  title: {display: true, text: title,
+          font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
+  ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 10}, color: '#9a8fa4'},
+  grid: {color: 'rgba(0,0,0,.05)'}
+});
 
-// While the winners toggle is on, only the winners answer the cursor — hovering
-// a greyed-out team would light it and defeat the toggle.
-function hitRadii(data) {
-  return data.map(d => (winnersOn && !d.p.won) ? 0 : 16);
-}
-function draw() {
-  const data = visible();
-  if (chart) {
-    chart.data.datasets[0].data = data;
-    chart.data.datasets[0].hitRadius = hitRadii(data);
-    chart.data.datasets[0].hitRadius = hitRadii(chart.data.datasets[0].data);
-    hovered = null; chart.update(); return;
-  }
-  chart = new Chart(document.getElementById('sideLandscape'), {
-    type: 'scatter',
-    data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: hitRadii(data)}]},
-    options: {
-      responsive: true, maintainAspectRatio: false, animation: false,
-      layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
-      // nearest + intersect:false = exactly one point, the closest to the
-      // cursor. The default mode returns everything within hitRadius, which in
-      // a cluster this dense meant five teams in one tooltip.
-      // intersect:true is what stops the tooltip appearing when the cursor is
-      // nowhere near a team: with false, Chart.js reports the nearest point
-      // from anywhere on the canvas, and the tooltip has its own interaction
-      // pass, so gating only the highlight left the card popping up unbidden.
-      interaction: {mode: 'nearest', intersect: true, axis: 'xy'},
-      events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
-      // nearest + intersect:false always returns SOMETHING while the cursor is
-      // over the canvas, so the highlight used to stick forever once entered.
-      // Gate it on actual pixel distance, and clear on the way out.
-      onHover(e, els, c) {
-        // Any cursor movement releases a pinned observation. The pin is a
-        // reading aid for the sentence that set it, not a mode to get stuck
-        // in — one move and the chart is back to its normal state.
-        if (pinned !== null) { pinned = null; c.draw(); }
-        let i = null;
-        if (els.length) {
-          const pt = c.getDatasetMeta(0).data[els[0].index];
-          const d = Math.hypot(e.x - pt.x, e.y - pt.y);
-          if (d <= HOVER_PX) i = els[0].index;
-        }
-        if (i !== hovered) { hovered = i; c.draw(); }
-      },
-      scales: {
-        // Pinned, not auto-scaled. Filtering to one event would otherwise
-        // rescale both axes and every mark would jump, making two views
-        // impossible to compare by eye. All 122 points sit inside this window.
-        x: {min: 0.40, max: 0.70,
-            title: {display: true, text: 'Defense win%',
-                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
-            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 10}, color: '#9a8fa4'},
-            grid: {color: 'rgba(0,0,0,.05)'}},
-        y: {min: 0.40, max: 0.70,
-            title: {display: true, text: 'Attack win%',
-                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
-            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 10}, color: '#9a8fa4'},
-            grid: {color: 'rgba(0,0,0,.05)'}}
-      },
-      plugins: {
-        legend: {display: false},
-        tooltip: {
-          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
-          // Above the mark, and no position tween — the default slides the card
-          // between teams, which both reads as lag and costs frames.
-          position: 'aboveMark', yAlign: 'bottom', xAlign: 'center',
-          // Fade in and out, but no position tween: `numbers` covers x/y/caret,
-          // and animating those is what made the card glide from team to team.
-          animation: {duration: 140},
-          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
-          caretSize: 5,
-          callbacks: {
-            title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (won it)' : ''),
-            label: it => {
-              const p = it.raw.p;
-              return ['from ' + p.prior,
-                      'Attack  ' + pct(p.atk) + '  (' + p.atk_w + '/' + p.atk_n + ')',
-                      'Defense ' + pct(p.dfn) + '  (' + p.def_w + '/' + p.def_n + ')'];
+// One interactive landscape. Built twice — plain, then with tier bands — so its
+// state lives in a closure rather than on the page, or the two would share a
+// hover.
+function buildLandscape({canvas, winBox, eventBox, bandDefs}) {
+  let hovered = null, pinned = null, active = 'All', winnersOn = true, chart;
+  const HOVER_PX = 20;
+
+  const visible = () => LS.points.filter(p => active === 'All' || p.intl === active)
+                                 .map(p => ({x: p.dfn, y: p.atk, p}));
+  const hitRadii = data => data.map(d => (winnersOn && !d.p.won) ? 0 : 16);
+
+  function draw() {
+    const data = visible();
+    if (chart) {
+      chart.data.datasets[0].data = data;
+      chart.data.datasets[0].hitRadius = hitRadii(data);
+      hovered = null; chart.update(); return;
+    }
+    chart = new Chart(document.getElementById(canvas), {
+      type: 'scatter',
+      data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: hitRadii(data)}]},
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
+        interaction: {mode: 'nearest', intersect: true, axis: 'xy'},
+        events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+        onHover(e, els, c) {
+          if (pinned !== null) { pinned = null; c.draw(); }
+          let i = null;
+          if (els.length) {
+            const pt = c.getDatasetMeta(0).data[els[0].index];
+            if (Math.hypot(e.x - pt.x, e.y - pt.y) <= HOVER_PX) i = els[0].index;
+          }
+          if (i !== hovered) { hovered = i; c.draw(); }
+        },
+        scales: {x: AXIS('Defense win%'), y: AXIS('Attack win%')},
+        plugins: {
+          legend: {display: false},
+          tooltip: {
+            displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+            position: 'aboveMark', yAlign: 'bottom', xAlign: 'center',
+            animation: {duration: 140},
+            animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+            caretSize: 5,
+            callbacks: {
+              title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (won it)' : ''),
+              label: it => {
+                const p = it.raw.p;
+                return ['from ' + p.prior,
+                        'Attack  ' + pct(p.atk) + '  (' + p.atk_w + '/' + p.atk_n + ')',
+                        'Defense ' + pct(p.dfn) + '  (' + p.def_w + '/' + p.def_n + ')'];
+              }
             }
           }
         }
-      }
-    },
-    plugins: [plate, fifty, marks]
-  });
-  chart.$state = () => ({hovered, pinned, winnersOn});
-  charts.push(chart);
-  chart.canvas.addEventListener('mouseleave', () => {
-    if (hovered !== null) { hovered = null; chart.draw(); }
-  });
-}
-
-// Rendered live rather than shipped as a screenshot: crisp at any resolution
-// and any pixel density, and it cannot fall out of step with the data above it.
-(function () {
-  const el = document.getElementById('bangkokInset');
-  if (!el) return;
-  const pts = LS.points.filter(p => p.intl === 'Masters Bangkok 2025')
-                       .map(p => ({x: p.dfn, y: p.atk, p}));
-  const c = new Chart(el, {
-    type: 'scatter',
-    data: {datasets: [{data: pts, pointRadius: 0, pointHoverRadius: 0, hitRadius: 0}]},
-    options: {
-      responsive: true, maintainAspectRatio: false, animation: false,
-      layout: {padding: {top: 12, right: 14, bottom: 2, left: 2}},
-      events: [],
-      scales: {
-        x: {min: 0.40, max: 0.70,
-            title: {display: true, text: 'Defense win%',
-                    font: {family: "'DM Sans',sans-serif", size: 10, weight: 600}, color: '#7a6e7e'},
-            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 9}, color: '#9a8fa4'},
-            grid: {color: 'rgba(0,0,0,.05)'}},
-        y: {min: 0.40, max: 0.70,
-            title: {display: true, text: 'Attack win%',
-                    font: {family: "'DM Sans',sans-serif", size: 10, weight: 600}, color: '#7a6e7e'},
-            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 9}, color: '#9a8fa4'},
-            grid: {color: 'rgba(0,0,0,.05)'}}
       },
-      plugins: {legend: {display: false}, tooltip: {enabled: false}}
-    },
-    plugins: [plate, fifty, marks]
-  });
-  c.$state = () => ({hovered: null, pinned: null, winnersOn: false});
-  charts.push(c);
-})();
+      plugins: [plate, bands, fifty, marks]
+    });
+    chart.$state = () => ({hovered, pinned, winnersOn});
+    if (bandDefs) chart.$bands = bandDefs;
+    charts.push(chart);
+    chart.canvas.addEventListener('mouseleave', () => {
+      if (hovered !== null || pinned !== null) { hovered = null; pinned = null; chart.draw(); }
+    });
+  }
 
-(function () {
-  const box = document.getElementById('lsEvents');
+  const box = document.getElementById(eventBox);
   const evBtns = [];
   ['All'].concat(LS.internationals).forEach(name => {
     const b = document.createElement('button');
@@ -483,13 +479,10 @@ function draw() {
     evBtns.push(b);
     box.appendChild(b);
   });
-  // Independent of the event row — it changes what's LIT, not what's shown, so
-  // it composes with whichever event is selected.
   const w = document.createElement('button');
   w.type = 'button';
   const setLabel = () => {
-    w.innerHTML = 'Highlight winners <span class="lsb-state">' +
-                  (winnersOn ? 'ON' : 'OFF') + '</span>';
+    w.innerHTML = 'Highlight winners <span class="lsb-state">' + (winnersOn ? 'ON' : 'OFF') + '</span>';
   };
   w.className = 'lsb lsb-win on';
   setLabel();
@@ -500,15 +493,13 @@ function draw() {
     setLabel();
     draw();
   };
-  document.getElementById('lsWin').appendChild(w);
+  document.getElementById(winBox).appendChild(w);
 
-  // Fit the event row to one line by measurement rather than by a guessed font
-  // size. Ten full event names are wider than the column at any comfortable
-  // size, and hand-tuning it breaks the moment an event is added — so step down
-  // until it stops overflowing.
+  // Fit the row to one line by measurement — ten event names are wider than the
+  // column at any comfortable size, and a tuned constant breaks when an event
+  // is added.
   function fitRow() {
-    const steps = [[.68, 10], [.64, 9], [.60, 8], [.56, 7], [.52, 6],
-                   [.48, 5], [.44, 4], [.40, 4]];
+    const steps = [[.68, 10], [.64, 9], [.60, 8], [.56, 7], [.52, 6], [.48, 5], [.44, 4], [.40, 4]];
     for (const [fs, px] of steps) {
       box.style.setProperty('--lsb-fs', fs + 'rem');
       box.style.setProperty('--lsb-px', px + 'px');
@@ -519,31 +510,57 @@ function draw() {
   addEventListener('resize', fitRow);
   draw();
 
-  // In-text mentions ("Loud at Tokyo") pin their point: show every entry, light
-  // that one, and bring the figure into view. Winners-highlight is switched off
-  // on the way so the pinned team isn't competing with nine gold marks.
-  document.querySelectorAll('.pin').forEach(a => {
-    a.addEventListener('click', ev => {
-      ev.preventDefault();
+  return {
+    pin(org, intl) {
       active = 'All';
       evBtns.forEach(c => c.classList.toggle('on', c.textContent === 'All'));
       if (winnersOn) { winnersOn = false; w.classList.remove('on'); setLabel(); }
       draw();
-      const org = a.dataset.org, intl = a.dataset.intl;
       const i = chart.data.datasets[0].data.findIndex(d => d.p.org === org && d.p.intl === intl);
       pinned = i >= 0 ? i : null;
       chart.draw();
       if (pinned !== null) {
-        // Show the card too — a pin should look exactly like hovering that
-        // team, numbers included, not just a lit logo.
         const el = chart.getDatasetMeta(0).data[pinned];
         chart.tooltip.setActiveElements([{datasetIndex: 0, index: pinned}], {x: el.x, y: el.y});
         chart.update();
       }
-      document.querySelector('.fig').scrollIntoView({behavior: 'smooth', block: 'center'});
-    });
+    }
+  };
+}
+
+const mainLandscape = buildLandscape({canvas: 'sideLandscape', winBox: 'lsWin', eventBox: 'lsEvents'});
+buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvents', bandDefs: BANDS});
+
+// Static, non-interactive: the cluster the T1 sentence points at.
+(function () {
+  const el = document.getElementById('bangkokInset');
+  if (!el) return;
+  const pts = LS.points.filter(p => p.intl === 'Masters Bangkok 2025')
+                       .map(p => ({x: p.dfn, y: p.atk, p}));
+  const c = new Chart(el, {
+    type: 'scatter',
+    data: {datasets: [{data: pts, pointRadius: 0, pointHoverRadius: 0, hitRadius: 0}]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 12, right: 14, bottom: 2, left: 2}},
+      events: [],
+      scales: {x: AXIS('Defense win%'), y: AXIS('Attack win%')},
+      plugins: {legend: {display: false}, tooltip: {enabled: false}}
+    },
+    plugins: [plate, fifty, marks]
   });
+  c.$state = () => ({hovered: null, pinned: null, winnersOn: false});
+  charts.push(c);
 })();
+
+// In-text mentions drive the first chart.
+document.querySelectorAll('.pin').forEach(a => {
+  a.addEventListener('click', ev => {
+    ev.preventDefault();
+    mainLandscape.pin(a.dataset.org, a.dataset.intl);
+    document.querySelector('.fig').scrollIntoView({behavior: 'smooth', block: 'center'});
+  });
+});
 </script>
 </body>
 </html>

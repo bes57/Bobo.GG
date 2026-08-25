@@ -2467,6 +2467,10 @@ def logo():
 def patmen():
     return send_from_directory(os.path.dirname(__file__), "Patmen.jpg", mimetype="image/jpeg")
 
+@app.route("/evanmiya-landscape.jpg")
+def evanmiya_landscape_img():
+    return send_from_directory(os.path.dirname(__file__), "EvanMiyaLandscape.jpg", mimetype="image/jpeg")
+
 @app.route("/championshipdna.jpg")
 def championshipdna_img():
     return send_from_directory(os.path.dirname(__file__), "ChampionshipDNA.jpg", mimetype="image/jpeg")
