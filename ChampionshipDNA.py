@@ -91,7 +91,7 @@ PAGE_HTML = """
   .content h2, .cover { scroll-margin-top:84px; }
   .fig { margin:34px 0 40px; }
   .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; background:#fff;
-              border:1px solid #ece6f2; border-radius:14px; box-shadow:0 4px 24px #0000000a;
+              border:1px solid #ece6f2; box-shadow:0 4px 24px #0000000a;
               overflow:hidden; }
   .fig-filter { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
   .lsb { font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:700; color:var(--soft);
@@ -137,14 +137,45 @@ PAGE_HTML = """
 
 <script>
 const LS = __LANDSCAPE_JSON__;
-const logoCache = {};
+const logoCache = {}, greyCache = {}, wCache = {};
 function logo(org) {
   if (!logoCache[org]) { const i = new Image(); i.src = '/logos/' + org + '.png'; logoCache[org] = i; }
   return logoCache[org];
 }
+// Greyscale is baked once per logo into an offscreen canvas. Doing it with
+// ctx.filter='grayscale(1)' instead costs a full filter pass PER IMAGE PER
+// FRAME — with 122 marks that alone was what made hovering crawl.
+function grey(org) {
+  const img = logo(org);
+  if (!img.complete || !img.naturalWidth) return null;
+  if (!greyCache[org]) {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const g = c.getContext('2d');
+    g.filter = 'grayscale(1)';
+    g.drawImage(img, 0, 0);
+    greyCache[org] = c;
+  }
+  return greyCache[org];
+}
+function textW(ctx, t, font) {
+  const k = font + '|' + t;
+  if (wCache[k] === undefined) { ctx.font = font; wCache[k] = ctx.measureText(t).width; }
+  return wCache[k];
+}
+// Masters get the site purple, Champions gold.
+const ringFor = intl => intl.indexOf('Champions') === 0 ? '#d8a93a' : '#7c4dd6';
+// Anchor the tooltip above the mark. The hovered logo grows to ~51px, so
+// sit clear of its top edge rather than landing on top of it.
+Chart.Tooltip.positioners.aboveMark = function (items) {
+  if (!items.length) return false;
+  const e = items[0].element;
+  return {x: e.x, y: e.y - 30};
+};
 const pct = v => (v * 100).toFixed(1) + '%';
 
 let hovered = null, active = 'All', chart;
+const HOVER_PX = 20;   // cursor must be this close to a mark to isolate it
 
 // White plate behind everything, so the figure reads as its own card instead of
 // sitting on the page's gradient.
@@ -189,23 +220,29 @@ const marks = {
       const on  = hovered === i;
       const dim = hovered !== null && !on;
       const S = (p.won ? 30 : 25) * (on ? 1.7 : 1);
+      const src = dim ? grey(p.org) : img;
       ctx.save();
-      ctx.globalAlpha = dim ? 0.28 : 1;
-      if (dim) ctx.filter = 'grayscale(1)';
-      if (img.complete && img.naturalWidth) ctx.drawImage(img, pt.x - S / 2, pt.y - S / 2, S, S);
-      ctx.filter = 'none';
-      ctx.globalAlpha = 1;
-      ctx.font = (on ? "800 12px " : "500 9px ") + "'DM Sans',sans-serif";
-      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      if (on) {
-        // Plate under the enlarged label so it stays readable over other marks.
-        const w = ctx.measureText(p.intl).width + 10;
-        ctx.fillStyle = 'rgba(255,255,255,.92)';
-        ctx.fillRect(pt.x - w / 2, pt.y + S / 2 + 1, w, 15);
+      ctx.globalAlpha = dim ? 0.45 : 1;
+      if (src && (dim || (img.complete && img.naturalWidth))) {
+        ctx.drawImage(src, pt.x - S / 2, pt.y - S / 2, S, S);
       }
+      ctx.globalAlpha = 1;
+      const font = (on ? "800 12px " : "700 9px ") + "'DM Sans',sans-serif";
+      const w = textW(ctx, p.intl, font);
+      ctx.font = font;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       const ly = pt.y + S / 2 + 3;
-      if (on || fits(pt.x, ly, ctx.measureText(p.intl).width)) {
-        ctx.fillStyle = dim ? 'rgba(150,142,158,.45)' : (on ? '#3d1a6e' : '#8a7f94');
+      if (on || fits(pt.x, ly, w)) {
+        if (on) {
+          ctx.fillStyle = 'rgba(255,255,255,.92)';
+          ctx.fillRect(pt.x - w / 2 - 5, ly - 2, w + 10, 15);
+        }
+        // Outline carries the event type: purple = Masters, gold = Champions.
+        ctx.lineWidth = on ? 3.5 : 2;
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = dim ? 'rgba(190,184,196,.5)' : ringFor(p.intl);
+        ctx.strokeText(p.intl, pt.x, ly);
+        ctx.fillStyle = dim ? 'rgba(150,142,158,.55)' : '#ffffff';
         ctx.fillText(p.intl, pt.x, ly);
       }
       ctx.restore();
@@ -226,30 +263,48 @@ function draw() {
     type: 'scatter',
     data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: 14}]},
     options: {
-      responsive: true, maintainAspectRatio: false,
+      responsive: true, maintainAspectRatio: false, animation: false,
       layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
       // nearest + intersect:false = exactly one point, the closest to the
       // cursor. The default mode returns everything within hitRadius, which in
       // a cluster this dense meant five teams in one tooltip.
       interaction: {mode: 'nearest', intersect: false, axis: 'xy'},
-      onHover(e, els) {
-        const i = els.length ? els[0].index : null;
-        if (i !== hovered) { hovered = i; chart.draw(); }
+      events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+      // nearest + intersect:false always returns SOMETHING while the cursor is
+      // over the canvas, so the highlight used to stick forever once entered.
+      // Gate it on actual pixel distance, and clear on the way out.
+      onHover(e, els, c) {
+        let i = null;
+        if (els.length) {
+          const pt = c.getDatasetMeta(0).data[els[0].index];
+          const d = Math.hypot(e.x - pt.x, e.y - pt.y);
+          if (d <= HOVER_PX) i = els[0].index;
+        }
+        if (i !== hovered) { hovered = i; c.draw(); }
       },
       scales: {
-        x: {title: {display: true, text: 'Defense win% in the split before the event',
+        // Pinned, not auto-scaled. Filtering to one event would otherwise
+        // rescale both axes and every mark would jump, making two views
+        // impossible to compare by eye. All 122 points sit inside this window.
+        x: {min: 0.40, max: 0.70,
+            title: {display: true, text: 'Defense win%',
                     font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
-            ticks: {callback: v => pct(v), font: {size: 10}, color: '#9a8fa4'},
+            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 10}, color: '#9a8fa4'},
             grid: {color: 'rgba(0,0,0,.05)'}},
-        y: {title: {display: true, text: 'Attack win% in the split before the event',
+        y: {min: 0.40, max: 0.70,
+            title: {display: true, text: 'Attack win%',
                     font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
-            ticks: {callback: v => pct(v), font: {size: 10}, color: '#9a8fa4'},
+            ticks: {callback: v => pct(v), stepSize: 0.05, font: {size: 10}, color: '#9a8fa4'},
             grid: {color: 'rgba(0,0,0,.05)'}}
       },
       plugins: {
         legend: {display: false},
         tooltip: {
           displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          // Above the mark, and no position tween — the default slides the card
+          // between teams, which both reads as lag and costs frames.
+          position: 'aboveMark', yAlign: 'bottom', xAlign: 'center',
+          animation: false, animations: {}, caretSize: 5,
           callbacks: {
             title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (won it)' : ''),
             label: it => {
@@ -263,6 +318,9 @@ function draw() {
       }
     },
     plugins: [plate, marks]
+  });
+  chart.canvas.addEventListener('mouseleave', () => {
+    if (hovered !== null) { hovered = null; chart.draw(); }
   });
 }
 

@@ -173,6 +173,11 @@ if __name__ == "__main__":
           f"{len(p['internationals'])} internationals")
     print(f"  global attack round win rate: {p['global_attack_rate']} (expect ~.507)")
     print(f"  winners: {p['winners']}")
+    # The article pins both axes to 40-70%. Anything outside would be clipped
+    # off the chart with no visual hint, so say so loudly here.
+    out = [f"{x['org']} @ {x['intl']} atk={x['atk']:.3f} def={x['dfn']:.3f}"
+           for x in p["points"] if not (0.40 <= x["atk"] <= 0.70 and 0.40 <= x["dfn"] <= 0.70)]
+    print(f"  outside the chart's pinned 40-70% window: {out if out else 'none'}")
     won = [x for x in p["points"] if x["won"]]
     print(f"  points flagged as tournament winners: {len(won)} (expect one per event)")
     for s in p["skipped"]:
