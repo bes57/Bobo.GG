@@ -93,15 +93,26 @@ PAGE_HTML = """
   .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; background:#fff;
               border:1px solid #ece6f2; box-shadow:0 4px 24px #0000000a;
               overflow:hidden; }
-  .fig-note { font-size:.68rem; font-weight:300; color:var(--soft); text-align:center;
-              margin:0 0 14px; line-height:1.5; }
-  .fig-filter { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
+  /* Scoped under .content: `.content p` is class+element, which outranks a bare
+     .fig-note class, so an unscoped rule here silently lost every property to
+     the body-paragraph style. */
+  .content .fig-note { font-size:.68rem; font-weight:300; color:var(--soft);
+                       text-align:center; margin:0 0 14px; line-height:1.5; }
+  .fig-filter { margin-bottom:14px; }
+  .ls-win { display:flex; justify-content:center; margin-bottom:8px; }
+  /* One line, always. The ten event names are far wider than the 860px column,
+     so the row scrolls sideways rather than wrapping — same treatment as the
+     site nav. Scrollbar hidden; it's still swipeable/shift-scrollable. */
+  .ls-events { display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto;
+               scrollbar-width:none; padding-bottom:2px; }
+  .ls-events::-webkit-scrollbar { display:none; }
+  .ls-events .lsb { flex:0 0 auto; }
   .lsb { font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:700; color:var(--soft);
          background:#fff; border:1px solid #e8e0ec; border-radius:99px; padding:5px 12px; cursor:pointer;
          transition:background .15s,border-color .15s,color .15s; }
   .lsb:hover { color:var(--ink); border-color:#c9b8d8; }
   .lsb.on { background:#7c4dd6; border-color:#7c4dd6; color:#fff; }
-  .lsb-win { border-color:#e0c48a; color:#8a6a1a; margin-left:10px; }
+  .lsb-win { border-color:#e0c48a; color:#8a6a1a; }
   .lsb-win.on { background:#d8a93a; border-color:#d8a93a; color:#fff; }
   @media (max-width:820px) {
     .page { padding:40px 18px 60px; }
@@ -131,7 +142,10 @@ PAGE_HTML = """
 
       <figure class="fig">
         <p class="fig-note"><em>Note: Champions 2023 was not included, since there was no domestic split prior to the tournament</em></p>
-        <div class="fig-filter" id="lsFilter"></div>
+        <div class="fig-filter">
+          <div class="ls-win" id="lsWin"></div>
+          <div class="ls-events" id="lsEvents"></div>
+        </div>
         <div class="fig-wrap"><canvas id="sideLandscape"></canvas></div>
       </figure>
     </div>
@@ -141,8 +155,22 @@ PAGE_HTML = """
 <script>
 const LS = __LANDSCAPE_JSON__;
 const logoCache = {}, greyCache = {}, wCache = {};
+// Logos load async. The first draw usually beats them, and nothing else
+// repaints on its own, so without this the marks stay blank until some other
+// interaction forces a redraw. One coalesced repaint per frame as they arrive.
+let redrawQueued = false;
+function queueRedraw() {
+  if (redrawQueued || !chart) return;
+  redrawQueued = true;
+  requestAnimationFrame(() => { redrawQueued = false; if (chart) chart.draw(); });
+}
 function logo(org) {
-  if (!logoCache[org]) { const i = new Image(); i.src = '/logos/' + org + '.png'; logoCache[org] = i; }
+  if (!logoCache[org]) {
+    const i = new Image();
+    i.onload = queueRedraw;
+    i.src = '/logos/' + org + '.png';
+    logoCache[org] = i;
+  }
   return logoCache[org];
 }
 // Greyscale is baked once per logo into an offscreen canvas. Doing it with
@@ -192,6 +220,23 @@ const plate = {
 };
 
 
+// The even-split lines. Both axes cross at 50%, so these mark the point where a
+// team is winning exactly half its rounds on that side.
+const fifty = {
+  id: 'fifty',
+  beforeDatasetsDraw(c) {
+    const {ctx, chartArea: a, scales: {x, y}} = c;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(61,26,110,.38)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(a.left, y.getPixelForValue(0.5)); ctx.lineTo(a.right, y.getPixelForValue(0.5));
+    ctx.moveTo(x.getPixelForValue(0.5), a.top);  ctx.lineTo(x.getPixelForValue(0.5), a.bottom);
+    ctx.stroke();
+    ctx.restore();
+  }
+};
+
 // Logos and their event labels are drawn here rather than via pointStyle. Two
 // reasons: Chart.js swaps the point for its hover style on hover, which made the
 // logo vanish under the cursor, and drawing by hand is what lets everything
@@ -201,9 +246,16 @@ const marks = {
   afterDatasetsDraw(c) {
     const {ctx} = c;
     const meta = c.getDatasetMeta(0);
-    // Hovered one last, so it draws over the neighbours it grows into.
-    const order = meta.data.map((_, i) => i)
-                           .sort((a, b) => (a === hovered) - (b === hovered));
+    // Paint back-to-front: greyed-out marks, then lit ones, then the hovered
+    // one. Without this a dimmed neighbour drawn later sat on top of a
+    // highlighted winner, which is exactly backwards.
+    const rank = i => {
+      if (i === hovered) return 2;
+      const p = c.data.datasets[0].data[i].p;
+      const lit = hovered !== null ? false : (!winnersOn || p.won);
+      return lit ? 1 : 0;
+    };
+    const order = meta.data.map((_, i) => i).sort((a, b) => rank(a) - rank(b));
     order.forEach(i => {
       const pt = meta.data[i];
       const p = c.data.datasets[0].data[i].p;
@@ -249,12 +301,21 @@ function visible() {
                   .map(p => ({x: p.dfn, y: p.atk, p}));
 }
 
+// While the winners toggle is on, only the winners answer the cursor — hovering
+// a greyed-out team would light it and defeat the toggle.
+function hitRadii(data) {
+  return data.map(d => (winnersOn && !d.p.won) ? 0 : 16);
+}
 function draw() {
   const data = visible();
-  if (chart) { chart.data.datasets[0].data = data; hovered = null; chart.update(); return; }
+  if (chart) {
+    chart.data.datasets[0].data = data;
+    chart.data.datasets[0].hitRadius = hitRadii(data);
+    hovered = null; chart.update(); return;
+  }
   chart = new Chart(document.getElementById('sideLandscape'), {
     type: 'scatter',
-    data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: 16}]},
+    data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: hitRadii(data)}]},
     options: {
       responsive: true, maintainAspectRatio: false, animation: false,
       layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
@@ -311,14 +372,14 @@ function draw() {
             label: it => {
               const p = it.raw.p;
               return ['from ' + p.prior,
-                      'attack  ' + pct(p.atk) + '  (' + p.atk_w + '/' + p.atk_n + ')',
-                      'defense ' + pct(p.dfn) + '  (' + p.def_w + '/' + p.def_n + ')'];
+                      'Attack  ' + pct(p.atk) + '  (' + p.atk_w + '/' + p.atk_n + ')',
+                      'Defense ' + pct(p.dfn) + '  (' + p.def_w + '/' + p.def_n + ')'];
             }
           }
         }
       }
     },
-    plugins: [plate, marks]
+    plugins: [plate, fifty, marks]
   });
   chart.canvas.addEventListener('mouseleave', () => {
     if (hovered !== null) { hovered = null; chart.draw(); }
@@ -326,7 +387,7 @@ function draw() {
 }
 
 (function () {
-  const box = document.getElementById('lsFilter');
+  const box = document.getElementById('lsEvents');
   const evBtns = [];
   ['All'].concat(LS.internationals).forEach(name => {
     const b = document.createElement('button');
@@ -352,7 +413,7 @@ function draw() {
     w.classList.toggle('on', winnersOn);
     draw();
   };
-  box.appendChild(w);
+  document.getElementById('lsWin').appendChild(w);
   draw();
 })();
 </script>
