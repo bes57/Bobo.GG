@@ -89,8 +89,13 @@ PAGE_HTML = """
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
   .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content h2, .cover { scroll-margin-top:84px; }
-  .fig { margin:34px 0 40px; }
-  .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; background:#fff;
+  /* Breaks out of the 860px text column. Ten event names cannot fit one line
+     at any readable size inside 860px, and the scatter is dense enough that
+     the extra width helps it too. Centred on the viewport, capped so it never
+     runs to the screen edge. */
+  .fig { margin:34px 0 40px; width:min(1120px, calc(100vw - 56px));
+         margin-left:50%; transform:translateX(-50%); }
+  .fig-wrap { position:relative; width:100%; aspect-ratio:1.25/1; background:#fff;
               border:1px solid #ece6f2; box-shadow:0 4px 24px #0000000a;
               overflow:hidden; }
   /* Scoped under .content: `.content p` is class+element, which outranks a bare
@@ -103,16 +108,20 @@ PAGE_HTML = """
   /* One line, always. The ten event names are far wider than the 860px column,
      so the row scrolls sideways rather than wrapping — same treatment as the
      site nav. Scrollbar hidden; it's still swipeable/shift-scrollable. */
-  .ls-events { display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto;
-               scrollbar-width:none; padding-bottom:2px; }
+  .ls-events { display:flex; flex-wrap:nowrap; gap:5px; justify-content:center;
+               overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
   .ls-events::-webkit-scrollbar { display:none; }
   .ls-events .lsb { flex:0 0 auto; }
-  .lsb { font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:700; color:var(--soft);
-         background:#fff; border:1px solid #e8e0ec; border-radius:99px; padding:5px 12px; cursor:pointer;
-         transition:background .15s,border-color .15s,color .15s; }
+  .lsb { font-family:'DM Sans',sans-serif; font-size:.62rem; font-weight:700; color:var(--soft);
+         background:#fff; border:1px solid #e8e0ec; border-radius:99px; padding:4px 9px; cursor:pointer;
+         white-space:nowrap; transition:background .15s,border-color .15s,color .15s; }
   .lsb:hover { color:var(--ink); border-color:#c9b8d8; }
   .lsb.on { background:#7c4dd6; border-color:#7c4dd6; color:#fff; }
-  .lsb-win { border-color:#e0c48a; color:#8a6a1a; }
+  .lsb-win { border-color:#e0c48a; color:#8a6a1a; font-size:.76rem; padding:7px 16px; }
+  .lsb-state { display:inline-block; margin-left:7px; padding:1px 7px; border-radius:99px;
+               font-size:.62rem; font-weight:800; letter-spacing:.05em;
+               background:rgba(138,106,26,.14); color:#8a6a1a; }
+  .lsb-win.on .lsb-state { background:rgba(255,255,255,.28); color:#fff; }
   .lsb-win.on { background:#d8a93a; border-color:#d8a93a; color:#fff; }
   @media (max-width:820px) {
     .page { padding:40px 18px 60px; }
@@ -205,7 +214,7 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
 };
 const pct = v => (v * 100).toFixed(1) + '%';
 
-let hovered = null, active = 'All', winnersOn = false, chart;
+let hovered = null, active = 'All', winnersOn = true, chart;
 const HOVER_PX = 20;   // cursor must be this close to a mark to isolate it
 
 // White plate behind everything, so the figure reads as its own card instead of
@@ -406,11 +415,16 @@ function draw() {
   // it composes with whichever event is selected.
   const w = document.createElement('button');
   w.type = 'button';
-  w.className = 'lsb lsb-win';
-  w.textContent = 'Highlight winners';
+  const setLabel = () => {
+    w.innerHTML = 'Highlight winners <span class="lsb-state">' +
+                  (winnersOn ? 'ON' : 'OFF') + '</span>';
+  };
+  w.className = 'lsb lsb-win on';
+  setLabel();
   w.onclick = () => {
     winnersOn = !winnersOn;
     w.classList.toggle('on', winnersOn);
+    setLabel();
     draw();
   };
   document.getElementById('lsWin').appendChild(w);
