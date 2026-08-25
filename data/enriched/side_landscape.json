@@ -11,7 +11,8 @@
    "atk_n": 326,
    "def_w": 200,
    "def_n": 384,
-   "rounds": 710
+   "rounds": 710,
+   "won": false
   },
   {
    "org": "FNC",
@@ -24,7 +25,8 @@
    "atk_n": 282,
    "def_w": 175,
    "def_n": 288,
-   "rounds": 570
+   "rounds": 570,
+   "won": true
   },
   {
    "org": "FUT",
@@ -37,7 +39,8 @@
    "atk_n": 308,
    "def_w": 165,
    "def_n": 341,
-   "rounds": 649
+   "rounds": 649,
+   "won": false
   },
   {
    "org": "KRX",
@@ -50,7 +53,8 @@
    "atk_n": 386,
    "def_w": 178,
    "def_n": 345,
-   "rounds": 731
+   "rounds": 731,
+   "won": false
   },
   {
    "org": "LOUD",
@@ -63,7 +67,8 @@
    "atk_n": 338,
    "def_w": 159,
    "def_n": 305,
-   "rounds": 643
+   "rounds": 643,
+   "won": false
   },
   {
    "org": "NAVI",
@@ -76,7 +81,8 @@
    "atk_n": 293,
    "def_w": 167,
    "def_n": 301,
-   "rounds": 594
+   "rounds": 594,
+   "won": false
   },
   {
    "org": "NRG",
@@ -89,7 +95,8 @@
    "atk_n": 405,
    "def_w": 211,
    "def_n": 388,
-   "rounds": 793
+   "rounds": 793,
+   "won": false
   },
   {
    "org": "PRX",
@@ -102,7 +109,8 @@
    "atk_n": 318,
    "def_w": 169,
    "def_n": 305,
-   "rounds": 623
+   "rounds": 623,
+   "won": false
   },
   {
    "org": "T1",
@@ -115,7 +123,8 @@
    "atk_n": 360,
    "def_w": 208,
    "def_n": 403,
-   "rounds": 763
+   "rounds": 763,
+   "won": false
   },
   {
    "org": "TL",
@@ -128,7 +137,8 @@
    "atk_n": 402,
    "def_w": 218,
    "def_n": 408,
-   "rounds": 810
+   "rounds": 810,
+   "won": false
   },
   {
    "org": "BLG",
@@ -141,7 +151,8 @@
    "atk_n": 151,
    "def_w": 80,
    "def_n": 154,
-   "rounds": 305
+   "rounds": 305,
+   "won": false
   },
   {
    "org": "EDG",
@@ -154,7 +165,8 @@
    "atk_n": 89,
    "def_w": 70,
    "def_n": 104,
-   "rounds": 193
+   "rounds": 193,
+   "won": false
   },
   {
    "org": "EG",
@@ -167,7 +179,8 @@
    "atk_n": 326,
    "def_w": 200,
    "def_n": 384,
-   "rounds": 710
+   "rounds": 710,
+   "won": true
   },
   {
    "org": "FNC",
@@ -180,7 +193,8 @@
    "atk_n": 282,
    "def_w": 175,
    "def_n": 288,
-   "rounds": 570
+   "rounds": 570,
+   "won": false
   },
   {
    "org": "FPX",
@@ -193,7 +207,8 @@
    "atk_n": 158,
    "def_w": 67,
    "def_n": 142,
-   "rounds": 300
+   "rounds": 300,
+   "won": false
   },
   {
    "org": "FUT",
@@ -206,7 +221,8 @@
    "atk_n": 308,
    "def_w": 165,
    "def_n": 341,
-   "rounds": 649
+   "rounds": 649,
+   "won": false
   },
   {
    "org": "GIA",
@@ -219,7 +235,8 @@
    "atk_n": 284,
    "def_w": 149,
    "def_n": 279,
-   "rounds": 563
+   "rounds": 563,
+   "won": false
   },
   {
    "org": "KRX",
@@ -232,7 +249,8 @@
    "atk_n": 386,
    "def_w": 178,
    "def_n": 345,
-   "rounds": 731
+   "rounds": 731,
+   "won": false
   },
   {
    "org": "KR\u00dc",
@@ -245,7 +263,8 @@
    "atk_n": 255,
    "def_w": 106,
    "def_n": 248,
-   "rounds": 503
+   "rounds": 503,
+   "won": false
   },
   {
    "org": "LOUD",
@@ -258,7 +277,8 @@
    "atk_n": 338,
    "def_w": 159,
    "def_n": 305,
-   "rounds": 643
+   "rounds": 643,
+   "won": false
   },
   {
    "org": "NAVI",
@@ -271,7 +291,8 @@
    "atk_n": 293,
    "def_w": 167,
    "def_n": 301,
-   "rounds": 594
+   "rounds": 594,
+   "won": false
   },
   {
    "org": "NRG",
@@ -284,7 +305,8 @@
    "atk_n": 405,
    "def_w": 211,
    "def_n": 388,
-   "rounds": 793
+   "rounds": 793,
+   "won": false
   },
   {
    "org": "PRX",
@@ -297,7 +319,8 @@
    "atk_n": 318,
    "def_w": 169,
    "def_n": 305,
-   "rounds": 623
+   "rounds": 623,
+   "won": false
   },
   {
    "org": "T1",
@@ -310,7 +333,8 @@
    "atk_n": 360,
    "def_w": 208,
    "def_n": 403,
-   "rounds": 763
+   "rounds": 763,
+   "won": false
   },
   {
    "org": "TL",
@@ -323,7 +347,8 @@
    "atk_n": 402,
    "def_w": 218,
    "def_n": 408,
-   "rounds": 810
+   "rounds": 810,
+   "won": false
   },
   {
    "org": "ZETA",
@@ -336,7 +361,8 @@
    "atk_n": 309,
    "def_w": 151,
    "def_n": 304,
-   "rounds": 613
+   "rounds": 613,
+   "won": false
   },
   {
    "org": "EDG",
@@ -349,7 +375,8 @@
    "atk_n": 111,
    "def_w": 56,
    "def_n": 100,
-   "rounds": 211
+   "rounds": 211,
+   "won": false
   },
   {
    "org": "FPX",
@@ -362,7 +389,8 @@
    "atk_n": 116,
    "def_w": 70,
    "def_n": 134,
-   "rounds": 250
+   "rounds": 250,
+   "won": false
   },
   {
    "org": "GEN",
@@ -375,7 +403,8 @@
    "atk_n": 216,
    "def_w": 116,
    "def_n": 213,
-   "rounds": 429
+   "rounds": 429,
+   "won": false
   },
   {
    "org": "KC",
@@ -388,7 +417,8 @@
    "atk_n": 185,
    "def_w": 106,
    "def_n": 198,
-   "rounds": 383
+   "rounds": 383,
+   "won": false
   },
   {
    "org": "LOUD",
@@ -401,7 +431,8 @@
    "atk_n": 140,
    "def_w": 62,
    "def_n": 131,
-   "rounds": 271
+   "rounds": 271,
+   "won": false
   },
   {
    "org": "PRX",
@@ -414,7 +445,8 @@
    "atk_n": 99,
    "def_w": 46,
    "def_n": 92,
-   "rounds": 191
+   "rounds": 191,
+   "won": false
   },
   {
    "org": "SEN",
@@ -427,7 +459,8 @@
    "atk_n": 200,
    "def_w": 133,
    "def_n": 232,
-   "rounds": 432
+   "rounds": 432,
+   "won": true
   },
   {
    "org": "TH",
@@ -440,7 +473,8 @@
    "atk_n": 103,
    "def_w": 56,
    "def_n": 105,
-   "rounds": 208
+   "rounds": 208,
+   "won": false
   },
   {
    "org": "100T",
@@ -453,7 +487,8 @@
    "atk_n": 200,
    "def_w": 150,
    "def_n": 257,
-   "rounds": 457
+   "rounds": 457,
+   "won": false
   },
   {
    "org": "DRG",
@@ -466,7 +501,8 @@
    "atk_n": 262,
    "def_w": 141,
    "def_n": 287,
-   "rounds": 549
+   "rounds": 549,
+   "won": false
   },
   {
    "org": "EDG",
@@ -479,7 +515,8 @@
    "atk_n": 295,
    "def_w": 133,
    "def_n": 243,
-   "rounds": 538
+   "rounds": 538,
+   "won": false
   },
   {
    "org": "FNC",
@@ -492,7 +529,8 @@
    "atk_n": 326,
    "def_w": 158,
    "def_n": 320,
-   "rounds": 646
+   "rounds": 646,
+   "won": false
   },
   {
    "org": "FPX",
@@ -505,7 +543,8 @@
    "atk_n": 201,
    "def_w": 104,
    "def_n": 211,
-   "rounds": 412
+   "rounds": 412,
+   "won": false
   },
   {
    "org": "FUT",
@@ -518,7 +557,8 @@
    "atk_n": 233,
    "def_w": 107,
    "def_n": 207,
-   "rounds": 440
+   "rounds": 440,
+   "won": false
   },
   {
    "org": "G2",
@@ -531,7 +571,8 @@
    "atk_n": 297,
    "def_w": 154,
    "def_n": 287,
-   "rounds": 584
+   "rounds": 584,
+   "won": false
   },
   {
    "org": "GEN",
@@ -544,7 +585,8 @@
    "atk_n": 295,
    "def_w": 176,
    "def_n": 332,
-   "rounds": 627
+   "rounds": 627,
+   "won": true
   },
   {
    "org": "LEV",
@@ -557,7 +599,8 @@
    "atk_n": 267,
    "def_w": 142,
    "def_n": 277,
-   "rounds": 544
+   "rounds": 544,
+   "won": false
   },
   {
    "org": "PRX",
@@ -570,7 +613,8 @@
    "atk_n": 250,
    "def_w": 146,
    "def_n": 244,
-   "rounds": 494
+   "rounds": 494,
+   "won": false
   },
   {
    "org": "T1",
@@ -583,7 +627,8 @@
    "atk_n": 269,
    "def_w": 133,
    "def_n": 262,
-   "rounds": 531
+   "rounds": 531,
+   "won": false
   },
   {
    "org": "TH",
@@ -596,7 +641,8 @@
    "atk_n": 249,
    "def_w": 125,
    "def_n": 262,
-   "rounds": 511
+   "rounds": 511,
+   "won": false
   },
   {
    "org": "BLG",
@@ -609,7 +655,8 @@
    "atk_n": 180,
    "def_w": 106,
    "def_n": 190,
-   "rounds": 370
+   "rounds": 370,
+   "won": false
   },
   {
    "org": "EDG",
@@ -622,7 +669,8 @@
    "atk_n": 210,
    "def_w": 97,
    "def_n": 184,
-   "rounds": 394
+   "rounds": 394,
+   "won": true
   },
   {
    "org": "FNC",
@@ -635,7 +683,8 @@
    "atk_n": 215,
    "def_w": 136,
    "def_n": 224,
-   "rounds": 439
+   "rounds": 439,
+   "won": false
   },
   {
    "org": "FPX",
@@ -648,7 +697,8 @@
    "atk_n": 301,
    "def_w": 144,
    "def_n": 298,
-   "rounds": 599
+   "rounds": 599,
+   "won": false
   },
   {
    "org": "FUT",
@@ -661,7 +711,8 @@
    "atk_n": 147,
    "def_w": 84,
    "def_n": 163,
-   "rounds": 310
+   "rounds": 310,
+   "won": false
   },
   {
    "org": "G2",
@@ -674,7 +725,8 @@
    "atk_n": 190,
    "def_w": 108,
    "def_n": 198,
-   "rounds": 388
+   "rounds": 388,
+   "won": false
   },
   {
    "org": "GEN",
@@ -687,7 +739,8 @@
    "atk_n": 216,
    "def_w": 142,
    "def_n": 264,
-   "rounds": 480
+   "rounds": 480,
+   "won": false
   },
   {
    "org": "KRX",
@@ -700,7 +753,8 @@
    "atk_n": 312,
    "def_w": 137,
    "def_n": 278,
-   "rounds": 590
+   "rounds": 590,
+   "won": false
   },
   {
    "org": "KR\u00dc",
@@ -713,7 +767,8 @@
    "atk_n": 249,
    "def_w": 110,
    "def_n": 243,
-   "rounds": 492
+   "rounds": 492,
+   "won": false
   },
   {
    "org": "LEV",
@@ -726,7 +781,8 @@
    "atk_n": 219,
    "def_w": 156,
    "def_n": 260,
-   "rounds": 479
+   "rounds": 479,
+   "won": false
   },
   {
    "org": "PRX",
@@ -739,7 +795,8 @@
    "atk_n": 236,
    "def_w": 108,
    "def_n": 200,
-   "rounds": 436
+   "rounds": 436,
+   "won": false
   },
   {
    "org": "SEN",
@@ -752,7 +809,8 @@
    "atk_n": 116,
    "def_w": 44,
    "def_n": 101,
-   "rounds": 217
+   "rounds": 217,
+   "won": false
   },
   {
    "org": "TE",
@@ -765,7 +823,8 @@
    "atk_n": 257,
    "def_w": 116,
    "def_n": 253,
-   "rounds": 510
+   "rounds": 510,
+   "won": false
   },
   {
    "org": "TH",
@@ -778,7 +837,8 @@
    "atk_n": 233,
    "def_w": 128,
    "def_n": 241,
-   "rounds": 474
+   "rounds": 474,
+   "won": false
   },
   {
    "org": "TLN",
@@ -791,7 +851,8 @@
    "atk_n": 197,
    "def_w": 81,
    "def_n": 201,
-   "rounds": 398
+   "rounds": 398,
+   "won": false
   },
   {
    "org": "VIT",
@@ -804,7 +865,8 @@
    "atk_n": 290,
    "def_w": 150,
    "def_n": 283,
-   "rounds": 573
+   "rounds": 573,
+   "won": false
   },
   {
    "org": "EDG",
@@ -817,7 +879,8 @@
    "atk_n": 175,
    "def_w": 84,
    "def_n": 158,
-   "rounds": 333
+   "rounds": 333,
+   "won": false
   },
   {
    "org": "G2",
@@ -830,7 +893,8 @@
    "atk_n": 114,
    "def_w": 63,
    "def_n": 107,
-   "rounds": 221
+   "rounds": 221,
+   "won": false
   },
   {
    "org": "KRX",
@@ -843,7 +907,8 @@
    "atk_n": 144,
    "def_w": 78,
    "def_n": 153,
-   "rounds": 297
+   "rounds": 297,
+   "won": false
   },
   {
    "org": "SEN",
@@ -856,7 +921,8 @@
    "atk_n": 189,
    "def_w": 88,
    "def_n": 181,
-   "rounds": 370
+   "rounds": 370,
+   "won": false
   },
   {
    "org": "T1",
@@ -869,7 +935,8 @@
    "atk_n": 259,
    "def_w": 115,
    "def_n": 224,
-   "rounds": 483
+   "rounds": 483,
+   "won": true
   },
   {
    "org": "TE",
@@ -882,7 +949,8 @@
    "atk_n": 122,
    "def_w": 59,
    "def_n": 111,
-   "rounds": 233
+   "rounds": 233,
+   "won": false
   },
   {
    "org": "TL",
@@ -895,7 +963,8 @@
    "atk_n": 239,
    "def_w": 132,
    "def_n": 254,
-   "rounds": 493
+   "rounds": 493,
+   "won": false
   },
   {
    "org": "VIT",
@@ -908,7 +977,8 @@
    "atk_n": 129,
    "def_w": 65,
    "def_n": 120,
-   "rounds": 249
+   "rounds": 249,
+   "won": false
   },
   {
    "org": "BLG",
@@ -921,7 +991,8 @@
    "atk_n": 281,
    "def_w": 146,
    "def_n": 297,
-   "rounds": 578
+   "rounds": 578,
+   "won": false
   },
   {
    "org": "FNC",
@@ -934,7 +1005,8 @@
    "atk_n": 245,
    "def_w": 138,
    "def_n": 244,
-   "rounds": 489
+   "rounds": 489,
+   "won": false
   },
   {
    "org": "G2",
@@ -947,7 +1019,8 @@
    "atk_n": 338,
    "def_w": 179,
    "def_n": 325,
-   "rounds": 663
+   "rounds": 663,
+   "won": false
   },
   {
    "org": "GEN",
@@ -960,7 +1033,8 @@
    "atk_n": 224,
    "def_w": 142,
    "def_n": 248,
-   "rounds": 472
+   "rounds": 472,
+   "won": false
   },
   {
    "org": "MIBR",
@@ -973,7 +1047,8 @@
    "atk_n": 244,
    "def_w": 133,
    "def_n": 256,
-   "rounds": 500
+   "rounds": 500,
+   "won": false
   },
   {
    "org": "PRX",
@@ -986,7 +1061,8 @@
    "atk_n": 244,
    "def_w": 155,
    "def_n": 292,
-   "rounds": 536
+   "rounds": 536,
+   "won": true
   },
   {
    "org": "RRQ",
@@ -999,7 +1075,8 @@
    "atk_n": 279,
    "def_w": 137,
    "def_n": 294,
-   "rounds": 573
+   "rounds": 573,
+   "won": false
   },
   {
    "org": "SEN",
@@ -1012,7 +1089,8 @@
    "atk_n": 240,
    "def_w": 127,
    "def_n": 235,
-   "rounds": 475
+   "rounds": 475,
+   "won": false
   },
   {
    "org": "TH",
@@ -1025,7 +1103,8 @@
    "atk_n": 242,
    "def_w": 121,
    "def_n": 205,
-   "rounds": 447
+   "rounds": 447,
+   "won": false
   },
   {
    "org": "TL",
@@ -1038,7 +1117,8 @@
    "atk_n": 239,
    "def_w": 126,
    "def_n": 250,
-   "rounds": 489
+   "rounds": 489,
+   "won": false
   },
   {
    "org": "WOL",
@@ -1051,7 +1131,8 @@
    "atk_n": 218,
    "def_w": 130,
    "def_n": 246,
-   "rounds": 464
+   "rounds": 464,
+   "won": false
   },
   {
    "org": "XLG",
@@ -1064,7 +1145,8 @@
    "atk_n": 243,
    "def_w": 147,
    "def_n": 266,
-   "rounds": 509
+   "rounds": 509,
+   "won": false
   },
   {
    "org": "BLG",
@@ -1077,7 +1159,8 @@
    "atk_n": 290,
    "def_w": 153,
    "def_n": 271,
-   "rounds": 561
+   "rounds": 561,
+   "won": false
   },
   {
    "org": "DRG",
@@ -1090,7 +1173,8 @@
    "atk_n": 300,
    "def_w": 135,
    "def_n": 278,
-   "rounds": 578
+   "rounds": 578,
+   "won": false
   },
   {
    "org": "EDG",
@@ -1103,7 +1187,8 @@
    "atk_n": 288,
    "def_w": 132,
    "def_n": 258,
-   "rounds": 546
+   "rounds": 546,
+   "won": false
   },
   {
    "org": "FNC",
@@ -1116,7 +1201,8 @@
    "atk_n": 228,
    "def_w": 114,
    "def_n": 220,
-   "rounds": 448
+   "rounds": 448,
+   "won": false
   },
   {
    "org": "G2",
@@ -1129,7 +1215,8 @@
    "atk_n": 230,
    "def_w": 143,
    "def_n": 222,
-   "rounds": 452
+   "rounds": 452,
+   "won": false
   },
   {
    "org": "GX",
@@ -1142,7 +1229,8 @@
    "atk_n": 310,
    "def_w": 174,
    "def_n": 315,
-   "rounds": 625
+   "rounds": 625,
+   "won": false
   },
   {
    "org": "KRX",
@@ -1155,7 +1243,8 @@
    "atk_n": 172,
    "def_w": 80,
    "def_n": 163,
-   "rounds": 335
+   "rounds": 335,
+   "won": false
   },
   {
    "org": "MIBR",
@@ -1168,7 +1257,8 @@
    "atk_n": 118,
    "def_w": 54,
    "def_n": 124,
-   "rounds": 242
+   "rounds": 242,
+   "won": false
   },
   {
    "org": "NRG",
@@ -1181,7 +1271,8 @@
    "atk_n": 279,
    "def_w": 172,
    "def_n": 289,
-   "rounds": 568
+   "rounds": 568,
+   "won": true
   },
   {
    "org": "PRX",
@@ -1194,7 +1285,8 @@
    "atk_n": 182,
    "def_w": 126,
    "def_n": 220,
-   "rounds": 402
+   "rounds": 402,
+   "won": false
   },
   {
    "org": "RRQ",
@@ -1207,7 +1299,8 @@
    "atk_n": 337,
    "def_w": 191,
    "def_n": 359,
-   "rounds": 696
+   "rounds": 696,
+   "won": false
   },
   {
    "org": "SEN",
@@ -1220,7 +1313,8 @@
    "atk_n": 213,
    "def_w": 107,
    "def_n": 213,
-   "rounds": 426
+   "rounds": 426,
+   "won": false
   },
   {
    "org": "T1",
@@ -1233,7 +1327,8 @@
    "atk_n": 235,
    "def_w": 112,
    "def_n": 207,
-   "rounds": 442
+   "rounds": 442,
+   "won": false
   },
   {
    "org": "TH",
@@ -1246,7 +1341,8 @@
    "atk_n": 162,
    "def_w": 101,
    "def_n": 172,
-   "rounds": 334
+   "rounds": 334,
+   "won": false
   },
   {
    "org": "TL",
@@ -1259,7 +1355,8 @@
    "atk_n": 235,
    "def_w": 150,
    "def_n": 259,
-   "rounds": 494
+   "rounds": 494,
+   "won": false
   },
   {
    "org": "XLG",
@@ -1272,7 +1369,8 @@
    "atk_n": 199,
    "def_w": 98,
    "def_n": 198,
-   "rounds": 397
+   "rounds": 397,
+   "won": false
   },
   {
    "org": "AG",
@@ -1285,7 +1383,8 @@
    "atk_n": 128,
    "def_w": 72,
    "def_n": 136,
-   "rounds": 264
+   "rounds": 264,
+   "won": false
   },
   {
    "org": "BBL",
@@ -1298,7 +1397,8 @@
    "atk_n": 124,
    "def_w": 78,
    "def_n": 138,
-   "rounds": 262
+   "rounds": 262,
+   "won": false
   },
   {
    "org": "EDG",
@@ -1311,7 +1411,8 @@
    "atk_n": 223,
    "def_w": 92,
    "def_n": 177,
-   "rounds": 400
+   "rounds": 400,
+   "won": false
   },
   {
    "org": "FUR",
@@ -1324,7 +1425,8 @@
    "atk_n": 128,
    "def_w": 69,
    "def_n": 133,
-   "rounds": 261
+   "rounds": 261,
+   "won": false
   },
   {
    "org": "G2",
@@ -1337,7 +1439,8 @@
    "atk_n": 132,
    "def_w": 67,
    "def_n": 123,
-   "rounds": 255
+   "rounds": 255,
+   "won": false
   },
   {
    "org": "M8",
@@ -1350,7 +1453,8 @@
    "atk_n": 188,
    "def_w": 97,
    "def_n": 182,
-   "rounds": 370
+   "rounds": 370,
+   "won": false
   },
   {
    "org": "NRG",
@@ -1363,7 +1467,8 @@
    "atk_n": 164,
    "def_w": 83,
    "def_n": 155,
-   "rounds": 319
+   "rounds": 319,
+   "won": false
   },
   {
    "org": "NS",
@@ -1376,7 +1481,8 @@
    "atk_n": 134,
    "def_w": 61,
    "def_n": 116,
-   "rounds": 250
+   "rounds": 250,
+   "won": true
   },
   {
    "org": "PRX",
@@ -1389,7 +1495,8 @@
    "atk_n": 209,
    "def_w": 107,
    "def_n": 223,
-   "rounds": 432
+   "rounds": 432,
+   "won": false
   },
   {
    "org": "T1",
@@ -1402,7 +1509,8 @@
    "atk_n": 165,
    "def_w": 91,
    "def_n": 181,
-   "rounds": 346
+   "rounds": 346,
+   "won": false
   },
   {
    "org": "TL",
@@ -1415,7 +1523,8 @@
    "atk_n": 240,
    "def_w": 120,
    "def_n": 237,
-   "rounds": 477
+   "rounds": 477,
+   "won": false
   },
   {
    "org": "XLG",
@@ -1428,7 +1537,8 @@
    "atk_n": 154,
    "def_w": 86,
    "def_n": 137,
-   "rounds": 291
+   "rounds": 291,
+   "won": false
   },
   {
    "org": "DRG",
@@ -1441,7 +1551,8 @@
    "atk_n": 283,
    "def_w": 138,
    "def_n": 298,
-   "rounds": 581
+   "rounds": 581,
+   "won": false
   },
   {
    "org": "EDG",
@@ -1454,7 +1565,8 @@
    "atk_n": 274,
    "def_w": 158,
    "def_n": 280,
-   "rounds": 554
+   "rounds": 554,
+   "won": false
   },
   {
    "org": "FS",
@@ -1467,7 +1579,8 @@
    "atk_n": 220,
    "def_w": 106,
    "def_n": 222,
-   "rounds": 442
+   "rounds": 442,
+   "won": false
   },
   {
    "org": "FUT",
@@ -1480,7 +1593,8 @@
    "atk_n": 256,
    "def_w": 117,
    "def_n": 241,
-   "rounds": 497
+   "rounds": 497,
+   "won": false
   },
   {
    "org": "G2",
@@ -1493,7 +1607,8 @@
    "atk_n": 285,
    "def_w": 173,
    "def_n": 323,
-   "rounds": 608
+   "rounds": 608,
+   "won": false
   },
   {
    "org": "GE",
@@ -1506,7 +1621,8 @@
    "atk_n": 215,
    "def_w": 107,
    "def_n": 226,
-   "rounds": 441
+   "rounds": 441,
+   "won": false
   },
   {
    "org": "LEV",
@@ -1519,7 +1635,8 @@
    "atk_n": 275,
    "def_w": 141,
    "def_n": 268,
-   "rounds": 543
+   "rounds": 543,
+   "won": true
   },
   {
    "org": "NRG",
@@ -1532,7 +1649,8 @@
    "atk_n": 242,
    "def_w": 134,
    "def_n": 247,
-   "rounds": 489
+   "rounds": 489,
+   "won": false
   },
   {
    "org": "PRX",
@@ -1545,7 +1663,8 @@
    "atk_n": 266,
    "def_w": 173,
    "def_n": 298,
-   "rounds": 564
+   "rounds": 564,
+   "won": false
   },
   {
    "org": "TH",
@@ -1558,7 +1677,8 @@
    "atk_n": 328,
    "def_w": 187,
    "def_n": 354,
-   "rounds": 682
+   "rounds": 682,
+   "won": false
   },
   {
    "org": "VIT",
@@ -1571,7 +1691,8 @@
    "atk_n": 257,
    "def_w": 128,
    "def_n": 277,
-   "rounds": 534
+   "rounds": 534,
+   "won": false
   },
   {
    "org": "XLG",
@@ -1584,7 +1705,8 @@
    "atk_n": 323,
    "def_w": 168,
    "def_n": 316,
-   "rounds": 639
+   "rounds": 639,
+   "won": false
   }
  ],
  "internationals": [
@@ -1600,6 +1722,18 @@
   "Masters London 2026"
  ],
  "global_attack_rate": 0.5075,
+ "winners": {
+  "Masters Tokyo 2023": "FNC",
+  "Champions 2023": "EG",
+  "Masters Madrid 2024": "SEN",
+  "Masters Shanghai 2024": "GEN",
+  "Champions 2024": "EDG",
+  "Masters Bangkok 2025": "T1",
+  "Masters Toronto 2025": "PRX",
+  "Champions 2025": "NRG",
+  "Masters Santiago 2026": "NS",
+  "Masters London 2026": "LEV"
+ },
  "skipped": [
   "ASE @ Masters Tokyo 2023 (no prior split)",
   "EDG @ Masters Tokyo 2023 (no prior split)"

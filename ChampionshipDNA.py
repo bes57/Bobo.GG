@@ -90,13 +90,17 @@ PAGE_HTML = """
   .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content h2, .cover { scroll-margin-top:84px; }
   .fig { margin:34px 0 40px; }
-  .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; }
+  .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; background:#fff;
+              border:1px solid #ece6f2; border-radius:14px; box-shadow:0 4px 24px #0000000a;
+              overflow:hidden; }
   .fig-filter { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
   .lsb { font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:700; color:var(--soft);
          background:#fff; border:1px solid #e8e0ec; border-radius:99px; padding:5px 12px; cursor:pointer;
          transition:background .15s,border-color .15s,color .15s; }
   .lsb:hover { color:var(--ink); border-color:#c9b8d8; }
   .lsb.on { background:#7c4dd6; border-color:#7c4dd6; color:#fff; }
+  .lsb-win { border-color:#e0c48a; color:#8a6a1a; }
+  .lsb-win.on { background:#d8a93a; border-color:#d8a93a; color:#fff; }
   @media (max-width:820px) {
     .page { padding:40px 18px 60px; }
   }
@@ -135,67 +139,126 @@ PAGE_HTML = """
 const LS = __LANDSCAPE_JSON__;
 const logoCache = {};
 function logo(org) {
-  if (!logoCache[org]) {
-    const i = new Image(26, 26);
-    i.src = '/logos/' + org + '.png';
-    logoCache[org] = i;
-  }
+  if (!logoCache[org]) { const i = new Image(); i.src = '/logos/' + org + '.png'; logoCache[org] = i; }
   return logoCache[org];
 }
 const pct = v => (v * 100).toFixed(1) + '%';
 
-// Reference lines at the league-wide split. Attack and defense are two views of
-// the same rounds, so these are complements: whatever share attack wins overall,
-// defense wins the rest. A team above/right of them beat the field on that side.
 const ATK_AVG = LS.global_attack_rate, DEF_AVG = 1 - LS.global_attack_rate;
+let hovered = null, active = 'All', chart;
+
+// White plate behind everything, so the figure reads as its own card instead of
+// sitting on the page's gradient.
+const plate = {
+  id: 'plate',
+  beforeDraw(c) {
+    const {ctx} = c;
+    ctx.save(); ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, c.width, c.height); ctx.restore();
+  }
+};
+
+// Reference lines at the league-wide split — attack and defense are two views of
+// the same rounds, so they're complements.
 const guides = {
   id: 'guides',
   beforeDatasetsDraw(c) {
     const {ctx, chartArea: a, scales: {x, y}} = c;
     ctx.save();
-    ctx.strokeStyle = 'rgba(61,26,110,.22)';
-    ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(a.left, y.getPixelForValue(ATK_AVG)); ctx.lineTo(a.right, y.getPixelForValue(ATK_AVG)); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x.getPixelForValue(DEF_AVG), a.top); ctx.lineTo(x.getPixelForValue(DEF_AVG), a.bottom); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(61,26,110,.45)';
-    ctx.font = "600 10px 'DM Sans',sans-serif";
-    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(61,26,110,.40)'; ctx.font = "600 10px 'DM Sans',sans-serif"; ctx.textAlign = 'left';
     ctx.fillText('league-average attack (' + pct(ATK_AVG) + ')', a.left + 6, y.getPixelForValue(ATK_AVG) - 5);
-    ctx.save();
-    ctx.translate(x.getPixelForValue(DEF_AVG) - 5, a.bottom - 6);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillText('league-average defense (' + pct(DEF_AVG) + ')', 0, 0);
-    ctx.restore();
     ctx.restore();
   }
 };
 
-let chart, active = 'All';
-function pointsFor(sel) {
-  return LS.points.filter(p => sel === 'All' || p.intl === sel)
-                  .map(p => ({x: p.dfn, y: p.atk, p}));
+// Logos and their event labels are drawn here rather than via pointStyle. Two
+// reasons: Chart.js swaps the point for its hover style on hover, which made the
+// logo vanish under the cursor, and drawing by hand is what lets everything
+// except the hovered team drop to greyscale.
+const marks = {
+  id: 'marks',
+  afterDatasetsDraw(c) {
+    const {ctx} = c;
+    const meta = c.getDatasetMeta(0);
+    // Hovered one last, so it draws over the neighbours it grows into.
+    const order = meta.data.map((_, i) => i)
+                           .sort((a, b) => (a === hovered) - (b === hovered));
+    // Labels are skipped where they'd land on one already drawn. With all 122
+    // points shown they otherwise pile into an unreadable smear through the
+    // middle of the cloud; this keeps whichever ones can actually be read, and
+    // the hovered label is always drawn regardless.
+    const placed = [];
+    const fits = (x, y, w) => {
+      const r = {l: x - w / 2, r: x + w / 2, t: y, b: y + 11};
+      for (const q of placed) {
+        if (r.l < q.r && r.r > q.l && r.t < q.b && r.b > q.t) return false;
+      }
+      placed.push(r); return true;
+    };
+    order.forEach(i => {
+      const pt = meta.data[i];
+      const p = c.data.datasets[0].data[i].p;
+      const img = logo(p.org);
+      const on  = hovered === i;
+      const dim = hovered !== null && !on;
+      const S = (p.won ? 30 : 25) * (on ? 1.7 : 1);
+      ctx.save();
+      ctx.globalAlpha = dim ? 0.28 : 1;
+      if (dim) ctx.filter = 'grayscale(1)';
+      if (img.complete && img.naturalWidth) ctx.drawImage(img, pt.x - S / 2, pt.y - S / 2, S, S);
+      ctx.filter = 'none';
+      ctx.globalAlpha = 1;
+      ctx.font = (on ? "800 12px " : "500 9px ") + "'DM Sans',sans-serif";
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      if (on) {
+        // Plate under the enlarged label so it stays readable over other marks.
+        const w = ctx.measureText(p.intl).width + 10;
+        ctx.fillStyle = 'rgba(255,255,255,.92)';
+        ctx.fillRect(pt.x - w / 2, pt.y + S / 2 + 1, w, 15);
+      }
+      const ly = pt.y + S / 2 + 3;
+      if (on || fits(pt.x, ly, ctx.measureText(p.intl).width)) {
+        ctx.fillStyle = dim ? 'rgba(150,142,158,.45)' : (on ? '#3d1a6e' : '#8a7f94');
+        ctx.fillText(p.intl, pt.x, ly);
+      }
+      ctx.restore();
+    });
+  }
+};
+
+function visible() {
+  return LS.points.filter(p =>
+    active === 'All' ? true : (active === 'Winners' ? p.won : p.intl === active)
+  ).map(p => ({x: p.dfn, y: p.atk, p}));
 }
+
 function draw() {
-  const data = pointsFor(active);
-  if (chart) { chart.data.datasets[0].data = data;
-               chart.data.datasets[0].pointStyle = data.map(d => logo(d.p.org));
-               chart.update(); return; }
+  const data = visible();
+  if (chart) { chart.data.datasets[0].data = data; hovered = null; chart.update(); return; }
   chart = new Chart(document.getElementById('sideLandscape'), {
     type: 'scatter',
-    data: {datasets: [{
-      data, pointStyle: data.map(d => logo(d.p.org)),
-      hoverRadius: 0, hitRadius: 13,
-    }]},
+    data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: 14}]},
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: {padding: 10},
+      layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
+      // nearest + intersect:false = exactly one point, the closest to the
+      // cursor. The default mode returns everything within hitRadius, which in
+      // a cluster this dense meant five teams in one tooltip.
+      interaction: {mode: 'nearest', intersect: false, axis: 'xy'},
+      onHover(e, els) {
+        const i = els.length ? els[0].index : null;
+        if (i !== hovered) { hovered = i; chart.draw(); }
+      },
       scales: {
-        x: {title: {display: true, text: 'Defense win% (split before the event)',
+        x: {title: {display: true, text: 'Defense win% in the split before the event',
                     font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
             ticks: {callback: v => pct(v), font: {size: 10}, color: '#9a8fa4'},
             grid: {color: 'rgba(0,0,0,.05)'}},
-        y: {title: {display: true, text: 'Attack win% (split before the event)',
+        y: {title: {display: true, text: 'Attack win% in the split before the event',
                     font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
             ticks: {callback: v => pct(v), font: {size: 10}, color: '#9a8fa4'},
             grid: {color: 'rgba(0,0,0,.05)'}}
@@ -203,9 +266,9 @@ function draw() {
       plugins: {
         legend: {display: false},
         tooltip: {
-          displayColors: false,
+          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
           callbacks: {
-            title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl,
+            title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (won it)' : ''),
             label: it => {
               const p = it.raw.p;
               return ['from ' + p.prior,
@@ -216,18 +279,21 @@ function draw() {
         }
       }
     },
-    plugins: [guides]
+    plugins: [plate, guides, marks]
   });
 }
+
 (function () {
   const box = document.getElementById('lsFilter');
-  ['All'].concat(LS.internationals).forEach(name => {
+  const opts = [['All', 'All'], ['Winners', 'Winners only']].concat(
+    LS.internationals.map(n => [n, n]));
+  opts.forEach(([val, text]) => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'lsb' + (name === 'All' ? ' on' : '');
-    b.textContent = name;
+    b.className = 'lsb' + (val === 'All' ? ' on' : '') + (val === 'Winners' ? ' lsb-win' : '');
+    b.textContent = text;
     b.onclick = () => {
-      active = name;
+      active = val;
       [].forEach.call(box.children, c => c.classList.toggle('on', c === b));
       draw();
     };

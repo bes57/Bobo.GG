@@ -98,8 +98,27 @@ def side_rates():
     return out
 
 
+def _event_winners():
+    """intl event -> the org that won its Grand Final. Read from match_results
+    rather than hardcoded, so a new event needs no edit here."""
+    mr = pd.read_csv(os.path.join(ROOT, "data", "match_results.csv"), dtype=str)
+    mr["MatchID"] = mr.MatchID.str.strip()
+    ro = pd.read_csv(os.path.join(ROOT, "data", "enriched", "round_outcomes.csv"),
+                     dtype=str, usecols=["match_id", "event"]).drop_duplicates()
+    ev = dict(zip(ro.match_id.str.strip(), ro.event))
+    series = mr[mr.MapNum == "all"].assign(event=lambda d: d.MatchID.map(ev))
+    out = {}
+    for e, _ in INTERNATIONALS:
+        sub = series[series.event == e]
+        gf = sub[sub.MatchName.str.contains("Grand Final", case=False, na=False)]
+        if len(gf) == 1:
+            out[e] = gf.iloc[0].WinnerOrg
+    return out
+
+
 def build():
     sp = side_rates()
+    winners = _event_winners()
     sp = sp[~sp.org.isin(_NOT_ORGS)]
     sp["is_split"] = sp.event.str.contains(_SPLIT_RE, regex=True) & ~sp.event.isin(_INTL_SET)
 
@@ -130,12 +149,14 @@ def build():
                 "atk_w": int(pr.atk_w), "atk_n": int(pr.atk_n),
                 "def_w": int(pr.def_w), "def_n": int(pr.def_n),
                 "rounds": int(pr.atk_n + pr.def_n),
+                "won": winners.get(ev) == row.org,
             })
 
     payload = {
         "points": points,
         "internationals": [lbl for _, lbl in INTERNATIONALS],
         "global_attack_rate": round(sp.atk_w.sum() / max(1, sp.atk_n.sum()), 4),
+        "winners": {label[e]: o for e, o in winners.items()},
         "skipped": skipped,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -151,5 +172,8 @@ if __name__ == "__main__":
           f"{len({x['org'] for x in p['points']})} teams, "
           f"{len(p['internationals'])} internationals")
     print(f"  global attack round win rate: {p['global_attack_rate']} (expect ~.507)")
+    print(f"  winners: {p['winners']}")
+    won = [x for x in p["points"] if x["won"]]
+    print(f"  points flagged as tournament winners: {len(won)} (expect one per event)")
     for s in p["skipped"]:
         print(f"  skipped: {s}")
