@@ -280,15 +280,15 @@ const fifty = {
 // Tiers of favouritism, EvanMiya-style. A band is a range of attack% + defense%,
 // so every boundary is the same diagonal slope — a team can reach a tier by
 // being strong on either side or balanced across both. Thresholds are set from
-// the teams the author named: 1.18 sits between FPX at Shanghai (1.160) and
-// Nongshim at Santiago (1.190) and just above G2 at Bangkok (1.176); 1.08 sits
-// just under NRG at Champions 2025 (1.086) and PRX at Toronto (1.084); 1.015
-// sits just above T1 at Bangkok (1.008), who names the floor tier.
+// the teams the author named: 1.168 clears FPX at Shanghai (1.160) while taking
+// in G2 (1.176) and Vitality (1.177) at Bangkok; 1.08 sits just under NRG at
+// Champions 2025 (1.086) and PRX at Toronto (1.084); 1.015 sits just above T1
+// at Bangkok (1.008), who names the floor tier.
 const BANDS = [
-  {lo: 1.18,  hi: 2.00, label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.16)',  ink: '#8a6a1a'},
-  {lo: 1.08,  hi: 1.18, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.13)',  ink: '#5b21b6'},
-  {lo: 1.015, hi: 1.08, label: 'Trophy Believers',  fill: 'rgba(124,77,214,.06)',  ink: '#7c4dd6'},
-  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',          fill: 'rgba(120,110,130,.07)', ink: '#7a6e7e'}
+  {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a'},
+  {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6'},
+  {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8'},
+  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c'}
 ];
 
 const bands = {
@@ -325,17 +325,20 @@ const bands = {
       const m = (b.lo + Math.min(b.hi, 1.40)) / 2;
       let x0 = Math.max(0.40, m - 0.70), x1 = Math.min(0.70, m - 0.40);
       if (x1 <= x0) return;
-      const cx = (x0 + x1) / 2, cy = m - cx;
+      // Near the LEFT end of the strip rather than its middle: a diagonal band's
+      // centre runs through the thick of the cloud, where the title lands on
+      // top of teams. The upper-left of each band is open space.
+      const cx = x0 + 0.12 * (x1 - x0), cy = m - cx;
       if (cy < 0.40 || cy > 0.70) return;
       const [sx, sy] = px(cx, cy);
-      const font = "800 11px 'DM Sans',sans-serif";
-      const w = textW(ctx, b.label, font) + 18;
+      const font = "800 14px 'DM Sans',sans-serif";
+      const w = textW(ctx, b.label, font) + 22;
       ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(255,255,255,.88)';
       ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.lineWidth = 1;
-      const h = 22, rx = sx - w / 2, ry = sy - h / 2;
+      const h = 28, rx = sx - w / 2, ry = sy - h / 2;
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(rx, ry, w, h, 11);
+      if (ctx.roundRect) ctx.roundRect(rx, ry, w, h, 14);
       else ctx.rect(rx, ry, w, h);
       ctx.fill(); ctx.stroke();
       ctx.fillStyle = b.ink;
@@ -400,8 +403,8 @@ const AXIS = title => ({
 // One interactive landscape. Built twice — plain, then with tier bands — so its
 // state lives in a closure rather than on the page, or the two would share a
 // hover.
-function buildLandscape({canvas, winBox, eventBox, bandDefs}) {
-  let hovered = null, pinned = null, active = 'All', winnersOn = true, chart;
+function buildLandscape({canvas, winBox, eventBox, bandDefs, winnersDefault = true}) {
+  let hovered = null, pinned = null, active = 'All', winnersOn = winnersDefault, chart;
   const HOVER_PX = 20;
 
   const visible = () => LS.points.filter(p => active === 'All' || p.intl === active)
@@ -484,7 +487,7 @@ function buildLandscape({canvas, winBox, eventBox, bandDefs}) {
   const setLabel = () => {
     w.innerHTML = 'Highlight winners <span class="lsb-state">' + (winnersOn ? 'ON' : 'OFF') + '</span>';
   };
-  w.className = 'lsb lsb-win on';
+  w.className = 'lsb lsb-win' + (winnersOn ? ' on' : '');
   setLabel();
   w.onclick = () => {
     winnersOn = !winnersOn; pinned = null;
@@ -529,7 +532,8 @@ function buildLandscape({canvas, winBox, eventBox, bandDefs}) {
 }
 
 const mainLandscape = buildLandscape({canvas: 'sideLandscape', winBox: 'lsWin', eventBox: 'lsEvents'});
-buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvents', bandDefs: BANDS});
+buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvents',
+                bandDefs: BANDS, winnersDefault: false});
 
 // Static, non-interactive: the cluster the T1 sentence points at.
 (function () {
