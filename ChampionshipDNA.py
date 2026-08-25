@@ -300,8 +300,9 @@ const fifty = {
 // at Bangkok (1.008), who names the floor tier.
 const BANDS = [
   {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a',
-   sub: 'A rare tier of strength to fall into. Half of the teams in this tier finished top 2 at their events'},
+   sub: 'A rare tier of strength to fall into. Half of the teams in this tier finished top-2 at their events'},
   {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6',
+   nudge: 0.035,
    sub: 'Most of these teams are strong enough to win. It’s the tier that contains the most trophy winners (and also the most entries).'},
   {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8',
    sub: 'I wouldn’t count on these teams winning. They are either middling on both attack/defense or have one side that is weak'},
@@ -371,12 +372,15 @@ const bands = {
         return out;
       };
 
-      // A sum safely inside the band, so the block never sits on a boundary.
+      // Ride just under the band's UPPER edge, not through the middle of the
+      // strip: the top-left corner of a diagonal band is where its upper edge
+      // meets the left axis, and that is where these titles belong. The top
+      // band has no upper edge inside the plot, so it hangs off its lower one.
       const span = b.hi - b.lo;
-      const t = span > 0.5
-        ? (b.lo < 0.5 ? b.hi - 0.075 : b.lo + 0.075)   // open-ended band
-        : b.lo + span * 0.5;
-      const xlo = Math.max(0.40, t - 0.70), xhi = Math.min(0.70, t - 0.40);
+      const openTop = b.hi >= 1.9;
+      const margin = Math.min(0.030, Math.max(span, 0.06) * 0.35);
+      const t = openTop ? b.lo + 0.075 : b.hi - margin;
+      const xlo = Math.max(0.40, t - 0.70) + (b.nudge || 0), xhi = Math.min(0.70, t - 0.40);
       if (xhi <= xlo) return;
 
       // Try progressively narrower wraps. A tall thin block fits gaps in the
