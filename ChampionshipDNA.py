@@ -314,10 +314,6 @@ const marks = {
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       const ly = pt.y + S / 2 + 3;
       {
-        if (on) {
-          ctx.fillStyle = 'rgba(255,255,255,.92)';
-          ctx.fillRect(pt.x - w / 2 - 5, ly - 2, w + 10, 15);
-        }
         // Outline carries the event type: purple = Masters, gold = Champions.
         ctx.lineWidth = on ? 3.5 : 2;
         ctx.lineJoin = 'round';
