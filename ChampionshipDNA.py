@@ -336,63 +336,88 @@ const bands = {
     });
     ctx.restore();
 
-    // Titles, placed at the middle of each band's visible run so they sit in
-    // open space rather than on the diagonal's ends.
+    // Titles. Three constraints: inside the band, biased up and left, and clear
+    // of everything already on the plot. Candidates run ALONG the band — a line
+    // of constant attack+defense — so any position tried is by construction
+    // still in that tier; the search just picks the first that collides with
+    // nothing.
     ctx.save();
-    c.$bands.forEach(b => {
-      // Clamp the open-ended sides before taking a midpoint. The bottom band
-      // runs from 0 and the top to 2.0; using those raw puts the midpoint
-      // nowhere near the plot and the range test below drops the label — which
-      // is exactly how T1 Tier lost its title.
-      // Top-left corner of this band's visible region, nudged inside it. A band
-      // is a diagonal strip, so its leftmost visible column is where its lower
-      // edge crosses the left axis; the highest point in that column sits just
-      // under its upper edge. Anchoring off the strip's midpoint instead put
-      // each title in a different place relative to its own band.
-      const xs = Math.max(0.40, b.lo - 0.70);
-      const cx = xs + 0.02;
-      const cy = Math.min(0.70, b.hi - cx) - 0.02;
-      if (cx > 0.70 || cy < 0.40 || cy > 0.70) return;
-      const [sx, sy] = px(cx, cy);
-      const font = "800 14px 'DM Sans',sans-serif";
-      const w = textW(ctx, b.label, font) + 22;
-      ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'rgba(255,255,255,.88)';
-      ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.lineWidth = 1;
-      // Keep the pill wholly inside the plot — centring on the anchor alone
-      // lets it hang over an axis when the anchor sits near an edge.
-      const h = 28;
-      const rx = Math.min(Math.max(sx - w / 2, a.left + 8), a.right - w - 8);
-      const ry = Math.min(Math.max(sy - h / 2, a.top + 6), a.bottom - h - 6);
-      ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(rx, ry, w, h, 14);
-      else ctx.rect(rx, ry, w, h);
-      ctx.fill(); ctx.stroke();
-      ctx.fillStyle = b.ink;
-      ctx.fillText(b.label, rx + w / 2, ry + h / 2 + 0.5);
+    const occupied = [];
+    // What the marks will occupy, computed here because bands draw first.
+    c.data.datasets[0].data.forEach(d => {
+      const mx = x.getPixelForValue(d.x), my = y.getPixelForValue(d.y);
+      const half = (d.p.won ? 30 : 25) / 2;
+      const lw = textW(ctx, d.p.intl, "700 9px 'DM Sans',sans-serif");
+      occupied.push({l: mx - Math.max(half, lw / 2), r: mx + Math.max(half, lw / 2),
+                     t: my - half, b: my + half + 14});
+    });
+    const hits = r => occupied.some(q => r.l < q.r && r.r > q.l && r.t < q.b && r.b > q.t);
 
-      // Subtext under the pill, unboxed and wrapped — same treatment as the
-      // reference, where the tier name carries the label and the line beneath
-      // says what being in it means.
-      if (b.sub) {
-        const sfont = "500 9.5px 'DM Sans',sans-serif";
-        ctx.font = sfont;
-        const maxW = 208, words = b.sub.split(' '), lines = [];
+    c.$bands.forEach(b => {
+      const titleFont = "800 14px 'DM Sans',sans-serif";
+      const subFont   = "500 9.5px 'DM Sans',sans-serif";
+      const w = textW(ctx, b.label, titleFont) + 22;
+
+      const wrap = maxW => {
+        ctx.font = subFont;
+        const out = [];
         let cur = '';
-        words.forEach(word => {
+        (b.sub || '').split(' ').forEach(word => {
           const test = cur ? cur + ' ' + word : word;
-          if (ctx.measureText(test).width > maxW && cur) { lines.push(cur); cur = word; }
+          if (ctx.measureText(test).width > maxW && cur) { out.push(cur); cur = word; }
           else cur = test;
         });
-        if (cur) lines.push(cur);
+        if (cur) out.push(cur);
+        return out;
+      };
+
+      // A sum safely inside the band, so the block never sits on a boundary.
+      const span = b.hi - b.lo;
+      const t = span > 0.5
+        ? (b.lo < 0.5 ? b.hi - 0.075 : b.lo + 0.075)   // open-ended band
+        : b.lo + span * 0.5;
+      const xlo = Math.max(0.40, t - 0.70), xhi = Math.min(0.70, t - 0.40);
+      if (xhi <= xlo) return;
+
+      // Try progressively narrower wraps. A tall thin block fits gaps in the
+      // cloud that a wide one cannot, so rewrapping buys clear space where
+      // sliding along the band alone runs out of it.
+      let best = null, subLines = [], blockW = 0, blockH = 0, fallback = null;
+      for (const maxW of [208, 168, 136, 112]) {
+        const ls = wrap(maxW);
+        const bw = Math.max(w, ls.length ? maxW : 0);
+        const bh = 28 + (ls.length ? ls.length * 12 + 4 : 0);
+        for (let step = 0; step <= 40; step++) {
+          const cx = xlo + (xhi - xlo) * (step / 40), cy = t - cx;
+          const sx = x.getPixelForValue(cx), sy = y.getPixelForValue(cy);
+          const r = {l: sx - bw / 2, r: sx + bw / 2, t: sy - 14, b: sy - 14 + bh};
+          if (r.l < a.left + 6 || r.r > a.right - 6 || r.t < a.top + 4 || r.b > a.bottom - 4) continue;
+          if (!fallback) { fallback = r; subLines = ls; blockW = bw; blockH = bh; }
+          if (!hits(r)) { best = r; subLines = ls; blockW = bw; blockH = bh; break; }
+        }
+        if (best) break;
+      }
+      if (!best) { best = fallback; }
+      if (!best) return;
+
+      const rx = best.l, ry = best.t, h = 28;
+      const px2 = rx + (blockW - w) / 2;
+      ctx.font = titleFont; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,.92)';
+      ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(px2, ry, w, h, 14); else ctx.rect(px2, ry, w, h);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = b.ink;
+      ctx.fillText(b.label, px2 + w / 2, ry + h / 2 + 0.5);
+
+      if (subLines.length) {
+        ctx.font = subFont; ctx.textBaseline = 'top';
         ctx.fillStyle = 'rgba(61,26,110,.62)';
-        ctx.textBaseline = 'top';
-        let ly2 = ry + h + 4;
-        // Flip above the pill if the block would run off the bottom.
-        if (ly2 + lines.length * 12 > a.bottom - 4) ly2 = ry - 4 - lines.length * 12;
-        lines.forEach((ln, k) => ctx.fillText(ln, rx + w / 2, ly2 + k * 12));
+        subLines.forEach((ln, k) => ctx.fillText(ln, rx + blockW / 2, ry + h + 4 + k * 12));
         ctx.textBaseline = 'middle';
       }
+      occupied.push(best);   // later titles avoid earlier ones too
     });
     ctx.restore();
   }
