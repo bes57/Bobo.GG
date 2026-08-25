@@ -304,7 +304,7 @@ const BANDS = [
   {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6',
    sub: 'Most of these teams are strong enough to win. It’s the tier that contains the most trophy winners (and also the most entries).'},
   {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8',
-   sub: 'These teams could possibly win, but I wouldn’t count on it. They are either middling on both sides (attack/defense) or have one side that is weak'},
+   sub: 'I wouldn’t count on these teams winning. They are either middling on both attack/defense or have one side that is weak'},
   {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c',
    sub: 'Apparently, you can win from this tier - see T1 at Bangkok'}
 ];
@@ -344,17 +344,15 @@ const bands = {
       // runs from 0 and the top to 2.0; using those raw puts the midpoint
       // nowhere near the plot and the range test below drops the label — which
       // is exactly how T1 Tier lost its title.
-      const m = (Math.max(b.lo, 0.80) + Math.min(b.hi, 1.40)) / 2;
-      let x0 = Math.max(0.40, m - 0.70), x1 = Math.min(0.70, m - 0.40);
-      if (x1 <= x0) return;
-      // Near the LEFT end of the strip rather than its middle: a diagonal band's
-      // centre runs through the thick of the cloud, where the title lands on
-      // top of teams. The upper-left of each band is open space.
-      // A FIXED inset, not a fraction of the run: the bottom band's visible
-      // run is about a third the length of the others, so a percentage put
-      // its title hard against the axis while the rest sat comfortably in.
-      const cx = Math.min(x0 + 0.035, x1), cy = m - cx;
-      if (cy < 0.40 || cy > 0.70) return;
+      // Top-left corner of this band's visible region, nudged inside it. A band
+      // is a diagonal strip, so its leftmost visible column is where its lower
+      // edge crosses the left axis; the highest point in that column sits just
+      // under its upper edge. Anchoring off the strip's midpoint instead put
+      // each title in a different place relative to its own band.
+      const xs = Math.max(0.40, b.lo - 0.70);
+      const cx = xs + 0.02;
+      const cy = Math.min(0.70, b.hi - cx) - 0.02;
+      if (cx > 0.70 || cy < 0.40 || cy > 0.70) return;
       const [sx, sy] = px(cx, cy);
       const font = "800 14px 'DM Sans',sans-serif";
       const w = textW(ctx, b.label, font) + 22;
