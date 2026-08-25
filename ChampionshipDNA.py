@@ -299,10 +299,10 @@ const fifty = {
 // Champions 2025 (1.086) and PRX at Toronto (1.084); 1.015 sits just above T1
 // at Bangkok (1.008), who names the floor tier.
 const BANDS = [
-  {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a',
+  {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a', dx: 6,
    sub: 'A rare tier of strength to fall into. Half of the teams in this tier finished top-2 at their events'},
   {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6',
-   nudge: 0.035, dx: -6,
+   nudge: 0.035, dx: -18,
    sub: 'Most of these teams are strong enough to win. It’s the tier that contains the most trophy winners (and also the most entries).'},
   {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8', dx: 2,
    sub: 'These teams are either middling on both attack/defense or have one side that is weak'},
