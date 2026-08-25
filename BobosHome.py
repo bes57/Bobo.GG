@@ -1869,7 +1869,7 @@ ARTICLES_HTML = """
       <img src="/championshipdna.jpg" alt="">
       <div class="ab">
         <div class="at">Championship DNA: Historical Trends To Note For Champions Shanghai</div>
-        <div class="ad">Understanding the indicators of a team being able to rise above the rest - by the numbers, by the rosters, and other miscellaneous trends.</div>
+        <div class="ad">Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.</div>
         <div class="adate">Aug 25, 2026</div>
       </div>
     </a>

@@ -30,7 +30,7 @@ PAGE_HTML = """
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Bobo gg">
 <meta property="og:title" content="Championship DNA: Historical Trends To Note For Champions Shanghai">
-<meta property="og:description" content="Understanding the indicators of a team being able to rise above the rest - by the numbers, by the rosters, and other miscellaneous trends.">
+<meta property="og:description" content="Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.">
 <meta property="og:url" content="https://bobo-gg.net/articles/championship-dna/">
 <meta property="og:image" content="https://bobo-gg.net/championshipdna.jpg">
 <meta property="og:image:secure_url" content="https://bobo-gg.net/championshipdna.jpg">
@@ -39,7 +39,7 @@ PAGE_HTML = """
 <meta property="og:image:height" content="1404">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Championship DNA: Historical Trends To Note For Champions Shanghai">
-<meta name="twitter:description" content="Understanding the indicators of a team being able to rise above the rest - by the numbers, by the rosters, and other miscellaneous trends.">
+<meta name="twitter:description" content="Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.">
 <meta name="twitter:image" content="https://bobo-gg.net/championshipdna.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
