@@ -103,7 +103,10 @@ PAGE_HTML = """
      the body-paragraph style. */
   /* Centred in the bullet, and pulled back over the list indent so it lines up
      with the body column rather than sitting off to the right. */
-  .inline-fig { margin:18px 0 18px -22px; }
+  .inline-fig { margin:18px 0; }
+  /* Only the in-bullet inset needs pulling back over the list indent. Applying
+     it to every .inline-fig knocked the full-width reference image off centre. */
+  li .inline-fig { margin-left:-22px; }
   .content .fig-credit { font-size:.68rem; font-weight:300; color:var(--soft);
                          text-align:center; margin-top:8px; word-break:break-all; }
   .content .fig-credit a { color:var(--soft); text-decoration:underline; }
