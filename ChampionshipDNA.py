@@ -733,7 +733,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
             label: it => {
               const r = rows[it.dataIndex];
               return ['BenPom #' + r.rank + ' of ' + r.pool + ' rated teams',
-                      'as of ' + r.as_of];
+                      'from the "' + r.snapshot + '" ratings'];
             }
           }
         }
