@@ -299,10 +299,14 @@ const fifty = {
 // Champions 2025 (1.086) and PRX at Toronto (1.084); 1.015 sits just above T1
 // at Bangkok (1.008), who names the floor tier.
 const BANDS = [
-  {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a'},
-  {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6'},
-  {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8'},
-  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c'}
+  {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a',
+   sub: 'A rare tier of strength to fall into. Half of the teams in this tier finished top 2 at their events'},
+  {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6',
+   sub: 'Most of these teams are strong enough to win. It’s the tier that contains the most trophy winners (and also the most entries).'},
+  {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8',
+   sub: 'These teams could possibly win, but I wouldn’t count on it. They are either middling on both sides (attack/defense) or have one side that is weak'},
+  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c',
+   sub: 'Apparently, you can win from this tier - see T1 at Bangkok'}
 ];
 
 const bands = {
@@ -368,6 +372,29 @@ const bands = {
       ctx.fill(); ctx.stroke();
       ctx.fillStyle = b.ink;
       ctx.fillText(b.label, rx + w / 2, ry + h / 2 + 0.5);
+
+      // Subtext under the pill, unboxed and wrapped — same treatment as the
+      // reference, where the tier name carries the label and the line beneath
+      // says what being in it means.
+      if (b.sub) {
+        const sfont = "500 9.5px 'DM Sans',sans-serif";
+        ctx.font = sfont;
+        const maxW = 208, words = b.sub.split(' '), lines = [];
+        let cur = '';
+        words.forEach(word => {
+          const test = cur ? cur + ' ' + word : word;
+          if (ctx.measureText(test).width > maxW && cur) { lines.push(cur); cur = word; }
+          else cur = test;
+        });
+        if (cur) lines.push(cur);
+        ctx.fillStyle = 'rgba(61,26,110,.62)';
+        ctx.textBaseline = 'top';
+        let ly2 = ry + h + 4;
+        // Flip above the pill if the block would run off the bottom.
+        if (ly2 + lines.length * 12 > a.bottom - 4) ly2 = ry - 4 - lines.length * 12;
+        lines.forEach((ln, k) => ctx.fillText(ln, rx + w / 2, ly2 + k * 12));
+        ctx.textBaseline = 'middle';
+      }
     });
     ctx.restore();
   }
