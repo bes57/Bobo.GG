@@ -359,6 +359,10 @@ function draw() {
       // over the canvas, so the highlight used to stick forever once entered.
       // Gate it on actual pixel distance, and clear on the way out.
       onHover(e, els, c) {
+        // Any cursor movement releases a pinned observation. The pin is a
+        // reading aid for the sentence that set it, not a mode to get stuck
+        // in — one move and the chart is back to its normal state.
+        if (pinned !== null) { pinned = null; c.draw(); }
         let i = null;
         if (els.length) {
           const pt = c.getDatasetMeta(0).data[els[0].index];
