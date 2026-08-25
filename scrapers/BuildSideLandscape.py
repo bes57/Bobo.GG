@@ -27,11 +27,14 @@ import pandas as pd
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT  = os.path.join(ROOT, "data", "enriched", "side_landscape.json")
 
-# International events, oldest first. LOCK//IN 2023 is deliberately absent: it
-# opened the franchised era, so no team had a split before it.
+# International events, oldest first. LOCK//IN 2023 is absent for the same
+# reason as Champions 2023 below: no domestic split preceded it.
 INTERNATIONALS = [
     ("Champions Tour 2023: Masters Tokyo",     "Masters Tokyo 2023"),
-    ("Valorant Champions 2023",                "Champions 2023"),
+    # Champions 2023 is deliberately absent. 2023 ran a single domestic League
+    # split, and that split already feeds Masters Tokyo — only LCQs sat between
+    # Tokyo and Champions. Including it would reuse the same numbers for two
+    # different events.
     ("Champions Tour 2024: Masters Madrid",    "Masters Madrid 2024"),
     ("Champions Tour 2024: Masters Shanghai",  "Masters Shanghai 2024"),
     ("Valorant Champions 2024",                "Champions 2024"),

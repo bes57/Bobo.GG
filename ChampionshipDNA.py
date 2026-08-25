@@ -93,13 +93,15 @@ PAGE_HTML = """
   .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; background:#fff;
               border:1px solid #ece6f2; box-shadow:0 4px 24px #0000000a;
               overflow:hidden; }
+  .fig-note { font-size:.78rem; font-weight:300; color:var(--soft); text-align:center;
+              margin:0 0 14px; line-height:1.5; }
   .fig-filter { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
   .lsb { font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:700; color:var(--soft);
          background:#fff; border:1px solid #e8e0ec; border-radius:99px; padding:5px 12px; cursor:pointer;
          transition:background .15s,border-color .15s,color .15s; }
   .lsb:hover { color:var(--ink); border-color:#c9b8d8; }
   .lsb.on { background:#7c4dd6; border-color:#7c4dd6; color:#fff; }
-  .lsb-win { border-color:#e0c48a; color:#8a6a1a; }
+  .lsb-win { border-color:#e0c48a; color:#8a6a1a; margin-left:10px; }
   .lsb-win.on { background:#d8a93a; border-color:#d8a93a; color:#fff; }
   @media (max-width:820px) {
     .page { padding:40px 18px 60px; }
@@ -128,6 +130,7 @@ PAGE_HTML = """
       <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior (e.g. Leviatan at London uses their numbers from Stage 1 of 2026).</p>
 
       <figure class="fig">
+        <p class="fig-note"><em>Note: Champions 2023 was not included, since there was no domestic split prior to the tournament</em></p>
         <div class="fig-filter" id="lsFilter"></div>
         <div class="fig-wrap"><canvas id="sideLandscape"></canvas></div>
       </figure>
@@ -174,7 +177,7 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
 };
 const pct = v => (v * 100).toFixed(1) + '%';
 
-let hovered = null, active = 'All', chart;
+let hovered = null, active = 'All', winnersOn = false, chart;
 const HOVER_PX = 20;   // cursor must be this close to a mark to isolate it
 
 // White plate behind everything, so the figure reads as its own card instead of
@@ -201,24 +204,15 @@ const marks = {
     // Hovered one last, so it draws over the neighbours it grows into.
     const order = meta.data.map((_, i) => i)
                            .sort((a, b) => (a === hovered) - (b === hovered));
-    // Labels are skipped where they'd land on one already drawn. With all 122
-    // points shown they otherwise pile into an unreadable smear through the
-    // middle of the cloud; this keeps whichever ones can actually be read, and
-    // the hovered label is always drawn regardless.
-    const placed = [];
-    const fits = (x, y, w) => {
-      const r = {l: x - w / 2, r: x + w / 2, t: y, b: y + 11};
-      for (const q of placed) {
-        if (r.l < q.r && r.r > q.l && r.t < q.b && r.b > q.t) return false;
-      }
-      placed.push(r); return true;
-    };
     order.forEach(i => {
       const pt = meta.data[i];
       const p = c.data.datasets[0].data[i].p;
       const img = logo(p.org);
       const on  = hovered === i;
-      const dim = hovered !== null && !on;
+      // Hover wins over the winners toggle: while isolating one team, that is
+      // the only thing lit. With nothing hovered, the toggle greys the field
+      // down to the trophy winners — they stay in the plot either way.
+      const dim = hovered !== null ? !on : (winnersOn && !p.won);
       const S = (p.won ? 30 : 25) * (on ? 1.7 : 1);
       const src = dim ? grey(p.org) : img;
       ctx.save();
@@ -232,7 +226,7 @@ const marks = {
       ctx.font = font;
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       const ly = pt.y + S / 2 + 3;
-      if (on || fits(pt.x, ly, w)) {
+      {
         if (on) {
           ctx.fillStyle = 'rgba(255,255,255,.92)';
           ctx.fillRect(pt.x - w / 2 - 5, ly - 2, w + 10, 15);
@@ -251,9 +245,8 @@ const marks = {
 };
 
 function visible() {
-  return LS.points.filter(p =>
-    active === 'All' ? true : (active === 'Winners' ? p.won : p.intl === active)
-  ).map(p => ({x: p.dfn, y: p.atk, p}));
+  return LS.points.filter(p => active === 'All' || p.intl === active)
+                  .map(p => ({x: p.dfn, y: p.atk, p}));
 }
 
 function draw() {
@@ -261,14 +254,18 @@ function draw() {
   if (chart) { chart.data.datasets[0].data = data; hovered = null; chart.update(); return; }
   chart = new Chart(document.getElementById('sideLandscape'), {
     type: 'scatter',
-    data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: 14}]},
+    data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: 16}]},
     options: {
       responsive: true, maintainAspectRatio: false, animation: false,
       layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
       // nearest + intersect:false = exactly one point, the closest to the
       // cursor. The default mode returns everything within hitRadius, which in
       // a cluster this dense meant five teams in one tooltip.
-      interaction: {mode: 'nearest', intersect: false, axis: 'xy'},
+      // intersect:true is what stops the tooltip appearing when the cursor is
+      // nowhere near a team: with false, Chart.js reports the nearest point
+      // from anywhere on the canvas, and the tooltip has its own interaction
+      // pass, so gating only the highlight left the card popping up unbidden.
+      interaction: {mode: 'nearest', intersect: true, axis: 'xy'},
       events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
       // nearest + intersect:false always returns SOMETHING while the cursor is
       // over the canvas, so the highlight used to stick forever once entered.
@@ -304,7 +301,11 @@ function draw() {
           // Above the mark, and no position tween — the default slides the card
           // between teams, which both reads as lag and costs frames.
           position: 'aboveMark', yAlign: 'bottom', xAlign: 'center',
-          animation: false, animations: {}, caretSize: 5,
+          // Fade in and out, but no position tween: `numbers` covers x/y/caret,
+          // and animating those is what made the card glide from team to team.
+          animation: {duration: 140},
+          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+          caretSize: 5,
           callbacks: {
             title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (won it)' : ''),
             label: it => {
@@ -326,20 +327,32 @@ function draw() {
 
 (function () {
   const box = document.getElementById('lsFilter');
-  const opts = [['All', 'All'], ['Winners', 'Winners only']].concat(
-    LS.internationals.map(n => [n, n]));
-  opts.forEach(([val, text]) => {
+  const evBtns = [];
+  ['All'].concat(LS.internationals).forEach(name => {
     const b = document.createElement('button');
     b.type = 'button';
-    b.className = 'lsb' + (val === 'All' ? ' on' : '') + (val === 'Winners' ? ' lsb-win' : '');
-    b.textContent = text;
+    b.className = 'lsb' + (name === 'All' ? ' on' : '');
+    b.textContent = name;
     b.onclick = () => {
-      active = val;
-      [].forEach.call(box.children, c => c.classList.toggle('on', c === b));
+      active = name;
+      evBtns.forEach(c => c.classList.toggle('on', c === b));
       draw();
     };
+    evBtns.push(b);
     box.appendChild(b);
   });
+  // Independent of the event row — it changes what's LIT, not what's shown, so
+  // it composes with whichever event is selected.
+  const w = document.createElement('button');
+  w.type = 'button';
+  w.className = 'lsb lsb-win';
+  w.textContent = 'Highlight winners';
+  w.onclick = () => {
+    winnersOn = !winnersOn;
+    w.classList.toggle('on', winnersOn);
+    draw();
+  };
+  box.appendChild(w);
   draw();
 })();
 </script>
