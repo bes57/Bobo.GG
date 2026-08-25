@@ -104,6 +104,10 @@ PAGE_HTML = """
   /* Centred in the bullet, and pulled back over the list indent so it lines up
      with the body column rather than sitting off to the right. */
   .inline-fig { margin:18px 0 18px -22px; }
+  .content .fig-credit { font-size:.68rem; font-weight:300; color:var(--soft);
+                         text-align:center; margin-top:8px; word-break:break-all; }
+  .content .fig-credit a { color:var(--soft); text-decoration:underline; }
+  .content .fig-credit a:hover { color:#7c4dd6; }
   .inline-fig.wide img { display:block; width:100%; max-width:820px; height:auto; margin:0 auto;
                         border:1px solid #ece6f2; }
   .inline-fig-wrap { position:relative; width:100%; max-width:760px; aspect-ratio:1.15/1;
@@ -189,9 +193,12 @@ PAGE_HTML = """
 
       <figure class="inline-fig wide">
         <img src="/evanmiya-landscape.jpg" alt="EvanMiya&rsquo;s March Madness Predicted Efficiency Landscape">
+        <figcaption class="fig-credit"><a href="https://substack.com/home/post/p-191132130" target="_blank" rel="noopener">https://substack.com/home/post/p-191132130</a></figcaption>
       </figure>
 
-      <p>In continuation, let&rsquo;s make our own bands of favoritism to win VCT tournaments based on this graph.</p>
+      <p>I highly recommend checking out EvanMiya&rsquo;s work for anyone interested in basketball.</p>
+
+      <p>In accordance with him, let&rsquo;s make our own bands of favoritism to win VCT tournaments based on this graph.</p>
 
       <figure class="fig">
         <div class="fig-filter">
