@@ -93,7 +93,7 @@ PAGE_HTML = """
   .fig-wrap { position:relative; width:100%; aspect-ratio:1/1; background:#fff;
               border:1px solid #ece6f2; box-shadow:0 4px 24px #0000000a;
               overflow:hidden; }
-  .fig-note { font-size:.78rem; font-weight:300; color:var(--soft); text-align:center;
+  .fig-note { font-size:.68rem; font-weight:300; color:var(--soft); text-align:center;
               margin:0 0 14px; line-height:1.5; }
   .fig-filter { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px; }
   .lsb { font-family:'DM Sans',sans-serif; font-size:.7rem; font-weight:700; color:var(--soft);
