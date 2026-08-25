@@ -346,7 +346,10 @@ const bands = {
       // Near the LEFT end of the strip rather than its middle: a diagonal band's
       // centre runs through the thick of the cloud, where the title lands on
       // top of teams. The upper-left of each band is open space.
-      const cx = x0 + 0.12 * (x1 - x0), cy = m - cx;
+      // A FIXED inset, not a fraction of the run: the bottom band's visible
+      // run is about a third the length of the others, so a percentage put
+      // its title hard against the axis while the rest sat comfortably in.
+      const cx = Math.min(x0 + 0.035, x1), cy = m - cx;
       if (cy < 0.40 || cy > 0.70) return;
       const [sx, sy] = px(cx, cy);
       const font = "800 14px 'DM Sans',sans-serif";
@@ -354,13 +357,17 @@ const bands = {
       ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(255,255,255,.88)';
       ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.lineWidth = 1;
-      const h = 28, rx = sx - w / 2, ry = sy - h / 2;
+      // Keep the pill wholly inside the plot — centring on the anchor alone
+      // lets it hang over an axis when the anchor sits near an edge.
+      const h = 28;
+      const rx = Math.min(Math.max(sx - w / 2, a.left + 8), a.right - w - 8);
+      const ry = Math.min(Math.max(sy - h / 2, a.top + 6), a.bottom - h - 6);
       ctx.beginPath();
       if (ctx.roundRect) ctx.roundRect(rx, ry, w, h, 14);
       else ctx.rect(rx, ry, w, h);
       ctx.fill(); ctx.stroke();
       ctx.fillStyle = b.ink;
-      ctx.fillText(b.label, sx, sy + 0.5);
+      ctx.fillText(b.label, rx + w / 2, ry + h / 2 + 0.5);
     });
     ctx.restore();
   }
