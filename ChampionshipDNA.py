@@ -101,6 +101,11 @@ PAGE_HTML = """
   /* Scoped under .content: `.content p` is class+element, which outranks a bare
      .fig-note class, so an unscoped rule here silently lost every property to
      the body-paragraph style. */
+  /* Sits inside a bullet, so it's held well under the body width — the point
+     is the shape of the cluster, not the detail. */
+  .inline-fig { margin:16px 0; }
+  .inline-fig img { display:block; width:100%; max-width:460px; height:auto;
+                    border:1px solid #ece6f2; border-radius:4px; }
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
@@ -169,8 +174,12 @@ PAGE_HTML = """
       <p>This is an awesome visualization that's fun to play around with! Some notes:</p>
 
       <ul class="notes">
-        <li>We can see teams that were expected to do better than they did (e.g. <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">Loud at Tokyo</a>)</li>
-        <li>We can see which teams overshot their previous domestic performance (e.g. <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is obvious, but also <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are worth mentioning)</li>
+        <li>We can see teams that were expected to do better than they did: for example, <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">LOUD at Tokyo</a>. This is a favorite example of mine, with a great narrative. 2023 LOUD was an amazing team with intense success before this event (2nd at LOCK//IN and then won Americas Stage 1) and after this event (3rd at Champions LA). They were a consensus top-2 favorite to win the event (Platchat put them above FNATIC, in fact, as favorites for the event.) Their flop at Tokyo was shocking and historic - what happened? As I recall, this event was the start of a rift between Less/Saadhak and Aspas, a reminder that this game cannot be just broken down into numbers. Also, it’s a reminder that Valorant is random.</li>
+        <li>We can also see which teams overshot their previous domestic performance! <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is the most obvious one. I mean seriously, how did they win this tournament:
+          <figure class="inline-fig">
+            <img src="/championshipdna-bangkok.jpg" alt="The landscape filtered to Masters Bangkok 2025">
+          </figure>
+          <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are also worth mentioning, though!</li>
         <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 2-0 in their respective events)</li>
       </ul>
     </div>
