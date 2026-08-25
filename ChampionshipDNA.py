@@ -122,6 +122,7 @@ PAGE_HTML = """
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
+  .content .secbreak { border:0; border-top:1px solid #e8e0ec; margin:46px 0 34px; }
   .content .xlink { color:#7c4dd6; font-weight:500; text-decoration:underline;
                     text-decoration-thickness:1px; text-underline-offset:2px; }
   .content .xlink:hover { color:#5b21b6; }
@@ -216,6 +217,8 @@ PAGE_HTML = """
         </div>
         <div class="fig-wrap"><canvas id="tierLandscape"></canvas></div>
       </figure>
+
+      <hr class="secbreak">
 
       <p>Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of KenPom&rsquo;s rating system.</p>
 
