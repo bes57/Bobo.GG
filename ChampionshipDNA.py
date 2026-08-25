@@ -302,11 +302,11 @@ const BANDS = [
   {lo: 1.168, hi: 2.00,  label: 'Trophy Favorites',  fill: 'rgba(216,169,58,.20)', ink: '#8a6a1a',
    sub: 'A rare tier of strength to fall into. Half of the teams in this tier finished top-2 at their events'},
   {lo: 1.08,  hi: 1.168, label: 'Trophy Contenders', fill: 'rgba(124,77,214,.16)', ink: '#5b21b6',
-   nudge: 0.035,
+   nudge: 0.035, dx: -6,
    sub: 'Most of these teams are strong enough to win. It’s the tier that contains the most trophy winners (and also the most entries).'},
-  {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8',
+  {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8', dx: 2,
    sub: 'These teams are either middling on both attack/defense or have one side that is weak'},
-  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c',
+  {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c', dx: 2, dy: 6,
    sub: 'Apparently, you can win from this tier - see T1 at Bangkok'}
 ];
 
@@ -421,7 +421,11 @@ const bands = {
       if (!placed) return;
 
       const {r: best, ls: subLines, bw: blockW, tf, sf, pillH, lineH, wPill} = placed;
-      const rx = best.l, ry = best.t;
+      // Hand nudges, in pixels. Each stays well inside the clearance measured
+      // for that band: Contenders has ~50px of room toward its lower edge,
+      // Believers ~13px toward its upper one, and T1 Tier moves DOWN, which
+      // is away from its only boundary.
+      const rx = best.l + (b.dx || 0), ry = best.t + (b.dy || 0);
       const px2 = rx + (blockW - wPill) / 2;
       ctx.font = tf; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillStyle = 'rgba(255,255,255,.93)';
