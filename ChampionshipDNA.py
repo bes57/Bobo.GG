@@ -108,8 +108,10 @@ PAGE_HTML = """
   /* One line, always. The ten event names are far wider than the 860px column,
      so the row scrolls sideways rather than wrapping — same treatment as the
      site nav. Scrollbar hidden; it's still swipeable/shift-scrollable. */
-  .ls-events { display:flex; flex-wrap:nowrap; gap:5px; justify-content:center;
-               overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+  .ls-events { display:flex; flex-wrap:nowrap; gap:5px; justify-content:safe center;
+               overflow-x:auto; scrollbar-width:none; padding-bottom:2px;
+               --lsb-fs:.68rem; --lsb-px:10px; }
+  .ls-events .lsb { font-size:var(--lsb-fs); padding:4px var(--lsb-px); }
   .ls-events::-webkit-scrollbar { display:none; }
   .ls-events .lsb { flex:0 0 auto; }
   .lsb { font-family:'DM Sans',sans-serif; font-size:.62rem; font-weight:700; color:var(--soft);
@@ -428,6 +430,22 @@ function draw() {
     draw();
   };
   document.getElementById('lsWin').appendChild(w);
+
+  // Fit the event row to one line by measurement rather than by a guessed font
+  // size. Ten full event names are wider than the column at any comfortable
+  // size, and hand-tuning it breaks the moment an event is added — so step down
+  // until it stops overflowing.
+  function fitRow() {
+    const steps = [[.68, 10], [.64, 9], [.60, 8], [.56, 7], [.52, 6],
+                   [.48, 5], [.44, 4], [.40, 4]];
+    for (const [fs, px] of steps) {
+      box.style.setProperty('--lsb-fs', fs + 'rem');
+      box.style.setProperty('--lsb-px', px + 'px');
+      if (box.scrollWidth <= box.clientWidth) return;
+    }
+  }
+  fitRow();
+  addEventListener('resize', fitRow);
   draw();
 })();
 </script>
