@@ -122,6 +122,10 @@ PAGE_HTML = """
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
+  .content .xlink { color:#7c4dd6; font-weight:500; text-decoration:underline;
+                    text-decoration-thickness:1px; text-underline-offset:2px; }
+  .content .xlink:hover { color:#5b21b6; }
+  .rank-wrap { aspect-ratio:2.1/1; }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -211,6 +215,14 @@ PAGE_HTML = """
           <div class="ls-events" id="tierEvents"></div>
         </div>
         <div class="fig-wrap"><canvas id="tierLandscape"></canvas></div>
+      </figure>
+
+      <p>Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of KenPom&rsquo;s rating system.</p>
+
+      <p>I have my own <a class="xlink" href="/mapelo/modern/" target="_blank" rel="noopener">BenPom</a> rating system for VCT - let&rsquo;s see what the trend is there:</p>
+
+      <figure class="fig">
+        <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
       </figure>
     </div>
   </div>
@@ -653,6 +665,82 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     plugins: [plate, fifty, marks]
   });
   c.$state = () => ({hovered: null, pinned: null, winnersOn: false});
+  charts.push(c);
+})();
+
+// Winners' BenPom rank going into the event they won. Category axis so the
+// tournaments sit equidistant in chronological order regardless of the gaps
+// between them, and the rank axis is reversed so #1 is at the top.
+(function () {
+  const el = document.getElementById('rankChart');
+  if (!el || !LS.winner_ranks || !LS.winner_ranks.length) return;
+  const rows = LS.winner_ranks;
+  const worst = Math.max(...rows.map(r => r.rank));
+  const axisMax = Math.max(25, Math.ceil(worst / 5) * 5);
+
+  const rankMarks = {
+    id: 'rankMarks',
+    afterDatasetsDraw(c) {
+      const {ctx} = c;
+      c.getDatasetMeta(0).data.forEach((pt, i) => {
+        const r = rows[i], img = logo(r.org);
+        ctx.save();
+        if (img.complete && img.naturalWidth) ctx.drawImage(img, pt.x - 13, pt.y - 13, 26, 26);
+        ctx.font = "800 10px 'DM Sans',sans-serif";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#7c4dd6';
+        ctx.strokeText('#' + r.rank, pt.x, pt.y + 15);
+        ctx.fillStyle = '#fff';
+        ctx.fillText('#' + r.rank, pt.x, pt.y + 15);
+        ctx.restore();
+      });
+    }
+  };
+
+  const c = new Chart(el, {
+    type: 'line',
+    data: {
+      labels: rows.map(r => r.event),
+      datasets: [{
+        data: rows.map(r => r.rank),
+        borderColor: 'rgba(124,77,214,.45)', borderWidth: 2,
+        pointRadius: 0, pointHoverRadius: 0, hitRadius: 18, tension: 0.25
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 18, right: 16, bottom: 4, left: 4}},
+      interaction: {mode: 'nearest', intersect: true, axis: 'x'},
+      scales: {
+        x: {ticks: {font: {size: 9.5}, color: '#9a8fa4', maxRotation: 40, minRotation: 40},
+            grid: {color: 'rgba(0,0,0,.04)'}},
+        y: {reverse: true, min: 1, max: axisMax,
+            title: {display: true, text: 'BenPom rank going into the event',
+                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
+            ticks: {stepSize: 5, font: {size: 10}, color: '#9a8fa4',
+                    callback: v => '#' + v},
+            grid: {color: 'rgba(0,0,0,.05)'}}
+      },
+      plugins: {
+        legend: {display: false},
+        tooltip: {
+          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          animation: {duration: 140},
+          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+          callbacks: {
+            title: it => rows[it[0].dataIndex].org + ' won ' + rows[it[0].dataIndex].event,
+            label: it => {
+              const r = rows[it.dataIndex];
+              return ['BenPom #' + r.rank + ' of ' + r.pool + ' rated teams',
+                      'as of ' + r.as_of];
+            }
+          }
+        }
+      }
+    },
+    plugins: [plate, rankMarks]
+  });
   charts.push(c);
 })();
 

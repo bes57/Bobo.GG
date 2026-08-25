@@ -1508,6 +1508,88 @@
   "Masters Santiago 2026": "NS",
   "Masters London 2026": "LEV"
  },
+ "winner_ranks": [
+  {
+   "event": "Masters Tokyo 2023",
+   "org": "FNC",
+   "rank": 1,
+   "pool": 39,
+   "as_of": "2023-06-06",
+   "date": "2023-06-10"
+  },
+  {
+   "event": "Champions 2023",
+   "org": "EG",
+   "rank": 3,
+   "pool": 42,
+   "as_of": "2023-07-23",
+   "date": "2023-08-06"
+  },
+  {
+   "event": "Masters Madrid 2024",
+   "org": "SEN",
+   "rank": 3,
+   "pool": 44,
+   "as_of": "2024-03-03",
+   "date": "2024-03-14"
+  },
+  {
+   "event": "Masters Shanghai 2024",
+   "org": "GEN",
+   "rank": 12,
+   "pool": 46,
+   "as_of": "2024-05-12",
+   "date": "2024-05-23"
+  },
+  {
+   "event": "Champions 2024",
+   "org": "EDG",
+   "rank": 11,
+   "pool": 47,
+   "as_of": "2024-07-21",
+   "date": "2024-08-01"
+  },
+  {
+   "event": "Masters Bangkok 2025",
+   "org": "T1",
+   "rank": 16,
+   "pool": 48,
+   "as_of": "2025-02-16",
+   "date": "2025-02-20"
+  },
+  {
+   "event": "Masters Toronto 2025",
+   "org": "PRX",
+   "rank": 1,
+   "pool": 50,
+   "as_of": "2025-05-25",
+   "date": "2025-06-07"
+  },
+  {
+   "event": "Champions 2025",
+   "org": "NRG",
+   "rank": 6,
+   "pool": 60,
+   "as_of": "2025-09-07",
+   "date": "2025-09-12"
+  },
+  {
+   "event": "Masters Santiago 2026",
+   "org": "NS",
+   "rank": 4,
+   "pool": 48,
+   "as_of": "2026-02-15",
+   "date": "2026-02-28"
+  },
+  {
+   "event": "Masters London 2026",
+   "org": "LEV",
+   "rank": 7,
+   "pool": 49,
+   "as_of": "2026-05-31",
+   "date": "2026-06-06"
+  }
+ ],
  "skipped": [
   "ASE @ Masters Tokyo 2023 (no prior split)",
   "EDG @ Masters Tokyo 2023 (no prior split)"

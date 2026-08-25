@@ -46,6 +46,16 @@ INTERNATIONALS = [
 ]
 _INTL_SET = {e for e, _ in INTERNATIONALS}
 
+# Champions 2023 belongs in the rank chart even though the landscape drops it —
+# that exclusion is about the missing domestic split, not about ratings.
+INTERNATIONALS_ALL = sorted(
+    INTERNATIONALS + [("Valorant Champions 2023", "Champions 2023")],
+    key=lambda t: ["Tokyo", "Champions 2023", "Madrid", "Shanghai", "Champions 2024",
+                   "Bangkok", "Toronto", "Champions 2025", "Santiago", "London"].index(
+        next(k for k in ["Tokyo", "Champions 2023", "Madrid", "Shanghai", "Champions 2024",
+                         "Bangkok", "Toronto", "Champions 2025", "Santiago", "London"]
+             if k in t[1])))
+
 # A domestic split: the regional competition played between internationals.
 _SPLIT_RE = re.compile(
     r"(?:Kickoff|Stage 1|Stage 2|:\s(?:Americas|EMEA|Pacific|China)\sLeague"
@@ -101,7 +111,12 @@ def side_rates():
     return out
 
 
-def _event_winners():
+def _event_winners_all():
+    """Grand-final winners for every international, Champions 2023 included."""
+    return _event_winners(INTERNATIONALS_ALL)
+
+
+def _event_winners(events=None):
     """intl event -> the org that won its Grand Final. Read from match_results
     rather than hardcoded, so a new event needs no edit here."""
     mr = pd.read_csv(os.path.join(ROOT, "data", "match_results.csv"), dtype=str)
@@ -111,11 +126,56 @@ def _event_winners():
     ev = dict(zip(ro.match_id.str.strip(), ro.event))
     series = mr[mr.MapNum == "all"].assign(event=lambda d: d.MatchID.map(ev))
     out = {}
-    for e, _ in INTERNATIONALS:
+    for e, _ in (events or INTERNATIONALS):
         sub = series[series.event == e]
         gf = sub[sub.MatchName.str.contains("Grand Final", case=False, na=False)]
         if len(gf) == 1:
             out[e] = gf.iloc[0].WinnerOrg
+    return out
+
+
+def _winner_ranks(winners):
+    """Each international winner's BenPom RANK at the last checkpoint before
+    that event started — the VCT analogue of KenPom's "every champion was top
+    25" line. Rank is over every team the timeline rates that day, so the pool
+    size travels with it; a rank means little without it.
+
+    Champions 2023 appears here even though the landscape drops it: that
+    exclusion is about there being no domestic split beforehand, and this
+    measure needs only a rating checkpoint."""
+    tls = {}
+    for year in (2023, 2024, 2025, 2026):
+        name = "rating_timeline.json" if year == 2026 else f"rating_timeline_{year}.json"
+        try:
+            with open(os.path.join(ROOT, "data", name)) as f:
+                tls[year] = json.load(f)
+        except Exception:
+            continue
+
+    ro = pd.read_csv(os.path.join(ROOT, "data", "enriched", "round_outcomes.csv"),
+                     dtype=str, usecols=["event", "date"])
+    starts = ro.groupby("event").date.min().to_dict()
+
+    out = []
+    for ev, label in INTERNATIONALS_ALL:
+        org = winners.get(ev)
+        start = starts.get(ev)
+        if not org or not start:
+            continue
+        tl = tls.get(int(start[:4]))
+        if not tl:
+            continue
+        before = [c for c in tl.get("checkpoints", []) if c["date"] < start]
+        if not before:
+            continue
+        cp = before[-1]
+        order = sorted(cp["ratings"].items(), key=lambda kv: -kv[1])
+        rank = next((i + 1 for i, (o, _) in enumerate(order) if o == org), None)
+        if rank is None:
+            continue
+        out.append({"event": label, "org": org, "rank": rank,
+                    "pool": len(order), "as_of": cp["date"], "date": start})
+    out.sort(key=lambda r: r["date"])
     return out
 
 
@@ -160,6 +220,7 @@ def build():
         "internationals": [lbl for _, lbl in INTERNATIONALS],
         "global_attack_rate": round(sp.atk_w.sum() / max(1, sp.atk_n.sum()), 4),
         "winners": {label[e]: o for e, o in winners.items()},
+        "winner_ranks": _winner_ranks(_event_winners_all()),
         "skipped": skipped,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -176,6 +237,9 @@ if __name__ == "__main__":
           f"{len(p['internationals'])} internationals")
     print(f"  global attack round win rate: {p['global_attack_rate']} (expect ~.507)")
     print(f"  winners: {p['winners']}")
+    print("  winner BenPom rank before each event:")
+    for r in p["winner_ranks"]:
+        print(f"    {r['event']:22s} {r['org']:5s} #{r['rank']:<3} of {r['pool']}  (as of {r['as_of']})")
     # The article pins both axes to 40-70%. Anything outside would be clipped
     # off the chart with no visual hint, so say so loudly here.
     out = [f"{x['org']} @ {x['intl']} atk={x['atk']:.3f} def={x['dfn']:.3f}"
