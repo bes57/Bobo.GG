@@ -355,80 +355,91 @@ const bands = {
     const hits = r => occupied.some(q => r.l < q.r && r.r > q.l && r.t < q.b && r.b > q.t);
 
     c.$bands.forEach(b => {
-      const titleFont = "800 14px 'DM Sans',sans-serif";
-      const subFont   = "500 9.5px 'DM Sans',sans-serif";
-      const w = textW(ctx, b.label, titleFont) + 22;
+      // Pixels per data unit, to reason about the block in the plot's own space.
+      const ux = Math.abs(x.getPixelForValue(0.5) - x.getPixelForValue(0.4)) / 0.1;
+      const uy = Math.abs(y.getPixelForValue(0.4) - y.getPixelForValue(0.5)) / 0.1;
+      const openTop = b.hi >= 1.9, openBot = b.lo <= 0.01;
 
-      const wrap = maxW => {
-        ctx.font = subFont;
-        const out = [];
-        let cur = '';
-        (b.sub || '').split(' ').forEach(word => {
-          const test = cur ? cur + ' ' + word : word;
-          if (ctx.measureText(test).width > maxW && cur) { out.push(cur); cur = word; }
-          else cur = test;
-        });
-        if (cur) out.push(cur);
-        return out;
-      };
+      // A band is a DIAGONAL strip, so a horizontal block of width W and height
+      // H only fits inside it when the strip is thicker than W + H — its
+      // top-right and bottom-left corners rest on opposite edges. Believers is
+      // 0.065 thick and the full-size block is 0.083, which is why titles kept
+      // ending up in a neighbouring tier. Try progressively smaller type and
+      // narrower wraps until the block genuinely fits its own band.
+      // Search every (scale, wrap, step) and keep the clear candidate with the
+      // SMALLEST step — nearest the tier's top-left corner. Breaking at the
+      // first clear hit instead meant a full-size block that had to slide a
+      // long way beat a smaller one that fitted right at the corner, which is
+      // how T1 Tier ended up at the bottom of its band.
+      let placed = null, placedStep = 1e9, fallback = null;
+      const SCALES = [1, 0.92, 0.85, 0.78, 0.72, 0.66];
+      for (const sc of SCALES) {
+        const tf = "800 " + (14 * sc).toFixed(1) + "px 'DM Sans',sans-serif";
+        const sf = "500 " + (9.5 * sc).toFixed(1) + "px 'DM Sans',sans-serif";
+        const pillH = 28 * sc, lineH = 12 * sc, pad = 22 * sc;
+        const wPill = textW(ctx, b.label, tf) + pad;
+        for (const maxW of [208, 168, 140, 118, 100]) {
+          ctx.font = sf;
+          const ls = []; let cur = '';
+          (b.sub || '').split(' ').forEach(word => {
+            const test = cur ? cur + ' ' + word : word;
+            if (ctx.measureText(test).width > maxW * sc && cur) { ls.push(cur); cur = word; }
+            else cur = test;
+          });
+          if (cur) ls.push(cur);
+          const bw = Math.max(wPill, ls.length ? maxW * sc : 0);
+          const bh = pillH + (ls.length ? ls.length * lineH + 4 : 0);
+          const bwD = bw / ux, bhD = bh / uy;
+          const thick = b.hi - b.lo;
+          if (!openTop && !openBot && thick < bwD + bhD + 0.005) continue;
 
-      // Ride just under the band's UPPER edge, not through the middle of the
-      // strip: the top-left corner of a diagonal band is where its upper edge
-      // meets the left axis, and that is where these titles belong. The top
-      // band has no upper edge inside the plot, so it hangs off its lower one.
-      const span = b.hi - b.lo;
-      const openTop = b.hi >= 1.9;
-      const margin = Math.min(0.030, Math.max(span, 0.06) * 0.35);
-      const t = openTop ? b.lo + 0.075 : b.hi - margin;
-      const xlo = Math.max(0.40, t - 0.70) + (b.nudge || 0), xhi = Math.min(0.70, t - 0.40);
-      if (xhi <= xlo) return;
-
-      // Try progressively narrower wraps. A tall thin block fits gaps in the
-      // cloud that a wide one cannot, so rewrapping buys clear space where
-      // sliding along the band alone runs out of it.
-      let best = null, subLines = [], blockW = 0, blockH = 0, fallback = null;
-      for (const maxW of [208, 168, 136, 112]) {
-        const ls = wrap(maxW);
-        const bw = Math.max(w, ls.length ? maxW : 0);
-        const bh = 28 + (ls.length ? ls.length * 12 + 4 : 0);
-        // The block is LEFT-ALIGNED on the anchor, not centred on it. Centred,
-        // half of it hung past the left axis whenever the anchor sat there, the
-        // bounds check rejected it, and the search slid the title away down the
-        // band — which is how Believers ended up in the bottom-right corner of
-        // its own tier. And the slide is short: staying at the tier's top-left
-        // matters more than finding perfectly clear space further along.
-        const STEPS = 12;
-        for (let step = 0; step <= STEPS; step++) {
-          const cx = xlo + (xhi - xlo) * 0.22 * (step / STEPS), cy = t - cx;
-          const sx = x.getPixelForValue(cx), sy = y.getPixelForValue(cy);
-          const r = {l: sx, r: sx + bw, t: sy - 12, b: sy - 12 + bh};
-          if (r.r > a.right - 6 || r.t < a.top + 4 || r.b > a.bottom - 4) continue;
-          if (!fallback) { fallback = r; subLines = ls; blockW = bw; blockH = bh; }
-          if (!hits(r)) { best = r; subLines = ls; blockW = bw; blockH = bh; break; }
+          // Walk from the band's left end rightward, a short way only.
+          const xStart = Math.max(0.40, (openTop ? b.lo : b.lo) - 0.70) + (b.nudge || 0);
+          for (let step = 0; step <= 10; step++) {
+            const xl = xStart + step * 0.010;
+            if (xl + bwD > 0.695) break;
+            // Top edge sits under the upper boundary measured at the block's
+            // RIGHT edge — the corner that breaches it first.
+            let yt = openTop ? 0.695 : b.hi - (xl + bwD) - 0.003;
+            yt = Math.min(yt, 0.695);
+            const yb = yt - bhD;
+            const botLimit = openBot ? 0.402 : (b.lo - xl) + 0.003;
+            if (yb < botLimit) continue;
+            const r = {l: x.getPixelForValue(xl), r: x.getPixelForValue(xl + bwD),
+                       t: y.getPixelForValue(yt), b: y.getPixelForValue(yb)};
+            if (r.t < a.top + 3 || r.b > a.bottom - 3) continue;
+            const cand = {r, ls, bw, tf, sf, pillH, lineH, wPill};
+            if (!fallback) fallback = cand;
+            if (!hits(r) && step < placedStep) { placed = cand; placedStep = step; }
+            if (placedStep === 0) break;
+          }
+          if (placedStep === 0) break;
         }
-        if (best) break;
+        if (placedStep === 0) break;
       }
-      if (!best) { best = fallback; }
-      if (!best) return;
+      if (!placed) placed = fallback;
+      if (!placed) return;
 
-      const rx = best.l, ry = best.t, h = 28;
-      const px2 = rx + (blockW - w) / 2;
-      ctx.font = titleFont; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'rgba(255,255,255,.92)';
-      ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.lineWidth = 1;
+      const {r: best, ls: subLines, bw: blockW, tf, sf, pillH, lineH, wPill} = placed;
+      const rx = best.l, ry = best.t;
+      const px2 = rx + (blockW - wPill) / 2;
+      ctx.font = tf; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,.93)';
+      ctx.strokeStyle = 'rgba(61,26,110,.22)'; ctx.lineWidth = 1;
       ctx.beginPath();
-      if (ctx.roundRect) ctx.roundRect(px2, ry, w, h, 14); else ctx.rect(px2, ry, w, h);
+      if (ctx.roundRect) ctx.roundRect(px2, ry, wPill, pillH, pillH / 2);
+      else ctx.rect(px2, ry, wPill, pillH);
       ctx.fill(); ctx.stroke();
       ctx.fillStyle = b.ink;
-      ctx.fillText(b.label, px2 + w / 2, ry + h / 2 + 0.5);
+      ctx.fillText(b.label, px2 + wPill / 2, ry + pillH / 2 + 0.5);
 
       if (subLines.length) {
-        ctx.font = subFont; ctx.textBaseline = 'top';
-        ctx.fillStyle = 'rgba(61,26,110,.62)';
-        subLines.forEach((ln, k) => ctx.fillText(ln, rx + blockW / 2, ry + h + 4 + k * 12));
+        ctx.font = sf; ctx.textBaseline = 'top';
+        ctx.fillStyle = 'rgba(61,26,110,.68)';
+        subLines.forEach((ln, k2) => ctx.fillText(ln, rx + blockW / 2, ry + pillH + 4 + k2 * lineH));
         ctx.textBaseline = 'middle';
       }
-      occupied.push(best);   // later titles avoid earlier ones too
+      occupied.push(best);
     });
     ctx.restore();
   }
