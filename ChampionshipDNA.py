@@ -203,8 +203,6 @@ PAGE_HTML = """
         <figcaption class="fig-credit">Credit: <a href="https://substack.com/home/post/p-191132130" target="_blank" rel="noopener">https://substack.com/home/post/p-191132130</a></figcaption>
       </figure>
 
-      <p>I highly recommend checking out EvanMiya&rsquo;s work for anyone interested in basketball.</p>
-
       <p>In accordance with him, let&rsquo;s make our own bands of favoritism to win VCT tournaments based on this graph.</p>
 
       <figure class="fig">
