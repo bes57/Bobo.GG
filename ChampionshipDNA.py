@@ -423,6 +423,7 @@ function draw() {
     b.textContent = name;
     b.onclick = () => {
       active = name; pinned = null;
+      if (chart) chart.tooltip.setActiveElements([], {});
       evBtns.forEach(c => c.classList.toggle('on', c === b));
       draw();
     };
@@ -441,6 +442,7 @@ function draw() {
   setLabel();
   w.onclick = () => {
     winnersOn = !winnersOn; pinned = null;
+    if (chart) chart.tooltip.setActiveElements([], {});
     w.classList.toggle('on', winnersOn);
     setLabel();
     draw();
@@ -478,6 +480,13 @@ function draw() {
       const i = chart.data.datasets[0].data.findIndex(d => d.p.org === org && d.p.intl === intl);
       pinned = i >= 0 ? i : null;
       chart.draw();
+      if (pinned !== null) {
+        // Show the card too — a pin should look exactly like hovering that
+        // team, numbers included, not just a lit logo.
+        const el = chart.getDatasetMeta(0).data[pinned];
+        chart.tooltip.setActiveElements([{datasetIndex: 0, index: pinned}], {x: el.x, y: el.y});
+        chart.update();
+      }
       document.querySelector('.fig').scrollIntoView({behavior: 'smooth', block: 'center'});
     });
   });
