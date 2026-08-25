@@ -101,11 +101,11 @@ PAGE_HTML = """
   /* Scoped under .content: `.content p` is class+element, which outranks a bare
      .fig-note class, so an unscoped rule here silently lost every property to
      the body-paragraph style. */
-  /* Sits inside a bullet, so it's held well under the body width — the point
-     is the shape of the cluster, not the detail. */
-  .inline-fig { margin:16px 0; }
-  .inline-fig img { display:block; width:100%; max-width:460px; height:auto;
-                    border:1px solid #ece6f2; border-radius:4px; }
+  /* Centred in the bullet, and pulled back over the list indent so it lines up
+     with the body column rather than sitting off to the right. */
+  .inline-fig { margin:18px 0 18px -22px; }
+  .inline-fig img { display:block; width:100%; max-width:760px; height:auto;
+                    margin:0 auto; border:1px solid #ece6f2; border-radius:4px; }
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
