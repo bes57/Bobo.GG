@@ -144,7 +144,6 @@ function logo(org) {
 }
 const pct = v => (v * 100).toFixed(1) + '%';
 
-const ATK_AVG = LS.global_attack_rate, DEF_AVG = 1 - LS.global_attack_rate;
 let hovered = null, active = 'All', chart;
 
 // White plate behind everything, so the figure reads as its own card instead of
@@ -158,22 +157,6 @@ const plate = {
   }
 };
 
-// Reference lines at the league-wide split — attack and defense are two views of
-// the same rounds, so they're complements.
-const guides = {
-  id: 'guides',
-  beforeDatasetsDraw(c) {
-    const {ctx, chartArea: a, scales: {x, y}} = c;
-    ctx.save();
-    ctx.strokeStyle = 'rgba(61,26,110,.20)'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(a.left, y.getPixelForValue(ATK_AVG)); ctx.lineTo(a.right, y.getPixelForValue(ATK_AVG)); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x.getPixelForValue(DEF_AVG), a.top); ctx.lineTo(x.getPixelForValue(DEF_AVG), a.bottom); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(61,26,110,.40)'; ctx.font = "600 10px 'DM Sans',sans-serif"; ctx.textAlign = 'left';
-    ctx.fillText('league-average attack (' + pct(ATK_AVG) + ')', a.left + 6, y.getPixelForValue(ATK_AVG) - 5);
-    ctx.restore();
-  }
-};
 
 // Logos and their event labels are drawn here rather than via pointStyle. Two
 // reasons: Chart.js swaps the point for its hover style on hover, which made the
@@ -279,7 +262,7 @@ function draw() {
         }
       }
     },
-    plugins: [plate, guides, marks]
+    plugins: [plate, marks]
   });
 }
 
