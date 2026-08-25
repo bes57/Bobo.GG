@@ -196,7 +196,7 @@ PAGE_HTML = """
 
       <figure class="inline-fig wide">
         <img src="/evanmiya-landscape.jpg" alt="EvanMiya&rsquo;s March Madness Predicted Efficiency Landscape">
-        <figcaption class="fig-credit"><a href="https://substack.com/home/post/p-191132130" target="_blank" rel="noopener">https://substack.com/home/post/p-191132130</a></figcaption>
+        <figcaption class="fig-credit">Credit: <a href="https://substack.com/home/post/p-191132130" target="_blank" rel="noopener">https://substack.com/home/post/p-191132130</a></figcaption>
       </figure>
 
       <p>I highly recommend checking out EvanMiya&rsquo;s work for anyone interested in basketball.</p>
