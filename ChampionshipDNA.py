@@ -305,7 +305,7 @@ const BANDS = [
    nudge: 0.035,
    sub: 'Most of these teams are strong enough to win. It’s the tier that contains the most trophy winners (and also the most entries).'},
   {lo: 1.015, hi: 1.08,  label: 'Trophy Believers',  fill: 'rgba(37,99,235,.14)',  ink: '#1d4ed8',
-   sub: 'I wouldn’t count on these teams winning. They are either middling on both attack/defense or have one side that is weak'},
+   sub: 'These teams are either middling on both attack/defense or have one side that is weak'},
   {lo: 0.00,  hi: 1.015, label: 'T1 Tier',           fill: 'rgba(220,38,38,.12)',  ink: '#b91c1c',
    sub: 'Apparently, you can win from this tier - see T1 at Bangkok'}
 ];
