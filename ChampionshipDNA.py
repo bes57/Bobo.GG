@@ -80,7 +80,7 @@ PAGE_HTML = """
     <div class="cover">
       <img src="/championshipdna.jpg" alt="VCT champions lifting trophies">
     </div>
-    <p class="cover-caption">International winners from each year of franchised VCT - FNATIC at Tokyo in 2023, Sentinels at Madrid in 2024, Paper Rex in 2025, and Leviatán at London in 2026</p>
+    <p class="cover-caption">International winners from each year of franchised VCT - <br>FNATIC at Tokyo in 2023, Sentinels at Madrid in 2024, Paper Rex in 2025, and Leviatán at London in 2026</p>
     <div class="content">
       <!-- Body goes here. Left empty on purpose. -->
     </div>
