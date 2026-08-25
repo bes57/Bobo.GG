@@ -1864,10 +1864,12 @@ ARTICLES_HTML = """
     <button class="afbtn" data-f="research" type="button">Research</button>
   </div>
   <div class="alist">
-    <a class="acard" href="/articles/championship-dna/">
+    <a class="acard" data-cat="research preview" href="/articles/championship-dna/">
+      <span class="acats"><span class="acat research">Research</span><span class="acat preview">Preview</span></span>
       <img src="/championshipdna.jpg" alt="">
       <div class="ab">
-        <div class="at">Championship DNA: What Makes A Trophy-Winning Team in VCT?</div>
+        <div class="at">Championship DNA: Historical Trends To Note For Champions Shanghai</div>
+        <div class="ad">Understanding the indicators of a team being able to rise above the rest - by the numbers, by the rosters, and other miscellaneous trends.</div>
         <div class="adate">Aug 25, 2026</div>
       </div>
     </a>
