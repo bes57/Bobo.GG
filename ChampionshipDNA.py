@@ -165,9 +165,11 @@ PAGE_HTML = """
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
-  /* Wide enough that the headline stays on one line — it needs about 920px
-     of text at this size, and the figure it sits under is 1120px. */
-  .takeaway { max-width:1080px; margin:24px auto 0; text-align:center;
+  /* Only as wide as the headline needs. Measured against the 1120px figure
+     above it, that line renders ~871px, so 34px of padding each side puts
+     the minimum at ~940px. 970px keeps ~30px of slack against font-
+     rendering differences without running the full width of the figure. */
+  .takeaway { max-width:970px; margin:24px auto 0; text-align:center;
               background:#fff; border:1.5px solid #e0d4ec; border-radius:22px;
               padding:26px 34px; box-shadow:0 6px 26px #0000000f; }
   /* Dash markers come from CSS, not the markup, so the copy stays clean. */
