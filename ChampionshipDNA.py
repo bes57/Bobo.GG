@@ -450,7 +450,7 @@ PAGE_HTML = """
 
       <hr class="secbreak">
 
-      <p id="sec-stars">One last trope that surrounds champions in practically all sports is the notion of <em>star power</em>. It&rsquo;s an arbitrary notion, but the idea is that to be a champion, you have to have an elite player who can rise in the most important matches/moments. In VCT, our best comprehensive statistic for player quality is VLR-rating, so let&rsquo;s use that to look at each championship team&rsquo;s best player:</p>
+      <p id="sec-stars">One last trope that surrounds champions in practically all sports is the notion of <em>star power</em>. It&rsquo;s an arbitrary concept, but the idea is that to be a champion, you have to have an elite player who can rise in the most important matches/moments. In VCT, our best comprehensive statistic for player quality is VLR-rating, so let&rsquo;s use that to look at each championship team&rsquo;s best player:</p>
 
       <figure class="fig">
         <div class="stars" id="starGrid"></div>
