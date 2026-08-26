@@ -372,10 +372,12 @@ PAGE_HTML = """
   .content .fig-note.below { margin:14px 0 0; }
   /* Roster turnover. Outs and ins are coloured rather than just signed, so the
      shape of a change reads before any name does. */
-  .rosters { display:flex; flex-direction:column; gap:22px; margin:26px 0 8px; }
-  .ro-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
-  .ro { background:#fff; border:1px solid #ece6f2; border-radius:14px; padding:14px 14px;
-        box-shadow:0 4px 18px #0000000a; min-width:0; }
+  /* Inside a .fig, so it breaks out to 1120px like the star cards instead of
+     being held to the 860px text column. .fig supplies the outer margin. */
+  .rosters { display:flex; flex-direction:column; gap:22px; }
+  .ro-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  .ro { background:#fff; border:1px solid #ece6f2; border-radius:16px; padding:16px;
+        box-shadow:0 4px 20px #0000000a; min-width:0; }
   /* Tournament on top, team under it with its logo alongside. */
   .ro-head { margin-bottom:11px; }
   .ro-evt { font-size:.72rem; font-weight:600; letter-spacing:.03em; color:var(--soft);
@@ -391,10 +393,10 @@ PAGE_HTML = """
              overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
              -webkit-overflow-scrolling:touch; }
   .ro-line::-webkit-scrollbar { display:none; }
-  .ro-tag { font-size:.63rem; font-weight:700; letter-spacing:.03em; color:var(--soft);
+  .ro-tag { font-size:.67rem; font-weight:700; letter-spacing:.03em; color:var(--soft);
             background:#f4f0f8; border-radius:5px; padding:2px 6px;
             white-space:nowrap; flex:0 0 auto; }
-  .ro-out, .ro-in { font-size:.73rem; font-weight:600; border-radius:6px; padding:2px 7px;
+  .ro-out, .ro-in { font-size:.79rem; font-weight:600; border-radius:6px; padding:3px 9px;
                     white-space:nowrap; flex:0 0 auto; }
   .ro-out { color:#a33b3b; background:#fbeeee; }
   .ro-in  { color:#2f7a54; background:#eaf6ef; }
@@ -570,7 +572,9 @@ PAGE_HTML = """
 
       <p>Now one of the most interesting trends I&rsquo;ve noticed in championship-winning teams is about their rosters. More specifically, their roster turnover rate. Every single championship-winning roster made roster changes from the previous year <em>OR</em> they made roster changes during the year:</p>
 
-      <div class="rosters">__ROSTERS__</div>
+      <figure class="fig">
+        <div class="rosters">__ROSTERS__</div>
+      </figure>
     </div>
   </div>
 </div>
