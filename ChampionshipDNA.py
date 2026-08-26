@@ -335,7 +335,7 @@ PAGE_HTML = """
 
       <hr class="secbreak">
 
-      <p id="sec-momentum">To go back to the point on teams that &ldquo;overshot their previous domestic performance&rdquo;, those teams often were playing better towards the end of their split. In other words, they had <em>momentum</em>. For instance, MIBR placed horribly on the Attack/Defense graph before Champions Paris, yet they finished 5th-6th and only lost to each of the top-3 teams at the tournament (narrowly). In their Americas Stage 2 split, they won 2 of their last 3 games but were on a 5-match losing streak before that.</p>
+      <p id="sec-momentum">To go back to the point on teams that &ldquo;overshot their previous domestic performance&rdquo;, those teams often were playing better towards the end of their split. In other words, they had <em>momentum</em>. For instance, MIBR placed horribly on the Attack/Defense graph before Champions Paris, yet they finished 5th-6th and only lost to the top-3 teams at the tournament (narrowly). In their Americas Stage 2 split, they won 2 of their last 3 games but were on a 5-match losing streak before that.</p>
 
       <p>How important is momentum, then?</p>
 
