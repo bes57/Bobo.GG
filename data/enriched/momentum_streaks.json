@@ -6,6 +6,7 @@
    "last5": {
     "w": 4,
     "l": 1,
+    "n": 5,
     "bucket": "4-1",
     "seq": "WWWWL",
     "events": [
@@ -24,6 +25,7 @@
    "last5": {
     "w": 3,
     "l": 2,
+    "n": 5,
     "bucket": "3-2",
     "seq": "WWLWL",
     "events": [
@@ -37,6 +39,7 @@
    "last5": {
     "w": 4,
     "l": 1,
+    "n": 5,
     "bucket": "4-1",
     "seq": "WWLWW",
     "events": [
@@ -55,6 +58,7 @@
    "last5": {
     "w": 2,
     "l": 3,
+    "n": 5,
     "bucket": "2-3",
     "seq": "LLWWL",
     "events": [
@@ -73,6 +77,7 @@
    "last5": {
     "w": 5,
     "l": 0,
+    "n": 5,
     "bucket": "5-0",
     "seq": "WWWWW",
     "events": [
@@ -91,6 +96,7 @@
    "last5": {
     "w": 3,
     "l": 2,
+    "n": 5,
     "bucket": "3-2",
     "seq": "WWLWL",
     "events": [
@@ -109,6 +115,7 @@
    "last5": {
     "w": 4,
     "l": 1,
+    "n": 5,
     "bucket": "4-1",
     "seq": "WWWWL",
     "events": [
@@ -127,6 +134,7 @@
    "last5": {
     "w": 3,
     "l": 2,
+    "n": 5,
     "bucket": "3-2",
     "seq": "LWWWL",
     "events": [
@@ -145,6 +153,7 @@
    "last5": {
     "w": 4,
     "l": 1,
+    "n": 5,
     "bucket": "4-1",
     "seq": "LWWWW",
     "events": [
@@ -164,6 +173,7 @@
    "last5": {
     "w": 3,
     "l": 2,
+    "n": 5,
     "bucket": "3-2",
     "seq": "LWWWL",
     "events": [
@@ -260,6 +270,203 @@
    "n": 0,
    "who": []
   }
+ ],
+ "success": [
+  {
+   "bucket": "5-0",
+   "n": 14,
+   "top3": 4,
+   "who": [
+    {
+     "org": "PRX",
+     "label": "Masters Tokyo 2023",
+     "place": 3
+    },
+    {
+     "org": "GEN",
+     "label": "Masters Madrid 2024",
+     "place": 2
+    },
+    {
+     "org": "EDG",
+     "label": "Champions 2024",
+     "place": 1
+    },
+    {
+     "org": "EDG",
+     "label": "Masters London 2026",
+     "place": 3
+    }
+   ]
+  },
+  {
+   "bucket": "4-1",
+   "n": 40,
+   "top3": 11,
+   "who": [
+    {
+     "org": "FNC",
+     "label": "Masters Tokyo 2023",
+     "place": 1
+    },
+    {
+     "org": "SEN",
+     "label": "Masters Madrid 2024",
+     "place": 1
+    },
+    {
+     "org": "TH",
+     "label": "Masters Shanghai 2024",
+     "place": 2
+    },
+    {
+     "org": "LEV",
+     "label": "Champions 2024",
+     "place": 3
+    },
+    {
+     "org": "EDG",
+     "label": "Masters Bangkok 2025",
+     "place": 3
+    },
+    {
+     "org": "G2",
+     "label": "Masters Bangkok 2025",
+     "place": 2
+    },
+    {
+     "org": "FNC",
+     "label": "Masters Toronto 2025",
+     "place": 2
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Toronto 2025",
+     "place": 1
+    },
+    {
+     "org": "NS",
+     "label": "Masters Santiago 2026",
+     "place": 1
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Santiago 2026",
+     "place": 2
+    },
+    {
+     "org": "PRX",
+     "label": "Masters London 2026",
+     "place": 2
+    }
+   ]
+  },
+  {
+   "bucket": "3-2",
+   "n": 50,
+   "top3": 12,
+   "who": [
+    {
+     "org": "EG",
+     "label": "Champions 2023",
+     "place": 1
+    },
+    {
+     "org": "LOUD",
+     "label": "Champions 2023",
+     "place": 3
+    },
+    {
+     "org": "PRX",
+     "label": "Champions 2023",
+     "place": 2
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Madrid 2024",
+     "place": 3
+    },
+    {
+     "org": "G2",
+     "label": "Masters Shanghai 2024",
+     "place": 3
+    },
+    {
+     "org": "TH",
+     "label": "Champions 2024",
+     "place": 2
+    },
+    {
+     "org": "T1",
+     "label": "Masters Bangkok 2025",
+     "place": 1
+    },
+    {
+     "org": "WOL",
+     "label": "Masters Toronto 2025",
+     "place": 3
+    },
+    {
+     "org": "KRX",
+     "label": "Champions 2025",
+     "place": 3
+    },
+    {
+     "org": "NRG",
+     "label": "Champions 2025",
+     "place": 1
+    },
+    {
+     "org": "NRG",
+     "label": "Masters Santiago 2026",
+     "place": 3
+    },
+    {
+     "org": "LEV",
+     "label": "Masters London 2026",
+     "place": 1
+    }
+   ]
+  },
+  {
+   "bucket": "2-3",
+   "n": 16,
+   "top3": 3,
+   "who": [
+    {
+     "org": "EG",
+     "label": "Masters Tokyo 2023",
+     "place": 2
+    },
+    {
+     "org": "GEN",
+     "label": "Masters Shanghai 2024",
+     "place": 1
+    },
+    {
+     "org": "FNC",
+     "label": "Champions 2025",
+     "place": 2
+    }
+   ]
+  },
+  {
+   "bucket": "1-4",
+   "n": 1,
+   "top3": 0,
+   "who": []
+  },
+  {
+   "bucket": "0-5",
+   "n": 0,
+   "top3": 0,
+   "who": []
+  }
+ ],
+ "short_sample": [
+  "ASE @ Masters Tokyo 2023 (0 prior)",
+  "EDG @ Masters Tokyo 2023 (1 prior)",
+  "BLG @ Champions 2023 (4 prior)"
  ],
  "skipped": [
   "EG @ Champions 2023 (no within-split streak)"

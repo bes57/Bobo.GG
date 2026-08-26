@@ -64,9 +64,11 @@ def _landscape():
             _s = json.load(f)
         data["streaks"] = _s.get("winners") or []
         data["last5"] = _s.get("tally") or []
+        data["success"] = _s.get("success") or []
     except Exception:
         data["streaks"] = []
         data["last5"] = []
+        data["success"] = []
     _ls_cache = (data, stamp)
     return data
 
@@ -217,6 +219,12 @@ PAGE_HTML = """
   /* overflow:visible overrides .fig-wrap's clip: the bubble is allowed to
      hang off the white plate rather than being cut at its edge. */
   .polar-wrap { aspect-ratio:1.35/1; overflow:visible; }
+  .streak-key { display:flex; justify-content:center; gap:20px; margin-bottom:10px;
+                font-family:'DM Sans',sans-serif; font-size:.76rem; color:#7a6e7e; }
+  .streak-key span { display:inline-flex; align-items:center; gap:7px; }
+  .streak-key .sk { width:13px; height:13px; border-radius:3px; display:inline-block; }
+  .streak-key .sk-top { background:#7c4dd6; }
+  .streak-key .sk-rest { background:#e4dcf0; }
   /* HTML tooltip, because a logo per TEAM is not something the canvas tooltip
      can do: it draws one colour box per data item, and a wedge is one item no
      matter how many teams it holds. */
@@ -353,6 +361,18 @@ PAGE_HTML = """
       <figure class="fig">
         <p class="fig-note"><em>Note: LOCK//IN was not included, since there were no prior matches for any of those teams.</em></p>
         <div class="fig-wrap polar-wrap"><canvas id="last5Chart"></canvas></div>
+      </figure>
+
+      <p>Interesting, only one team (Gen.G) was able to win a trophy despite losing a majority of their past 5 matches. Momentum is clearly important, though. Half of the winners had a 4-1 record or better before their events.</p>
+
+      <p>More generally, can momentum be a strong predictor of international <em>success</em>, not just winning?</p>
+
+      <figure class="fig">
+        <div class="streak-key">
+          <span><i class="sk sk-top"></i>Finished top 3</span>
+          <span><i class="sk sk-rest"></i>Did not</span>
+        </div>
+        <div class="fig-wrap rank-wrap"><canvas id="successChart"></canvas></div>
       </figure>
     </div>
   </div>
@@ -928,6 +948,96 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
       }
     },
     plugins: [plate, wedgeCounts]
+  });
+  charts.push(c);
+})();
+
+// Every team at every international, bucketed by its last-5 record and split by
+// whether it finished top 3. Stacked counts rather than a bare rate, so the
+// sample behind each bar stays visible -- 1-4 holds a single team, and a lone
+// 0% would otherwise read as loudly as the buckets with forty.
+(function () {
+  const el = document.getElementById('successChart');
+  if (!el || !LS.success || !LS.success.length) return;
+  const rows = LS.success;
+  const tallest = Math.max(...rows.map(r => r.n));
+
+  const rateLabels = {
+    id: 'rateLabels',
+    afterDatasetsDraw(ch) {
+      const {ctx} = ch;
+      ch.getDatasetMeta(1).data.forEach((bar, i) => {
+        const r = rows[i];
+        if (!r.n) return;
+        ctx.save();
+        ctx.font = "800 12px 'DM Sans',sans-serif";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillStyle = '#3d1a6e';
+        ctx.fillText(Math.round(100 * r.top3 / r.n) + '%', bar.x, bar.y - 16);
+        ctx.font = "600 10px 'DM Sans',sans-serif";
+        ctx.fillStyle = '#9a8fa4';
+        ctx.fillText(r.top3 + ' of ' + r.n, bar.x, bar.y - 4);
+        ctx.restore();
+      });
+    }
+  };
+
+  const c = new Chart(el, {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.bucket),
+      datasets: [
+        {label: 'Finished top 3', data: rows.map(r => r.top3),
+         backgroundColor: '#7c4dd6', maxBarThickness: 62, stack: 's'},
+        {label: 'Did not', data: rows.map(r => r.n - r.top3),
+         backgroundColor: '#e4dcf0', maxBarThickness: 62, stack: 's',
+         borderRadius: {topLeft: 3, topRight: 3}}
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 26, right: 16, bottom: 4, left: 4}},
+      interaction: {mode: 'index', intersect: false},
+      scales: {
+        x: {stacked: true, grid: {display: false},
+            title: {display: true, text: 'Record over the last 5 matches',
+                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
+            ticks: {font: {size: 11, weight: 700}, color: '#7a6e7e'}},
+        y: {stacked: true, min: 0, max: Math.ceil((tallest + 6) / 10) * 10,
+            title: {display: true, text: 'Teams',
+                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
+            ticks: {stepSize: 10, font: {size: 10}, color: '#9a8fa4'},
+            grid: {color: 'rgba(0,0,0,.05)'}}
+      },
+      plugins: {
+        legend: {display: false},
+        title: {
+          display: true,
+          text: 'Top-3 finishes by record over the last 5 matches',
+          color: '#3d1a6e', padding: {top: 2, bottom: 14},
+          font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
+        },
+        tooltip: {
+          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          animation: {duration: 140},
+          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+          callbacks: {
+            title: it => rows[it[0].dataIndex].bucket + ' in their last 5',
+            label: () => '',
+            afterBody: it => {
+              const r = rows[it[0].dataIndex];
+              if (!r.n) return ['No team arrived on this record'];
+              const head = r.top3 + ' of ' + r.n + ' finished top 3 ('
+                         + Math.round(100 * r.top3 / r.n) + '%)';
+              return [head, ''].concat(
+                r.who.map(w => '  ' + w.org + ' \u2014 ' + w.label + ' (' + w.place +
+                               (w.place === 1 ? 'st' : w.place === 2 ? 'nd' : 'rd') + ')'));
+            }
+          }
+        }
+      }
+    },
+    plugins: [plate, rateLabels]
   });
   charts.push(c);
 })();

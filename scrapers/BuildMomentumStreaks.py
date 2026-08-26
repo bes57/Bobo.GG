@@ -72,14 +72,19 @@ def _series_table():
 
     dates = json.load(open(os.path.join(ROOT, "data", "match_dates.json")))
 
-    rows = []
+    name = dict(zip(mr[mr.MapNum == "all"].MatchID, mr[mr.MapNum == "all"].MatchName))
+
+    rows, series = [], []
     for mid, orgs in parts.items():
         w, e, d = win.get(mid), ev.get(mid), dates.get(mid)
         if not w or not e or not d or w not in orgs:
             continue
+        loser = orgs[0] if orgs[1] == w else orgs[1]
+        series.append((e, int(mid), w, loser, name.get(mid) or ""))
         for o in orgs:
             rows.append((o, e, d, int(mid), o == w))
-    return pd.DataFrame(rows, columns=["org", "event", "date", "mid", "won"])
+    return (pd.DataFrame(rows, columns=["org", "event", "date", "mid", "won"]),
+            pd.DataFrame(series, columns=["event", "mid", "winner", "loser", "match_name"]))
 
 
 def _terminal_streak(seq):
@@ -99,9 +104,28 @@ def _last_five(series, org, before):
     if g.empty:
         return None
     w = int(g.won.sum())
-    return {"w": w, "l": len(g) - w, "bucket": f"{w}-{len(g) - w}",
+    return {"w": w, "l": len(g) - w, "n": len(g), "bucket": f"{w}-{len(g) - w}",
             "seq": "".join("W" if v else "L" for v in g.won),
             "events": sorted(set(g.event))}
+
+
+def _top_three(series_all, event):
+    """{org: placing} for the top 3, read off the bracket.
+
+    Every international in the data runs a double-elimination playoff, so 1st and
+    2nd are the Grand Final's two teams and 3rd is whoever lost the Lower Final.
+    """
+    out = {}
+    sub = series_all[series_all.event == event]
+    for name, places in (("Grand Final", (1, 2)), ("Lower Final", (None, 3))):
+        m = sub[sub.match_name.str.contains(name, case=False, na=False)]
+        if len(m) != 1:
+            continue
+        row = m.iloc[0]
+        if places[0]:
+            out[row.winner] = places[0]
+        out[row.loser] = places[1]
+    return out
 
 
 def build():
@@ -112,7 +136,7 @@ def build():
     label   = dict(INTERNATIONALS_ALL)
     winners = _event_winners_all()
     split_only = dict(INTERNATIONALS)
-    series  = _series_table()
+    series, brackets = _series_table()
 
     out, skipped = [], []
     for ev, _ in INTERNATIONALS_ALL:
@@ -141,6 +165,28 @@ def build():
     # Every 5-match bucket, including the empty ones -- a wedge missing from the
     # chart says something, but only if the reader can see where it would be.
     buckets = [f"{w}-{5 - w}" for w in range(5, -1, -1)]
+
+    # Every team at every international, last-5 record against a top-3 finish.
+    # Teams with fewer than five prior franchised matches are dropped rather than
+    # bucketed: a 3-0 start is not a 5-0 run and would inflate the top bucket.
+    succ = {b: {"n": 0, "top3": 0, "who": []} for b in buckets}
+    short = []
+    for ev, _ in INTERNATIONALS_ALL:
+        if ev not in starts.index:
+            continue
+        podium = _top_three(brackets, ev)
+        for org in sorted(set(series[series.event == ev].org)) :
+            if org in _NOT_ORGS:
+                continue
+            l5 = _last_five(series, org, starts[ev])
+            if not l5 or l5["n"] < 5:
+                short.append(f"{org} @ {label[ev]} ({l5['n'] if l5 else 0} prior)")
+                continue
+            b = succ[l5["bucket"]]
+            b["n"] += 1
+            if org in podium:
+                b["top3"] += 1
+                b["who"].append({"org": org, "label": label[ev], "place": podium[org]})
     tally = {b: [] for b in buckets}
     for r in out:
         if r.get("last5"):
@@ -148,6 +194,8 @@ def build():
 
     payload = {"winners": out, "buckets": buckets,
                "tally": [{"bucket": b, "n": len(tally[b]), "who": tally[b]} for b in buckets],
+               "success": [dict(bucket=b, **succ[b]) for b in buckets],
+               "short_sample": short,
                "skipped": skipped}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:
@@ -164,5 +212,10 @@ if __name__ == "__main__":
         print(f"  {w['org']:<4} {w['intl']:<22} {w.get('seq','-'):<12} -> {st:<3}"
               f"   last5 {l5.get('seq','?'):<6} {l5.get('bucket','?')}")
     print("  last-5 buckets: " + ", ".join(f"{t['bucket']}={t['n']}" for t in p["tally"]))
+    print("  top-3 rate by last-5 record, all teams at all internationals:")
+    for r in p["success"]:
+        rate = f"{100 * r['top3'] / r['n']:.0f}%" if r["n"] else "--"
+        print(f"    {r['bucket']}  {r['top3']:>2}/{r['n']:<3} {rate}")
+    print(f"  dropped for <5 prior franchised matches: {len(p['short_sample'])}")
     if p["skipped"]:
         print(f"  skipped: {p['skipped']}")
