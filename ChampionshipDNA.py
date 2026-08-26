@@ -1241,8 +1241,10 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
       +   '<div class="star-name">' + esc(s.player) + '</div>'
       +   '<div class="star-evt">' + esc(s.org) + ' &middot; ' + esc(s.intl) + '</div>'
       +   '<div class="star-line"><span class="star-rating">' + s.rating.toFixed(2) + '</span>'
-      +     '<span class="star-rank"><b>#' + s.rank + '</b> of ' + s.pool + ' in the split</span></div>'
-      +   '<div class="star-split">' + esc(split(s.prior)) + ' &middot; ' + s.rounds + ' rounds</div>'
+      +     '<span class="star-rank"><b>#' + s.rank + '</b> of ' + s.pool + '</span></div>'
+      // "in the split" would be wrong for EG: their last event was Masters
+      // Tokyo, an international. The event carries the meaning instead.
+      +   '<div class="star-split">in ' + esc(split(s.prior)) + ' &middot; ' + s.rounds + ' rounds</div>'
       + '</div></div>';
   }).join('');
 })();

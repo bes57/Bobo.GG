@@ -11,16 +11,23 @@ are also the ones VLR can publish mid-window with a single map's numbers in the
 "all maps" line (see scrapers/MatchStatsIntegrity.py); per-map rows are not
 exposed to that.
 
-The rank is the player's position on that split's leaderboard, among everyone
+The rank is the player's position on that event's leaderboard, among everyone
 who cleared the round minimum, so it says how good the performance was against
 the field the team was actually playing in.
+
+"Last split" here means the most recent FRANCHISED event the team played, not
+the most recent domestic split. For nine of the ten winners those are the same
+event. They differ for Champions 2023, where Masters Tokyo sat between the
+Americas League and Champions -- taking the League would have measured Demon1
+on the split before the one he actually last played.
 """
 import os, re, sys, json, glob
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from BuildSideLandscape import (INTERNATIONALS_ALL, _INTL_SET, _SPLIT_RE, _NOT_ORGS,
+from BuildSideLandscape import (INTERNATIONALS_ALL, _INTL_SET, _NOT_ORGS,
                                 side_rates, _event_winners_all)
+from BuildMomentumStreaks import _FRANCHISED_RE
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT  = os.path.join(ROOT, "data", "enriched", "star_power.json")
@@ -70,7 +77,7 @@ def build():
     agg["rating"] = agg.wr / agg.rounds
 
     sp = side_rates(); sp = sp[~sp.org.isin(_NOT_ORGS)]
-    sp["is_split"] = sp.event.str.contains(_SPLIT_RE, regex=True) & ~sp.event.isin(_INTL_SET)
+    sp["is_prior"] = sp.event.str.match(_FRANCHISED_RE)
     starts  = sp[sp.event.isin({e for e, _ in INTERNATIONALS_ALL})].groupby("event").date.min()
     label   = dict(INTERNATIONALS_ALL)
     winners = _event_winners_all()
@@ -81,9 +88,10 @@ def build():
         org = winners.get(ev)
         if org is None or ev not in starts.index:
             skipped.append(f"{label[ev]} (no winner or start date)"); continue
-        prior = sp[(sp.org == org) & sp.is_split & (sp.date < starts[ev])].sort_values("date")
+        prior = sp[(sp.org == org) & sp.is_prior & (sp.date < starts[ev])
+                   & (sp.event != ev)].sort_values("date")
         if prior.empty:
-            skipped.append(f"{org} @ {label[ev]} (no prior split)"); continue
+            skipped.append(f"{org} @ {label[ev]} (no prior franchised event)"); continue
         pe = prior.iloc[-1].event
 
         board = agg[(agg.event == pe) & (agg.rounds >= MIN_ROUNDS)].sort_values("rating", ascending=False)
