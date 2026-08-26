@@ -989,10 +989,10 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
         const r = rows[i];
         if (!r.n) return;
         ctx.save();
-        ctx.font = "800 12px 'DM Sans',sans-serif";
+        ctx.font = "800 17px 'DM Sans',sans-serif";
         ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
         ctx.fillStyle = '#3d1a6e';
-        ctx.fillText(Math.round(100 * r.top3 / r.n) + '%', bar.x, bar.y - 16);
+        ctx.fillText(Math.round(100 * r.top3 / r.n) + '%', bar.x, bar.y - 17);
         ctx.font = "600 10px 'DM Sans',sans-serif";
         ctx.fillStyle = '#9a8fa4';
         ctx.fillText(r.top3 + ' of ' + r.n, bar.x, bar.y - 4);
@@ -1048,7 +1048,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     },
     options: {
       responsive: true, maintainAspectRatio: false, animation: false,
-      layout: {padding: {top: 26, right: 16, bottom: 4, left: 4}},
+      layout: {padding: {top: 32, right: 16, bottom: 4, left: 4}},
       // intersect:true, or the bubble fires anywhere in the column -- including
       // the empty space above a short bar.
       interaction: {mode: 'index', intersect: true},
