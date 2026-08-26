@@ -170,11 +170,12 @@ PAGE_HTML = """
               font-style:italic; font-size:1.32rem; line-height:1.3; color:#3d1a6e;
               letter-spacing:-0.2px; }
   .takeaway span { margin-top:22px; }
-  /* Sections legend, top-left. Its width is clamped to the gutter beside the
+  /* Sections legend, top-right, matching every other article. Its width is
+     clamped to the gutter beside the
      centred content — but this article's figures break out to 1120px, so the
      gutter is much narrower than on articles whose widest element is the 860px
      text column. Hidden entirely below 1500px, where there is no room at all. */
-  .toc { position:fixed; top:32px; left:32px; background:#fff; border-radius:16px;
+  .toc { position:fixed; top:32px; right:32px; background:#fff; border-radius:16px;
          padding:18px 20px; box-shadow:0 4px 24px #0000000f; display:flex;
          flex-direction:column; gap:6px; z-index:100; width:max-content;
          max-width:min(215px, calc(50vw - 585px)); }
