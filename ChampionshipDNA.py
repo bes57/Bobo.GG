@@ -386,24 +386,26 @@ PAGE_HTML = """
      being held to the 860px text column. .fig supplies the outer margin. */
   .rosters { display:flex; flex-direction:column; gap:22px; }
   .ro-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
-  .ro { background:#fff; border:1px solid #ece6f2; border-radius:16px; padding:16px;
-        box-shadow:0 4px 20px #0000000a; min-width:0; }
-  /* Tournament on top, team under it with its logo alongside. */
-  .ro-head { margin-bottom:11px; }
-  .ro-evt { font-size:.72rem; font-weight:600; letter-spacing:.03em; color:var(--soft);
-            line-height:1.2; }
-  .ro-team { display:flex; align-items:center; gap:8px; margin-top:3px; }
+  .ro { background:#fff; border:1px solid #ece6f2; border-radius:16px; padding:16px 16px 18px;
+        box-shadow:0 4px 20px #0000000a; min-width:0; text-align:center; }
+  /* Tournament on top, team under it with its logo alongside. Centred, so each
+     change block reads as a unit hanging off its own label. */
+  .ro-head { margin-bottom:13px; padding-bottom:12px; border-bottom:1px solid #f2edf7; }
+  .ro-evt { font-size:.71rem; font-weight:600; letter-spacing:.04em; color:var(--soft);
+            line-height:1.2; text-transform:uppercase; }
+  .ro-team { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:4px; }
   .ro-team img { width:24px; height:24px; object-fit:contain; flex:0 0 24px; }
   .ro-team span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1rem;
                   color:#16121d; line-height:1.2; }
-  /* One row of outs, one row of ins. flex-wrap stays on as a safety net -- with
-     the rows split this way nothing currently reaches it, but a future roster
-     with more names should push down rather than spill out of the card. */
-  .ro-change + .ro-change { margin-top:13px; }
-  .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:5px; }
+  /* One row of outs, one row of ins, both centred under the label they belong
+     to. flex-wrap stays on as a safety net -- nothing reaches it at these
+     lengths, but a longer roster should push down rather than spill out. */
+  .ro-change + .ro-change { margin-top:14px; padding-top:13px; border-top:1px dashed #efe9f5; }
+  .ro-line { display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+             gap:5px; margin-top:6px; }
   .ro-tag { display:inline-block; font-size:.63rem; font-weight:700; letter-spacing:.03em;
             color:var(--soft); background:#f4f0f8; border-radius:5px; padding:2px 6px;
-            white-space:nowrap; }
+            white-space:nowrap; margin-bottom:1px; }
   .ro-out, .ro-in { font-size:.71rem; font-weight:600; border-radius:6px; padding:2px 7px;
                     white-space:nowrap; flex:0 0 auto; }
   .ro-out { color:#a33b3b; background:#fbeeee; }
