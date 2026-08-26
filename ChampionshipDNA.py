@@ -430,6 +430,24 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
 };
 
 
+// Stacked-bar tooltips: beside the bar, never over it. Side is chosen from which
+// half of the plot the bar sits in, which needs no knowledge of the box's width
+// -- and the box can be a dozen lines tall here, so guessing wrong is costly.
+// Anchored to the middle of the plot vertically rather than to the bar's top, so
+// a tall list off a short bar cannot run out of the canvas.
+Chart.Tooltip.positioners.besideBar = function (items) {
+  if (!items.length) return false;
+  const e = items[0].element, ca = this.chart.chartArea;
+  const toRight = e.x < (ca.left + ca.right) / 2;
+  const half = (e.width || 0) / 2 + 12;
+  return {
+    x: e.x + (toRight ? half : -half),
+    y: (ca.top + ca.bottom) / 2,
+    xAlign: toRight ? 'left' : 'right',
+    yAlign: 'center'
+  };
+};
+
 const plate = {
   id: 'plate',
   beforeDraw(c) {
@@ -997,7 +1015,9 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     options: {
       responsive: true, maintainAspectRatio: false, animation: false,
       layout: {padding: {top: 26, right: 16, bottom: 4, left: 4}},
-      interaction: {mode: 'index', intersect: false},
+      // intersect:true, or the bubble fires anywhere in the column -- including
+      // the empty space above a short bar.
+      interaction: {mode: 'index', intersect: true},
       scales: {
         x: {stacked: true, grid: {display: false},
             title: {display: true, text: 'Record over the last 5 matches',
@@ -1019,11 +1039,15 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
         },
         tooltip: {
           displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          position: 'besideBar',
+          // Both stack segments resolve to the same bucket, so without this the
+          // body is built twice.
+          filter: it => it.datasetIndex === 0,
           animation: {duration: 140},
           animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
           callbacks: {
             title: it => rows[it[0].dataIndex].bucket + ' in their last 5',
-            label: () => '',
+            label: () => [],
             afterBody: it => {
               const r = rows[it[0].dataIndex];
               if (!r.n) return ['No team arrived on this record'];
