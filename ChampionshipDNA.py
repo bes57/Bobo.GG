@@ -596,7 +596,7 @@ PAGE_HTML = """
 
       <h2 id="roster-composition">Roster Composition</h2>
 
-      <p>Now one of the most interesting trends I&rsquo;ve noticed in championship-winning teams is about their rosters. More specifically, their roster turnover rate. Every single championship-winning roster made roster changes from the previous year <em>OR</em> they made roster changes during the year:</p>
+      <p>One trend I&rsquo;ve noticed in championship-winning teams is about their rosters. More specifically, their roster turnover rate. Every single championship-winning roster made roster changes from the previous year <em>OR</em> they made roster changes during the year:</p>
 
       <figure class="fig">
         <div class="rosters">__ROSTERS__</div>
