@@ -266,10 +266,13 @@ PAGE_HTML = """
                color:#16121d; line-height:1.2; }
   .star-evt { font-size:.72rem; color:var(--soft); margin-top:2px; }
   .star-line { display:flex; align-items:baseline; gap:8px; margin-top:7px; }
-  .star-rating { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.36rem;
+  .star-rating { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.12rem;
                  color:#7c4dd6; line-height:1; }
+  /* The rank is the headline number on the card -- a 1.14 rating means little
+     on its own, "#3 of 50" is the part that says how good it was. */
   .star-rank { font-size:.72rem; color:var(--soft); }
-  .star-rank b { color:#3d1a6e; font-weight:800; }
+  .star-rank b { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.72rem; font-weight:800;
+                 color:#3d1a6e; line-height:1; letter-spacing:-0.5px; margin-right:1px; }
   .star-split { font-size:.66rem; color:var(--soft); margin-top:4px; }
   @media (max-width:900px) { .stars { grid-template-columns:repeat(2, 1fr); } }
   @media (max-width:620px) { .stars { grid-template-columns:1fr; } }
