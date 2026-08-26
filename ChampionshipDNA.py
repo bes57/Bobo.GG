@@ -214,7 +214,9 @@ PAGE_HTML = """
   .rank-wrap { aspect-ratio:2.1/1; }
   /* A rose chart is radial, so it wants a near-square frame rather than the
      2.1:1 the line and scatter charts use. */
-  .polar-wrap { aspect-ratio:1.35/1; }
+  /* overflow:visible overrides .fig-wrap's clip: the bubble is allowed to
+     hang off the white plate rather than being cut at its edge. */
+  .polar-wrap { aspect-ratio:1.35/1; overflow:visible; }
   /* HTML tooltip, because a logo per TEAM is not something the canvas tooltip
      can do: it draws one colour box per data item, and a wedge is one item no
      matter how many teams it holds. */
@@ -406,24 +408,6 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
   return {x: e.x, y: e.y - 30};
 };
 
-// Rose chart: put the bubble out along the wedge's own bisector, so it reads as
-// belonging to that slice instead of sitting on the hub where every slice meets.
-// The alignment has to swing with the direction too -- anchoring outward but
-// keeping the box centred would just drop it back over the wedge.
-Chart.Tooltip.positioners.outward = function (items) {
-  if (!items.length) return false;
-  const e = items[0].element;
-  const mid = (e.startAngle + e.endAngle) / 2;
-  const dx = Math.cos(mid), dy = Math.sin(mid);
-  // Just inside the tip: the caret lands on the wedge, the box clears it.
-  const r = e.outerRadius * 0.92;
-  return {
-    x: e.x + dx * r,
-    y: e.y + dy * r,
-    xAlign: dx > 0.3 ? 'left' : dx < -0.3 ? 'right' : 'center',
-    yAlign: dy > 0.3 ? 'top'  : dy < -0.3 ? 'bottom' : 'center'
-  };
-};
 
 const plate = {
   id: 'plate',
@@ -842,12 +826,14 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   box.className = 'rose-tip';
   el.parentNode.appendChild(box);
 
-  // Reuses the alignment the `outward` positioner worked out, so the HTML box
-  // leaves the hub in the same direction the canvas one would have.
+  // Anchored off the arc itself rather than tooltip.caretX/caretY: Chart.js
+  // derives the caret from where IT would have put a canvas tooltip, sized to
+  // its own box, which left this one tens of pixels off the wedge.
   function tip(ctx) {
     const t = ctx.tooltip;
     if (!t.opacity || !t.dataPoints || !t.dataPoints.length) { box.style.opacity = 0; return; }
-    const r = rows[t.dataPoints[0].dataIndex];
+    const idx = t.dataPoints[0].dataIndex;
+    const r = rows[idx];
     let h = '<div class="rt-head">' + r.bucket + ' in their last 5</div>';
     h += '<div class="rt-sub">' + (r.n ? r.n + (r.n === 1 ? ' winner' : ' winners')
                                        : 'No winner came in on this record') + '</div>';
@@ -856,14 +842,21 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     box.innerHTML = h;
 
     box.style.opacity = 1;
+    const a = ctx.chart.getDatasetMeta(0).data[idx];
+    const mid = (a.startAngle + a.endAngle) / 2;
+    const dx = Math.cos(mid), dy = Math.sin(mid);
+    // Out along the wedge's own bisector, just inside the tip. Empty wedges have
+    // no tip, so they anchor on the ring the count sits on.
+    const maxR = Math.max(...ctx.chart.getDatasetMeta(0).data.map(e => e.outerRadius || 0));
+    const rad = r.n ? a.outerRadius * 0.92 : maxR * 0.13;
+    const x = a.x + dx * rad, y = a.y + dy * rad;
     const W = box.offsetWidth, H = box.offsetHeight, gap = 10;
-    const x = t.caretX, y = t.caretY;
-    box.style.left = (t.xAlign === 'left'  ? x + gap
-                    : t.xAlign === 'right' ? x - gap - W
-                    :                        x - W / 2) + 'px';
-    box.style.top  = (t.yAlign === 'top'    ? y + gap
-                    : t.yAlign === 'bottom' ? y - gap - H
-                    :                         y - H / 2) + 'px';
+    box.style.left = (dx >  0.3 ? x + gap
+                    : dx < -0.3 ? x - gap - W
+                    :             x - W / 2) + 'px';
+    box.style.top  = (dy >  0.3 ? y + gap
+                    : dy < -0.3 ? y - gap - H
+                    :             y - H / 2) + 'px';
   }
 
   // Count inside each wedge. Zeros have no wedge to sit in, so they park on a
@@ -929,7 +922,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
           font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
         },
         tooltip: {
-          enabled: false, position: 'outward', external: tip
+          enabled: false, external: tip
         }
       }
     },
