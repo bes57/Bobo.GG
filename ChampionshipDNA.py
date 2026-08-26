@@ -293,6 +293,8 @@ PAGE_HTML = """
   .star-note { font-size:.66rem; color:#b06a2c; margin-top:3px; }
   /* Says why the rank is 4 and not 5 when two players show the same figure. */
   .star-tie { font-style:italic; }
+  /* .fig-note normally sits above a figure; this one sits under it. */
+  .content .fig-note.below { margin:14px 0 0; }
   .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
   .star-face--org { background:#fff; border:1px solid #ece6f2; }
   .star-face--org img { width:60%; height:60%; object-fit:contain; }
@@ -446,6 +448,7 @@ PAGE_HTML = """
 
       <figure class="fig">
         <div class="stars" id="starGrid"></div>
+        <p class="fig-note below"><em>For EDG at Champions Seoul, I just used ACS since VLR rating wasn&rsquo;t calculated in domestic CN splits until 2025</em></p>
       </figure>
     </div>
   </div>
