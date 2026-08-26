@@ -1012,10 +1012,13 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   const tipBox = makeTip(el);
   const ord = p => p + (p === 1 ? 'st' : p === 2 ? 'nd' : 'rd');
 
-  // One rule, every bar: box beside the bar, its top level with the top of the
-  // stack. Side comes from which half of the plot the bar is in. Only the
-  // vertical clamp in makeTip can move it, and only enough to stay on canvas --
-  // letting Chart.js pick the alignment is what made this jump between bars.
+  // One rule, every bar: box beside the bar, centred on the bar's own span.
+  //
+  // Levelling its top with the top of the stack was geometrically consistent but
+  // did not look it -- on a tall bar the box sat up at the tip, on a short one it
+  // dangled past the bar's bottom. Centring on the bar reads the same at every
+  // height. Side comes from which half of the plot the bar is in, and only the
+  // vertical clamp in makeTip can move it, and only to stay on canvas.
   function barTip(ctx) {
     const t = ctx.tooltip;
     if (!t.opacity || !t.dataPoints || !t.dataPoints.length) { tipBox.hide(); return; }
@@ -1034,12 +1037,15 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     if (!r.top3 && r.all.length > list.length) {
       h += '<div class="rt-row rt-place">+' + (r.all.length - list.length) + ' more</div>';
     }
-    const bars = ctx.chart.getDatasetMeta(0).data;
-    const bar = bars[idx], ca = ctx.chart.chartArea;
+    const bar = ctx.chart.getDatasetMeta(0).data[idx], ca = ctx.chart.chartArea;
     const topSeg = ctx.chart.getDatasetMeta(1).data[idx];
     const toRight = bar.x < (ca.left + ca.right) / 2;
+    // Baseline off the scale, not off bar.base: an empty bucket has no drawn
+    // bar to take a base from.
+    const foot = ctx.chart.scales.y.getPixelForValue(0);
+    const head = topSeg ? topSeg.y : bar.y;
     tipBox.place(h, bar.x + ((bar.width || 0) / 2) * (toRight ? 1 : -1),
-                 topSeg ? topSeg.y : bar.y, toRight ? 1 : -1, 1);
+                 (head + foot) / 2, toRight ? 1 : -1, 0);
   }
 
   const c = new Chart(el, {
