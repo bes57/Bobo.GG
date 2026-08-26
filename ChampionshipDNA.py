@@ -256,7 +256,7 @@ PAGE_HTML = """
 
       <h2 id="by-the-numbers">The Winners: By The Numbers</h2>
 
-      <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior (e.g. Leviatan at London uses their numbers from Stage 1 of 2026).</p>
+      <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior <em>(e.g. Leviatan at London uses their numbers from Stage 1 of 2026)</em>.</p>
 
       <figure class="fig" id="sec-landscape">
         <p class="fig-note"><em>Note: Champions 2023 was not included, since there was no domestic split prior to the tournament</em></p>
@@ -608,18 +608,27 @@ function buildLandscape({canvas, winBox, eventBox, bandDefs, winnersDefault = tr
                                  .map(p => ({x: p.dfn, y: p.atk, p}));
   const hitRadii = data => data.map(d => (winnersOn && !d.p.won) ? 0 : 16);
 
-  function draw() {
+  // `animate` is only true for an event-button press. Chart.js tweens element
+  // positions by index, and the filtered sets barely overlap, so the logos
+  // glide across the plot into the new layout while the ones that dropped out
+  // shrink away -- which is the shuffle this is here for. Every other caller
+  // (winners toggle, pin, first paint) passes nothing and updates instantly:
+  // their data is unchanged, so an animation would just burn 550ms of frames.
+  function draw(animate) {
     const data = visible();
     if (chart) {
       chart.data.datasets[0].data = data;
       chart.data.datasets[0].hitRadius = hitRadii(data);
-      hovered = null; chart.update(); return;
+      hovered = null; chart.update(animate ? undefined : 'none'); return;
     }
     chart = new Chart(document.getElementById(canvas), {
       type: 'scatter',
       data: {datasets: [{data, pointRadius: 0, pointHoverRadius: 0, hitRadius: hitRadii(data)}]},
       options: {
-        responsive: true, maintainAspectRatio: false, animation: false,
+        responsive: true, maintainAspectRatio: false,
+        // Hover redraws call chart.draw() straight, so they never touch this --
+        // it costs nothing at rest and only runs on an event change.
+        animation: {duration: 550, easing: 'easeOutQuart'},
         layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
         interaction: {mode: 'nearest', intersect: true, axis: 'xy'},
         events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
@@ -674,7 +683,7 @@ function buildLandscape({canvas, winBox, eventBox, bandDefs, winnersDefault = tr
       active = name; pinned = null;
       if (chart) chart.tooltip.setActiveElements([], {});
       evBtns.forEach(c => c.classList.toggle('on', c === b));
-      draw();
+      draw(true);
     };
     evBtns.push(b);
     box.appendChild(b);
