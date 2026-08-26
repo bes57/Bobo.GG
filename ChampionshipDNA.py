@@ -609,7 +609,7 @@ PAGE_HTML = """
         <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Sylvan on T1, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and spikziN/blowz/Neon on LEV.</span>
       </div>
 
-      <p>This speaks to the continuous influx of top-level talent in VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent. Even if it means adding newer talent into a roster with veterans.</p>
+      <p>This speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent. Even if it means adding newer talent into a roster with veterans.</p>
 
       <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned in the final stages of the two Masters events this year - by Nongshim at Masters Santiago and Leviatan at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
 
