@@ -247,7 +247,14 @@ PAGE_HTML = """
   .tip-wrap { overflow:visible; }
   /* Star cards. A grid rather than a chart: the headshot is the point, and
      nine of them read better side by side than as labelled marks. */
-  .stars { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  .stars { display:flex; flex-direction:column; gap:22px; }
+  /* Grouped by season. Card widths stay uniform across groups, so a year with
+     one winner gets a card the same size as a year with three. */
+  .star-year { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .star-year span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.82rem;
+                    letter-spacing:.08em; color:#7c4dd6; }
+  .star-year i { flex:1 1 auto; height:1px; background:#e8e0f2; }
+  .star-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
   .star { background:#fff; border:1px solid #ece6f2; border-radius:16px; padding:16px 16px 14px;
           box-shadow:0 4px 20px #0000000a; display:flex; align-items:center; gap:14px; }
   .star-face { position:relative; flex:0 0 62px; width:62px; height:62px; border-radius:50%;
@@ -274,8 +281,8 @@ PAGE_HTML = """
   .star-rank b { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.72rem; font-weight:800;
                  color:#3d1a6e; line-height:1; letter-spacing:-0.5px; margin-right:1px; }
   .star-split { font-size:.66rem; color:var(--soft); margin-top:4px; }
-  @media (max-width:900px) { .stars { grid-template-columns:repeat(2, 1fr); } }
-  @media (max-width:620px) { .stars { grid-template-columns:1fr; } }
+  @media (max-width:900px) { .star-row { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:620px) { .star-row { grid-template-columns:1fr; } }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -1232,7 +1239,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   // a warning today, an error in a later Python.
   const split = t => String(t).replace(/^(Champions Tour|VCT)\\s+/, '').replace(/^(\\d{4}):\\s*/, '$1 ');
 
-  grid.innerHTML = LS.stars.map(s => {
+  const card = s => {
     const face = s.head
       ? '<img src="' + esc(s.head) + '" alt="" loading="lazy">'
       : '<span>' + esc(s.player.slice(0, 1).toUpperCase()) + '</span>';
@@ -1249,7 +1256,22 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
       // Tokyo, an international. The event carries the meaning instead.
       +   '<div class="star-split">in ' + esc(split(s.prior)) + ' &middot; ' + s.rounds + ' rounds</div>'
       + '</div></div>';
-  }).join('');
+  };
+
+  // Season comes off the event label's trailing year; the data is already in
+  // chronological order, so first-seen order is chronological too.
+  const years = [];
+  LS.stars.forEach(s => {
+    const y = (String(s.intl).match(/(\\d{4})\\s*$/) || [, '?'])[1];
+    let g = years.find(v => v.year === y);
+    if (!g) years.push(g = {year: y, rows: []});
+    g.rows.push(s);
+  });
+
+  grid.innerHTML = years.map(g =>
+    '<div><div class="star-year"><span>' + esc(g.year) + '</span><i></i></div>'
+    + '<div class="star-row">' + g.rows.map(card).join('') + '</div></div>'
+  ).join('');
 })();
 
 // In-text mentions drive the first chart.
