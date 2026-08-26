@@ -42,7 +42,12 @@ _BEFORE_SNAP = [
 # rather than markup so the outs and ins can be styled apart from each other;
 # the wording of every label and name is theirs.
 _ROSTERS = [
-    ("FNC", 2023, "LOCK//IN + Masters Tokyo", "FNATIC", [
+    # Two cards, one roster: the same offseason changes carried FNATIC through
+    # both titles, and merging them into one card hid that they won twice.
+    ("FNC", 2023, "LOCK//IN", "FNATIC", [
+        ("preseason", ["Mistic", "Enzo"], ["Chronicle", "Leo"]),
+    ]),
+    ("FNC", 2023, "Masters Tokyo", "FNATIC", [
         ("preseason", ["Mistic", "Enzo"], ["Chronicle", "Leo"]),
     ]),
     ("EG", 2023, "Champions LA", "EG", [
