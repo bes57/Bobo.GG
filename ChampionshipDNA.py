@@ -42,38 +42,38 @@ _BEFORE_SNAP = [
 # rather than markup so the outs and ins can be styled apart from each other;
 # the wording of every label and name is theirs.
 _ROSTERS = [
-    ("FNC", "LOCK//IN + Masters Tokyo", "FNATIC", [
-        ("", ["Mistic", "Enzo"], ["Chronicle", "Leo"]),
+    ("FNC", 2023, "LOCK//IN + Masters Tokyo", "FNATIC", [
+        ("preseason", ["Mistic", "Enzo"], ["Chronicle", "Leo"]),
     ]),
-    ("EG", "Champions LA", "EG", [
-        ("", ["Apoth", "Reformed"], ["BcJ", "Ethan"]),
+    ("EG", 2023, "Champions LA", "EG", [
+        ("preseason", ["Apoth", "Reformed"], ["BcJ", "Ethan"]),
         ("midseason", ["BcJ"], ["Demon1"]),
     ]),
-    ("SEN", "Masters Madrid", "Sentinels", [
-        ("", ["Pancada", "Marved"], ["JohnQT", "Zellsis"]),
+    ("SEN", 2024, "Masters Madrid", "Sentinels", [
+        ("preseason", ["Pancada", "Marved"], ["JohnQT", "Zellsis"]),
     ]),
-    ("GEN", "Masters Shanghai", "Gen.G", [
-        ("", ["TS", "k1Ng", "Secret", "eKo", "GodDead"],
+    ("GEN", 2024, "Masters Shanghai", "Gen.G", [
+        ("preseason", ["TS", "k1Ng", "Secret", "eKo", "GodDead"],
              ["t3xture", "Munchkin", "Karon", "Lakia"]),
     ]),
-    ("EDG", "Champions Seoul", "EDG", [
+    ("EDG", 2024, "Champions Seoul", "EDG", [
         ("midseason", ["Haodong"], ["S1Mon"]),
     ]),
-    ("T1", "Masters Bangkok", "T1", [
-        ("", ["Sayaplayer", "Rossy", "xccurate"], ["Meteor", "BuZz", "Sylvan"]),
+    ("T1", 2025, "Masters Bangkok", "T1", [
+        ("preseason", ["Sayaplayer", "Rossy", "xccurate"], ["Meteor", "BuZz", "Sylvan"]),
     ]),
-    ("PRX", "Masters Toronto", "PRX", [
+    ("PRX", 2025, "Masters Toronto", "PRX", [
         ("midseason", ["mindfreak"], ["PatMen"]),
     ]),
-    ("NRG", "Champions Paris", "NRG", [
-        ("", ["crashies", "Victor"], ["Verno", "Mada"]),
+    ("NRG", 2025, "Champions Paris", "NRG", [
+        ("preseason", ["crashies", "Victor"], ["Verno", "Mada"]),
         ("midseason", ["Verno", "FNS"], ["Brawk", "skuba"]),
     ]),
-    ("NS", "Masters Santiago", "NS RedForce", [
-        ("", ["margaret", "Persia"], ["Rb", "Xross"]),
+    ("NS", 2026, "Masters Santiago", "NS RedForce", [
+        ("preseason", ["margaret", "Persia"], ["Rb", "Xross"]),
     ]),
-    ("LEV", "Masters London", "Leviat\u00e1n", [
-        ("", ["C0M", "tex"], ["spikeziN", "blowz"]),
+    ("LEV", 2026, "Masters London", "Leviat\u00e1n", [
+        ("preseason", ["C0M", "tex"], ["spikeziN", "blowz"]),
         ("midseason", ["PxS"], ["Neon"]),
     ]),
 ]
@@ -81,22 +81,30 @@ _ROSTERS = [
 
 def _rosters_html():
     """Static markup: this never changes between requests, unlike the charts."""
-    out = []
-    for org, event, team, rows in _ROSTERS:
+    # Grouped by season, reusing the star cards' year header so the two
+    # sections read as the same kind of list.
+    TAGS = {"preseason": "(Preseason)", "midseason": "[midseason]"}
+    years, cards = [], {}
+    for org, year, event, team, rows in _ROSTERS:
         lines = []
         for tag, gone, came in rows:
             chips = "".join(f'<span class="ro-out">&minus; {n}</span>' for n in gone)
             chips += "".join(f'<span class="ro-in">+ {n}</span>' for n in came)
-            label = f'<span class="ro-tag">[{tag}]</span>' if tag else ""
+            label = f'<span class="ro-tag">{TAGS[tag]}</span>' if tag else ""
             lines.append(f'<div class="ro-line">{label}{chips}</div>')
-        out.append(
+        if year not in cards:
+            years.append(year); cards[year] = []
+        cards[year].append(
             '<div class="ro">'
             '<div class="ro-head">'
             f'<div class="ro-evt">{event}</div>'
             f'<div class="ro-team"><img src="/logos/{org}.png" alt=""><span>{team}</span></div>'
             '</div>'
             + "".join(lines) + "</div>")
-    return "\n".join(out)
+    return "\n".join(
+        f'<div><div class="star-year"><span>{y}</span><i></i></div>'
+        f'<div class="ro-row">{"".join(cards[y])}</div></div>'
+        for y in years)
 
 
 _ls_cache = (None, -1.0)
@@ -364,7 +372,8 @@ PAGE_HTML = """
   .content .fig-note.below { margin:14px 0 0; }
   /* Roster turnover. Outs and ins are coloured rather than just signed, so the
      shape of a change reads before any name does. */
-  .rosters { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin:26px 0 8px; }
+  .rosters { display:flex; flex-direction:column; gap:22px; margin:26px 0 8px; }
+  .ro-row { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
   .ro { background:#fff; border:1px solid #ece6f2; border-radius:14px; padding:14px 16px;
         box-shadow:0 4px 18px #0000000a; }
   /* Tournament on top, team under it with its logo alongside. */
@@ -382,7 +391,7 @@ PAGE_HTML = """
                     white-space:nowrap; }
   .ro-out { color:#a33b3b; background:#fbeeee; }
   .ro-in  { color:#2f7a54; background:#eaf6ef; }
-  @media (max-width:760px) { .rosters { grid-template-columns:1fr; } }
+  @media (max-width:760px) { .ro-row { grid-template-columns:1fr; } }
   .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
   .star-face--org { background:#fff; border:1px solid #ece6f2; }
   .star-face--org > img { width:60%; height:60%; border-radius:0; object-fit:contain; }
