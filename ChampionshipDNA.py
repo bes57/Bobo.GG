@@ -83,7 +83,7 @@ def _rosters_html():
     """Static markup: this never changes between requests, unlike the charts."""
     # Grouped by season, reusing the star cards' year header so the two
     # sections read as the same kind of list.
-    TAGS = {"preseason": "(Preseason)", "midseason": "[midseason]"}
+    TAGS = {"preseason": "(Preseason)", "midseason": "(Midseason)"}
     years, cards = [], {}
     for org, year, event, team, rows in _ROSTERS:
         lines = []
@@ -373,9 +373,9 @@ PAGE_HTML = """
   /* Roster turnover. Outs and ins are coloured rather than just signed, so the
      shape of a change reads before any name does. */
   .rosters { display:flex; flex-direction:column; gap:22px; margin:26px 0 8px; }
-  .ro-row { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; }
-  .ro { background:#fff; border:1px solid #ece6f2; border-radius:14px; padding:14px 16px;
-        box-shadow:0 4px 18px #0000000a; }
+  .ro-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; }
+  .ro { background:#fff; border:1px solid #ece6f2; border-radius:14px; padding:14px 14px;
+        box-shadow:0 4px 18px #0000000a; min-width:0; }
   /* Tournament on top, team under it with its logo alongside. */
   .ro-head { margin-bottom:11px; }
   .ro-evt { font-size:.72rem; font-weight:600; letter-spacing:.03em; color:var(--soft);
@@ -384,14 +384,22 @@ PAGE_HTML = """
   .ro-team img { width:24px; height:24px; object-fit:contain; flex:0 0 24px; }
   .ro-team span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1rem;
                   color:#16121d; line-height:1.2; }
-  .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:6px; }
-  .ro-tag { font-size:.66rem; font-weight:700; letter-spacing:.04em; color:var(--soft);
-            background:#f4f0f8; border-radius:5px; padding:2px 6px; }
-  .ro-out, .ro-in { font-size:.78rem; font-weight:600; border-radius:6px; padding:2px 8px;
-                    white-space:nowrap; }
+  /* One row per change, never wrapped. Gen.G's preseason line is nine names and
+     will not fit a third of the figure at any readable size, so the line scrolls
+     sideways -- the same single-row-scroll the nav bar uses. */
+  .ro-line { display:flex; flex-wrap:nowrap; align-items:center; gap:5px; margin-top:12px;
+             overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
+             -webkit-overflow-scrolling:touch; }
+  .ro-line::-webkit-scrollbar { display:none; }
+  .ro-tag { font-size:.63rem; font-weight:700; letter-spacing:.03em; color:var(--soft);
+            background:#f4f0f8; border-radius:5px; padding:2px 6px;
+            white-space:nowrap; flex:0 0 auto; }
+  .ro-out, .ro-in { font-size:.73rem; font-weight:600; border-radius:6px; padding:2px 7px;
+                    white-space:nowrap; flex:0 0 auto; }
   .ro-out { color:#a33b3b; background:#fbeeee; }
   .ro-in  { color:#2f7a54; background:#eaf6ef; }
-  @media (max-width:760px) { .ro-row { grid-template-columns:1fr; } }
+  @media (max-width:900px) { .ro-row { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:620px) { .ro-row { grid-template-columns:1fr; } }
   .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
   .star-face--org { background:#fff; border:1px solid #ece6f2; }
   .star-face--org > img { width:60%; height:60%; border-radius:0; object-fit:contain; }
