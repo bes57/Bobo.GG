@@ -88,10 +88,20 @@ def _rosters_html():
     for org, year, event, team, rows in _ROSTERS:
         lines = []
         for tag, gone, came in rows:
-            chips = "".join(f'<span class="ro-out">&minus; {n}</span>' for n in gone)
-            chips += "".join(f'<span class="ro-in">+ {n}</span>' for n in came)
-            label = f'<span class="ro-tag">{TAGS[tag]}</span>' if tag else ""
-            lines.append(f'<div class="ro-line">{label}{chips}</div>')
+            # Outs and ins get a row each. Nine names on one line -- Gen.G's
+            # preseason rebuild -- cannot fit a third of the figure at any
+            # readable size, and splitting on the natural seam keeps every row
+            # inside the card without shrinking the type to nothing.
+            block = [f'<div class="ro-tag">{TAGS[tag]}</div>'] if tag else []
+            if gone:
+                block.append('<div class="ro-line">'
+                             + "".join(f'<span class="ro-out">&minus; {n}</span>' for n in gone)
+                             + "</div>")
+            if came:
+                block.append('<div class="ro-line">'
+                             + "".join(f'<span class="ro-in">+ {n}</span>' for n in came)
+                             + "</div>")
+            lines.append('<div class="ro-change">' + "".join(block) + "</div>")
         if year not in cards:
             years.append(year); cards[year] = []
         cards[year].append(
@@ -386,14 +396,14 @@ PAGE_HTML = """
   .ro-team img { width:24px; height:24px; object-fit:contain; flex:0 0 24px; }
   .ro-team span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1rem;
                   color:#16121d; line-height:1.2; }
-  /* Wraps rather than scrolls. Gen.G's preseason line is nine names and cannot
-     fit a third of the figure at any readable size -- scrolling it sideways hid
-     the tail of the line, which is worse than a second row. Names are small
-     enough that most lines still come out on one. */
-  .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:12px; }
-  .ro-tag { font-size:.63rem; font-weight:700; letter-spacing:.03em; color:var(--soft);
-            background:#f4f0f8; border-radius:5px; padding:2px 6px;
-            white-space:nowrap; flex:0 0 auto; }
+  /* One row of outs, one row of ins. flex-wrap stays on as a safety net -- with
+     the rows split this way nothing currently reaches it, but a future roster
+     with more names should push down rather than spill out of the card. */
+  .ro-change + .ro-change { margin-top:13px; }
+  .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:5px; }
+  .ro-tag { display:inline-block; font-size:.63rem; font-weight:700; letter-spacing:.03em;
+            color:var(--soft); background:#f4f0f8; border-radius:5px; padding:2px 6px;
+            white-space:nowrap; }
   .ro-out, .ro-in { font-size:.71rem; font-weight:600; border-radius:6px; padding:2px 7px;
                     white-space:nowrap; flex:0 0 auto; }
   .ro-out { color:#a33b3b; background:#fbeeee; }
