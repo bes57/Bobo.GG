@@ -11,14 +11,14 @@ Two views, both modelled on the NCAA originals:
     split. "Split prior" is resolved exactly as BuildSideLandscape does it, per
     TEAM, so this describes the same stretch of matches as the landscape chart.
 
-  last5 -- the winner's record over its last five matches before the tournament,
-    counted ACROSS events rather than inside the split. A team's run into an
-    international routinely spans a split, an off-season event and a previous
-    international (MIBR's five straight losses before Champions ran EWC ->
-    Toronto -> Stage 2), and an event boundary does not reset momentum. It also
-    avoids undercounting teams whose split was shorter than five matches.
+  last5 -- the winner's record over its last five FRANCHISED matches before the
+    tournament, counted across events rather than inside the split. Crossing the
+    event boundary matters because a run into an international routinely spans a
+    split and a previous international. Third-party events are excluded: a team
+    that entered EWC or Red Bull Home Ground would otherwise be judged on
+    matches its rivals never had the chance to play.
 """
-import os, json, glob
+import os, re, json, glob
 import pandas as pd
 
 import sys
@@ -27,6 +27,14 @@ from BuildSideLandscape import (INTERNATIONALS, _INTL_SET, _SPLIT_RE, _NOT_ORGS,
                                 side_rates, _event_winners)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# The franchised circuit: domestic splits, their qualifiers, and the Masters /
+# Champions events. Everything else in the data is third-party -- Esports World
+# Cup, Red Bull Home Ground, the China Evolution Series, Shanghai Esports
+# Masters, TEN, Convergence, the Radiant Invitationals -- and only some teams
+# ever play them.
+_FRANCHISED_RE = re.compile(
+    r"^(?:Champions Tour \d{4}:|VCT \d{4}:|Valorant Champions \d{4}$|Valorant Masters )")
 OUT  = os.path.join(ROOT, "data", "enriched", "momentum_streaks.json")
 
 
@@ -80,7 +88,8 @@ def _terminal_streak(seq):
 
 def _last_five(series, org, before):
     """Record over the org's last five matches before a date, across events."""
-    g = series[(series.org == org) & (series.date < before)].sort_values(["date", "mid"]).tail(5)
+    g = series[(series.org == org) & (series.date < before)
+               & series.event.str.match(_FRANCHISED_RE)].sort_values(["date", "mid"]).tail(5)
     if g.empty:
         return None
     w = int(g.won.sum())

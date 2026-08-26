@@ -99,12 +99,12 @@
    "record": "5-4",
    "seq": "LLLWWWWWL",
    "last5": {
-    "w": 5,
-    "l": 0,
-    "bucket": "5-0",
-    "seq": "WWWWW",
+    "w": 4,
+    "l": 1,
+    "bucket": "4-1",
+    "seq": "WWWWL",
     "events": [
-     "Esports World Cup 2025"
+     "VCT 2025: Pacific Stage 1"
     ]
    }
   },
@@ -135,12 +135,12 @@
    "record": "4-0",
    "seq": "WWWW",
    "last5": {
-    "w": 5,
-    "l": 0,
-    "bucket": "5-0",
-    "seq": "WWWWW",
+    "w": 4,
+    "l": 1,
+    "bucket": "4-1",
+    "seq": "LWWWW",
     "events": [
-     "TEN Global Invitational 2025",
+     "VCT 2025: Pacific Stage 2",
      "VCT 2026: Pacific Kickoff"
     ]
    }
@@ -154,12 +154,11 @@
    "record": "6-3",
    "seq": "WWWLLWWWL",
    "last5": {
-    "w": 2,
-    "l": 3,
-    "bucket": "2-3",
-    "seq": "WLWLL",
+    "w": 3,
+    "l": 2,
+    "bucket": "3-2",
+    "seq": "LWWWL",
     "events": [
-     "Esports World Cup 2026: Americas Qualifier",
      "VCT 2026: Americas Stage 1"
     ]
    }
@@ -176,35 +175,35 @@
  "tally": [
   {
    "bucket": "5-0",
-   "n": 3,
+   "n": 1,
    "who": [
-    "EDG Champions 2024",
+    "EDG Champions 2024"
+   ]
+  },
+  {
+   "bucket": "4-1",
+   "n": 4,
+   "who": [
+    "FNC Masters Tokyo 2023",
+    "SEN Masters Madrid 2024",
     "PRX Masters Toronto 2025",
     "NS Masters Santiago 2026"
    ]
   },
   {
-   "bucket": "4-1",
-   "n": 2,
-   "who": [
-    "FNC Masters Tokyo 2023",
-    "SEN Masters Madrid 2024"
-   ]
-  },
-  {
    "bucket": "3-2",
-   "n": 2,
+   "n": 3,
    "who": [
     "T1 Masters Bangkok 2025",
-    "NRG Champions 2025"
+    "NRG Champions 2025",
+    "LEV Masters London 2026"
    ]
   },
   {
    "bucket": "2-3",
-   "n": 2,
+   "n": 1,
    "who": [
-    "GEN Masters Shanghai 2024",
-    "LEV Masters London 2026"
+    "GEN Masters Shanghai 2024"
    ]
   },
   {
