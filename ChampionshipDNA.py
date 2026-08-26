@@ -257,8 +257,8 @@ PAGE_HTML = """
   <a href="#by-the-numbers">The Winners: By The Numbers</a>
   <a href="#sec-landscape" class="sub">Attack &amp; Defense</a>
   <a href="#sec-tiers" class="sub">Bands of Favoritism</a>
-  <a href="#sec-momentum" class="sub">Momentum</a>
   <a href="#sec-benpom" class="sub">BenPom Rank</a>
+  <a href="#sec-momentum" class="sub">Momentum</a>
 </nav>
 <div class="page">
   <div class="article">
@@ -325,6 +325,14 @@ PAGE_HTML = """
 
       <p>I have my own <a class="xlink" href="/mapelo/modern/" target="_blank" rel="noopener">BenPom</a> rating system for VCT - let&rsquo;s see what the trend is there:</p>
 
+      <figure class="fig">
+        <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
+        <div class="takeaway">
+          <b>Every trophy winner since franchising was Top-15 by BenPom before the tournament</b>
+          <span>70% were top-7</span>
+        </div>
+      </figure>
+
       <hr class="secbreak">
 
       <p id="sec-momentum">To go back to the point on teams that &ldquo;overshot their previous domestic performance&rdquo;, those teams often were playing better towards the end of their split. In other words, they had <em>momentum</em>. For instance, MIBR went far at Champions Paris place horribly on the Attack/Defense graph, yet they finished 5th-6th and only lost to each of the top-3 teams at the tournament (narrowly). In their Americas Stage 2 split, they won 2 of their last 3 games but were on a 5-match losing streak before that.</p>
@@ -337,14 +345,6 @@ PAGE_HTML = """
           <span><i class="sk sk-w"></i>Winning streak</span>
         </div>
         <div class="fig-wrap rank-wrap"><canvas id="streakChart"></canvas></div>
-      </figure>
-
-      <figure class="fig">
-        <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
-        <div class="takeaway">
-          <b>Every trophy winner since franchising was Top-15 by BenPom before the tournament</b>
-          <span>70% were top-7</span>
-        </div>
       </figure>
     </div>
   </div>
