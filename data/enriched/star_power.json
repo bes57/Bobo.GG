@@ -1,112 +1,165 @@
 {
  "stars": [
   {
+   "intl": "LOCK//IN 2023",
+   "org": "FNC",
+   "kind": "nodata",
+   "note": "No prior data",
+   "url": "https://www.vlr.gg/event/stats/1188/champions-tour-2023-lock-in-s-o-paulo"
+  },
+  {
    "intl": "Masters Tokyo 2023",
    "org": "FNC",
    "prior": "Champions Tour 2023: EMEA League",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "Alfajer",
    "profile": "https://www.vlr.gg/player/9810/alfajer",
    "head": "https://owcdn.net/img/687e2c40ac175.png",
-   "rating": 1.26,
+   "val": 1.26,
    "rank": 1,
    "pool": 53,
    "rounds": 465,
-   "maps": 23
+   "maps": 23,
+   "url": "https://www.vlr.gg/event/stats/1190/champions-tour-2023-emea-league"
+  },
+  {
+   "intl": "Champions 2023",
+   "org": "EG",
+   "kind": "nostage",
+   "note": "No domestic stage",
+   "url": "https://www.vlr.gg/event/stats/1657/valorant-champions-2023"
   },
   {
    "intl": "Masters Madrid 2024",
    "org": "SEN",
    "prior": "Champions Tour 2024: Americas Kickoff",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "zekken",
    "profile": "https://www.vlr.gg/player/4004/zekken",
    "head": "https://owcdn.net/img/69742b2cdd6c3.png",
-   "rating": 1.14,
+   "val": 1.14,
    "rank": 3,
    "pool": 50,
    "rounds": 432,
-   "maps": 21
+   "maps": 21,
+   "url": "https://www.vlr.gg/event/stats/1923/champions-tour-2024-americas-kickoff"
   },
   {
    "intl": "Masters Shanghai 2024",
    "org": "GEN",
    "prior": "Champions Tour 2024: Pacific Stage 1",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "t3xture",
    "profile": "https://www.vlr.gg/player/9196/t3xture",
    "head": "https://owcdn.net/img/676ba04aee5f9.png",
-   "rating": 1.14,
+   "val": 1.14,
    "rank": 4,
    "pool": 55,
    "rounds": 627,
-   "maps": 29
+   "maps": 29,
+   "url": "https://www.vlr.gg/event/stats/2002/champions-tour-2024-pacific-stage-1"
+  },
+  {
+   "intl": "Champions 2024",
+   "org": "EDG",
+   "prior": "Champions Tour 2024: China Stage 2",
+   "kind": "acs",
+   "stat": "ACS",
+   "note": "No VLR-rating published",
+   "player": "ZmjjKK",
+   "profile": "https://www.vlr.gg/player/3520/zmjjkk",
+   "head": "https://owcdn.net/img/677fe40edf9da.png",
+   "val": 258.2,
+   "rank": 1,
+   "pool": 55,
+   "rounds": 394,
+   "maps": 19,
+   "url": "https://www.vlr.gg/event/stats/2096/champions-tour-2024-china-stage-2"
   },
   {
    "intl": "Masters Bangkok 2025",
    "org": "T1",
    "prior": "VCT 2025: Pacific Kickoff",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "BuZz",
    "profile": "https://www.vlr.gg/player/804/buzz",
    "head": "https://owcdn.net/img/696cbe96ec066.png",
-   "rating": 1.07,
+   "val": 1.07,
    "rank": 18,
    "pool": 56,
    "rounds": 483,
-   "maps": 22
+   "maps": 22,
+   "url": "https://www.vlr.gg/event/stats/2277/champions-tour-2025-pacific-kickoff"
   },
   {
    "intl": "Masters Toronto 2025",
    "org": "PRX",
    "prior": "VCT 2025: Pacific Stage 1",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "Jinggg",
    "profile": "https://www.vlr.gg/player/7378/jinggg",
    "head": "https://owcdn.net/img/69735f0889a6b.png",
-   "rating": 1.14,
+   "val": 1.14,
    "rank": 4,
    "pool": 64,
    "rounds": 536,
-   "maps": 26
+   "maps": 26,
+   "url": "https://www.vlr.gg/event/stats/2379/vct-2025-pacific-stage-1"
   },
   {
    "intl": "Champions 2025",
    "org": "NRG",
    "prior": "VCT 2025: Americas Stage 2",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "brawk",
    "profile": "https://www.vlr.gg/player/2172/brawk",
    "head": "https://owcdn.net/img/697426e1f3308.png",
-   "rating": 1.13,
+   "val": 1.13,
    "rank": 5,
    "pool": 61,
    "rounds": 568,
-   "maps": 27
+   "maps": 27,
+   "url": "https://www.vlr.gg/event/stats/2501/vct-2025-americas-stage-2"
   },
   {
    "intl": "Masters Santiago 2026",
    "org": "NS",
    "prior": "VCT 2026: Pacific Kickoff",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "Rb",
    "profile": "https://www.vlr.gg/player/488/rb",
    "head": "https://owcdn.net/img/69d5f87b7c32d.png",
-   "rating": 1.12,
+   "val": 1.12,
    "rank": 6,
    "pool": 60,
    "rounds": 250,
-   "maps": 12
+   "maps": 12,
+   "url": "https://www.vlr.gg/event/stats/2683/vct-2026-pacific-kickoff"
   },
   {
    "intl": "Masters London 2026",
    "org": "LEV",
    "prior": "VCT 2026: Americas Stage 1",
+   "kind": "rating",
+   "stat": "VLR-rating",
    "player": "Neon",
    "profile": "https://www.vlr.gg/player/29243/neon",
    "head": "https://owcdn.net/img/69234b3d0a58d.png",
-   "rating": 1.25,
+   "val": 1.25,
    "rank": 1,
    "pool": 62,
    "rounds": 543,
-   "maps": 26
+   "maps": 26,
+   "url": "https://www.vlr.gg/event/stats/2860/vct-2026-americas-stage-1"
   }
  ],
  "min_rounds": 100,
- "skipped": [
-  "EDG @ Champions 2024: no published player ratings in Champions Tour 2024: China Stage 2"
- ]
+ "skipped": []
 }

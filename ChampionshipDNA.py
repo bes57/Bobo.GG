@@ -256,7 +256,14 @@ PAGE_HTML = """
   .star-year i { flex:1 1 auto; height:1px; background:#e8e0f2; }
   .star-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
   .star { background:#fff; border:1px solid #ece6f2; border-radius:16px; padding:16px 16px 14px;
-          box-shadow:0 4px 20px #0000000a; display:flex; align-items:center; gap:14px; }
+          box-shadow:0 4px 20px #0000000a; display:flex; align-items:center; gap:14px;
+          color:inherit; text-decoration:none;
+          transition:transform .13s ease, box-shadow .13s ease, border-color .13s ease; }
+  /* Only the linked ones lift -- a card that goes nowhere should not invite a
+     click. Every card happens to have a leaderboard today, but the renderer
+     still falls back to a plain div when one is missing. */
+  a.star:hover { transform:translateY(-2px); border-color:#d9c9f0;
+                 box-shadow:0 10px 26px #7c4dd61f; }
   .star-face { position:relative; flex:0 0 62px; width:62px; height:62px; border-radius:50%;
                background:#f3eefb; overflow:hidden; display:flex; align-items:center;
                justify-content:center; }
@@ -281,6 +288,13 @@ PAGE_HTML = """
   .star-rank b { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.72rem; font-weight:800;
                  color:#3d1a6e; line-height:1; letter-spacing:-0.5px; margin-right:1px; }
   .star-split { font-size:.66rem; color:var(--soft); margin-top:4px; }
+  .star-stat { font-size:.66rem; font-weight:700; color:#7c4dd6; letter-spacing:.04em;
+               margin-left:-4px; }
+  .star-note { font-size:.66rem; color:#b06a2c; margin-top:3px; }
+  .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
+  .star-face--org { background:#fff; border:1px solid #ece6f2; }
+  .star-face--org img { width:60%; height:60%; object-fit:contain; }
+  .star-none { font-size:.76rem; font-style:italic; color:var(--soft); margin-top:8px; }
   @media (max-width:900px) { .star-row { grid-template-columns:repeat(2, 1fr); } }
   @media (max-width:620px) { .star-row { grid-template-columns:1fr; } }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
@@ -1240,22 +1254,40 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   const split = t => String(t).replace(/^(Champions Tour|VCT)\\s+/, '').replace(/^(\\d{4}):\\s*/, '$1 ');
 
   const card = s => {
+    const org = '<span class="star-org"><img src="/logos/' + esc(s.org) + '.png" alt=""></span>';
+
+    // Events with nothing to measure still get a card. A visible gap says more
+    // than a quietly shorter row, and the reason is the interesting part.
+    const open = s.url ? '<a class="star star--empty" href="' + esc(s.url)
+                       + '" target="_blank" rel="noopener">' : '<div class="star star--empty">';
+    const shut = s.url ? '</a>' : '</div>';
+    if (s.kind === 'nodata' || s.kind === 'nostage') {
+      return open
+        + '<div class="star-face star-face--org"><img src="/logos/' + esc(s.org) + '.png" alt=""></div>'
+        + '<div class="star-body">'
+        +   '<div class="star-name">' + esc(s.intl) + '</div>'
+        +   '<div class="star-evt">' + esc(s.org) + '</div>'
+        +   '<div class="star-none">' + esc(s.note) + '</div>'
+        + '</div>' + shut;
+    }
+
     const face = s.head
       ? '<img src="' + esc(s.head) + '" alt="" loading="lazy">'
       : '<span>' + esc(s.player.slice(0, 1).toUpperCase()) + '</span>';
-    return '<div class="star">'
-      + '<div class="star-face">' + face
-      +   '<span class="star-org"><img src="/logos/' + esc(s.org) + '.png" alt=""></span>'
-      + '</div>'
+    // The ACS card is labelled, so 258 next to everyone else's 1.14 cannot be
+    // read as a rating.
+    const stat = s.kind === 'acs' ? ' <span class="star-stat">ACS</span>' : '';
+    return (s.url ? '<a class="star" href="' + esc(s.url) + '" target="_blank" rel="noopener">'
+                  : '<div class="star">')
+      + '<div class="star-face">' + face + org + '</div>'
       + '<div class="star-body">'
       +   '<div class="star-name">' + esc(s.player) + '</div>'
       +   '<div class="star-evt">' + esc(s.org) + ' &middot; ' + esc(s.intl) + '</div>'
-      +   '<div class="star-line"><span class="star-rating">' + s.rating.toFixed(2) + '</span>'
+      +   '<div class="star-line"><span class="star-rating">' + s.val + '</span>' + stat
       +     '<span class="star-rank"><b>#' + s.rank + '</b> of ' + s.pool + '</span></div>'
-      // "in the split" would be wrong for EG: their last event was Masters
-      // Tokyo, an international. The event carries the meaning instead.
       +   '<div class="star-split">in ' + esc(split(s.prior)) + ' &middot; ' + s.rounds + ' rounds</div>'
-      + '</div></div>';
+      +   (s.note ? '<div class="star-note">' + esc(s.note) + '</div>' : '')
+      + '</div>' + (s.url ? '</a>' : '</div>');
   };
 
   // Season comes off the event label's trailing year; the data is already in
