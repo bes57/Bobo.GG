@@ -6480,6 +6480,50 @@ def _event_bands_for_year(year):
     return bands
 
 
+def benpom_snapshot_board(year, snap):
+    """The "Before/After <event>" leaderboard exactly as /mapelo/rankings/ shows
+    it: [(org, rating), ...] best first, plus the cutoff date used.
+
+    Extracted so anything else needing these numbers (the Championship DNA
+    article) reads them from one place. Getting this wrong is easy and quiet —
+    the map_ratings snapshot's own `overall_rating` is a different intermediate
+    and must never be displayed, and the cutoff is NOT the snapshot's ref_date
+    but the last real match date among the snap's own events.
+    """
+    year = str(year)
+    full = get_ratings()
+    snapshots = ((full.get('ratings') or {}).get(year, {}) or {}).get('snapshots', {}) or {}
+    snap_data = snapshots.get(snap)
+    if not snap_data:
+        return [], ''
+    ref_date  = snap_data.get('ref_date') or ''
+    teams_raw = snap_data.get('teams', {}) or {}
+
+    tl = _load_year_timeline(year)
+    all_match_events = tl.get('match_events') or []
+    snap_event_set = set(_SNAPSHOT_EVENTS.get(year, {}).get(snap, []))
+    if snap_event_set:
+        in_snap = [me.get('date', '') for me in all_match_events
+                   if me.get('event_id') in snap_event_set]
+        cutoff_date = max(in_snap) if in_snap else ref_date
+    else:
+        cutoff_date = ref_date
+
+    cps = [cp for cp in (tl.get('checkpoints') or []) if cp.get('date', '') <= cutoff_date]
+    last_cp_ratings = max(cps, key=lambda cp: cp.get('date', '')).get('ratings', {}) if cps else {}
+
+    board = []
+    for org, td in teams_raw.items():
+        if last_cp_ratings:
+            if org not in last_cp_ratings:
+                continue
+            board.append((org, float(last_cp_ratings[org])))
+        else:
+            board.append((org, float(td.get('overall_rating', 0.0))))
+    board.sort(key=lambda kv: -kv[1])
+    return board, cutoff_date
+
+
 @mapelo_bp.route('/rankings/data')
 def mapelo_rankings_data():
     """Per-(year, snap) payload for the historical rankings page.

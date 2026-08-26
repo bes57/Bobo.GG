@@ -134,68 +134,6 @@ def _event_winners(events=None):
     return out
 
 
-# Each international's "Before <event>" snapshot in map_ratings.json — the same
-# ratings the site's own rankings page shows, so the article and the site agree.
-_BEFORE_SNAPSHOT = {
-    "Champions Tour 2023: Masters Tokyo":    ("2023", "before_tokyo"),
-    "Valorant Champions 2023":               ("2023", "before_champions"),
-    "Champions Tour 2024: Masters Madrid":   ("2024", "before_madrid"),
-    "Champions Tour 2024: Masters Shanghai": ("2024", "before_shanghai"),
-    "Valorant Champions 2024":               ("2024", "before_champions"),
-    "Valorant Masters Bangkok 2025":         ("2025", "before_bangkok"),
-    "Valorant Masters Toronto 2025":         ("2025", "before_toronto"),
-    "Valorant Champions 2025":               ("2025", "before_champions"),
-    "Valorant Masters Santiago 2026":        ("2026", "before_santiago"),
-    "Valorant Masters London 2026":          ("2026", "before_london"),
-}
-
-
-def _winner_ranks(winners):
-    """Each international winner's BenPom RANK in that event's "Before <event>"
-    snapshot — the VCT answer to KenPom's "every champion was top 25".
-
-    Read from map_ratings.json, NOT from rating_timeline.json. They are two
-    different solves and they disagree: taking the timeline's last checkpoint
-    before an event start put Paper Rex 1st going into Toronto when the site
-    shows 5th, because Esports World Cup ran in the gap and the timeline had
-    already absorbed it. Snapshots are what /mapelo/rankings/ displays, so
-    using them keeps the article and the site telling the same story.
-
-    Ignore each snapshot's ref_date — some are stale (2024's before_champions
-    is dated the event's last day). What matters is the game set, and that is
-    genuinely pre-event: EDG sits at 0.765 in before_champions and 3.316 in
-    after_champions.
-    """
-    try:
-        with open(os.path.join(ROOT, "data", "map_ratings.json")) as f:
-            mr = json.load(f)
-    except Exception:
-        return []
-
-    ro = pd.read_csv(os.path.join(ROOT, "data", "enriched", "round_outcomes.csv"),
-                     dtype=str, usecols=["event", "date"])
-    starts = ro.groupby("event").date.min().to_dict()
-
-    out = []
-    for ev, label in INTERNATIONALS_ALL:
-        org = winners.get(ev)
-        key = _BEFORE_SNAPSHOT.get(ev)
-        if not org or not key:
-            continue
-        snap = ((mr.get("ratings", {}).get(key[0]) or {}).get("snapshots", {}) or {}).get(key[1])
-        if not snap:
-            continue
-        teams = snap.get("teams", {})
-        order = sorted(teams.items(), key=lambda kv: -kv[1].get("overall_rating", -99))
-        rank = next((i + 1 for i, (o, _) in enumerate(order) if o == org), None)
-        if rank is None:
-            continue
-        out.append({"event": label, "org": org, "rank": rank, "pool": len(order),
-                    "snapshot": snap.get("label", key[1]), "date": starts.get(ev, "")})
-    out.sort(key=lambda r: r["date"])
-    return out
-
-
 def build():
     sp = side_rates()
     winners = _event_winners()
@@ -236,8 +174,8 @@ def build():
         "points": points,
         "internationals": [lbl for _, lbl in INTERNATIONALS],
         "global_attack_rate": round(sp.atk_w.sum() / max(1, sp.atk_n.sum()), 4),
-        "winners": {label[e]: o for e, o in winners.items()},
-        "winner_ranks": _winner_ranks(_event_winners_all()),
+        "winners": {lbl: o for e, o in _event_winners_all().items()
+                    for lbl in [dict(INTERNATIONALS_ALL).get(e, e)]},
         "skipped": skipped,
     }
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
@@ -254,9 +192,6 @@ if __name__ == "__main__":
           f"{len(p['internationals'])} internationals")
     print(f"  global attack round win rate: {p['global_attack_rate']} (expect ~.507)")
     print(f"  winners: {p['winners']}")
-    print("  winner BenPom rank before each event:")
-    for r in p["winner_ranks"]:
-        print(f"    {r['event']:22s} {r['org']:5s} #{r['rank']:<3} of {r['pool']}  ({r['snapshot']})")
     # The article pins both axes to 40-70%. Anything outside would be clipped
     # off the chart with no visual hint, so say so loudly here.
     out = [f"{x['org']} @ {x['intl']} atk={x['atk']:.3f} def={x['dfn']:.3f}"

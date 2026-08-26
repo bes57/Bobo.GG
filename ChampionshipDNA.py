@@ -19,6 +19,23 @@ article_championship_dna_bp = Blueprint("article_championship_dna", __name__)
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 _LANDSCAPE = os.path.join(_ROOT, "data", "enriched", "side_landscape.json")
 
+# Each international's "Before <event>" snapshot. Ranks are read through
+# MapElo.benpom_snapshot_board so the article shows exactly what
+# /mapelo/rankings/ shows — computing them any other way silently disagreed
+# (see that helper's docstring).
+_BEFORE_SNAP = [
+    ("Masters Tokyo 2023",    "2023", "before_tokyo"),
+    ("Champions 2023",        "2023", "before_champions"),
+    ("Masters Madrid 2024",   "2024", "before_madrid"),
+    ("Masters Shanghai 2024", "2024", "before_shanghai"),
+    ("Champions 2024",        "2024", "before_champions"),
+    ("Masters Bangkok 2025",  "2025", "before_bangkok"),
+    ("Masters Toronto 2025",  "2025", "before_toronto"),
+    ("Champions 2025",        "2025", "before_champions"),
+    ("Masters Santiago 2026", "2026", "before_santiago"),
+    ("Masters London 2026",   "2026", "before_london"),
+]
+
 _ls_cache = (None, -1.0)
 
 
@@ -38,8 +55,29 @@ def _landscape():
             data = json.load(f)
     except Exception:
         data = {"points": [], "internationals": []}
+    data["winner_ranks"] = _winner_ranks(data.get("winners") or {})
     _ls_cache = (data, stamp)
     return data
+
+
+def _winner_ranks(winners):
+    """Each winner's BenPom rank in that event's Before-<event> board."""
+    try:
+        from MapElo import benpom_snapshot_board
+    except Exception:
+        return []
+    out = []
+    for label, year, snap in _BEFORE_SNAP:
+        org = winners.get(label)
+        if not org:
+            continue
+        board, cutoff = benpom_snapshot_board(year, snap)
+        rank = next((i + 1 for i, (o, _) in enumerate(board) if o == org), None)
+        if rank is None:
+            continue
+        out.append({"event": label, "org": org, "rank": rank,
+                    "pool": len(board), "as_of": cutoff})
+    return out
 
 
 PAGE_HTML = """
@@ -736,7 +774,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
             label: it => {
               const r = rows[it.dataIndex];
               return ['BenPom #' + r.rank + ' of ' + r.pool + ' rated teams',
-                      'from the "' + r.snapshot + '" ratings'];
+                      'as of ' + r.as_of];
             }
           }
         }

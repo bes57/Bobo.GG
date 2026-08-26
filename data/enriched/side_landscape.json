@@ -1499,6 +1499,7 @@
  "global_attack_rate": 0.5075,
  "winners": {
   "Masters Tokyo 2023": "FNC",
+  "Champions 2023": "EG",
   "Masters Madrid 2024": "SEN",
   "Masters Shanghai 2024": "GEN",
   "Champions 2024": "EDG",
@@ -1508,88 +1509,6 @@
   "Masters Santiago 2026": "NS",
   "Masters London 2026": "LEV"
  },
- "winner_ranks": [
-  {
-   "event": "Masters Tokyo 2023",
-   "org": "FNC",
-   "rank": 1,
-   "pool": 32,
-   "snapshot": "Before Masters Tokyo",
-   "date": "2023-06-10"
-  },
-  {
-   "event": "Champions 2023",
-   "org": "EG",
-   "rank": 3,
-   "pool": 33,
-   "snapshot": "Before Champions",
-   "date": "2023-08-06"
-  },
-  {
-   "event": "Masters Madrid 2024",
-   "org": "SEN",
-   "rank": 7,
-   "pool": 44,
-   "snapshot": "Before Masters Madrid",
-   "date": "2024-03-14"
-  },
-  {
-   "event": "Masters Shanghai 2024",
-   "org": "GEN",
-   "rank": 6,
-   "pool": 44,
-   "snapshot": "Before Masters Shanghai",
-   "date": "2024-05-23"
-  },
-  {
-   "event": "Champions 2024",
-   "org": "EDG",
-   "rank": 14,
-   "pool": 44,
-   "snapshot": "Before Champions",
-   "date": "2024-08-01"
-  },
-  {
-   "event": "Masters Bangkok 2025",
-   "org": "T1",
-   "rank": 9,
-   "pool": 48,
-   "snapshot": "Before Masters Bangkok",
-   "date": "2025-02-20"
-  },
-  {
-   "event": "Masters Toronto 2025",
-   "org": "PRX",
-   "rank": 5,
-   "pool": 48,
-   "snapshot": "Before Masters Toronto",
-   "date": "2025-06-07"
-  },
-  {
-   "event": "Champions 2025",
-   "org": "NRG",
-   "rank": 7,
-   "pool": 48,
-   "snapshot": "Before Champions",
-   "date": "2025-09-12"
-  },
-  {
-   "event": "Masters Santiago 2026",
-   "org": "NS",
-   "rank": 2,
-   "pool": 48,
-   "snapshot": "Before Masters Santiago",
-   "date": "2026-02-28"
-  },
-  {
-   "event": "Masters London 2026",
-   "org": "LEV",
-   "rank": 9,
-   "pool": 49,
-   "snapshot": "Before Masters London",
-   "date": "2026-06-06"
-  }
- ],
  "skipped": [
   "ASE @ Masters Tokyo 2023 (no prior split)",
   "EDG @ Masters Tokyo 2023 (no prior split)"
