@@ -1368,6 +1368,31 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   charts.push(c);
 })();
 
+// Every roster card to the height of the tallest, across all four seasons.
+// CSS can only equalise within one grid, and each season is its own -- so a
+// year whose winners all made a single change would sit shorter than the rest.
+(function () {
+  const cards = [].slice.call(document.querySelectorAll('.ro'));
+  if (!cards.length) return;
+  let queued = false;
+  function level() {
+    queued = false;
+    cards.forEach(c => { c.style.minHeight = ''; });
+    // Read every height before writing any, or each write forces a reflow.
+    const tallest = Math.max.apply(null, cards.map(c => c.offsetHeight));
+    cards.forEach(c => { c.style.minHeight = tallest + 'px'; });
+  }
+  function schedule() {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(level);
+  }
+  schedule();
+  addEventListener('resize', schedule);
+  // Web fonts land after first paint and change every measurement.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+})();
+
 // Star cards. Plain DOM, not Chart.js -- these are portraits with numbers
 // attached, and nothing here is plotted against an axis.
 (function () {
