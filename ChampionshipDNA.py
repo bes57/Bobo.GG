@@ -299,7 +299,7 @@ PAGE_HTML = """
 
       <hr class="secbreak">
 
-      <p id="sec-benpom">Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of KenPom&rsquo;s rating system.</p>
+      <p id="sec-benpom">Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of <a class="xlink" href="https://kenpom.com/" target="_blank" rel="noopener">KenPom&rsquo;s rating system</a>.</p>
 
       <p>I have my own <a class="xlink" href="/mapelo/modern/" target="_blank" rel="noopener">BenPom</a> rating system for VCT - let&rsquo;s see what the trend is there:</p>
 
