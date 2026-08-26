@@ -286,6 +286,8 @@ PAGE_HTML = """
   .takeaway--roster { max-width:1120px; text-align:left; padding:26px 30px; }
   .takeaway--roster b { font-size:1.24rem; line-height:1.35; }
   .takeaway--roster span { font-size:1rem; font-weight:600; line-height:1.65; margin-top:16px; }
+  /* The list is a sentence, not a second claim, so it takes no dash. */
+  .takeaway--roster span::before { content:none; }
   /* Sections legend, top-right, matching every other article. Its width is
      clamped to the gutter beside the
      centred content — but this article's figures break out to 1120px, so the
