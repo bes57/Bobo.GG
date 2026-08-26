@@ -1,0 +1,4324 @@
+{
+ "https://www.vlr.gg/event/stats/1190/champions-tour-2023-emea-league": [
+  {
+   "player": "Alfajer",
+   "profile": "https://www.vlr.gg/player/9810/alfajer",
+   "team": "FNC",
+   "rounds": 465,
+   "rating": 1.26,
+   "acs": 231.0
+  },
+  {
+   "player": "Sayf",
+   "profile": "https://www.vlr.gg/player/312/sayf",
+   "team": "TL",
+   "rounds": 738,
+   "rating": 1.23,
+   "acs": 249.0
+  },
+  {
+   "player": "Leo",
+   "profile": "https://www.vlr.gg/player/1380/leo",
+   "team": "FNC",
+   "rounds": 570,
+   "rating": 1.2,
+   "acs": 199.0
+  },
+  {
+   "player": "Chronicle",
+   "profile": "https://www.vlr.gg/player/458/chronicle",
+   "team": "FNC",
+   "rounds": 570,
+   "rating": 1.19,
+   "acs": 224.0
+  },
+  {
+   "player": "Derke",
+   "profile": "https://www.vlr.gg/player/5022/derke",
+   "team": "FNC",
+   "rounds": 570,
+   "rating": 1.18,
+   "acs": 269.0
+  },
+  {
+   "player": "trexx",
+   "profile": "https://www.vlr.gg/player/2168/trexx",
+   "team": "MKOI",
+   "rounds": 453,
+   "rating": 1.15,
+   "acs": 226.0
+  },
+  {
+   "player": "nAts",
+   "profile": "https://www.vlr.gg/player/457/nats",
+   "team": "TL",
+   "rounds": 786,
+   "rating": 1.13,
+   "acs": 222.0
+  },
+  {
+   "player": "Shao",
+   "profile": "https://www.vlr.gg/player/384/shao",
+   "team": "NAVI",
+   "rounds": 570,
+   "rating": 1.12,
+   "acs": 200.0
+  },
+  {
+   "player": "sheydos",
+   "profile": "https://www.vlr.gg/player/1428/sheydos",
+   "team": "MKOI",
+   "rounds": 453,
+   "rating": 1.11,
+   "acs": 200.0
+  },
+  {
+   "player": "nukkye",
+   "profile": "https://www.vlr.gg/player/3070/nukkye",
+   "team": "GIA",
+   "rounds": 563,
+   "rating": 1.11,
+   "acs": 218.0
+  },
+  {
+   "player": "SUYGETSU",
+   "profile": "https://www.vlr.gg/player/2858/suygetsu",
+   "team": "NAVI",
+   "rounds": 570,
+   "rating": 1.09,
+   "acs": 199.0
+  },
+  {
+   "player": "Cloud",
+   "profile": "https://www.vlr.gg/player/4181/cloud",
+   "team": "GIA",
+   "rounds": 563,
+   "rating": 1.08,
+   "acs": 220.0
+  },
+  {
+   "player": "Jamppi",
+   "profile": "https://www.vlr.gg/player/9780/jamppi",
+   "team": "TL",
+   "rounds": 786,
+   "rating": 1.08,
+   "acs": 208.0
+  },
+  {
+   "player": "QutionerX",
+   "profile": "https://www.vlr.gg/player/10161/qutionerx",
+   "team": "BBL",
+   "rounds": 444,
+   "rating": 1.08,
+   "acs": 243.0
+  },
+  {
+   "player": "Fit1nho",
+   "profile": "https://www.vlr.gg/player/292/fit1nho",
+   "team": "GIA",
+   "rounds": 563,
+   "rating": 1.07,
+   "acs": 208.0
+  },
+  {
+   "player": "cNed",
+   "profile": "https://www.vlr.gg/player/573/cned",
+   "team": "NAVI",
+   "rounds": 570,
+   "rating": 1.07,
+   "acs": 226.0
+  },
+  {
+   "player": "kamyk",
+   "profile": "https://www.vlr.gg/player/1475/kamyk",
+   "team": "FNC",
+   "rounds": 105,
+   "rating": 1.07,
+   "acs": 200.0
+  },
+  {
+   "player": "hoody",
+   "profile": "https://www.vlr.gg/player/2690/hoody",
+   "team": "GIA",
+   "rounds": 563,
+   "rating": 1.07,
+   "acs": 207.0
+  },
+  {
+   "player": "qw1",
+   "profile": "https://www.vlr.gg/player/10125/qw1",
+   "team": "FUT",
+   "rounds": 606,
+   "rating": 1.07,
+   "acs": 223.0
+  },
+  {
+   "player": "Zyppan",
+   "profile": "https://www.vlr.gg/player/11/zyppan",
+   "team": "NAVI",
+   "rounds": 570,
+   "rating": 1.06,
+   "acs": 203.0
+  },
+  {
+   "player": "Twisten",
+   "profile": "https://www.vlr.gg/player/1137/twisten",
+   "team": "VIT",
+   "rounds": 563,
+   "rating": 1.03,
+   "acs": 219.0
+  },
+  {
+   "player": "ceNder",
+   "profile": "https://www.vlr.gg/player/4321/cender",
+   "team": "VIT",
+   "rounds": 563,
+   "rating": 1.02,
+   "acs": 203.0
+  },
+  {
+   "player": "AtaKaptan",
+   "profile": "https://www.vlr.gg/player/6510/atakaptan",
+   "team": "FUT",
+   "rounds": 568,
+   "rating": 1.01,
+   "acs": 194.0
+  },
+  {
+   "player": "Nivera",
+   "profile": "https://www.vlr.gg/player/14669/nivera",
+   "team": "KC",
+   "rounds": 393,
+   "rating": 1.0,
+   "acs": 197.0
+  },
+  {
+   "player": "ScreaM",
+   "profile": "https://www.vlr.gg/player/92/scream",
+   "team": "KC",
+   "rounds": 393,
+   "rating": 0.99,
+   "acs": 215.0
+  },
+  {
+   "player": "qRaxs",
+   "profile": "https://www.vlr.gg/player/1139/qraxs",
+   "team": "FUT",
+   "rounds": 606,
+   "rating": 0.98,
+   "acs": 192.0
+  },
+  {
+   "player": "Brave",
+   "profile": "https://www.vlr.gg/player/8041/brave",
+   "team": "BBL",
+   "rounds": 444,
+   "rating": 0.98,
+   "acs": 196.0
+  },
+  {
+   "player": "Boaster",
+   "profile": "https://www.vlr.gg/player/438/boaster",
+   "team": "FNC",
+   "rounds": 570,
+   "rating": 0.97,
+   "acs": 157.0
+  },
+  {
+   "player": "MOLSI",
+   "profile": "https://www.vlr.gg/player/1281/molsi",
+   "team": "VIT",
+   "rounds": 563,
+   "rating": 0.97,
+   "acs": 182.0
+  },
+  {
+   "player": "AsLanM4shadoW",
+   "profile": "https://www.vlr.gg/player/1481/aslanm4shadow",
+   "team": "BBL",
+   "rounds": 444,
+   "rating": 0.97,
+   "acs": 209.0
+  },
+  {
+   "player": "Turko",
+   "profile": "https://www.vlr.gg/player/568/turko",
+   "team": "BBL",
+   "rounds": 444,
+   "rating": 0.96,
+   "acs": 167.0
+  },
+  {
+   "player": "AvovA",
+   "profile": "https://www.vlr.gg/player/1507/avova",
+   "team": "TH",
+   "rounds": 446,
+   "rating": 0.96,
+   "acs": 176.0
+  },
+  {
+   "player": "MrFaliN",
+   "profile": "https://www.vlr.gg/player/8044/mrfalin",
+   "team": "FUT",
+   "rounds": 606,
+   "rating": 0.95,
+   "acs": 185.0
+  },
+  {
+   "player": "soulcas",
+   "profile": "https://www.vlr.gg/player/101/soulcas",
+   "team": "TL",
+   "rounds": 786,
+   "rating": 0.94,
+   "acs": 168.0
+  },
+  {
+   "player": "Boo",
+   "profile": "https://www.vlr.gg/player/1144/boo",
+   "team": "TH",
+   "rounds": 446,
+   "rating": 0.93,
+   "acs": 176.0
+  },
+  {
+   "player": "Destrian",
+   "profile": "https://www.vlr.gg/player/1615/destrian",
+   "team": "VIT",
+   "rounds": 563,
+   "rating": 0.93,
+   "acs": 177.0
+  },
+  {
+   "player": "MOJJ",
+   "profile": "https://www.vlr.gg/player/3604/mojj",
+   "team": "FUT",
+   "rounds": 606,
+   "rating": 0.93,
+   "acs": 185.0
+  },
+  {
+   "player": "zeek",
+   "profile": "https://www.vlr.gg/player/562/zeek",
+   "team": "TH",
+   "rounds": 277,
+   "rating": 0.92,
+   "acs": 196.0
+  },
+  {
+   "player": "starxo",
+   "profile": "https://www.vlr.gg/player/565/starxo",
+   "team": "MKOI",
+   "rounds": 453,
+   "rating": 0.92,
+   "acs": 183.0
+  },
+  {
+   "player": "xms",
+   "profile": "https://www.vlr.gg/player/4603/xms",
+   "team": "KC",
+   "rounds": 393,
+   "rating": 0.91,
+   "acs": 171.0
+  },
+  {
+   "player": "Redgar",
+   "profile": "https://www.vlr.gg/player/1427/redgar",
+   "team": "TL",
+   "rounds": 786,
+   "rating": 0.89,
+   "acs": 174.0
+  },
+  {
+   "player": "BONECOLD",
+   "profile": "https://www.vlr.gg/player/3672/bonecold",
+   "team": "VIT",
+   "rounds": 563,
+   "rating": 0.89,
+   "acs": 171.0
+  },
+  {
+   "player": "SouhcNi",
+   "profile": "https://www.vlr.gg/player/556/souhcni",
+   "team": "BBL",
+   "rounds": 444,
+   "rating": 0.88,
+   "acs": 167.0
+  },
+  {
+   "player": "Mixwell",
+   "profile": "https://www.vlr.gg/player/93/mixwell",
+   "team": "TH",
+   "rounds": 446,
+   "rating": 0.87,
+   "acs": 191.0
+  },
+  {
+   "player": "weber",
+   "profile": "https://www.vlr.gg/player/2038/weber",
+   "team": "TH",
+   "rounds": 169,
+   "rating": 0.86,
+   "acs": 155.0
+  },
+  {
+   "player": "ANGE1",
+   "profile": "https://www.vlr.gg/player/109/ange1",
+   "team": "NAVI",
+   "rounds": 570,
+   "rating": 0.85,
+   "acs": 188.0
+  },
+  {
+   "player": "sh1n",
+   "profile": "https://www.vlr.gg/player/2625/sh1n",
+   "team": "KC",
+   "rounds": 393,
+   "rating": 0.85,
+   "acs": 165.0
+  },
+  {
+   "player": "Wolfen",
+   "profile": "https://www.vlr.gg/player/9558/wolfen",
+   "team": "MKOI",
+   "rounds": 453,
+   "rating": 0.85,
+   "acs": 192.0
+  },
+  {
+   "player": "Harmii",
+   "profile": "https://www.vlr.gg/player/24803/harmii",
+   "team": "TL",
+   "rounds": 48,
+   "rating": 0.82,
+   "acs": 175.0
+  },
+  {
+   "player": "rhyme",
+   "profile": "https://www.vlr.gg/player/10/rhyme",
+   "team": "GIA",
+   "rounds": 563,
+   "rating": 0.81,
+   "acs": 162.0
+  },
+  {
+   "player": "keloqz",
+   "profile": "https://www.vlr.gg/player/3582/keloqz",
+   "team": "TH",
+   "rounds": 446,
+   "rating": 0.81,
+   "acs": 193.0
+  },
+  {
+   "player": "Muj",
+   "profile": "https://www.vlr.gg/player/8551/muj",
+   "team": "FUT",
+   "rounds": 38,
+   "rating": 0.81,
+   "acs": 170.0
+  },
+  {
+   "player": "Newzera",
+   "profile": "https://www.vlr.gg/player/2622/newzera",
+   "team": "KC",
+   "rounds": 160,
+   "rating": 0.75,
+   "acs": 125.0
+  },
+  {
+   "player": "koldamenta",
+   "profile": "https://www.vlr.gg/player/339/koldamenta",
+   "team": "MKOI",
+   "rounds": 453,
+   "rating": 0.66,
+   "acs": 131.0
+  },
+  {
+   "player": "ZE1SH",
+   "profile": "https://www.vlr.gg/player/302/ze1sh",
+   "team": "KC",
+   "rounds": 233,
+   "rating": 0.6,
+   "acs": 129.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/1923/champions-tour-2024-americas-kickoff": [
+  {
+   "player": "mwzera",
+   "profile": "https://www.vlr.gg/player/939/mwzera",
+   "team": "FUR",
+   "rounds": 90,
+   "rating": 1.24,
+   "acs": 237.0
+  },
+  {
+   "player": "aspas",
+   "profile": "https://www.vlr.gg/player/8480/aspas",
+   "team": "LEV",
+   "rounds": 186,
+   "rating": 1.21,
+   "acs": 242.0
+  },
+  {
+   "player": "Less",
+   "profile": "https://www.vlr.gg/player/8447/less",
+   "team": "LOUD",
+   "rounds": 271,
+   "rating": 1.2,
+   "acs": 213.0
+  },
+  {
+   "player": "keznit",
+   "profile": "https://www.vlr.gg/player/2462/keznit",
+   "team": "KR\u00dc",
+   "rounds": 110,
+   "rating": 1.14,
+   "acs": 251.0
+  },
+  {
+   "player": "zekken",
+   "profile": "https://www.vlr.gg/player/4004/zekken",
+   "team": "SEN",
+   "rounds": 432,
+   "rating": 1.14,
+   "acs": 249.0
+  },
+  {
+   "player": "supamen",
+   "profile": "https://www.vlr.gg/player/826/supamen",
+   "team": "EG",
+   "rounds": 110,
+   "rating": 1.12,
+   "acs": 191.0
+  },
+  {
+   "player": "Victor",
+   "profile": "https://www.vlr.gg/player/261/victor",
+   "team": "NRG",
+   "rounds": 157,
+   "rating": 1.11,
+   "acs": 211.0
+  },
+  {
+   "player": "TenZ",
+   "profile": "https://www.vlr.gg/player/9/tenz",
+   "team": "SEN",
+   "rounds": 432,
+   "rating": 1.1,
+   "acs": 213.0
+  },
+  {
+   "player": "Derrek",
+   "profile": "https://www.vlr.gg/player/1533/derrek",
+   "team": "EG",
+   "rounds": 110,
+   "rating": 1.1,
+   "acs": 219.0
+  },
+  {
+   "player": "tuyz",
+   "profile": "https://www.vlr.gg/player/2408/tuyz",
+   "team": "LOUD",
+   "rounds": 271,
+   "rating": 1.1,
+   "acs": 191.0
+  },
+  {
+   "player": "Shyy",
+   "profile": "https://www.vlr.gg/player/24007/shyy",
+   "team": "KR\u00dc",
+   "rounds": 110,
+   "rating": 1.09,
+   "acs": 190.0
+  },
+  {
+   "player": "leaf",
+   "profile": "https://www.vlr.gg/player/7873/leaf",
+   "team": "G2",
+   "rounds": 300,
+   "rating": 1.08,
+   "acs": 237.0
+  },
+  {
+   "player": "vanity",
+   "profile": "https://www.vlr.gg/player/7870/vanity",
+   "team": "C9",
+   "rounds": 162,
+   "rating": 1.07,
+   "acs": 199.0
+  },
+  {
+   "player": "Zellsis",
+   "profile": "https://www.vlr.gg/player/729/zellsis",
+   "team": "SEN",
+   "rounds": 432,
+   "rating": 1.06,
+   "acs": 195.0
+  },
+  {
+   "player": "Demon1",
+   "profile": "https://www.vlr.gg/player/26171/demon1",
+   "team": "NRG",
+   "rounds": 157,
+   "rating": 1.06,
+   "acs": 215.0
+  },
+  {
+   "player": "RgLMeister",
+   "profile": "https://www.vlr.gg/player/5351/rglmeister",
+   "team": "MIBR",
+   "rounds": 274,
+   "rating": 1.05,
+   "acs": 188.0
+  },
+  {
+   "player": "trent",
+   "profile": "https://www.vlr.gg/player/15500/trent",
+   "team": "G2",
+   "rounds": 300,
+   "rating": 1.05,
+   "acs": 197.0
+  },
+  {
+   "player": "Sacy",
+   "profile": "https://www.vlr.gg/player/659/sacy",
+   "team": "SEN",
+   "rounds": 432,
+   "rating": 1.04,
+   "acs": 200.0
+  },
+  {
+   "player": "johnqt",
+   "profile": "https://www.vlr.gg/player/1265/johnqt",
+   "team": "SEN",
+   "rounds": 432,
+   "rating": 1.04,
+   "acs": 188.0
+  },
+  {
+   "player": "kiNgg",
+   "profile": "https://www.vlr.gg/player/8549/kingg",
+   "team": "LEV",
+   "rounds": 186,
+   "rating": 1.04,
+   "acs": 207.0
+  },
+  {
+   "player": "Cryocells",
+   "profile": "https://www.vlr.gg/player/4147/cryocells",
+   "team": "100T",
+   "rounds": 120,
+   "rating": 1.03,
+   "acs": 206.0
+  },
+  {
+   "player": "Apoth",
+   "profile": "https://www.vlr.gg/player/5188/apoth",
+   "team": "EG",
+   "rounds": 110,
+   "rating": 1.03,
+   "acs": 217.0
+  },
+  {
+   "player": "Xeppaa",
+   "profile": "https://www.vlr.gg/player/7871/xeppaa",
+   "team": "C9",
+   "rounds": 162,
+   "rating": 1.03,
+   "acs": 211.0
+  },
+  {
+   "player": "frz",
+   "profile": "https://www.vlr.gg/player/651/frz",
+   "team": "MIBR",
+   "rounds": 274,
+   "rating": 1.02,
+   "acs": 192.0
+  },
+  {
+   "player": "jzz",
+   "profile": "https://www.vlr.gg/player/13093/jzz",
+   "team": "MIBR",
+   "rounds": 274,
+   "rating": 1.02,
+   "acs": 216.0
+  },
+  {
+   "player": "cauanzin",
+   "profile": "https://www.vlr.gg/player/6193/cauanzin",
+   "team": "LOUD",
+   "rounds": 271,
+   "rating": 1.01,
+   "acs": 196.0
+  },
+  {
+   "player": "Ethan",
+   "profile": "https://www.vlr.gg/player/11225/ethan",
+   "team": "NRG",
+   "rounds": 157,
+   "rating": 1.01,
+   "acs": 211.0
+  },
+  {
+   "player": "JonahP",
+   "profile": "https://www.vlr.gg/player/4581/jonahp",
+   "team": "G2",
+   "rounds": 300,
+   "rating": 1.0,
+   "acs": 179.0
+  },
+  {
+   "player": "wippie",
+   "profile": "https://www.vlr.gg/player/4373/wippie",
+   "team": "C9",
+   "rounds": 162,
+   "rating": 0.99,
+   "acs": 179.0
+  },
+  {
+   "player": "crashies",
+   "profile": "https://www.vlr.gg/player/4/crashies",
+   "team": "NRG",
+   "rounds": 157,
+   "rating": 0.97,
+   "acs": 168.0
+  },
+  {
+   "player": "Boostio",
+   "profile": "https://www.vlr.gg/player/604/boostio",
+   "team": "100T",
+   "rounds": 120,
+   "rating": 0.97,
+   "acs": 202.0
+  },
+  {
+   "player": "C0M",
+   "profile": "https://www.vlr.gg/player/619/c0m",
+   "team": "LEV",
+   "rounds": 186,
+   "rating": 0.97,
+   "acs": 188.0
+  },
+  {
+   "player": "artzin",
+   "profile": "https://www.vlr.gg/player/5957/artzin",
+   "team": "MIBR",
+   "rounds": 274,
+   "rating": 0.97,
+   "acs": 216.0
+  },
+  {
+   "player": "neT",
+   "profile": "https://www.vlr.gg/player/6582/net",
+   "team": "G2",
+   "rounds": 300,
+   "rating": 0.97,
+   "acs": 199.0
+  },
+  {
+   "player": "Klaus",
+   "profile": "https://www.vlr.gg/player/2610/klaus",
+   "team": "KR\u00dc",
+   "rounds": 110,
+   "rating": 0.96,
+   "acs": 183.0
+  },
+  {
+   "player": "jakee",
+   "profile": "https://www.vlr.gg/player/8742/jakee",
+   "team": "C9",
+   "rounds": 162,
+   "rating": 0.96,
+   "acs": 171.0
+  },
+  {
+   "player": "valyn",
+   "profile": "https://www.vlr.gg/player/3885/valyn",
+   "team": "G2",
+   "rounds": 300,
+   "rating": 0.95,
+   "acs": 181.0
+  },
+  {
+   "player": "jawgemo",
+   "profile": "https://www.vlr.gg/player/3993/jawgemo",
+   "team": "EG",
+   "rounds": 110,
+   "rating": 0.94,
+   "acs": 206.0
+  },
+  {
+   "player": "qck",
+   "profile": "https://www.vlr.gg/player/1575/qck",
+   "team": "LOUD",
+   "rounds": 271,
+   "rating": 0.93,
+   "acs": 203.0
+  },
+  {
+   "player": "kon4n",
+   "profile": "https://www.vlr.gg/player/1671/kon4n",
+   "team": "FUR",
+   "rounds": 90,
+   "rating": 0.93,
+   "acs": 170.0
+  },
+  {
+   "player": "Khalil",
+   "profile": "https://www.vlr.gg/player/1711/khalil",
+   "team": "FUR",
+   "rounds": 90,
+   "rating": 0.93,
+   "acs": 171.0
+  },
+  {
+   "player": "OXY",
+   "profile": "https://www.vlr.gg/player/18796/oxy",
+   "team": "C9",
+   "rounds": 162,
+   "rating": 0.93,
+   "acs": 228.0
+  },
+  {
+   "player": "Marved",
+   "profile": "https://www.vlr.gg/player/263/marved",
+   "team": "NRG",
+   "rounds": 157,
+   "rating": 0.92,
+   "acs": 193.0
+  },
+  {
+   "player": "eeiu",
+   "profile": "https://www.vlr.gg/player/796/eeiu",
+   "team": "100T",
+   "rounds": 120,
+   "rating": 0.91,
+   "acs": 170.0
+  },
+  {
+   "player": "bang",
+   "profile": "https://www.vlr.gg/player/3880/bang",
+   "team": "100T",
+   "rounds": 120,
+   "rating": 0.91,
+   "acs": 193.0
+  },
+  {
+   "player": "liazzi",
+   "profile": "https://www.vlr.gg/player/2567/liazzi",
+   "team": "FUR",
+   "rounds": 90,
+   "rating": 0.89,
+   "acs": 167.0
+  },
+  {
+   "player": "saadhak",
+   "profile": "https://www.vlr.gg/player/727/saadhak",
+   "team": "LOUD",
+   "rounds": 271,
+   "rating": 0.88,
+   "acs": 187.0
+  },
+  {
+   "player": "mta",
+   "profile": "https://www.vlr.gg/player/36169/mta",
+   "team": "KR\u00dc",
+   "rounds": 110,
+   "rating": 0.86,
+   "acs": 179.0
+  },
+  {
+   "player": "mazin",
+   "profile": "https://www.vlr.gg/player/8872/mazin",
+   "team": "MIBR",
+   "rounds": 274,
+   "rating": 0.83,
+   "acs": 162.0
+  },
+  {
+   "player": "Asuna",
+   "profile": "https://www.vlr.gg/player/601/asuna",
+   "team": "100T",
+   "rounds": 120,
+   "rating": 0.81,
+   "acs": 190.0
+  },
+  {
+   "player": "Mazino",
+   "profile": "https://www.vlr.gg/player/7603/mazino",
+   "team": "LEV",
+   "rounds": 186,
+   "rating": 0.81,
+   "acs": 164.0
+  },
+  {
+   "player": "NaturE",
+   "profile": "https://www.vlr.gg/player/4927/nature",
+   "team": "EG",
+   "rounds": 110,
+   "rating": 0.78,
+   "acs": 148.0
+  },
+  {
+   "player": "tex",
+   "profile": "https://www.vlr.gg/player/1818/tex",
+   "team": "LEV",
+   "rounds": 186,
+   "rating": 0.75,
+   "acs": 167.0
+  },
+  {
+   "player": "havoc",
+   "profile": "https://www.vlr.gg/player/8706/havoc",
+   "team": "FUR",
+   "rounds": 90,
+   "rating": 0.69,
+   "acs": 171.0
+  },
+  {
+   "player": "Melser",
+   "profile": "https://www.vlr.gg/player/1311/melser",
+   "team": "KR\u00dc",
+   "rounds": 110,
+   "rating": 0.64,
+   "acs": 137.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2002/champions-tour-2024-pacific-stage-1": [
+  {
+   "player": "Jemkin",
+   "profile": "https://www.vlr.gg/player/24895/jemkin",
+   "team": "RRQ",
+   "rounds": 244,
+   "rating": 1.17,
+   "acs": 236.0
+  },
+  {
+   "player": "MaKo",
+   "profile": "https://www.vlr.gg/player/4462/mako",
+   "team": "KRX",
+   "rounds": 372,
+   "rating": 1.16,
+   "acs": 217.0
+  },
+  {
+   "player": "BeYN",
+   "profile": "https://www.vlr.gg/player/4678/beyn",
+   "team": "KRX",
+   "rounds": 372,
+   "rating": 1.15,
+   "acs": 200.0
+  },
+  {
+   "player": "Laz",
+   "profile": "https://www.vlr.gg/player/999/laz",
+   "team": "ZETA",
+   "rounds": 299,
+   "rating": 1.14,
+   "acs": 213.0
+  },
+  {
+   "player": "t3xture",
+   "profile": "https://www.vlr.gg/player/9196/t3xture",
+   "team": "GEN",
+   "rounds": 627,
+   "rating": 1.14,
+   "acs": 235.0
+  },
+  {
+   "player": "something",
+   "profile": "https://www.vlr.gg/player/17086/something",
+   "team": "PRX",
+   "rounds": 494,
+   "rating": 1.14,
+   "acs": 230.0
+  },
+  {
+   "player": "d4v41",
+   "profile": "https://www.vlr.gg/player/9803/d4v41",
+   "team": "PRX",
+   "rounds": 494,
+   "rating": 1.13,
+   "acs": 211.0
+  },
+  {
+   "player": "sScary",
+   "profile": "https://www.vlr.gg/player/4382/sscary",
+   "team": "BLD",
+   "rounds": 294,
+   "rating": 1.12,
+   "acs": 220.0
+  },
+  {
+   "player": "invy",
+   "profile": "https://www.vlr.gg/player/8504/invy",
+   "team": "TS",
+   "rounds": 382,
+   "rating": 1.12,
+   "acs": 207.0
+  },
+  {
+   "player": "Jinggg",
+   "profile": "https://www.vlr.gg/player/7378/jinggg",
+   "team": "PRX",
+   "rounds": 494,
+   "rating": 1.1,
+   "acs": 234.0
+  },
+  {
+   "player": "JitBoyS",
+   "profile": "https://www.vlr.gg/player/13788/jitboys",
+   "team": "TLN",
+   "rounds": 339,
+   "rating": 1.1,
+   "acs": 199.0
+  },
+  {
+   "player": "Dep",
+   "profile": "https://www.vlr.gg/player/424/dep",
+   "team": "ZETA",
+   "rounds": 299,
+   "rating": 1.08,
+   "acs": 235.0
+  },
+  {
+   "player": "Jremy",
+   "profile": "https://www.vlr.gg/player/7405/jremy",
+   "team": "TS",
+   "rounds": 382,
+   "rating": 1.08,
+   "acs": 247.0
+  },
+  {
+   "player": "Foxy9",
+   "profile": "https://www.vlr.gg/player/11600/foxy9",
+   "team": "KRX",
+   "rounds": 372,
+   "rating": 1.08,
+   "acs": 191.0
+  },
+  {
+   "player": "Lmemore",
+   "profile": "https://www.vlr.gg/player/7764/lmemore",
+   "team": "RRQ",
+   "rounds": 244,
+   "rating": 1.07,
+   "acs": 222.0
+  },
+  {
+   "player": "Rossy",
+   "profile": "https://www.vlr.gg/player/1129/rossy",
+   "team": "T1",
+   "rounds": 531,
+   "rating": 1.06,
+   "acs": 201.0
+  },
+  {
+   "player": "Munchkin",
+   "profile": "https://www.vlr.gg/player/2489/munchkin",
+   "team": "GEN",
+   "rounds": 627,
+   "rating": 1.06,
+   "acs": 196.0
+  },
+  {
+   "player": "mindfreak",
+   "profile": "https://www.vlr.gg/player/9800/mindfreak",
+   "team": "PRX",
+   "rounds": 494,
+   "rating": 1.06,
+   "acs": 193.0
+  },
+  {
+   "player": "f0rsakeN",
+   "profile": "https://www.vlr.gg/player/9801/f0rsaken",
+   "team": "PRX",
+   "rounds": 494,
+   "rating": 1.06,
+   "acs": 196.0
+  },
+  {
+   "player": "Lightningfast",
+   "profile": "https://www.vlr.gg/player/3626/lightningfast",
+   "team": "GE",
+   "rounds": 302,
+   "rating": 1.05,
+   "acs": 209.0
+  },
+  {
+   "player": "Karon",
+   "profile": "https://www.vlr.gg/player/34974/karon",
+   "team": "GEN",
+   "rounds": 627,
+   "rating": 1.04,
+   "acs": 189.0
+  },
+  {
+   "player": "SugarZ3ro",
+   "profile": "https://www.vlr.gg/player/6668/sugarz3ro",
+   "team": "ZETA",
+   "rounds": 299,
+   "rating": 1.03,
+   "acs": 194.0
+  },
+  {
+   "player": "yuran",
+   "profile": "https://www.vlr.gg/player/29840/yuran",
+   "team": "ZETA",
+   "rounds": 299,
+   "rating": 1.03,
+   "acs": 203.0
+  },
+  {
+   "player": "BuZz",
+   "profile": "https://www.vlr.gg/player/804/buzz",
+   "team": "KRX",
+   "rounds": 372,
+   "rating": 1.02,
+   "acs": 231.0
+  },
+  {
+   "player": "Meiy",
+   "profile": "https://www.vlr.gg/player/6672/meiy",
+   "team": "DFM",
+   "rounds": 284,
+   "rating": 1.02,
+   "acs": 238.0
+  },
+  {
+   "player": "BORKUM",
+   "profile": "https://www.vlr.gg/player/2333/borkum",
+   "team": "TS",
+   "rounds": 382,
+   "rating": 1.01,
+   "acs": 187.0
+  },
+  {
+   "player": "JessieVash",
+   "profile": "https://www.vlr.gg/player/2334/jessievash",
+   "team": "TS",
+   "rounds": 382,
+   "rating": 0.99,
+   "acs": 191.0
+  },
+  {
+   "player": "xffero",
+   "profile": "https://www.vlr.gg/player/4871/xffero",
+   "team": "RRQ",
+   "rounds": 244,
+   "rating": 0.99,
+   "acs": 201.0
+  },
+  {
+   "player": "Russ",
+   "profile": "https://www.vlr.gg/player/1162/russ",
+   "team": "GE",
+   "rounds": 302,
+   "rating": 0.98,
+   "acs": 192.0
+  },
+  {
+   "player": "blaZek1ng",
+   "profile": "https://www.vlr.gg/player/1743/blazek1ng",
+   "team": "GE",
+   "rounds": 302,
+   "rating": 0.98,
+   "acs": 194.0
+  },
+  {
+   "player": "Polvi",
+   "profile": "https://www.vlr.gg/player/1839/polvi",
+   "team": "GE",
+   "rounds": 302,
+   "rating": 0.98,
+   "acs": 212.0
+  },
+  {
+   "player": "ban",
+   "profile": "https://www.vlr.gg/player/5129/ban",
+   "team": "TLN",
+   "rounds": 339,
+   "rating": 0.98,
+   "acs": 208.0
+  },
+  {
+   "player": "Meteor",
+   "profile": "https://www.vlr.gg/player/13039/meteor",
+   "team": "GEN",
+   "rounds": 627,
+   "rating": 0.97,
+   "acs": 211.0
+  },
+  {
+   "player": "stax",
+   "profile": "https://www.vlr.gg/player/485/stax",
+   "team": "KRX",
+   "rounds": 372,
+   "rating": 0.96,
+   "acs": 174.0
+  },
+  {
+   "player": "xccurate",
+   "profile": "https://www.vlr.gg/player/10816/xccurate",
+   "team": "T1",
+   "rounds": 531,
+   "rating": 0.96,
+   "acs": 186.0
+  },
+  {
+   "player": "Governor",
+   "profile": "https://www.vlr.gg/player/3980/governor",
+   "team": "TLN",
+   "rounds": 339,
+   "rating": 0.95,
+   "acs": 199.0
+  },
+  {
+   "player": "lenne",
+   "profile": "https://www.vlr.gg/player/8137/lenne",
+   "team": "TLN",
+   "rounds": 91,
+   "rating": 0.95,
+   "acs": 177.0
+  },
+  {
+   "player": "Zest",
+   "profile": "https://www.vlr.gg/player/772/zest",
+   "team": "BLD",
+   "rounds": 294,
+   "rating": 0.94,
+   "acs": 176.0
+  },
+  {
+   "player": "Sayaplayer",
+   "profile": "https://www.vlr.gg/player/4545/sayaplayer",
+   "team": "T1",
+   "rounds": 531,
+   "rating": 0.94,
+   "acs": 210.0
+  },
+  {
+   "player": "Lakia",
+   "profile": "https://www.vlr.gg/player/773/lakia",
+   "team": "GEN",
+   "rounds": 627,
+   "rating": 0.92,
+   "acs": 169.0
+  },
+  {
+   "player": "Surf",
+   "profile": "https://www.vlr.gg/player/23062/surf",
+   "team": "TLN",
+   "rounds": 248,
+   "rating": 0.92,
+   "acs": 170.0
+  },
+  {
+   "player": "iZu",
+   "profile": "https://www.vlr.gg/player/29833/izu",
+   "team": "T1",
+   "rounds": 531,
+   "rating": 0.91,
+   "acs": 185.0
+  },
+  {
+   "player": "Medusa",
+   "profile": "https://www.vlr.gg/player/993/medusa",
+   "team": "DFM",
+   "rounds": 284,
+   "rating": 0.9,
+   "acs": 187.0
+  },
+  {
+   "player": "Crws",
+   "profile": "https://www.vlr.gg/player/3977/crws",
+   "team": "TLN",
+   "rounds": 339,
+   "rating": 0.9,
+   "acs": 159.0
+  },
+  {
+   "player": "Anthem",
+   "profile": "https://www.vlr.gg/player/6700/anthem",
+   "team": "DFM",
+   "rounds": 284,
+   "rating": 0.9,
+   "acs": 159.0
+  },
+  {
+   "player": "NDG",
+   "profile": "https://www.vlr.gg/player/12322/ndg",
+   "team": "TS",
+   "rounds": 382,
+   "rating": 0.9,
+   "acs": 186.0
+  },
+  {
+   "player": "Benkai",
+   "profile": "https://www.vlr.gg/player/9802/benkai",
+   "team": "GE",
+   "rounds": 302,
+   "rating": 0.89,
+   "acs": 166.0
+  },
+  {
+   "player": "carpe",
+   "profile": "https://www.vlr.gg/player/31207/carpe",
+   "team": "T1",
+   "rounds": 531,
+   "rating": 0.89,
+   "acs": 169.0
+  },
+  {
+   "player": "Retla",
+   "profile": "https://www.vlr.gg/player/2361/retla",
+   "team": "BLD",
+   "rounds": 294,
+   "rating": 0.87,
+   "acs": 164.0
+  },
+  {
+   "player": "SSeeS",
+   "profile": "https://www.vlr.gg/player/21438/ssees",
+   "team": "DFM",
+   "rounds": 284,
+   "rating": 0.86,
+   "acs": 151.0
+  },
+  {
+   "player": "Deryeon",
+   "profile": "https://www.vlr.gg/player/9152/deryeon",
+   "team": "BLD",
+   "rounds": 294,
+   "rating": 0.84,
+   "acs": 170.0
+  },
+  {
+   "player": "Estrella",
+   "profile": "https://www.vlr.gg/player/25025/estrella",
+   "team": "RRQ",
+   "rounds": 204,
+   "rating": 0.84,
+   "acs": 157.0
+  },
+  {
+   "player": "yay",
+   "profile": "https://www.vlr.gg/player/881/yay",
+   "team": "BLD",
+   "rounds": 294,
+   "rating": 0.83,
+   "acs": 190.0
+  },
+  {
+   "player": "neth",
+   "profile": "https://www.vlr.gg/player/1970/neth",
+   "team": "DFM",
+   "rounds": 284,
+   "rating": 0.82,
+   "acs": 161.0
+  },
+  {
+   "player": "hiroronn",
+   "profile": "https://www.vlr.gg/player/10588/hiroronn",
+   "team": "ZETA",
+   "rounds": 299,
+   "rating": 0.81,
+   "acs": 165.0
+  },
+  {
+   "player": "fl1pzjder",
+   "profile": "https://www.vlr.gg/player/7045/fl1pzjder",
+   "team": "RRQ",
+   "rounds": 244,
+   "rating": 0.8,
+   "acs": 156.0
+  },
+  {
+   "player": "2GE",
+   "profile": "https://www.vlr.gg/player/9735/2ge",
+   "team": "RRQ",
+   "rounds": 40,
+   "rating": 0.69,
+   "acs": 122.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2096/champions-tour-2024-china-stage-2": [
+  {
+   "player": "Abo",
+   "profile": "https://www.vlr.gg/player/5011/abo",
+   "team": "TEC",
+   "rounds": 269,
+   "rating": null,
+   "acs": 213.0
+  },
+  {
+   "player": "Ninebody",
+   "profile": "https://www.vlr.gg/player/3547/ninebody",
+   "team": "TYL",
+   "rounds": 249,
+   "rating": null,
+   "acs": 252.0
+  },
+  {
+   "player": "Rb",
+   "profile": "https://www.vlr.gg/player/488/rb",
+   "team": "TEC",
+   "rounds": 269,
+   "rating": null,
+   "acs": 228.0
+  },
+  {
+   "player": "AC",
+   "profile": "https://www.vlr.gg/player/14445/ac",
+   "team": "TEC",
+   "rounds": 269,
+   "rating": null,
+   "acs": 210.0
+  },
+  {
+   "player": "stew",
+   "profile": "https://www.vlr.gg/player/16924/stew",
+   "team": "JDG",
+   "rounds": 267,
+   "rating": null,
+   "acs": 231.0
+  },
+  {
+   "player": "Viva",
+   "profile": "https://www.vlr.gg/player/36415/viva",
+   "team": "JDG",
+   "rounds": 267,
+   "rating": null,
+   "acs": 218.0
+  },
+  {
+   "player": "jkuro",
+   "profile": "https://www.vlr.gg/player/3519/jkuro",
+   "team": "JDG",
+   "rounds": 267,
+   "rating": null,
+   "acs": 176.0
+  },
+  {
+   "player": "Z1yan",
+   "profile": "https://www.vlr.gg/player/41029/z1yan",
+   "team": "JDG",
+   "rounds": 267,
+   "rating": null,
+   "acs": 212.0
+  },
+  {
+   "player": "YHchen",
+   "profile": "https://www.vlr.gg/player/10486/yhchen",
+   "team": "JDG",
+   "rounds": 267,
+   "rating": null,
+   "acs": 203.0
+  },
+  {
+   "player": "bunt",
+   "profile": "https://www.vlr.gg/player/25949/bunt",
+   "team": "AG",
+   "rounds": 263,
+   "rating": null,
+   "acs": 182.0
+  },
+  {
+   "player": "monk",
+   "profile": "https://www.vlr.gg/player/14431/monk",
+   "team": "AG",
+   "rounds": 263,
+   "rating": null,
+   "acs": 195.0
+  },
+  {
+   "player": "deLb",
+   "profile": "https://www.vlr.gg/player/10821/delb",
+   "team": "AG",
+   "rounds": 263,
+   "rating": null,
+   "acs": 182.0
+  },
+  {
+   "player": "Spitfires",
+   "profile": "https://www.vlr.gg/player/4881/spitfires",
+   "team": "AG",
+   "rounds": 263,
+   "rating": null,
+   "acs": 229.0
+  },
+  {
+   "player": "Yuicaw",
+   "profile": "https://www.vlr.gg/player/11218/yuicaw",
+   "team": "WOL",
+   "rounds": 197,
+   "rating": null,
+   "acs": 254.0
+  },
+  {
+   "player": "sword9",
+   "profile": "https://www.vlr.gg/player/3049/sword9",
+   "team": "AG",
+   "rounds": 263,
+   "rating": null,
+   "acs": 186.0
+  },
+  {
+   "player": "AAK",
+   "profile": "https://www.vlr.gg/player/4773/aak",
+   "team": "TYL",
+   "rounds": 40,
+   "rating": null,
+   "acs": 163.0
+  },
+  {
+   "player": "Scales",
+   "profile": "https://www.vlr.gg/player/39485/scales",
+   "team": "TYL",
+   "rounds": 249,
+   "rating": null,
+   "acs": 165.0
+  },
+  {
+   "player": "zjc",
+   "profile": "https://www.vlr.gg/player/7135/zjc",
+   "team": "TYL",
+   "rounds": 249,
+   "rating": null,
+   "acs": 186.0
+  },
+  {
+   "player": "coldfish",
+   "profile": "https://www.vlr.gg/player/3020/coldfish",
+   "team": "TYL",
+   "rounds": 249,
+   "rating": null,
+   "acs": 182.0
+  },
+  {
+   "player": "whzy",
+   "profile": "https://www.vlr.gg/player/4885/whzy",
+   "team": "BLG",
+   "rounds": 370,
+   "rating": null,
+   "acs": 226.0
+  },
+  {
+   "player": "Knight",
+   "profile": "https://www.vlr.gg/player/4774/knight",
+   "team": "BLG",
+   "rounds": 370,
+   "rating": null,
+   "acs": 198.0
+  },
+  {
+   "player": "yosemite",
+   "profile": "https://www.vlr.gg/player/6022/yosemite",
+   "team": "BLG",
+   "rounds": 370,
+   "rating": null,
+   "acs": 206.0
+  },
+  {
+   "player": "Flex1n",
+   "profile": "https://www.vlr.gg/player/4705/flex1n",
+   "team": "BLG",
+   "rounds": 370,
+   "rating": null,
+   "acs": 187.0
+  },
+  {
+   "player": "nephh",
+   "profile": "https://www.vlr.gg/player/10698/nephh",
+   "team": "BLG",
+   "rounds": 370,
+   "rating": null,
+   "acs": 203.0
+  },
+  {
+   "player": "pl1xx",
+   "profile": "https://www.vlr.gg/player/871/pl1xx",
+   "team": "WOL",
+   "rounds": 197,
+   "rating": null,
+   "acs": 195.0
+  },
+  {
+   "player": "Spring",
+   "profile": "https://www.vlr.gg/player/14125/spring",
+   "team": "WOL",
+   "rounds": 197,
+   "rating": null,
+   "acs": 234.0
+  },
+  {
+   "player": "aluba",
+   "profile": "https://www.vlr.gg/player/14441/aluba",
+   "team": "WOL",
+   "rounds": 197,
+   "rating": null,
+   "acs": 189.0
+  },
+  {
+   "player": "LockM",
+   "profile": "https://www.vlr.gg/player/25339/lockm",
+   "team": "TEC",
+   "rounds": 269,
+   "rating": null,
+   "acs": 163.0
+  },
+  {
+   "player": "kawaii",
+   "profile": "https://www.vlr.gg/player/4778/kawaii",
+   "team": "TEC",
+   "rounds": 92,
+   "rating": null,
+   "acs": 173.0
+  },
+  {
+   "player": "Autumn",
+   "profile": "https://www.vlr.gg/player/872/autumn",
+   "team": "FPX",
+   "rounds": 599,
+   "rating": null,
+   "acs": 202.0
+  },
+  {
+   "player": "Nicc",
+   "profile": "https://www.vlr.gg/player/11524/nicc",
+   "team": "DRG",
+   "rounds": 193,
+   "rating": null,
+   "acs": 172.0
+  },
+  {
+   "player": "vo0kashu",
+   "profile": "https://www.vlr.gg/player/3741/vo0kashu",
+   "team": "DRG",
+   "rounds": 193,
+   "rating": null,
+   "acs": 252.0
+  },
+  {
+   "player": "Shion7",
+   "profile": "https://www.vlr.gg/player/41774/shion7",
+   "team": "DRG",
+   "rounds": 193,
+   "rating": null,
+   "acs": 182.0
+  },
+  {
+   "player": "nizhaoTZH",
+   "profile": "https://www.vlr.gg/player/4880/nizhaotzh",
+   "team": "DRG",
+   "rounds": 193,
+   "rating": null,
+   "acs": 155.0
+  },
+  {
+   "player": "o0o0o",
+   "profile": "https://www.vlr.gg/player/4402/o0o0o",
+   "team": "NOVA",
+   "rounds": 230,
+   "rating": null,
+   "acs": 159.0
+  },
+  {
+   "player": "Ezeir",
+   "profile": "https://www.vlr.gg/player/46460/ezeir",
+   "team": "NOVA",
+   "rounds": 230,
+   "rating": null,
+   "acs": 184.0
+  },
+  {
+   "player": "cb",
+   "profile": "https://www.vlr.gg/player/39697/cb",
+   "team": "NOVA",
+   "rounds": 230,
+   "rating": null,
+   "acs": 187.0
+  },
+  {
+   "player": "GuanG",
+   "profile": "https://www.vlr.gg/player/41054/guang",
+   "team": "NOVA",
+   "rounds": 230,
+   "rating": null,
+   "acs": 209.0
+  },
+  {
+   "player": "SWERL",
+   "profile": "https://www.vlr.gg/player/1209/swerl",
+   "team": "NOVA",
+   "rounds": 230,
+   "rating": null,
+   "acs": 223.0
+  },
+  {
+   "player": "AAAAY",
+   "profile": "https://www.vlr.gg/player/19530/aaaay",
+   "team": "FPX",
+   "rounds": 599,
+   "rating": null,
+   "acs": 192.0
+  },
+  {
+   "player": "BerLIN",
+   "profile": "https://www.vlr.gg/player/7857/berlin",
+   "team": "FPX",
+   "rounds": 599,
+   "rating": null,
+   "acs": 187.0
+  },
+  {
+   "player": "Lysoar",
+   "profile": "https://www.vlr.gg/player/37489/lysoar",
+   "team": "FPX",
+   "rounds": 599,
+   "rating": null,
+   "acs": 197.0
+  },
+  {
+   "player": "Life",
+   "profile": "https://www.vlr.gg/player/3028/life",
+   "team": "FPX",
+   "rounds": 599,
+   "rating": null,
+   "acs": 218.0
+  },
+  {
+   "player": "FengF",
+   "profile": "https://www.vlr.gg/player/4770/fengf",
+   "team": "TE",
+   "rounds": 493,
+   "rating": null,
+   "acs": 217.0
+  },
+  {
+   "player": "SiuFatBB",
+   "profile": "https://www.vlr.gg/player/7849/siufatbb",
+   "team": "WOL",
+   "rounds": 197,
+   "rating": null,
+   "acs": 161.0
+  },
+  {
+   "player": "heybay",
+   "profile": "https://www.vlr.gg/player/4712/heybay",
+   "team": "TE",
+   "rounds": 493,
+   "rating": null,
+   "acs": 166.0
+  },
+  {
+   "player": "Kai",
+   "profile": "https://www.vlr.gg/player/37494/kai",
+   "team": "TE",
+   "rounds": 493,
+   "rating": null,
+   "acs": 220.0
+  },
+  {
+   "player": "LuoK1ng",
+   "profile": "https://www.vlr.gg/player/3045/luok1ng",
+   "team": "TE",
+   "rounds": 493,
+   "rating": null,
+   "acs": 179.0
+  },
+  {
+   "player": "Biank",
+   "profile": "https://www.vlr.gg/player/3021/biank",
+   "team": "TE",
+   "rounds": 493,
+   "rating": null,
+   "acs": 199.0
+  },
+  {
+   "player": "Haodong",
+   "profile": "https://www.vlr.gg/player/4720/haodong",
+   "team": "EDG",
+   "rounds": 66,
+   "rating": null,
+   "acs": 123.0
+  },
+  {
+   "player": "ZmjjKK",
+   "profile": "https://www.vlr.gg/player/3520/zmjjkk",
+   "team": "EDG",
+   "rounds": 394,
+   "rating": null,
+   "acs": 259.0
+  },
+  {
+   "player": "nobody",
+   "profile": "https://www.vlr.gg/player/3017/nobody",
+   "team": "EDG",
+   "rounds": 394,
+   "rating": null,
+   "acs": 203.0
+  },
+  {
+   "player": "CHICHOO",
+   "profile": "https://www.vlr.gg/player/15559/chichoo",
+   "team": "EDG",
+   "rounds": 394,
+   "rating": null,
+   "acs": 204.0
+  },
+  {
+   "player": "Smoggy",
+   "profile": "https://www.vlr.gg/player/4742/smoggy",
+   "team": "EDG",
+   "rounds": 394,
+   "rating": null,
+   "acs": 201.0
+  },
+  {
+   "player": "Eren",
+   "profile": "https://www.vlr.gg/player/14444/eren",
+   "team": "TYL",
+   "rounds": 209,
+   "rating": null,
+   "acs": 195.0
+  },
+  {
+   "player": "S1Mon",
+   "profile": "https://www.vlr.gg/player/13768/s1mon",
+   "team": "EDG",
+   "rounds": 328,
+   "rating": null,
+   "acs": 173.0
+  },
+  {
+   "player": "TvirusLuke",
+   "profile": "https://www.vlr.gg/player/7841/tvirusluke",
+   "team": "DRG",
+   "rounds": 193,
+   "rating": null,
+   "acs": 226.0
+  },
+  {
+   "player": "B1ack",
+   "profile": "https://www.vlr.gg/player/30526/b1ack",
+   "team": "TEC",
+   "rounds": 177,
+   "rating": null,
+   "acs": 195.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2277/champions-tour-2025-pacific-kickoff": [
+  {
+   "player": "Jemkin",
+   "profile": "https://www.vlr.gg/player/24895/jemkin",
+   "team": "RRQ",
+   "rounds": 269,
+   "rating": 1.2,
+   "acs": 257.0
+  },
+  {
+   "player": "Karon",
+   "profile": "https://www.vlr.gg/player/34974/karon",
+   "team": "GEN",
+   "rounds": 304,
+   "rating": 1.2,
+   "acs": 205.0
+  },
+  {
+   "player": "Meiy",
+   "profile": "https://www.vlr.gg/player/6672/meiy",
+   "team": "DFM",
+   "rounds": 180,
+   "rating": 1.19,
+   "acs": 240.0
+  },
+  {
+   "player": "primmie",
+   "profile": "https://www.vlr.gg/player/25255/primmie",
+   "team": "TLN",
+   "rounds": 217,
+   "rating": 1.19,
+   "acs": 235.0
+  },
+  {
+   "player": "free1ng",
+   "profile": "https://www.vlr.gg/player/1916/free1ng",
+   "team": "KRX",
+   "rounds": 297,
+   "rating": 1.16,
+   "acs": 222.0
+  },
+  {
+   "player": "Kushy",
+   "profile": "https://www.vlr.gg/player/4866/kushy",
+   "team": "RRQ",
+   "rounds": 269,
+   "rating": 1.14,
+   "acs": 222.0
+  },
+  {
+   "player": "BerserX",
+   "profile": "https://www.vlr.gg/player/4874/berserx",
+   "team": "BME",
+   "rounds": 123,
+   "rating": 1.14,
+   "acs": 209.0
+  },
+  {
+   "player": "MaKo",
+   "profile": "https://www.vlr.gg/player/4462/mako",
+   "team": "KRX",
+   "rounds": 297,
+   "rating": 1.12,
+   "acs": 205.0
+  },
+  {
+   "player": "f0rsakeN",
+   "profile": "https://www.vlr.gg/player/9801/f0rsaken",
+   "team": "PRX",
+   "rounds": 140,
+   "rating": 1.12,
+   "acs": 222.0
+  },
+  {
+   "player": "HYUNMIN",
+   "profile": "https://www.vlr.gg/player/28400/hyunmin",
+   "team": "KRX",
+   "rounds": 297,
+   "rating": 1.11,
+   "acs": 245.0
+  },
+  {
+   "player": "Ivy",
+   "profile": "https://www.vlr.gg/player/31829/ivy",
+   "team": "NS",
+   "rounds": 319,
+   "rating": 1.11,
+   "acs": 196.0
+  },
+  {
+   "player": "JessieVash",
+   "profile": "https://www.vlr.gg/player/2334/jessievash",
+   "team": "TS",
+   "rounds": 111,
+   "rating": 1.1,
+   "acs": 218.0
+  },
+  {
+   "player": "Kr1stal",
+   "profile": "https://www.vlr.gg/player/5796/kr1stal",
+   "team": "GE",
+   "rounds": 164,
+   "rating": 1.1,
+   "acs": 207.0
+  },
+  {
+   "player": "Francis",
+   "profile": "https://www.vlr.gg/player/31828/francis",
+   "team": "NS",
+   "rounds": 319,
+   "rating": 1.1,
+   "acs": 219.0
+  },
+  {
+   "player": "Persia",
+   "profile": "https://www.vlr.gg/player/4122/persia",
+   "team": "NS",
+   "rounds": 319,
+   "rating": 1.09,
+   "acs": 191.0
+  },
+  {
+   "player": "JitBoyS",
+   "profile": "https://www.vlr.gg/player/13788/jitboys",
+   "team": "TLN",
+   "rounds": 217,
+   "rating": 1.09,
+   "acs": 190.0
+  },
+  {
+   "player": "Estrella",
+   "profile": "https://www.vlr.gg/player/25025/estrella",
+   "team": "RRQ",
+   "rounds": 269,
+   "rating": 1.08,
+   "acs": 181.0
+  },
+  {
+   "player": "BuZz",
+   "profile": "https://www.vlr.gg/player/804/buzz",
+   "team": "T1",
+   "rounds": 483,
+   "rating": 1.07,
+   "acs": 237.0
+  },
+  {
+   "player": "Dep",
+   "profile": "https://www.vlr.gg/player/424/dep",
+   "team": "ZETA",
+   "rounds": 83,
+   "rating": 1.04,
+   "acs": 227.0
+  },
+  {
+   "player": "Famouz",
+   "profile": "https://www.vlr.gg/player/2348/famouz",
+   "team": "BME",
+   "rounds": 123,
+   "rating": 1.04,
+   "acs": 231.0
+  },
+  {
+   "player": "Jinggg",
+   "profile": "https://www.vlr.gg/player/7378/jinggg",
+   "team": "PRX",
+   "rounds": 140,
+   "rating": 1.04,
+   "acs": 218.0
+  },
+  {
+   "player": "Munchkin",
+   "profile": "https://www.vlr.gg/player/2489/munchkin",
+   "team": "GEN",
+   "rounds": 304,
+   "rating": 1.03,
+   "acs": 202.0
+  },
+  {
+   "player": "carpe",
+   "profile": "https://www.vlr.gg/player/31207/carpe",
+   "team": "T1",
+   "rounds": 297,
+   "rating": 1.02,
+   "acs": 181.0
+  },
+  {
+   "player": "d4v41",
+   "profile": "https://www.vlr.gg/player/9803/d4v41",
+   "team": "PRX",
+   "rounds": 140,
+   "rating": 1.0,
+   "acs": 194.0
+  },
+  {
+   "player": "Akame",
+   "profile": "https://www.vlr.gg/player/13002/akame",
+   "team": "DFM",
+   "rounds": 180,
+   "rating": 1.0,
+   "acs": 202.0
+  },
+  {
+   "player": "Papi",
+   "profile": "https://www.vlr.gg/player/13219/papi",
+   "team": "GE",
+   "rounds": 164,
+   "rating": 1.0,
+   "acs": 174.0
+  },
+  {
+   "player": "dos9",
+   "profile": "https://www.vlr.gg/player/16215/dos9",
+   "team": "BME",
+   "rounds": 123,
+   "rating": 1.0,
+   "acs": 180.0
+  },
+  {
+   "player": "yoman",
+   "profile": "https://www.vlr.gg/player/25081/yoman",
+   "team": "GEN",
+   "rounds": 304,
+   "rating": 1.0,
+   "acs": 172.0
+  },
+  {
+   "player": "iZu",
+   "profile": "https://www.vlr.gg/player/29833/izu",
+   "team": "T1",
+   "rounds": 483,
+   "rating": 1.0,
+   "acs": 184.0
+  },
+  {
+   "player": "stax",
+   "profile": "https://www.vlr.gg/player/485/stax",
+   "team": "T1",
+   "rounds": 483,
+   "rating": 0.99,
+   "acs": 170.0
+  },
+  {
+   "player": "Monyet",
+   "profile": "https://www.vlr.gg/player/8497/monyet",
+   "team": "RRQ",
+   "rounds": 269,
+   "rating": 0.99,
+   "acs": 188.0
+  },
+  {
+   "player": "t3xture",
+   "profile": "https://www.vlr.gg/player/9196/t3xture",
+   "team": "GEN",
+   "rounds": 304,
+   "rating": 0.99,
+   "acs": 222.0
+  },
+  {
+   "player": "UdoTan",
+   "profile": "https://www.vlr.gg/player/4428/udotan",
+   "team": "GE",
+   "rounds": 164,
+   "rating": 0.98,
+   "acs": 218.0
+  },
+  {
+   "player": "something",
+   "profile": "https://www.vlr.gg/player/17086/something",
+   "team": "PRX",
+   "rounds": 140,
+   "rating": 0.98,
+   "acs": 210.0
+  },
+  {
+   "player": "xffero",
+   "profile": "https://www.vlr.gg/player/4871/xffero",
+   "team": "RRQ",
+   "rounds": 269,
+   "rating": 0.97,
+   "acs": 181.0
+  },
+  {
+   "player": "Foxy9",
+   "profile": "https://www.vlr.gg/player/11600/foxy9",
+   "team": "GEN",
+   "rounds": 304,
+   "rating": 0.97,
+   "acs": 195.0
+  },
+  {
+   "player": "margaret",
+   "profile": "https://www.vlr.gg/player/33576/margaret",
+   "team": "NS",
+   "rounds": 319,
+   "rating": 0.96,
+   "acs": 181.0
+  },
+  {
+   "player": "BeYN",
+   "profile": "https://www.vlr.gg/player/4678/beyn",
+   "team": "KRX",
+   "rounds": 297,
+   "rating": 0.95,
+   "acs": 160.0
+  },
+  {
+   "player": "Flashback",
+   "profile": "https://www.vlr.gg/player/35013/flashback",
+   "team": "KRX",
+   "rounds": 297,
+   "rating": 0.94,
+   "acs": 184.0
+  },
+  {
+   "player": "Sylvan",
+   "profile": "https://www.vlr.gg/player/4056/sylvan",
+   "team": "T1",
+   "rounds": 186,
+   "rating": 0.93,
+   "acs": 176.0
+  },
+  {
+   "player": "Meteor",
+   "profile": "https://www.vlr.gg/player/13039/meteor",
+   "team": "T1",
+   "rounds": 483,
+   "rating": 0.93,
+   "acs": 203.0
+  },
+  {
+   "player": "Jinboong",
+   "profile": "https://www.vlr.gg/player/4052/jinboong",
+   "team": "DFM",
+   "rounds": 180,
+   "rating": 0.92,
+   "acs": 170.0
+  },
+  {
+   "player": "Shiro",
+   "profile": "https://www.vlr.gg/player/10739/shiro",
+   "team": "BME",
+   "rounds": 123,
+   "rating": 0.92,
+   "acs": 175.0
+  },
+  {
+   "player": "gyen",
+   "profile": "https://www.vlr.gg/player/48577/gyen",
+   "team": "DFM",
+   "rounds": 180,
+   "rating": 0.91,
+   "acs": 168.0
+  },
+  {
+   "player": "mindfreak",
+   "profile": "https://www.vlr.gg/player/9800/mindfreak",
+   "team": "PRX",
+   "rounds": 140,
+   "rating": 0.9,
+   "acs": 169.0
+  },
+  {
+   "player": "ban",
+   "profile": "https://www.vlr.gg/player/5129/ban",
+   "team": "TLN",
+   "rounds": 217,
+   "rating": 0.89,
+   "acs": 184.0
+  },
+  {
+   "player": "Jremy",
+   "profile": "https://www.vlr.gg/player/7405/jremy",
+   "team": "TS",
+   "rounds": 111,
+   "rating": 0.89,
+   "acs": 215.0
+  },
+  {
+   "player": "invy",
+   "profile": "https://www.vlr.gg/player/8504/invy",
+   "team": "TS",
+   "rounds": 111,
+   "rating": 0.89,
+   "acs": 174.0
+  },
+  {
+   "player": "Deryeon",
+   "profile": "https://www.vlr.gg/player/9152/deryeon",
+   "team": "GE",
+   "rounds": 164,
+   "rating": 0.89,
+   "acs": 155.0
+  },
+  {
+   "player": "Dambi",
+   "profile": "https://www.vlr.gg/player/31827/dambi",
+   "team": "NS",
+   "rounds": 319,
+   "rating": 0.87,
+   "acs": 219.0
+  },
+  {
+   "player": "kellyS",
+   "profile": "https://www.vlr.gg/player/7437/kellys",
+   "team": "GE",
+   "rounds": 164,
+   "rating": 0.85,
+   "acs": 175.0
+  },
+  {
+   "player": "Art",
+   "profile": "https://www.vlr.gg/player/10627/art",
+   "team": "DFM",
+   "rounds": 180,
+   "rating": 0.85,
+   "acs": 177.0
+  },
+  {
+   "player": "2GE",
+   "profile": "https://www.vlr.gg/player/9735/2ge",
+   "team": "TS",
+   "rounds": 111,
+   "rating": 0.84,
+   "acs": 166.0
+  },
+  {
+   "player": "SugarZ3ro",
+   "profile": "https://www.vlr.gg/player/6668/sugarz3ro",
+   "team": "ZETA",
+   "rounds": 83,
+   "rating": 0.8,
+   "acs": 176.0
+  },
+  {
+   "player": "Wild0reoo",
+   "profile": "https://www.vlr.gg/player/9740/wild0reoo",
+   "team": "TS",
+   "rounds": 111,
+   "rating": 0.8,
+   "acs": 164.0
+  },
+  {
+   "player": "CLZ",
+   "profile": "https://www.vlr.gg/player/2615/clz",
+   "team": "ZETA",
+   "rounds": 83,
+   "rating": 0.78,
+   "acs": 142.0
+  },
+  {
+   "player": "Crws",
+   "profile": "https://www.vlr.gg/player/3977/crws",
+   "team": "TLN",
+   "rounds": 217,
+   "rating": 0.75,
+   "acs": 146.0
+  },
+  {
+   "player": "Governor",
+   "profile": "https://www.vlr.gg/player/3980/governor",
+   "team": "TLN",
+   "rounds": 217,
+   "rating": 0.75,
+   "acs": 174.0
+  },
+  {
+   "player": "SyouTa",
+   "profile": "https://www.vlr.gg/player/12990/syouta",
+   "team": "ZETA",
+   "rounds": 83,
+   "rating": 0.75,
+   "acs": 178.0
+  },
+  {
+   "player": "NcSlasher",
+   "profile": "https://www.vlr.gg/player/7043/ncslasher",
+   "team": "BME",
+   "rounds": 123,
+   "rating": 0.73,
+   "acs": 148.0
+  },
+  {
+   "player": "Xdll",
+   "profile": "https://www.vlr.gg/player/25221/xdll",
+   "team": "ZETA",
+   "rounds": 83,
+   "rating": 0.7,
+   "acs": 174.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2379/vct-2025-pacific-stage-1": [
+  {
+   "player": "invy",
+   "profile": "https://www.vlr.gg/player/8504/invy",
+   "team": "TS",
+   "rounds": 271,
+   "rating": 1.26,
+   "acs": 237.0
+  },
+  {
+   "player": "Jemkin",
+   "profile": "https://www.vlr.gg/player/24895/jemkin",
+   "team": "RRQ",
+   "rounds": 573,
+   "rating": 1.22,
+   "acs": 254.0
+  },
+  {
+   "player": "dos9",
+   "profile": "https://www.vlr.gg/player/16215/dos9",
+   "team": "BME",
+   "rounds": 344,
+   "rating": 1.19,
+   "acs": 212.0
+  },
+  {
+   "player": "Jinggg",
+   "profile": "https://www.vlr.gg/player/7378/jinggg",
+   "team": "PRX",
+   "rounds": 536,
+   "rating": 1.14,
+   "acs": 221.0
+  },
+  {
+   "player": "MaKo",
+   "profile": "https://www.vlr.gg/player/4462/mako",
+   "team": "KRX",
+   "rounds": 484,
+   "rating": 1.12,
+   "acs": 209.0
+  },
+  {
+   "player": "Foxy9",
+   "profile": "https://www.vlr.gg/player/11600/foxy9",
+   "team": "GEN",
+   "rounds": 360,
+   "rating": 1.12,
+   "acs": 208.0
+  },
+  {
+   "player": "HYUNMIN",
+   "profile": "https://www.vlr.gg/player/28400/hyunmin",
+   "team": "KRX",
+   "rounds": 484,
+   "rating": 1.12,
+   "acs": 238.0
+  },
+  {
+   "player": "t3xture",
+   "profile": "https://www.vlr.gg/player/9196/t3xture",
+   "team": "GEN",
+   "rounds": 472,
+   "rating": 1.11,
+   "acs": 244.0
+  },
+  {
+   "player": "f0rsakeN",
+   "profile": "https://www.vlr.gg/player/9801/f0rsaken",
+   "team": "PRX",
+   "rounds": 536,
+   "rating": 1.11,
+   "acs": 226.0
+  },
+  {
+   "player": "Akame",
+   "profile": "https://www.vlr.gg/player/13002/akame",
+   "team": "DFM",
+   "rounds": 225,
+   "rating": 1.11,
+   "acs": 213.0
+  },
+  {
+   "player": "primmie",
+   "profile": "https://www.vlr.gg/player/25255/primmie",
+   "team": "TLN",
+   "rounds": 392,
+   "rating": 1.11,
+   "acs": 230.0
+  },
+  {
+   "player": "Flashback",
+   "profile": "https://www.vlr.gg/player/35013/flashback",
+   "team": "KRX",
+   "rounds": 141,
+   "rating": 1.11,
+   "acs": 216.0
+  },
+  {
+   "player": "Karon",
+   "profile": "https://www.vlr.gg/player/34974/karon",
+   "team": "GEN",
+   "rounds": 472,
+   "rating": 1.08,
+   "acs": 208.0
+  },
+  {
+   "player": "Munchkin",
+   "profile": "https://www.vlr.gg/player/2489/munchkin",
+   "team": "GEN",
+   "rounds": 472,
+   "rating": 1.07,
+   "acs": 199.0
+  },
+  {
+   "player": "Kr1stal",
+   "profile": "https://www.vlr.gg/player/5796/kr1stal",
+   "team": "GE",
+   "rounds": 199,
+   "rating": 1.07,
+   "acs": 189.0
+  },
+  {
+   "player": "margaret",
+   "profile": "https://www.vlr.gg/player/33576/margaret",
+   "team": "NS",
+   "rounds": 333,
+   "rating": 1.07,
+   "acs": 206.0
+  },
+  {
+   "player": "NcSlasher",
+   "profile": "https://www.vlr.gg/player/7043/ncslasher",
+   "team": "BME",
+   "rounds": 344,
+   "rating": 1.05,
+   "acs": 197.0
+  },
+  {
+   "player": "Francis",
+   "profile": "https://www.vlr.gg/player/31828/francis",
+   "team": "NS",
+   "rounds": 333,
+   "rating": 1.05,
+   "acs": 199.0
+  },
+  {
+   "player": "UdoTan",
+   "profile": "https://www.vlr.gg/player/4428/udotan",
+   "team": "GE",
+   "rounds": 199,
+   "rating": 1.04,
+   "acs": 215.0
+  },
+  {
+   "player": "SugarZ3ro",
+   "profile": "https://www.vlr.gg/player/6668/sugarz3ro",
+   "team": "ZETA",
+   "rounds": 255,
+   "rating": 1.04,
+   "acs": 182.0
+  },
+  {
+   "player": "something",
+   "profile": "https://www.vlr.gg/player/17086/something",
+   "team": "PRX",
+   "rounds": 536,
+   "rating": 1.03,
+   "acs": 198.0
+  },
+  {
+   "player": "iZu",
+   "profile": "https://www.vlr.gg/player/29833/izu",
+   "team": "T1",
+   "rounds": 378,
+   "rating": 1.03,
+   "acs": 196.0
+  },
+  {
+   "player": "Kushy",
+   "profile": "https://www.vlr.gg/player/4866/kushy",
+   "team": "RRQ",
+   "rounds": 573,
+   "rating": 1.01,
+   "acs": 193.0
+  },
+  {
+   "player": "BerserX",
+   "profile": "https://www.vlr.gg/player/4874/berserx",
+   "team": "BME",
+   "rounds": 344,
+   "rating": 1.01,
+   "acs": 196.0
+  },
+  {
+   "player": "Ivy",
+   "profile": "https://www.vlr.gg/player/31829/ivy",
+   "team": "NS",
+   "rounds": 333,
+   "rating": 1.01,
+   "acs": 172.0
+  },
+  {
+   "player": "PatMen",
+   "profile": "https://www.vlr.gg/player/13744/patmen",
+   "team": "PRX",
+   "rounds": 412,
+   "rating": 1.0,
+   "acs": 193.0
+  },
+  {
+   "player": "Ash",
+   "profile": "https://www.vlr.gg/player/25017/ash",
+   "team": "GEN",
+   "rounds": 472,
+   "rating": 1.0,
+   "acs": 174.0
+  },
+  {
+   "player": "JessieVash",
+   "profile": "https://www.vlr.gg/player/2334/jessievash",
+   "team": "TS",
+   "rounds": 271,
+   "rating": 0.99,
+   "acs": 183.0
+  },
+  {
+   "player": "Famouz",
+   "profile": "https://www.vlr.gg/player/2348/famouz",
+   "team": "BME",
+   "rounds": 344,
+   "rating": 0.99,
+   "acs": 228.0
+  },
+  {
+   "player": "Persia",
+   "profile": "https://www.vlr.gg/player/4122/persia",
+   "team": "NS",
+   "rounds": 333,
+   "rating": 0.99,
+   "acs": 174.0
+  },
+  {
+   "player": "BeYN",
+   "profile": "https://www.vlr.gg/player/4678/beyn",
+   "team": "KRX",
+   "rounds": 445,
+   "rating": 0.99,
+   "acs": 178.0
+  },
+  {
+   "player": "Killua",
+   "profile": "https://www.vlr.gg/player/13784/killua",
+   "team": "TLN",
+   "rounds": 392,
+   "rating": 0.99,
+   "acs": 188.0
+  },
+  {
+   "player": "BuZz",
+   "profile": "https://www.vlr.gg/player/804/buzz",
+   "team": "T1",
+   "rounds": 378,
+   "rating": 0.98,
+   "acs": 225.0
+  },
+  {
+   "player": "d4v41",
+   "profile": "https://www.vlr.gg/player/9803/d4v41",
+   "team": "PRX",
+   "rounds": 536,
+   "rating": 0.98,
+   "acs": 191.0
+  },
+  {
+   "player": "Meteor",
+   "profile": "https://www.vlr.gg/player/13039/meteor",
+   "team": "T1",
+   "rounds": 378,
+   "rating": 0.98,
+   "acs": 215.0
+  },
+  {
+   "player": "free1ng",
+   "profile": "https://www.vlr.gg/player/1916/free1ng",
+   "team": "KRX",
+   "rounds": 484,
+   "rating": 0.97,
+   "acs": 190.0
+  },
+  {
+   "player": "xffero",
+   "profile": "https://www.vlr.gg/player/4871/xffero",
+   "team": "RRQ",
+   "rounds": 573,
+   "rating": 0.97,
+   "acs": 184.0
+  },
+  {
+   "player": "CLZ",
+   "profile": "https://www.vlr.gg/player/2615/clz",
+   "team": "ZETA",
+   "rounds": 255,
+   "rating": 0.96,
+   "acs": 178.0
+  },
+  {
+   "player": "stax",
+   "profile": "https://www.vlr.gg/player/485/stax",
+   "team": "T1",
+   "rounds": 378,
+   "rating": 0.95,
+   "acs": 175.0
+  },
+  {
+   "player": "Dambi",
+   "profile": "https://www.vlr.gg/player/31827/dambi",
+   "team": "NS",
+   "rounds": 333,
+   "rating": 0.95,
+   "acs": 211.0
+  },
+  {
+   "player": "gyen",
+   "profile": "https://www.vlr.gg/player/48577/gyen",
+   "team": "DFM",
+   "rounds": 225,
+   "rating": 0.95,
+   "acs": 190.0
+  },
+  {
+   "player": "Dep",
+   "profile": "https://www.vlr.gg/player/424/dep",
+   "team": "ZETA",
+   "rounds": 152,
+   "rating": 0.94,
+   "acs": 211.0
+  },
+  {
+   "player": "crazyguy",
+   "profile": "https://www.vlr.gg/player/1430/crazyguy",
+   "team": "RRQ",
+   "rounds": 573,
+   "rating": 0.94,
+   "acs": 182.0
+  },
+  {
+   "player": "Monyet",
+   "profile": "https://www.vlr.gg/player/8497/monyet",
+   "team": "RRQ",
+   "rounds": 573,
+   "rating": 0.94,
+   "acs": 181.0
+  },
+  {
+   "player": "TenTen",
+   "profile": "https://www.vlr.gg/player/29839/tenten",
+   "team": "ZETA",
+   "rounds": 103,
+   "rating": 0.94,
+   "acs": 216.0
+  },
+  {
+   "player": "Shiro",
+   "profile": "https://www.vlr.gg/player/10739/shiro",
+   "team": "BME",
+   "rounds": 344,
+   "rating": 0.93,
+   "acs": 188.0
+  },
+  {
+   "player": "thyy",
+   "profile": "https://www.vlr.gg/player/42901/thyy",
+   "team": "TLN",
+   "rounds": 392,
+   "rating": 0.93,
+   "acs": 177.0
+  },
+  {
+   "player": "Sylvan",
+   "profile": "https://www.vlr.gg/player/4056/sylvan",
+   "team": "T1",
+   "rounds": 378,
+   "rating": 0.92,
+   "acs": 179.0
+  },
+  {
+   "player": "JitBoyS",
+   "profile": "https://www.vlr.gg/player/13788/jitboys",
+   "team": "TLN",
+   "rounds": 392,
+   "rating": 0.91,
+   "acs": 187.0
+  },
+  {
+   "player": "Crws",
+   "profile": "https://www.vlr.gg/player/3977/crws",
+   "team": "TLN",
+   "rounds": 392,
+   "rating": 0.9,
+   "acs": 174.0
+  },
+  {
+   "player": "Meiy",
+   "profile": "https://www.vlr.gg/player/6672/meiy",
+   "team": "DFM",
+   "rounds": 225,
+   "rating": 0.9,
+   "acs": 190.0
+  },
+  {
+   "player": "Jremy",
+   "profile": "https://www.vlr.gg/player/7405/jremy",
+   "team": "TS",
+   "rounds": 271,
+   "rating": 0.9,
+   "acs": 201.0
+  },
+  {
+   "player": "Xdll",
+   "profile": "https://www.vlr.gg/player/25221/xdll",
+   "team": "ZETA",
+   "rounds": 255,
+   "rating": 0.88,
+   "acs": 201.0
+  },
+  {
+   "player": "kellyS",
+   "profile": "https://www.vlr.gg/player/7437/kellys",
+   "team": "GE",
+   "rounds": 199,
+   "rating": 0.87,
+   "acs": 182.0
+  },
+  {
+   "player": "mindfreak",
+   "profile": "https://www.vlr.gg/player/9800/mindfreak",
+   "team": "PRX",
+   "rounds": 124,
+   "rating": 0.86,
+   "acs": 165.0
+  },
+  {
+   "player": "Wild0reoo",
+   "profile": "https://www.vlr.gg/player/9740/wild0reoo",
+   "team": "TS",
+   "rounds": 271,
+   "rating": 0.85,
+   "acs": 186.0
+  },
+  {
+   "player": "Estrella",
+   "profile": "https://www.vlr.gg/player/25025/estrella",
+   "team": "KRX",
+   "rounds": 382,
+   "rating": 0.83,
+   "acs": 162.0
+  },
+  {
+   "player": "Deryeon",
+   "profile": "https://www.vlr.gg/player/9152/deryeon",
+   "team": "GE",
+   "rounds": 78,
+   "rating": 0.81,
+   "acs": 208.0
+  },
+  {
+   "player": "2GE",
+   "profile": "https://www.vlr.gg/player/9735/2ge",
+   "team": "TS",
+   "rounds": 271,
+   "rating": 0.81,
+   "acs": 165.0
+  },
+  {
+   "player": "Jinboong",
+   "profile": "https://www.vlr.gg/player/4052/jinboong",
+   "team": "DFM",
+   "rounds": 225,
+   "rating": 0.8,
+   "acs": 157.0
+  },
+  {
+   "player": "Papi",
+   "profile": "https://www.vlr.gg/player/13219/papi",
+   "team": "GE",
+   "rounds": 199,
+   "rating": 0.8,
+   "acs": 152.0
+  },
+  {
+   "player": "SyouTa",
+   "profile": "https://www.vlr.gg/player/12990/syouta",
+   "team": "ZETA",
+   "rounds": 255,
+   "rating": 0.79,
+   "acs": 163.0
+  },
+  {
+   "player": "Suggest",
+   "profile": "https://www.vlr.gg/player/4559/suggest",
+   "team": "GEN",
+   "rounds": 112,
+   "rating": 0.66,
+   "acs": 152.0
+  },
+  {
+   "player": "Art",
+   "profile": "https://www.vlr.gg/player/10627/art",
+   "team": "DFM",
+   "rounds": 225,
+   "rating": 0.61,
+   "acs": 136.0
+  },
+  {
+   "player": "yokam",
+   "profile": "https://www.vlr.gg/player/44259/yokam",
+   "team": "GE",
+   "rounds": 121,
+   "rating": 0.55,
+   "acs": 153.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2501/vct-2025-americas-stage-2": [
+  {
+   "player": "OXY",
+   "profile": "https://www.vlr.gg/player/18796/oxy",
+   "team": "C9",
+   "rounds": 442,
+   "rating": 1.17,
+   "acs": 255.0
+  },
+  {
+   "player": "valyn",
+   "profile": "https://www.vlr.gg/player/3885/valyn",
+   "team": "G2",
+   "rounds": 452,
+   "rating": 1.14,
+   "acs": 214.0
+  },
+  {
+   "player": "Cryocells",
+   "profile": "https://www.vlr.gg/player/4147/cryocells",
+   "team": "100T",
+   "rounds": 372,
+   "rating": 1.14,
+   "acs": 221.0
+  },
+  {
+   "player": "N4RRATE",
+   "profile": "https://www.vlr.gg/player/36245/n4rrate",
+   "team": "SEN",
+   "rounds": 426,
+   "rating": 1.14,
+   "acs": 225.0
+  },
+  {
+   "player": "brawk",
+   "profile": "https://www.vlr.gg/player/2172/brawk",
+   "team": "NRG",
+   "rounds": 568,
+   "rating": 1.13,
+   "acs": 214.0
+  },
+  {
+   "player": "JonahP",
+   "profile": "https://www.vlr.gg/player/4581/jonahp",
+   "team": "G2",
+   "rounds": 452,
+   "rating": 1.13,
+   "acs": 206.0
+  },
+  {
+   "player": "keznit",
+   "profile": "https://www.vlr.gg/player/2462/keznit",
+   "team": "KR\u00dc",
+   "rounds": 334,
+   "rating": 1.12,
+   "acs": 234.0
+  },
+  {
+   "player": "aspas",
+   "profile": "https://www.vlr.gg/player/8480/aspas",
+   "team": "MIBR",
+   "rounds": 242,
+   "rating": 1.12,
+   "acs": 227.0
+  },
+  {
+   "player": "Sato",
+   "profile": "https://www.vlr.gg/player/21659/sato",
+   "team": "LEV",
+   "rounds": 463,
+   "rating": 1.12,
+   "acs": 254.0
+  },
+  {
+   "player": "johnqt",
+   "profile": "https://www.vlr.gg/player/1265/johnqt",
+   "team": "SEN",
+   "rounds": 426,
+   "rating": 1.11,
+   "acs": 184.0
+  },
+  {
+   "player": "zekken",
+   "profile": "https://www.vlr.gg/player/4004/zekken",
+   "team": "SEN",
+   "rounds": 426,
+   "rating": 1.09,
+   "acs": 234.0
+  },
+  {
+   "player": "kiNgg",
+   "profile": "https://www.vlr.gg/player/8549/kingg",
+   "team": "LEV",
+   "rounds": 463,
+   "rating": 1.08,
+   "acs": 194.0
+  },
+  {
+   "player": "trent",
+   "profile": "https://www.vlr.gg/player/15500/trent",
+   "team": "G2",
+   "rounds": 452,
+   "rating": 1.08,
+   "acs": 192.0
+  },
+  {
+   "player": "Derrek",
+   "profile": "https://www.vlr.gg/player/1533/derrek",
+   "team": "EG",
+   "rounds": 289,
+   "rating": 1.07,
+   "acs": 210.0
+  },
+  {
+   "player": "leaf",
+   "profile": "https://www.vlr.gg/player/7873/leaf",
+   "team": "G2",
+   "rounds": 111,
+   "rating": 1.07,
+   "acs": 211.0
+  },
+  {
+   "player": "skuba",
+   "profile": "https://www.vlr.gg/player/11118/skuba",
+   "team": "NRG",
+   "rounds": 568,
+   "rating": 1.07,
+   "acs": 190.0
+  },
+  {
+   "player": "silentzz",
+   "profile": "https://www.vlr.gg/player/11921/silentzz",
+   "team": "2G",
+   "rounds": 252,
+   "rating": 1.07,
+   "acs": 199.0
+  },
+  {
+   "player": "eeiu",
+   "profile": "https://www.vlr.gg/player/796/eeiu",
+   "team": "100T",
+   "rounds": 372,
+   "rating": 1.06,
+   "acs": 194.0
+  },
+  {
+   "player": "cortezia",
+   "profile": "https://www.vlr.gg/player/5395/cortezia",
+   "team": "MIBR",
+   "rounds": 242,
+   "rating": 1.06,
+   "acs": 203.0
+  },
+  {
+   "player": "v1c",
+   "profile": "https://www.vlr.gg/player/17433/v1c",
+   "team": "C9",
+   "rounds": 442,
+   "rating": 1.06,
+   "acs": 200.0
+  },
+  {
+   "player": "bang",
+   "profile": "https://www.vlr.gg/player/3880/bang",
+   "team": "SEN",
+   "rounds": 426,
+   "rating": 1.05,
+   "acs": 195.0
+  },
+  {
+   "player": "jawgemo",
+   "profile": "https://www.vlr.gg/player/3993/jawgemo",
+   "team": "G2",
+   "rounds": 452,
+   "rating": 1.05,
+   "acs": 228.0
+  },
+  {
+   "player": "s0m",
+   "profile": "https://www.vlr.gg/player/4164/s0m",
+   "team": "NRG",
+   "rounds": 568,
+   "rating": 1.04,
+   "acs": 197.0
+  },
+  {
+   "player": "mada",
+   "profile": "https://www.vlr.gg/player/5132/mada",
+   "team": "NRG",
+   "rounds": 568,
+   "rating": 1.04,
+   "acs": 223.0
+  },
+  {
+   "player": "lukxo",
+   "profile": "https://www.vlr.gg/player/28716/lukxo",
+   "team": "LOUD",
+   "rounds": 276,
+   "rating": 1.03,
+   "acs": 211.0
+  },
+  {
+   "player": "BABYBAY",
+   "profile": "https://www.vlr.gg/player/2170/babybay",
+   "team": "G2",
+   "rounds": 341,
+   "rating": 1.02,
+   "acs": 198.0
+  },
+  {
+   "player": "Okeanos",
+   "profile": "https://www.vlr.gg/player/8373/okeanos",
+   "team": "LEV",
+   "rounds": 463,
+   "rating": 1.02,
+   "acs": 201.0
+  },
+  {
+   "player": "Ethan",
+   "profile": "https://www.vlr.gg/player/11225/ethan",
+   "team": "NRG",
+   "rounds": 568,
+   "rating": 1.02,
+   "acs": 195.0
+  },
+  {
+   "player": "Asuna",
+   "profile": "https://www.vlr.gg/player/601/asuna",
+   "team": "100T",
+   "rounds": 372,
+   "rating": 1.01,
+   "acs": 207.0
+  },
+  {
+   "player": "Zellsis",
+   "profile": "https://www.vlr.gg/player/729/zellsis",
+   "team": "SEN",
+   "rounds": 426,
+   "rating": 1.01,
+   "acs": 190.0
+  },
+  {
+   "player": "Virtyy",
+   "profile": "https://www.vlr.gg/player/3983/virtyy",
+   "team": "LOUD",
+   "rounds": 276,
+   "rating": 1.01,
+   "acs": 214.0
+  },
+  {
+   "player": "spike",
+   "profile": "https://www.vlr.gg/player/21661/spike",
+   "team": "2G",
+   "rounds": 252,
+   "rating": 0.99,
+   "acs": 233.0
+  },
+  {
+   "player": "Xeppaa",
+   "profile": "https://www.vlr.gg/player/7871/xeppaa",
+   "team": "C9",
+   "rounds": 442,
+   "rating": 0.98,
+   "acs": 201.0
+  },
+  {
+   "player": "Shyy",
+   "profile": "https://www.vlr.gg/player/24007/shyy",
+   "team": "KR\u00dc",
+   "rounds": 334,
+   "rating": 0.97,
+   "acs": 183.0
+  },
+  {
+   "player": "C0M",
+   "profile": "https://www.vlr.gg/player/619/c0m",
+   "team": "LEV",
+   "rounds": 463,
+   "rating": 0.96,
+   "acs": 171.0
+  },
+  {
+   "player": "Mazino",
+   "profile": "https://www.vlr.gg/player/7603/mazino",
+   "team": "KR\u00dc",
+   "rounds": 334,
+   "rating": 0.96,
+   "acs": 191.0
+  },
+  {
+   "player": "zander",
+   "profile": "https://www.vlr.gg/player/8082/zander",
+   "team": "100T",
+   "rounds": 372,
+   "rating": 0.96,
+   "acs": 198.0
+  },
+  {
+   "player": "yay",
+   "profile": "https://www.vlr.gg/player/881/yay",
+   "team": "EG",
+   "rounds": 289,
+   "rating": 0.95,
+   "acs": 218.0
+  },
+  {
+   "player": "xenom",
+   "profile": "https://www.vlr.gg/player/20240/xenom",
+   "team": "MIBR",
+   "rounds": 242,
+   "rating": 0.94,
+   "acs": 169.0
+  },
+  {
+   "player": "mitch",
+   "profile": "https://www.vlr.gg/player/612/mitch",
+   "team": "C9",
+   "rounds": 442,
+   "rating": 0.93,
+   "acs": 175.0
+  },
+  {
+   "player": "Melser",
+   "profile": "https://www.vlr.gg/player/1311/melser",
+   "team": "KR\u00dc",
+   "rounds": 334,
+   "rating": 0.93,
+   "acs": 159.0
+  },
+  {
+   "player": "cauanzin",
+   "profile": "https://www.vlr.gg/player/6193/cauanzin",
+   "team": "LOUD",
+   "rounds": 276,
+   "rating": 0.92,
+   "acs": 194.0
+  },
+  {
+   "player": "pryze",
+   "profile": "https://www.vlr.gg/player/662/pryze",
+   "team": "2G",
+   "rounds": 252,
+   "rating": 0.91,
+   "acs": 179.0
+  },
+  {
+   "player": "neT",
+   "profile": "https://www.vlr.gg/player/6582/net",
+   "team": "C9",
+   "rounds": 442,
+   "rating": 0.9,
+   "acs": 164.0
+  },
+  {
+   "player": "Kess",
+   "profile": "https://www.vlr.gg/player/9094/kess",
+   "team": "100T",
+   "rounds": 372,
+   "rating": 0.9,
+   "acs": 173.0
+  },
+  {
+   "player": "pANcada",
+   "profile": "https://www.vlr.gg/player/683/pancada",
+   "team": "LOUD",
+   "rounds": 276,
+   "rating": 0.89,
+   "acs": 164.0
+  },
+  {
+   "player": "NaturE",
+   "profile": "https://www.vlr.gg/player/4927/nature",
+   "team": "EG",
+   "rounds": 289,
+   "rating": 0.89,
+   "acs": 180.0
+  },
+  {
+   "player": "heat",
+   "profile": "https://www.vlr.gg/player/8673/heat",
+   "team": "FUR",
+   "rounds": 196,
+   "rating": 0.87,
+   "acs": 185.0
+  },
+  {
+   "player": "Dantedeu5",
+   "profile": "https://www.vlr.gg/player/41135/dantedeu5",
+   "team": "KR\u00dc",
+   "rounds": 334,
+   "rating": 0.87,
+   "acs": 188.0
+  },
+  {
+   "player": "lz",
+   "profile": "https://www.vlr.gg/player/6195/lz",
+   "team": "2G",
+   "rounds": 252,
+   "rating": 0.86,
+   "acs": 161.0
+  },
+  {
+   "player": "adverso",
+   "profile": "https://www.vlr.gg/player/3826/adverso",
+   "team": "FUR",
+   "rounds": 196,
+   "rating": 0.85,
+   "acs": 188.0
+  },
+  {
+   "player": "icy",
+   "profile": "https://www.vlr.gg/player/8402/icy",
+   "team": "EG",
+   "rounds": 289,
+   "rating": 0.85,
+   "acs": 168.0
+  },
+  {
+   "player": "supamen",
+   "profile": "https://www.vlr.gg/player/826/supamen",
+   "team": "EG",
+   "rounds": 289,
+   "rating": 0.83,
+   "acs": 155.0
+  },
+  {
+   "player": "tex",
+   "profile": "https://www.vlr.gg/player/1818/tex",
+   "team": "LEV",
+   "rounds": 463,
+   "rating": 0.83,
+   "acs": 162.0
+  },
+  {
+   "player": "artzin",
+   "profile": "https://www.vlr.gg/player/5957/artzin",
+   "team": "MIBR",
+   "rounds": 242,
+   "rating": 0.8,
+   "acs": 180.0
+  },
+  {
+   "player": "RobbieBk",
+   "profile": "https://www.vlr.gg/player/5893/robbiebk",
+   "team": "LOUD",
+   "rounds": 276,
+   "rating": 0.78,
+   "acs": 149.0
+  },
+  {
+   "player": "gobera",
+   "profile": "https://www.vlr.gg/player/14950/gobera",
+   "team": "2G",
+   "rounds": 252,
+   "rating": 0.78,
+   "acs": 157.0
+  },
+  {
+   "player": "Palla",
+   "profile": "https://www.vlr.gg/player/15681/palla",
+   "team": "FUR",
+   "rounds": 196,
+   "rating": 0.77,
+   "acs": 199.0
+  },
+  {
+   "player": "tuyz",
+   "profile": "https://www.vlr.gg/player/2408/tuyz",
+   "team": "FUR",
+   "rounds": 196,
+   "rating": 0.72,
+   "acs": 136.0
+  },
+  {
+   "player": "Verno",
+   "profile": "https://www.vlr.gg/player/21668/verno",
+   "team": "MIBR",
+   "rounds": 242,
+   "rating": 0.72,
+   "acs": 141.0
+  },
+  {
+   "player": "Urango",
+   "profile": "https://www.vlr.gg/player/6238/urango",
+   "team": "FUR",
+   "rounds": 196,
+   "rating": 0.59,
+   "acs": 140.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2683/vct-2026-pacific-kickoff": [
+  {
+   "player": "primmie",
+   "profile": "https://www.vlr.gg/player/25255/primmie",
+   "team": "FS",
+   "rounds": 237,
+   "rating": 1.23,
+   "acs": 258.0
+  },
+  {
+   "player": "Karon",
+   "profile": "https://www.vlr.gg/player/34974/karon",
+   "team": "GEN",
+   "rounds": 266,
+   "rating": 1.15,
+   "acs": 216.0
+  },
+  {
+   "player": "PatMen",
+   "profile": "https://www.vlr.gg/player/13744/patmen",
+   "team": "GE",
+   "rounds": 353,
+   "rating": 1.14,
+   "acs": 233.0
+  },
+  {
+   "player": "iZu",
+   "profile": "https://www.vlr.gg/player/29833/izu",
+   "team": "T1",
+   "rounds": 346,
+   "rating": 1.14,
+   "acs": 225.0
+  },
+  {
+   "player": "Jemkin",
+   "profile": "https://www.vlr.gg/player/24895/jemkin",
+   "team": "RRQ",
+   "rounds": 348,
+   "rating": 1.13,
+   "acs": 226.0
+  },
+  {
+   "player": "Rb",
+   "profile": "https://www.vlr.gg/player/488/rb",
+   "team": "NS",
+   "rounds": 250,
+   "rating": 1.12,
+   "acs": 187.0
+  },
+  {
+   "player": "Dambi",
+   "profile": "https://www.vlr.gg/player/31827/dambi",
+   "team": "NS",
+   "rounds": 250,
+   "rating": 1.11,
+   "acs": 247.0
+  },
+  {
+   "player": "Autumn",
+   "profile": "https://www.vlr.gg/player/872/autumn",
+   "team": "GE",
+   "rounds": 353,
+   "rating": 1.1,
+   "acs": 226.0
+  },
+  {
+   "player": "Meiy",
+   "profile": "https://www.vlr.gg/player/6672/meiy",
+   "team": "DFM",
+   "rounds": 323,
+   "rating": 1.09,
+   "acs": 240.0
+  },
+  {
+   "player": "f0rsakeN",
+   "profile": "https://www.vlr.gg/player/9801/f0rsaken",
+   "team": "PRX",
+   "rounds": 432,
+   "rating": 1.09,
+   "acs": 227.0
+  },
+  {
+   "player": "xffero",
+   "profile": "https://www.vlr.gg/player/4871/xffero",
+   "team": "RRQ",
+   "rounds": 348,
+   "rating": 1.07,
+   "acs": 195.0
+  },
+  {
+   "player": "Xross",
+   "profile": "https://www.vlr.gg/player/42772/xross",
+   "team": "NS",
+   "rounds": 250,
+   "rating": 1.06,
+   "acs": 186.0
+  },
+  {
+   "player": "MaKo",
+   "profile": "https://www.vlr.gg/player/4462/mako",
+   "team": "KRX",
+   "rounds": 339,
+   "rating": 1.05,
+   "acs": 203.0
+  },
+  {
+   "player": "invy",
+   "profile": "https://www.vlr.gg/player/8504/invy",
+   "team": "PRX",
+   "rounds": 432,
+   "rating": 1.05,
+   "acs": 195.0
+  },
+  {
+   "player": "Meteor",
+   "profile": "https://www.vlr.gg/player/13039/meteor",
+   "team": "T1",
+   "rounds": 346,
+   "rating": 1.05,
+   "acs": 221.0
+  },
+  {
+   "player": "Killua",
+   "profile": "https://www.vlr.gg/player/13784/killua",
+   "team": "FS",
+   "rounds": 237,
+   "rating": 1.05,
+   "acs": 202.0
+  },
+  {
+   "player": "HYUNMIN",
+   "profile": "https://www.vlr.gg/player/28400/hyunmin",
+   "team": "KRX",
+   "rounds": 339,
+   "rating": 1.05,
+   "acs": 235.0
+  },
+  {
+   "player": "Ivy",
+   "profile": "https://www.vlr.gg/player/31829/ivy",
+   "team": "NS",
+   "rounds": 250,
+   "rating": 1.05,
+   "acs": 188.0
+  },
+  {
+   "player": "XuNa",
+   "profile": "https://www.vlr.gg/player/42733/xuna",
+   "team": "VL",
+   "rounds": 187,
+   "rating": 1.05,
+   "acs": 192.0
+  },
+  {
+   "player": "Jinggg",
+   "profile": "https://www.vlr.gg/player/7378/jinggg",
+   "team": "PRX",
+   "rounds": 432,
+   "rating": 1.04,
+   "acs": 209.0
+  },
+  {
+   "player": "free1ng",
+   "profile": "https://www.vlr.gg/player/1916/free1ng",
+   "team": "KRX",
+   "rounds": 339,
+   "rating": 1.03,
+   "acs": 192.0
+  },
+  {
+   "player": "xavi8k",
+   "profile": "https://www.vlr.gg/player/7754/xavi8k",
+   "team": "GE",
+   "rounds": 353,
+   "rating": 1.03,
+   "acs": 193.0
+  },
+  {
+   "player": "Munchkin",
+   "profile": "https://www.vlr.gg/player/2489/munchkin",
+   "team": "T1",
+   "rounds": 346,
+   "rating": 1.01,
+   "acs": 180.0
+  },
+  {
+   "player": "SugarZ3ro",
+   "profile": "https://www.vlr.gg/player/6668/sugarz3ro",
+   "team": "ZETA",
+   "rounds": 198,
+   "rating": 1.01,
+   "acs": 203.0
+  },
+  {
+   "player": "BuZz",
+   "profile": "https://www.vlr.gg/player/804/buzz",
+   "team": "T1",
+   "rounds": 346,
+   "rating": 1.0,
+   "acs": 220.0
+  },
+  {
+   "player": "Zexy",
+   "profile": "https://www.vlr.gg/player/37532/zexy",
+   "team": "VL",
+   "rounds": 187,
+   "rating": 1.0,
+   "acs": 237.0
+  },
+  {
+   "player": "Klaus",
+   "profile": "https://www.vlr.gg/player/4426/klaus",
+   "team": "VL",
+   "rounds": 187,
+   "rating": 0.99,
+   "acs": 190.0
+  },
+  {
+   "player": "UdoTan",
+   "profile": "https://www.vlr.gg/player/4428/udotan",
+   "team": "GE",
+   "rounds": 353,
+   "rating": 0.99,
+   "acs": 207.0
+  },
+  {
+   "player": "BeYN",
+   "profile": "https://www.vlr.gg/player/4678/beyn",
+   "team": "KRX",
+   "rounds": 339,
+   "rating": 0.98,
+   "acs": 182.0
+  },
+  {
+   "player": "t3xture",
+   "profile": "https://www.vlr.gg/player/9196/t3xture",
+   "team": "GEN",
+   "rounds": 266,
+   "rating": 0.98,
+   "acs": 224.0
+  },
+  {
+   "player": "Kushy",
+   "profile": "https://www.vlr.gg/player/4866/kushy",
+   "team": "RRQ",
+   "rounds": 348,
+   "rating": 0.97,
+   "acs": 185.0
+  },
+  {
+   "player": "Kr1stal",
+   "profile": "https://www.vlr.gg/player/5796/kr1stal",
+   "team": "GE",
+   "rounds": 353,
+   "rating": 0.97,
+   "acs": 169.0
+  },
+  {
+   "player": "kellyS",
+   "profile": "https://www.vlr.gg/player/7437/kellys",
+   "team": "TS",
+   "rounds": 133,
+   "rating": 0.97,
+   "acs": 219.0
+  },
+  {
+   "player": "Akame",
+   "profile": "https://www.vlr.gg/player/13002/akame",
+   "team": "DFM",
+   "rounds": 323,
+   "rating": 0.96,
+   "acs": 177.0
+  },
+  {
+   "player": "Leviathan",
+   "profile": "https://www.vlr.gg/player/27254/leviathan",
+   "team": "FS",
+   "rounds": 237,
+   "rating": 0.96,
+   "acs": 191.0
+  },
+  {
+   "player": "eKo",
+   "profile": "https://www.vlr.gg/player/1960/eko",
+   "team": "ZETA",
+   "rounds": 198,
+   "rating": 0.95,
+   "acs": 206.0
+  },
+  {
+   "player": "Ash",
+   "profile": "https://www.vlr.gg/player/25017/ash",
+   "team": "GEN",
+   "rounds": 266,
+   "rating": 0.95,
+   "acs": 156.0
+  },
+  {
+   "player": "JessieVash",
+   "profile": "https://www.vlr.gg/player/2334/jessievash",
+   "team": "TS",
+   "rounds": 133,
+   "rating": 0.94,
+   "acs": 202.0
+  },
+  {
+   "player": "BerserX",
+   "profile": "https://www.vlr.gg/player/4874/berserx",
+   "team": "TS",
+   "rounds": 133,
+   "rating": 0.94,
+   "acs": 192.0
+  },
+  {
+   "player": "something",
+   "profile": "https://www.vlr.gg/player/17086/something",
+   "team": "PRX",
+   "rounds": 432,
+   "rating": 0.94,
+   "acs": 185.0
+  },
+  {
+   "player": "Francis",
+   "profile": "https://www.vlr.gg/player/31828/francis",
+   "team": "NS",
+   "rounds": 250,
+   "rating": 0.94,
+   "acs": 211.0
+  },
+  {
+   "player": "ZynX",
+   "profile": "https://www.vlr.gg/player/51099/zynx",
+   "team": "GEN",
+   "rounds": 266,
+   "rating": 0.94,
+   "acs": 210.0
+  },
+  {
+   "player": "d4v41",
+   "profile": "https://www.vlr.gg/player/9803/d4v41",
+   "team": "PRX",
+   "rounds": 432,
+   "rating": 0.93,
+   "acs": 187.0
+  },
+  {
+   "player": "yatsuka",
+   "profile": "https://www.vlr.gg/player/29843/yatsuka",
+   "team": "DFM",
+   "rounds": 323,
+   "rating": 0.93,
+   "acs": 184.0
+  },
+  {
+   "player": "SSeeS",
+   "profile": "https://www.vlr.gg/player/21438/ssees",
+   "team": "DFM",
+   "rounds": 323,
+   "rating": 0.91,
+   "acs": 161.0
+  },
+  {
+   "player": "stax",
+   "profile": "https://www.vlr.gg/player/485/stax",
+   "team": "T1",
+   "rounds": 346,
+   "rating": 0.9,
+   "acs": 157.0
+  },
+  {
+   "player": "Xdll",
+   "profile": "https://www.vlr.gg/player/25221/xdll",
+   "team": "ZETA",
+   "rounds": 198,
+   "rating": 0.88,
+   "acs": 167.0
+  },
+  {
+   "player": "Monyet",
+   "profile": "https://www.vlr.gg/player/8497/monyet",
+   "team": "RRQ",
+   "rounds": 348,
+   "rating": 0.87,
+   "acs": 196.0
+  },
+  {
+   "player": "JitBoyS",
+   "profile": "https://www.vlr.gg/player/13788/jitboys",
+   "team": "FS",
+   "rounds": 237,
+   "rating": 0.87,
+   "acs": 167.0
+  },
+  {
+   "player": "Caedye",
+   "profile": "https://www.vlr.gg/player/29841/caedye",
+   "team": "DFM",
+   "rounds": 323,
+   "rating": 0.87,
+   "acs": 199.0
+  },
+  {
+   "player": "Lakia",
+   "profile": "https://www.vlr.gg/player/773/lakia",
+   "team": "GEN",
+   "rounds": 266,
+   "rating": 0.86,
+   "acs": 171.0
+  },
+  {
+   "player": "crazyguy",
+   "profile": "https://www.vlr.gg/player/1430/crazyguy",
+   "team": "RRQ",
+   "rounds": 348,
+   "rating": 0.85,
+   "acs": 156.0
+  },
+  {
+   "player": "Hermes",
+   "profile": "https://www.vlr.gg/player/17049/hermes",
+   "team": "KRX",
+   "rounds": 339,
+   "rating": 0.85,
+   "acs": 173.0
+  },
+  {
+   "player": "Absol",
+   "profile": "https://www.vlr.gg/player/34776/absol",
+   "team": "ZETA",
+   "rounds": 198,
+   "rating": 0.85,
+   "acs": 196.0
+  },
+  {
+   "player": "oonzmlp",
+   "profile": "https://www.vlr.gg/player/34926/oonzmlp",
+   "team": "VL",
+   "rounds": 187,
+   "rating": 0.81,
+   "acs": 165.0
+  },
+  {
+   "player": "SyouTa",
+   "profile": "https://www.vlr.gg/player/12990/syouta",
+   "team": "ZETA",
+   "rounds": 198,
+   "rating": 0.8,
+   "acs": 156.0
+  },
+  {
+   "player": "TenTen",
+   "profile": "https://www.vlr.gg/player/29839/tenten",
+   "team": "TS",
+   "rounds": 133,
+   "rating": 0.79,
+   "acs": 171.0
+  },
+  {
+   "player": "thyy",
+   "profile": "https://www.vlr.gg/player/42901/thyy",
+   "team": "FS",
+   "rounds": 237,
+   "rating": 0.78,
+   "acs": 169.0
+  },
+  {
+   "player": "Sylvan",
+   "profile": "https://www.vlr.gg/player/4056/sylvan",
+   "team": "TS",
+   "rounds": 133,
+   "rating": 0.75,
+   "acs": 142.0
+  },
+  {
+   "player": "C1ndeR",
+   "profile": "https://www.vlr.gg/player/2149/c1nder",
+   "team": "VL",
+   "rounds": 187,
+   "rating": 0.66,
+   "acs": 131.0
+  }
+ ],
+ "https://www.vlr.gg/event/stats/2860/vct-2026-americas-stage-1": [
+  {
+   "player": "Neon",
+   "profile": "https://www.vlr.gg/player/29243/neon",
+   "team": "LEV",
+   "rounds": 543,
+   "rating": 1.25,
+   "acs": 227.0
+  },
+  {
+   "player": "brawk",
+   "profile": "https://www.vlr.gg/player/2172/brawk",
+   "team": "NRG",
+   "rounds": 489,
+   "rating": 1.24,
+   "acs": 225.0
+  },
+  {
+   "player": "Less",
+   "profile": "https://www.vlr.gg/player/8447/less",
+   "team": "KR\u00dc",
+   "rounds": 335,
+   "rating": 1.21,
+   "acs": 237.0
+  },
+  {
+   "player": "cortezia",
+   "profile": "https://www.vlr.gg/player/5395/cortezia",
+   "team": "SEN",
+   "rounds": 274,
+   "rating": 1.15,
+   "acs": 209.0
+  },
+  {
+   "player": "trent",
+   "profile": "https://www.vlr.gg/player/15500/trent",
+   "team": "G2",
+   "rounds": 608,
+   "rating": 1.15,
+   "acs": 202.0
+  },
+  {
+   "player": "erde",
+   "profile": "https://www.vlr.gg/player/29242/erde",
+   "team": "LOUD",
+   "rounds": 159,
+   "rating": 1.13,
+   "acs": 213.0
+  },
+  {
+   "player": "saadhak",
+   "profile": "https://www.vlr.gg/player/727/saadhak",
+   "team": "KR\u00dc",
+   "rounds": 335,
+   "rating": 1.11,
+   "acs": 211.0
+  },
+  {
+   "player": "mwzera",
+   "profile": "https://www.vlr.gg/player/939/mwzera",
+   "team": "KR\u00dc",
+   "rounds": 335,
+   "rating": 1.09,
+   "acs": 200.0
+  },
+  {
+   "player": "aspas",
+   "profile": "https://www.vlr.gg/player/8480/aspas",
+   "team": "MIBR",
+   "rounds": 323,
+   "rating": 1.09,
+   "acs": 212.0
+  },
+  {
+   "player": "keiko",
+   "profile": "https://www.vlr.gg/player/11494/keiko",
+   "team": "NRG",
+   "rounds": 489,
+   "rating": 1.09,
+   "acs": 218.0
+  },
+  {
+   "player": "bang",
+   "profile": "https://www.vlr.gg/player/3880/bang",
+   "team": "100T",
+   "rounds": 440,
+   "rating": 1.08,
+   "acs": 189.0
+  },
+  {
+   "player": "valyn",
+   "profile": "https://www.vlr.gg/player/3885/valyn",
+   "team": "G2",
+   "rounds": 608,
+   "rating": 1.08,
+   "acs": 199.0
+  },
+  {
+   "player": "Rossy",
+   "profile": "https://www.vlr.gg/player/1129/rossy",
+   "team": "ENVY",
+   "rounds": 231,
+   "rating": 1.07,
+   "acs": 204.0
+  },
+  {
+   "player": "BABYBAY",
+   "profile": "https://www.vlr.gg/player/2170/babybay",
+   "team": "G2",
+   "rounds": 608,
+   "rating": 1.07,
+   "acs": 212.0
+  },
+  {
+   "player": "Cryocells",
+   "profile": "https://www.vlr.gg/player/4147/cryocells",
+   "team": "100T",
+   "rounds": 440,
+   "rating": 1.07,
+   "acs": 203.0
+  },
+  {
+   "player": "artzin",
+   "profile": "https://www.vlr.gg/player/5957/artzin",
+   "team": "FUR",
+   "rounds": 360,
+   "rating": 1.07,
+   "acs": 211.0
+  },
+  {
+   "player": "lukxo",
+   "profile": "https://www.vlr.gg/player/28716/lukxo",
+   "team": "LOUD",
+   "rounds": 311,
+   "rating": 1.07,
+   "acs": 214.0
+  },
+  {
+   "player": "Reduxx",
+   "profile": "https://www.vlr.gg/player/8419/reduxx",
+   "team": "SEN",
+   "rounds": 274,
+   "rating": 1.06,
+   "acs": 218.0
+  },
+  {
+   "player": "blowz",
+   "profile": "https://www.vlr.gg/player/21251/blowz",
+   "team": "LEV",
+   "rounds": 543,
+   "rating": 1.06,
+   "acs": 181.0
+  },
+  {
+   "player": "Sato",
+   "profile": "https://www.vlr.gg/player/21659/sato",
+   "team": "LEV",
+   "rounds": 543,
+   "rating": 1.06,
+   "acs": 224.0
+  },
+  {
+   "player": "OXY",
+   "profile": "https://www.vlr.gg/player/18796/oxy",
+   "team": "C9",
+   "rounds": 253,
+   "rating": 1.05,
+   "acs": 238.0
+  },
+  {
+   "player": "Asuna",
+   "profile": "https://www.vlr.gg/player/601/asuna",
+   "team": "100T",
+   "rounds": 440,
+   "rating": 1.03,
+   "acs": 208.0
+  },
+  {
+   "player": "dgzin",
+   "profile": "https://www.vlr.gg/player/8873/dgzin",
+   "team": "EG",
+   "rounds": 259,
+   "rating": 1.03,
+   "acs": 224.0
+  },
+  {
+   "player": "zekken",
+   "profile": "https://www.vlr.gg/player/4004/zekken",
+   "team": "MIBR",
+   "rounds": 323,
+   "rating": 1.02,
+   "acs": 228.0
+  },
+  {
+   "player": "Verno",
+   "profile": "https://www.vlr.gg/player/21668/verno",
+   "team": "MIBR",
+   "rounds": 323,
+   "rating": 1.02,
+   "acs": 179.0
+  },
+  {
+   "player": "Notexxd",
+   "profile": "https://www.vlr.gg/player/39021/notexxd",
+   "team": "C9",
+   "rounds": 41,
+   "rating": 1.02,
+   "acs": 196.0
+  },
+  {
+   "player": "leaf",
+   "profile": "https://www.vlr.gg/player/7873/leaf",
+   "team": "G2",
+   "rounds": 608,
+   "rating": 1.01,
+   "acs": 201.0
+  },
+  {
+   "player": "kiNgg",
+   "profile": "https://www.vlr.gg/player/8549/kingg",
+   "team": "LEV",
+   "rounds": 543,
+   "rating": 1.01,
+   "acs": 175.0
+  },
+  {
+   "player": "Timotino",
+   "profile": "https://www.vlr.gg/player/29893/timotino",
+   "team": "100T",
+   "rounds": 440,
+   "rating": 1.01,
+   "acs": 225.0
+  },
+  {
+   "player": "Ethan",
+   "profile": "https://www.vlr.gg/player/11225/ethan",
+   "team": "NRG",
+   "rounds": 489,
+   "rating": 1.0,
+   "acs": 188.0
+  },
+  {
+   "player": "mada",
+   "profile": "https://www.vlr.gg/player/5132/mada",
+   "team": "NRG",
+   "rounds": 489,
+   "rating": 0.99,
+   "acs": 203.0
+  },
+  {
+   "player": "v1c",
+   "profile": "https://www.vlr.gg/player/17433/v1c",
+   "team": "C9",
+   "rounds": 212,
+   "rating": 0.99,
+   "acs": 170.0
+  },
+  {
+   "player": "Demon1",
+   "profile": "https://www.vlr.gg/player/26171/demon1",
+   "team": "ENVY",
+   "rounds": 231,
+   "rating": 0.99,
+   "acs": 197.0
+  },
+  {
+   "player": "Paincakes",
+   "profile": "https://www.vlr.gg/player/2164/paincakes",
+   "team": "EG",
+   "rounds": 67,
+   "rating": 0.98,
+   "acs": 183.0
+  },
+  {
+   "player": "Darker",
+   "profile": "https://www.vlr.gg/player/10557/darker",
+   "team": "LOUD",
+   "rounds": 311,
+   "rating": 0.98,
+   "acs": 204.0
+  },
+  {
+   "player": "keznit",
+   "profile": "https://www.vlr.gg/player/2462/keznit",
+   "team": "ENVY",
+   "rounds": 231,
+   "rating": 0.97,
+   "acs": 223.0
+  },
+  {
+   "player": "cauanzin",
+   "profile": "https://www.vlr.gg/player/6193/cauanzin",
+   "team": "LOUD",
+   "rounds": 311,
+   "rating": 0.96,
+   "acs": 171.0
+  },
+  {
+   "player": "zerona",
+   "profile": "https://www.vlr.gg/player/14048/zerona",
+   "team": "EG",
+   "rounds": 67,
+   "rating": 0.96,
+   "acs": 218.0
+  },
+  {
+   "player": "eeiu",
+   "profile": "https://www.vlr.gg/player/796/eeiu",
+   "team": "FUR",
+   "rounds": 360,
+   "rating": 0.95,
+   "acs": 179.0
+  },
+  {
+   "player": "johnqt",
+   "profile": "https://www.vlr.gg/player/1265/johnqt",
+   "team": "SEN",
+   "rounds": 274,
+   "rating": 0.95,
+   "acs": 167.0
+  },
+  {
+   "player": "jawgemo",
+   "profile": "https://www.vlr.gg/player/3993/jawgemo",
+   "team": "G2",
+   "rounds": 608,
+   "rating": 0.94,
+   "acs": 209.0
+  },
+  {
+   "player": "Mazino",
+   "profile": "https://www.vlr.gg/player/7603/mazino",
+   "team": "MIBR",
+   "rounds": 323,
+   "rating": 0.94,
+   "acs": 187.0
+  },
+  {
+   "player": "penny",
+   "profile": "https://www.vlr.gg/player/7716/penny",
+   "team": "C9",
+   "rounds": 153,
+   "rating": 0.94,
+   "acs": 193.0
+  },
+  {
+   "player": "spike",
+   "profile": "https://www.vlr.gg/player/21661/spike",
+   "team": "LEV",
+   "rounds": 543,
+   "rating": 0.93,
+   "acs": 230.0
+  },
+  {
+   "player": "nerve",
+   "profile": "https://www.vlr.gg/player/754/nerve",
+   "team": "FUR",
+   "rounds": 360,
+   "rating": 0.92,
+   "acs": 170.0
+  },
+  {
+   "player": "vora",
+   "profile": "https://www.vlr.gg/player/20140/vora",
+   "team": "100T",
+   "rounds": 440,
+   "rating": 0.92,
+   "acs": 167.0
+  },
+  {
+   "player": "alym",
+   "profile": "https://www.vlr.gg/player/48025/alym",
+   "team": "FUR",
+   "rounds": 360,
+   "rating": 0.91,
+   "acs": 212.0
+  },
+  {
+   "player": "skuba",
+   "profile": "https://www.vlr.gg/player/11118/skuba",
+   "team": "NRG",
+   "rounds": 489,
+   "rating": 0.9,
+   "acs": 169.0
+  },
+  {
+   "player": "Jackk",
+   "profile": "https://www.vlr.gg/player/44842/jackk",
+   "team": "C9",
+   "rounds": 100,
+   "rating": 0.9,
+   "acs": 166.0
+  },
+  {
+   "player": "P0PPIN",
+   "profile": "https://www.vlr.gg/player/21778/p0ppin",
+   "team": "ENVY",
+   "rounds": 231,
+   "rating": 0.89,
+   "acs": 181.0
+  },
+  {
+   "player": "supamen",
+   "profile": "https://www.vlr.gg/player/826/supamen",
+   "team": "EG",
+   "rounds": 259,
+   "rating": 0.88,
+   "acs": 172.0
+  },
+  {
+   "player": "JonahP",
+   "profile": "https://www.vlr.gg/player/4581/jonahp",
+   "team": "SEN",
+   "rounds": 274,
+   "rating": 0.88,
+   "acs": 179.0
+  },
+  {
+   "player": "Xeppaa",
+   "profile": "https://www.vlr.gg/player/7871/xeppaa",
+   "team": "C9",
+   "rounds": 253,
+   "rating": 0.88,
+   "acs": 186.0
+  },
+  {
+   "player": "silentzz",
+   "profile": "https://www.vlr.gg/player/11921/silentzz",
+   "team": "KR\u00dc",
+   "rounds": 335,
+   "rating": 0.88,
+   "acs": 171.0
+  },
+  {
+   "player": "tex",
+   "profile": "https://www.vlr.gg/player/1818/tex",
+   "team": "MIBR",
+   "rounds": 323,
+   "rating": 0.86,
+   "acs": 167.0
+  },
+  {
+   "player": "bao",
+   "profile": "https://www.vlr.gg/player/34400/bao",
+   "team": "EG",
+   "rounds": 259,
+   "rating": 0.86,
+   "acs": 181.0
+  },
+  {
+   "player": "Okeanos",
+   "profile": "https://www.vlr.gg/player/8373/okeanos",
+   "team": "EG",
+   "rounds": 192,
+   "rating": 0.85,
+   "acs": 175.0
+  },
+  {
+   "player": "koalanoob",
+   "profile": "https://www.vlr.gg/player/3722/koalanoob",
+   "team": "FUR",
+   "rounds": 360,
+   "rating": 0.84,
+   "acs": 182.0
+  },
+  {
+   "player": "Zellsis",
+   "profile": "https://www.vlr.gg/player/729/zellsis",
+   "team": "C9",
+   "rounds": 253,
+   "rating": 0.83,
+   "acs": 167.0
+  },
+  {
+   "player": "Jerrwin",
+   "profile": "https://www.vlr.gg/player/34057/jerrwin",
+   "team": "SEN",
+   "rounds": 231,
+   "rating": 0.82,
+   "acs": 196.0
+  },
+  {
+   "player": "Virtyy",
+   "profile": "https://www.vlr.gg/player/3983/virtyy",
+   "team": "LOUD",
+   "rounds": 311,
+   "rating": 0.81,
+   "acs": 182.0
+  },
+  {
+   "player": "Dantedeu5",
+   "profile": "https://www.vlr.gg/player/41135/dantedeu5",
+   "team": "KR\u00dc",
+   "rounds": 335,
+   "rating": 0.81,
+   "acs": 186.0
+  },
+  {
+   "player": "C0M",
+   "profile": "https://www.vlr.gg/player/619/c0m",
+   "team": "EG",
+   "rounds": 192,
+   "rating": 0.76,
+   "acs": 152.0
+  },
+  {
+   "player": "Eggsterr",
+   "profile": "https://www.vlr.gg/player/35302/eggsterr",
+   "team": "ENVY",
+   "rounds": 231,
+   "rating": 0.72,
+   "acs": 174.0
+  },
+  {
+   "player": "Victor",
+   "profile": "https://www.vlr.gg/player/261/victor",
+   "team": "SEN",
+   "rounds": 43,
+   "rating": 0.7,
+   "acs": 192.0
+  },
+  {
+   "player": "Bati",
+   "profile": "https://www.vlr.gg/player/5203/bati",
+   "team": "LOUD",
+   "rounds": 152,
+   "rating": 0.7,
+   "acs": 140.0
+  }
+ ]
+}

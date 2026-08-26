@@ -5,11 +5,21 @@ measured over the domestic split immediately before the tournament.
 
 Writes data/enriched/star_power.json for the Championship DNA article.
 
-Rating is a ROUNDS-WEIGHTED mean of per-map R2.0, which is how VLR aggregates
-and is the reason this reads data/maps rather than data/series. The series rows
-are also the ones VLR can publish mid-window with a single map's numbers in the
-"all maps" line (see scrapers/MatchStatsIntegrity.py); per-map rows are not
-exposed to that.
+The board is READ FROM VLR, not recomputed. An earlier version aggregated
+per-map ratings locally and landed within 0.01 of VLR on almost every player --
+but "almost" is not good enough for a rank, and the card links straight to the
+page a reader can check it against:
+
+  * VLR's round minimum for an event page is lower than any sensible local one.
+    mwzera cleared it at Champions Tour 2024: Americas Kickoff on 90 rounds and
+    sat top of the board; a 100-round cut dropped him and moved everyone below
+    him up a place.
+  * Ties at two decimals are common and VLR breaks them on values it does not
+    publish. keznit and zekken both show 1.14 there, ordered keznit first,
+    while the local numbers ordered them the other way.
+
+Boards are cached to data/enriched/vlr_boards.json, so a rebuild costs nothing
+unless a new event is added or the cache is deleted.
 
 The rank is the player's position on that event's leaderboard, among everyone
 who cleared the round minimum, so it says how good the performance was against
@@ -78,6 +88,70 @@ def _stats_urls():
     return out
 
 
+BOARDS = os.path.join(ROOT, "data", "enriched", "vlr_boards.json")
+
+
+def _fetch_board(url):
+    """One VLR event stats page -> [{player, profile, team, rounds, rating, acs}]."""
+    from curl_cffi import requests as cr
+    from bs4 import BeautifulSoup
+    r = cr.get(url, impersonate="chrome131", timeout=30)
+    r.raise_for_status()
+    tbl = BeautifulSoup(r.text, "html.parser").find("table")
+    if tbl is None:
+        return []
+    out = []
+    for tr in tbl.find_all("tr")[1:]:
+        cell = tr.find("td")
+        a = cell.find("a") if cell else None
+        name = cell.select_one(".st-pl-name") if cell else None
+        if not a or not name:
+            continue
+        team = cell.select_one(".st-pl-country")
+
+        def col(c):
+            td = tr.find("td", attrs={"data-col": c})
+            return td.get_text(strip=True) if td else ""
+
+        def num(c):
+            try:
+                return float(col(c))
+            except ValueError:
+                return None
+
+        out.append({
+            "player":  name.get_text(strip=True),
+            "profile": "https://www.vlr.gg" + a["href"],
+            "team":    team.get_text(strip=True) if team else "",
+            "rounds":  int(num("rnd") or 0),
+            "rating":  num("rating2"),
+            "acs":     num("acs"),
+        })
+    return out
+
+
+def boards_for(urls, refresh=False):
+    """Cached VLR boards, keyed by stats URL."""
+    try:
+        cache = json.load(open(BOARDS))
+    except Exception:
+        cache = {}
+    fetched = 0
+    for u in urls:
+        if u and (refresh or u not in cache):
+            try:
+                cache[u] = _fetch_board(u)
+                fetched += 1
+                print(f"  fetched {len(cache[u]):>3} rows  {u}")
+            except Exception as e:
+                print(f"  [warn] {u}: {e}")
+                cache.setdefault(u, [])
+    if fetched:
+        os.makedirs(os.path.dirname(BOARDS), exist_ok=True)
+        json.dump(cache, open(BOARDS, "w"), indent=1)
+    return cache
+
+
 def _map_rounds():
     """(match_id, map_num) -> rounds played, and -> event."""
     r = pd.read_csv(os.path.join(ROOT, "data", "enriched", "round_outcomes.csv"),
@@ -106,26 +180,8 @@ def _player_maps():
     return m.drop_duplicates(["Player", "MatchID", "MapNum"])
 
 
-def build():
-    rounds, ev_of_map = _map_rounds()
-    m = _player_maps()
-    key = list(zip(m.MatchID, m.MapNum))
-    m["rounds"] = [rounds.get(k, 0) for k in key]
-    m["event"]  = [ev_of_map.get(k) for k in key]
-    m = m[(m.rounds > 0) & m.event.notna() & ~m.Org.isin(_NOT_ORGS)]
-
-    def board_for(stat):
-        """Rounds-weighted mean of `stat` per (player, event)."""
-        d = m.dropna(subset=[stat]).copy()
-        d["w"] = d[stat] * d.rounds
-        g = (d.groupby(["event", "Player", "Org", "ProfileURL"], as_index=False)
-               .agg(w=("w", "sum"), rounds=("rounds", "sum"), maps=("MapNum", "size")))
-        g["val"] = g.w / g.rounds
-        return g
-
-    agg = board_for("R2.0")
-    agg_acs = board_for("ACS")
-
+def build(refresh=False):
+    skipped_early = []
     sp = side_rates(); sp = sp[~sp.org.isin(_NOT_ORGS)]
     sp["is_split"]  = sp.event.str.contains(_SPLIT_RE, regex=True) & ~sp.event.isin(_INTL_SET)
     sp["is_franch"] = sp.event.str.match(_FRANCHISED_RE)
@@ -137,60 +193,65 @@ def build():
     heads   = json.load(open(os.path.join(ROOT, "data", "headshots.json")))
     stats   = _stats_urls()
 
-    def top_of(board, org, event):
-        """Best qualified player from `org` at `event`, with their overall rank."""
-        b = board[(board.event == event) & (board.rounds >= MIN_ROUNDS)]
-        b = b.sort_values("val", ascending=False).reset_index(drop=True)
-        mine = b[b.Org == org]
-        if b.empty or mine.empty:
-            return None
-        i = mine.index[0]
-        row = b.loc[i]
-        return {"player": row.Player, "profile": row.ProfileURL,
-                "head": heads.get(row.ProfileURL) or "",
-                "val": float(row.val), "rank": int(i) + 1, "pool": int(len(b)),
-                "rounds": int(row.rounds), "maps": int(row.maps)}
-
-    out, skipped = [], []
+    # Work out every card's target first, then fetch the boards in one pass.
+    plan = []
     for ev, _ in EVENTS:
         org = winners.get(ev)
         if org is None or ev not in starts.index:
-            skipped.append(f"{label[ev]} (no winner or start date)"); continue
-        card = {"intl": label[ev], "org": org}
-
+            skipped_early.append(f"{label[ev]} (no winner or start date)"); continue
         before = sp[(sp.org == org) & (sp.date < starts[ev]) & (sp.event != ev)]
         splits = before[before.is_split].sort_values("date")
         franch = before[before.is_franch].sort_values("date")
-
         if splits.empty:
-            card.update(kind="nodata", note="No prior data")
+            kind, prior = "nodata", None
         elif franch.empty or franch.iloc[-1].event != splits.iloc[-1].event:
             # A split ran, but an international came after it -- so the split is
             # not the last thing this roster played.
-            card.update(kind="nostage", note="No domestic stage")
+            kind, prior = "nostage", None
         else:
-            pe = splits.iloc[-1].event
-            card["prior"] = pe
-            hit = top_of(agg, org, pe)
-            if hit:
-                card.update(kind="rating", stat="VLR-rating", **hit)
-                card["val"] = round(card["val"], 2)
-            else:
-                hit = top_of(agg_acs, org, pe)
-                if hit:
-                    card.update(kind="acs", stat="ACS", note="No VLR-rating published", **hit)
-                    card["val"] = round(card["val"], 1)
-                else:
-                    card.update(kind="nodata", note="No player data")
-                    skipped.append(f"{org} @ {label[ev]}: nothing usable in {pe}")
-        # Link target: the leaderboard the number came from. Cards with no
-        # split fall back to the tournament's own stats page.
-        card["url"] = stats.get(_slug(card.get("prior") or ev)) or stats.get(_slug(ev)) or ""
-        if not card["url"]:
-            skipped.append(f"{label[ev]}: no VLR stats URL for {card.get('prior') or ev}")
+            kind, prior = "measured", splits.iloc[-1].event
+        url = stats.get(_slug(prior or ev)) or stats.get(_slug(ev)) or ""
+        plan.append((ev, org, kind, prior, url))
+
+    cache = boards_for([u for _, _, k, _, u in plan if u and k == "measured"], refresh=refresh)
+
+    out, skipped = [], list(skipped_early)
+    for ev, org, kind, prior, url in plan:
+        card = {"intl": label[ev], "org": org, "url": url}
+        if kind != "measured":
+            card.update(kind=kind,
+                        note="No prior data" if kind == "nodata" else "No domestic stage")
+            out.append(card); continue
+
+        board = cache.get(url) or []
+        # VLR publishes no rating2 for the 2024 CN splits -- full boards, empty R
+        # column -- so those fall back to ACS, which is populated.
+        stat = "rating" if any(r.get("rating") is not None for r in board) else "acs"
+        ranked = [r for r in board if r.get(stat) is not None]
+        if stat == "acs":
+            # VLR sorts its page by rating. With the rating column empty that
+            # order carries no meaning, so the ACS board has to be sorted here --
+            # taking VLR's row order put EDG's 50th-best ACS on the card.
+            ranked.sort(key=lambda r: -r["acs"])
+        mine = [r for r in ranked if r["team"] == org]
+        if not mine:
+            card.update(kind="nodata", note="No player data", prior=prior)
+            skipped.append(f"{org} @ {label[ev]}: no {org} row on {url}")
+            out.append(card); continue
+
+        # VLR's own order is the ranking; do not re-sort, since it breaks ties on
+        # values it does not publish.
+        best = mine[0]
+        card.update(kind="rating" if stat == "rating" else "acs",
+                    prior=prior, player=best["player"], profile=best["profile"],
+                    head=heads.get(best["profile"]) or "",
+                    val=best[stat], rank=ranked.index(best) + 1, pool=len(ranked),
+                    rounds=best["rounds"])
+        if stat == "acs":
+            card["note"] = "No VLR-rating published"
         out.append(card)
 
-    payload = {"stars": out, "min_rounds": MIN_ROUNDS, "skipped": skipped}
+    payload = {"stars": out, "skipped": skipped}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:
         json.dump(payload, f, indent=1)
@@ -199,7 +260,7 @@ def build():
 
 if __name__ == "__main__":
     p = build()
-    print(f"wrote {OUT}   (min {p['min_rounds']} rounds to qualify)")
+    print(f"wrote {OUT}")
     for s in p["stars"]:
         if s["kind"] in ("rating", "acs"):
             print(f"  {s['org']:<4} {s['intl']:<22} {s['kind']:<7} {s['player']:<12} "
