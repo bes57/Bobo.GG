@@ -19,6 +19,7 @@ article_championship_dna_bp = Blueprint("article_championship_dna", __name__)
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 _LANDSCAPE = os.path.join(_ROOT, "data", "enriched", "side_landscape.json")
 _STREAKS   = os.path.join(_ROOT, "data", "enriched", "momentum_streaks.json")
+_STARS     = os.path.join(_ROOT, "data", "enriched", "star_power.json")
 
 # Each international's "Before <event>" snapshot. Ranks are read through
 # MapElo.benpom_snapshot_board so the article shows exactly what
@@ -48,7 +49,8 @@ def _landscape():
     try:
         # Keyed on both files: the streaks ride along in the same payload, so a
         # rebuild of either one has to invalidate the cache.
-        stamp = (os.path.getmtime(_LANDSCAPE), os.path.getmtime(_STREAKS))
+        stamp = (os.path.getmtime(_LANDSCAPE), os.path.getmtime(_STREAKS),
+                 os.path.getmtime(_STARS))
     except OSError:
         return {"points": [], "internationals": []}
     if _ls_cache[0] is not None and _ls_cache[1] == stamp:
@@ -59,16 +61,18 @@ def _landscape():
     except Exception:
         data = {"points": [], "internationals": []}
     data["winner_ranks"] = _winner_ranks(data.get("winners") or {})
-    try:
-        with open(_STREAKS) as f:
-            _s = json.load(f)
-        data["streaks"] = _s.get("winners") or []
-        data["last5"] = _s.get("tally") or []
-        data["success"] = _s.get("success") or []
-    except Exception:
-        data["streaks"] = []
-        data["last5"] = []
-        data["success"] = []
+    # Each side file is loaded on its own, so a missing or half-written one
+    # blanks its own section instead of taking the others down with it.
+    for path, keys in ((_STREAKS, (("streaks", "winners"), ("last5", "tally"),
+                                   ("success", "success"))),
+                       (_STARS,   (("stars", "stars"),))):
+        try:
+            with open(path) as f:
+                blob = json.load(f)
+        except Exception:
+            blob = {}
+        for dest, src in keys:
+            data[dest] = blob.get(src) or []
     _ls_cache = (data, stamp)
     return data
 
@@ -241,6 +245,34 @@ PAGE_HTML = """
   .chart-tip .rt-row img { width:17px; height:17px; object-fit:contain; flex:0 0 17px; }
   .chart-tip .rt-place { color:#c9bfd6; }
   .tip-wrap { overflow:visible; }
+  /* Star cards. A grid rather than a chart: the headshot is the point, and
+     nine of them read better side by side than as labelled marks. */
+  .stars { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  .star { background:#fff; border:1px solid #ece6f2; border-radius:16px; padding:16px 16px 14px;
+          box-shadow:0 4px 20px #0000000a; display:flex; align-items:center; gap:14px; }
+  .star-face { position:relative; flex:0 0 62px; width:62px; height:62px; border-radius:50%;
+               background:#f3eefb; overflow:hidden; display:flex; align-items:center;
+               justify-content:center; }
+  .star-face img { width:100%; height:100%; object-fit:cover; object-position:top center; }
+  /* Not every player has a headshot on file, so the initial stands in. */
+  .star-face span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.5rem;
+                    color:#b9a9d4; }
+  .star-face .star-org { position:absolute; right:-2px; bottom:-2px; width:24px; height:24px;
+                         border-radius:50%; background:#fff; border:1px solid #ece6f2;
+                         display:flex; align-items:center; justify-content:center; }
+  .star-face .star-org img { width:17px; height:17px; object-fit:contain; }
+  .star-body { min-width:0; flex:1 1 auto; }
+  .star-name { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.02rem;
+               color:#16121d; line-height:1.2; }
+  .star-evt { font-size:.72rem; color:var(--soft); margin-top:2px; }
+  .star-line { display:flex; align-items:baseline; gap:8px; margin-top:7px; }
+  .star-rating { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.36rem;
+                 color:#7c4dd6; line-height:1; }
+  .star-rank { font-size:.72rem; color:var(--soft); }
+  .star-rank b { color:#3d1a6e; font-weight:800; }
+  .star-split { font-size:.66rem; color:var(--soft); margin-top:4px; }
+  @media (max-width:900px) { .stars { grid-template-columns:repeat(2, 1fr); } }
+  @media (max-width:620px) { .stars { grid-template-columns:1fr; } }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -282,6 +314,7 @@ PAGE_HTML = """
   <a href="#sec-tiers" class="sub">Bands of Favoritism</a>
   <a href="#sec-benpom" class="sub">BenPom Rank</a>
   <a href="#sec-momentum" class="sub">Momentum</a>
+  <a href="#sec-stars" class="sub">Star Power</a>
 </nav>
 <div class="page">
   <div class="article">
@@ -380,6 +413,14 @@ PAGE_HTML = """
       </figure>
 
       <p>The trend is there, but it&rsquo;s nothing more extreme than we would&rsquo;ve expected. Let&rsquo;s move on!</p>
+
+      <hr class="secbreak">
+
+      <p id="sec-stars">One last trope that surrounds champions in practically all sports is the notion of <em>star power</em>. It&rsquo;s an arbitrary notion, but the idea is that to be a champion, you have to have an elite player who can rise in the most important matches/moments. In VCT, our best comprehensive statistic for player quality is VLR-rating, so let&rsquo;s use that to look at each championship team&rsquo;s best player:</p>
+
+      <figure class="fig">
+        <div class="stars" id="starGrid"></div>
+      </figure>
     </div>
   </div>
 </div>
@@ -1173,6 +1214,37 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     plugins: [plate, rankMarks]
   });
   charts.push(c);
+})();
+
+// Star cards. Plain DOM, not Chart.js -- these are portraits with numbers
+// attached, and nothing here is plotted against an axis.
+(function () {
+  const grid = document.getElementById('starGrid');
+  if (!grid || !LS.stars || !LS.stars.length) return;
+  const esc = t => String(t).replace(/[&<>"]/g, c =>
+    ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+  // A split name reads better without the season prefix repeated nine times.
+  // Backslashes are doubled through this file: PAGE_HTML is a plain (non-raw)
+  // triple-quote, so a single one in a JS regex is an invalid Python escape --
+  // a warning today, an error in a later Python.
+  const split = t => String(t).replace(/^(Champions Tour|VCT)\\s+/, '').replace(/^(\\d{4}):\\s*/, '$1 ');
+
+  grid.innerHTML = LS.stars.map(s => {
+    const face = s.head
+      ? '<img src="' + esc(s.head) + '" alt="" loading="lazy">'
+      : '<span>' + esc(s.player.slice(0, 1).toUpperCase()) + '</span>';
+    return '<div class="star">'
+      + '<div class="star-face">' + face
+      +   '<span class="star-org"><img src="/logos/' + esc(s.org) + '.png" alt=""></span>'
+      + '</div>'
+      + '<div class="star-body">'
+      +   '<div class="star-name">' + esc(s.player) + '</div>'
+      +   '<div class="star-evt">' + esc(s.org) + ' &middot; ' + esc(s.intl) + '</div>'
+      +   '<div class="star-line"><span class="star-rating">' + s.rating.toFixed(2) + '</span>'
+      +     '<span class="star-rank"><b>#' + s.rank + '</b> of ' + s.pool + ' in the split</span></div>'
+      +   '<div class="star-split">' + esc(split(s.prior)) + ' &middot; ' + s.rounds + ' rounds</div>'
+      + '</div></div>';
+  }).join('');
 })();
 
 // In-text mentions drive the first chart.
