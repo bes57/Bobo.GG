@@ -603,7 +603,7 @@ PAGE_HTML = """
 
       <div class="takeaway takeaway--roster">
         <b>Every international-winning roster since Masters Tokyo has featured a player in their rookie year.</b>
-        <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Sylvan on T1, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and finally spikziN/blowz/Neon on LEV.</span>
+        <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Sylvan on T1, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and spikziN/blowz/Neon on LEV.</span>
       </div>
 
       <p>This speaks to the continuous influx of top-level talent in VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent. Even if it means adding newer talent into a roster with veterans.</p>
