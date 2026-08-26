@@ -280,6 +280,12 @@ PAGE_HTML = """
               font-style:italic; font-size:1.32rem; line-height:1.3; color:#3d1a6e;
               letter-spacing:-0.2px; }
   .takeaway span { margin-top:34px; }
+  /* The rookie bubble carries a headline and a roster list rather than two
+     short claims, so it takes the full figure width and drops the list to
+     reading size. */
+  .takeaway--roster { max-width:1120px; text-align:left; padding:26px 30px; }
+  .takeaway--roster b { font-size:1.24rem; line-height:1.35; }
+  .takeaway--roster span { font-size:1rem; font-weight:600; line-height:1.65; margin-top:16px; }
   /* Sections legend, top-right, matching every other article. Its width is
      clamped to the gutter beside the
      centred content — but this article's figures break out to 1120px, so the
@@ -590,6 +596,19 @@ PAGE_HTML = """
       <figure class="fig">
         <div class="rosters">__ROSTERS__</div>
       </figure>
+
+      <p>There&rsquo;s a more interesting observation, though:</p>
+
+      <div class="takeaway takeaway--roster">
+        <b>Every international-winning roster since Masters Tokyo has featured a player in their rookie year.</b>
+        <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Sylvan on T1, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and finally spikziN/blowz/Neon on LEV.</span>
+      </div>
+
+      <p>This speaks to the continuous influx of top-level talent in VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent. Even if it means adding newer talent into a roster with veterans.</p>
+
+      <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned in the final stages of the two Masters events this year - by Nongshim at Masters Santiago and Leviatan at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
+
+      <p>What&rsquo;s even more damming is that every team that&rsquo;s won Champions specifically has made a mid-season roster change to add a rookie.</p>
     </div>
   </div>
 </div>
