@@ -615,6 +615,8 @@ PAGE_HTML = """
       <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned by teams with a rookie/rookies in the final stages of the two Masters events this year - by Nongshim at Masters Santiago and Leviatan at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
 
       <p>What&rsquo;s even more damning is that every team that&rsquo;s won Champions specifically has made a mid-season roster change to add a rookie. This is a low sample size observation, but I&rsquo;m curious as to whether this trend continues at Champions Shanghai.</p>
+
+      <p class="fig-note below"><em>Note: This trend implicates teams like Leviatan, Vitality, and Fut</em></p>
     </div>
   </div>
 </div>
