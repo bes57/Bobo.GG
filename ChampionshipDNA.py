@@ -616,7 +616,7 @@ PAGE_HTML = """
 
       <p>What&rsquo;s even more damning is that every team that&rsquo;s won Champions specifically has made a mid-season roster change to add a rookie. This is a low sample size observation, but I&rsquo;m curious as to whether this trend continues at Champions Shanghai.</p>
 
-      <p><em>Note: This trend implicates teams like Leviatan, Vitality, and Fut</em></p>
+      <p><em>Note: This Champions trend implicates teams like Leviatan, Vitality, and Fut</em></p>
     </div>
   </div>
 </div>
