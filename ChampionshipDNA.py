@@ -448,7 +448,7 @@ PAGE_HTML = """
 
       <figure class="fig">
         <div class="stars" id="starGrid"></div>
-        <p class="fig-note below"><em>For EDG at Champions Seoul, I just used ACS since VLR rating wasn&rsquo;t calculated in domestic CN splits until 2025</em></p>
+        <p class="fig-note below"><em>Note: For EDG at Champions Seoul, I just used ACS since VLR rating wasn&rsquo;t calculated in domestic CN splits until 2025</em></p>
       </figure>
     </div>
   </div>
