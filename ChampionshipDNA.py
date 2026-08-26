@@ -264,17 +264,21 @@ PAGE_HTML = """
      still falls back to a plain div when one is missing. */
   a.star:hover { transform:translateY(-2px); border-color:#d9c9f0;
                  box-shadow:0 10px 26px #7c4dd61f; }
+  /* No overflow:hidden here. The circle is clipped on the portrait itself, so
+     the team badge can hang off the edge instead of being sliced by the
+     parent's rounding. */
   .star-face { position:relative; flex:0 0 62px; width:62px; height:62px; border-radius:50%;
-               background:#f3eefb; overflow:hidden; display:flex; align-items:center;
-               justify-content:center; }
-  .star-face img { width:100%; height:100%; object-fit:cover; object-position:top center; }
+               background:#f3eefb; display:flex; align-items:center; justify-content:center; }
+  .star-face > img { width:100%; height:100%; border-radius:50%;
+                     object-fit:cover; object-position:top center; }
   /* Not every player has a headshot on file, so the initial stands in. */
   .star-face span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.5rem;
                     color:#b9a9d4; }
-  .star-face .star-org { position:absolute; right:-2px; bottom:-2px; width:24px; height:24px;
+  .star-face .star-org { position:absolute; right:-5px; bottom:-4px; width:26px; height:26px;
                          border-radius:50%; background:#fff; border:1px solid #ece6f2;
+                         box-shadow:0 1px 5px #0000001a;
                          display:flex; align-items:center; justify-content:center; }
-  .star-face .star-org img { width:17px; height:17px; object-fit:contain; }
+  .star-face .star-org img { width:18px; height:18px; object-fit:contain; }
   .star-body { min-width:0; flex:1 1 auto; }
   .star-name { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.02rem;
                color:#16121d; line-height:1.2; }
@@ -297,7 +301,7 @@ PAGE_HTML = """
   .content .fig-note.below { margin:14px 0 0; }
   .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
   .star-face--org { background:#fff; border:1px solid #ece6f2; }
-  .star-face--org img { width:60%; height:60%; object-fit:contain; }
+  .star-face--org > img { width:60%; height:60%; border-radius:0; object-fit:contain; }
   .star-none { font-size:.76rem; font-style:italic; color:var(--soft); margin-top:8px; }
   @media (max-width:900px) { .star-row { grid-template-columns:repeat(2, 1fr); } }
   @media (max-width:620px) { .star-row { grid-template-columns:1fr; } }
