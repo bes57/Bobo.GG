@@ -1,0 +1,86 @@
+{
+ "winners": [
+  {
+   "org": "FNC",
+   "intl": "Masters Tokyo 2023",
+   "prior": "Champions Tour 2023: EMEA League",
+   "streak": 1,
+   "result": "L",
+   "record": "11-1",
+   "seq": "WWWWWWWWWWWL"
+  },
+  {
+   "org": "SEN",
+   "intl": "Masters Madrid 2024",
+   "prior": "Champions Tour 2024: Americas Kickoff",
+   "streak": 2,
+   "result": "W",
+   "record": "5-2",
+   "seq": "LWWWLWW"
+  },
+  {
+   "org": "GEN",
+   "intl": "Masters Shanghai 2024",
+   "prior": "Champions Tour 2024: Pacific Stage 1",
+   "streak": 1,
+   "result": "L",
+   "record": "5-5",
+   "seq": "WLWLWLLWWL"
+  },
+  {
+   "org": "EDG",
+   "intl": "Champions 2024",
+   "prior": "Champions Tour 2024: China Stage 2",
+   "streak": 5,
+   "result": "W",
+   "record": "5-2",
+   "seq": "LLWWWWW"
+  },
+  {
+   "org": "T1",
+   "intl": "Masters Bangkok 2025",
+   "prior": "VCT 2025: Pacific Kickoff",
+   "streak": 1,
+   "result": "L",
+   "record": "4-2",
+   "seq": "WWWLWL"
+  },
+  {
+   "org": "PRX",
+   "intl": "Masters Toronto 2025",
+   "prior": "VCT 2025: Pacific Stage 1",
+   "streak": 1,
+   "result": "L",
+   "record": "5-4",
+   "seq": "LLLWWWWWL"
+  },
+  {
+   "org": "NRG",
+   "intl": "Champions 2025",
+   "prior": "VCT 2025: Americas Stage 2",
+   "streak": 1,
+   "result": "L",
+   "record": "7-3",
+   "seq": "LWWWWLWWWL"
+  },
+  {
+   "org": "NS",
+   "intl": "Masters Santiago 2026",
+   "prior": "VCT 2026: Pacific Kickoff",
+   "streak": 4,
+   "result": "W",
+   "record": "4-0",
+   "seq": "WWWW"
+  },
+  {
+   "org": "LEV",
+   "intl": "Masters London 2026",
+   "prior": "VCT 2026: Americas Stage 1",
+   "streak": 1,
+   "result": "L",
+   "record": "6-3",
+   "seq": "WWWLLWWWL"
+  }
+ ],
+ "skipped": []
+}

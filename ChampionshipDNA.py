@@ -18,6 +18,7 @@ article_championship_dna_bp = Blueprint("article_championship_dna", __name__)
 
 _ROOT = os.path.dirname(os.path.abspath(__file__))
 _LANDSCAPE = os.path.join(_ROOT, "data", "enriched", "side_landscape.json")
+_STREAKS   = os.path.join(_ROOT, "data", "enriched", "momentum_streaks.json")
 
 # Each international's "Before <event>" snapshot. Ranks are read through
 # MapElo.benpom_snapshot_board so the article shows exactly what
@@ -45,7 +46,9 @@ def _landscape():
     there for why it is precomputed rather than derived per request."""
     global _ls_cache
     try:
-        stamp = os.path.getmtime(_LANDSCAPE)
+        # Keyed on both files: the streaks ride along in the same payload, so a
+        # rebuild of either one has to invalidate the cache.
+        stamp = (os.path.getmtime(_LANDSCAPE), os.path.getmtime(_STREAKS))
     except OSError:
         return {"points": [], "internationals": []}
     if _ls_cache[0] is not None and _ls_cache[1] == stamp:
@@ -56,6 +59,11 @@ def _landscape():
     except Exception:
         data = {"points": [], "internationals": []}
     data["winner_ranks"] = _winner_ranks(data.get("winners") or {})
+    try:
+        with open(_STREAKS) as f:
+            data["streaks"] = json.load(f).get("winners") or []
+    except Exception:
+        data["streaks"] = []
     _ls_cache = (data, stamp)
     return data
 
@@ -201,6 +209,15 @@ PAGE_HTML = """
                     text-decoration-thickness:1px; text-underline-offset:2px; }
   .content .xlink:hover { color:#5b21b6; }
   .rank-wrap { aspect-ratio:2.1/1; }
+  /* Result key for the streak chart, mirroring the L/W legend on the NCAA
+     original. HTML rather than Chart.js's legend, which with a single dataset
+     would only ever render one swatch. */
+  .streak-key { display:flex; justify-content:center; gap:20px; margin-bottom:10px;
+                font-family:'DM Sans',sans-serif; font-size:.76rem; color:#7a6e7e; }
+  .streak-key span { display:inline-flex; align-items:center; gap:7px; }
+  .streak-key .sk { width:13px; height:13px; border-radius:3px; display:inline-block; }
+  .streak-key .sk-l { background:#d1732f; }
+  .streak-key .sk-w { background:#5aa88b; }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -240,6 +257,7 @@ PAGE_HTML = """
   <a href="#by-the-numbers">The Winners: By The Numbers</a>
   <a href="#sec-landscape" class="sub">Attack &amp; Defense</a>
   <a href="#sec-tiers" class="sub">Bands of Favoritism</a>
+  <a href="#sec-momentum" class="sub">Momentum</a>
   <a href="#sec-benpom" class="sub">BenPom Rank</a>
 </nav>
 <div class="page">
@@ -306,6 +324,20 @@ PAGE_HTML = """
       <p id="sec-benpom">Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of <a class="xlink" href="https://kenpom.com/" target="_blank" rel="noopener">KenPom&rsquo;s rating system</a>.</p>
 
       <p>I have my own <a class="xlink" href="/mapelo/modern/" target="_blank" rel="noopener">BenPom</a> rating system for VCT - let&rsquo;s see what the trend is there:</p>
+
+      <hr class="secbreak">
+
+      <p id="sec-momentum">To go back to the point on teams that &ldquo;overshot their previous domestic performance&rdquo;, those teams often were playing better towards the end of their split. In other words, they had <em>momentum</em>. For instance, MIBR went far at Champions Paris place horribly on the Attack/Defense graph, yet they finished 5th-6th and only lost to each of the top-3 teams at the tournament (narrowly). In their Americas Stage 2 split, they won 2 of their last 3 games but were on a 5-match losing streak before that.</p>
+
+      <p>How important is momentum, then?</p>
+
+      <figure class="fig">
+        <div class="streak-key">
+          <span><i class="sk sk-l"></i>Losing streak</span>
+          <span><i class="sk sk-w"></i>Winning streak</span>
+        </div>
+        <div class="fig-wrap rank-wrap"><canvas id="streakChart"></canvas></div>
+      </figure>
 
       <figure class="fig">
         <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
@@ -764,6 +796,89 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     plugins: [plate, fifty, marks]
   });
   c.$state = () => ({hovered: null, pinned: null, winnersOn: false});
+  charts.push(c);
+})();
+
+// End-of-split streak each winner carried into the tournament. Bar chart in
+// the shape of the NCAA original: height is the run length, colour says whether
+// the run was wins or losses. Logos sit above each bar and the event name goes
+// on the category axis, the same treatment as the rank chart below.
+(function () {
+  const el = document.getElementById('streakChart');
+  if (!el || !LS.streaks || !LS.streaks.length) return;
+  const rows = LS.streaks;
+  const L = '#d1732f', W = '#5aa88b';
+  const tall = Math.max(...rows.map(r => r.streak));
+
+  const streakMarks = {
+    id: 'streakMarks',
+    afterDatasetsDraw(c) {
+      const {ctx} = c;
+      c.getDatasetMeta(0).data.forEach((bar, i) => {
+        const r = rows[i], img = logo(r.org);
+        ctx.save();
+        // Run length inside the bar top, logo floating just above it.
+        ctx.font = "800 11px 'DM Sans',sans-serif";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillStyle = '#fff';
+        ctx.fillText(r.streak + r.result, bar.x, bar.y + 5);
+        if (img.complete && img.naturalWidth) ctx.drawImage(img, bar.x - 13, bar.y - 31, 26, 26);
+        ctx.restore();
+      });
+    }
+  };
+
+  const c = new Chart(el, {
+    type: 'bar',
+    data: {
+      labels: rows.map(r => r.intl),
+      datasets: [{
+        data: rows.map(r => r.streak),
+        backgroundColor: rows.map(r => r.result === 'W' ? W : L),
+        borderRadius: 3, borderSkipped: false,
+        maxBarThickness: 54, hitRadius: 0
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 18, right: 16, bottom: 4, left: 4}},
+      interaction: {mode: 'index', intersect: false},
+      scales: {
+        x: {ticks: {font: {size: 9.5}, color: '#9a8fa4', maxRotation: 40, minRotation: 40},
+            grid: {display: false}},
+        y: {min: 0, max: Math.max(6, tall + 1),
+            title: {display: true, text: 'Streak length',
+                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
+            ticks: {stepSize: 1, font: {size: 10}, color: '#9a8fa4'},
+            grid: {color: 'rgba(0,0,0,.05)'}}
+      },
+      plugins: {
+        legend: {display: false},
+        title: {
+          display: true,
+          text: 'Every international winner\u2019s end-of-split streak',
+          color: '#3d1a6e', padding: {top: 2, bottom: 14},
+          font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
+        },
+        tooltip: {
+          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          animation: {duration: 140},
+          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+          callbacks: {
+            title: it => rows[it[0].dataIndex].org + ' won ' + rows[it[0].dataIndex].intl,
+            label: it => {
+              const r = rows[it.dataIndex];
+              const kind = r.result === 'W' ? 'winning' : 'losing';
+              return ['Came in on a ' + r.streak + '-match ' + kind + ' streak',
+                      r.prior + ': ' + r.record,
+                      'Series in order: ' + r.seq];
+            }
+          }
+        }
+      }
+    },
+    plugins: [plate, streakMarks]
+  });
   charts.push(c);
 })();
 
