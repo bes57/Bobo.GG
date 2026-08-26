@@ -454,6 +454,13 @@ PAGE_HTML = """
         <div class="stars" id="starGrid"></div>
         <p class="fig-note below"><em>Note: For EDG at Champions Seoul, I just used ACS since VLR rating wasn&rsquo;t calculated in domestic CN splits until 2025</em></p>
       </figure>
+
+      <p>This is also extremely interesting. &frac13; of the winning teams had the highest-rated player in the previous domestic split. Also, T1 at Bangkok again look like an extreme anomaly. Their highest-rated player (Buzz) was ranked 18th in Pacific Kickoff 2025. The second-lowest rank was 6th for RB with Nongshim in 2026. This article is just turning into &ldquo;T1 winning Bangkok is a gigantic statistical and historical anomaly&rdquo;, but I digress.</p>
+
+      <div class="takeaway">
+        <b>8/9 eligible tournament winners had a top-6 rated player in the previous domestic split</b>
+        <span>7/9 had a top-4 rated player</span>
+      </div>
     </div>
   </div>
 </div>
