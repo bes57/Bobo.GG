@@ -160,6 +160,13 @@ PAGE_HTML = """
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
+  .takeaway { max-width:620px; margin:18px auto 0; text-align:center;
+              background:#fff; border:1px solid #e0d4ec; border-radius:16px;
+              padding:14px 22px; box-shadow:0 4px 18px #0000000a; }
+  .takeaway b { display:block; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
+                font-size:1rem; color:#3d1a6e; line-height:1.35; }
+  .takeaway span { display:block; margin-top:6px; font-size:.85rem; font-weight:600;
+                   color:var(--soft); }
   .content .secbreak { border:0; border-top:1px solid #e8e0ec; margin:46px 0 34px; }
   .content .xlink { color:#7c4dd6; font-weight:500; text-decoration:underline;
                     text-decoration-thickness:1px; text-underline-offset:2px; }
@@ -265,6 +272,10 @@ PAGE_HTML = """
 
       <figure class="fig">
         <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
+        <div class="takeaway">
+          <b>Every Trophy Winner was Top-15 by BenPom before the tournament</b>
+          <span>70% were top-7</span>
+        </div>
       </figure>
     </div>
   </div>
