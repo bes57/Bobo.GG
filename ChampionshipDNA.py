@@ -283,7 +283,7 @@ PAGE_HTML = """
   /* The rookie bubble carries a headline and a roster list rather than two
      short claims, so it takes the full figure width and drops the list to
      reading size. */
-  .takeaway--roster { max-width:1120px; text-align:left; padding:26px 30px; }
+  .takeaway--roster { max-width:1120px; padding:26px 34px; }
   .takeaway--roster b { font-size:1.24rem; line-height:1.35; }
   .takeaway--roster span { font-size:1rem; font-weight:600; line-height:1.65; margin-top:16px; }
   /* The list is a sentence, not a second claim, so it takes no dash. */
