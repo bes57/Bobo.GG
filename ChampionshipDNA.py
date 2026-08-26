@@ -38,6 +38,65 @@ _BEFORE_SNAP = [
     ("Masters London 2026",   "2026", "before_london"),
 ]
 
+# Roster turnover behind each title, as supplied by the author. Held as data
+# rather than markup so the outs and ins can be styled apart from each other;
+# the wording of every label and name is theirs.
+_ROSTERS = [
+    ("FNC", "LOCK//IN + Masters Tokyo FNATIC", [
+        ("", ["Mistic", "Enzo"], ["Chronicle", "Leo"]),
+    ]),
+    ("EG", "Champions LA EG", [
+        ("", ["Apoth", "Reformed"], ["BcJ", "Ethan"]),
+        ("midseason", ["BcJ"], ["Demon1"]),
+    ]),
+    ("SEN", "Masters Madrid Sentinels", [
+        ("", ["Pancada", "Marved"], ["JohnQT", "Zellsis"]),
+    ]),
+    ("GEN", "Masters Shanghai Gen.G", [
+        ("", ["TS", "k1Ng", "Secret", "eKo", "GodDead"],
+             ["t3xture", "Munchkin", "Karon", "Lakia"]),
+    ]),
+    ("EDG", "Champions Seoul EDG", [
+        ("midseason", ["Haodong"], ["S1Mon"]),
+    ]),
+    ("T1", "Masters Bangkok T1", [
+        ("", ["Sayaplayer", "Rossy", "xccurate"], ["Meteor", "BuZz", "Sylvan"]),
+    ]),
+    ("PRX", "Masters Toronto PRX", [
+        ("midseason", ["mindfreak"], ["PatMen"]),
+    ]),
+    ("NRG", "Champions Paris NRG", [
+        ("", ["crashies", "Victor"], ["Verno", "Mada"]),
+        ("midseason", ["Verno", "FNS"], ["Brawk", "skuba"]),
+    ]),
+    ("NS", "Masters Santiago NS RedForce", [
+        ("", ["margaret", "Persia"], ["Rb", "Xross"]),
+    ]),
+    ("LEV", "Masters London Leviat\u00e1n", [
+        ("", ["C0M", "tex"], ["spikeziN", "blowz"]),
+        ("midseason", ["PxS"], ["Neon"]),
+    ]),
+]
+
+
+def _rosters_html():
+    """Static markup: this never changes between requests, unlike the charts."""
+    out = []
+    for org, title, rows in _ROSTERS:
+        lines = []
+        for tag, gone, came in rows:
+            chips = "".join(f'<span class="ro-out">&minus; {n}</span>' for n in gone)
+            chips += "".join(f'<span class="ro-in">+ {n}</span>' for n in came)
+            label = f'<span class="ro-tag">[{tag}]</span>' if tag else ""
+            lines.append(f'<div class="ro-line">{label}{chips}</div>')
+        out.append(
+            '<div class="ro">'
+            f'<div class="ro-head"><img src="/logos/{org}.png" alt="">'
+            f'<span>{title}</span></div>'
+            + "".join(lines) + "</div>")
+    return "\n".join(out)
+
+
 _ls_cache = (None, -1.0)
 
 
@@ -301,6 +360,23 @@ PAGE_HTML = """
   .star-tie { font-style:italic; }
   /* .fig-note normally sits above a figure; this one sits under it. */
   .content .fig-note.below { margin:14px 0 0; }
+  /* Roster turnover. Outs and ins are coloured rather than just signed, so the
+     shape of a change reads before any name does. */
+  .rosters { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin:26px 0 8px; }
+  .ro { background:#fff; border:1px solid #ece6f2; border-radius:14px; padding:14px 16px;
+        box-shadow:0 4px 18px #0000000a; }
+  .ro-head { display:flex; align-items:center; gap:9px; margin-bottom:9px; }
+  .ro-head img { width:22px; height:22px; object-fit:contain; flex:0 0 22px; }
+  .ro-head span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.9rem;
+                  color:#16121d; line-height:1.25; }
+  .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:6px; }
+  .ro-tag { font-size:.66rem; font-weight:700; letter-spacing:.04em; color:var(--soft);
+            background:#f4f0f8; border-radius:5px; padding:2px 6px; }
+  .ro-out, .ro-in { font-size:.78rem; font-weight:600; border-radius:6px; padding:2px 8px;
+                    white-space:nowrap; }
+  .ro-out { color:#a33b3b; background:#fbeeee; }
+  .ro-in  { color:#2f7a54; background:#eaf6ef; }
+  @media (max-width:760px) { .rosters { grid-template-columns:1fr; } }
   .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
   .star-face--org { background:#fff; border:1px solid #ece6f2; }
   .star-face--org > img { width:60%; height:60%; border-radius:0; object-fit:contain; }
@@ -349,6 +425,7 @@ PAGE_HTML = """
   <a href="#sec-benpom" class="sub">BenPom Rank</a>
   <a href="#sec-momentum" class="sub">Momentum</a>
   <a href="#sec-stars" class="sub">Star Power</a>
+  <a href="#roster-composition">Roster Composition</a>
 </nav>
 <div class="page">
   <div class="article">
@@ -463,6 +540,14 @@ PAGE_HTML = """
         <b>8/9 eligible tournament winners had a top-6 rated player in the previous domestic split</b>
         <span>7/9 had a top-4 rated player</span>
       </div>
+
+      <hr class="secbreak">
+
+      <h2 id="roster-composition">Roster Composition</h2>
+
+      <p>Now one of the most interesting trends I&rsquo;ve noticed in championship-winning teams is about their rosters. More specifically, their roster turnover rate. Every single championship-winning roster made roster changes from the previous year <em>OR</em> they made roster changes during the year:</p>
+
+      <div class="rosters">__ROSTERS__</div>
     </div>
   </div>
 </div>
@@ -1344,4 +1429,6 @@ def article_championship_dna():
     # Straight substitution rather than a Jinja variable: the chart script is
     # full of JS object literals, and render_template_string would try to read
     # some of them as Jinja delimiters.
-    return PAGE_HTML.replace("__LANDSCAPE_JSON__", json.dumps(_landscape()))
+    return (PAGE_HTML
+            .replace("__LANDSCAPE_JSON__", json.dumps(_landscape()))
+            .replace("__ROSTERS__", _rosters_html()))
