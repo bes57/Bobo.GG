@@ -165,8 +165,9 @@ PAGE_HTML = """
               padding:26px 34px; box-shadow:0 6px 26px #0000000f; }
   .takeaway b, .takeaway span {
               display:block; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
-              font-size:1.32rem; line-height:1.3; color:#3d1a6e; letter-spacing:-0.2px; }
-  .takeaway span { margin-top:10px; }
+              font-style:italic; font-size:1.32rem; line-height:1.3; color:#3d1a6e;
+              letter-spacing:-0.2px; }
+  .takeaway span { margin-top:22px; }
   .content .secbreak { border:0; border-top:1px solid #e8e0ec; margin:46px 0 34px; }
   .content .xlink { color:#7c4dd6; font-weight:500; text-decoration:underline;
                     text-decoration-thickness:1px; text-underline-offset:2px; }
