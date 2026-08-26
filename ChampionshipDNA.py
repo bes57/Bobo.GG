@@ -213,7 +213,9 @@ PAGE_HTML = """
   .toc a.sub { padding-left:12px; font-size:.72rem; }
   .alpha-navbar ~ .toc { top:72px; }
   @media (max-width:1500px) { .toc { display:none; } }
-  .content .secbreak { border:0; border-top:1px solid #e8e0ec; margin:46px 0 34px; }
+  /* Black, matching the body ink rather than the pale lilac the figure
+     borders use -- these divide sections, so they should read as structure. */
+  .content .secbreak { border:0; border-top:1px solid var(--ink); margin:46px 0 34px; }
   .content .xlink { color:#7c4dd6; font-weight:500; text-decoration:underline;
                     text-decoration-thickness:1px; text-underline-offset:2px; }
   .content .xlink:hover { color:#5b21b6; }
