@@ -170,6 +170,8 @@ PAGE_HTML = """
   .takeaway { max-width:1080px; margin:24px auto 0; text-align:center;
               background:#fff; border:1.5px solid #e0d4ec; border-radius:22px;
               padding:26px 34px; box-shadow:0 6px 26px #0000000f; }
+  /* Dash markers come from CSS, not the markup, so the copy stays clean. */
+  .takeaway b::before, .takeaway span::before { content:'- '; white-space:pre; }
   .takeaway b, .takeaway span {
               display:block; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
               font-style:italic; font-size:1.32rem; line-height:1.3; color:#3d1a6e;
