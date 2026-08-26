@@ -126,7 +126,12 @@ PAGE_HTML = """
   .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
   .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
-  .content h2, .cover, .content .fig, .content p[id] { scroll-margin-top:84px; }
+  .content h2, .cover, .content .fig { scroll-margin-top:84px; }
+  /* Paragraph anchors land tighter than the rest. The nav bar is ~42px tall, so
+     84px left a ~42px gap under it — just enough for the tail of the previous
+     line to peek out. 66px tucks that line behind the bar while still leaving
+     the paragraph a comfortable ~17px of daylight. */
+  .content p[id] { scroll-margin-top:66px; }
   /* Breaks out of the 860px text column. Ten event names cannot fit one line
      at any readable size inside 860px, and the scatter is dense enough that
      the extra width helps it too. Centred on the viewport, capped so it never
