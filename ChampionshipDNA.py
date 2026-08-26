@@ -215,6 +215,18 @@ PAGE_HTML = """
   /* A rose chart is radial, so it wants a near-square frame rather than the
      2.1:1 the line and scatter charts use. */
   .polar-wrap { aspect-ratio:1.35/1; }
+  /* HTML tooltip, because a logo per TEAM is not something the canvas tooltip
+     can do: it draws one colour box per data item, and a wedge is one item no
+     matter how many teams it holds. */
+  .rose-tip { position:absolute; pointer-events:none; opacity:0; transition:opacity .14s linear;
+              background:rgba(22,18,29,.94); color:#fff; border-radius:8px; padding:10px 12px;
+              font-family:'DM Sans',sans-serif; font-size:.78rem; line-height:1.35;
+              white-space:nowrap; z-index:5; }
+  .rose-tip .rt-head { font-weight:700; margin-bottom:3px; }
+  .rose-tip .rt-sub { color:#c9bfd6; margin-bottom:5px; }
+  .rose-tip .rt-row { display:flex; align-items:center; gap:7px; }
+  .rose-tip .rt-row + .rt-row { margin-top:3px; }
+  .rose-tip .rt-row img { width:17px; height:17px; object-fit:contain; flex:0 0 17px; }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -826,6 +838,61 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   const ink = n => n === 0 ? 'rgba(124,77,214,.05)'
                            : 'rgba(124,77,214,' + (0.22 + 0.58 * (n / top)).toFixed(3) + ')';
 
+  const box = document.createElement('div');
+  box.className = 'rose-tip';
+  el.parentNode.appendChild(box);
+
+  // Reuses the alignment the `outward` positioner worked out, so the HTML box
+  // leaves the hub in the same direction the canvas one would have.
+  function tip(ctx) {
+    const t = ctx.tooltip;
+    if (!t.opacity || !t.dataPoints || !t.dataPoints.length) { box.style.opacity = 0; return; }
+    const r = rows[t.dataPoints[0].dataIndex];
+    let h = '<div class="rt-head">' + r.bucket + ' in their last 5</div>';
+    h += '<div class="rt-sub">' + (r.n ? r.n + (r.n === 1 ? ' winner' : ' winners')
+                                       : 'No winner came in on this record') + '</div>';
+    h += r.who.map(w => '<div class="rt-row"><img src="/logos/' + w.org + '.png" alt="">'
+                        + w.org + ' ' + w.label + '</div>').join('');
+    box.innerHTML = h;
+
+    box.style.opacity = 1;
+    const W = box.offsetWidth, H = box.offsetHeight, gap = 10;
+    const x = t.caretX, y = t.caretY;
+    box.style.left = (t.xAlign === 'left'  ? x + gap
+                    : t.xAlign === 'right' ? x - gap - W
+                    :                        x - W / 2) + 'px';
+    box.style.top  = (t.yAlign === 'top'    ? y + gap
+                    : t.yAlign === 'bottom' ? y - gap - H
+                    :                         y - H / 2) + 'px';
+  }
+
+  // Count inside each wedge. Zeros have no wedge to sit in, so they park on a
+  // fixed inner radius in a muted ink -- the label still says which bucket.
+  const wedgeCounts = {
+    id: 'wedgeCounts',
+    afterDatasetsDraw(ch) {
+      const {ctx} = ch;
+      const arcs = ch.getDatasetMeta(0).data;
+      const maxR = Math.max(...arcs.map(a => a.outerRadius || 0));
+      arcs.forEach((a, i) => {
+        const n = rows[i].n;
+        const mid = (a.startAngle + a.endAngle) / 2;
+        const rad = n ? a.outerRadius * 0.55 : maxR * 0.13;
+        ctx.save();
+        ctx.font = "800 " + (n ? 16 : 12) + "px 'DM Sans',sans-serif";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        // Halo first: the wedge ramps from near-white to deep purple, and one
+        // flat ink would vanish at one end of that ramp or the other.
+        ctx.lineWidth = 3.5; ctx.lineJoin = 'round'; ctx.strokeStyle = '#fff';
+        const x = a.x + Math.cos(mid) * rad, y = a.y + Math.sin(mid) * rad;
+        ctx.strokeText(String(n), x, y);
+        ctx.fillStyle = n ? '#3d1a6e' : '#b6acc0';
+        ctx.fillText(String(n), x, y);
+        ctx.restore();
+      });
+    }
+  };
+
   const c = new Chart(el, {
     type: 'polarArea',
     data: {
@@ -862,22 +929,11 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
           font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
         },
         tooltip: {
-          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
-          position: 'outward',
-          animation: {duration: 140},
-          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
-          callbacks: {
-            title: it => rows[it[0].dataIndex].bucket + ' in their last 5',
-            label: it => {
-              const r = rows[it.dataIndex];
-              if (!r.n) return 'No winner came in on this record';
-              return [r.n + (r.n === 1 ? ' winner' : ' winners')].concat(r.who);
-            }
-          }
+          enabled: false, position: 'outward', external: tip
         }
       }
     },
-    plugins: [plate]
+    plugins: [plate, wedgeCounts]
   });
   charts.push(c);
 })();

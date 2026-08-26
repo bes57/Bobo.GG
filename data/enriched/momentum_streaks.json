@@ -177,33 +177,60 @@
    "bucket": "5-0",
    "n": 1,
    "who": [
-    "EDG Champions 2024"
+    {
+     "org": "EDG",
+     "label": "Champions 2024"
+    }
    ]
   },
   {
    "bucket": "4-1",
    "n": 4,
    "who": [
-    "FNC Masters Tokyo 2023",
-    "SEN Masters Madrid 2024",
-    "PRX Masters Toronto 2025",
-    "NS Masters Santiago 2026"
+    {
+     "org": "FNC",
+     "label": "Masters Tokyo 2023"
+    },
+    {
+     "org": "SEN",
+     "label": "Masters Madrid 2024"
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Toronto 2025"
+    },
+    {
+     "org": "NS",
+     "label": "Masters Santiago 2026"
+    }
    ]
   },
   {
    "bucket": "3-2",
    "n": 3,
    "who": [
-    "T1 Masters Bangkok 2025",
-    "NRG Champions 2025",
-    "LEV Masters London 2026"
+    {
+     "org": "T1",
+     "label": "Masters Bangkok 2025"
+    },
+    {
+     "org": "NRG",
+     "label": "Champions 2025"
+    },
+    {
+     "org": "LEV",
+     "label": "Masters London 2026"
+    }
    ]
   },
   {
    "bucket": "2-3",
    "n": 1,
    "who": [
-    "GEN Masters Shanghai 2024"
+    {
+     "org": "GEN",
+     "label": "Masters Shanghai 2024"
+    }
    ]
   },
   {

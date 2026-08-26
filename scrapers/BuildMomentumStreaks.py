@@ -136,7 +136,7 @@ def build():
     tally = {b: [] for b in buckets}
     for r in out:
         if r.get("last5"):
-            tally[r["last5"]["bucket"]].append(r["org"] + " " + r["intl"])
+            tally[r["last5"]["bucket"]].append({"org": r["org"], "label": r["intl"]})
 
     payload = {"winners": out, "buckets": buckets,
                "tally": [{"bucket": b, "n": len(tally[b]), "who": tally[b]} for b in buckets],
