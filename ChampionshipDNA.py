@@ -286,6 +286,9 @@ PAGE_HTML = """
   .takeaway--roster { max-width:1120px; padding:26px 34px; }
   .takeaway--roster b { font-size:1.24rem; line-height:1.35; }
   .takeaway--roster span { font-size:1rem; font-weight:600; line-height:1.65; margin-top:16px; }
+  /* A bubble has no bottom margin -- the ones inside a figure borrow the
+     figure's. This one is standalone, so prose after it needs its own gap. */
+  .content .takeaway + p { margin-top:38px; }
   /* The list is a sentence, not a second claim, so it takes no dash. */
   .takeaway--roster span::before { content:none; }
   /* Sections legend, top-right, matching every other article. Its width is
