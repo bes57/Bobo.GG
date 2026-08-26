@@ -351,6 +351,7 @@ PAGE_HTML = """
       <p>How important is momentum, then?</p>
 
       <figure class="fig">
+        <p class="fig-note"><em>Note: LOCK//IN was not included, since there were no prior matches for any of those teams.</em></p>
         <div class="fig-wrap polar-wrap"><canvas id="last5Chart"></canvas></div>
       </figure>
     </div>
