@@ -757,7 +757,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
         x: {ticks: {font: {size: 9.5}, color: '#9a8fa4', maxRotation: 40, minRotation: 40},
             grid: {color: 'rgba(0,0,0,.04)'}},
         y: {reverse: true, min: 1, max: axisMax,
-            title: {display: true, text: 'BenPom rank going into the event',
+            title: {display: true, text: 'BenPom rank',
                     font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
             ticks: {stepSize: 5, font: {size: 10}, color: '#9a8fa4',
                     callback: v => '#' + v},
@@ -765,6 +765,12 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
       },
       plugins: {
         legend: {display: false},
+        title: {
+          display: true,
+          text: 'Every international winner\u2019s BenPom rank before the event they won',
+          color: '#3d1a6e', padding: {top: 2, bottom: 14},
+          font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
+        },
         tooltip: {
           displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
           animation: {duration: 140},
