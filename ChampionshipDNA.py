@@ -174,7 +174,7 @@ PAGE_HTML = """
               display:block; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
               font-style:italic; font-size:1.32rem; line-height:1.3; color:#3d1a6e;
               letter-spacing:-0.2px; }
-  .takeaway span { margin-top:22px; }
+  .takeaway span { margin-top:34px; }
   /* Sections legend, top-right, matching every other article. Its width is
      clamped to the gutter beside the
      centred content — but this article's figures break out to 1120px, so the
