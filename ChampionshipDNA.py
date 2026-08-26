@@ -274,7 +274,7 @@ PAGE_HTML = """
       <figure class="fig">
         <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
         <div class="takeaway">
-          <b>Every Trophy Winner was Top-15 by BenPom before the tournament</b>
+          <b>Every trophy winner since franchising was Top-15 by BenPom before the tournament</b>
           <span>70% were top-7</span>
         </div>
       </figure>
