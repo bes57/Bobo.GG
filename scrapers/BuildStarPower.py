@@ -239,14 +239,18 @@ def build(refresh=False):
             skipped.append(f"{org} @ {label[ev]}: no {org} row on {url}")
             out.append(card); continue
 
-        # VLR's own order is the ranking; do not re-sort, since it breaks ties on
-        # values it does not publish.
         best = mine[0]
+        # Competition ranking on the PUBLISHED value: one better than the number
+        # of players ahead of you, so players showing the same figure share a
+        # place. VLR's row order breaks 1.14-vs-1.14 on precision it does not
+        # print, and a reader counting rows sees a tie, not a winner.
+        ahead = sum(1 for r in ranked if r[stat] > best[stat])
+        tied  = sum(1 for r in ranked if r[stat] == best[stat])
         card.update(kind="rating" if stat == "rating" else "acs",
                     prior=prior, player=best["player"], profile=best["profile"],
                     head=heads.get(best["profile"]) or "",
-                    val=best[stat], rank=ranked.index(best) + 1, pool=len(ranked),
-                    rounds=best["rounds"])
+                    val=best[stat], rank=ahead + 1, pool=len(ranked),
+                    tied=tied > 1, rounds=best["rounds"])
         if stat == "acs":
             card["note"] = "No VLR-rating published"
         out.append(card)
@@ -264,7 +268,7 @@ if __name__ == "__main__":
     for s in p["stars"]:
         if s["kind"] in ("rating", "acs"):
             print(f"  {s['org']:<4} {s['intl']:<22} {s['kind']:<7} {s['player']:<12} "
-                  f"{s['val']:>6}  #{s['rank']:<3} of {s['pool']:<3} {s['rounds']:>4} rnd  "
+                  f"{s['val']:>6}  {'T-' if s.get('tied') else '#'}{s['rank']:<3} of {s['pool']:<3} {s['rounds']:>4} rnd  "
                   f"{'HEAD' if s['head'] else 'NO HEADSHOT':<11} {s.get('prior','')}")
         else:
             print(f"  {s['org']:<4} {s['intl']:<22} {s['kind']:<7} -- {s['note']}")

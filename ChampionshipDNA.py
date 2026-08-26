@@ -291,6 +291,8 @@ PAGE_HTML = """
   .star-stat { font-size:.66rem; font-weight:700; color:#7c4dd6; letter-spacing:.04em;
                margin-left:-4px; }
   .star-note { font-size:.66rem; color:#b06a2c; margin-top:3px; }
+  /* Says why the rank is 4 and not 5 when two players show the same figure. */
+  .star-tie { font-style:italic; }
   .star--empty { background:#faf8fd; border-style:dashed; box-shadow:none; }
   .star-face--org { background:#fff; border:1px solid #ece6f2; }
   .star-face--org img { width:60%; height:60%; object-fit:contain; }
@@ -1284,7 +1286,8 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
       +   '<div class="star-name">' + esc(s.player) + '</div>'
       +   '<div class="star-evt">' + esc(s.org) + ' &middot; ' + esc(s.intl) + '</div>'
       +   '<div class="star-line"><span class="star-rating">' + s.val + '</span>' + stat
-      +     '<span class="star-rank"><b>#' + s.rank + '</b> of ' + s.pool + '</span></div>'
+      +     '<span class="star-rank"><b>#' + s.rank + '</b> of ' + s.pool
+      +       (s.tied ? ' <span class="star-tie">tied</span>' : '') + '</span></div>'
       +   '<div class="star-split">in ' + esc(split(s.prior)) + ' &middot; ' + s.rounds + ' rounds</div>'
       +   (s.note ? '<div class="star-note">' + esc(s.note) + '</div>' : '')
       + '</div>' + (s.url ? '</a>' : '</div>');

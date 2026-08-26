@@ -19,6 +19,7 @@
    "val": 1.26,
    "rank": 1,
    "pool": 55,
+   "tied": false,
    "rounds": 465
   },
   {
@@ -38,8 +39,9 @@
    "profile": "https://www.vlr.gg/player/4004/zekken",
    "head": "https://owcdn.net/img/69742b2cdd6c3.png",
    "val": 1.14,
-   "rank": 5,
+   "rank": 4,
    "pool": 55,
+   "tied": true,
    "rounds": 432
   },
   {
@@ -52,8 +54,9 @@
    "profile": "https://www.vlr.gg/player/9196/t3xture",
    "head": "https://owcdn.net/img/676ba04aee5f9.png",
    "val": 1.14,
-   "rank": 5,
+   "rank": 4,
    "pool": 57,
+   "tied": true,
    "rounds": 627
   },
   {
@@ -68,6 +71,7 @@
    "val": 259.0,
    "rank": 1,
    "pool": 58,
+   "tied": false,
    "rounds": 394,
    "note": "No VLR-rating published"
   },
@@ -83,6 +87,7 @@
    "val": 1.07,
    "rank": 18,
    "pool": 61,
+   "tied": false,
    "rounds": 483
   },
   {
@@ -97,6 +102,7 @@
    "val": 1.14,
    "rank": 4,
    "pool": 65,
+   "tied": false,
    "rounds": 536
   },
   {
@@ -111,6 +117,7 @@
    "val": 1.13,
    "rank": 5,
    "pool": 61,
+   "tied": true,
    "rounds": 568
   },
   {
@@ -125,6 +132,7 @@
    "val": 1.12,
    "rank": 6,
    "pool": 60,
+   "tied": false,
    "rounds": 250
   },
   {
@@ -139,6 +147,7 @@
    "val": 1.25,
    "rank": 1,
    "pool": 66,
+   "tied": false,
    "rounds": 543
   }
  ],
