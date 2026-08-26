@@ -753,7 +753,7 @@ function buildLandscape({canvas, winBox, eventBox, bandDefs, winnersDefault = tr
             animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
             caretSize: 5,
             callbacks: {
-              title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (won it)' : ''),
+              title: it => it[0].raw.p.org + ' — ' + it[0].raw.p.intl + (it[0].raw.p.won ? '  (Won)' : ''),
               label: it => {
                 const p = it.raw.p;
                 return ['from ' + p.prior,
