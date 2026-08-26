@@ -430,21 +430,28 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
 };
 
 
-// Stacked-bar tooltips: beside the bar, never over it. Side is chosen from which
-// half of the plot the bar sits in, which needs no knowledge of the box's width
-// -- and the box can be a dozen lines tall here, so guessing wrong is costly.
-// Anchored to the middle of the plot vertically rather than to the bar's top, so
-// a tall list off a short bar cannot run out of the canvas.
+// Stacked-bar tooltips: beside the bar, level with the top of its stack.
+//
+// xAlign is set here, from which half of the plot the bar sits in -- that needs
+// no knowledge of the box's width, and with a dozen teams listed the box is big
+// enough that guessing wrong is costly.
+//
+// yAlign is deliberately NOT set. Chart.js only runs its own vertical alignment
+// when the positioner leaves it undefined, and that logic already knows the
+// box's measured height, so it flips between top/center/bottom to keep a long
+// list inside the canvas. Setting it here short-circuits that, which is what
+// forced the earlier anchor to the middle of the plot -- safe, but nowhere near
+// the short bars.
 Chart.Tooltip.positioners.besideBar = function (items) {
   if (!items.length) return false;
   const e = items[0].element, ca = this.chart.chartArea;
   const toRight = e.x < (ca.left + ca.right) / 2;
-  const half = (e.width || 0) / 2 + 12;
+  // Top of the whole stack, not of the segment under the cursor.
+  const topSeg = this.chart.getDatasetMeta(1).data[items[0].index];
   return {
-    x: e.x + (toRight ? half : -half),
-    y: (ca.top + ca.bottom) / 2,
-    xAlign: toRight ? 'left' : 'right',
-    yAlign: 'center'
+    x: e.x + ((e.width || 0) / 2 + 12) * (toRight ? 1 : -1),
+    y: topSeg ? topSeg.y : e.y,
+    xAlign: toRight ? 'left' : 'right'
   };
 };
 
