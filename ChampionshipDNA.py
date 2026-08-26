@@ -768,7 +768,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
         legend: {display: false},
         title: {
           display: true,
-          text: 'Every international winner\u2019s BenPom rank before the event they won',
+          text: 'Every international winner\u2019s BenPom rank before the event',
           color: '#3d1a6e', padding: {top: 2, bottom: 14},
           font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
         },
