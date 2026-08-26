@@ -394,6 +394,25 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
   return {x: e.x, y: e.y - 30};
 };
 
+// Rose chart: put the bubble out along the wedge's own bisector, so it reads as
+// belonging to that slice instead of sitting on the hub where every slice meets.
+// The alignment has to swing with the direction too -- anchoring outward but
+// keeping the box centred would just drop it back over the wedge.
+Chart.Tooltip.positioners.outward = function (items) {
+  if (!items.length) return false;
+  const e = items[0].element;
+  const mid = (e.startAngle + e.endAngle) / 2;
+  const dx = Math.cos(mid), dy = Math.sin(mid);
+  // Just inside the tip: the caret lands on the wedge, the box clears it.
+  const r = e.outerRadius * 0.92;
+  return {
+    x: e.x + dx * r,
+    y: e.y + dy * r,
+    xAlign: dx > 0.3 ? 'left' : dx < -0.3 ? 'right' : 'center',
+    yAlign: dy > 0.3 ? 'top'  : dy < -0.3 ? 'bottom' : 'center'
+  };
+};
+
 const plate = {
   id: 'plate',
   beforeDraw(c) {
@@ -844,6 +863,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
         },
         tooltip: {
           displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          position: 'outward',
           animation: {duration: 140},
           animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
           callbacks: {
