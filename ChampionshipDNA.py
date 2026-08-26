@@ -857,7 +857,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
         legend: {display: false},
         title: {
           display: true,
-          text: 'Last-5 records of international winners',
+          text: 'Last 5 matches of international winners',
           color: '#3d1a6e', padding: {top: 2, bottom: 10},
           font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
         },
