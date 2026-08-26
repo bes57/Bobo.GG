@@ -126,7 +126,7 @@ PAGE_HTML = """
   .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
   .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
-  .content h2, .cover { scroll-margin-top:84px; }
+  .content h2, .cover, .content .fig, .content p[id] { scroll-margin-top:84px; }
   /* Breaks out of the 860px text column. Ten event names cannot fit one line
      at any readable size inside 860px, and the scatter is dense enough that
      the extra width helps it too. Centred on the viewport, capped so it never
@@ -160,7 +160,9 @@ PAGE_HTML = """
   .content ul.notes { margin:0 0 24px; padding-left:22px; }
   .content ul.notes li { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink);
                          margin-bottom:12px; }
-  .takeaway { max-width:820px; margin:24px auto 0; text-align:center;
+  /* Wide enough that the headline stays on one line — it needs about 920px
+     of text at this size, and the figure it sits under is 1120px. */
+  .takeaway { max-width:1080px; margin:24px auto 0; text-align:center;
               background:#fff; border:1.5px solid #e0d4ec; border-radius:22px;
               padding:26px 34px; box-shadow:0 6px 26px #0000000f; }
   .takeaway b, .takeaway span {
@@ -168,6 +170,22 @@ PAGE_HTML = """
               font-style:italic; font-size:1.32rem; line-height:1.3; color:#3d1a6e;
               letter-spacing:-0.2px; }
   .takeaway span { margin-top:22px; }
+  /* Sections legend, top-left. Its width is clamped to the gutter beside the
+     centred content — but this article's figures break out to 1120px, so the
+     gutter is much narrower than on articles whose widest element is the 860px
+     text column. Hidden entirely below 1500px, where there is no room at all. */
+  .toc { position:fixed; top:32px; left:32px; background:#fff; border-radius:16px;
+         padding:18px 20px; box-shadow:0 4px 24px #0000000f; display:flex;
+         flex-direction:column; gap:6px; z-index:100; width:max-content;
+         max-width:min(215px, calc(50vw - 585px)); }
+  .toc-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:.72rem; font-weight:800;
+               letter-spacing:.1em; text-transform:uppercase; color:var(--soft); margin-bottom:4px; }
+  .toc a { font-size:.76rem; color:var(--soft); text-decoration:none; font-weight:400;
+           transition:color .15s; line-height:1.4; }
+  .toc a:hover { color:var(--ink); }
+  .toc a.sub { padding-left:12px; font-size:.72rem; }
+  .alpha-navbar ~ .toc { top:72px; }
+  @media (max-width:1500px) { .toc { display:none; } }
   .content .secbreak { border:0; border-top:1px solid #e8e0ec; margin:46px 0 34px; }
   .content .xlink { color:#7c4dd6; font-weight:500; text-decoration:underline;
                     text-decoration-thickness:1px; text-underline-offset:2px; }
@@ -206,6 +224,14 @@ PAGE_HTML = """
 </style>
 </head>
 <body>
+<nav class="toc">
+  <div class="toc-title">Sections</div>
+  <a href="#intro">Intro</a>
+  <a href="#by-the-numbers">The Winners: By The Numbers</a>
+  <a href="#sec-landscape" class="sub">Attack &amp; Defense</a>
+  <a href="#sec-tiers" class="sub">Bands of Favoritism</a>
+  <a href="#sec-benpom" class="sub">BenPom Rank</a>
+</nav>
 <div class="page">
   <div class="article">
     <!-- Explicit break after the colon: the series name owns line 1, the
@@ -213,7 +239,7 @@ PAGE_HTML = """
          line 2 ever has to wrap on a narrow screen. Wording untouched. -->
     <h1>Championship DNA:<br>Historical Trends To Note For <span class="nb">Champions Shanghai</span></h1>
     <div class="byline">Bobo &mdash; August 2026</div>
-    <div class="cover">
+    <div class="cover" id="intro">
       <img src="/championshipdna.jpg" alt="VCT champions lifting trophies">
     </div>
     <p class="cover-caption">International winners from each year of franchised VCT<br>FNATIC at Tokyo in 2023, Sentinels at Madrid in 2024, Paper Rex in 2025, and Leviatán at London in 2026</p>
@@ -226,7 +252,7 @@ PAGE_HTML = """
 
       <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior (e.g. Leviatan at London uses their numbers from Stage 1 of 2026).</p>
 
-      <figure class="fig">
+      <figure class="fig" id="sec-landscape">
         <p class="fig-note"><em>Note: Champions 2023 was not included, since there was no domestic split prior to the tournament</em></p>
         <div class="fig-filter">
           <div class="ls-win" id="lsWin"></div>
@@ -248,7 +274,7 @@ PAGE_HTML = """
         <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 0-2 in their respective events)</li>
       </ul>
 
-      <p>Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph which includes tiers of favoritism to win the NCAA tournament.</p>
+      <p id="sec-tiers">Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph which includes tiers of favoritism to win the NCAA tournament.</p>
 
       <figure class="inline-fig wide">
         <img src="/evanmiya-landscape.jpg" alt="EvanMiya&rsquo;s March Madness Predicted Efficiency Landscape">
@@ -267,7 +293,7 @@ PAGE_HTML = """
 
       <hr class="secbreak">
 
-      <p>Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of KenPom&rsquo;s rating system.</p>
+      <p id="sec-benpom">Another historical trend cited in NCAAM is the fact that every tournament winner in the 21st century has been in the Top 25 of KenPom&rsquo;s rating system.</p>
 
       <p>I have my own <a class="xlink" href="/mapelo/modern/" target="_blank" rel="noopener">BenPom</a> rating system for VCT - let&rsquo;s see what the trend is there:</p>
 
