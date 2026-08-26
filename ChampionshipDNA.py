@@ -367,7 +367,7 @@ PAGE_HTML = """
         <div class="fig-wrap polar-wrap"><canvas id="last5Chart"></canvas></div>
       </figure>
 
-      <p>Interesting, only one team (Gen.G) was able to win a trophy despite losing a majority of their past 5 matches. Momentum is clearly important, though. Half of the winners had a 4-1 record or better before their events. It&rsquo;s also not the be-all-end-all, as 4 of the 10 winners lost 2 of their past 5 matches.</p>
+      <p>Interesting, only one team (Gen.G) was able to win a trophy despite losing a majority of their past 5 matches. Momentum is clearly important. Half of the winners had a 4-1 record or better before their events. It&rsquo;s also not the be-all-end-all, as 4 of the 10 winners lost 2 of their past 5 matches.</p>
 
       <p>More generally, can momentum be a strong predictor of international <em>success</em>, not just winning?</p>
 
