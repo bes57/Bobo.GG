@@ -42,37 +42,37 @@ _BEFORE_SNAP = [
 # rather than markup so the outs and ins can be styled apart from each other;
 # the wording of every label and name is theirs.
 _ROSTERS = [
-    ("FNC", "LOCK//IN + Masters Tokyo FNATIC", [
+    ("FNC", "LOCK//IN + Masters Tokyo", "FNATIC", [
         ("", ["Mistic", "Enzo"], ["Chronicle", "Leo"]),
     ]),
-    ("EG", "Champions LA EG", [
+    ("EG", "Champions LA", "EG", [
         ("", ["Apoth", "Reformed"], ["BcJ", "Ethan"]),
         ("midseason", ["BcJ"], ["Demon1"]),
     ]),
-    ("SEN", "Masters Madrid Sentinels", [
+    ("SEN", "Masters Madrid", "Sentinels", [
         ("", ["Pancada", "Marved"], ["JohnQT", "Zellsis"]),
     ]),
-    ("GEN", "Masters Shanghai Gen.G", [
+    ("GEN", "Masters Shanghai", "Gen.G", [
         ("", ["TS", "k1Ng", "Secret", "eKo", "GodDead"],
              ["t3xture", "Munchkin", "Karon", "Lakia"]),
     ]),
-    ("EDG", "Champions Seoul EDG", [
+    ("EDG", "Champions Seoul", "EDG", [
         ("midseason", ["Haodong"], ["S1Mon"]),
     ]),
-    ("T1", "Masters Bangkok T1", [
+    ("T1", "Masters Bangkok", "T1", [
         ("", ["Sayaplayer", "Rossy", "xccurate"], ["Meteor", "BuZz", "Sylvan"]),
     ]),
-    ("PRX", "Masters Toronto PRX", [
+    ("PRX", "Masters Toronto", "PRX", [
         ("midseason", ["mindfreak"], ["PatMen"]),
     ]),
-    ("NRG", "Champions Paris NRG", [
+    ("NRG", "Champions Paris", "NRG", [
         ("", ["crashies", "Victor"], ["Verno", "Mada"]),
         ("midseason", ["Verno", "FNS"], ["Brawk", "skuba"]),
     ]),
-    ("NS", "Masters Santiago NS RedForce", [
+    ("NS", "Masters Santiago", "NS RedForce", [
         ("", ["margaret", "Persia"], ["Rb", "Xross"]),
     ]),
-    ("LEV", "Masters London Leviat\u00e1n", [
+    ("LEV", "Masters London", "Leviat\u00e1n", [
         ("", ["C0M", "tex"], ["spikeziN", "blowz"]),
         ("midseason", ["PxS"], ["Neon"]),
     ]),
@@ -82,7 +82,7 @@ _ROSTERS = [
 def _rosters_html():
     """Static markup: this never changes between requests, unlike the charts."""
     out = []
-    for org, title, rows in _ROSTERS:
+    for org, event, team, rows in _ROSTERS:
         lines = []
         for tag, gone, came in rows:
             chips = "".join(f'<span class="ro-out">&minus; {n}</span>' for n in gone)
@@ -91,8 +91,10 @@ def _rosters_html():
             lines.append(f'<div class="ro-line">{label}{chips}</div>')
         out.append(
             '<div class="ro">'
-            f'<div class="ro-head"><img src="/logos/{org}.png" alt="">'
-            f'<span>{title}</span></div>'
+            '<div class="ro-head">'
+            f'<div class="ro-evt">{event}</div>'
+            f'<div class="ro-team"><img src="/logos/{org}.png" alt=""><span>{team}</span></div>'
+            '</div>'
             + "".join(lines) + "</div>")
     return "\n".join(out)
 
@@ -365,10 +367,14 @@ PAGE_HTML = """
   .rosters { display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; margin:26px 0 8px; }
   .ro { background:#fff; border:1px solid #ece6f2; border-radius:14px; padding:14px 16px;
         box-shadow:0 4px 18px #0000000a; }
-  .ro-head { display:flex; align-items:center; gap:9px; margin-bottom:9px; }
-  .ro-head img { width:22px; height:22px; object-fit:contain; flex:0 0 22px; }
-  .ro-head span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:.9rem;
-                  color:#16121d; line-height:1.25; }
+  /* Tournament on top, team under it with its logo alongside. */
+  .ro-head { margin-bottom:11px; }
+  .ro-evt { font-size:.72rem; font-weight:600; letter-spacing:.03em; color:var(--soft);
+            line-height:1.2; }
+  .ro-team { display:flex; align-items:center; gap:8px; margin-top:3px; }
+  .ro-team img { width:24px; height:24px; object-fit:contain; flex:0 0 24px; }
+  .ro-team span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1rem;
+                  color:#16121d; line-height:1.2; }
   .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:6px; }
   .ro-tag { font-size:.66rem; font-weight:700; letter-spacing:.04em; color:var(--soft);
             background:#f4f0f8; border-radius:5px; padding:2px 6px; }
