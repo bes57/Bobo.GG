@@ -225,18 +225,22 @@ PAGE_HTML = """
   .streak-key .sk { width:13px; height:13px; border-radius:3px; display:inline-block; }
   .streak-key .sk-top { background:#7c4dd6; }
   .streak-key .sk-rest { background:#e4dcf0; }
-  /* HTML tooltip, because a logo per TEAM is not something the canvas tooltip
-     can do: it draws one colour box per data item, and a wedge is one item no
-     matter how many teams it holds. */
-  .rose-tip { position:absolute; pointer-events:none; opacity:0; transition:opacity .14s linear;
-              background:rgba(22,18,29,.94); color:#fff; border-radius:8px; padding:10px 12px;
-              font-family:'DM Sans',sans-serif; font-size:.78rem; line-height:1.35;
-              white-space:nowrap; z-index:5; }
-  .rose-tip .rt-head { font-weight:700; margin-bottom:3px; }
-  .rose-tip .rt-sub { color:#c9bfd6; margin-bottom:5px; }
-  .rose-tip .rt-row { display:flex; align-items:center; gap:7px; }
-  .rose-tip .rt-row + .rt-row { margin-top:3px; }
-  .rose-tip .rt-row img { width:17px; height:17px; object-fit:contain; flex:0 0 17px; }
+  /* HTML tooltip, used by both the rose and the stacked bars. Two reasons the
+     canvas one could not do this job: it draws a single colour box per data
+     item, so a logo per TEAM is impossible, and it re-picks its vertical
+     alignment as the box grows -- which made the bubble sit at the bar's top on
+     one bar and centred on the next. */
+  .chart-tip { position:absolute; pointer-events:none; opacity:0; transition:opacity .14s linear;
+               background:rgba(22,18,29,.94); color:#fff; border-radius:8px; padding:10px 12px;
+               font-family:'DM Sans',sans-serif; font-size:.78rem; line-height:1.35;
+               white-space:nowrap; z-index:5; }
+  .chart-tip .rt-head { font-weight:700; margin-bottom:3px; }
+  .chart-tip .rt-sub { color:#c9bfd6; margin-bottom:5px; }
+  .chart-tip .rt-row { display:flex; align-items:center; gap:7px; }
+  .chart-tip .rt-row + .rt-row { margin-top:3px; }
+  .chart-tip .rt-row img { width:17px; height:17px; object-fit:contain; flex:0 0 17px; }
+  .chart-tip .rt-place { color:#c9bfd6; }
+  .tip-wrap { overflow:visible; }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -372,7 +376,7 @@ PAGE_HTML = """
           <span><i class="sk sk-top"></i>Finished top 3</span>
           <span><i class="sk sk-rest"></i>Did not</span>
         </div>
-        <div class="fig-wrap rank-wrap"><canvas id="successChart"></canvas></div>
+        <div class="fig-wrap rank-wrap tip-wrap"><canvas id="successChart"></canvas></div>
       </figure>
     </div>
   </div>
@@ -430,30 +434,28 @@ Chart.Tooltip.positioners.aboveMark = function (items) {
 };
 
 
-// Stacked-bar tooltips: beside the bar, level with the top of its stack.
-//
-// xAlign is set here, from which half of the plot the bar sits in -- that needs
-// no knowledge of the box's width, and with a dozen teams listed the box is big
-// enough that guessing wrong is costly.
-//
-// yAlign is deliberately NOT set. Chart.js only runs its own vertical alignment
-// when the positioner leaves it undefined, and that logic already knows the
-// box's measured height, so it flips between top/center/bottom to keep a long
-// list inside the canvas. Setting it here short-circuits that, which is what
-// forced the earlier anchor to the middle of the plot -- safe, but nowhere near
-// the short bars.
-Chart.Tooltip.positioners.besideBar = function (items) {
-  if (!items.length) return false;
-  const e = items[0].element, ca = this.chart.chartArea;
-  const toRight = e.x < (ca.left + ca.right) / 2;
-  // Top of the whole stack, not of the segment under the cursor.
-  const topSeg = this.chart.getDatasetMeta(1).data[items[0].index];
+// Shared HTML tooltip. Placement is fixed by the caller and only ever clamped
+// vertically, so a given chart always puts its bubble in the same relation to
+// the thing under the cursor. Horizontal overflow is deliberately left alone --
+// the box is allowed off the white plate.
+function makeTip(canvas) {
+  const box = document.createElement('div');
+  box.className = 'chart-tip';
+  canvas.parentNode.appendChild(box);
   return {
-    x: e.x + ((e.width || 0) / 2 + 12) * (toRight ? 1 : -1),
-    y: topSeg ? topSeg.y : e.y,
-    xAlign: toRight ? 'left' : 'right'
+    hide() { box.style.opacity = 0; },
+    place(html, x, y, sideX, sideY) {
+      box.innerHTML = html;
+      box.style.opacity = 1;
+      const W = box.offsetWidth, H = box.offsetHeight, g = 10;
+      const h = canvas.parentNode.clientHeight;
+      const L = sideX > 0 ? x + g : sideX < 0 ? x - g - W : x - W / 2;
+      const T = sideY > 0 ? y + g : sideY < 0 ? y - g - H : y - H / 2;
+      box.style.left = L + 'px';
+      box.style.top  = Math.max(2, Math.min(T, h - H - 2)) + 'px';
+    }
   };
-};
+}
 
 const plate = {
   id: 'plate',
@@ -868,16 +870,14 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   const ink = n => n === 0 ? 'rgba(124,77,214,.05)'
                            : 'rgba(124,77,214,' + (0.22 + 0.58 * (n / top)).toFixed(3) + ')';
 
-  const box = document.createElement('div');
-  box.className = 'rose-tip';
-  el.parentNode.appendChild(box);
+  const tipBox = makeTip(el);
 
   // Anchored off the arc itself rather than tooltip.caretX/caretY: Chart.js
   // derives the caret from where IT would have put a canvas tooltip, sized to
   // its own box, which left this one tens of pixels off the wedge.
   function tip(ctx) {
     const t = ctx.tooltip;
-    if (!t.opacity || !t.dataPoints || !t.dataPoints.length) { box.style.opacity = 0; return; }
+    if (!t.opacity || !t.dataPoints || !t.dataPoints.length) { tipBox.hide(); return; }
     const idx = t.dataPoints[0].dataIndex;
     const r = rows[idx];
     let h = '<div class="rt-head">' + r.bucket + ' in their last 5</div>';
@@ -885,9 +885,6 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
                                        : 'No winner came in on this record') + '</div>';
     h += r.who.map(w => '<div class="rt-row"><img src="/logos/' + w.org + '.png" alt="">'
                         + w.org + ' ' + w.label + '</div>').join('');
-    box.innerHTML = h;
-
-    box.style.opacity = 1;
     const a = ctx.chart.getDatasetMeta(0).data[idx];
     const mid = (a.startAngle + a.endAngle) / 2;
     const dx = Math.cos(mid), dy = Math.sin(mid);
@@ -895,14 +892,9 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     // no tip, so they anchor on the ring the count sits on.
     const maxR = Math.max(...ctx.chart.getDatasetMeta(0).data.map(e => e.outerRadius || 0));
     const rad = r.n ? a.outerRadius * 0.92 : maxR * 0.13;
-    const x = a.x + dx * rad, y = a.y + dy * rad;
-    const W = box.offsetWidth, H = box.offsetHeight, gap = 10;
-    box.style.left = (dx >  0.3 ? x + gap
-                    : dx < -0.3 ? x - gap - W
-                    :             x - W / 2) + 'px';
-    box.style.top  = (dy >  0.3 ? y + gap
-                    : dy < -0.3 ? y - gap - H
-                    :             y - H / 2) + 'px';
+    tipBox.place(h, a.x + dx * rad, a.y + dy * rad,
+                 dx > 0.3 ? 1 : dx < -0.3 ? -1 : 0,
+                 dy > 0.3 ? 1 : dy < -0.3 ? -1 : 0);
   }
 
   // Count inside each wedge. Zeros have no wedge to sit in, so they park on a
@@ -1007,6 +999,39 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
     }
   };
 
+  const tipBox = makeTip(el);
+  const ord = p => p + (p === 1 ? 'st' : p === 2 ? 'nd' : 'rd');
+
+  // One rule, every bar: box beside the bar, its top level with the top of the
+  // stack. Side comes from which half of the plot the bar is in. Only the
+  // vertical clamp in makeTip can move it, and only enough to stay on canvas --
+  // letting Chart.js pick the alignment is what made this jump between bars.
+  function barTip(ctx) {
+    const t = ctx.tooltip;
+    if (!t.opacity || !t.dataPoints || !t.dataPoints.length) { tipBox.hide(); return; }
+    const idx = t.dataPoints[0].dataIndex, r = rows[idx];
+    let h = '<div class="rt-head">' + r.bucket + ' in their last 5</div>';
+    h += '<div class="rt-sub">' + (r.n
+        ? r.top3 + ' of ' + r.n + ' finished top 3 (' + Math.round(100 * r.top3 / r.n) + '%)'
+        : 'No team arrived on this record') + '</div>';
+    // Nothing placed means nothing to list, so name the teams instead -- those
+    // are the small buckets. Capped, in case one is ever large and podium-less.
+    const list = r.top3 ? r.who : r.all.slice(0, 8);
+    h += list.map(w => '<div class="rt-row"><img src="/logos/' + w.org + '.png" alt="">'
+                     + w.org + ' ' + w.label
+                     + (w.place ? ' <span class="rt-place">(' + ord(w.place) + ')</span>' : '')
+                     + '</div>').join('');
+    if (!r.top3 && r.all.length > list.length) {
+      h += '<div class="rt-row rt-place">+' + (r.all.length - list.length) + ' more</div>';
+    }
+    const bars = ctx.chart.getDatasetMeta(0).data;
+    const bar = bars[idx], ca = ctx.chart.chartArea;
+    const topSeg = ctx.chart.getDatasetMeta(1).data[idx];
+    const toRight = bar.x < (ca.left + ca.right) / 2;
+    tipBox.place(h, bar.x + ((bar.width || 0) / 2) * (toRight ? 1 : -1),
+                 topSeg ? topSeg.y : bar.y, toRight ? 1 : -1, 1);
+  }
+
   const c = new Chart(el, {
     type: 'bar',
     data: {
@@ -1044,37 +1069,7 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
           color: '#3d1a6e', padding: {top: 2, bottom: 14},
           font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
         },
-        tooltip: {
-          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
-          position: 'besideBar',
-          // Both stack segments resolve to the same bucket, so without this the
-          // body is built twice.
-          filter: it => it.datasetIndex === 0,
-          animation: {duration: 140},
-          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
-          callbacks: {
-            title: it => rows[it[0].dataIndex].bucket + ' in their last 5',
-            label: () => [],
-            afterBody: it => {
-              const r = rows[it[0].dataIndex];
-              if (!r.n) return ['No team arrived on this record'];
-              const head = r.top3 + ' of ' + r.n + ' finished top 3 ('
-                         + Math.round(100 * r.top3 / r.n) + '%)';
-              const ord = p => p + (p === 1 ? 'st' : p === 2 ? 'nd' : 'rd');
-              // With no top-3 finisher there is nothing to list, so name the
-              // teams instead -- those buckets are the small ones. Capped, in
-              // case a bucket ever gets both large and empty of podiums.
-              if (!r.top3) {
-                const some = r.all.slice(0, 8);
-                return [head, ''].concat(
-                  some.map(w => '  ' + w.org + ' \u2014 ' + w.label),
-                  r.all.length > some.length ? ['  +' + (r.all.length - some.length) + ' more'] : []);
-              }
-              return [head, ''].concat(
-                r.who.map(w => '  ' + w.org + ' \u2014 ' + w.label + ' (' + ord(w.place) + ')'));
-            }
-          }
-        }
+        tooltip: {enabled: false, external: barTip}
       }
     },
     plugins: [plate, rateLabels]
