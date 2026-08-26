@@ -1060,9 +1060,18 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
               if (!r.n) return ['No team arrived on this record'];
               const head = r.top3 + ' of ' + r.n + ' finished top 3 ('
                          + Math.round(100 * r.top3 / r.n) + '%)';
+              const ord = p => p + (p === 1 ? 'st' : p === 2 ? 'nd' : 'rd');
+              // With no top-3 finisher there is nothing to list, so name the
+              // teams instead -- those buckets are the small ones. Capped, in
+              // case a bucket ever gets both large and empty of podiums.
+              if (!r.top3) {
+                const some = r.all.slice(0, 8);
+                return [head, ''].concat(
+                  some.map(w => '  ' + w.org + ' \u2014 ' + w.label),
+                  r.all.length > some.length ? ['  +' + (r.all.length - some.length) + ' more'] : []);
+              }
               return [head, ''].concat(
-                r.who.map(w => '  ' + w.org + ' \u2014 ' + w.label + ' (' + w.place +
-                               (w.place === 1 ? 'st' : w.place === 2 ? 'nd' : 'rd') + ')'));
+                r.who.map(w => '  ' + w.org + ' \u2014 ' + w.label + ' (' + ord(w.place) + ')'));
             }
           }
         }

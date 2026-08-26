@@ -169,7 +169,7 @@ def build():
     # Every team at every international, last-5 record against a top-3 finish.
     # Teams with fewer than five prior franchised matches are dropped rather than
     # bucketed: a 3-0 start is not a 5-0 run and would inflate the top bucket.
-    succ = {b: {"n": 0, "top3": 0, "who": []} for b in buckets}
+    succ = {b: {"n": 0, "top3": 0, "who": [], "all": []} for b in buckets}
     short = []
     for ev, _ in INTERNATIONALS_ALL:
         if ev not in starts.index:
@@ -184,6 +184,10 @@ def build():
                 continue
             b = succ[l5["bucket"]]
             b["n"] += 1
+            # Every team, not only the ones that placed: a bucket with no top-3
+            # finisher had nothing to show otherwise, and those are exactly the
+            # small buckets a reader most wants named.
+            b["all"].append({"org": org, "label": label[ev], "place": podium.get(org)})
             if org in podium:
                 b["top3"] += 1
                 b["who"].append({"org": org, "label": label[ev], "place": podium[org]})

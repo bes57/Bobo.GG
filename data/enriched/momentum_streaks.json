@@ -297,6 +297,78 @@
      "label": "Masters London 2026",
      "place": 3
     }
+   ],
+   "all": [
+    {
+     "org": "PRX",
+     "label": "Masters Tokyo 2023",
+     "place": 3
+    },
+    {
+     "org": "KR\u00dc",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "GEN",
+     "label": "Masters Madrid 2024",
+     "place": 2
+    },
+    {
+     "org": "KC",
+     "label": "Masters Madrid 2024",
+     "place": null
+    },
+    {
+     "org": "100T",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "EDG",
+     "label": "Champions 2024",
+     "place": 1
+    },
+    {
+     "org": "FNC",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "XLG",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "G2",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "T1",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "TL",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "EDG",
+     "label": "Masters London 2026",
+     "place": 3
+    },
+    {
+     "org": "TH",
+     "label": "Masters London 2026",
+     "place": null
+    }
    ]
   },
   {
@@ -358,6 +430,208 @@
      "org": "PRX",
      "label": "Masters London 2026",
      "place": 2
+    }
+   ],
+   "all": [
+    {
+     "org": "FNC",
+     "label": "Masters Tokyo 2023",
+     "place": 1
+    },
+    {
+     "org": "LOUD",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "TL",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "EDG",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "FNC",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "EDG",
+     "label": "Masters Madrid 2024",
+     "place": null
+    },
+    {
+     "org": "SEN",
+     "label": "Masters Madrid 2024",
+     "place": 1
+    },
+    {
+     "org": "EDG",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "FNC",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "FPX",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "TH",
+     "label": "Masters Shanghai 2024",
+     "place": 2
+    },
+    {
+     "org": "G2",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "GEN",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "LEV",
+     "label": "Champions 2024",
+     "place": 3
+    },
+    {
+     "org": "EDG",
+     "label": "Masters Bangkok 2025",
+     "place": 3
+    },
+    {
+     "org": "G2",
+     "label": "Masters Bangkok 2025",
+     "place": 2
+    },
+    {
+     "org": "KRX",
+     "label": "Masters Bangkok 2025",
+     "place": null
+    },
+    {
+     "org": "TL",
+     "label": "Masters Bangkok 2025",
+     "place": null
+    },
+    {
+     "org": "VIT",
+     "label": "Masters Bangkok 2025",
+     "place": null
+    },
+    {
+     "org": "FNC",
+     "label": "Masters Toronto 2025",
+     "place": 2
+    },
+    {
+     "org": "G2",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Toronto 2025",
+     "place": 1
+    },
+    {
+     "org": "SEN",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "BLG",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "DRG",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "RRQ",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "TL",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "AG",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "BBL",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "EDG",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "FUR",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "G2",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "M8",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "NS",
+     "label": "Masters Santiago 2026",
+     "place": 1
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Santiago 2026",
+     "place": 2
+    },
+    {
+     "org": "G2",
+     "label": "Masters London 2026",
+     "place": null
+    },
+    {
+     "org": "NRG",
+     "label": "Masters London 2026",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Masters London 2026",
+     "place": 2
+    },
+    {
+     "org": "VIT",
+     "label": "Masters London 2026",
+     "place": null
     }
    ]
   },
@@ -426,6 +700,258 @@
      "label": "Masters London 2026",
      "place": 1
     }
+   ],
+   "all": [
+    {
+     "org": "FUT",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "KRX",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "NRG",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "T1",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "EG",
+     "label": "Champions 2023",
+     "place": 1
+    },
+    {
+     "org": "GIA",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "LOUD",
+     "label": "Champions 2023",
+     "place": 3
+    },
+    {
+     "org": "NRG",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Champions 2023",
+     "place": 2
+    },
+    {
+     "org": "TL",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "ZETA",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "FPX",
+     "label": "Masters Madrid 2024",
+     "place": null
+    },
+    {
+     "org": "LOUD",
+     "label": "Masters Madrid 2024",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Masters Madrid 2024",
+     "place": 3
+    },
+    {
+     "org": "TH",
+     "label": "Masters Madrid 2024",
+     "place": null
+    },
+    {
+     "org": "FUT",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "G2",
+     "label": "Masters Shanghai 2024",
+     "place": 3
+    },
+    {
+     "org": "LEV",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "T1",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "KRX",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "KR\u00dc",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "PRX",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "SEN",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "TE",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "TH",
+     "label": "Champions 2024",
+     "place": 2
+    },
+    {
+     "org": "VIT",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "SEN",
+     "label": "Masters Bangkok 2025",
+     "place": null
+    },
+    {
+     "org": "T1",
+     "label": "Masters Bangkok 2025",
+     "place": 1
+    },
+    {
+     "org": "TE",
+     "label": "Masters Bangkok 2025",
+     "place": null
+    },
+    {
+     "org": "BLG",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "GEN",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "MIBR",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "RRQ",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "TH",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "TL",
+     "label": "Masters Toronto 2025",
+     "place": null
+    },
+    {
+     "org": "WOL",
+     "label": "Masters Toronto 2025",
+     "place": 3
+    },
+    {
+     "org": "EDG",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "GX",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "KRX",
+     "label": "Champions 2025",
+     "place": 3
+    },
+    {
+     "org": "NRG",
+     "label": "Champions 2025",
+     "place": 1
+    },
+    {
+     "org": "SEN",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "T1",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "TH",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "NRG",
+     "label": "Masters Santiago 2026",
+     "place": 3
+    },
+    {
+     "org": "XLG",
+     "label": "Masters Santiago 2026",
+     "place": null
+    },
+    {
+     "org": "DRG",
+     "label": "Masters London 2026",
+     "place": null
+    },
+    {
+     "org": "FS",
+     "label": "Masters London 2026",
+     "place": null
+    },
+    {
+     "org": "GE",
+     "label": "Masters London 2026",
+     "place": null
+    },
+    {
+     "org": "LEV",
+     "label": "Masters London 2026",
+     "place": 1
+    },
+    {
+     "org": "XLG",
+     "label": "Masters London 2026",
+     "place": null
+    }
    ]
   },
   {
@@ -448,19 +974,109 @@
      "label": "Champions 2025",
      "place": 2
     }
+   ],
+   "all": [
+    {
+     "org": "EG",
+     "label": "Masters Tokyo 2023",
+     "place": 2
+    },
+    {
+     "org": "NAVI",
+     "label": "Masters Tokyo 2023",
+     "place": null
+    },
+    {
+     "org": "FPX",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "FUT",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "KRX",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "NAVI",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "T1",
+     "label": "Champions 2023",
+     "place": null
+    },
+    {
+     "org": "DRG",
+     "label": "Masters Shanghai 2024",
+     "place": null
+    },
+    {
+     "org": "GEN",
+     "label": "Masters Shanghai 2024",
+     "place": 1
+    },
+    {
+     "org": "BLG",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "FPX",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "FUT",
+     "label": "Champions 2024",
+     "place": null
+    },
+    {
+     "org": "FNC",
+     "label": "Champions 2025",
+     "place": 2
+    },
+    {
+     "org": "MIBR",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "XLG",
+     "label": "Champions 2025",
+     "place": null
+    },
+    {
+     "org": "FUT",
+     "label": "Masters London 2026",
+     "place": null
+    }
    ]
   },
   {
    "bucket": "1-4",
    "n": 1,
    "top3": 0,
-   "who": []
+   "who": [],
+   "all": [
+    {
+     "org": "TLN",
+     "label": "Champions 2024",
+     "place": null
+    }
+   ]
   },
   {
    "bucket": "0-5",
    "n": 0,
    "top3": 0,
-   "who": []
+   "who": [],
+   "all": []
   }
  ],
  "short_sample": [
