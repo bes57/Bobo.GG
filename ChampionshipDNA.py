@@ -397,6 +397,13 @@ function queueRedraw() {
     charts.forEach(c => { try { c.draw(); } catch (e) {} });
   });
 }
+// Point labels drop the "Masters" prefix: on a plot this dense the word is
+// repeated forty times and carries nothing, since the city already identifies
+// the event. Champions has no city in its name and is left alone. Only the
+// DRAWN text changes -- the filter buttons, ring colours and tooltips all still
+// key off the full name.
+function shortIntl(s) { return s.replace(/^Masters /, ''); }
+
 function logo(org) {
   if (!logoCache[org]) {
     const i = new Image();
@@ -538,7 +545,7 @@ const bands = {
     c.data.datasets[0].data.forEach(d => {
       const mx = x.getPixelForValue(d.x), my = y.getPixelForValue(d.y);
       const half = (d.p.won ? 30 : 25) / 2;
-      const lw = textW(ctx, d.p.intl, "700 9px 'DM Sans',sans-serif");
+      const lw = textW(ctx, shortIntl(d.p.intl), "700 9px 'DM Sans',sans-serif");
       occupied.push({l: mx - Math.max(half, lw / 2), r: mx + Math.max(half, lw / 2),
                      t: my - half, b: my + half + 14});
     });
@@ -668,16 +675,17 @@ const marks = {
       }
       ctx.globalAlpha = 1;
       const font = (on ? "800 12px " : "700 9px ") + "'DM Sans',sans-serif";
-      const w = textW(ctx, p.intl, font);
+      const lbl = shortIntl(p.intl);
+      const w = textW(ctx, lbl, font);
       ctx.font = font;
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       const ly = pt.y + S / 2 + 3;
       ctx.lineWidth = on ? 3.5 : 2;
       ctx.lineJoin = 'round';
       ctx.strokeStyle = dim ? 'rgba(190,184,196,.5)' : ringFor(p.intl);
-      ctx.strokeText(p.intl, pt.x, ly);
+      ctx.strokeText(lbl, pt.x, ly);
       ctx.fillStyle = dim ? 'rgba(150,142,158,.55)' : '#ffffff';
-      ctx.fillText(p.intl, pt.x, ly);
+      ctx.fillText(lbl, pt.x, ly);
       ctx.restore();
     });
   }
