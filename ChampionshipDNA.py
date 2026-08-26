@@ -378,6 +378,8 @@ PAGE_HTML = """
         </div>
         <div class="fig-wrap rank-wrap tip-wrap"><canvas id="successChart"></canvas></div>
       </figure>
+
+      <p>The trend is there, but it&rsquo;s nothing more extreme than we would&rsquo;ve expected.</p>
     </div>
   </div>
 </div>
