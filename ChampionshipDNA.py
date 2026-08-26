@@ -61,9 +61,12 @@ def _landscape():
     data["winner_ranks"] = _winner_ranks(data.get("winners") or {})
     try:
         with open(_STREAKS) as f:
-            data["streaks"] = json.load(f).get("winners") or []
+            _s = json.load(f)
+        data["streaks"] = _s.get("winners") or []
+        data["last5"] = _s.get("tally") or []
     except Exception:
         data["streaks"] = []
+        data["last5"] = []
     _ls_cache = (data, stamp)
     return data
 
@@ -209,15 +212,9 @@ PAGE_HTML = """
                     text-decoration-thickness:1px; text-underline-offset:2px; }
   .content .xlink:hover { color:#5b21b6; }
   .rank-wrap { aspect-ratio:2.1/1; }
-  /* Result key for the streak chart, mirroring the L/W legend on the NCAA
-     original. HTML rather than Chart.js's legend, which with a single dataset
-     would only ever render one swatch. */
-  .streak-key { display:flex; justify-content:center; gap:20px; margin-bottom:10px;
-                font-family:'DM Sans',sans-serif; font-size:.76rem; color:#7a6e7e; }
-  .streak-key span { display:inline-flex; align-items:center; gap:7px; }
-  .streak-key .sk { width:13px; height:13px; border-radius:3px; display:inline-block; }
-  .streak-key .sk-l { background:#d1732f; }
-  .streak-key .sk-w { background:#5aa88b; }
+  /* A rose chart is radial, so it wants a near-square frame rather than the
+     2.1:1 the line and scatter charts use. */
+  .polar-wrap { aspect-ratio:1.35/1; }
   .content .pin { color:#7c4dd6; font-weight:500; text-decoration:underline;
                   text-decoration-thickness:1px; text-underline-offset:2px; cursor:pointer; }
   .content .pin:hover { color:#5b21b6; }
@@ -340,11 +337,7 @@ PAGE_HTML = """
       <p>How important is momentum, then?</p>
 
       <figure class="fig">
-        <div class="streak-key">
-          <span><i class="sk sk-l"></i>Losing streak</span>
-          <span><i class="sk sk-w"></i>Winning streak</span>
-        </div>
-        <div class="fig-wrap rank-wrap"><canvas id="streakChart"></canvas></div>
+        <div class="fig-wrap polar-wrap"><canvas id="last5Chart"></canvas></div>
       </figure>
     </div>
   </div>
@@ -799,65 +792,54 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   charts.push(c);
 })();
 
-// End-of-split streak each winner carried into the tournament. Bar chart in
-// the shape of the NCAA original: height is the run length, colour says whether
-// the run was wins or losses. Logos sit above each bar and the event name goes
-// on the category axis, the same treatment as the rank chart below.
+// Last-5 records of the winners, as a rose chart in the shape of the NCAA
+// original: one wedge per possible record, radius = how many winners had it.
+// Counted across events rather than inside the split -- a run into an
+// international routinely spans a split, an off-season event and a previous
+// international, and an event boundary does not reset momentum.
 (function () {
-  const el = document.getElementById('streakChart');
-  if (!el || !LS.streaks || !LS.streaks.length) return;
-  const rows = LS.streaks;
-  const L = '#d1732f', W = '#5aa88b';
-  const tall = Math.max(...rows.map(r => r.streak));
-
-  const streakMarks = {
-    id: 'streakMarks',
-    afterDatasetsDraw(c) {
-      const {ctx} = c;
-      c.getDatasetMeta(0).data.forEach((bar, i) => {
-        const r = rows[i], img = logo(r.org);
-        ctx.save();
-        // Run length inside the bar top, logo floating just above it.
-        ctx.font = "800 11px 'DM Sans',sans-serif";
-        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillStyle = '#fff';
-        ctx.fillText(r.streak + r.result, bar.x, bar.y + 5);
-        if (img.complete && img.naturalWidth) ctx.drawImage(img, bar.x - 13, bar.y - 31, 26, 26);
-        ctx.restore();
-      });
-    }
-  };
+  const el = document.getElementById('last5Chart');
+  if (!el || !LS.last5 || !LS.last5.length) return;
+  const rows = LS.last5;
+  const top  = Math.max(...rows.map(r => r.n));
+  // Darker the more common, so the shape reads before the labels do. Empty
+  // buckets keep a faint ring so a missing wedge is visibly a zero.
+  const ink = n => n === 0 ? 'rgba(124,77,214,.05)'
+                           : 'rgba(124,77,214,' + (0.22 + 0.58 * (n / top)).toFixed(3) + ')';
 
   const c = new Chart(el, {
-    type: 'bar',
+    type: 'polarArea',
     data: {
-      labels: rows.map(r => r.intl),
+      labels: rows.map(r => r.bucket),
       datasets: [{
-        data: rows.map(r => r.streak),
-        backgroundColor: rows.map(r => r.result === 'W' ? W : L),
-        borderRadius: 3, borderSkipped: false,
-        maxBarThickness: 54, hitRadius: 0
+        data: rows.map(r => r.n),
+        backgroundColor: rows.map(r => ink(r.n)),
+        borderColor: '#fff', borderWidth: 2
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false, animation: false,
-      layout: {padding: {top: 18, right: 16, bottom: 4, left: 4}},
-      interaction: {mode: 'index', intersect: false},
+      layout: {padding: {top: 6, right: 10, bottom: 6, left: 10}},
       scales: {
-        x: {ticks: {font: {size: 9.5}, color: '#9a8fa4', maxRotation: 40, minRotation: 40},
-            grid: {display: false}},
-        y: {min: 0, max: Math.max(6, tall + 1),
-            title: {display: true, text: 'Streak length',
-                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
-            ticks: {stepSize: 1, font: {size: 10}, color: '#9a8fa4'},
-            grid: {color: 'rgba(0,0,0,.05)'}}
+        r: {
+          min: 0, max: top,
+          ticks: {stepSize: 1, font: {size: 9.5}, color: '#9a8fa4',
+                  backdropColor: 'rgba(255,255,255,.8)', z: 2},
+          grid: {color: 'rgba(0,0,0,.07)'},
+          angleLines: {color: 'rgba(0,0,0,.05)'},
+          pointLabels: {
+            display: true, centerPointLabels: true,
+            font: {family: "'DM Sans',sans-serif", size: 13, weight: 700},
+            color: '#5c5165'
+          }
+        }
       },
       plugins: {
         legend: {display: false},
         title: {
           display: true,
-          text: 'Every international winner\u2019s end-of-split streak',
-          color: '#3d1a6e', padding: {top: 2, bottom: 14},
+          text: 'Last-5 records of international winners',
+          color: '#3d1a6e', padding: {top: 2, bottom: 10},
           font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
         },
         tooltip: {
@@ -865,19 +847,17 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
           animation: {duration: 140},
           animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
           callbacks: {
-            title: it => rows[it[0].dataIndex].org + ' won ' + rows[it[0].dataIndex].intl,
+            title: it => rows[it[0].dataIndex].bucket + ' in their last 5',
             label: it => {
               const r = rows[it.dataIndex];
-              const kind = r.result === 'W' ? 'winning' : 'losing';
-              return ['Came in on a ' + r.streak + '-match ' + kind + ' streak',
-                      r.prior + ': ' + r.record,
-                      'Series in order: ' + r.seq];
+              if (!r.n) return 'No winner came in on this record';
+              return [r.n + (r.n === 1 ? ' winner' : ' winners')].concat(r.who);
             }
           }
         }
       }
     },
-    plugins: [plate, streakMarks]
+    plugins: [plate]
   });
   charts.push(c);
 })();

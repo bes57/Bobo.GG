@@ -5,13 +5,18 @@ the domestic split immediately before the tournament.
 
 Writes data/enriched/momentum_streaks.json for the Championship DNA article.
 
-Modelled on the NCAA "End-of-Season Streaks for NCAA Champions" chart: one bar
-per champion, height = the length of the run they ended the regular season on,
-coloured by whether that run was wins or losses.
+Two views, both modelled on the NCAA originals:
 
-"Split prior" is resolved exactly as BuildSideLandscape does it -- per TEAM, the
-most recent domestic split that team actually played before the international
-starts -- so the two charts always describe the same stretch of matches.
+  streaks -- the run a winner ended its domestic split on, measured inside that
+    split. "Split prior" is resolved exactly as BuildSideLandscape does it, per
+    TEAM, so this describes the same stretch of matches as the landscape chart.
+
+  last5 -- the winner's record over its last five matches before the tournament,
+    counted ACROSS events rather than inside the split. A team's run into an
+    international routinely spans a split, an off-season event and a previous
+    international (MIBR's five straight losses before Champions ran EWC ->
+    Toronto -> Stage 2), and an event boundary does not reset momentum. It also
+    avoids undercounting teams whose split was shorter than five matches.
 """
 import os, json, glob
 import pandas as pd
@@ -73,6 +78,17 @@ def _terminal_streak(seq):
     return n, ("W" if last else "L")
 
 
+def _last_five(series, org, before):
+    """Record over the org's last five matches before a date, across events."""
+    g = series[(series.org == org) & (series.date < before)].sort_values(["date", "mid"]).tail(5)
+    if g.empty:
+        return None
+    w = int(g.won.sum())
+    return {"w": w, "l": len(g) - w, "bucket": f"{w}-{len(g) - w}",
+            "seq": "".join("W" if v else "L" for v in g.won),
+            "events": sorted(set(g.event))}
+
+
 def build():
     sp = side_rates()
     sp = sp[~sp.org.isin(_NOT_ORGS)]
@@ -96,14 +112,26 @@ def build():
             skipped.append(f"{org} @ {label[ev]} (no series rows for {pe})"); continue
         seq = list(g.won)
         n, res = _terminal_streak(seq)
-        out.append({
+        rec = {
             "org": org, "intl": label[ev], "prior": pe,
             "streak": n, "result": res,
             "record": f"{sum(seq)}-{len(seq) - sum(seq)}",
             "seq": "".join("W" if v else "L" for v in seq),
-        })
+        }
+        rec["last5"] = _last_five(series, org, starts[ev])
+        out.append(rec)
 
-    payload = {"winners": out, "skipped": skipped}
+    # Every 5-match bucket, including the empty ones -- a wedge missing from the
+    # chart says something, but only if the reader can see where it would be.
+    buckets = [f"{w}-{5 - w}" for w in range(5, -1, -1)]
+    tally = {b: [] for b in buckets}
+    for r in out:
+        if r.get("last5"):
+            tally[r["last5"]["bucket"]].append(r["org"] + " " + r["intl"])
+
+    payload = {"winners": out, "buckets": buckets,
+               "tally": [{"bucket": b, "n": len(tally[b]), "who": tally[b]} for b in buckets],
+               "skipped": skipped}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as f:
         json.dump(payload, f, indent=1)
@@ -114,7 +142,9 @@ if __name__ == "__main__":
     p = build()
     print(f"wrote {OUT}")
     for w in p["winners"]:
-        print(f"  {w['org']:<4} {w['intl']:<22} {w['prior']:<40} "
-              f"{w['seq']:<12} -> {w['streak']}{w['result']}  ({w['record']})")
+        l5 = w.get("last5") or {}
+        print(f"  {w['org']:<4} {w['intl']:<22} {w['seq']:<12} -> {w['streak']}{w['result']}"
+              f"   last5 {l5.get('seq','?'):<6} {l5.get('bucket','?')}")
+    print("  last-5 buckets: " + ", ".join(f"{t['bucket']}={t['n']}" for t in p["tally"]))
     if p["skipped"]:
         print(f"  skipped: {p['skipped']}")
