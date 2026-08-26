@@ -3,11 +3,6 @@
   {
    "org": "FNC",
    "intl": "Masters Tokyo 2023",
-   "prior": "Champions Tour 2023: EMEA League",
-   "streak": 1,
-   "result": "L",
-   "record": "11-1",
-   "seq": "WWWWWWWWWWWL",
    "last5": {
     "w": 4,
     "l": 1,
@@ -16,16 +11,29 @@
     "events": [
      "Champions Tour 2023: EMEA League"
     ]
+   },
+   "prior": "Champions Tour 2023: EMEA League",
+   "streak": 1,
+   "result": "L",
+   "record": "11-1",
+   "seq": "WWWWWWWWWWWL"
+  },
+  {
+   "org": "EG",
+   "intl": "Champions 2023",
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "bucket": "3-2",
+    "seq": "WWLWL",
+    "events": [
+     "Champions Tour 2023: Masters Tokyo"
+    ]
    }
   },
   {
    "org": "SEN",
    "intl": "Masters Madrid 2024",
-   "prior": "Champions Tour 2024: Americas Kickoff",
-   "streak": 2,
-   "result": "W",
-   "record": "5-2",
-   "seq": "LWWWLWW",
    "last5": {
     "w": 4,
     "l": 1,
@@ -34,16 +42,16 @@
     "events": [
      "Champions Tour 2024: Americas Kickoff"
     ]
-   }
+   },
+   "prior": "Champions Tour 2024: Americas Kickoff",
+   "streak": 2,
+   "result": "W",
+   "record": "5-2",
+   "seq": "LWWWLWW"
   },
   {
    "org": "GEN",
    "intl": "Masters Shanghai 2024",
-   "prior": "Champions Tour 2024: Pacific Stage 1",
-   "streak": 1,
-   "result": "L",
-   "record": "5-5",
-   "seq": "WLWLWLLWWL",
    "last5": {
     "w": 2,
     "l": 3,
@@ -52,16 +60,16 @@
     "events": [
      "Champions Tour 2024: Pacific Stage 1"
     ]
-   }
+   },
+   "prior": "Champions Tour 2024: Pacific Stage 1",
+   "streak": 1,
+   "result": "L",
+   "record": "5-5",
+   "seq": "WLWLWLLWWL"
   },
   {
    "org": "EDG",
    "intl": "Champions 2024",
-   "prior": "Champions Tour 2024: China Stage 2",
-   "streak": 5,
-   "result": "W",
-   "record": "5-2",
-   "seq": "LLWWWWW",
    "last5": {
     "w": 5,
     "l": 0,
@@ -70,16 +78,16 @@
     "events": [
      "Champions Tour 2024: China Stage 2"
     ]
-   }
+   },
+   "prior": "Champions Tour 2024: China Stage 2",
+   "streak": 5,
+   "result": "W",
+   "record": "5-2",
+   "seq": "LLWWWWW"
   },
   {
    "org": "T1",
    "intl": "Masters Bangkok 2025",
-   "prior": "VCT 2025: Pacific Kickoff",
-   "streak": 1,
-   "result": "L",
-   "record": "4-2",
-   "seq": "WWWLWL",
    "last5": {
     "w": 3,
     "l": 2,
@@ -88,16 +96,16 @@
     "events": [
      "VCT 2025: Pacific Kickoff"
     ]
-   }
+   },
+   "prior": "VCT 2025: Pacific Kickoff",
+   "streak": 1,
+   "result": "L",
+   "record": "4-2",
+   "seq": "WWWLWL"
   },
   {
    "org": "PRX",
    "intl": "Masters Toronto 2025",
-   "prior": "VCT 2025: Pacific Stage 1",
-   "streak": 1,
-   "result": "L",
-   "record": "5-4",
-   "seq": "LLLWWWWWL",
    "last5": {
     "w": 4,
     "l": 1,
@@ -106,16 +114,16 @@
     "events": [
      "VCT 2025: Pacific Stage 1"
     ]
-   }
+   },
+   "prior": "VCT 2025: Pacific Stage 1",
+   "streak": 1,
+   "result": "L",
+   "record": "5-4",
+   "seq": "LLLWWWWWL"
   },
   {
    "org": "NRG",
    "intl": "Champions 2025",
-   "prior": "VCT 2025: Americas Stage 2",
-   "streak": 1,
-   "result": "L",
-   "record": "7-3",
-   "seq": "LWWWWLWWWL",
    "last5": {
     "w": 3,
     "l": 2,
@@ -124,16 +132,16 @@
     "events": [
      "VCT 2025: Americas Stage 2"
     ]
-   }
+   },
+   "prior": "VCT 2025: Americas Stage 2",
+   "streak": 1,
+   "result": "L",
+   "record": "7-3",
+   "seq": "LWWWWLWWWL"
   },
   {
    "org": "NS",
    "intl": "Masters Santiago 2026",
-   "prior": "VCT 2026: Pacific Kickoff",
-   "streak": 4,
-   "result": "W",
-   "record": "4-0",
-   "seq": "WWWW",
    "last5": {
     "w": 4,
     "l": 1,
@@ -143,16 +151,16 @@
      "VCT 2025: Pacific Stage 2",
      "VCT 2026: Pacific Kickoff"
     ]
-   }
+   },
+   "prior": "VCT 2026: Pacific Kickoff",
+   "streak": 4,
+   "result": "W",
+   "record": "4-0",
+   "seq": "WWWW"
   },
   {
    "org": "LEV",
    "intl": "Masters London 2026",
-   "prior": "VCT 2026: Americas Stage 1",
-   "streak": 1,
-   "result": "L",
-   "record": "6-3",
-   "seq": "WWWLLWWWL",
    "last5": {
     "w": 3,
     "l": 2,
@@ -161,7 +169,12 @@
     "events": [
      "VCT 2026: Americas Stage 1"
     ]
-   }
+   },
+   "prior": "VCT 2026: Americas Stage 1",
+   "streak": 1,
+   "result": "L",
+   "record": "6-3",
+   "seq": "WWWLLWWWL"
   }
  ],
  "buckets": [
@@ -207,8 +220,12 @@
   },
   {
    "bucket": "3-2",
-   "n": 3,
+   "n": 4,
    "who": [
+    {
+     "org": "EG",
+     "label": "Champions 2023"
+    },
     {
      "org": "T1",
      "label": "Masters Bangkok 2025"
@@ -244,5 +261,7 @@
    "who": []
   }
  ],
- "skipped": []
+ "skipped": [
+  "EG @ Champions 2023 (no within-split streak)"
+ ]
 }

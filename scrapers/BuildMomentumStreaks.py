@@ -10,9 +10,13 @@ Two views, both modelled on the NCAA originals:
   streaks -- the run a winner ended its domestic split on, measured inside that
     split. "Split prior" is resolved exactly as BuildSideLandscape does it, per
     TEAM, so this describes the same stretch of matches as the landscape chart.
+    Champions 2023 is absent here for the reason it is absent from the landscape:
+    no domestic split preceded it.
 
   last5 -- the winner's record over its last five FRANCHISED matches before the
-    tournament, counted across events rather than inside the split. Crossing the
+    tournament, counted across events rather than inside the split. All TEN
+    internationals appear, Champions 2023 included -- not needing a split before
+    it is the whole point of counting across events. Crossing the
     event boundary matters because a run into an international routinely spans a
     split and a previous international. Third-party events are excluded: a team
     that entered EWC or Red Bull Home Ground would otherwise be judged on
@@ -23,8 +27,10 @@ import pandas as pd
 
 import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from BuildSideLandscape import (INTERNATIONALS, _INTL_SET, _SPLIT_RE, _NOT_ORGS,
-                                side_rates, _event_winners)
+from BuildSideLandscape import (INTERNATIONALS, INTERNATIONALS_ALL, _INTL_SET, _SPLIT_RE,
+                                _NOT_ORGS, side_rates, _event_winners, _event_winners_all)
+
+_INTL_ALL_SET = {e for e, _ in INTERNATIONALS_ALL}
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -102,32 +108,34 @@ def build():
     sp = side_rates()
     sp = sp[~sp.org.isin(_NOT_ORGS)]
     sp["is_split"] = sp.event.str.contains(_SPLIT_RE, regex=True) & ~sp.event.isin(_INTL_SET)
-    starts  = sp[sp.event.isin(_INTL_SET)].groupby("event").date.min()
-    label   = dict(INTERNATIONALS)
-    winners = _event_winners()
+    starts  = sp[sp.event.isin(_INTL_ALL_SET)].groupby("event").date.min()
+    label   = dict(INTERNATIONALS_ALL)
+    winners = _event_winners_all()
+    split_only = dict(INTERNATIONALS)
     series  = _series_table()
 
     out, skipped = [], []
-    for ev, _ in INTERNATIONALS:
+    for ev, _ in INTERNATIONALS_ALL:
         org = winners.get(ev)
         if org is None or ev not in starts.index:
             skipped.append(f"{label[ev]} (no winner or no start date)"); continue
-        prior = sp[(sp.org == org) & sp.is_split & (sp.date < starts[ev])].sort_values("date")
-        if prior.empty:
-            skipped.append(f"{org} @ {label[ev]} (no prior split)"); continue
-        pe = prior.iloc[-1].event
-        g = series[(series.org == org) & (series.event == pe)].sort_values(["date", "mid"])
-        if g.empty:
-            skipped.append(f"{org} @ {label[ev]} (no series rows for {pe})"); continue
-        seq = list(g.won)
-        n, res = _terminal_streak(seq)
-        rec = {
-            "org": org, "intl": label[ev], "prior": pe,
-            "streak": n, "result": res,
-            "record": f"{sum(seq)}-{len(seq) - sum(seq)}",
-            "seq": "".join("W" if v else "L" for v in seq),
-        }
-        rec["last5"] = _last_five(series, org, starts[ev])
+        rec = {"org": org, "intl": label[ev], "last5": _last_five(series, org, starts[ev])}
+
+        # The within-split streak needs a split to have happened first, which is
+        # exactly what Champions 2023 lacks. The last-5 above does not.
+        if ev in split_only:
+            prior = sp[(sp.org == org) & sp.is_split & (sp.date < starts[ev])].sort_values("date")
+            if not prior.empty:
+                pe = prior.iloc[-1].event
+                g = series[(series.org == org) & (series.event == pe)].sort_values(["date", "mid"])
+                if not g.empty:
+                    seq = list(g.won)
+                    n, res = _terminal_streak(seq)
+                    rec.update({"prior": pe, "streak": n, "result": res,
+                                "record": f"{sum(seq)}-{len(seq) - sum(seq)}",
+                                "seq": "".join("W" if v else "L" for v in seq)})
+        if "streak" not in rec:
+            skipped.append(f"{org} @ {label[ev]} (no within-split streak)")
         out.append(rec)
 
     # Every 5-match bucket, including the empty ones -- a wedge missing from the
@@ -152,7 +160,8 @@ if __name__ == "__main__":
     print(f"wrote {OUT}")
     for w in p["winners"]:
         l5 = w.get("last5") or {}
-        print(f"  {w['org']:<4} {w['intl']:<22} {w['seq']:<12} -> {w['streak']}{w['result']}"
+        st = f"{w['streak']}{w['result']}" if "streak" in w else "--"
+        print(f"  {w['org']:<4} {w['intl']:<22} {w.get('seq','-'):<12} -> {st:<3}"
               f"   last5 {l5.get('seq','?'):<6} {l5.get('bucket','?')}")
     print("  last-5 buckets: " + ", ".join(f"{t['bucket']}={t['n']}" for t in p["tally"]))
     if p["skipped"]:
