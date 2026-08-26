@@ -386,17 +386,15 @@ PAGE_HTML = """
   .ro-team img { width:24px; height:24px; object-fit:contain; flex:0 0 24px; }
   .ro-team span { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1rem;
                   color:#16121d; line-height:1.2; }
-  /* One row per change, never wrapped. Gen.G's preseason line is nine names and
-     will not fit a third of the figure at any readable size, so the line scrolls
-     sideways -- the same single-row-scroll the nav bar uses. */
-  .ro-line { display:flex; flex-wrap:nowrap; align-items:center; gap:5px; margin-top:12px;
-             overflow-x:auto; overflow-y:hidden; scrollbar-width:none;
-             -webkit-overflow-scrolling:touch; }
-  .ro-line::-webkit-scrollbar { display:none; }
-  .ro-tag { font-size:.67rem; font-weight:700; letter-spacing:.03em; color:var(--soft);
+  /* Wraps rather than scrolls. Gen.G's preseason line is nine names and cannot
+     fit a third of the figure at any readable size -- scrolling it sideways hid
+     the tail of the line, which is worse than a second row. Names are small
+     enough that most lines still come out on one. */
+  .ro-line { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:12px; }
+  .ro-tag { font-size:.63rem; font-weight:700; letter-spacing:.03em; color:var(--soft);
             background:#f4f0f8; border-radius:5px; padding:2px 6px;
             white-space:nowrap; flex:0 0 auto; }
-  .ro-out, .ro-in { font-size:.79rem; font-weight:600; border-radius:6px; padding:3px 9px;
+  .ro-out, .ro-in { font-size:.71rem; font-weight:600; border-radius:6px; padding:2px 7px;
                     white-space:nowrap; flex:0 0 auto; }
   .ro-out { color:#a33b3b; background:#fbeeee; }
   .ro-in  { color:#2f7a54; background:#eaf6ef; }
