@@ -383,6 +383,102 @@ def _build_alpha_data():
     }
 
 
+# ── Articles registry: ONE list drives every article surface (home "Recent
+# Articles" cards, the hero banner's Latest Article tile, the classic home's
+# article cards, and the /articles/ index). Add a new article here and every
+# page updates and re-sorts by date automatically.
+ARTICLES = [
+    {"href": "/articles/championship-dna/",
+     "title": "Championship DNA: Historical Trends To Note For Champions Shanghai",
+     "desc": "Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.",
+     "img": "/championshipdna.jpg", "date": "2026-08-25",
+     "cats": ["research", "preview"]},
+    {"href": "/articles/greatest-prime/",
+     "title": "The Greatest Prime in VCT History Isn't a Debate",
+     "desc": "Aspas at Champions Paris towers over VCT history, including your favorite player.",
+     "img": "/aspas25corrode.jpg", "date": "2026-06-28",
+     "cats": ["research", "opinion"]},
+    {"href": "/articles/masters-london-playoffs-preview/",
+     "title": "Masters London Playoffs Preview",
+     "desc": "A brief statistical glimpse into the final stage of Masters London.",
+     "img": "/chronlondon.jpg", "date": "2026-06-10",
+     "cats": ["preview"]},
+    {"href": "/articles/masters-london-preview/",
+     "title": "Masters London Tournament Preview",
+     "desc": "Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.",
+     "img": "/prxpacstage1win.jpg", "date": "2026-06-02",
+     "cats": ["preview"]},
+    {"href": "/articles/americas-stage1-playoffs-preview/",
+     "title": "Americas Stage 1 Playoffs Preview",
+     "desc": "LOUD's resurgence, Leviat\u00e1n's Bind, the 100T question, and BenPom's final say.",
+     "img": "/loudlev26.jpg", "date": "2026-05-12",
+     "cats": ["preview"]},
+    {"href": "/articles/over-underperformers/",
+     "title": "Overperforming in VCT: Who's Doing It?",
+     "desc": "Surfacing the players outperforming (or underperforming) their team.",
+     "img": "/patmen.jpg", "date": "2026-05-04",
+     "cats": ["research"]},
+]
+
+_MON_AB = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+_MON_FULL = ["January", "February", "March", "April", "May", "June", "July",
+             "August", "September", "October", "November", "December"]
+
+
+def _adate(iso, full=False):
+    y, m, d = iso.split("-")
+    return f"{(_MON_FULL if full else _MON_AB)[int(m) - 1]} {int(d)}, {y}"
+
+
+def _articles_by_date():
+    return sorted(ARTICLES, key=lambda a: a["date"], reverse=True)
+
+
+def _home_article_cards(n=4):
+    out = []
+    for a in _articles_by_date()[:n]:
+        out.append(
+            f'<a class="acard" href="{a["href"]}"><img src="{a["img"]}" alt="">'
+            f'<div class="ab"><div class="at">{a["title"]}</div>'
+            f'<div class="ad">{a["desc"]}</div>'
+            f'<div class="adate">{_adate(a["date"])}</div></div></a>')
+    return "\n      ".join(out)
+
+
+def _classic_article_cards():
+    out = []
+    for a in _articles_by_date():
+        out.append(
+            f'<a class="nav-card" href="{a["href"]}">\n'
+            f'          <img class="nav-card-cover" src="{a["img"]}" alt="">\n'
+            f'          <div class="nav-card-title">{a["title"]}</div>\n'
+            f'          <div class="nav-card-desc">{a["desc"]}</div>\n'
+            f'          <div class="nav-card-date">{_adate(a["date"], full=True)}</div>\n'
+            f'          <div class="nav-card-arrow">Read &rarr;</div>\n'
+            f'        </a>')
+    return "\n        ".join(out)
+
+
+def _index_article_cards():
+    out = []
+    for a in _articles_by_date():
+        cats = a.get("cats") or []
+        spans = "".join(f'<span class="acat {c}">{c.capitalize()}</span>' for c in cats)
+        if len(cats) > 1:
+            spans = f'<span class="acats">{spans}</span>'
+        out.append(
+            f'<a class="acard" data-cat="{" ".join(cats)}" href="{a["href"]}">\n'
+            f'      {spans}\n'
+            f'      <img src="{a["img"]}" alt="">\n'
+            f'      <div class="ab">\n'
+            f'        <div class="at">{a["title"]}</div>\n'
+            f'        <div class="ad">{a["desc"]}</div>\n'
+            f'        <div class="adate">{_adate(a["date"])}</div>\n'
+            f'      </div>\n'
+            f'    </a>')
+    return "\n    ".join(out)
+
+
 _pool_state = {"pool": None, "mtime": -1.0}
 
 
@@ -714,41 +810,7 @@ HOME_HTML = """
       <div class="section-title">Research / Opinion Articles <span class="section-chevron">▾</span></div>
       <div class="cards-wrap"><div class="cards-inner">
       <div class="cards">
-        <a class="nav-card" href="/articles/greatest-prime/">
-          <img class="nav-card-cover" src="/aspas25corrode.jpg" alt="Aspas at Champions 2025">
-          <div class="nav-card-title">The Greatest Prime in<br>VCT History Isn&rsquo;t a Debate</div>
-          <div class="nav-card-desc">Aspas at Champions Paris towers over VCT history, including your favorite player.</div>
-          <div class="nav-card-date">June 28, 2026</div>
-          <div class="nav-card-arrow">Read &rarr;</div>
-        </a>
-        <a class="nav-card" href="/articles/masters-london-playoffs-preview/">
-          <img class="nav-card-cover" src="/chronlondon.jpg" alt="Masters London">
-          <div class="nav-card-title">Masters London<br>Playoffs Preview</div>
-          <div class="nav-card-desc">A brief statistical glimpse into the final stage of Masters London.</div>
-          <div class="nav-card-date">June 10, 2026</div>
-          <div class="nav-card-arrow">Read &rarr;</div>
-        </a>
-        <a class="nav-card" href="/articles/masters-london-preview/">
-          <img class="nav-card-cover" src="/prxpacstage1win.jpg" alt="Paper Rex win VCT Pacific Stage 1">
-          <div class="nav-card-title">Masters London<br>Tournament Preview</div>
-          <div class="nav-card-desc">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div>
-          <div class="nav-card-date">June 2, 2026</div>
-          <div class="nav-card-arrow">Read &rarr;</div>
-        </a>
-        <a class="nav-card" href="/articles/americas-stage1-playoffs-preview/">
-          <img class="nav-card-cover" src="/loudlev26.jpg" alt="LOUD vs Leviatán">
-          <div class="nav-card-title">Americas Stage 1<br>Playoffs Preview</div>
-          <div class="nav-card-desc">A quick discussion after a wild Split 1: LOUD's resurgence, Leviatan's Bind, the ubiquitous question of 100 Thieves, and BenPom's final say.</div>
-          <div class="nav-card-date">May 12, 2026</div>
-          <div class="nav-card-arrow">Read &rarr;</div>
-        </a>
-        <a class="nav-card" href="/articles/over-underperformers/">
-          <img class="nav-card-cover" src="/patmen.jpg" alt="Patmen">
-          <div class="nav-card-title">Overperforming in VCT: Who's Doing It?</div>
-          <div class="nav-card-desc">Using VCT stats to surface players who are outperforming (or underperforming) their team.</div>
-          <div class="nav-card-date">May 4, 2026</div>
-          <div class="nav-card-arrow">Read &rarr;</div>
-        </a>
+        __CLASSIC_ARTICLE_CARDS__
       </div>
       </div></div>
     </div>
@@ -973,8 +1035,12 @@ ALPHA_HTML = """
   .tdate{font-size:.54rem;color:#9d8fbb;font-weight:600;margin-top:2px}
 
   /* ── Panels / grid ── */
-  .agrid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start}
-  #rankings-panel{position:sticky;top:14px}
+  .agrid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:stretch}
+  /* Both bubbles always match height; the matches body fills and centers its
+     empty state instead of leaving a void below it. */
+  #matches-panel,#rankings-panel{display:flex;flex-direction:column}
+  #match-body{flex:1;display:flex;flex-direction:column}
+  #match-body > .empty{margin:auto 0;font-size:1.08rem;line-height:2}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 20px 14px;box-shadow:0 4px 22px #0000000a}
   .phead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
   .ptitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:-.01em}
@@ -1330,10 +1396,7 @@ ALPHA_HTML = """
   <div id="explore">
     <div class="phead" style="margin-bottom:14px"><div class="sec-title" style="margin:0">Recent Articles</div><a class="plink" href="/articles/">View all articles &rarr;</a></div>
     <div class="acards">
-      <a class="acard" href="/articles/greatest-prime/"><img src="/aspas25corrode.jpg" alt=""><div class="ab"><div class="at">The Greatest Prime in VCT History Isn't a Debate</div><div class="ad">Aspas at Champions Paris towers over VCT history, including your favorite player.</div><div class="adate">Jun 28, 2026</div></div></a>
-      <a class="acard" href="/articles/masters-london-playoffs-preview/"><img src="/chronlondon.jpg" alt=""><div class="ab"><div class="at">Masters London Playoffs Preview</div><div class="ad">A brief statistical glimpse into the final stage of Masters London.</div><div class="adate">Jun 10, 2026</div></div></a>
-      <a class="acard" href="/articles/masters-london-preview/"><img src="/prxpacstage1win.jpg" alt=""><div class="ab"><div class="at">Masters London Tournament Preview</div><div class="ad">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div><div class="adate">Jun 2, 2026</div></div></a>
-      <a class="acard" href="/articles/over-underperformers/"><img src="/patmen.jpg" alt=""><div class="ab"><div class="at">Overperforming in VCT: Who's Doing It?</div><div class="ad">Surfacing the players outperforming (or underperforming) their team.</div><div class="adate">May 4, 2026</div></div></a>
+      __HOME_ARTICLE_CARDS__
     </div>
     <div class="sec-title">Stats &amp; Databases</div>
     <div class="dbtiles">
@@ -1405,12 +1468,16 @@ function renderBanner(){
     +'<div class="ebtns"><a class="ebtn" href="/mapelo/modern/">Open live hub &rarr;</a></div>'
     +(tl?'<div class="timeline">'+tl+'</div>':'')
     +'</div>'
-    +'<a class="ebanner-r" href="/articles/greatest-prime/">'
-    +'<img src="/aspas25corrode.jpg" alt="">'
-    +'<div class="ead-tag">Latest Article</div>'
-    +'<div class="ead-title">The Greatest Prime in VCT History Isn&rsquo;t a Debate</div>'
-    +'<div class="ead-link">Read &rarr;</div>'
-    +'</a>'
+    +(function(){var A=DATA.latest_article||{};
+      // A "Name: Subtitle" title breaks after the colon, like the article's own h1.
+      var t=A.title||'Articles', ci=t.indexOf(': ');
+      var th=ci>0?esc(t.slice(0,ci+1))+'<br>'+esc(t.slice(ci+2)):esc(t);
+      return '<a class="ebanner-r" href="'+(A.href||'/articles/')+'">'
+        +(A.img?'<img src="'+A.img+'" alt="">':'')
+        +'<div class="ead-tag">Latest Article</div>'
+        +'<div class="ead-title">'+th+'</div>'
+        +'<div class="ead-link">Read &rarr;</div>'
+        +'</a>';})()
     +'</div>';
 }
 
@@ -1993,60 +2060,7 @@ ARTICLES_HTML = """
     <button class="afbtn" data-f="research" type="button">Research</button>
   </div>
   <div class="alist">
-    <a class="acard" data-cat="research preview" href="/articles/championship-dna/">
-      <span class="acats"><span class="acat research">Research</span><span class="acat preview">Preview</span></span>
-      <img src="/championshipdna.jpg" alt="">
-      <div class="ab">
-        <div class="at">Championship DNA: Historical Trends To Note For Champions Shanghai</div>
-        <div class="ad">Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.</div>
-        <div class="adate">Aug 25, 2026</div>
-      </div>
-    </a>
-    <a class="acard" data-cat="research opinion" href="/articles/greatest-prime/">
-      <span class="acats"><span class="acat research">Research</span><span class="acat opinion">Opinion</span></span>
-      <img src="/aspas25corrode.jpg" alt="">
-      <div class="ab">
-        <div class="at">The Greatest Prime in VCT History Isn't a Debate</div>
-        <div class="ad">Aspas at Champions Paris towers over VCT history, including your favorite player.</div>
-        <div class="adate">Jun 28, 2026</div>
-      </div>
-    </a>
-    <a class="acard" data-cat="preview" href="/articles/masters-london-playoffs-preview/">
-      <span class="acat preview">Preview</span>
-      <img src="/chronlondon.jpg" alt="">
-      <div class="ab">
-        <div class="at">Masters London Playoffs Preview</div>
-        <div class="ad">A brief statistical glimpse into the final stage of Masters London.</div>
-        <div class="adate">Jun 10, 2026</div>
-      </div>
-    </a>
-    <a class="acard" data-cat="preview" href="/articles/masters-london-preview/">
-      <span class="acat preview">Preview</span>
-      <img src="/prxpacstage1win.jpg" alt="">
-      <div class="ab">
-        <div class="at">Masters London Tournament Preview</div>
-        <div class="ad">Paper Rex's (un)inevitability, Neon nerfs, China's resurgence, and other bold predictions.</div>
-        <div class="adate">Jun 2, 2026</div>
-      </div>
-    </a>
-    <a class="acard" data-cat="preview" href="/articles/americas-stage1-playoffs-preview/">
-      <span class="acat preview">Preview</span>
-      <img src="/loudlev26.jpg" alt="">
-      <div class="ab">
-        <div class="at">Americas Stage 1 Playoffs Preview</div>
-        <div class="ad">LOUD's resurgence, Leviatán's Bind, the 100T question, and BenPom's final say.</div>
-        <div class="adate">May 12, 2026</div>
-      </div>
-    </a>
-    <a class="acard" data-cat="research" href="/articles/over-underperformers/">
-      <span class="acat research">Research</span>
-      <img src="/patmen.jpg" alt="">
-      <div class="ab">
-        <div class="at">Overperforming in VCT: Who's Doing It?</div>
-        <div class="ad">Surfacing the players outperforming (or underperforming) their team.</div>
-        <div class="adate">May 4, 2026</div>
-      </div>
-    </a>
+    __ARTICLE_CARDS__
   </div>
   <div class="aempty" hidden>No articles in this category yet.</div>
 </div>
@@ -2693,12 +2707,16 @@ def alpha_home():
         data = {"error": str(e), "event": None, "next_event": None, "last_event": None,
                 "rankings": [], "recent": [], "upcoming": [], "player_stats": [],
                 "players_event": None, "colors": {}, "logos": {}}
-    return render_template_string(ALPHA_HTML, data_json=_json.dumps(data))
+    la = _articles_by_date()[0]
+    data["latest_article"] = {"href": la["href"], "img": la["img"], "title": la["title"]}
+    html = ALPHA_HTML.replace("__HOME_ARTICLE_CARDS__", _home_article_cards())
+    return render_template_string(html, data_json=_json.dumps(data))
 
 
 @app.route("/classic")
 def classic_home():
-    return render_template_string(HOME_HTML)
+    return render_template_string(
+        HOME_HTML.replace("__CLASSIC_ARTICLE_CARDS__", _classic_article_cards()))
 
 
 @app.route("/alpha/version")
@@ -2756,7 +2774,8 @@ def alpha_bust_cache():
 
 @app.route("/articles/")
 def articles_index():
-    return render_template_string(ARTICLES_HTML)
+    return render_template_string(
+        ARTICLES_HTML.replace("__ARTICLE_CARDS__", _index_article_cards()))
 
 
 @app.route("/team/<org>")
