@@ -14886,3 +14886,17 @@ MatchID,step,team,action,map
 742487,5,GE,pick,Ascent
 742487,6,T1,pick,Haven
 742487,7,,remains,Sunset
+734314,1,NRG,ban,Split
+734314,2,LOUD,ban,Ascent
+734314,3,NRG,pick,Abyss
+734314,4,LOUD,pick,Sunset
+734314,5,NRG,pick,Summit
+734314,6,LOUD,pick,Haven
+734314,7,,remains,Lotus
+742481,1,NS,ban,Summit
+742481,2,NS,ban,Ascent
+742481,3,NS,pick,Sunset
+742481,4,GE,pick,Split
+742481,5,NS,pick,Abyss
+742481,6,GE,pick,Lotus
+742481,7,,remains,Haven
