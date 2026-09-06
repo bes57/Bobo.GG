@@ -1,80 +1,15 @@
 [
   {
-    "match_id": "742476",
-    "team_a": "Paper Rex",
-    "team_b": "Nongshim RedForce",
-    "org_a": "PRX",
-    "org_b": "NS",
-    "date": "2026-08-26",
-    "datetime": "2026-08-26 08:00:00",
+    "match_id": "742481",
+    "team_a": "Nongshim RedForce",
+    "team_b": "Global Esports",
+    "org_a": "NS",
+    "org_b": "GE",
+    "date": "2026-09-06",
+    "datetime": "2026-09-06 08:00:00",
     "region": "Pacific",
     "event": "2026 Stage 2 \u2014 Pacific",
     "format": "bo3",
-    "match_name": "Upper Round 1 Playoffs"
-  },
-  {
-    "match_id": "742477",
-    "team_a": "Global Esports",
-    "team_b": "KIWOOM DRX",
-    "org_a": "GE",
-    "org_b": "KRX",
-    "date": "2026-08-26",
-    "datetime": "2026-08-26 11:00:00",
-    "region": "Pacific",
-    "event": "2026 Stage 2 \u2014 Pacific",
-    "format": "bo3",
-    "match_name": "Upper Round 1 Playoffs"
-  },
-  {
-    "match_id": "734302",
-    "team_a": "LOUD",
-    "team_b": "FURIA",
-    "org_a": "LOUD",
-    "org_b": "FUR",
-    "date": "2026-08-27",
-    "datetime": "2026-08-27 21:00:00",
-    "region": "Americas",
-    "event": "2026 Stage 2 \u2014 Americas",
-    "format": "bo3",
-    "match_name": "Upper Round 1 Playoffs"
-  },
-  {
-    "match_id": "734303",
-    "team_a": "LEVIAT\u00c1N",
-    "team_b": "MIBR",
-    "org_a": "LEV",
-    "org_b": "MIBR",
-    "date": "2026-08-27",
-    "datetime": "2026-08-28 00:00:00",
-    "region": "Americas",
-    "event": "2026 Stage 2 \u2014 Americas",
-    "format": "bo3",
-    "match_name": "Upper Round 1 Playoffs"
-  },
-  {
-    "match_id": "731400",
-    "team_a": "FUT Esports",
-    "team_b": "Karmine Corp",
-    "org_a": "FUT",
-    "org_b": "KC",
-    "date": "2026-08-28",
-    "datetime": "2026-08-28 14:00:00",
-    "region": "EMEA",
-    "event": "2026 Stage 2 \u2014 EMEA",
-    "format": "bo3",
-    "match_name": "Upper Final Playoffs"
-  },
-  {
-    "match_id": "731407",
-    "team_a": "Team Liquid",
-    "team_b": "Fire Flux Esports",
-    "org_a": "TL",
-    "org_b": "Fire Flux Esports",
-    "date": "2026-08-28",
-    "datetime": "2026-08-28 17:00:00",
-    "region": "EMEA",
-    "event": "2026 Stage 2 \u2014 EMEA",
-    "format": "bo3",
-    "match_name": "Lower Round 3 Playoffs"
+    "match_name": "Grand Final Playoffs"
   }
 ]
