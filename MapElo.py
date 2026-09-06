@@ -8689,9 +8689,9 @@ body:has(.flying)::after{animation-play-state:paused}
     .upc-list{gap:26px}
     .upc-card{padding:12px 13px}
   }
-  /* Mobile (touch only): enlarge the BenPom Ratings/Upcoming/Recent content for legibility,
-     but keep the tab bubbles at their original size. Touch-only; desktop unchanged. */
-  @media (hover:none) and (pointer:coarse){ html{font-size:150%} .tab{font-size:14px} .pill{font-size:14px} .chart-card{max-width:732px} }
+  /* Mobile (touch only): enlarge the BenPom Ratings/Upcoming/Recent content for legibility.
+     The tab bar wraps with side padding so no bubble is ever clipped at the edges. */
+  @media (hover:none) and (pointer:coarse){ html{font-size:150%} .tab-bar{flex-wrap:wrap;justify-content:center;padding:0 12px} .tab{font-size:14px;padding:8px 18px} .pill{font-size:14px} .chart-card{max-width:732px} }
 </style>
 </head>
 <body>

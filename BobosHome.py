@@ -383,6 +383,124 @@ def _build_alpha_data():
     }
 
 
+_pool_state = {"pool": None, "mtime": -1.0}
+
+
+def _current_map_pool():
+    """Active competitive map pool, read off the newest veto in map_vetos.csv:
+    a bo3/bo5 veto walks the full 7-map pool, so the most recent match with 7
+    distinct maps in its veto IS the pool as of that date. This survives
+    mid-split rotations (e.g. Breeze out / Abyss in during 2026 Stage 2) that
+    a static per-event pool list misses. Falls back to veto_model.json's
+    event_pools for the latest started event if the veto data is unusable."""
+    base = os.path.dirname(os.path.abspath(__file__))
+    mv_path = os.path.join(base, "data", "map_vetos.csv")
+    md_path = os.path.join(base, "data", "match_dates.json")
+    try:
+        mt = (os.path.getmtime(mv_path), os.path.getmtime(md_path))
+    except OSError:
+        mt = None
+    if _pool_state["pool"] is not None and mt == _pool_state["mtime"]:
+        return _pool_state["pool"]
+    pool = set()
+    try:
+        import csv as _csv
+        with open(md_path) as f:
+            dates = _json.load(f) or {}
+        by_match = {}
+        with open(mv_path) as f:
+            for r in _csv.DictReader(f):
+                by_match.setdefault(r["MatchID"], set()).add(r["map"])
+        dated = sorted(((dates.get(mid, ""), maps) for mid, maps in by_match.items()
+                        if dates.get(mid)), key=lambda x: x[0], reverse=True)
+        for _d, maps in dated[:40]:
+            if len(maps) == 7:
+                pool = set(maps)
+                break
+    except Exception:
+        pool = set()
+    if not pool:
+        try:
+            with open(os.path.join(base, "data", "veto_model.json")) as f:
+                event_pools = (_json.load(f) or {}).get("event_pools") or {}
+            from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+            today = _datetime.date.today().isoformat()
+            started = [e for e in _AE
+                       if e.get("id") in event_pools and (e.get("start") or "") <= today]
+            if started:
+                latest = max(started, key=lambda e: e.get("start") or "")
+                pool = set(event_pools[latest["id"]])
+        except Exception:
+            pool = set()
+    _pool_state["pool"] = pool
+    _pool_state["mtime"] = mt
+    return pool
+
+
+_sides_state = {"data": None, "key": None}
+
+
+def _season_side_stats(hub):
+    """Attack/defense round win%% per org over the whole current season: every
+    round in round_outcomes.csv joined to the hub timeline's match org-pairs
+    (same source as everything else on the card, so it updates with each
+    scrape). Winner won its side; the other org lost the opposite side."""
+    base = os.path.dirname(os.path.abspath(__file__))
+    ro_path = os.path.join(base, "data", "enriched", "round_outcomes.csv")
+    try:
+        key = (os.path.getmtime(ro_path),
+               (hub.get("leaderboard") or {}).get("as_of_date"))
+    except OSError:
+        return []
+    if _sides_state["data"] is not None and _sides_state["key"] == key:
+        return _sides_state["data"]
+    pairs = {}
+    for me in (hub.get("chart") or {}).get("match_events", []):
+        w, l = me.get("winner"), me.get("loser")
+        if w and l:
+            pairs[str(me.get("match_id"))] = (w, l)
+    stats = {}   # org -> [atk_w, atk_n, def_w, def_n]
+    import csv as _csv
+    try:
+        with open(ro_path) as f:
+            for r in _csv.DictReader(f):
+                pair = pairs.get(r["match_id"])
+                if not pair:
+                    continue
+                w_org, side = r["winner_org"], r["winner_side"]
+                if w_org not in pair or side not in ("attack", "defense"):
+                    continue
+                l_org = pair[1] if w_org == pair[0] else pair[0]
+                sw = stats.setdefault(w_org, [0, 0, 0, 0])
+                sl = stats.setdefault(l_org, [0, 0, 0, 0])
+                if side == "attack":
+                    sw[0] += 1; sw[1] += 1   # winner attack round won
+                    sl[3] += 1               # loser defense round lost
+                else:
+                    sw[2] += 1; sw[3] += 1   # winner defense round won
+                    sl[1] += 1               # loser attack round lost
+    except OSError:
+        return []
+    lb_orgs = {t.get("org") for t in (hub.get("leaderboard") or {}).get("teams", [])}
+    out = []
+    for org, (aw, an, dw, dn) in stats.items():
+        if org not in lb_orgs or an + dn < 150:
+            continue
+        out.append({"org": org,
+                    "atk": round(100.0 * aw / an, 1) if an else 0.0,
+                    "dfn": round(100.0 * dw / dn, 1) if dn else 0.0,
+                    "rounds": an + dn})
+    _sides_state["data"] = out
+    _sides_state["key"] = key
+    return out
+
+
+def _pool_maps(maps):
+    pool = _current_map_pool()
+    maps = maps or []
+    return [m for m in maps if m.get("map") in pool] if pool else maps
+
+
 def _build_team_profile(org):
     """Fast team-profile payload (no scrape) for /team/<org>: BenPom rating,
     global rank, record, recent matches (with maps), best/worst maps, roster."""
@@ -471,15 +589,16 @@ def _build_team_profile(org):
         "n_teams": len(teams), "w": t.get("w", 0), "l": t.get("l", 0),
         "season": (lb.get("as_of_date") or "")[:4],
         "beta": lb.get("beta") or _site_model()["beta"],
-        "all_maps": t.get("all_maps") or [],
-        "best_maps": (t.get("best_maps") or [])[:3],
-        "worst_maps": (t.get("worst_maps") or [])[:3],
+        "all_maps": _pool_maps(t.get("all_maps")),
+        "best_maps": _pool_maps(t.get("best_maps"))[:3],
+        "worst_maps": _pool_maps(t.get("worst_maps"))[:3],
         "recent": (t.get("recent_matches") or [])[:4],
         "upcoming": upcoming,
         "form": (t.get("recent_matches") or [])[:5],
         "roster": (t.get("roster") or [])[:6],
         "traj": traj,
         "events": org_events,
+        "sides": _season_side_stats(hub),
         "season_events": season_events,
         "event_labels": elabels,
         "colors": {o: ALPHA_TEAM_COLORS.get(o, "#8a8a8a") for o in orgs if o},
@@ -1030,8 +1149,18 @@ ALPHA_HTML = """
   .rec-sort button.on{background:#fff;color:var(--accent);box-shadow:0 1px 4px #00000012}
   /* NB: keep the space after the brace — brace-then-hash opens a Jinja comment */
   @media (max-width:700px){ #records-panel .phead{flex-wrap:wrap}.rec-sort{order:3;margin-right:0}}
+  /* Phones: panel headers keep "title ..... link" on one row by scaling the
+     link pill down; the Player Leaders slider gets its own row; record cards
+     fill the viewport so each slide sits centered between the arrows. */
+  @media (max-width:600px){
+    .plink{font-size:.72rem;padding:5px 11px}
+    .ptitle{font-size:1.04rem}
+    #players-panel .phead{flex-wrap:wrap}
+    #players-panel .pl-minrnd{order:3;flex:1 1 100%}
+    .rec-card{flex:0 0 calc(100% - 13px)}
+  }
   .rec-wrap{display:flex;align-items:center;gap:8px}
-  .rec-nav{flex:0 0 30px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#fff;color:#7c4dd6;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 3px 12px #00000014;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s,box-shadow .15s}
+  .rec-nav{flex:0 0 30px;width:30px;height:30px;padding:0;border-radius:50%;border:1px solid var(--line);background:#fff;color:#7c4dd6;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.1rem;font-weight:800;line-height:1;cursor:pointer;box-shadow:0 3px 12px #00000014;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s,box-shadow .15s}
   .rec-nav:hover{background:#f1ebfb;transform:scale(1.1);box-shadow:0 5px 16px #7c4dd633}
   .rec-vp{flex:1;min-width:0;overflow:hidden;position:relative;padding:4px 0;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 3%,#000 97%,transparent 100%)}
   .rec-track{display:flex;align-items:stretch;width:max-content;will-change:transform}
@@ -1961,7 +2090,7 @@ TEAM_PROFILE_HTML = """
   *{box-sizing:border-box}
   body{font-family:'DM Sans',sans-serif;color:var(--ink)}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1080px;margin:0 auto;padding:18px 22px 64px;position:relative;z-index:1}
+  .wrap{width:100%;max-width:1080px;margin:0 auto;padding:18px 22px 64px;position:relative;z-index:1}
 
   /* ── hero (team-color themed) ── */
   .tp-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap;
@@ -1985,18 +2114,28 @@ TEAM_PROFILE_HTML = """
   .tp-stat .k{font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a8296;margin-top:4px}
   .tp-spark{display:flex;flex-direction:column;align-items:center;gap:4px}
   .tp-spark svg{display:block}
+  .tp-sides{gap:5px;position:relative;z-index:1}
   .tp-spark-k{font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#8a8296}
 
-  /* ── columns: 2 by default (Recent | right stack); 3 when the team has upcoming
-     matches (Upcoming | Recent | right stack) ── */
+  /* ── columns: always Recent | Map performance. Upcoming (when any) is a
+     full-width strip between the hero and the columns. ── */
   .tp-cols{display:grid;grid-template-columns:minmax(390px,1fr) minmax(0,1.1fr);gap:18px;margin-top:18px;align-items:stretch}
-  .tp-cols.with-up{grid-template-columns:minmax(230px,.82fr) minmax(390px,1fr) minmax(0,1.2fr)}
+  /* one shared row under the hero: Upcoming match (left) + Roster (right) */
+  /* same column template as .tp-cols so the two rows' seams line up */
+  .tp-strip{display:grid;grid-template-columns:minmax(390px,1fr) minmax(0,1.1fr);gap:18px;margin-top:18px;align-items:stretch}
+  .tp-up{margin-top:0}
+  .tp-up .uprow{display:flex;gap:12px;flex-wrap:wrap}
+  .tp-up .uc{flex:1 1 260px;max-width:380px;margin-bottom:0}
+  .uc.uc-none{display:flex;align-items:center;justify-content:center;min-height:52px;
+    color:var(--faint);font-weight:700;font-size:.9rem;letter-spacing:.02em;
+    border:1px dashed var(--line);border-left:4px solid var(--line)}
+  .uc.uc-none:hover{box-shadow:none;border-color:var(--line)}
   /* Recent panel keeps its natural height — only the right column stretches to
      fill when it is shorter; expanding a map must NOT extend recent matches. */
-  .tp-cols > .panel{align-self:start}
+  .tp-cols > .panel{align-self:start;display:flex;flex-direction:column}
   .tp-right{display:flex;flex-direction:column;gap:18px;min-width:0}
   .mapwrap{display:flex;flex-direction:column;flex:1}
-  #maps{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:3px}
+  #maps{flex:1;display:flex;flex-direction:column;justify-content:space-evenly}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px 14px;box-shadow:0 4px 22px #0000000a}
   .ptitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:13px;display:flex;align-items:baseline;gap:9px}
   .ptit-sub{font-family:'DM Sans',sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
@@ -2018,7 +2157,9 @@ TEAM_PROFILE_HTML = """
   .uc-wp small{display:block;font-family:'DM Sans',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:right;line-height:1;margin-top:1px}
 
   /* recent matches (expandable + filterable) */
-  .rm{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:10px 13px;margin-bottom:10px;transition:box-shadow .15s}
+  .rm{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:10px 13px;transition:box-shadow .15s}
+  /* even rhythm: same gap between cards and toward the panel edges */
+  #recent{display:flex;flex-direction:column;flex:1;justify-content:space-evenly;row-gap:10px}
   .rm.win{border-left-color:var(--good)}.rm.loss{border-left-color:var(--bad)}
   .rm:hover{box-shadow:0 3px 14px #0000000a}
   .rm-top{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.68rem;color:var(--faint);font-weight:600;margin-bottom:4px}
@@ -2048,7 +2189,7 @@ TEAM_PROFILE_HTML = """
   .mapbar:hover{background:#faf8ff}
   .mapblk.open .mapbar{background:#f3eefb}
   .mb-name{flex:0 0 60px;font-weight:700;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .mb-wl{flex:0 0 38px;font-size:.66rem;color:var(--faint);font-weight:600;font-variant-numeric:tabular-nums}
+  .mb-wl{flex:0 0 46px;font-size:.84rem;color:var(--soft);font-weight:800;font-variant-numeric:tabular-nums}
   .mb-track{position:relative;flex:1;height:17px;border-radius:0;background:#f4f2f8}
   .mb-zero{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:#dcd6e6;transform:translateX(-1px)}
   .mb-seg{position:absolute;top:0;bottom:0;border-radius:0}
@@ -2079,9 +2220,10 @@ TEAM_PROFILE_HTML = """
   .mg-meta{margin-left:auto;color:var(--faint);font-size:.63rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:6px}
   .mg-empty{color:var(--faint);font-size:.72rem;padding:6px 8px}
 
-  /* ── roster (right column, under map performance) — one even row ── */
-  .roster{display:flex;gap:10px}
-  .pl{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;flex:1 1 0;min-width:0;padding:12px 6px;border:1px solid var(--line);border-radius:13px;transition:border-color .15s,transform .15s}
+  /* ── roster — full-width strip below the columns, one centered row ── */
+  .tp-roster{margin-top:0}
+  .roster{display:flex;gap:12px;justify-content:center}
+  .pl{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;flex:0 1 168px;min-width:0;padding:12px 6px;border:1px solid var(--line);border-radius:13px;transition:border-color .15s,transform .15s}
   .pl:hover{border-color:#d6cce8;transform:translateY(-2px)}
   .pl-ring{display:inline-flex;border-radius:50%;padding:2px;background:var(--tc,#7c4dd6)}
   .pl-ring img{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:top center;background:#efeaf6;display:block;border:2px solid #fff}
@@ -2091,12 +2233,35 @@ TEAM_PROFILE_HTML = """
   footer{text-align:center;padding:28px;color:var(--faint);font-size:.74rem;font-weight:500;position:relative;z-index:1}
   html.inmodal footer{display:none}
   /* Compact the profile when shown inside the team modal so it fits with no scroll. */
-  html.inmodal .wrap{padding:10px 18px 14px}
-  html.inmodal .tp-hero{padding:16px 22px}
-  html.inmodal .tp-cols{gap:14px;margin-top:14px}
-  html.inmodal .panel{padding:14px 16px 11px}
-  html.inmodal .tp-roster{margin-top:14px}
-  html.inmodal .rm{margin-bottom:8px}
+  html.inmodal .wrap{padding:8px 16px 10px;max-width:1280px}
+  html.inmodal .tp-hero{padding:11px 20px}
+  html.inmodal .tp-name{font-size:clamp(1.6rem,3vw,2rem)}
+  html.inmodal .tp-logo,html.inmodal .tp-logo-ph{width:58px;height:58px}
+  html.inmodal .tp-stat .v{font-size:1.3rem}
+  html.inmodal .tp-cols{gap:12px;margin-top:10px}
+  html.inmodal .panel{padding:12px 14px 9px}
+  html.inmodal .ptitle{margin-bottom:9px;font-size:.98rem}
+  /* Modal: roster collapses to one compact chip row so the card fits with no scroll. */
+  html.inmodal .tp-strip{gap:12px;margin-top:10px}
+  /* Both strip bubbles: tiny overline title, content row centered under it —
+     equal fixed height, and the chips get the panel's full width. */
+  html.inmodal .tp-strip .panel{min-height:92px;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:9px 14px}
+  html.inmodal .tp-strip .ptitle{margin-bottom:0;font-family:'DM Sans',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+  html.inmodal .tp-strip .ptit-sub{font-size:.58rem}
+  html.inmodal .roster{gap:8px;justify-content:center;flex-wrap:nowrap;min-width:0}
+  html.inmodal .pl{flex-direction:row;flex:0 1 auto;gap:8px;padding:4px 12px 4px 5px;border-radius:999px;min-width:0}
+  html.inmodal .pl:hover{transform:none}
+  html.inmodal .pl-ring img,html.inmodal .pl-ring .ph{width:38px;height:38px;font-size:.7rem}
+  html.inmodal .pl .nm{font-size:.84rem}
+  html.inmodal .rm{padding:8px 12px}
+  html.inmodal #recent{row-gap:8px}
+  html.inmodal .rm-board{margin-top:5px}
+  /* Modal: upcoming is one slim inline row — title and cards on the same line. */
+  html.inmodal .tp-up .uprow{min-width:0;flex-wrap:nowrap;overflow:hidden;justify-content:center}
+  html.inmodal .tp-up .uc{padding:5px 12px;gap:3px;flex:0 1 330px}
+  html.inmodal .tp-up .uc-nm{font-size:.88rem}
+  html.inmodal .tp-up .uc-logo,html.inmodal .tp-up .uc-ph{width:24px;height:24px}
+  html.inmodal .tp-up .uc-wp{font-size:.86rem}
   /* hover popup: match card on form dots, label on trajectory event lines */
   #tpop{position:fixed;z-index:99999;pointer-events:none;background:linear-gradient(160deg,#241839,#19102a);color:#fff;border:1px solid #3a2a5a;border-radius:13px;padding:11px 13px;box-shadow:0 14px 38px #0007;font-size:.74rem;max-width:232px;opacity:0;visibility:hidden;transition:opacity .12s}
   #tpop.on{opacity:1;visibility:visible}
@@ -2117,9 +2282,7 @@ TEAM_PROFILE_HTML = """
   #tpop .tp-maps td{font-size:.66rem;padding:3px 2px;border-top:1px solid #ffffff14;color:#cdbfe6}
   #tpop .tp-ms{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
   #tpop .tp-ms.mw{color:#41f59a}#tpop .tp-ms.ml{color:#ff8b8b}
-  /* mid widths: Upcoming | Recent on top, right stack spans full width below */
-  @media (max-width:960px){.tp-cols.with-up{grid-template-columns:minmax(180px,.72fr) 1fr}.tp-cols.with-up > .tp-right{grid-column:1 / -1}}
-  @media (max-width:780px){.tp-cols,.tp-cols.with-up{grid-template-columns:1fr}.tp-hero{gap:16px}.tp-hr{gap:16px}}
+  @media (max-width:780px){.tp-cols,.tp-strip{grid-template-columns:1fr}.tp-hero{gap:16px}.tp-hr{gap:16px}}
 </style>
 </head>
 <body>
@@ -2194,6 +2357,39 @@ function sparkline(traj,color,events){
     +'<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
     +'</svg>';
 }
+// Mini season landscape: every VCT team by attack/defense round win%%,
+// this team highlighted. Whole-year data (D.sides) from round_outcomes.csv.
+function sideScatter(){
+  var S=D.sides||[]; if(S.length<6)return '';
+  var me=null; S.forEach(function(t){ if(t.org===D.org)me=t; });
+  if(!me)return '';
+  var W=120,H=120,pad=11;
+  // Symmetric domain about 50%% on BOTH axes: the quadrant axes cross at the
+  // exact center (50/50 round-win), and one unit of atk equals one of def.
+  var r=1;
+  S.forEach(function(t){ r=Math.max(r,Math.abs(t.atk-50),Math.abs(t.dfn-50)); });
+  r+=0.8;
+  var mnx=50-r, mxx=50+r, mny=50-r, mxy=50+r, avx=50, avy=50;
+  function X(v){return pad+(v-mnx)/(mxx-mnx)*(W-2*pad);}
+  function Y(v){return H-pad-(v-mny)/(mxy-mny)*(H-2*pad);}
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'">'
+    +'<rect x="0.5" y="0.5" width="'+(W-1)+'" height="'+(H-1)+'" rx="9" fill="#faf8ff" stroke="#eceef2"/>'
+    +'<line x1="'+X(avx).toFixed(1)+'" y1="3" x2="'+X(avx).toFixed(1)+'" y2="'+(H-3)+'" stroke="#dcd6e6" stroke-dasharray="2 3"/>'
+    +'<line x1="3" y1="'+Y(avy).toFixed(1)+'" x2="'+(W-3)+'" y2="'+Y(avy).toFixed(1)+'" stroke="#dcd6e6" stroke-dasharray="2 3"/>';
+  S.forEach(function(t){
+    if(t.org===D.org)return;
+    svg+='<circle cx="'+X(t.dfn).toFixed(1)+'" cy="'+Y(t.atk).toFixed(1)+'" r="2.6" fill="#c9c2d6" fill-opacity="0.62">'
+      +'<title>'+esc(t.org)+' \u2014 '+t.atk+'% atk / '+t.dfn+'% def</title></circle>';
+  });
+  svg+='<circle cx="'+X(me.dfn).toFixed(1)+'" cy="'+Y(me.atk).toFixed(1)+'" r="5" fill="'+col(D.org)+'" stroke="#fff" stroke-width="1.6">'
+    +'<title>'+esc(D.org)+' \u2014 '+me.atk+'% atk / '+me.dfn+'% def</title></circle>'
+    +'<text x="'+(W-7)+'" y="'+(H-6)+'" text-anchor="end" font-size="6.8" font-weight="800" fill="#9a8fa4">DEF \u2192</text>'
+    +'<text x="7" y="10" font-size="6.8" font-weight="800" fill="#9a8fa4">ATK \u2191</text>'
+    +'</svg>';
+  return '<div class="tp-spark tp-sides">'+svg
+    +'<div class="tp-spark-k">'+me.atk+'% atk &middot; '+me.dfn+'% def &middot; season</div></div>';
+}
+
 var FORMM=[];          // registry: form-dot index -> full match object
 function formDots(){
   var r=(D.recent||[]).slice(0,5).slice().reverse();
@@ -2329,6 +2525,7 @@ function playerCard(p){
     +'<div class="tp-hl">'+logo(D.org,'tp-logo','tp-logo-ph',true)
     +'<div><div class="tp-name">'+esc(D.org)+'</div>'
     +'<div class="tp-meta"><span class="tp-reg" style="color:'+rc[0]+';background:'+rc[1]+'">'+esc(D.region||'')+'</span>'+formDots()+'</div></div></div>'
+    +sideScatter()
     +'<div class="tp-hr">'
     +'<div class="tp-stat"><div class="v">'+fmtR(D.rating)+'</div><div class="k">BenPom</div></div>'
     +'<div class="tp-stat"><div class="v">#'+D.rank+'</div><div class="k">of '+D.n_teams+' VCT teams</div></div>'
@@ -2345,48 +2542,22 @@ function playerCard(p){
   // Upcoming matches sit to the LEFT of Recent — but only when the team actually
   // has some, so off-season profiles fall back to the original 2-column layout.
   var hasUp=D.upcoming&&D.upcoming.length;
-  var upcomingPanel=hasUp
-    ?'<section class="panel"><div class="ptitle">Upcoming matches <span class="ptit-sub">proj. series win</span></div><div id="upcoming">'+D.upcoming.map(upcomingRow).join('')+'</div></section>'
-    :'';
+  var upcomingPanel='<section class="panel tp-up"><div class="ptitle">Upcoming match <span class="ptit-sub">proj. series win</span></div><div id="upcoming" class="uprow">'
+    +(hasUp?upcomingRow(D.upcoming[0]):'<div class="uc uc-none">None</div>')
+    +'</div></section>';
 
   root.innerHTML=hero
-    +'<div class="tp-cols'+(hasUp?' with-up':'')+'">'
+    +'<div class="tp-strip">'
     +upcomingPanel
+    +'<section class="panel tp-roster"><div class="ptitle">Roster</div><div class="roster">'+rosterHTML+'</div></section>'
+    +'</div>'
+    +'<div class="tp-cols">'
     +'<section class="panel"><div class="ptitle">Recent matches</div><div id="recent">'+recentHTML+'</div></section>'
     +'<div class="tp-right">'
     +'<section class="panel mapwrap"><div class="ptitle">Map performance <span class="ptit-sub">net rating &middot; click a map for its games</span></div><div id="maps">'+mapsHTML+'</div></section>'
-    +'<section class="panel"><div class="ptitle">Roster</div><div class="roster">'+rosterHTML+'</div></section>'
     +'</div>'
     +'</div>';
 
-  // Upcoming cards must match Recent cards' height row-by-row — Recent's
-  // per-map scoreboard grid makes it inherently taller than a CSS min-height
-  // guess can track. Measure each rendered .rm card and stretch the
-  // same-index .uc card to match (post-layout, so fonts/logos are accounted
-  // for); re-measure on resize since wrapping can change card heights.
-  function syncUpcomingHeights(){
-    var ups=document.querySelectorAll('#upcoming .uc');
-    var recs=document.querySelectorAll('#recent .rm');
-    if(!ups.length||!recs.length)return;
-    ups.forEach(function(u,i){
-      u.style.height='';
-      var r=recs[i]||recs[recs.length-1];
-      var h=r.getBoundingClientRect().height;
-      if(h)u.style.height=h+'px';
-    });
-  }
-  if(hasUp){
-    syncUpcomingHeights();
-    // Re-sync once web fonts finish swapping in (a font-metric shift after the
-    // first measurement is the only thing that can still throw the two
-    // columns off by a few px) and once more next frame for full precision.
-    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(syncUpcomingHeights).catch(function(){});
-    requestAnimationFrame(function(){requestAnimationFrame(syncUpcomingHeights);});
-    if(!window._tpHeightSync){
-      window._tpHeightSync=true;
-      window.addEventListener('resize',function(){clearTimeout(window._tpHSt);window._tpHSt=setTimeout(syncUpcomingHeights,120);});
-    }
-  }
 
   // Click a map → expand the game-by-game breakdown underneath it (lazy-built).
   document.getElementById('maps').addEventListener('click',function(e){
@@ -2416,7 +2587,7 @@ function playerCard(p){
       if(p.d && p.d<=date && (best===null || p.d>=best.d)) best=p; }
     return best?best.r:null;
   }
-  var sv=document.querySelector('.tp-spark svg');
+  var sv=document.querySelector('.tp-hr .tp-spark svg');
   if(sv){
     sv.addEventListener('mouseover',function(e){
       var t=e.target.closest('[data-ev]'); if(!t) return;
