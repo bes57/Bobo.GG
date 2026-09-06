@@ -11,6 +11,7 @@ the sections and category exist.
 """
 
 import os
+import time
 import json
 from flask import Blueprint, render_template_string
 
@@ -58,7 +59,7 @@ _ROSTERS = [
         ("preseason", ["Pancada", "Marved"], ["JohnQT", "Zellsis"]),
     ]),
     ("GEN", 2024, "Masters Shanghai", "Gen.G", [
-        ("preseason", ["TS", "k1Ng", "Secret", "eKo", "GodDead"],
+        ("preseason", ["TS", "k1Ng", "eKo", "GodDead"],
              ["t3xture", "Munchkin", "Karon", "Lakia"]),
     ]),
     ("EDG", 2024, "Champions Seoul", "EDG", [
@@ -122,6 +123,162 @@ def _rosters_html():
         for y in years)
 
 
+# Each winner's regional seed coming into the event they won, grouped by how
+# many teams the event took (an 8-team Madrid 2-seed and a 16-team Champions
+# 2-seed are different achievements). Masters seeds are the prior split's
+# playoff placement; Champions seeds follow the same split-prior convention.
+_WINNER_SEEDS = [
+    # 8-team events (2 per region)
+    {"org": "SEN", "event": "Masters Madrid 2024",   "seed": 1, "pool": 8,  "region": "Americas"},
+    {"org": "T1",  "event": "Masters Bangkok 2025",  "seed": 2, "pool": 8,  "region": "Pacific"},
+    # 12-team events (3 per region)
+    {"org": "FNC", "event": "Masters Tokyo 2023",    "seed": 2, "pool": 12, "region": "EMEA"},
+    {"org": "GEN", "event": "Masters Shanghai 2024", "seed": 2, "pool": 12, "region": "Pacific"},
+    {"org": "PRX", "event": "Masters Toronto 2025",  "seed": 3, "pool": 12, "region": "Pacific"},
+    {"org": "NS",  "event": "Masters Santiago 2026", "seed": 1, "pool": 12, "region": "Pacific"},
+    {"org": "LEV", "event": "Masters London 2026",   "seed": 2, "pool": 12, "region": "Americas"},
+    # 16-team events (4 per region)
+    {"org": "EG",  "event": "Champions 2023",        "seed": 3, "pool": 16, "region": "Americas"},
+    {"org": "EDG", "event": "Champions 2024",        "seed": 1, "pool": 16, "region": "CN"},
+    {"org": "NRG", "event": "Champions 2025",        "seed": 2, "pool": 16, "region": "Americas"},
+]
+
+
+# ── Champions Shanghai checklist ──────────────────────────────────────────
+# Qualified teams come from VLR's Champions 2026 event page, cached on disk and
+# refetched (6h TTL) while slots are still TBD — the table fills in the last
+# teams automatically as VLR confirms them. Every column is computed live from
+# the same data the rest of the site uses, so nothing here goes stale.
+_CHAMPS_EVENT_URL = "https://www.vlr.gg/event/2766/valorant-champions-2026"
+_CHAMPS_TEAMS_PATH = os.path.join(_ROOT, "data", "enriched", "champs_teams.json")
+_REGION_ORDER = ["Americas", "EMEA", "Pacific", "CN"]
+
+
+def _vlr_name_to_org():
+    """VLR display name -> org code, parsed from RefreshLiveData's dict (single
+    source of truth) without importing the script."""
+    import ast, re as _re
+    try:
+        src = open(os.path.join(_ROOT, "scrapers", "RefreshLiveData.py")).read()
+        m = _re.search(r"VLR_NAME_TO_ORG = (\{.*?\n\})", src, _re.S)
+        d = ast.literal_eval(m.group(1))
+        return {k.lower(): v for k, v in d.items()}
+    except Exception:
+        return {}
+
+
+def _champs_teams():
+    try:
+        cached = json.load(open(_CHAMPS_TEAMS_PATH))
+    except Exception:
+        cached = None
+    fresh_enough = (cached and (len(cached.get("teams") or []) >= 16
+                    or time.time() - cached.get("fetched_at", 0) < 6 * 3600))
+    if fresh_enough:
+        return cached["teams"]
+    teams = (cached or {}).get("teams") or []
+    try:
+        import re as _re
+        from curl_cffi import requests as _cr
+        from MapElo import ORG_REGIONS as _OREG
+        html = _cr.get(_CHAMPS_EVENT_URL, impersonate="chrome131", timeout=20).text
+        names = _vlr_name_to_org()
+        found, seen = [], set()
+        for m in _re.finditer(r'href="/team/\d+/[a-z0-9-]+"[^>]*>(.*?)</a>', html, _re.S):
+            txt = " ".join(_re.sub(r"<[^>]+>", " ", m.group(1)).split())
+            org = names.get(txt.lower())
+            if org and org not in seen and org in _OREG:
+                seen.add(org)
+                found.append({"org": org, "region": _OREG[org]})
+        if found:
+            teams = found
+            json.dump({"fetched_at": time.time(), "teams": teams},
+                      open(_CHAMPS_TEAMS_PATH, "w"))
+    except Exception:
+        pass
+    return teams
+
+
+def _champs_checklist():
+    """One row per Champions team: BenPom top-7, 3-2+ last five, top-6 rated
+    player in the previous split (2026 Stage 2), rookie on the roster."""
+    try:
+        from MapElo import _mhub_load
+        hub = _mhub_load()
+    except Exception:
+        return None
+    lb = {t.get("org"): t for t in (hub.get("leaderboard") or {}).get("teams", [])}
+
+    # previous-split player ranks per region (R2.0, min 100 rounds)
+    import csv as _csv
+    ranks = {}          # region -> [(rank, player, org, rating)]
+    try:
+        rows = list(_csv.DictReader(open(os.path.join(_ROOT, "data", "2026_stage2.csv"))))
+        from collections import defaultdict as _dd
+        per = _dd(list)
+        for r in rows:
+            try:
+                if float(r.get("Rnd") or 0) >= 100:
+                    per[r["Region"]].append((float(r["R2.0"]), r["Player"], r["Org"]))
+            except Exception:
+                continue
+        for reg, lst in per.items():
+            lst.sort(key=lambda x: -x[0])
+            ranks[reg] = [(i + 1, p, o, rt) for i, (rt, p, o) in enumerate(lst)]
+    except Exception:
+        pass
+
+    # veterans: anyone who appeared in franchised VCT before 2026
+    vets = set()
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+        import re as _re
+        for e in _AE:
+            if int(e.get("year") or 0) > 2025:
+                continue
+            if not _re.search(r"kickoff|stage|league|masters|champions|lock_in", e["id"]):
+                continue
+            p = os.path.join(_ROOT, "data", e["id"] + ".csv")
+            if not os.path.exists(p):
+                continue
+            for r in _csv.DictReader(open(p)):
+                vets.add((r.get("Player") or "").strip().lower())
+    except Exception:
+        vets = set()
+
+    out = []
+    for t in _champs_teams():
+        org, region = t["org"], t["region"]
+        lbt = lb.get(org) or {}
+        rank = lbt.get("rank")
+        # last-5 from the leaderboard's recent_matches — the same source as the
+        # home page form dots, which includes playoff matches vs tier-2 teams
+        # that the ratings timeline drops.
+        last5 = (lbt.get("recent_matches") or [])[:5]
+        w = sum(1 for m in last5 if m.get("result") == "W")
+        l = len(last5) - w
+        best = next(((rk, pl) for rk, pl, o, _ in ranks.get(region, []) if o == org), None)
+        rookies = []
+        if vets:
+            for p in (lbt.get("roster") or []):
+                nm = (p.get("player") or "").strip()
+                if nm and nm.lower() not in vets:
+                    rookies.append(nm)
+        out.append({
+            "org": org, "region": region,
+            "benpom": {"rank": rank, "ok": bool(rank and rank <= 7)},
+            "last5": {"w": w, "l": l, "ok": w >= 3},
+            "star": {"player": best[1] if best else None,
+                     "rank": best[0] if best else None,
+                     "ok": bool(best and best[0] <= 6)},
+            "rookie": {"names": rookies, "ok": bool(rookies)},
+        })
+    out.sort(key=lambda r: (_REGION_ORDER.index(r["region"])
+                            if r["region"] in _REGION_ORDER else 9,
+                            r["benpom"]["rank"] or 99))
+    return {"rows": out, "slots": 16}
+
+
 _ls_cache = (None, -1.0)
 
 
@@ -145,6 +302,8 @@ def _landscape():
     except Exception:
         data = {"points": [], "internationals": []}
     data["winner_ranks"] = _winner_ranks(data.get("winners") or {})
+    data["winner_seeds"] = _WINNER_SEEDS
+    data["champs"] = _champs_checklist()
     # Each side file is loaded on its own, so a missing or half-written one
     # blanks its own section instead of taking the others down with it.
     for path, keys in ((_STREAKS, (("streaks", "winners"), ("last5", "tally"),
@@ -306,6 +465,32 @@ PAGE_HTML = """
   .toc a { font-size:.76rem; color:var(--soft); text-decoration:none; font-weight:400;
            transition:color .15s; line-height:1.4; }
   .toc a:hover { color:var(--ink); }
+  .toc a.active { color:var(--ink); font-weight:500; }
+  /* Champions Shanghai checklist */
+  .champs-tbl { width:100%; border-collapse:collapse; font-size:.86rem; }
+  .champs-tbl th { font-family:'Plus Jakarta Sans',sans-serif; font-size:.66rem; font-weight:800;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--soft); text-align:center;
+    padding:8px 6px; border-bottom:2px solid var(--line); }
+  .champs-tbl th:first-child { text-align:left; padding-left:8px; }
+  .champs-tbl td { padding:10px 6px 9px; border-bottom:1px solid #f0edf5; text-align:center; vertical-align:middle; }
+  .champs-tbl .ct-region td { font-family:'Plus Jakarta Sans',sans-serif; font-size:.68rem; font-weight:800;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--soft); background:#faf8fd;
+    text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); }
+  .champs-tbl .ct-team { display:flex; align-items:center; gap:9px; font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:800; font-size:.9rem; }
+  .champs-tbl .ct-team img { width:24px; height:24px; object-fit:contain; }
+  .champs-tbl .ct-score { font-family:'DM Sans',sans-serif; font-weight:700; font-size:.74rem; color:var(--soft,#6b6478); }
+  .champs-tbl .ct-mark { display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:6px; }
+  .champs-tbl .ct-mark svg { display:block; }
+  .champs-tbl .ct-yes { color:#1f9d55; background:#e9f7ef; border:1px solid #c3e7d1; }
+  .champs-tbl .ct-no { color:#d23b3b; background:#fdf1f1; border:1px solid #f0cccc; }
+  .champs-tbl .ct-sub { display:block; font-size:.66rem; font-weight:600; color:var(--soft); margin-top:5px; line-height:1.2; }
+  /* DM Sans' hyphen rides low between digits; lift it onto the digits' axis */
+  .champs-tbl .ct-d { position:relative; top:-0.09em; }
+  .champs-tbl .ct-tbd td { color:var(--faint); font-weight:700; }
+  .champs-wrap { overflow-x:auto; background:#fff; border:1px solid var(--line,#eceef2);
+    border-radius:16px; padding:8px 16px 12px; margin:18px 0 8px; box-shadow:0 4px 22px #0000000a; }
   .toc a.sub { padding-left:12px; font-size:.72rem; }
   .alpha-navbar ~ .toc { top:72px; }
   @media (max-width:1500px) { .toc { display:none; } }
@@ -478,6 +663,8 @@ PAGE_HTML = """
   <a href="#sec-momentum" class="sub">Momentum</a>
   <a href="#sec-stars" class="sub">Star Power</a>
   <a href="#roster-composition">Roster Composition</a>
+  <a href="#sec-seeding">Seeding</a>
+  <a href="#sec-champs">Champions Shanghai</a>
 </nav>
 <div class="page">
   <div class="article">
@@ -491,13 +678,15 @@ PAGE_HTML = """
     </div>
     <p class="cover-caption">International winners from each year of franchised VCT<br>FNATIC at Tokyo in 2023, Sentinels at Madrid in 2024, Paper Rex in 2025, and Leviatán at London in 2026</p>
     <div class="content">
-      <p>Champions, the biggest event in the year for VCT, is right around the corner. This means that the entirety of the fanbase will be making Pick&rsquo;Ems, discussing their predictions online, casting bets, and constructing fantasy teams. Furthermore, Champions involves 4 teams from each region, as opposed to the 3 (and sometimes 2, in the past) from each region at Masters events. With such a wide pool of teams alongside a large, captive, and opinionated audience, there is no better time to look back on the (almost) 4 years of franchised VCT history! How can we use history to sort through these teams and see who is expected to fail and who are true favorites?</p>
+      <p>Champions Shanghai, the biggest VCT event of the year, is right around the corner. This means that the entirety of the fanbase will be making Pick&rsquo;Ems, discussing their predictions online, casting bets, and constructing fantasy teams. Furthermore, Champions involves 4 teams from each region, as opposed to the 3 per region (occasionally 2 per region in the past) at Masters events. With such a wide pool of teams alongside a large, captive, and opinionated audience, there is no better time to look back on the 4 years of franchised VCT history. How can we use history to sort through these teams and see who is expected to fail and who are the true favorites?</p>
 
-      <p>This tradition of historical and analytical trends exists heavily in other sports and the results are often fascinating (and accurate). I am excited to borrow these ideas, frameworks, and visualizations I&rsquo;ve read over the years and bring them into the world of VCT! In this article, you will likely see a few references to college basketball/baseball analytics, so bear with me if that&rsquo;s unfamiliar. (Or you can skip them).</p>
+      <p>This tradition of historical and analytical trends exists heavily in other sports and the results are often fascinating (and accurate). I am excited to borrow these ideas, frameworks, and visualizations I&rsquo;ve read over the years and bring them into the world of VCT! In this article, you will likely see a few references to college basketball/baseball analytics, so bear with me if that&rsquo;s unfamiliar (or you can skip them).</p>
 
       <h2 id="by-the-numbers">The Winners: By The Numbers</h2>
 
-      <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior <em>(e.g. Leviatan at London uses their numbers from Stage 1 of 2026)</em>.</p>
+      <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior.<br><em>(e.g. Leviatán at Masters London uses their numbers from Stage 1 of 2026)</em></p>
+
+      <p>Trophy winner are automatically highlighted, but turn that off with the &ldquo;Highlight Winners&rdquo; button, allowing you to see/interact with all international-attending teams.</p>
 
       <figure class="fig" id="sec-landscape">
         <p class="fig-note"><em>Note: Champions 2023 was not included, since there was no domestic split prior to the tournament</em></p>
@@ -511,17 +700,16 @@ PAGE_HTML = """
       <p>This is an awesome visualization that's fun to play around with! Some notes:</p>
 
       <ul class="notes">
-        <li>We can see teams that did worse than they were expected to: for example, <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">LOUD at Tokyo</a>. This is a favorite example of mine, with a great narrative. 2023 LOUD was an amazing team with intense success before Masters Tokyo (2nd at LOCK//IN and then won Americas Stage 1) and after Masters Tokyo (3rd at Champions LA). They were a consensus top-2 favorite to win the event (Platchat put them above FNATIC, in fact, as favorites for Masters Tokyo). Their flop at Tokyo was shocking and historic - what happened? As I recall, Masters Tokyo was the start of a rift between Less/Saadhak and Aspas, a reminder that this game cannot be just broken down into numbers. Also, it’s a reminder that Valorant was, is, and will be extremely random.</li>
+        <li>We can see teams that did worse than they were expected to. For example, <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">LOUD at Tokyo</a>. This is a favorite example of mine, with a great narrative. 2023 LOUD were an amazing team with intense success before Masters Tokyo (2nd at LOCK//IN and then won Americas Stage 1) and after Masters Tokyo (3rd at Champions LA). They were a consensus top-2 favorite to win the event (Platchat put them above FNATIC, in fact, as favorites for Masters Tokyo). Their flop at Tokyo was shocking and historic - what happened? As I recall, Masters Tokyo was the start of a rift between Less/Saadhak and Aspas, a reminder that this game cannot be just broken down into numbers. Also, it’s a reminder that Valorant was, is, and will always be random.</li>
         <li>Speaking of random, we can also see which teams overshot their previous domestic performance! <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is the most obvious one. Here are all of the teams coming into Masters Bangkok on this graph:
           <figure class="inline-fig">
             <div class="inline-fig-wrap"><canvas id="bangkokInset"></canvas></div>
           </figure>
           I mean seriously, how did they win this tournament?<br><br>
           <a class="pin" data-org="MIBR" data-intl="Champions 2025">MIBR at Champions Paris</a> and <a class="pin" data-org="WOL" data-intl="Masters Toronto 2025">Wolves at Masters Toronto</a> are also worth mentioning for this category.</li>
-        <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 0-2 in their respective events)</li>
+        <li>We can see that Chinese teams get consistently overrated by this visualization, due to the less competitive state of domestic CN Valorant (e.g. <a class="pin" data-org="FPX" data-intl="Masters Shanghai 2024">FPX at Shanghai</a> and <a class="pin" data-org="XLG" data-intl="Masters Santiago 2026">XLG at Santiago</a> are placed impressively on this graph - they also went 1-2 and 0-2 in their respective events).</li>
+        <li id="sec-tiers">Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph which includes tiers of favoritism to win the NCAA tournament:</li>
       </ul>
-
-      <p id="sec-tiers">Lastly, this visualization was inspired by EvanMiya&rsquo;s March Madness Efficiency Landscape graph which includes tiers of favoritism to win the NCAA tournament.</p>
 
       <figure class="inline-fig wide">
         <img src="/evanmiya-landscape.jpg" alt="EvanMiya&rsquo;s March Madness Predicted Efficiency Landscape">
@@ -545,6 +733,7 @@ PAGE_HTML = """
       <p>I have my own <a class="xlink" href="/mapelo/modern/" target="_blank" rel="noopener">BenPom</a> rating system for VCT - let&rsquo;s see what the trend is there:</p>
 
       <figure class="fig">
+        <p class="fig-note"><em>Note: LOCK//IN was not included, since there were ratings prior to the event</em></p>
         <div class="fig-wrap rank-wrap"><canvas id="rankChart"></canvas></div>
         <div class="takeaway">
           <b>Every trophy winner since franchising was Top-15 by BenPom before the tournament</b>
@@ -554,7 +743,7 @@ PAGE_HTML = """
 
       <hr class="secbreak">
 
-      <p id="sec-momentum">To go back to the point on teams that &ldquo;overshot their previous domestic performance&rdquo;, those teams often were playing better towards the end of their split. In other words, they had <em>momentum</em>. For instance, MIBR placed horribly on the Attack/Defense graph before Champions Paris, yet they finished 5th-6th and only lost to the top-3 teams at the tournament (narrowly). In their Americas Stage 2 split, they won 2 of their last 3 games but were on a 5-match losing streak before that.</p>
+      <p id="sec-momentum">To go back to the point on teams that &ldquo;overshot their previous domestic performance&rdquo;, those teams often were playing better towards the end of their split. In other words, they had <em>momentum</em>. For instance, MIBR placed horribly on the Attack/Defense graph before Champions Paris, yet they finished 5th-6th at Paris and only lost to the top-3 teams at the tournament (narrowly). Importantly, in their Americas Stage 2 split, they won 2 of their last 3 games but were on a 5-match losing streak before that.</p>
 
       <p>How important is momentum, then?</p>
 
@@ -579,7 +768,7 @@ PAGE_HTML = """
 
       <hr class="secbreak">
 
-      <p id="sec-stars">One last trope that surrounds champions in practically all sports is the notion of <em>star power</em>. It&rsquo;s an arbitrary concept, but the idea is that to be a champion, you have to have an elite player who can rise in the most important matches/moments. In VCT, our best comprehensive statistic for player quality is VLR-rating, so let&rsquo;s use that to look at each championship team&rsquo;s best player coming into the international tournament:</p>
+      <p id="sec-stars">One other trope that surrounds winners in practically all sports is the notion of <em>star power</em>. It&rsquo;s an arbitrary concept, but the idea is that to win a tournament, you have to have an elite player who can rise in the most important matches/moments. In VCT, our best comprehensive statistic for player quality is VLR-rating, so let&rsquo;s use that to look at each championship team&rsquo;s best player in their previous domestic split:</p>
 
       <figure class="fig">
         <div class="stars" id="starGrid"></div>
@@ -597,7 +786,7 @@ PAGE_HTML = """
 
       <h2 id="roster-composition">Roster Composition</h2>
 
-      <p>One trend I&rsquo;ve noticed in championship-winning teams is about their rosters. More specifically, their roster turnover rate. Every single championship-winning roster made roster changes from the previous year <em>OR</em> they made roster changes during the year:</p>
+      <p>One trend I&rsquo;ve noticed in trophy-winning VCT teams regards their rosters. More specifically, their roster turnover rate. Every single championship-winning roster made roster changes from the previous year <em>OR</em> they made roster changes during the year:</p>
 
       <figure class="fig">
         <div class="rosters">__ROSTERS__</div>
@@ -610,13 +799,36 @@ PAGE_HTML = """
         <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Sylvan on T1, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and blowz/Neon on LEV.</span>
       </div>
 
-      <p>This speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent. Even if it means adding newer talent into a roster with veterans.</p>
+      <p>This speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent - even if it means adding newer talent into a roster with veterans.</p>
 
-      <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned by teams with a rookie/rookies in the final stages of the two Masters events this year - by Nongshim at Masters Santiago and Leviatan at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
+      <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned by teams with a rookie/rookies in the two Masters events this year - by Nongshim at Masters Santiago and Leviatán at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
 
-      <p>What&rsquo;s even more damning is that every team that&rsquo;s won Champions specifically has made a mid-season roster change to add a rookie. This is a low sample size observation, but I&rsquo;m curious as to whether this trend continues at Champions Shanghai.</p>
+      <p>What&rsquo;s even more damning is that every team that&rsquo;s won Champions specifically has made a mid-season roster change to add a rookie. This is a low-sample-size observation, but I&rsquo;m curious as to whether this trend continues at Champions Shanghai.</p>
 
-      <p><em>Note: This Champions trend implicates teams like Leviatan, Vitality, and Fut</em></p>
+      <p><em>Note: This Champions trend implicates teams like Leviatán, Vitality, and Fut</em></p>
+
+      <hr class="secbreak">
+
+      <p id="sec-seeding">What about seeding coming into the event? This is a hot topic in VCT discourse, as there&rsquo;s a common debate about whether the bye that first-seeds get in Masters events is a positive or negative. Let&rsquo;s see what the trend is there:</p>
+
+      <figure class="fig">
+        <div class="fig-wrap rank-wrap"><canvas id="seedChart"></canvas></div>
+      </figure>
+
+      <p>Similarly to the momentum visualization, the trends here aren&rsquo;t that surprising. It&rsquo;s higher seeds that are winning trophies more than lower seeds, but that is a fairly lax rule. For instance:</p>
+
+      <ul class="notes">
+        <li>The most common seed of trophy-winning teams is the #2 seed, not a #1 seed.</li>
+        <li>Lowest-seeded teams have won Masters events 2/7 times (T1 at Bangkok + PRX at Toronto), though this is yet to happen at a Champions tournament.</li>
+      </ul>
+
+      <p>Nothing much to note here.</p>
+
+      <hr class="secbreak">
+
+      <h2 id="sec-champs">Champions Shanghai</h2>
+
+      <div id="champsTable"></div>
     </div>
   </div>
 </div>
@@ -1412,6 +1624,131 @@ buildLandscape({canvas: 'tierLandscape', winBox: 'tierWin', eventBox: 'tierEvent
   charts.push(c);
 })();
 
+// Winners' regional seed coming into the event they won. Same visual language
+// as the rank chart, but the category axis is sorted by field size (8 / 12 /
+// 16 teams) rather than chronology -- a 2-seed means less the more teams an
+// event takes -- with dashed separators and a header over each group.
+(function () {
+  const el = document.getElementById('seedChart');
+  if (!el || !LS.winner_seeds || !LS.winner_seeds.length) return;
+  const rows = LS.winner_seeds;
+  const PER_REGION = {8: '2 per region', 12: '3 per region', 16: '4 per region'};
+
+  const seedMarks = {
+    id: 'seedMarks',
+    afterDatasetsDraw(c) {
+      const {ctx} = c;
+      c.getDatasetMeta(0).data.forEach((pt, i) => {
+        const r = rows[i], img = logo(r.org);
+        ctx.save();
+        if (img.complete && img.naturalWidth) ctx.drawImage(img, pt.x - 13, pt.y - 13, 26, 26);
+        ctx.font = "800 10px 'DM Sans',sans-serif";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.lineWidth = 2.5; ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#7c4dd6';
+        ctx.strokeText('#' + r.seed, pt.x, pt.y + 15);
+        ctx.fillStyle = '#fff';
+        ctx.fillText('#' + r.seed, pt.x, pt.y + 15);
+        ctx.restore();
+      });
+    }
+  };
+
+  const seedGroups = {
+    id: 'seedGroups',
+    // Bands + headers under the datasets, headers in the gap the title's
+    // padding-bottom leaves: layout.padding.top sits ABOVE the title, so
+    // drawing at a.top-N with only layout padding lands on the title text.
+    beforeDatasetsDraw(c) {
+      const {ctx, chartArea: a, scales: {x}} = c;
+      const groups = [];
+      let start = 0;
+      for (let i = 1; i <= rows.length; i++) {
+        if (i < rows.length && rows[i].pool === rows[start].pool) continue;
+        groups.push([start, i - 1]); start = i;
+      }
+      const edge = i => Math.min(a.right, Math.max(a.left, x.getPixelForValue(i)));
+      ctx.save();
+      const POOL_TINT = {8: 'rgba(22,163,74,.08)', 12: 'rgba(124,77,214,.07)', 16: 'rgba(220,38,38,.06)'};
+      groups.forEach(([g0, g1], gi) => {
+        const x0 = edge(g0 - 0.5), x1 = edge(g1 + 0.5);
+        // Each field size gets its own tint: blue 8, purple 12, red 16.
+        ctx.fillStyle = POOL_TINT[rows[g0].pool] || 'rgba(0,0,0,.03)';
+        ctx.fillRect(x0, a.top, x1 - x0, a.bottom - a.top);
+        if (gi > 0) {
+          ctx.strokeStyle = 'rgba(0,0,0,.18)';
+          ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+          ctx.beginPath(); ctx.moveTo(x0, a.top); ctx.lineTo(x0, a.bottom); ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        const mid = (x0 + x1) / 2;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.font = "800 10.5px 'Plus Jakarta Sans',sans-serif";
+        ctx.fillStyle = '#7a6e7e';
+        ctx.fillText(rows[g0].pool + '-team events', mid, a.top - 26);
+        ctx.font = "600 9px 'DM Sans',sans-serif";
+        ctx.fillStyle = '#9a8fa4';
+        ctx.fillText('(' + PER_REGION[rows[g0].pool] + ')', mid, a.top - 15);
+      });
+      ctx.restore();
+    }
+  };
+
+  const c = new Chart(el, {
+    type: 'line',
+    data: {
+      labels: rows.map(r => r.event),
+      datasets: [{
+        data: rows.map(r => r.seed),
+        showLine: false,
+        pointRadius: 0, pointHoverRadius: 0, hitRadius: 18
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 6, right: 16, bottom: 4, left: 4}},
+      interaction: {mode: 'nearest', intersect: true, axis: 'x'},
+      scales: {
+        x: {offset: true,
+            ticks: {font: {size: 9.5}, color: '#9a8fa4', maxRotation: 40, minRotation: 40},
+            grid: {color: 'rgba(0,0,0,.04)'}},
+        y: {reverse: true, min: 1, max: 4, grace: 0.55,
+            afterBuildTicks: ax => { ax.ticks = [1, 2, 3, 4].map(v => ({value: v})); },
+            title: {display: true, text: 'Regional seed',
+                    font: {family: "'DM Sans',sans-serif", size: 11, weight: 600}, color: '#7a6e7e'},
+            ticks: {font: {size: 10}, color: '#9a8fa4',
+                    callback: v => '#' + v},
+            grid: {color: 'rgba(0,0,0,.05)'}}
+      },
+      plugins: {
+        legend: {display: false},
+        title: {
+          display: true,
+          text: 'Every international winner\u2019s seed coming into the event',
+          color: '#3d1a6e', padding: {top: 2, bottom: 44},
+          font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
+        },
+        tooltip: {
+          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          caretPadding: 22,
+          animation: {duration: 140},
+          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+          callbacks: {
+            title: it => rows[it[0].dataIndex].org + ' won ' + rows[it[0].dataIndex].event,
+            label: it => {
+              const r = rows[it.dataIndex];
+              return [r.region + ' #' + r.seed + ' seed coming into',
+                      r.pool + '-team event'];
+            }
+          }
+        }
+      }
+    },
+    plugins: [plate, seedMarks, seedGroups]
+  });
+  charts.push(c);
+})();
+
 // Every roster card to the height of the tallest, across all four seasons.
 // CSS can only equalise within one grid, and each season is its own -- so a
 // year whose winners all made a single change would sit shorter than the rest.
@@ -1512,6 +1849,67 @@ document.querySelectorAll('.pin').forEach(a => {
     document.querySelector('.fig').scrollIntoView({behavior: 'smooth', block: 'center'});
   });
 });
+
+// Champions Shanghai checklist table. Regions padded to 4 slots with TBD rows
+// until VLR confirms every team (the payload refreshes itself server-side).
+(function () {
+  var el = document.getElementById('champsTable');
+  var C = LS.champs;
+  if (!el || !C || !C.rows || !C.rows.length) { if (el) el.innerHTML = '<div style="color:#9a8fa4;font-weight:600;padding:12px">Team list not available yet.</div>'; return; }
+  var REGIONS = ['Americas', 'EMEA', 'Pacific', 'CN'];
+  function esc2(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  var CT_CHECK='<svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M2 6.6 L4.7 9.2 L10 3.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var CT_CROSS='<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.4 2.4 L9.6 9.6 M9.6 2.4 L2.4 9.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>';
+  function mark(ok, sub, raw){
+    // Always render the sub line (nbsp when empty) so every box in a row sits
+    // on the same axis and every sub-label shares one baseline.
+    return '<span class="ct-mark '+(ok?'ct-yes':'ct-no')+'">'+(ok?CT_CHECK:CT_CROSS)+'</span>'
+      +'<span class="ct-sub">'+(sub?(raw?sub:esc2(sub)):'&nbsp;')+'</span>';
+  }
+  var html = '<div class="champs-wrap"><table class="champs-tbl"><thead><tr>'
+    +'<th>Team</th><th>Top-7 in BenPom</th><th>3-2 (or better)<br>in past 5</th>'
+    +'<th>Top-6 rated player<br>in previous split</th><th>Have a rookie</th></tr></thead><tbody>';
+  REGIONS.forEach(function(reg){
+    var rows = C.rows.filter(function(r){ return r.region === reg; });
+    if (!rows.length) return;
+    html += '<tr class="ct-region"><td colspan="5">'+reg+'</td></tr>';
+    rows.forEach(function(r){
+      var passed = [r.benpom.ok, r.last5.ok, r.star.ok, r.rookie.ok].filter(Boolean).length;
+      html += '<tr>'
+        +'<td><span class="ct-team"><img src="/logos/'+esc2(r.org)+'.png" alt="" onerror="this.style.display=\\'none\\'">'+esc2(r.org)
+        +'<span class="ct-score">('+passed+'/4)</span></span></td>'
+        +'<td>'+mark(r.benpom.ok, r.benpom.rank ? '#'+r.benpom.rank : '')+'</td>'
+        +'<td>'+mark(r.last5.ok, r.last5.w+'<span class="ct-d">-</span>'+r.last5.l, true)+'</td>'
+        +'<td>'+mark(r.star.ok, r.star.player ? (r.star.player+' \u00b7 #'+r.star.rank) : '')+'</td>'
+        +'<td>'+mark(r.rookie.ok, r.rookie.ok ? r.rookie.names.join(', ') : '')+'</td>'
+        +'</tr>';
+    });
+    for (var i = rows.length; i < 4; i++) {
+      html += '<tr class="ct-tbd"><td><span class="ct-team">TBD</span></td>'
+        +'<td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td></tr>';
+    }
+  });
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
+})();
+
+(function() {
+  var tocLinks = document.querySelectorAll('.toc a');
+  var ids = Array.from(tocLinks).map(function(a) { return a.getAttribute('href').slice(1); });
+  function onScroll() {
+    var scrollY = window.scrollY + 120;
+    var active = ids[0];
+    ids.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el && el.offsetTop <= scrollY) active = id;
+    });
+    tocLinks.forEach(function(a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + active);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
 </script>
 </body>
 </html>
