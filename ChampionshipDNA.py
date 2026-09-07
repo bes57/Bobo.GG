@@ -138,7 +138,7 @@ _WINNER_SEEDS = [
     {"org": "NS",  "event": "Masters Santiago 2026", "seed": 1, "pool": 12, "region": "Pacific"},
     {"org": "LEV", "event": "Masters London 2026",   "seed": 2, "pool": 12, "region": "Americas"},
     # 16-team events (4 per region)
-    {"org": "EG",  "event": "Champions 2023",        "seed": 3, "pool": 16, "region": "Americas"},
+    {"org": "EG",  "event": "Champions 2023",        "seed": 1, "pool": 16, "region": "Americas"},
     {"org": "EDG", "event": "Champions 2024",        "seed": 1, "pool": 16, "region": "CN"},
     {"org": "NRG", "event": "Champions 2025",        "seed": 2, "pool": 16, "region": "Americas"},
 ]
@@ -908,7 +908,7 @@ PAGE_HTML = """
       <p>Similarly to the momentum visualization, the trends here aren&rsquo;t that surprising. It&rsquo;s higher seeds that are winning trophies more than lower seeds, but that is a fairly lax rule. For instance:</p>
 
       <ul class="notes">
-        <li>The most common seed of trophy-winning teams is the #2 seed, not a #1 seed.</li>
+        <li>There are an equal amount of #1 seeds and #2 seeds who have won.</li>
         <li>Lowest-seeded teams have won Masters events 2/7 times (T1 at Bangkok + PRX at Toronto), though this is yet to happen at a Champions tournament.</li>
       </ul>
 
