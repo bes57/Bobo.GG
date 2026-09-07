@@ -199,6 +199,10 @@ def _champs_teams():
     return teams
 
 
+_champs_cache = {"key": None, "data": None}
+_vets_cache = {"vets": None}
+
+
 def _champs_checklist():
     """One row per Champions team: BenPom top-7, 3-2+ last five, top-6 rated
     player in the previous split (2026 Stage 2), rookie on the roster."""
@@ -207,7 +211,48 @@ def _champs_checklist():
         hub = _mhub_load()
     except Exception:
         return None
+    def _mt(*parts):
+        try:
+            return os.path.getmtime(os.path.join(_ROOT, *parts))
+        except OSError:
+            return 0.0
+    key = ((hub.get("leaderboard") or {}).get("as_of_date"),
+           _mt("data", "2026_stage2.csv"),
+           _mt("data", "enriched", "champs_teams.json"),
+           _mt("data", "enriched", "round_outcomes.csv"))
+    if _champs_cache["data"] is not None and _champs_cache["key"] == key:
+        return _champs_cache["data"]
     lb = {t.get("org"): t for t in (hub.get("leaderboard") or {}).get("teams", [])}
+
+    # Attack/defense round win%% over 2026 Stage 2 only (the split that just
+    # ended), for the banded landscape under the checklist. Same join as the
+    # team cards: hub match org-pairs x round_outcomes.
+    import csv as _csv0
+    stage2_ids = {"2026_stage2", "2026_china_stage2"}
+    pairs = {str(me.get("match_id")): (me.get("winner"), me.get("loser"))
+             for me in (hub.get("chart") or {}).get("match_events", [])
+             if me.get("event_id") in stage2_ids and me.get("winner") and me.get("loser")}
+    sides = {}
+    try:
+        with open(os.path.join(_ROOT, "data", "enriched", "round_outcomes.csv")) as f:
+            for r in _csv0.DictReader(f):
+                pair = pairs.get(r["match_id"])
+                if not pair:
+                    continue
+                w_org, side = r["winner_org"], r["winner_side"]
+                if w_org not in pair or side not in ("attack", "defense"):
+                    continue
+                l_org = pair[1] if w_org == pair[0] else pair[0]
+                sw = sides.setdefault(w_org, [0, 0, 0, 0])
+                sl = sides.setdefault(l_org, [0, 0, 0, 0])
+                if side == "attack":
+                    sw[0] += 1; sw[1] += 1
+                    sl[3] += 1
+                else:
+                    sw[2] += 1; sw[3] += 1
+                    sl[1] += 1
+    except OSError:
+        sides = {}
 
     # previous-split player ranks per region (R2.0, min 100 rounds)
     import csv as _csv
@@ -228,23 +273,27 @@ def _champs_checklist():
     except Exception:
         pass
 
-    # veterans: anyone who appeared in franchised VCT before 2026
-    vets = set()
-    try:
-        from MoreTestingMaybeFiles import ALL_EVENTS as _AE
-        import re as _re
-        for e in _AE:
-            if int(e.get("year") or 0) > 2025:
-                continue
-            if not _re.search(r"kickoff|stage|league|masters|champions|lock_in", e["id"]):
-                continue
-            p = os.path.join(_ROOT, "data", e["id"] + ".csv")
-            if not os.path.exists(p):
-                continue
-            for r in _csv.DictReader(open(p)):
-                vets.add((r.get("Player") or "").strip().lower())
-    except Exception:
+    # veterans: anyone who appeared in franchised VCT before 2026 (static
+    # history — computed once per process)
+    vets = _vets_cache["vets"]
+    if vets is None:
         vets = set()
+        try:
+            from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+            import re as _re
+            for e in _AE:
+                if int(e.get("year") or 0) > 2025:
+                    continue
+                if not _re.search(r"kickoff|stage|league|masters|champions|lock_in", e["id"]):
+                    continue
+                p = os.path.join(_ROOT, "data", e["id"] + ".csv")
+                if not os.path.exists(p):
+                    continue
+                for r in _csv.DictReader(open(p)):
+                    vets.add((r.get("Player") or "").strip().lower())
+            _vets_cache["vets"] = vets
+        except Exception:
+            vets = set()
 
     out = []
     for t in _champs_teams():
@@ -264,8 +313,12 @@ def _champs_checklist():
                 nm = (p.get("player") or "").strip()
                 if nm and nm.lower() not in vets:
                     rookies.append(nm)
+        aw, an, dw, dn = sides.get(org, [0, 0, 0, 0])
         out.append({
             "org": org, "region": region,
+            "sides": ({"atk": round(aw / an, 4), "dfn": round(dw / dn, 4),
+                       "atk_w": aw, "atk_n": an, "def_w": dw, "def_n": dn}
+                      if an and dn else None),
             "benpom": {"rank": rank, "ok": bool(rank and rank <= 7)},
             "last5": {"w": w, "l": l, "ok": w >= 3},
             "star": {"player": best[1] if best else None,
@@ -276,7 +329,10 @@ def _champs_checklist():
     out.sort(key=lambda r: (_REGION_ORDER.index(r["region"])
                             if r["region"] in _REGION_ORDER else 9,
                             r["benpom"]["rank"] or 99))
-    return {"rows": out, "slots": 16}
+    result = {"rows": out, "slots": 16}
+    _champs_cache["key"] = key
+    _champs_cache["data"] = result
+    return result
 
 
 _ls_cache = (None, -1.0)
@@ -295,6 +351,9 @@ def _landscape():
     except OSError:
         return {"points": [], "internationals": []}
     if _ls_cache[0] is not None and _ls_cache[1] == stamp:
+        # The checklist tracks live hub data (ranks, last-5, new results), so it
+        # rides outside the file-mtime cache and refreshes itself per request.
+        _ls_cache[0]["champs"] = _champs_checklist()
         return _ls_cache[0]
     try:
         with open(_LANDSCAPE) as f:
@@ -346,12 +405,12 @@ PAGE_HTML = """
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=820">
-<title>Championship DNA: Historical Trends To Note For Champions Shanghai &mdash; Bobo's VCT Database</title>
+<title>Championship DNA: Historical Trends To Note For Champions &mdash; Bobo's VCT Database</title>
 <!-- Open Graph / Twitter link-preview cards. The description is the author's
      articles-index blurb, reused verbatim — same job, same words. -->
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Bobo gg">
-<meta property="og:title" content="Championship DNA: Historical Trends To Note For Champions Shanghai">
+<meta property="og:title" content="Championship DNA: Historical Trends To Note For Champions">
 <meta property="og:description" content="Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.">
 <meta property="og:url" content="https://bobo-gg.net/articles/championship-dna/">
 <meta property="og:image" content="https://bobo-gg.net/championshipdna.jpg">
@@ -360,7 +419,7 @@ PAGE_HTML = """
 <meta property="og:image:width" content="2048">
 <meta property="og:image:height" content="1404">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Championship DNA: Historical Trends To Note For Champions Shanghai">
+<meta name="twitter:title" content="Championship DNA: Historical Trends To Note For Champions">
 <meta name="twitter:description" content="Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.">
 <meta name="twitter:image" content="https://bobo-gg.net/championshipdna.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -671,7 +730,7 @@ PAGE_HTML = """
     <!-- Explicit break after the colon: the series name owns line 1, the
          subject owns line 2. The nowrap span keeps the event name whole if
          line 2 ever has to wrap on a narrow screen. Wording untouched. -->
-    <h1>Championship DNA:<br>Historical Trends To Note For <span class="nb">Champions Shanghai</span></h1>
+    <h1>Championship DNA:<br>Historical Trends To Note For <span class="nb">Champions</span></h1>
     <div class="byline">Bobo &mdash; August 2026</div>
     <div class="cover" id="intro">
       <img src="/championshipdna.jpg" alt="VCT champions lifting trophies">
@@ -829,6 +888,10 @@ PAGE_HTML = """
       <h2 id="sec-champs">Champions Shanghai</h2>
 
       <div id="champsTable"></div>
+
+      <figure class="fig">
+        <div class="fig-wrap"><canvas id="champsLandscape"></canvas></div>
+      </figure>
     </div>
   </div>
 </div>
@@ -1891,6 +1954,72 @@ document.querySelectorAll('.pin').forEach(a => {
   });
   html += '</tbody></table></div>';
   el.innerHTML = html;
+})();
+
+// Champions field on the banded landscape: every qualified team by its 2026
+// Stage 2 attack/defense round win%, over the same favoritism bands as the
+// tiers chart.
+(function () {
+  var el = document.getElementById('champsLandscape');
+  var C = LS.champs;
+  if (!el || !C || !C.rows) return;
+  var rows = C.rows.filter(function(r){ return r.sides; });
+  if (!rows.length) return;
+  // p mirrors the landscape point shape (intl/won) so the shared band-label
+  // occupancy pass can measure these marks without special cases.
+  var data = rows.map(function(r){
+    return {x: r.sides.dfn, y: r.sides.atk,
+            p: {org: r.org, intl: '', won: false, sides: r.sides}};
+  });
+
+  var champsMarks = {
+    id: 'champsMarks',
+    afterDatasetsDraw(c) {
+      var ctx = c.ctx;
+      c.getDatasetMeta(0).data.forEach(function(pt, i) {
+        var img = logo(rows[i].org);
+        if (img.complete && img.naturalWidth) ctx.drawImage(img, pt.x - 12, pt.y - 12, 24, 24);
+      });
+    }
+  };
+
+  var c = new Chart(el, {
+    type: 'scatter',
+    data: {datasets: [{data: data, pointRadius: 0, pointHoverRadius: 0, hitRadius: 16}]},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: {padding: {top: 14, right: 16, bottom: 4, left: 4}},
+      interaction: {mode: 'nearest', intersect: true, axis: 'xy'},
+      scales: {x: AXIS('Defense win%'), y: AXIS('Attack win%')},
+      plugins: {
+        legend: {display: false},
+        title: {
+          display: true,
+          text: 'The Champions field by 2026 Stage 2 attack/defense round win%',
+          color: '#3d1a6e', padding: {top: 2, bottom: 12},
+          font: {family: "'Plus Jakarta Sans',sans-serif", size: 14, weight: 800}
+        },
+        tooltip: {
+          displayColors: false, backgroundColor: 'rgba(22,18,29,.94)', padding: 10,
+          caretPadding: 16,
+          animation: {duration: 140},
+          animations: {numbers: {duration: 0}, opacity: {duration: 140, easing: 'linear'}},
+          callbacks: {
+            title: function(it){ return it[0].raw.p.org; },
+            label: function(it){
+              var sd = it.raw.p.sides;
+              return ['2026 Stage 2',
+                      'Attack  ' + pct(sd.atk) + '  (' + sd.atk_w + '/' + sd.atk_n + ')',
+                      'Defense ' + pct(sd.dfn) + '  (' + sd.def_w + '/' + sd.def_n + ')'];
+            }
+          }
+        }
+      }
+    },
+    plugins: [plate, bands, fifty, champsMarks]
+  });
+  c.$bands = BANDS;
+  charts.push(c);
 })();
 
 (function() {
