@@ -33,7 +33,7 @@ sys.path.insert(0, ROOT)
 from MoreTestingMaybeFiles import ALL_EVENTS
 
 DATA_DIR = os.path.join(ROOT, 'data')
-OUT_PATH = os.path.join(DATA_DIR, 'map_ratings.json')
+OUT_PATH = os.path.join(DATA_DIR, f"map_ratings{os.environ.get('BENPOM_OUT_SUFFIX', '')}.json")
 
 # International events — cross-regional calibrators; never apply recency decay.
 # Derived from ALL_EVENTS: any event whose `regions` dict has an "International"
@@ -55,6 +55,11 @@ def _is_champions_event(eid):
 # region — the start of the Stage 2 play-ins. Nothing earlier is touched; see
 # the filter in the games loop below.
 UNGAUGED_FROM = datetime(2026, 8, 1)
+# Experiment (2026-09-07): include play-in/T2 sides in the solve. Their maps
+# count, they get an internally-stored rating (snapshot['ungauged']), and the
+# display layers keep filtering them off every leaderboard. Set
+# BENPOM_KEEP_UNGAUGED=0 to restore the drop-them behavior.
+KEEP_UNGAUGED = os.environ.get("BENPOM_KEEP_UNGAUGED", "1") != "0" 
 
 TEAM_REGIONS = {
     # EMEA
@@ -454,7 +459,7 @@ def load_games(only_events=None):
         _ev = EVENT_DATES.get(row['event_id'])
         _recent = bool(_ev) and _parse_date(_ev[0]) >= UNGAUGED_FROM
         unknown = ([o for o in (winner, losers[0]) if o not in TEAM_REGIONS]
-                   if _recent else [])
+                   if (_recent and not KEEP_UNGAUGED) else [])
         if unknown:
             for o in unknown:
                 ungauged_drops[o] = ungauged_drops.get(o, 0) + 1
@@ -1564,11 +1569,24 @@ def build_year_ratings(games, lam, ref_date, shrink_k, min_games,
             'maps':            maps_out,
         }
 
+    # Solved-but-hidden sides (play-in/T2 orgs outside TEAM_REGIONS): their
+    # rating is stored here for inspection; no leaderboard reads this key.
+    ungauged_out = {}
+    for team, r in rtgs.items():
+        if team in TEAM_REGIONS:
+            continue
+        rec = records.get(team, {'w': 0, 'l': 0})
+        if rec['w'] + rec['l'] == 0:
+            continue
+        ungauged_out[team] = {'rating': round(r, 3),
+                              'w': rec['w'], 'l': rec['l']}
+
     return {
         'n_games':  len(games),
         'beta':     round(beta, 4),
         'ref_date': ref_date.strftime('%Y-%m-%d') if ref_date else None,
         'teams':    teams_out,
+        'ungauged': ungauged_out,
     }
 
 

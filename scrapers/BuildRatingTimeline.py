@@ -107,8 +107,12 @@ from BuildMapRatings import EVENT_DATES as BMR_EVENT_DATES
 UNGAUGED_FROM = datetime(2026, 8, 1)
 
 DATA_DIR = os.path.join(ROOT, "data")
-OUT_PATH  = os.path.join(DATA_DIR, "rating_timeline.json")  # 2026 (live; used by Modern Hub)
-SITE_MODEL_PATH = os.path.join(DATA_DIR, "site_model.json")
+# BENPOM_OUT_SUFFIX lets the refresh pipeline write a second variant of the
+# outputs (e.g. "_not2" = solved with BENPOM_KEEP_UNGAUGED=0) for the hub's
+# include-T2 toggle, without touching the canonical files.
+_OUT_SUFFIX = os.environ.get("BENPOM_OUT_SUFFIX", "")
+OUT_PATH  = os.path.join(DATA_DIR, f"rating_timeline{_OUT_SUFFIX}.json")  # 2026 (live; used by Modern Hub)
+SITE_MODEL_PATH = os.path.join(DATA_DIR, f"site_model{_OUT_SUFFIX}.json")
 
 def out_path_for_year(year):
     """Historical years write to rating_timeline_<year>.json. 2026 is live and
@@ -271,7 +275,7 @@ def load_all_games():
             # history through the back door.
             _gd = (datetime.strptime(date_str, "%Y-%m-%d")
                    if date_str else None)
-            unknown = ([] if (os.environ.get("BENPOM_KEEP_UNGAUGED") == "1"
+            unknown = ([] if (os.environ.get("BENPOM_KEEP_UNGAUGED", "1") != "0"
                               or _gd is None or _gd < UNGAUGED_FROM)
                        else [o for o in (winner, losers[0])
                              if o not in ORG_REGIONS])

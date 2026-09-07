@@ -2505,6 +2505,11 @@ var TEAM_COLORS = {
   DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
   MKOI:'#7C3AED', KOI:'#7C3AED', GIA:'#FFFFFF',
   '2G':'#00C853', BME:'#FFC107', BOOM:'#FFC107', APK:'#FF6F00',
+  // T2 / play-in sides (2026 Stage 2 experiment)
+  FF:'#29B6F6', EP:'#E53935', SGE:'#D5121E', JL:'#3949AB',
+  ONG:'#8D6E63', SP:'#26A69A', BST:'#7E57C2', QTD:'#5C6BC0',
+  M80:'#EF6C00', XIP:'#00897B', FX:'#C0CA33', AT:'#F06292',
+  KBG:'#455A64',
 };
 var LOGO_SCALES = { ZETA: 0.72 };
 
@@ -6937,7 +6942,7 @@ def _ungauged_events(known_ids):
 _RATING_TIMELINE_PATH = os.path.join(ROOT, "data", "rating_timeline.json")
 _MAP_RATINGS_PATH     = os.path.join(ROOT, "data", "map_ratings.json")
 
-_mhub_cache        = {"data": None, "ts": 0.0}
+_mhub_cache        = {"data": {}, "ts": {}}   # keyed by variant: "t2" / "not2"
 _mhub_cache_lock   = _th.Lock()
 _mhub_build_running = False
 _mhub_last_trigger = 0.0
@@ -7298,8 +7303,14 @@ def _mhub_dynamic_bands():
     return bands
 
 
-def _mhub_load():
-    """Load rating_timeline.json + map_ratings.json and merge into hub payload."""
+def _mhub_load(t2=False):
+    """Load rating_timeline.json + map_ratings.json and merge into hub payload.
+    T2/play-in matches are permanently part of the fit (user-confirmed
+    2026-09-07); t2 only controls whether the T2 SIDES appear as leaderboard
+    rows (and therefore chart lines) — every rating is identical either way.
+    Default False: the standard view is the 48 franchised teams."""
+    _tl_path = _RATING_TIMELINE_PATH
+    _mr_path = _MAP_RATINGS_PATH
     try:
         from MoreTestingMaybeFiles import ALL_EVENTS as _AE
         _elabels = {e["id"]: e.get("label", e["id"]) for e in _AE}
@@ -7321,8 +7332,8 @@ def _mhub_load():
     }
 
     # ── Chart data ─────────────────────────────────────────────────────────────
-    if os.path.exists(_RATING_TIMELINE_PATH):
-        with open(_RATING_TIMELINE_PATH) as f:
+    if os.path.exists(_tl_path):
+        with open(_tl_path) as f:
             tl = json.load(f)
         checkpoints   = tl.get("checkpoints",  [])
         match_events  = tl.get("match_events", [])
@@ -7370,8 +7381,8 @@ def _mhub_load():
     # scraped and BuildMapRatings rebuilds, this auto-promotes to the freshest.
     snap_data = None
     snap_name = None
-    if os.path.exists(_MAP_RATINGS_PATH):
-        with open(_MAP_RATINGS_PATH) as f:
+    if os.path.exists(_mr_path):
+        with open(_mr_path) as f:
             mr_json = json.load(f)
         all_ratings = mr_json.get("ratings", {}) or {}
         latest_year = max(all_ratings.keys()) if all_ratings else None
@@ -7505,21 +7516,33 @@ def _mhub_load():
                 "recent_matches": recent_by_org.get(org, []),
                 "roster": _roster_by_org.get(org, []),
             })
-        # Add any timeline teams not in snapshot (e.g. EMEA teams that missed Santiago)
+        # Add any timeline teams not in snapshot (e.g. EMEA teams that missed
+        # Santiago) — and, when the T2 variant is on, the play-in/T2 sides
+        # themselves, ranked inline with a "T2" region badge. Their W-L comes
+        # from the snapshot's internal `ungauged` store.
+        # T2 additions come ONLY from the snapshot's `ungauged` store — the
+        # sides that entered via the Stage 2 play-ins. Ex-franchise orgs that
+        # merely have 2026 timeline entries (ULF, 2G) stay hidden.
+        _ungauged_wl = (snap_data.get("ungauged") or {}) if snap_data else {}
+        show_orgs = set(ACTIVE_2026_ORGS)
+        if t2:
+            show_orgs |= set(_ungauged_wl)
         snap_orgs = {t["org"] for t in teams_list}
         for org, rating in last_checkpoint_ratings.items():
-            if org in snap_orgs or org not in ACTIVE_2026_ORGS:
+            if org in snap_orgs or org not in show_orgs:
                 continue
+            _ug = _ungauged_wl.get(org) or {}
             teams_list.append({
                 "org":    org,
-                "region": ORG_REGIONS.get(org, "Unknown"),
+                "region": (ORG_REGIONS.get(org, "Unknown")
+                           if org in ACTIVE_2026_ORGS else "T2"),
                 "rating": round(float(rating), 4),
-                "w": 0, "l": 0,
+                "w": _ug.get("w", 0), "l": _ug.get("l", 0),
                 "all_maps": [], "best_maps": [], "worst_maps": [],
                 "recent_matches": recent_by_org.get(org, []),
                 "roster": _roster_by_org.get(org, []),
             })
-        teams_list = [t for t in teams_list if t["org"] in ACTIVE_2026_ORGS]
+        teams_list = [t for t in teams_list if t["org"] in show_orgs]
         teams_list.sort(key=lambda x: -x["rating"])
         for i, t in enumerate(teams_list):
             t["rank"] = i + 1
@@ -7533,10 +7556,16 @@ def _mhub_load():
         }
     elif last_checkpoint_ratings:
         # Fallback: leaderboard from timeline ratings only (no map breakdown)
+        _fb_orgs = set(ACTIVE_2026_ORGS)
+        if t2:
+            _fb_orgs |= {o for o in last_checkpoint_ratings
+                         if o not in ACTIVE_2026_ORGS and o not in ORG_REGIONS}
         for i, (org, rating) in enumerate(
-                sorted(((o, r) for o, r in last_checkpoint_ratings.items() if o in ACTIVE_2026_ORGS), key=lambda x: -x[1]), 1):
+                sorted(((o, r) for o, r in last_checkpoint_ratings.items() if o in _fb_orgs), key=lambda x: -x[1]), 1):
             teams_list.append({
-                "org": org, "region": ORG_REGIONS.get(org, "Unknown"),
+                "org": org,
+                "region": (ORG_REGIONS.get(org, "Unknown")
+                           if org in ACTIVE_2026_ORGS else "T2"),
                 "rating": round(rating, 4), "rank": i,
                 "w": 0, "l": 0, "all_maps": [], "best_maps": [], "worst_maps": [],
                 "recent_matches": recent_by_org.get(org, []),
@@ -8080,14 +8109,14 @@ def _mhub_trigger_build(force=False):
                     _pd = json.load(_pf)
                 if _pd.get("phase") in ("done", "error") and (age or 999) < 60:
                     with _mhub_cache_lock:
-                        _mhub_cache["ts"] = 0.0
+                        _mhub_cache["ts"].clear()
             except Exception:
                 pass
 
     _th.Thread(target=_run, daemon=True).start()
 
 
-def _mhub_get():
+def _mhub_get(t2=False):
     """Return cached modern-hub data; short TTL when building for live progress.
 
     Cache is also invalidated whenever any source file (rating_timeline.json,
@@ -8097,9 +8126,10 @@ def _mhub_get():
     cached a 'ready' payload before the scrape completed would keep serving
     stale data for up to 30 min."""
     now = _time_mod.time()
+    vkey = "t2" if t2 else "not2"
     with _mhub_cache_lock:
-        cached   = _mhub_cache["data"]
-        cache_ts = _mhub_cache["ts"]
+        cached   = _mhub_cache["data"].get(vkey)
+        cache_ts = _mhub_cache["ts"].get(vkey, 0.0)
         # Cross-worker invalidation: if any source file was touched after we
         # last cached, drop the cache and re-read.
         if cached is not None:
@@ -8109,7 +8139,7 @@ def _mhub_get():
                           _MAP_RATINGS_PATH):
                     if os.path.exists(p) and os.path.getmtime(p) > cache_ts:
                         cached = None
-                        _mhub_cache["data"] = None
+                        _mhub_cache["data"].pop(vkey, None)
                         break
             except OSError:
                 pass
@@ -8119,7 +8149,7 @@ def _mhub_get():
         if cached is not None and (now - cache_ts) < ttl:
             return cached
 
-    data = _mhub_load()
+    data = _mhub_load(t2=t2)
 
     # Only spawn a subprocess when _mhub_load explicitly asked for one.  An
     # in-flight scrape from another worker still reports status=building
@@ -8135,8 +8165,8 @@ def _mhub_get():
     data["as_of_event"] = _mhub_event_for_date(data.get("as_of_date"))
 
     with _mhub_cache_lock:
-        _mhub_cache["data"] = data
-        _mhub_cache["ts"]   = now
+        _mhub_cache["data"][vkey] = data
+        _mhub_cache["ts"][vkey]   = now
 
     return data
 
@@ -8292,6 +8322,8 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 #dotTooltip .popup-teams{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
 #dotTooltip .popup-team-block{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:60px}
 #dotTooltip .popup-logo{width:44px;height:44px;object-fit:contain}
+#dotTooltip .popup-team-rating{font-size:.68rem;font-weight:800;color:#c4b5fd;font-variant-numeric:tabular-nums}
+.popup-team-rating{font-size:.72rem;font-weight:800;color:#c4b5fd;font-variant-numeric:tabular-nums}
 #dotTooltip .popup-team-name{font-size:.7rem;color:rgba(232,213,245,.6);font-weight:500}
 #dotTooltip .popup-score-block{display:flex;flex-direction:column;align-items:center;gap:3px}
 #dotTooltip .popup-score{font-size:1.9rem;font-weight:800;font-family:'Plus Jakarta Sans',sans-serif;line-height:1}
@@ -8368,6 +8400,7 @@ body:has(.chart-card.entering)::after{animation-play-state:paused}
 .lb-region.emea{background:rgba(22,163,74,.12);color:#15803d}
 .lb-region.pacific{background:rgba(37,99,235,.12);color:#1d4ed8}
 .lb-region.cn{background:rgba(219,39,119,.12);color:#be185d}
+.lb-region.t2{background:rgba(107,100,120,.13);color:#6b6478}
 .lb-chevron{color:#bbb;font-size:.62rem;text-align:center;transition:transform .2s}
 .lb-row.selected .lb-chevron{transform:rotate(180deg)}
 
@@ -8748,6 +8781,7 @@ body:has(.flying)::after{animation-play-state:paused}
               <div class="chart-header-row">
                 <span class="chart-asof" id="chartAsOf"></span>
                 <div class="chart-controls">
+                  <button class="chart-btn" id="t2Btn" onclick="toggleT2()" title="Include or exclude the tier-2 play-in teams and their matches from the ratings"></button>
                   <button class="chart-btn" id="replayBtn" onclick="replayChart()" title="Replay season animation">&#8635; Replay</button>
                   <button class="chart-btn" id="zoomBtn" onclick="toggleZoom()" title="Zoom to current split">&#x2316; Zoom Split</button>
                   <button class="chart-btn" id="resetZoomBtn" onclick="resetZoom()" title="Reset zoom">&#x2715; Reset</button>
@@ -8870,6 +8904,11 @@ const TEAM_COLORS = {
   // Legacy / extras kept for older event data
   DRX:'#c53030', ULF:'#0284c7', TLN:'#0369a1',
   '2G':'#00C853', BME:'#FFC107', BOOM:'#FFC107', APK:'#FF6F00',
+  // T2 / play-in sides (2026 Stage 2 experiment)
+  FF:'#29B6F6', EP:'#E53935', SGE:'#D5121E', JL:'#3949AB',
+  ONG:'#8D6E63', SP:'#26A69A', BST:'#7E57C2', QTD:'#5C6BC0',
+  M80:'#EF6C00', XIP:'#00897B', FX:'#C0CA33', AT:'#F06292',
+  KBG:'#455A64',
 };
 
 // Per-team logo size multipliers — some logos render too large inside the circle
@@ -9498,11 +9537,56 @@ async function introAnimation() {
 }
 
 // ── Data fetch ───────────────────────────────────────────────────────────────
+// Display toggle only: the T2 play-in sides are permanently part of the fit;
+// ON simply shows them as rankings rows and chart lines. Default is OFF.
+// Toggling filters the already-fetched payload and redraws in place — no
+// reload, no replay, no rescan.
+// ALWAYS boots OFF — no persistence, no URL control. The toggle is a
+// session-only view switch. A lingering ?t2 param (from the retired
+// navigation-style toggle) is scrubbed so stale URLs can't re-arm it.
+let T2_ON = false;
+try {
+  if (new URLSearchParams(location.search).has('t2')) {
+    const _u = new URL(location.href);
+    _u.searchParams.delete('t2');
+    history.replaceState(null, '', _u.toString());
+  }
+} catch (e) {}
+function _applyT2(data) {
+  if (!data || !data.leaderboard || !data.leaderboard.teams) return data;
+  if (!data._teamsAll) data._teamsAll = data.leaderboard.teams;
+  const teams = T2_ON ? data._teamsAll
+                      : data._teamsAll.filter(t => t.region !== 'T2');
+  teams.forEach((t, i) => { t.rank = i + 1; });   // already rating-sorted
+  data.leaderboard.teams = teams;
+  return data;
+}
+function _syncT2Btn() {
+  const b = document.getElementById('t2Btn');
+  if (!b) return;
+  b.innerHTML = T2_ON ? 'T2: ON' : 'T2: OFF';
+  b.style.opacity = T2_ON ? '1' : '0.6';
+}
+function toggleT2() {
+  T2_ON = !T2_ON;
+  _syncT2Btn();
+  if (!hubData) return;
+  selectedTeam = null;
+  expandedOrg  = null;
+  _applyT2(hubData);
+  if (_isZoomed && _savedZoomMin && _savedZoomMax) {
+    const _yr = _yRangeForWindow(hubData, _savedZoomMin, _savedZoomMax);
+    if (_yr) { _chartYMin = _yr.yMin; _chartYMax = _yr.yMax; }
+  }
+  buildChart(hubData);
+  renderLeaderboard(hubData);
+}
+document.addEventListener('DOMContentLoaded', _syncT2Btn);
 async function fetchData() {
   try {
-    const r = await fetch('/mapelo/modern/data');
+    const r = await fetch('/mapelo/modern/data?t2=1');
     if (!r.ok) return null;
-    return await r.json();
+    return _applyT2(await r.json());
   } catch(e) { return null; }
 }
 
@@ -9977,7 +10061,7 @@ function buildChart(data, noLines = false) {
     const pts = checkpoints.filter(cp => org in cp.ratings)
                            .map(cp => ({x: cp.date, y: cp.ratings[org]}));
     if (!pts.length) return;
-    const color    = TEAM_COLORS[org] || '#888';
+    const color    = TEAM_COLORS[org] || '#888888';
     const isSel    = selectedTeam === org;
     const isDimmed = selectedTeam !== null && !isSel;
     datasets.push({
@@ -10167,7 +10251,7 @@ function _applyLogoHover(org) {
   if (!myChart) return;
   myChart.data.datasets.forEach(ds => {
     if (ds.type === 'scatter') return;
-    const base = TEAM_COLORS[ds.org] || '#888';
+    const base = TEAM_COLORS[ds.org] || '#888888';
     if (!org) {
       // restore to current selectedTeam state
       const isSel    = ds.org === selectedTeam;
@@ -10587,14 +10671,14 @@ async function showChartAndLeaderboard(data, fast) {
     return;
   }
 
-  // Build chart without lines so shading/axes are visible during slide-in
+  // Build chart without lines so shading/axes are visible before the draw
   buildChart(data, true);
   _initCanvasListeners();   // register once after first build
 
-  // Slide card in from the left — lines hidden, bands/axes visible
+  // 2026-09-07: no card slide-in — the card is simply there (lines hidden,
+  // bands/axes visible) and the curtain-sweep line draw plays right away.
   showEl('chartSection');
   const chartCard = document.querySelector('.chart-card');
-  if (chartCard) chartCard.classList.add('entering');
 
   // Auto-scroll runs CONCURRENTLY with the slide-in, not after it — the two
   // together used to cost 1500 + 650ms of dead time before the line draw.
@@ -10622,9 +10706,8 @@ async function showChartAndLeaderboard(data, fast) {
     catch(e) { chartCard.scrollIntoView(); }
   }
 
-  // One wait now covers both the 1.4s slide-in and the smooth scroll running
-  // alongside it, instead of a wait per phase.
-  await sleep(1500);
+  // Short beat so the smooth scroll lands before the line draw begins.
+  await sleep(350);
 
   // Rebuild with real lines, then immediately sweep curtain from left
   buildChart(data);
@@ -10749,7 +10832,7 @@ function renderLeaderboard(data, opts) {
 
   visible.forEach((team, _idx) => {
     const org   = team.org;
-    const color = TEAM_COLORS[org] || '#888';
+    const color = TEAM_COLORS[org] || '#888888';
     const rStr  = (team.rating >= 0 ? '+' : '') + team.rating.toFixed(2);
     const regCls = (team.region || '').toLowerCase();
     const isSel  = org === selectedTeam;
@@ -11009,6 +11092,9 @@ function _matchTooltipHTML(m, won) {
   const opp  = won ? m.loser  : m.winner;
   const d    = won ? m.winner_delta : m.loser_delta;
   const rat  = won ? m.winner_after  : m.loser_after;
+  // Post-match rating for EACH side (T2 sides included — they're in the fit).
+  const orgAfter = won ? m.winner_after : m.loser_after;
+  const oppAfter = won ? m.loser_after  : m.winner_after;
   const dStr = (d >= 0 ? '+' : '') + d.toFixed(2);
   const evt  = _eventLabel(m.event_id) || m.event_id || '';
   // Series score always shown as [org score]-[opp score]
@@ -11035,6 +11121,7 @@ function _matchTooltipHTML(m, won) {
       <div class="popup-team-block">
         <img class="popup-logo" src="/static/logos/${org}.png" onerror="this.style.display='none'" alt="${org}">
         <span class="popup-team-name">${org}</span>
+        ${orgAfter != null ? `<span class="popup-team-rating">${(orgAfter>=0?'+':'')+orgAfter.toFixed(2)}</span>` : ''}
       </div>
       <div class="popup-score-block">
         <span class="popup-score ${won?'w':'l'}">${displayScore}</span>
@@ -11043,6 +11130,7 @@ function _matchTooltipHTML(m, won) {
       <div class="popup-team-block">
         <img class="popup-logo" src="/static/logos/${opp}.png" onerror="this.style.display='none'" alt="${opp}">
         <span class="popup-team-name">${opp}</span>
+        ${oppAfter != null ? `<span class="popup-team-rating">${(oppAfter>=0?'+':'')+oppAfter.toFixed(2)}</span>` : ''}
       </div>
     </div>
     <div class="popup-date">${m.date}</div>
@@ -12117,7 +12205,8 @@ def mapelo_modern():
 
 @mapelo_bp.route('/modern/data')
 def mapelo_modern_data():
-    data = _mhub_get()
+    from flask import request as _rq
+    data = _mhub_get(t2=(_rq.args.get('t2') == '1'))
     return Response(json.dumps(data), mimetype='application/json')
 
 @mapelo_bp.route('/modern/progress')
