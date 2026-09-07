@@ -391,7 +391,7 @@ ARTICLES = [
     {"href": "/articles/championship-dna/",
      "title": "Championship DNA: Historical Trends To Note For Champions",
      "desc": "Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.",
-     "img": "/championshipdna.jpg", "date": "2026-08-25",
+     "img": "/championshipdna.jpg", "date": "2026-09-07",
      "cats": ["research", "preview"]},
     {"href": "/articles/greatest-prime/",
      "title": "The Greatest Prime in VCT History Isn't a Debate",

@@ -760,7 +760,7 @@ PAGE_HTML = """
          subject owns line 2. The nowrap span keeps the event name whole if
          line 2 ever has to wrap on a narrow screen. Wording untouched. -->
     <h1>Championship DNA:<br>Historical Trends To Note For <span class="nb">Champions</span></h1>
-    <div class="byline">Bobo &mdash; August 2026</div>
+    <div class="byline">Bobo &mdash; September 7, 2026</div>
     <div class="cover" id="intro">
       <img src="/championshipdna.jpg" alt="VCT champions lifting trophies">
     </div>
@@ -946,7 +946,7 @@ PAGE_HTML = """
 
       <p>A majority of international-winning teams hit 5/5, including the past 4 winners. Looks good for 100 Thieves!</p>
 
-      <p>The one part I don&rsquo;t like (i.e. find boring) about this is simply the fact that 100 Thieves are already the favorites to win Champions Shanghai.</p>
+      <p>The one part that I don&rsquo;t like (i.e. find boring) is simply the fact that 100 Thieves are already the favorites to win Champions Shanghai.</p>
 
       <p>Now, there are two other teams that history smiles on that I&rsquo;d like to note:</p>
 
