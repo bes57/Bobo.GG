@@ -1,1 +1,106 @@
-[]
+[
+  {
+    "match_id": "753444",
+    "team_a": "100 Thieves",
+    "team_b": "T1",
+    "org_a": "100T",
+    "org_b": "T1",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (A) Group Stage"
+  },
+  {
+    "match_id": "753445",
+    "team_a": "JD Gaming",
+    "team_b": "FUT Esports",
+    "org_a": "JDG",
+    "org_b": "FUT",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (A) Group Stage"
+  },
+  {
+    "match_id": "753460",
+    "team_a": "Nongshim RedForce",
+    "team_b": "NRG",
+    "org_a": "NS",
+    "org_b": "NRG",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (D) Group Stage"
+  },
+  {
+    "match_id": "753459",
+    "team_a": "Karmine Corp",
+    "team_b": "Xi Lai Gaming",
+    "org_a": "KC",
+    "org_b": "XLG",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (D) Group Stage"
+  },
+  {
+    "match_id": "753455",
+    "team_a": "Team Liquid",
+    "team_b": "Paper Rex",
+    "org_a": "TL",
+    "org_b": "PRX",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (C) Group Stage"
+  },
+  {
+    "match_id": "753454",
+    "team_a": "TYLOO",
+    "team_b": "G2 Esports",
+    "org_a": "TYL",
+    "org_b": "G2",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (C) Group Stage"
+  },
+  {
+    "match_id": "753450",
+    "team_a": "LOUD",
+    "team_b": "EDward Gaming",
+    "org_a": "LOUD",
+    "org_b": "EDG",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (B) Group Stage"
+  },
+  {
+    "match_id": "753449",
+    "team_a": "Global Esports",
+    "team_b": "Team Vitality",
+    "org_a": "GE",
+    "org_b": "VIT",
+    "date": "2026-09-24",
+    "datetime": "",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Opening (B) Group Stage"
+  }
+]
