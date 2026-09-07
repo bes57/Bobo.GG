@@ -199,6 +199,27 @@ def _champs_teams():
     return teams
 
 
+# Every international winner (2024 on) against the same five checks. Static —
+# derived 2026-09-07 alongside _FIVE_FIVE with the identical method.
+_WINNERS_FIVE = [
+    {"event": "Masters Madrid 2024",   "org": "SEN",
+     "c": [[1, "#3"], [1, "#3"], [1, "4-1"], [1, "zekken \u00b7 #4"], [1, "johnqt"]]},
+    {"event": "Masters Shanghai 2024", "org": "GEN",
+     "c": [[0, "#12"], [1, "#12"], [0, "2-3"], [1, "t3xture \u00b7 #5"], [1, "Karon, Lakia"]]},
+    {"event": "Champions 2024",        "org": "EDG",
+     "c": [[0, "#11"], [1, "#11"], [1, "5-0"], [1, "ZmjjKK \u00b7 #1"], [1, "S1Mon"]]},
+    {"event": "Masters Bangkok 2025",  "org": "T1",
+     "c": [[0, "#15"], [1, "#15"], [1, "3-2"], [0, "BuZz \u00b7 #18"], [0, ""]]},
+    {"event": "Masters Toronto 2025",  "org": "PRX",
+     "c": [[1, "#5"], [1, "#5"], [1, "3-2"], [1, "Jinggg \u00b7 #4"], [1, "PatMen"]]},
+    {"event": "Champions 2025",        "org": "NRG",
+     "c": [[1, "#7"], [1, "#7"], [1, "3-2"], [1, "brawk \u00b7 #6"], [1, "brawk, mada, skuba"]]},
+    {"event": "Masters Santiago 2026", "org": "NS",
+     "c": [[1, "#4"], [1, "#4"], [1, "4-0"], [1, "Rb \u00b7 #6"], [1, "Xross"]]},
+    {"event": "Masters London 2026",   "org": "LEV",
+     "c": [[1, "#6"], [1, "#6"], [1, "3-2"], [1, "Neon \u00b7 #1"], [1, "blowz, Neon"]]},
+]
+
 _champs_cache = {"key": None, "data": None}
 _vets_cache = {"vets": None}
 
@@ -320,6 +341,7 @@ def _champs_checklist():
                        "atk_w": aw, "atk_n": an, "def_w": dw, "def_n": dn}
                       if an and dn else None),
             "benpom": {"rank": rank, "ok": bool(rank and rank <= 7)},
+            "benpom15": {"rank": rank, "ok": bool(rank and rank <= 15)},
             "last5": {"w": w, "l": l, "ok": w >= 3},
             "star": {"player": best[1] if best else None,
                      "rank": best[0] if best else None,
@@ -354,6 +376,7 @@ def _landscape():
         # The checklist tracks live hub data (ranks, last-5, new results), so it
         # rides outside the file-mtime cache and refreshes itself per request.
         _ls_cache[0]["champs"] = _champs_checklist()
+        _ls_cache[0]["winners_five"] = _WINNERS_FIVE
         return _ls_cache[0]
     try:
         with open(_LANDSCAPE) as f:
@@ -363,6 +386,7 @@ def _landscape():
     data["winner_ranks"] = _winner_ranks(data.get("winners") or {})
     data["winner_seeds"] = _WINNER_SEEDS
     data["champs"] = _champs_checklist()
+    data["winners_five"] = _WINNERS_FIVE
     # Each side file is loaded on its own, so a missing or half-written one
     # blanks its own section instead of taking the others down with it.
     for path, keys in ((_STREAKS, (("streaks", "winners"), ("last5", "tally"),
@@ -423,7 +447,7 @@ PAGE_HTML = """
 <meta name="twitter:description" content="Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.">
 <meta name="twitter:image" content="https://bobo-gg.net/championshipdna.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/base.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
@@ -444,6 +468,7 @@ PAGE_HTML = """
   .cover img { width:100%; height:auto; display:block; }
   .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
+  .content p b { font-weight:700; }
   .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content h2, .cover, .content .fig { scroll-margin-top:84px; }
   /* Paragraph anchors land tighter than the rest. The nav bar is ~42px tall, so
@@ -548,6 +573,10 @@ PAGE_HTML = """
   /* DM Sans' hyphen rides low between digits; lift it onto the digits' axis */
   .champs-tbl .ct-d { position:relative; top:-0.09em; }
   .champs-tbl .ct-tbd td { color:var(--faint); font-weight:700; }
+  #champsTable .champs-wrap, #winnersFiveList .champs-wrap { margin-bottom:34px; }
+  .tn-head { display:flex; align-items:center; gap:12px; font-family:'Plus Jakarta Sans',sans-serif;
+    font-weight:800; font-size:1.35rem; letter-spacing:-.01em; margin:34px 0 16px; }
+  .tn-head img { width:34px; height:34px; object-fit:contain; }
   .champs-wrap { overflow-x:auto; background:#fff; border:1px solid var(--line,#eceef2);
     border-radius:16px; padding:8px 16px 12px; margin:18px 0 8px; box-shadow:0 4px 22px #0000000a; }
   .toc a.sub { padding-left:12px; font-size:.72rem; }
@@ -854,17 +883,19 @@ PAGE_HTML = """
       <p>There&rsquo;s a more interesting observation, though:</p>
 
       <div class="takeaway takeaway--roster">
-        <b>Every international-winning roster since Masters Tokyo has featured a player in their rookie year.</b>
-        <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Sylvan on T1, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and blowz/Neon on LEV.</span>
+        <b>Every international-winning roster since Masters Tokyo (aside from T1 at Bangkok) has featured a rookie.</b>
+        <span>Demon1 on EG, JohnQT on Sen, Karon on Gen.G, Simon on EDG, Patmen on PRX, Brawk/Skuba on NRG, Xross on NS, and blowz/Neon on LEV.</span>
       </div>
 
-      <p>This speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent - even if it means adding newer talent into a roster with veterans.</p>
+      <p>Oh look, another trend where T1 at Bangkok is an outlier!</p>
+
+      <p>Still, this speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent - even if it means adding newer talent into a roster with veterans.</p>
 
       <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned by teams with a rookie/rookies in the two Masters events this year - by Nongshim at Masters Santiago and Leviatán at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
 
       <p>What&rsquo;s even more damning is that every team that&rsquo;s won Champions specifically has made a mid-season roster change to add a rookie. This is a low-sample-size observation, but I&rsquo;m curious as to whether this trend continues at Champions Shanghai.</p>
 
-      <p><em>Note: This Champions trend implicates teams like Leviatán, Vitality, and Fut</em></p>
+      <p><em>Note: This Champions trend implicates teams like Leviatán (RIP), LOUD, Vitality, and Fut</em></p>
 
       <hr class="secbreak">
 
@@ -887,11 +918,75 @@ PAGE_HTML = """
 
       <h2 id="sec-champs">Champions Shanghai</h2>
 
+      <p>Now the obvious question: what can these historical trends tell us about Champions Shanghai?</p>
+
+      <p>This year&rsquo;s Champions is, in my opinion, fairly open. The 1-seeds are not the teams people would&rsquo;ve expected, thus they are <em>&ldquo;question marks&rdquo;</em> per se <em>(e.g. GE, Tyloo, and KC)</em>. Meanwhile, plenty of the strongest teams of the year are coming into the tournament in poor form <em>(e.g. Vitality, PRX, EDG)</em>. Or, in Leviat&aacute;n&rsquo;s case, they&rsquo;re not coming to the tournament at all.</p>
+
+      <p>Given this open field, let&rsquo;s apply the main findings of this historical overview:</p>
+
+      <ul class="notes">
+        <li>70% of trophy winners were top-7 in BenPom before the tournament</li>
+        <li>All trophy winners were top-15 in BenPom</li>
+        <li>90% of trophy winners won a majority of their past 5 matches before the tournament</li>
+        <li>8/9 eligible tournament winners had a top-6 rated player in the previous domestic split</li>
+        <li>8/9 international winners since Masters Tokyo had a rookie on their team</li>
+      </ul>
+
       <div id="champsTable"></div>
+
+      <p>There&rsquo;s clearly one team that history smiles on more than the others:</p>
+
+      <div class="tn-head"><img src="/logos/100T.png" alt="">100 Thieves</div>
+
+      <p>They&rsquo;re the only team to meet 5/5 of the requirements coming into Champions Shanghai. In fact, they don&rsquo;t just meet each requirement, they crush them. They&rsquo;re <b>#1 in BenPom</b>, they have the <b>#1-rated player</b> from Americas Stage 2, and they have two rookies. Of course, this doesn&rsquo;t mean a Champions win is a forgone conclusion, but it certainly helps their case.</p>
+
+      <p>For instance, look at how the past international winners since 2024 slot into this criteria:</p>
+
+      <div id="winnersFiveList"></div>
+
+      <p>A majority of international-winning teams hit 5/5, including the past 4 winners. Looks good for 100 Thieves!</p>
+
+      <p>The one part I don&rsquo;t like (i.e. find boring) about this is simply the fact that 100 Thieves are already the favorites to win Champions Shanghai.</p>
+
+      <p>Now, there are two other teams that history smiles on that I&rsquo;d like to note:</p>
+
+      <div class="tn-head"><img src="/logos/LOUD.png" alt="">LOUD</div>
+
+      <p>If I changed the <em>&ldquo;Top-6 rated player in previous split&rdquo;</em> requirement to <em>&ldquo;Top-7&rdquo;</em>, then LOUD would also meet 5/5 of the requirements. In this way, LOUD are far and away the second-favorites according to these historical trends.</p>
+
+      <p>Not for nothing, I really like the case for LOUD to win Champions Shanghai. They have the momentum, youth, and certainly the star power (i.e. Erde and lukxo) that makes them dangerous and an exciting team to root for. What&rsquo;s more is that they just played the current favorites (100T) to a Map 5 OT Bo5.</p>
+
+      <div class="tn-head"><img src="/logos/KC.png" alt="">Karmine Corp</div>
+
+      <p>Now, there are plenty of teams with 4/5 historical trends met (e.g. Nongshim, Vitality, NRG, etc.) Why am I focusing on KC? Let&rsquo;s go back to the Attack/Defense Favoritism graph from earlier and apply it to the Champions Shanghai teams:</p>
 
       <figure class="fig">
         <div class="fig-wrap"><canvas id="champsLandscape"></canvas></div>
       </figure>
+
+      <p>Now you see why. KC are <em>so, so</em> close to being in the <em>&ldquo;Trophy Favorites&rdquo;</em> tier. Even if they aren&rsquo;t exactly within that mythical level, they&rsquo;re still placed the most impressively on this graph. Their domestic dominance is greater than any other team coming into Champions Shanghai, and that&rsquo;s not something to take for granted. It should not be a surprise if they win the whole event.</p>
+
+      <p>How about a team that history <em>frowns</em> upon?</p>
+
+      <div class="tn-head"><img src="/logos/PRX.png" alt="">Paper Rex</div>
+
+      <p>Now, there are varying levels of depth with which we can talk about Paper Rex. In simplest terms:</p>
+
+      <ul class="notes">
+        <li>They meet 2/5 the requirements, tied for the lowest out of every team at Champions Shanghai.</li>
+        <li>They&rsquo;re middling on the Attack/Defense Favoritism graph, looking like one of the worst teams.</li>
+        <li>One of those requirements that they fail to meet is being 3/5+ in their past 5 matches, instead being 2/5. Those two wins were against&hellip; Onside Gaming and Team Secret. Yikes.</li>
+        <li>Even T1 at Bangkok, a historical anomaly, met 3/5 of the historical trends before they won their tournament.</li>
+      </ul>
+
+      <p>Historically, they don&rsquo;t look great. The counterargument <em>against</em> history is simple, though:</p>
+
+      <ul class="notes">
+        <li>They qualified to Champions before Split 2 even started, so their stats could all look horrible because they weren&rsquo;t trying in Split 2 and experimenting instead.</li>
+        <li>They&rsquo;ve been to both of the past two international grand finals.</li>
+      </ul>
+
+      <p>I&rsquo;ll save completed team analyses for a later, full preview of Champions Shanghai, so stay tuned for that. Still, this was an extremely interesting reflection on VCT history and I hope you enjoyed reading it as much as I enjoyed writing it.</p>
     </div>
   </div>
 </div>
@@ -1913,6 +2008,19 @@ document.querySelectorAll('.pin').forEach(a => {
   });
 });
 
+// Shared bits for every checklist-style table on the page.
+function esc2(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+var CT_CHECK='<svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M2 6.6 L4.7 9.2 L10 3.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var CT_CROSS='<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.4 2.4 L9.6 9.6 M9.6 2.4 L2.4 9.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>';
+function mark(ok, sub, raw){
+  // Always render the sub line (nbsp when empty) so every box in a row sits
+  // on the same axis and every sub-label shares one baseline.
+  return '<span class="ct-mark '+(ok?'ct-yes':'ct-no')+'">'+(ok?CT_CHECK:CT_CROSS)+'</span>'
+    +'<span class="ct-sub">'+(sub?(raw?sub:esc2(sub)):'&nbsp;')+'</span>';
+}
+var CT_HEAD = '<th>Team</th><th>Top-7 in BenPom</th><th>Top-15 in BenPom</th><th>3-2 (or better)<br>in past 5</th>'
+  +'<th>Top-6 rated player<br>in previous split</th><th>Have a rookie</th>';
+
 // Champions Shanghai checklist table. Regions padded to 4 slots with TBD rows
 // until VLR confirms every team (the payload refreshes itself server-side).
 (function () {
@@ -1920,28 +2028,21 @@ document.querySelectorAll('.pin').forEach(a => {
   var C = LS.champs;
   if (!el || !C || !C.rows || !C.rows.length) { if (el) el.innerHTML = '<div style="color:#9a8fa4;font-weight:600;padding:12px">Team list not available yet.</div>'; return; }
   var REGIONS = ['Americas', 'EMEA', 'Pacific', 'CN'];
-  function esc2(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-  var CT_CHECK='<svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M2 6.6 L4.7 9.2 L10 3.1" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  var CT_CROSS='<svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2.4 2.4 L9.6 9.6 M9.6 2.4 L2.4 9.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>';
-  function mark(ok, sub, raw){
-    // Always render the sub line (nbsp when empty) so every box in a row sits
-    // on the same axis and every sub-label shares one baseline.
-    return '<span class="ct-mark '+(ok?'ct-yes':'ct-no')+'">'+(ok?CT_CHECK:CT_CROSS)+'</span>'
-      +'<span class="ct-sub">'+(sub?(raw?sub:esc2(sub)):'&nbsp;')+'</span>';
-  }
   var html = '<div class="champs-wrap"><table class="champs-tbl"><thead><tr>'
-    +'<th>Team</th><th>Top-7 in BenPom</th><th>3-2 (or better)<br>in past 5</th>'
+    +'<th>Team</th><th>Top-7 in BenPom</th><th>Top-15 in BenPom</th><th>3-2 (or better)<br>in past 5</th>'
     +'<th>Top-6 rated player<br>in previous split</th><th>Have a rookie</th></tr></thead><tbody>';
   REGIONS.forEach(function(reg){
     var rows = C.rows.filter(function(r){ return r.region === reg; });
     if (!rows.length) return;
-    html += '<tr class="ct-region"><td colspan="5">'+reg+'</td></tr>';
+    html += '<tr class="ct-region"><td colspan="6">'+reg+'</td></tr>';
     rows.forEach(function(r){
-      var passed = [r.benpom.ok, r.last5.ok, r.star.ok, r.rookie.ok].filter(Boolean).length;
+      var b15 = r.benpom15 || {ok: false, rank: null};
+      var passed = [r.benpom.ok, b15.ok, r.last5.ok, r.star.ok, r.rookie.ok].filter(Boolean).length;
       html += '<tr>'
         +'<td><span class="ct-team"><img src="/logos/'+esc2(r.org)+'.png" alt="" onerror="this.style.display=\\'none\\'">'+esc2(r.org)
-        +'<span class="ct-score">('+passed+'/4)</span></span></td>'
+        +'<span class="ct-score">('+passed+'/5)</span></span></td>'
         +'<td>'+mark(r.benpom.ok, r.benpom.rank ? '#'+r.benpom.rank : '')+'</td>'
+        +'<td>'+mark(b15.ok, b15.rank ? '#'+b15.rank : '')+'</td>'
         +'<td>'+mark(r.last5.ok, r.last5.w+'<span class="ct-d">-</span>'+r.last5.l, true)+'</td>'
         +'<td>'+mark(r.star.ok, r.star.player ? (r.star.player+' \u00b7 #'+r.star.rank) : '')+'</td>'
         +'<td>'+mark(r.rookie.ok, r.rookie.ok ? r.rookie.names.join(', ') : '')+'</td>'
@@ -1949,8 +2050,27 @@ document.querySelectorAll('.pin').forEach(a => {
     });
     for (var i = rows.length; i < 4; i++) {
       html += '<tr class="ct-tbd"><td><span class="ct-team">TBD</span></td>'
-        +'<td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td></tr>';
+        +'<td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td><td>\u2014</td></tr>';
     }
+  });
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
+})();
+
+// Every international winner (2024 on) against the same five checks.
+(function () {
+  var el = document.getElementById('winnersFiveList');
+  var L = LS.winners_five;
+  if (!el || !L || !L.length) { if (el) el.hidden = true; return; }
+  var html = '<div class="champs-wrap"><table class="champs-tbl"><thead><tr>'+CT_HEAD+'</tr></thead><tbody>';
+  L.forEach(function(r){
+    var passed = r.c.filter(function(c){ return c[0]; }).length;
+    html += '<tr class="ct-region"><td colspan="6">'+esc2(r.event)+'</td></tr>'
+      +'<tr>'
+      +'<td><span class="ct-team"><img src="/logos/'+esc2(r.org)+'.png" alt="" onerror="this.style.display=\\'none\\'">'+esc2(r.org)
+      +'<span class="ct-score">('+passed+'/5)</span></span></td>';
+    r.c.forEach(function(c){ html += '<td>'+mark(!!c[0], c[1])+'</td>'; });
+    html += '</tr>';
   });
   html += '</tbody></table></div>';
   el.innerHTML = html;
