@@ -389,7 +389,7 @@ def _build_alpha_data():
 # page updates and re-sorts by date automatically.
 ARTICLES = [
     {"href": "/articles/championship-dna/",
-     "title": "Championship DNA: Historical Trends To Note For Champions Shanghai",
+     "title": "Championship DNA: Historical Trends To Note For Champions",
      "desc": "Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.",
      "img": "/championshipdna.jpg", "date": "2026-08-25",
      "cats": ["research", "preview"]},
@@ -998,14 +998,14 @@ ALPHA_HTML = """
   .ebanner{background:linear-gradient(135deg,#1d1330 0%,#2a1c44 55%,#3a1f55 100%);border-radius:22px;padding:24px 28px;color:#fff;position:relative;overflow:hidden;box-shadow:0 10px 34px #1d133033;margin-bottom:24px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:stretch}
   .ebanner-l{min-width:0;display:flex;flex-direction:column}
   .ebanner-l .timeline{margin-top:auto}
-  .ebanner-r{position:relative;border-radius:16px;overflow:hidden;min-height:240px;display:flex;flex-direction:column;justify-content:flex-end;padding:22px 22px 17px;text-decoration:none;color:#fff;background:#1a0f24;transition:transform .18s,box-shadow .18s}
+  .ebanner-r{position:relative;border-radius:16px;overflow:hidden;min-height:240px;display:flex;flex-direction:column;justify-content:center;padding:20px 22px;text-decoration:none;color:#fff;background:#1a0f24;transition:transform .18s,box-shadow .18s}
   .ebanner-r:hover{transform:translateY(-3px);box-shadow:0 16px 38px #00000040}
-  .ebanner-r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%}
-  .ebanner-r::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#1a0f2400 0%,#1a0f2452 36%,#1a0f24dd 66%,#1a0f24 100%)}
+  .ebanner-r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .ebanner-r::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#1a0f2426 0%,#1a0f2480 30%,#1a0f24b8 55%,#1a0f24e6 100%)}
   .ebanner-r>*{position:relative;z-index:1}
-  .ead-tag{font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#e7dcff;margin-bottom:8px;text-shadow:0 1px 7px #1a0f24}
-  .ead-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;line-height:1.13;letter-spacing:-.01em;text-shadow:0 2px 10px #1a0f24cc}
-  .ead-link{margin-top:13px;font-size:.86rem;font-weight:800;color:#fff}
+  .ead-tag{align-self:flex-start;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7c4dd6;background:#fff;padding:4px 11px;border-radius:999px;margin-bottom:8px;box-shadow:0 2px 10px #1a0f2466}
+  .ead-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;line-height:1.13;letter-spacing:-.01em;text-shadow:0 2px 10px #1a0f24cc;text-align:center}
+  .ead-link{position:absolute;left:22px;bottom:14px;z-index:1;font-size:.86rem;font-weight:800;color:#fff}
   @media(max-width:760px){.ebanner{grid-template-columns:1fr}.ebanner-r{min-height:170px}}
   .ebanner::after{content:'';position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#a87bff2e,transparent 70%);pointer-events:none}
   .epill{display:inline-flex;align-items:center;gap:7px;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:#ffffff1c;margin-bottom:12px}
@@ -1039,8 +1039,16 @@ ALPHA_HTML = """
   /* Both bubbles always match height; the matches body fills and centers its
      empty state instead of leaving a void below it. */
   #matches-panel,#rankings-panel{display:flex;flex-direction:column}
-  #match-body{flex:1;display:flex;flex-direction:column}
-  #match-body > .empty{margin:auto 0;font-size:1.08rem;line-height:2}
+  #match-body{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+  #match-body > .empty{margin:auto 0}
+  #match-body > .empty.mte{margin:auto 0;display:flex;flex-direction:column;align-items:center;gap:7px;line-height:1.5;padding:20px 12px}
+  .mte-ic{width:104px;height:104px;border-radius:50%;background:#f1ebfb;color:#7c4dd6;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .mte-ic svg{width:48px;height:48px}
+  .mte-t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.8rem;color:var(--ink);letter-spacing:-.01em}
+  .mte-s{font-size:1.18rem;color:var(--soft);font-weight:600;margin-top:2px}
+  .mte-s b{color:var(--accent)}
+  .mte-btn{margin-top:24px;font-family:inherit;font-size:1.05rem;font-weight:800;color:var(--accent);background:#f1ebfb;border:1px solid #e4d9f6;border-radius:999px;padding:14px 30px;cursor:pointer;transition:background .15s,transform .12s,box-shadow .15s}
+  .mte-btn:hover{background:#e9dffa;transform:translateY(-1px);box-shadow:0 6px 16px #7c4dd626}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 20px 14px;box-shadow:0 4px 22px #0000000a}
   .phead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
   .ptitle{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:-.01em}
@@ -1564,7 +1572,14 @@ function renderMatches(tab){
     if(MATCH_REGION!=='All'){
       body.innerHTML='<div class="empty">No '+esc(MATCH_REGION)+' matches '+(tab==='upcoming'?'scheduled':'recently')+'.<br>Try <b>All Regions</b>.</div>';
     } else if(tab==='upcoming'){var ne=DATA.next_event;
-      body.innerHTML='<div class="empty">No matches scheduled right now.'+(ne?'<br><b>'+esc(ne.label)+'</b> starts '+shortDate(ne.start)+(ne.days!=null?' ('+ne.days+' days)':'')+'.':'')+'<br>Check <b>Recent</b> for the latest results.</div>';}
+      body.innerHTML='<div class="empty mte">'
+        +'<div class="mte-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>'
+        +'<div class="mte-t">No matches scheduled right now</div>'
+        +(ne?'<div class="mte-s"><b>'+esc(ne.label)+'</b> starts '+shortDate(ne.start)+(ne.days!=null?' &middot; in '+ne.days+' days':'')+'</div>':'')
+        +'<button type="button" class="mte-btn">Check recent results &rarr;</button>'
+        +'</div>';
+      var rb=body.querySelector('.mte-btn');
+      if(rb)rb.addEventListener('click',function(){var b=document.querySelector('#match-seg button[data-tab="recent"]');if(b)b.click();});}
     else body.innerHTML='<div class="empty">No recent matches.</div>';
     return;}
   var p=Math.min(PAGE[tab], Math.max(0,Math.ceil(list.length/PER_PAGE)-1));
@@ -2750,7 +2765,7 @@ def alpha_bust_cache():
     try:
         from MapElo import _mhub_cache, _mhub_cache_lock
         with _mhub_cache_lock:
-            _mhub_cache["ts"] = 0.0
+            _mhub_cache["ts"].clear()
         cleared.append("benpom")
     except Exception:
         pass
