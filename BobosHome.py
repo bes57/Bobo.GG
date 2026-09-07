@@ -1003,9 +1003,10 @@ ALPHA_HTML = """
   .ebanner-r img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
   .ebanner-r::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#1a0f2426 0%,#1a0f2480 30%,#1a0f24b8 55%,#1a0f24e6 100%)}
   .ebanner-r>*{position:relative;z-index:1}
-  .ead-tag{align-self:flex-start;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7c4dd6;background:#fff;padding:4px 11px;border-radius:999px;margin-bottom:8px;box-shadow:0 2px 10px #1a0f2466}
+  .ead-tag,.ead-link{z-index:1;font-size:.66rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#7c4dd6;background:#fff;padding:5px 13px;border-radius:999px;box-shadow:0 2px 10px #1a0f2466}
+  .ead-tag{position:absolute;top:14px;left:22px}
   .ead-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:1.5rem;line-height:1.13;letter-spacing:-.01em;text-shadow:0 2px 10px #1a0f24cc;text-align:center}
-  .ead-link{position:absolute;left:22px;bottom:14px;z-index:1;font-size:.86rem;font-weight:800;color:#fff}
+  .ead-link{position:absolute;left:22px;bottom:14px}
   @media(max-width:760px){.ebanner{grid-template-columns:1fr}.ebanner-r{min-height:170px}}
   .ebanner::after{content:'';position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#a87bff2e,transparent 70%);pointer-events:none}
   .epill{display:inline-flex;align-items:center;gap:7px;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 11px;border-radius:999px;background:#ffffff1c;margin-bottom:12px}
