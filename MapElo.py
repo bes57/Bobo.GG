@@ -9195,6 +9195,13 @@ document.querySelectorAll('.tab').forEach(btn => {
     const fromH = outer ? outer.offsetHeight : 0;
 
     activePanel = btn.dataset.panel;
+    // Every tab is its own shareable link: reflect it in the URL (default
+    // Team Ratings keeps the clean bare URL).
+    try {
+      history.replaceState(null, '', activePanel === 'a'
+        ? location.pathname + location.search
+        : location.pathname + location.search + '#panel=' + activePanel);
+    } catch (e) {}
     updatePanelInert();
 
     // All layout-touching work happens here, before the slide starts: make the
@@ -12131,6 +12138,39 @@ init();
     if (tries > 80) clearInterval(iv);
   }, 250);
 })();
+
+// Deep-link: /mapelo/modern/#panel=<m|b|c|d> opens that tab once the hub is
+// ready (the outbound half writes this hash on every tab click, so copying
+// the URL from any tab reproduces the view).
+(function(){
+  var hp;
+  try { hp = new URLSearchParams((location.hash || '').replace(/^#/, '')); } catch (e) { return; }
+  var want = hp.get('panel');
+  if (!want || want === 'a' || ['m','b','c','d'].indexOf(want) < 0) return;
+  var tries = 0;
+  var iv = setInterval(function(){
+    tries++;
+    var btn = document.querySelector('.tab[data-panel="' + want + '"]');
+    if (btn && !btn.classList.contains('tab-disabled')
+        && document.querySelectorAll('#lbBody .lb-row').length) {
+      clearInterval(iv);
+      btn.click();
+    } else if (tries > 240) {
+      clearInterval(iv);
+    }
+  }, 500);
+})();
+
+// Same-page hash edits (no reload) also switch tabs.
+window.addEventListener('hashchange', function(){
+  try {
+    var hp = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+    var want = hp.get('panel') || 'a';
+    if (['a','m','b','c','d'].indexOf(want) < 0) return;
+    var btn = document.querySelector('.tab[data-panel="' + want + '"]');
+    if (btn && !btn.classList.contains('tab-disabled')) btn.click();
+  } catch (e) {}
+});
 
 // Deep-link: /mapelo/modern/#panel=b&a=ORG_A&b=ORG_B&date=YYYY-MM-DD opens
 // the Upcoming Matches tab and expands that specific match's card once the
