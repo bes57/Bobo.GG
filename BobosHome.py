@@ -391,7 +391,7 @@ ARTICLES = [
     {"href": "/articles/championship-dna/",
      "title": "Championship DNA: Historical Trends To Note For Champions",
      "desc": "Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.",
-     "img": "/championshipdna.jpg", "date": "2026-09-07",
+     "img": "/championshipdna.jpg", "imgpos": "center", "date": "2026-09-07",
      "cats": ["research", "preview"]},
     {"href": "/articles/greatest-prime/",
      "title": "The Greatest Prime in VCT History Isn't a Debate",
@@ -437,8 +437,9 @@ def _articles_by_date():
 def _home_article_cards(n=4):
     out = []
     for a in _articles_by_date()[:n]:
+        pos = f' style="object-position:{a["imgpos"]}"' if a.get("imgpos") else ""
         out.append(
-            f'<a class="acard" href="{a["href"]}"><img src="{a["img"]}" alt="">'
+            f'<a class="acard" href="{a["href"]}"><img src="{a["img"]}"{pos} alt="">'
             f'<div class="ab"><div class="at">{a["title"]}</div>'
             f'<div class="ad">{a["desc"]}</div>'
             f'<div class="adate">{_adate(a["date"])}</div></div></a>')
@@ -450,7 +451,8 @@ def _classic_article_cards():
     for a in _articles_by_date():
         out.append(
             f'<a class="nav-card" href="{a["href"]}">\n'
-            f'          <img class="nav-card-cover" src="{a["img"]}" alt="">\n'
+            f'          <img class="nav-card-cover" src="{a["img"]}"'
+            + (f' style="object-position:{a["imgpos"]}"' if a.get("imgpos") else "") + ' alt="">\n'
             f'          <div class="nav-card-title">{a["title"]}</div>\n'
             f'          <div class="nav-card-desc">{a["desc"]}</div>\n'
             f'          <div class="nav-card-date">{_adate(a["date"], full=True)}</div>\n'
@@ -469,7 +471,8 @@ def _index_article_cards():
         out.append(
             f'<a class="acard" data-cat="{" ".join(cats)}" href="{a["href"]}">\n'
             f'      {spans}\n'
-            f'      <img src="{a["img"]}" alt="">\n'
+            f'      <img src="{a["img"]}"'
+            + (f' style="object-position:{a["imgpos"]}"' if a.get("imgpos") else "") + ' alt="">\n'
             f'      <div class="ab">\n'
             f'        <div class="at">{a["title"]}</div>\n'
             f'        <div class="ad">{a["desc"]}</div>\n'
@@ -686,8 +689,12 @@ def _build_team_profile(org):
         "season": (lb.get("as_of_date") or "")[:4],
         "beta": lb.get("beta") or _site_model()["beta"],
         "all_maps": _pool_maps(t.get("all_maps")),
-        "best_maps": _pool_maps(t.get("best_maps"))[:3],
-        "worst_maps": _pool_maps(t.get("worst_maps"))[:3],
+        # Top/bottom 3 BY RATING from the current-pool list — slicing the hub's
+        # pre-cut best/worst and THEN pool-filtering left uneven counts.
+        "best_maps": sorted(_pool_maps(t.get("all_maps")),
+                            key=lambda m: -m.get("rating", 0))[:3],
+        "worst_maps": sorted(_pool_maps(t.get("all_maps")),
+                             key=lambda m: m.get("rating", 0))[:3],
         "recent": (t.get("recent_matches") or [])[:4],
         "upcoming": upcoming,
         "form": (t.get("recent_matches") or [])[:5],
@@ -1040,7 +1047,10 @@ ALPHA_HTML = """
   /* Both bubbles always match height; the matches body fills and centers its
      empty state instead of leaving a void below it. */
   #matches-panel,#rankings-panel{display:flex;flex-direction:column}
-  #match-body{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+  /* Fixed rhythm between cards on every page; the pager alone is pushed to
+     the panel foot, so a short last page doesn't stretch the cards apart. */
+  #match-body{flex:1;display:flex;flex-direction:column;row-gap:16px}
+  #match-body > .mc-pager{margin-top:auto}
   #match-body > .empty{margin:auto 0}
   #match-body > .empty.mte{margin:auto 0;display:flex;flex-direction:column;align-items:center;gap:7px;line-height:1.5;padding:20px 12px}
   .mte-ic{width:104px;height:104px;border-radius:50%;background:#f1ebfb;color:#7c4dd6;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
@@ -1142,6 +1152,7 @@ ALPHA_HTML = """
   .h2h-rat span{display:block;font-family:'DM Sans',sans-serif;font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
   .h2h-rat.pos{color:#16a34a}.h2h-rat.neg{color:#c0392b}
   .h2h-form{display:flex;justify-content:center;gap:4px;margin:8px 0}
+  .h2h-record{font-size:.7rem;font-weight:700;color:var(--soft);margin-top:3px;font-variant-numeric:tabular-nums}
   .h2h-dot{width:8px;height:8px;border-radius:50%}.h2h-dot.w{background:var(--good)}.h2h-dot.l{background:#e6b0b0}
   .h2h-mtitle{font-size:.74rem;font-weight:800;letter-spacing:.03em;color:var(--ink);margin:11px 0 6px}
   .h2h-map{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:.74rem;font-weight:600;padding:2px 0}
@@ -1563,8 +1574,7 @@ function matchPage(d){
   var list=_matchList(CUR_TAB);
   var pages=Math.max(1,Math.ceil(list.length/PER_PAGE));
   PAGE[CUR_TAB]=Math.max(0,Math.min(pages-1,PAGE[CUR_TAB]+d));
-  renderMatches(CUR_TAB);
-  var mp=document.getElementById('matches-panel'); if(mp)mp.scrollIntoView({block:'nearest'});}
+  renderMatches(CUR_TAB);}
 function renderMatches(tab){
   CUR_TAB=tab;
   var body=document.getElementById('match-body');
@@ -1600,11 +1610,14 @@ function _h2hCol(t,org,side){
   if(!t)return '<div class="h2h-col '+side+'"><div class="h2h-org">'+esc(org)+'</div><div class="h2h-na">no data</div></div>';
   var best=(t.best_maps||[]).slice(0,3).map(function(mp){
     return '<div class="h2h-map"><span>'+esc(mp.map)+'</span><b class="'+(mp.rating>=0?'pos':'neg')+'">'+fmtR(mp.rating)+'</b></div>';}).join('');
+  var f5=(t.form||[]).slice(0,5);
+  var fw=f5.filter(function(m){return m.result==='W';}).length;
   return '<div class="h2h-col '+side+'">'
     +'<a class="h2h-org" href="/team/'+encodeURIComponent(org)+'">'+logoOrInit(org,'h2h-logo','h2h-init')+'<span>'+esc(org)+'</span></a>'
     +'<div class="h2h-meta"><span class="rbadge '+regClass(t.region)+'">'+esc(t.region||'')+'</span><span class="h2h-rank">#'+t.rank+'</span></div>'
     +'<div class="h2h-rat '+(t.rating>=0?'pos':'neg')+'">'+fmtR(t.rating)+'<span>BenPom</span></div>'
     +'<div class="h2h-form">'+formDots(t.form)+'</div>'
+    +(f5.length?'<div class="h2h-record">'+fw+'&ndash;'+(f5.length-fw)+' in past 5</div>':'')
     +'<div class="h2h-mtitle">Best maps</div>'+best+'</div>';
 }
 function renderH2H(id,org_a,org_b,pa,date){
@@ -1616,7 +1629,7 @@ function renderH2H(id,org_a,org_b,pa,date){
   var simHref='/mapelo/modern/#panel=b&a='+encodeURIComponent(org_a)+'&b='+encodeURIComponent(org_b)+(date?'&date='+encodeURIComponent(date):'');
   Promise.all([_fetchTeam(org_a),_fetchTeam(org_b)]).then(function(res){
     var A=res[0],B=res[1], pct=(pa!=null)?Math.round(pa*100):null;
-    el.innerHTML=(pct!=null?'<div class="h2h-head"><b>'+esc(org_a)+'</b> '+pct+'%&nbsp;&middot;&nbsp;'+(100-pct)+'% <b>'+esc(org_b)+'</b><div class="h2h-sub">projected series win</div></div>':'')
+    el.innerHTML=''
       +'<div class="h2h-grid">'+_h2hCol(A,org_a,'a')+'<div class="h2h-vs">VS</div>'+_h2hCol(B,org_b,'b')+'</div>'
       +'<a class="h2h-simlink" href="'+simHref+'">Full veto sim &amp; per-map odds &rarr;</a>';
     // Make the form dots interactable like Power Rankings (hover = BenPom match card).
@@ -1874,13 +1887,13 @@ renderMatches(startTab);
 // Only cap + fade the match-body when a card is EXPANDED (so the panel doesn't
 // grow past the rankings). On the normal paginated view there's NO cap/fade.
 function _updateMatchCap(){
+  // An open analysis is user-initiated: let the panel grow to show all of it
+  // instead of capping at the rankings panel's bottom (which chopped the last
+  // card's breakdown behind a subtle inner scroll). Height re-equalizes when
+  // the card closes.
   var mb=document.getElementById('match-body'); if(!mb)return;
-  var open=mb.querySelector('.mcard.open');
-  if(!(open && window.innerWidth>860)){ mb.style.maxHeight=''; mb.classList.remove('capped'); return; }
-  var rp=document.getElementById('rankings-panel'); if(!rp)return;
-  var avail=Math.max(260, rp.getBoundingClientRect().bottom - mb.getBoundingClientRect().top);
-  mb.style.maxHeight=Math.round(avail)+'px';
-  mb.classList.toggle('capped', mb.scrollHeight-mb.clientHeight>4);
+  mb.style.maxHeight='';
+  mb.classList.remove('capped');
 }
 function fitMatchesToRankings(){
   var mb=document.getElementById('match-body');
@@ -1891,7 +1904,7 @@ function fitMatchesToRankings(){
   var cardH=card.getBoundingClientRect().height+11;            // + margin
   var chrome=mp.getBoundingClientRect().height-mb.getBoundingClientRect().height;
   var avail=rp.getBoundingClientRect().height-chrome;
-  var n=Math.max(3,Math.round(avail/cardH));
+  var n=Math.max(3,Math.floor(avail/cardH));   // floor: never taller than the rankings panel
   if(n!==PER_PAGE){PER_PAGE=n;PAGE[CUR_TAB]=0;renderMatches(CUR_TAB);}
 }
 setTimeout(fitMatchesToRankings,60);

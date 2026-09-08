@@ -2,4 +2,4 @@
 [enrich] done: 0 enriched, 0 tombstoned, 0 deferred, 0 failed
 [comps] 0 match(es) to collect
 [comps] done: 0 collected, 0 failed
-[enrich-new] 0 enriched, 0 comps, 0.1s
+[enrich-new] 0 enriched, 0 comps, 0.0s
