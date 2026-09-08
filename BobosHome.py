@@ -1383,8 +1383,8 @@ ALPHA_HTML = """
     <div class="phead"><div class="ptitle">Player Leaders</div>
       <div class="pl-minrnd" title="Minimum rounds played to qualify">
         <span class="pl-minrnd-lab">Min rounds</span>
-        <input type="range" id="minRndSlider" min="0" max="200" step="10" value="50" aria-label="Minimum rounds played">
-        <span class="pl-minrnd-val" id="minRndVal">50+</span>
+        <input type="range" id="minRndSlider" min="0" max="200" step="10" value="100" aria-label="Minimum rounds played">
+        <span class="pl-minrnd-val" id="minRndVal">100+</span>
       </div>
       <a class="plink" id="players-full-link" href="/vct/">Full Leaderboards &rarr;</a></div>
     <div class="psub" id="players-sub"></div>
@@ -1726,7 +1726,7 @@ function plRow(p,i,stat){
     +'<span class="plr-n">'+(i+1)+'</span>'+avatar(p,'plr-av','plr-av-ph')
     +'<span class="plr-info"><span class="plr-name">'+esc(p.name)+'</span><span class="plr-meta">'+esc(p.org)+' &middot; '+esc(p.region)+'</span></span>'
     +'<span class="plr-val">'+esc(p.value)+'</span></a>';}
-var MIN_RND=50;   // min-rounds slider value; leaders re-filter client-side
+var MIN_RND=100;  // min-rounds slider value; leaders re-filter client-side
 function renderPlayers(){
   document.getElementById('players-sub').textContent=DATA.players_event?('Leaders · '+DATA.players_event):'';
   var pfl=document.getElementById('players-full-link');

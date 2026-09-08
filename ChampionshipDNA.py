@@ -766,15 +766,15 @@ PAGE_HTML = """
     </div>
     <p class="cover-caption">International winners from each year of franchised VCT<br>FNATIC at Tokyo in 2023, Sentinels at Madrid in 2024, Paper Rex in 2025, and Leviatán at London in 2026</p>
     <div class="content">
-      <p>Champions Shanghai, the biggest VCT event of the year, is right around the corner. This means that the entirety of the fanbase will be making Pick&rsquo;Ems, discussing their predictions online, casting bets, and constructing fantasy teams. Furthermore, Champions involves 4 teams from each region, as opposed to the 3 per region (occasionally 2 per region in the past) at Masters events. With such a wide pool of teams alongside a large, captive, and opinionated audience, there is no better time to look back on the 4 years of franchised VCT history. How can we use history to sort through these teams and see who is expected to fail and who are the true favorites?</p>
+      <p>With Champions Shanghai right around the corner, the VCT fanbase will be making Pick&rsquo;Ems, discussing their predictions online, casting bets, and constructing fantasy teams. With all 16 teams set alongside a large, captive, and opinionated audience, there is no better time to look back on the 4 years of franchised VCT history. How can we use history to sort through these teams and see who is expected to fail and who are the true favorites?</p>
 
-      <p>This tradition of historical and analytical trends exists heavily in other sports and the results are often fascinating (and accurate). I am excited to borrow these ideas, frameworks, and visualizations I&rsquo;ve read over the years and bring them into the world of VCT! In this article, you will likely see a few references to college basketball/baseball analytics, so bear with me if that&rsquo;s unfamiliar (or you can skip them).</p>
+      <p>This tradition of studying historical trends exists heavily in other sports and the results are often fascinating (and accurate). I am excited to borrow these ideas, frameworks, and visualizations I&rsquo;ve read over the years and bring them into the world of VCT. In this article, you will likely see a few references to college basketball/baseball analytics, so bear with me if that&rsquo;s unfamiliar (or you can skip them).</p>
 
       <h2 id="by-the-numbers">The Winners: By The Numbers</h2>
 
-      <p>One of the simplest ways that a championship team is understood in any sport is by their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team, mapped by their attack win% and defense win% in the split prior.<br><em>(e.g. Leviatán at Masters London uses their numbers from Stage 1 of 2026)</em></p>
+      <p>One of the simplest ways that a championship team is understood in any sport is through their offensive and defensive strength levels. Rely too heavily on one of these sides, and imbalance can often lead to failure. VCT is no different, except we&rsquo;re dealing with attack and defense rather than offense and defense. Here is a graph of every international-attending team in franchised VCT history, mapped by their attack win% and defense win% in the split prior.<br><em>(e.g. Leviatán at Masters London uses their numbers from Stage 1 of 2026)</em></p>
 
-      <p>Trophy winner are automatically highlighted, but turn that off with the &ldquo;Highlight Winners&rdquo; button, allowing you to see/interact with all international-attending teams.</p>
+      <p>Trophy winners are automatically highlighted, but you can turn that off with the &ldquo;Highlight Winners&rdquo; button, allowing you to see/interact with all international-attending teams.</p>
 
       <figure class="fig" id="sec-landscape">
         <p class="fig-note"><em>Note: Champions 2023 was not included, since there was no domestic split prior to the tournament</em></p>
@@ -788,7 +788,7 @@ PAGE_HTML = """
       <p>This is an awesome visualization that's fun to play around with! Some notes:</p>
 
       <ul class="notes">
-        <li>We can see teams that did worse than they were expected to. For example, <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">LOUD at Tokyo</a>. This is a favorite example of mine, with a great narrative. 2023 LOUD were an amazing team with intense success before Masters Tokyo (2nd at LOCK//IN and then won Americas Stage 1) and after Masters Tokyo (3rd at Champions LA). They were a consensus top-2 favorite to win the event (Platchat put them above FNATIC, in fact, as favorites for Masters Tokyo). Their flop at Tokyo was shocking and historic - what happened? As I recall, Masters Tokyo was the start of a rift between Less/Saadhak and Aspas, a reminder that this game cannot be just broken down into numbers. Also, it’s a reminder that Valorant was, is, and will always be random.</li>
+        <li>We can observe teams that did worse than they were expected to. For example, <a class="pin" data-org="LOUD" data-intl="Masters Tokyo 2023">LOUD at Tokyo</a>. This is a favorite example of mine, with a great narrative. 2023 LOUD were an amazing team with success before Masters Tokyo (2nd at LOCK//IN and then won Americas Stage 1) and after Masters Tokyo (3rd at Champions LA). They were a consensus top-2 favorite to win the event (Platchat put them above FNATIC, in fact, as favorites for Masters Tokyo). Thus, their flop at Tokyo was shocking and historic - what happened? As I recall, Masters Tokyo was the start of a rift between Less/Saadhak and Aspas, and these chemistry issues were only exacerbated by immediately playing (and losing to) EG, who went on to be runner-ups at the tournament. This serves as a reminder that Valorant cannot just be broken down into numbers and will ultimately always be random to an extent.</li>
         <li>Speaking of random, we can also see which teams overshot their previous domestic performance! <a class="pin" data-org="T1" data-intl="Masters Bangkok 2025">T1 at Bangkok</a> is the most obvious one. Here are all of the teams coming into Masters Bangkok on this graph:
           <figure class="inline-fig">
             <div class="inline-fig-wrap"><canvas id="bangkokInset"></canvas></div>
@@ -889,7 +889,7 @@ PAGE_HTML = """
 
       <p>Oh look, another trend where T1 at Bangkok is an outlier!</p>
 
-      <p>Still, this speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there are new pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent - even if it means adding newer talent into a roster with veterans.</p>
+      <p>Still, this speaks to the continuous influx of top-level talent into VCT. As years go on and Valorant has been around for longer, there exists a new generation of pros who grew up playing Valorant, the mechanical ceiling gets higher, and older talent generally fades out. It is proven that the best way to win a trophy in Valorant is by embracing new talent, not reshuffling older talent - even if it means adding newer talent into a roster with veterans.</p>
 
       <p>This is bad news for a team that some would call the current Champions Shanghai favorites: NRG. Also PRX. We&rsquo;ve watched both of these teams get outgunned by teams with a rookie/rookies in the two Masters events this year - by Nongshim at Masters Santiago and Leviatán at Masters London. I&rsquo;m not necessarily advocating for making roster changes on PRX and NRG, I&rsquo;m just pointing out a trend.</p>
 
@@ -954,7 +954,7 @@ PAGE_HTML = """
 
       <p>If I changed the <em>&ldquo;Top-6 rated player in previous split&rdquo;</em> requirement to <em>&ldquo;Top-7&rdquo;</em>, then LOUD would also meet 5/5 of the requirements. In this way, LOUD are far and away the second-favorites according to these historical trends.</p>
 
-      <p>Not for nothing, I really like the case for LOUD to win Champions Shanghai. They have the momentum, youth, and certainly the star power (i.e. Erde and lukxo) that makes them dangerous and an exciting team to root for. What&rsquo;s more is that they just played the current favorites (100T) to a Map 5 OT Bo5.</p>
+      <p>Not for nothing, but I really like the case for LOUD to win Champions Shanghai. They have the momentum, youth, and certainly the star power (i.e. Erde and lukxo) that makes them dangerous and an exciting team to root for. What&rsquo;s more is that they just played the current favorites (100T) to a Map 5 OT Bo5.</p>
 
       <div class="tn-head"><img src="/logos/KC.png" alt="">Karmine Corp</div>
 
