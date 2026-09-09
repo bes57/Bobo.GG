@@ -141,6 +141,18 @@ def _alpha_data_version():
         return ""
 
 
+def _players_min_rnd(event_id):
+    """100 for domestic splits, 50 for internationals (same rule as /vct/)."""
+    try:
+        from MoreTestingMaybeFiles import ALL_EVENTS as _AE
+        for e in _AE:
+            if e.get("id") == event_id:
+                return 50 if "International" in (e.get("regions") or {}) else 100
+    except Exception:
+        pass
+    return 100
+
+
 def _build_alpha_data():
     """Assemble the compact payload the alpha dashboard renders from."""
     from MapElo import _mhub_load
@@ -377,6 +389,9 @@ def _build_alpha_data():
         "rankings": rankings, "recent": recent, "upcoming": upcoming,
         "player_stats": player_stats, "players_event": players_event,
         "players_event_id": players_event_id,
+        # 100 for domestic splits, 50 for internationals — same rule as the
+        # event leaderboards page.
+        "players_min_rnd": _players_min_rnd(players_event_id),
         "records": records,
         "event_labels": event_labels,
         "colors": colors, "logos": logos,
@@ -1739,7 +1754,7 @@ function plRow(p,i,stat){
     +'<span class="plr-n">'+(i+1)+'</span>'+avatar(p,'plr-av','plr-av-ph')
     +'<span class="plr-info"><span class="plr-name">'+esc(p.name)+'</span><span class="plr-meta">'+esc(p.org)+' &middot; '+esc(p.region)+'</span></span>'
     +'<span class="plr-val">'+esc(p.value)+'</span></a>';}
-var MIN_RND=100;  // min-rounds slider value; leaders re-filter client-side
+var MIN_RND=(DATA.players_min_rnd||100);  // 100 domestic / 50 intl; leaders re-filter client-side
 function renderPlayers(){
   document.getElementById('players-sub').textContent=DATA.players_event?('Leaders · '+DATA.players_event):'';
   var pfl=document.getElementById('players-full-link');
@@ -1759,6 +1774,7 @@ function renderPlayers(){
     : '<div class="empty">No player data.</div>';}
 (function(){
   var s=document.getElementById('minRndSlider'),v=document.getElementById('minRndVal');
+  if(s){s.value=MIN_RND;} if(v){v.textContent=MIN_RND+'+';}
   if(!s)return;
   function upd(){
     MIN_RND=+s.value; v.textContent=s.value+'+';

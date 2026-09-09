@@ -12274,7 +12274,7 @@ def mapelo_modern_progress():
 def mapelo_modern_refresh():
     """Force-trigger a refresh (bypasses cooldown).  Poll /modern/progress."""
     with _mhub_cache_lock:
-        _mhub_cache["ts"] = 0.0
+        _mhub_cache["ts"].clear()
     _mhub_trigger_build(force=True)
     return Response(json.dumps({"triggered": True}), mimetype='application/json')
 

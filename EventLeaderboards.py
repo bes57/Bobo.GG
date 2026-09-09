@@ -865,7 +865,7 @@ MAIN_HTML = """
   {% endif %}
 
   <div class="rounds-wrap">
-    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
+    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">{{ "50+" if ("International" in event.regions) else "100+" }}</span></span>
     <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if is_alltime else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
 
@@ -881,7 +881,7 @@ MAIN_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}of the Event{% endif %}</div>
+      <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}&mdash; {{ event.label }}{% endif %}</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -901,11 +901,10 @@ const EVENT_LABEL = {{ event.label | tojson }};
 const STATS = Object.keys(STAT_LABELS);
 const PILL_CLASSES = ['pill-0','pill-1','pill-2','pill-3','pill-4','pill-5'];
 let currentRegion = 'All';
-let minRounds = (function(){
-  var v = parseInt(localStorage.getItem('bobo_min_rounds'));
-  if (isNaN(v)) v = 50;
-  return Math.max(v, ROUNDS_FLOOR);
-})();
+// Default depends on event type: 100 for domestic splits, 50 for
+// internationals (fewer matches per team).
+const IS_INTL = {{ ('International' in event.regions) | tojson }};
+let minRounds = Math.max(IS_INTL ? 50 : 100, ROUNDS_FLOOR);
 
 function rankClass(i) { return i===0?'r1':i===1?'r2':i===2?'r3':''; }
 
@@ -1008,7 +1007,6 @@ function switchRegion(region, btn) {
 
 function updateMinRounds(val) {
   minRounds = parseInt(val) || 0;
-  localStorage.setItem('bobo_min_rounds', minRounds);
   document.getElementById('rounds-val').textContent = minRounds === 0 ? 'Any' : minRounds + '+';
   renderGrid(currentRegion);
 }
@@ -1402,7 +1400,7 @@ RANKING_HTML = """
     <input class="search-input" id="search" type="text" placeholder="Search player name..." oninput="applyFilters()" autocomplete="off">
   </div>
   <div class="rounds-wrap">
-    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">50+</span></span>
+    <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">{{ "50+" if ("International" in event.regions) else "100+" }}</span></span>
     <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if is_alltime else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
   </div>
   <div class="table-wrap">
@@ -1432,7 +1430,7 @@ RANKING_HTML = """
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="modal-player" id="modal-player"></div>
     <div class="modal-section">
-      <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}of the Event{% endif %}</div>
+      <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}&mdash; {{ event.label }}{% endif %}</div>
       <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
     </div>
     <div class="modal-section dist-wrap">
@@ -1468,11 +1466,10 @@ function rankShowInitials(img) {
 }
 
 let activeRegion = '{{ active_region }}';
-let minRounds = (function(){
-  var v = parseInt(localStorage.getItem('bobo_min_rounds'));
-  if (isNaN(v)) v = 50;
-  return Math.max(v, ROUNDS_FLOOR);
-})();
+// Default depends on event type: 100 for domestic splits, 50 for
+// internationals (fewer matches per team).
+const IS_INTL = {{ ('International' in event.regions) | tojson }};
+let minRounds = Math.max(IS_INTL ? 50 : 100, ROUNDS_FLOOR);
 
 function filterRegion(region, btn) {
   activeRegion = region;
@@ -1483,7 +1480,6 @@ function filterRegion(region, btn) {
 
 function updateMinRounds(val) {
   minRounds = parseInt(val) || 0;
-  localStorage.setItem('bobo_min_rounds', minRounds);
   document.getElementById('rounds-val').textContent = minRounds === 0 ? 'Any' : minRounds + '+';
   applyFilters();
 }
@@ -2010,7 +2006,7 @@ PLAYER_CARD_HTML = """
 <div class="pc-wrap">
   <div class="modal-player" id="modal-player"></div>
   <div class="modal-section">
-    <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}of the Event{% endif %}</div>
+    <div class="modal-section-title">Best Match Performance {% if is_alltime %}of All-Time{% else %}&mdash; {{ event.label }}{% endif %}</div>
     <div id="modal-match"><div class="modal-loading">Loading match data&hellip;</div></div>
   </div>
   <div class="modal-section dist-wrap">

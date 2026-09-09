@@ -1,0 +1,264 @@
+{
+ "fetched_at": "2026-09-08 20:31 UTC",
+ "endpoints": {
+  "val-status-v1": 200,
+  "val-content-v1": 200,
+  "val-ranked-v1 (na)": 200,
+  "val-ranked-v1 (eu)": 200,
+  "val-ranked-v1 (ap)": 200,
+  "account-v1": 200,
+  "val-match-v1 (matchlist)": 403
+ },
+ "status": {
+  "name": "North America",
+  "locales": 18,
+  "maintenances": 0,
+  "incidents": 0
+ },
+ "content": {
+  "characters": 29,
+  "maps": 27,
+  "skins": 1405,
+  "gameModes": 17,
+  "acts_total": 53,
+  "active_act": "ACT V",
+  "active_act_id": "8102cd81-43a0-d0d7-bd59-47b8fe9bed1b",
+  "active_episode": "V26"
+ },
+ "leaderboards": {
+  "na": {
+   "total_players": 7672,
+   "top": [
+    {
+     "rank": 1,
+     "name": "twitch heartless",
+     "tag": "css",
+     "rr": 877,
+     "wins": 96
+    },
+    {
+     "rank": 2,
+     "name": "tonza",
+     "tag": "yxa",
+     "rr": 839,
+     "wins": 72
+    },
+    {
+     "rank": 3,
+     "name": "twitch stunna",
+     "tag": "val",
+     "rr": 835,
+     "wins": 131
+    },
+    {
+     "rank": 4,
+     "name": "notadoctor",
+     "tag": "mak",
+     "rr": 823,
+     "wins": 85
+    },
+    {
+     "rank": 5,
+     "name": "picklespear",
+     "tag": "s6d",
+     "rr": 732,
+     "wins": 67
+    },
+    {
+     "rank": 6,
+     "name": "Twitch Zamal",
+     "tag": "29a",
+     "rr": 720,
+     "wins": 57
+    },
+    {
+     "rank": 7,
+     "name": "Weegle",
+     "tag": "flop",
+     "rr": 711,
+     "wins": 47
+    },
+    {
+     "rank": 8,
+     "name": "needy",
+     "tag": "owo",
+     "rr": 707,
+     "wins": 55
+    },
+    {
+     "rank": 9,
+     "name": "I AM ZERO",
+     "tag": "OBEY",
+     "rr": 703,
+     "wins": 57
+    },
+    {
+     "rank": 10,
+     "name": "ethn",
+     "tag": "happy",
+     "rr": 700,
+     "wins": 67
+    }
+   ]
+  },
+  "eu": {
+   "total_players": 15000,
+   "top": [
+    {
+     "rank": 1,
+     "name": "LUKYOLOLO",
+     "tag": "042C",
+     "rr": 1090,
+     "wins": 59
+    },
+    {
+     "rank": 2,
+     "name": "EP MAGNUM",
+     "tag": "rawr",
+     "rr": 1023,
+     "wins": 65
+    },
+    {
+     "rank": 3,
+     "name": "SGE Fizzy",
+     "tag": "pstor",
+     "rr": 1020,
+     "wins": 77
+    },
+    {
+     "rank": 4,
+     "name": "Nich",
+     "tag": "ODIN",
+     "rr": 1012,
+     "wins": 61
+    },
+    {
+     "rank": 5,
+     "name": "YONKO \u30e4",
+     "tag": "maroc",
+     "rr": 1009,
+     "wins": 91
+    },
+    {
+     "rank": 6,
+     "name": "yaggert",
+     "tag": "atm",
+     "rr": 1003,
+     "wins": 106
+    },
+    {
+     "rank": 7,
+     "name": "troizyyy",
+     "tag": "DTEK",
+     "rr": 982,
+     "wins": 52
+    },
+    {
+     "rank": 8,
+     "name": "one eyed king",
+     "tag": "esco",
+     "rr": 982,
+     "wins": 79
+    },
+    {
+     "rank": 9,
+     "name": "Yellow flash",
+     "tag": "AWP",
+     "rr": 981,
+     "wins": 90
+    },
+    {
+     "rank": 10,
+     "name": "LFT metroneo",
+     "tag": "2008",
+     "rr": 979,
+     "wins": 70
+    }
+   ]
+  },
+  "ap": {
+   "total_players": 15000,
+   "top": [
+    {
+     "rank": 1,
+     "name": "deviceHP",
+     "tag": "ailee",
+     "rr": 1171,
+     "wins": 102
+    },
+    {
+     "rank": 2,
+     "name": "xero",
+     "tag": "\u043c\u0438\u0448\u0430",
+     "rr": 1158,
+     "wins": 63
+    },
+    {
+     "rank": 3,
+     "name": "Secret Zeus",
+     "tag": "ela",
+     "rr": 1143,
+     "wins": 73
+    },
+    {
+     "rank": 4,
+     "name": "\u041f\u0420\u0425 \u0418\u043b\u044c\u044f \u041f\u0435\u0442\u0440\u043e\u0432",
+     "tag": "2009",
+     "rr": 1118,
+     "wins": 96
+    },
+    {
+     "rank": 5,
+     "name": "\uc640 \uc774\uac70 \uc7ac\uaef4\uc9c0\ub124",
+     "tag": "\uc720\uc988\ud558\ub9ac\ucf54",
+     "rr": 1110,
+     "wins": 102
+    },
+    {
+     "rank": 6,
+     "name": "annyeon",
+     "tag": "123",
+     "rr": 1104,
+     "wins": 69
+    },
+    {
+     "rank": 7,
+     "name": "XC beom",
+     "tag": "0923",
+     "rr": 1078,
+     "wins": 67
+    },
+    {
+     "rank": 8,
+     "name": "SID",
+     "tag": "8253",
+     "rr": 1076,
+     "wins": 116
+    },
+    {
+     "rank": 9,
+     "name": "\u5e26\u68d2\u5a03",
+     "tag": "4553",
+     "rr": 1040,
+     "wins": 44
+    },
+    {
+     "rank": 10,
+     "name": "KENvlrt",
+     "tag": "Korea",
+     "rr": 1033,
+     "wins": 73
+    }
+   ]
+  }
+ },
+ "account_demo": {
+  "riot_id": "TenZ#SEN",
+  "puuid_prefix": "-1RsHdLb_9Vp\u2026"
+ },
+ "match_access": {
+  "status": 403,
+  "note": "dev keys need product approval for match data",
+  "matches": 0
+ }
+}
