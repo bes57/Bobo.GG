@@ -56,6 +56,104 @@ def playbook():
         return Response(f.read(), mimetype="text/html")
 
 
+@testing_bp.route("/riot-api")
+def riot_api_demo():
+    """Showcase of what the (24h dev) Riot Games API key can access — rendered
+    from data/riot_api_demo.json, which the fetch snippet in this page's
+    footer regenerates. The key itself lives in data/riot_api_key.txt
+    (gitignored) and is never rendered."""
+    if not _authed():
+        return redirect("/testing/")
+    import json as _json
+    demo_path = os.path.join(_ROOT, "data", "riot_api_demo.json")
+    try:
+        d = _json.load(open(demo_path))
+    except Exception:
+        return Response("<h3 style='font-family:sans-serif'>No demo data — run the fetch script first.</h3>",
+                        mimetype="text/html")
+
+    def esc(x):
+        return (str(x).replace("&", "&amp;").replace("<", "&lt;"))
+
+    ep_rows = "".join(
+        f"<tr><td><code>{esc(k)}</code></td><td class='{'ok' if v == 200 else 'no'}'>{v}"
+        f"{' OK' if v == 200 else ' (needs product approval)' if v in (401, 403) else ''}</td></tr>"
+        for k, v in (d.get("endpoints") or {}).items())
+
+    c = d.get("content") or {}
+    stat = d.get("status") or {}
+    lb_html = ""
+    SHARD_NAMES = {"na": "North America", "eu": "Europe", "ap": "Asia-Pacific"}
+    for shard, blob in (d.get("leaderboards") or {}).items():
+        rows = "".join(
+            f"<tr><td>#{p['rank']}</td><td>{esc(p['name'])}<span class='tag'>#{esc(p['tag'])}</span></td>"
+            f"<td>{p['rr']} RR</td><td>{p['wins']} wins</td></tr>"
+            for p in (blob.get("top") or []))
+        lb_html += (f"<div class='lbcard'><h3>{SHARD_NAMES.get(shard, shard.upper())}"
+                    f"<span class='sub'>{blob.get('total_players'):,} ranked players · "
+                    f"{esc(c.get('active_act') or '')}</span></h3>"
+                    f"<table>{rows}</table></div>")
+
+    acct = d.get("account_demo") or {}
+    match = d.get("match_access") or {}
+    html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>Riot API — Testing</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+ body{{font-family:'DM Sans',sans-serif;background:#faf8fc;color:#16121d;margin:0;padding:34px 20px 60px}}
+ .wrap{{max-width:900px;margin:0 auto}}
+ h1{{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.7rem;margin:0 0 4px}}
+ .sub,.tag{{color:#8a8296;font-weight:500}}
+ .tag{{font-size:.78em;margin-left:2px}}
+ .meta{{color:#8a8296;font-size:.85rem;margin-bottom:26px}}
+ .card{{background:#fff;border:1px solid #e8e2f0;border-radius:14px;padding:18px 20px;margin-bottom:18px;box-shadow:0 3px 14px #00000008}}
+ h2{{font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;margin:0 0 10px}}
+ h3{{font-family:'Plus Jakarta Sans',sans-serif;font-size:.95rem;margin:0 0 8px}}
+ h3 .sub{{display:block;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;margin-top:2px}}
+ table{{width:100%;border-collapse:collapse;font-size:.86rem}}
+ td{{padding:6px 8px;border-bottom:1px solid #f1edf6}}
+ tr:last-child td{{border-bottom:0}}
+ code{{background:#f3eefb;border-radius:5px;padding:2px 7px;font-size:.8rem}}
+ .ok{{color:#1f9d55;font-weight:700}} .no{{color:#c0392b;font-weight:700}}
+ .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}}
+ .stats{{display:flex;gap:22px;flex-wrap:wrap}}
+ .stat b{{display:block;font-family:'Plus Jakarta Sans',sans-serif;font-size:1.4rem}}
+ .stat span{{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#8a8296;font-weight:700}}
+ a.back{{color:#7c4dd6;font-weight:700;text-decoration:none;font-size:.85rem}}
+ .note{{font-size:.8rem;color:#8a8296;line-height:1.6}}
+</style></head><body><div class="wrap">
+ <a class="back" href="/testing/">&larr; Testing Lab</a>
+ <h1>Riot Games API — live access demo</h1>
+ <div class="meta">Key verified working · data fetched {esc(d.get('fetched_at'))} · 24h developer key (stored untracked in <code>data/riot_api_key.txt</code>)</div>
+
+ <div class="card"><h2>Endpoint access check</h2><table>{ep_rows}</table></div>
+
+ <div class="card"><h2>Game content <span class="sub">val-content-v1</span></h2>
+  <div class="stats">
+   <div class="stat"><b>{c.get('characters')}</b><span>agents</span></div>
+   <div class="stat"><b>{c.get('maps')}</b><span>maps</span></div>
+   <div class="stat"><b>{c.get('skins'):,}</b><span>skins</span></div>
+   <div class="stat"><b>{c.get('gameModes')}</b><span>game modes</span></div>
+   <div class="stat"><b>{c.get('acts_total')}</b><span>acts (all-time)</span></div>
+   <div class="stat"><b>{esc(c.get('active_episode') or '—')} / {esc(c.get('active_act') or '—')}</b><span>live right now</span></div>
+  </div></div>
+
+ <div class="card"><h2>Ranked leaderboards <span class="sub">val-ranked-v1 · top 10 Radiant by act</span></h2>
+  <div class="grid">{lb_html}</div></div>
+
+ <div class="card"><h2>Account resolution <span class="sub">account-v1</span></h2>
+  <p class="note"><b>{esc(acct.get('riot_id'))}</b> resolves to puuid <code>{esc(acct.get('puuid_prefix'))}</code> —
+  riot-id &rarr; puuid works for any player, which is the door into per-player endpoints.</p></div>
+
+ <div class="card"><h2>Match data <span class="sub">val-match-v1</span></h2>
+  <p class="note">Matchlist for that puuid returns <b class="no">{match.get('status')}</b> — {esc(match.get('note'))}.
+  Full VCT-depth telemetry lives in the separate Riot esports S3 pipeline (<code>scrapers/riot/</code>) already wired into Match Data &rarr; Deep Stats.</p></div>
+
+ <div class="card"><h2>Platform status <span class="sub">val-status-v1</span></h2>
+  <p class="note">{esc(stat.get('name'))} · {stat.get('locales')} locales · {stat.get('maintenances')} maintenances · {stat.get('incidents')} incidents right now.</p></div>
+</div></body></html>"""
+    return Response(html, mimetype="text/html")
+
+
 @testing_bp.route("/report/<name>")
 def report(name):
     if not _authed():
@@ -322,7 +420,7 @@ _LAB_HTML = """<!DOCTYPE html>
     <a href="/testing/report/favorites_lab">Favorites Lab</a>
 <a href="/testing/report/final_model">Final Model</a>
 <a href="/testing/report/v7_lab">v7 Lab</a><span class="brk"></span>
-<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a><a href="/testing/report/v10_lab">v10 Lab</a><a href="/testing/report/edge_lab">Edge vs Market</a><a href="/testing/report/playbook_bt">Playbook (backtested)</a>
+<a href="/testing/report/v8_lab">v8 Lab</a><a href="/testing/report/roster_adaptation">Roster</a><a href="/testing/report/v9_lab">v9 Lab</a><a href="/testing/report/v10_lab">v10 Lab</a><a href="/testing/report/edge_lab">Edge vs Market</a><a href="/testing/report/playbook_bt">Playbook (backtested)</a><a href="/testing/riot-api">Riot API</a>
   </div>
 
   <section>

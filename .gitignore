@@ -12,3 +12,4 @@ testing_lab/v8/data/vctmm_live.db
 # Per-host retry ledger for match stats re-scrapes (MatchStatsIntegrity).
 # Attempt counts/timestamps are local runtime state, not shared data.
 data/stats_recheck.json
+data/riot_api_key.txt
