@@ -8272,12 +8272,12 @@ body::after{content:'';position:fixed;inset:-50%;pointer-events:none;z-index:0;b
 .progress-pct{color:rgba(232,213,245,.5);font-size:.75rem;font-variant-numeric:tabular-nums;margin-bottom:0}
 .progress-note{color:rgba(232,213,245,.55);font-size:.78rem;font-style:italic;margin-top:14px;letter-spacing:.01em}
 @keyframes fillDone{0%{background:linear-gradient(90deg,#5b21b6,#7c3aed,#a78bfa,#c4b5fd)}50%{background:#fff;box-shadow:0 0 18px 8px rgba(255,255,255,.7)}100%{background:#e9d5ff;box-shadow:0 0 6px 2px rgba(255,255,255,.15)}}
-.progress-fill.done{animation:fillDone .45s ease forwards!important;width:100%!important;transition:none!important}
+.progress-fill.done{animation:fillDone .3s ease forwards!important;width:100%!important;transition:none!important}
 @keyframes cardExit{
   0%  {opacity:1;transform:translateY(0);filter:none}
   100%{opacity:0;transform:translateY(48px);filter:blur(4px)}
 }
-.progress-card.exiting{animation:cardExit .55s cubic-bezier(.4,0,1,1) forwards;pointer-events:none}
+.progress-card.exiting{animation:cardExit .38s cubic-bezier(.4,0,1,1) forwards;pointer-events:none}
 /* translate3d (not translateX) and will-change force the slide-in onto its
    own compositor layer, so the chart card moves on the GPU instead of
    repainting the canvas + gradients every frame. backface-visibility:hidden
@@ -9638,7 +9638,7 @@ function enableHubTabs() {
 async function pollUntilReady() {
   let retries = 0;
   while (retries < 400) {
-    await sleep(2000);
+    await sleep(1000);
     retries++;
     const data = await fetchData();
     if (!data) continue;
@@ -9646,7 +9646,7 @@ async function pollUntilReady() {
     if (data.progress) updateProgress(data.progress);
     if (data.status === 'ready') {
       updateProgress({pct: 100, message: 'All data verified!', log: data.progress?.log || []});
-      await sleep(900);
+      await sleep(300);
       return;
     }
   }
@@ -10304,6 +10304,7 @@ document.addEventListener('keydown', e => {
 
   if (key === 'x') {
     selectedTeam = null; expandedOrg = null;
+    hideDotTooltip();   // a match card open from a hovered dot must not outlive the selection
     buildChart(hubData); renderLeaderboard(hubData);
     return;
   }
@@ -10321,6 +10322,7 @@ document.addEventListener('keydown', e => {
 
   selectedTeam = next.org;
   expandedOrg  = null;
+  hideDotTooltip();
   buildChart(hubData);
   renderLeaderboard(hubData);
 });
@@ -10768,14 +10770,14 @@ async function init() {
     if (fill) fill.classList.add('done');
     const pLabel = document.querySelector('.progress-label');
     if (pLabel) pLabel.textContent = 'Ready';
-    await sleep(520);
+    await sleep(350);
     const pSec = document.getElementById('progressSection');
     if (pSec) pSec.style.overflow = 'visible';
     const pOuter = document.querySelector('.panels-outer');
     if (pOuter) pOuter.style.overflow = 'visible';
     const pCard = document.querySelector('.progress-card');
     if (pCard) pCard.classList.add('exiting');
-    await sleep(560);
+    await sleep(400);
     document.getElementById('progressSection').classList.add('hidden');
     // Restore overflow:hidden so the chart card clips correctly during slide-in
     if (pOuter) pOuter.style.overflow = '';

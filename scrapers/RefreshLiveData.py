@@ -937,6 +937,7 @@ def main():
     step_idx = 0
 
     all_stale = set()
+    region_jobs = []  # (target, region, existing) in fixed order
     for t in targets:
         existing, stale = _existing_match_ids(t["event_csv_id"])
         all_stale |= stale
@@ -944,12 +945,23 @@ def main():
                f"Scanning {t['label']} — {len(existing)} match(es) on disk…",
                [f"[{t['label']}] {len(existing)} match(es) already cached"
                 + (f", {len(stale)} being re-scraped for incomplete stats" if stale else "")])
-
         for region, vlr_id, slug in t["regions"]:
+            region_jobs.append((t, region, vlr_id, slug, existing))
+
+    # The region event pages are independent GETs — fetch them concurrently
+    # (bounded pool; the same burst a browser makes loading one VLR page).
+    # Progress writes stay on the main thread, in fixed region order.
+    from concurrent.futures import ThreadPoolExecutor
+    if region_jobs:
+        _write("checking", 10,
+               f"Checking {len(region_jobs)} region page(s) in parallel…")
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        futs = [pool.submit(_get_completed_urls, vlr_id, slug)
+                for (_t, _r, vlr_id, slug, _e) in region_jobs]
+        for (t, region, _vlr_id, _slug, existing), fut in zip(region_jobs, futs):
             step_idx += 1
             pct = 8 + int(step_idx / scan_steps * 20)
-            _write("checking", pct, f"Checking {t['label']} / {region}…")
-            urls = _get_completed_urls(vlr_id, slug)
+            urls = fut.result()
             total_completed += len(urls)
             new = [u for u in urls if _match_id_from_url(u) not in existing]
             for u in new:
@@ -957,7 +969,6 @@ def main():
             _write("checking", pct,
                    f"{t['label']} / {region}: {len(urls)} completed, {len(new)} new",
                    [f"✓ {t['label']} / {region}: {len(urls)} completed ({len(new)} new)"])
-            time.sleep(0.2)  # was 0.6 — kept sequential (Cloudflare-safe) but shorter
 
     _write("checking", 30,
            f"Scan complete — {total_completed} completed across {len(targets)} live event(s), "
