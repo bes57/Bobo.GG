@@ -364,7 +364,7 @@ def _sayo_chart():
 # Author copy per rank, inserted after the stat strip in that player's section.
 _PLAYER_COPY = {
     1: """
-        <p>The player that I expect to be the greatest player at Champions Shanghai is none other than Erde. Now, I expect people to disagree with this, but I know exactly what I saw in those playoffs - the greatest player in the world.</p>
+        <p>The player that I expect to be the greatest player at Champions Shanghai is none other than Erde. Now, people will disagree with this, but I know exactly what I saw in those playoffs - the greatest player in the world.</p>
 
         <p>Throughout the Stage 2 split, he was barely a player who got mentioned. In Stage 2 playoffs, he showcased a form that we haven’t seen from an IGL in VCT history, other than players like Valyn, F0rsaken (if you count him), Nats, and Munchkin.</p>
 
@@ -386,7 +386,7 @@ __ERDE_GF__
           <li>He was the highest-rated LOUD player for 4/5 of LOUD’s playoff matches, aside from the first where he was 2nd-highest.</li>
         </ol>
 
-        <p>If you just look at Stage 2 playoffs, Erde:</p>
+        <p>If you look at Stage 2 playoffs across all regions, Erde:</p>
 
         <ul class="notes">
           <li>is tied for the 3rd-highest VLR-rating in VCT</li>
@@ -398,11 +398,11 @@ __ERDE_GF__
           </li>
         </ul>
 
-        <p>Doing all of this while IGLing a young team, carrying every match, playing support agents, and finishing 2nd in the most competitive region makes him the best player in the world in my eyes. I expect him to continue being the best player in the world at Champions Shanghai.</p>""",
+        <p>Doing all of this while IGLing a young team, carrying every match, playing support agents, and finishing 2nd in the most competitive region makes him the best player in the world. I expect him to continue being the best player in the world at Champions Shanghai.</p>""",
     3: """
         <p>Similarly to Cryo, Lukxo has been one of the most hyped talents stuck on poor teams for the past two years. The difference is that, while Cryo has a longer career with international experience but is coming into the tournament in moderate form, Lukxo has no international experience but is coming into the tournament in incredible form.</p>
 
-        <p>To exemplify the point about Lukxo’s hype coming into this tournament, let’s look at one of the statistics I’ve created (available in my <a class="xlink" href="/vct/" target="_blank" rel="noopener">Leaderboards</a> page), called RGT (Rating Given Team). What it measures, in simplest terms, how impressive a player’s VLR-rating is given their team by normalizing said rating to the team’s round win% + the player’s role. For instance, being a duelist with a 1.05 rating on a team that wins 55% of its rounds is worth a 1.00 RGT and being a duelist with a 0.95 rating on a team that wins 45% of its rounds is worth a 1.01 RGT. Those two are about comparable. Players with high RGT are overperforming their team while players with low RGT are underperforming their team.</p>
+        <p>To exemplify the point about Lukxo’s hype coming into this tournament, let’s look at one of the statistics I’ve created (available in my <a class="xlink" href="/vct/" target="_blank" rel="noopener">Leaderboards</a> page), called RGT (Rating Given Team). What it measures, in simplest terms, is how impressive a player’s VLR-rating is given their team by normalizing said rating to the team’s round win% + the player’s role. For instance, being a duelist with a 1.05 rating on a team that wins 55% of its rounds is worth a 1.00 RGT and being a duelist with a 0.95 rating on a team that wins 45% of its rounds is worth a 1.01 RGT. Those two are about comparable. Players with high RGT are overperforming their team while players with low RGT are underperforming their team.</p>
 
         <p>Out of 2538 entries (combinations of players and splits) in the history of franchised VCT, Lukxo is one of five players to be in the top 25 for RGT at least twice. The others are Aspas, Primmie, Marteen, and Vo0kashu.</p>
 
@@ -423,7 +423,7 @@ __ERDE_GF__
           <li>He has the 2nd-highest KPR in VCT Stage 2 across all regions (0.88)</li>
         </ul>
 
-        <p>Between the consistent high-level form he’s shown for the past 2 years, his recent statistics in Stage 2, his showcased ability to play against top teams (barely losing to Champs favorites 100T), and the hype surrounding him, he has to be towards the top of this list. I expect him to validate those who believed in him on the stage he’s long deserved.</p>""",
+        <p>Between the consistent high-level form he’s shown for the past 2 years, his recent statistics in Stage 2, his showcased ability to play against top teams (barely losing to Champs favorites 100T), and the hype surrounding him, he has to be towards the top of this list. Lukxo will validate those who believed in him on the stage he’s long deserved.</p>""",
     4: """
         <p>Of the players on this list, Cryo does not have the best numbers from Stage 2, there’s no doubt.</p>
 
@@ -451,7 +451,7 @@ __ERDE_GF__
     5: """
         <p>My sole Pacific representative, Xavi8k stands alone.</p>
 
-        <p>To quickly acknowledge this: I am sure that <em>at least</em> one player from Nongshim Redforce and/or Paper Rex will be a top-10 player at the tournament. However, as things stand currently, both teams’ players are ~uniformly distributed in their current form. It’s hard for me to confidently highlight one NS/PRX player over anyone in this top 10 list. Neither team have a clear standout player, (maybe) aside from Something on PRX.</p>
+        <p>To quickly acknowledge this: I am sure that <em>at least</em> one player from Nongshim Redforce and/or Paper Rex will be a top-10 player at the tournament. However, as things stand currently, both teams’ players are ~uniformly distributed in their current form. It’s hard for me to confidently highlight one NS/PRX player over the others in this top 10 list. Neither team have a clear standout player, (maybe) aside from Something on PRX.</p>
 
         <p>Xavi8k, on the other hand, I have no problem with highlighting. For the Pacific 1-seed, Global Esports, Xavi8k:</p>
 
@@ -464,15 +464,15 @@ __ERDE_GF__
           <li>Does all of the above while IGLing</li>
         </ul>
 
-        <p>To reemphasize this: Xavi8k is outperforming his entire team in almost all major aspects while IGLing GE to a Stage 2 title.</p>
+        <p>To reemphasize this: Xavi8k is outperforming his entire team in almost all aspects while IGLing GE to a Stage 2 title.</p>
 
         <p>What’s more, his statistics marginally <em>improved</em> from the group stage to the playoffs, despite playing harder teams (on average).</p>
 
 __XAVI_CHART__
 
-        <p style="margin-top:34px">Unlike the situation with NS/PRX, GE have a very clear star in Xavi8k. A high-fragging, team-oriented, playoff-rising IGL who can lead his team to a 1-seed is an absurd occurrence. He doesn’t get the respect he deserves, but I’ll try to give him his credit.</p>""",
+        <p style="margin-top:34px">Unlike the situation with NS/PRX, GE have a very clear star in Xavi8k. A high-fragging, team-oriented, playoff-rising IGL who can lead his team to a 1-seed is an absurd occurrence. He doesn’t get the respect he deserves, so I’ll give him his credit.</p>""",
     6: """
-        <p>Prior to Stage 1 in 2026, Asuna was one of the biggest failures in VCT history. In my opinion, he <em>was</em> the biggest failure. From his success in the pre-franchising era, he has been a story of shaky aim, overcomming, poor statistics, and 1 international attended in franchised VCT. For the amount of hype that he had (and has), this was uncanny.</p>
+        <p>Prior to Stage 1 in 2026, Asuna was one of the biggest failures in VCT history. In my opinion, he <em>was</em> the biggest failure. From his success in the pre-franchising era, he had been a story of shaky aim, bad comms, poor statistics, and 1 international attended in franchised VCT. For the amount of hype that he had (and has), this was uncanny.</p>
 
         <p>What changed? The short answer: Phoenix</p>
 
@@ -482,27 +482,27 @@ __XAVI_CHART__
           <li>He’s been vocal in interviews about the fact that this was his first year with a regimented aim routine as well as consciously scaling back his overcomming. Despite scaling back his overcomming, his mid-rounding has been crucial for 100 Thieves, as AC d00mbr0s discussed:
             <div class="quote">“I just think his mid-rounding and mid-round understanding of the state of the map… and being able to do super fast decisions is on another world."<div class="quote-att">- 100 Thieves d00mbr0s</div></div>
           </li>
-          <li>Furthermore, this new 100 Thieves roster is built perfectly for him to succeed. Timotino has taken over Asuna’s role in previous 100 Thieves rosters as entry bait. In fact, Timotino has the highest first interactions per round (FIPR) out of every player at Champions Shanghai with 0.38. This allows Asuna to play less selflessly and more selfishly, shining off of Timo’s created space. Vora’s calling is a significant upgrade over Zander’s from 2025. Bang’s return to the roster has re-unlocked the synergy he once had with him in 2024. This new roster showcases Asuna perfectly.</li>
+          <li>Furthermore, this new 100 Thieves roster is built perfectly for him to succeed. Timotino has taken over Asuna’s role in previous 100 Thieves rosters as entry bait. In fact, Timotino has the highest first interactions per round (FIPR) out of every player at Champions Shanghai with 0.38. This allows Asuna to play less selflessly and more selfishly, shining off of Timo’s created space. Vora’s calling is a significant upgrade over Zander’s from 2025. Bang’s return to the roster has re-unlocked the synergy he once had with him in 2024. This new roster unlocks Asuna perfectly.</li>
           <li>Lastly, Phoenix is a big piece of the puzzle. Out of every Americas Stage 2 player, Asuna had the HIGHEST INDIVIDUAL AGENT PICK RATE with 95% for Phoenix. He is the purest one-trick in VCT. With the recent rework, Asuna has slotted perfectly onto this agent that allows him to create advantageous duels for himself, support his teammates, and run it down <em>without</em> playing a dive duelist. Being the best player on an agent that many people would consider overtuned is a gigantic plus.</li>
         </ol>
 
         <p>The result?</p>
 
         <ul class="notes">
-          <li>Asuna was the highest-rated player (1.19) in Americas Stage 2 (which most would consider the most competitive region in VCT)</li>
+          <li>Asuna was the highest-rated player (1.19) in Americas Stage 2 (the most competitive region in VCT)</li>
           <li>Asuna is the third-highest rated player coming into Champions Shanghai.</li>
-          <li>Asuna had the second-highest KAST% in VCT in Stage 2</li>
+          <li>Asuna has the second-highest KAST% in Stage 2 across VCT</li>
           <li>Asuna has the fourth-highest ADR out of players at Champions Shanghai</li>
           <li>Asuna has the 9th-highest KD out of players at Champions Shanghai</li>
           <li>100 Thieves won the Stage 2 grandfinals with Asuna winning MVP</li>
         </ul>
 
-        <p>Beyond his wide-ranging statistical dominance, he looks like the best player in the best region. For many people, Asuna will be considered the best player at Champions Shanghai. Why not myself?</p>
+        <p>Beyond his wide-ranging statistical dominance, he looks like the best player in the best region. For many people, Asuna will be considered the best player at Champions Shanghai. Why do I not rank him higher?</p>
 
         <p>A couple reasons:</p>
 
         <ul class="notes">
-          <li>I believe Asuna looks worse upon ignoring his resume and using the eye test. Despite his improved aim (re: aim routine), he’s still incredibly shaky, sporting a 22% headshot rate. This puts him in the <em>4th percentile</em> across all regions’ Stage 2. His clutch% is 14%, which puts him just below average (45th percentile). His FIWR is 52.75%, which is a bit above average (34th percentile). These statistics which indicate his indiviudal duel/aim capabilities (somewhat) back up the eye test.</li>
+          <li>I believe Asuna looks worse upon ignoring his resume and using the eye test. Despite his improved aim (re: aim routine), he’s still incredibly shaky, sporting a 22% headshot rate. This puts him in the <em>4th percentile</em> across all regions’ Stage 2. His clutch% is 14%, which puts him just below average (45th percentile). His FIWR is 52.75%, which is a bit above average (34th percentile). These statistics, which indicate his indiviudal duel/aim capabilities, (somewhat) back up the eye test.</li>
           <li>To go back to a previous point, it’s very clear that this team builds plays/rounds around him. Playing secondary entry to the most selfless duelist at Champions Shanghai (Timotino) on the best team in VCT (Rank 1 in BenPom) is a hard role not to shine in.</li>
           <li>He does not perform as well at LANs. Granted, we’re operating off of limited sample size, but the trend is consistent.
             <ul class="notes">
@@ -572,7 +572,7 @@ __SAYO_CHART__
           <li>The fourth-highest FIWR (61.35%)</li>
         </ul>
 
-        <p>I’d be lying if I said I’ve watched him play many times, but I did watch him in the VCT CN Stage 2 grandfinals, and the eye test certainly checks out. His playstyle was selfless (re: second-highest ADR) and his mechanics looked just as good as anyone else on this list.</p>
+        <p>I’d be lying if I said I’ve watched him play many times, but I did watch him in the VCT CN Stage 2 grandfinals, and the eye test certainly checks out. His playstyle was selfless (re: second-highest ADR) and his mechanics look just as good as anyone else on this list.</p>
 
         <p>If you have the time, I highly recommend checking out this frag movie to get a sense for Slowly's insane aim:</p>
 
@@ -599,20 +599,20 @@ __SAYO_CHART__
 
         <ul class="notes">
           <li>Highest K/D in Stage 2 throughout every region (1.34)</li>
-          <li>Second-highest VLR-rating in Stage 2 throughout every region <em>of players attending Champions Shanghai</em> (1.21)</li>
-          <li>5th-highest KPR in Stage 2 throughout every region <em>of players attending Champions Shanghai</em> (0.85)</li>
+          <li>Second-highest VLR-rating in Stage 2 <em>of players attending Champions Shanghai</em> (1.21)</li>
+          <li>5th-highest KPR in Stage 2 <em>of players attending Champions Shanghai</em> (0.85)</li>
         </ul>
 
-        <p>Going back to his first interactions, N4rrate is coming into Champions Shanghai with a 65.55% FIWR (first-interaction win rate), the second-highest of all players attending the event. It’s worth nothing that the player above him (Sayonara with a 67.44% FIWR) has 36% of the amount of first interactions that N4rrate has.</p>
+        <p>Going back to his first interactions, N4rrate is coming into Champions Shanghai with a 65.55% FIWR (first-interaction win rate), the second-highest of all players attending the event. It’s worth nothing that the player above him (Sayonara, with a 67.44% FIWR) has 36% of the amount of first interactions that N4rrate has. Volume matters when considering the impressiveness of a player’s FIWR.</p>
 
         <p>Having a 65.55% FIWR with 100+ first interactions is historically insane:</p>
 
         <div class="chart-wrap">
-          <div class="chart-title">First-Interaction Win % &mdash; Every Player with 100+ First Interactions in a Single Split</div>
+          <div class="chart-title">First-Interaction Win % &mdash; Every Player with 100+ First Interactions in a Single Split since Franchising</div>
           <div class="strip-box"><canvas id="fiwrSwarm"></canvas><div class="hl-card" id="fiwrCard" style="display:none"></div></div>
         </div>
 
-        <p style="margin-top:34px">He ranks 3rd all-time out of __FIWR_N__ entries, behind only Aspas and Lovers Rock. Insane!</p>
+        <p style="margin-top:34px">He ranks 3rd all-time out of __FIWR_N__ entries, behind only Aspas and Lovers Rock.</p>
 
         <p>His ability to have such a high K/D and VLR-rating while being used for first interactions so heavily is ridiculous. What’s more is that, if you watch KC’s games, you’ll see that he creates and wins these high-volume first interactions on his own. A prime example of this is KC’s Lotus.</p>
 
@@ -637,7 +637,7 @@ __SAYO_CHART__
           <div class="cc-dots" id="n4Dots"></div>
         </div>
 
-        <p style="margin-top:34px">Granted, FUT did make some questionable decisions (e.g. Skye dry peaks into A lobby despite having teammates/util), but it doesn’t change the fact that N4rrate is taking (and winning) duels in an impactful manner. You can see in the examples how often he is getting these kills completely alone and the map control/contention he offers. It’s not just the numbers - his individual value is second-to-none.</p>
+        <p style="margin-top:34px">Granted, FUT did make some questionable decisions (e.g. Round 8, Skye dry-peaks into A lobby despite having teammates/util), but it doesn’t change the fact that N4rrate is taking (and winning) duels in an impactful manner. You can see in the examples how often he is getting these kills completely alone and the map control/contention he offers. It’s not just the numbers - his individual value is second-to-none.</p>
 
         <p>In KC’s playoffs run, here are the FK/FD statlines N4rrate notched:</p>
 
@@ -690,7 +690,7 @@ PAGE_HTML = """
   .cover img { width:100%; height:auto; display:block; }
   .cover-caption { font-size:.75rem; color:var(--soft); font-weight:300; font-style:italic; margin-bottom:48px; text-align:center; }
   .content p { font-size:1rem; font-weight:300; line-height:1.8; color:var(--ink); margin-bottom:24px; }
-  .content p b { font-weight:700; }
+  .content b { font-weight:700; }
   .content h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1.54rem; font-weight:800; letter-spacing:-0.5px; margin:48px 0 20px; }
   .content h2, .cover, .plr { scroll-margin-top:84px; }
   .content .secbreak { border:0; border-top:1px solid var(--ink); margin:52px 0 40px; }
