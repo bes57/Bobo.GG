@@ -43,9 +43,10 @@ STAT_LABELS = {
     "KPR":    "Kills Per Round",
     "DPR":    "Deaths Per Round",
     "APR":    "Assists Per Round",
+    "RGT":    "Rating Given Team",
 }
 
-LIVE_EVENT_ID = "2026_stage2"   # Masters London completed 2026-06-21; now reads from data/2026_masters_london.csv like other past events
+LIVE_EVENT_ID = "2026_champions"   # Stage 2 completed 2026-09-06; it now reads from data/2026_stage2.csv like other past events and re-enters the All-Time aggregates
 ALLTIME_ID = "all_time"
 ALLTIME_INTL_ID = "all_time_intl"     # All-Time aggregate, international events only
 ALLTIME_DOM_ID = "all_time_dom"       # All-Time aggregate, domestic/regional events only
@@ -248,6 +249,98 @@ def _rebuild_live_event_csv(event):
     return cache
 
 
+# ── RGT (Rating Given Team) ──────────────────────────────────────────────────
+# Expected-rating model from the over/underperformers article: a pooled linear
+# fit of player rating vs. their team's round win % across the domestic events
+# in data/article_all_roles_data.json. RGT re-centers a player's rating on how
+# their team actually performed — 1.0 + (actual − expected) — so a 1.15 rating
+# on a team whose round share only justified 0.85 scores a 1.30.
+
+_ALL_ROLES_DATA_PATH = os.path.join(DATA_DIR, "article_all_roles_data.json")
+_rgt_model = None          # (intercept, slope), fit lazily from the article data
+_rgt_ratio_cache = {}      # event_id -> ((maps_mtime, results_mtime), {org: ratio})
+
+def _rgt_coefficients():
+    global _rgt_model
+    if _rgt_model is not None:
+        return _rgt_model
+    try:
+        with open(_ALL_ROLES_DATA_PATH) as f:
+            pts = [(p["x"], p["y"])
+                   for role_pts in json.load(f).values() for p in role_pts]
+        n  = len(pts)
+        mx = sum(x for x, _ in pts) / n
+        my = sum(y for _, y in pts) / n
+        sxx = sum((x - mx) ** 2 for x, _ in pts)
+        sxy = sum((x - mx) * (y - my) for x, y in pts)
+        slope = sxy / sxx
+        _rgt_model = (my - slope * mx, slope)
+    except Exception:
+        _rgt_model = ()
+    return _rgt_model
+
+
+def _rgt_org_ratios(event_id):
+    """{org: round win ratio} for one event, from its per-map CSV joined with
+    match_results.csv scores. Cached on both files' mtimes so the live split
+    stays current as new matches land."""
+    maps_path = os.path.join(DATA_DIR, "maps", f"{event_id}.csv")
+    mr_path   = os.path.join(DATA_DIR, "match_results.csv")
+    if not (os.path.exists(maps_path) and os.path.exists(mr_path)):
+        return {}
+    key = (os.path.getmtime(maps_path), os.path.getmtime(mr_path))
+    hit = _rgt_ratio_cache.get(event_id)
+    if hit and hit[0] == key:
+        return hit[1]
+    try:
+        maps = pd.read_csv(maps_path, dtype=str)
+        maps = maps[maps["MapNum"] != "all"]
+        mr = pd.read_csv(mr_path, dtype=str)
+        mr = mr[(mr["MapNum"] != "all") & mr["MatchID"].isin(set(maps["MatchID"]))]
+        map_orgs = maps.groupby(["MatchID", "MapNum"])["Org"].apply(
+            lambda x: list(x.unique()))
+        rounds = {}
+        for _, row in mr.iterrows():
+            try:
+                w, l = [int(v) for v in str(row["Score"]).split("-")]
+            except Exception:
+                continue
+            orgs = map_orgs.get((row["MatchID"], row["MapNum"]))
+            if orgs is None:
+                continue
+            losers = [o for o in orgs if o != row["WinnerOrg"]]
+            if not losers:
+                continue
+            for org, won, lost in ((row["WinnerOrg"], w, l), (losers[0], l, w)):
+                r = rounds.setdefault(org, [0, 0])
+                r[0] += won
+                r[1] += lost
+        ratios = {o: s[0] / (s[0] + s[1]) for o, s in rounds.items() if s[0] + s[1] > 0}
+    except Exception:
+        ratios = {}
+    _rgt_ratio_cache[event_id] = (key, ratios)
+    return ratios
+
+
+def _add_rgt(df, event_id):
+    """Add the RGT column: 1.0 + (rating − expected), expected coming from the
+    over/underperformers model evaluated at the player's team round win % in
+    this event. Rows without a rating or team ratio get "" (dropped from
+    rankings by the numeric filter in get_all)."""
+    if df.empty or "R2.0" not in df.columns or "Org" not in df.columns:
+        return df
+    model  = _rgt_coefficients()
+    ratios = _rgt_org_ratios(event_id)
+    if not model or not ratios:
+        return df
+    intercept, slope = model
+    r2  = pd.to_numeric(df["R2.0"], errors="coerce")
+    x   = pd.to_numeric(df["Org"].map(ratios), errors="coerce")
+    rgt = 1.0 + (r2 - (intercept + slope * x))
+    df["RGT"] = rgt.apply(lambda v: f"{v:.2f}" if pd.notna(v) else "")
+    return df
+
+
 def _add_derived_stats(df):
     """Add FIPR (first interactions / round) and FIWR (first-blood win %)
     columns derived from FK / FD / Rnd. Safe no-op if columns missing.
@@ -279,11 +372,12 @@ def _add_derived_stats(df):
     return df
 
 
-def _split_leaderboard_from_maps(event_id):
-    """Build an event-level per-player leaderboard for a live / in-progress split
-    by aggregating that split's per-map CSV (which the live scrape writes) plus
-    match_results.csv for rounds-per-map. Fast and local — no network — so the
-    home page can surface the *current* split's leaders without a live scrape.
+def _split_leaderboard_from_maps(event_id, only_playoffs=False):
+    """Build an event-level per-player leaderboard by aggregating the event's
+    per-map CSV plus match_results.csv for rounds-per-map. Fast and local — no
+    network — so the home page can surface the *current* split's leaders
+    without a live scrape, and any completed split can be re-cut to playoffs
+    only (matches whose MatchName starts with "Playoffs").
     Rate stats (rating, KAST, HS%, ACS, ADR) are round-weighted; counting stats
     (K/D/A/FK/FD/Rnd) are summed. Cached on the maps CSV mtime, so it refreshes
     automatically as new matches land. Returns an empty frame if no maps data."""
@@ -291,7 +385,8 @@ def _split_leaderboard_from_maps(event_id):
     if not os.path.exists(maps_path):
         return pd.DataFrame()
     mtime = os.path.getmtime(maps_path)
-    hit = _split_lb_cache.get(event_id)
+    cache_key = (event_id, only_playoffs)
+    hit = _split_lb_cache.get(cache_key)
     if hit and hit[0] == mtime:
         return hit[1]
     try:
@@ -303,12 +398,17 @@ def _split_leaderboard_from_maps(event_id):
 
     # rounds per (MatchID, MapNum) from match_results scores ("13-8" -> 21)
     rounds = {}
+    playoff_ids = set()
     mr_path = os.path.join(DATA_DIR, "match_results.csv")
     if os.path.exists(mr_path):
         try:
             mr = pd.read_csv(mr_path, dtype=str)
-            for mi, mn, sc in zip(mr["MatchID"], mr["MapNum"], mr["Score"]):
-                if str(mn) == "all" or not isinstance(sc, str) or "-" not in sc:
+            for mi, mn, sc, nm in zip(mr["MatchID"], mr["MapNum"], mr["Score"], mr["MatchName"]):
+                if str(mn) == "all":
+                    if str(nm).startswith("Playoffs"):
+                        playoff_ids.add(str(mi))
+                    continue
+                if not isinstance(sc, str) or "-" not in sc:
                     continue
                 a, b = sc.split("-", 1)
                 try:
@@ -319,6 +419,12 @@ def _split_leaderboard_from_maps(event_id):
             pass
 
     maps = maps.copy()
+    maps["MatchID"] = maps["MatchID"].astype(str)
+    if only_playoffs:
+        maps = maps[maps["MatchID"].isin(playoff_ids)]
+        if maps.empty:
+            _split_lb_cache[cache_key] = (mtime, pd.DataFrame())
+            return pd.DataFrame()
     maps["_rnd"] = [rounds.get((str(mi), str(mn)), 0)
                     for mi, mn in zip(maps["MatchID"], maps["MapNum"])]
 
@@ -345,23 +451,72 @@ def _split_leaderboard_from_maps(event_id):
 
         r20, kast, hs = wmean("R2.0"), wmean("KAST"), wmean("HS%")
         acs, adr = wmean("ACS"), wmean("ADR")
+        k, d, a = ssum("K"), ssum("D"), ssum("A")
         rows.append({
             "Player": g["Player"].iloc[0], "Org": g["Org"].iloc[0], "ProfileURL": prof,
             "Region": g["Region"].iloc[0] if "Region" in g.columns else "",
-            "Rnd": int(wsum), "K": ssum("K"), "D": ssum("D"), "A": ssum("A"),
+            "Rnd": int(wsum), "K": k, "D": d, "A": a,
             "FK": ssum("FK"), "FD": ssum("FD"),
             "R2.0": (f"{r20:.2f}" if r20 is not None and pd.notna(r20) else ""),
             "ACS":  (f"{acs:.1f}" if acs is not None and pd.notna(acs) else ""),
             "KAST": (f"{kast:.0f}%" if kast is not None and pd.notna(kast) else ""),
             "ADR":  (f"{adr:.1f}" if adr is not None and pd.notna(adr) else ""),
             "HS%":  (f"{hs:.0f}%" if hs is not None and pd.notna(hs) else ""),
+            "K:D":  (f"{k / d:.2f}" if d else ""),
+            "KPR":  (f"{k / wsum:.2f}" if wsum else ""),
+            "APR":  (f"{a / wsum:.2f}" if wsum else ""),
+            "FKPR": (f"{ssum('FK') / wsum:.2f}" if wsum else ""),
         })
 
     df = pd.DataFrame(rows)
     if not df.empty:
         df["HeadshotURL"] = df["ProfileURL"].map(lambda u: _headshot_cache.get(u, ""))
         df = _add_derived_stats(df)   # adds FIPR / FIWR / DPR from FK/FD/Rnd
-    _split_lb_cache[event_id] = (mtime, df)
+        if only_playoffs:
+            # RGT against playoffs-scoped team round win % (same model)
+            df = _add_rgt_from_maps(df, maps, rounds)
+    _split_lb_cache[cache_key] = (mtime, df)
+    return df
+
+
+def _add_rgt_from_maps(df, maps, rounds):
+    """RGT for an arbitrary maps subset: team round win % computed from the
+    subset's own maps, then the usual 1.0 + (rating − expected)."""
+    model = _rgt_coefficients()
+    if not model or df.empty:
+        return df
+    won = {}
+    tot = {}
+    maps = maps.copy()
+    maps["MatchID"] = maps["MatchID"].astype(str)
+    maps["MapNum"] = maps["MapNum"].astype(str)
+    grp = maps.groupby(["MatchID", "MapNum"])["Org"].apply(lambda x: list(x.unique()))
+    mr_path = os.path.join(DATA_DIR, "match_results.csv")
+    try:
+        mr = pd.read_csv(mr_path, dtype=str)
+    except Exception:
+        return df
+    mr = mr[(mr["MapNum"] != "all") & mr["MatchID"].isin(set(maps["MatchID"]))]
+    for _, r in mr.iterrows():
+        try:
+            a, b = [int(v) for v in str(r["Score"]).split("-")]
+        except Exception:
+            continue
+        orgs = grp.get((str(r["MatchID"]), str(r["MapNum"])))
+        if orgs is None:
+            continue
+        losers = [o for o in orgs if o != r["WinnerOrg"]]
+        if not losers:
+            continue
+        for org, w, l in ((r["WinnerOrg"], a, b), (losers[0], b, a)):
+            won[org] = won.get(org, 0) + w
+            tot[org] = tot.get(org, 0) + w + l
+    ratios = {o: won[o] / tot[o] for o in tot if tot[o] > 0}
+    intercept, slope = model
+    r2 = pd.to_numeric(df["R2.0"], errors="coerce")
+    x = pd.to_numeric(df["Org"].map(ratios), errors="coerce")
+    rgt = 1.0 + (r2 - (intercept + slope * x))
+    df["RGT"] = rgt.apply(lambda v: f"{v:.2f}" if pd.notna(v) else "")
     return df
 
 
@@ -430,6 +585,7 @@ def load_event(event):
             cache = _scrape_event_live(event)
 
     cache = _add_derived_stats(cache)
+    cache = _add_rgt(cache, event_id)
     _event_cache[event_id] = cache
     return cache
 
@@ -744,11 +900,15 @@ MAIN_HTML = """
   input[type=range].rounds-slider { -webkit-appearance:none; width:180px; height:4px; border-radius:99px; background:#f0ecf4; outline:none; cursor:pointer; vertical-align:middle; }
   input[type=range].rounds-slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--ink); cursor:pointer; }
   input[type=range].rounds-slider::-moz-range-thumb { width:18px; height:18px; border:none; border-radius:50%; background:var(--ink); cursor:pointer; }
+  .po-toggle { margin-left:22px; font-size:.85rem; font-weight:500; color:var(--soft);
+               cursor:pointer; display:inline-flex; align-items:center; gap:7px; user-select:none; }
+  .po-toggle input { width:15px; height:15px; accent-color:#7c4dd6; cursor:pointer; }
   .filter-btn { padding:8px 22px; border-radius:99px; border:2px solid transparent; background:white; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; cursor:pointer; transition:all .2s; box-shadow:0 2px 8px #0001; }
   .filter-btn:hover,.filter-btn.active { background:var(--ink); color:white; }
   .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:1200px; margin:0 auto; }
-  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:580px){.grid{grid-template-columns:1fr;}}
+  .card.card-rgt { grid-column:2; }
+  @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);} .card.card-rgt{grid-column:1 / -1; width:calc(50% - 10px); justify-self:center;}}
+  @media(max-width:580px){.grid{grid-template-columns:1fr;} .card.card-rgt{grid-column:auto; width:auto; justify-self:stretch;}}
   .card { background:white; border-radius:20px; padding:22px; box-shadow:0 4px 24px #0000000a; transition:transform .2s,box-shadow .2s; cursor:pointer; }
   .card:hover { transform:translateY(-4px); box-shadow:0 12px 32px #00000014; }
   .card-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
@@ -867,6 +1027,9 @@ MAIN_HTML = """
   <div class="rounds-wrap">
     <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">{{ "50+" if ("International" in event.regions) else "100+" }}</span></span>
     <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if is_alltime else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
+    {% if show_playoffs_toggle %}
+    <label class="po-toggle"><input type="checkbox" {{ 'checked' if playoffs_on else '' }} onchange="togglePlayoffs(this.checked)"> Playoffs only</label>
+    {% endif %}
   </div>
 
   <div class="grid" id="grid"></div>
@@ -898,6 +1061,13 @@ const DATA = {{ data_json | safe }};
 const STAT_LABELS = {{ stat_labels_json | safe }};
 const EVENT_ID = {{ event_id | tojson }};
 const EVENT_LABEL = {{ event.label | tojson }};
+const PLAYOFFS_ON = {{ playoffs_on | tojson }};
+function togglePlayoffs(on) {
+  const u = new URL(window.location);
+  if (on) u.searchParams.set('playoffs', '1'); else u.searchParams.delete('playoffs');
+  try { sessionStorage.setItem('vct_scroll', String(window.scrollY)); } catch(e) {}
+  window.location = u;
+}
 const STATS = Object.keys(STAT_LABELS);
 const PILL_CLASSES = ['pill-0','pill-1','pill-2','pill-3','pill-4','pill-5'];
 let currentRegion = 'All';
@@ -969,8 +1139,8 @@ function renderCard(stat, players, idx) {
     </div>`
   ).join('') : '<div class="empty">No data for this selection</div>';
 
-  return `<div class="card"
-    onclick="window.location='/vct/ranking/${encodeURIComponent(stat)}?event=${EVENT_ID}&region=${currentRegion}'">
+  return `<div class="card${stat === 'RGT' ? ' card-rgt' : ''}"
+    onclick="window.location='/vct/ranking/${encodeURIComponent(stat)}?event=${EVENT_ID}&region=${currentRegion}' + (PLAYOFFS_ON ? '&playoffs=1' : '')">
     <div class="card-header">
       <div class="stat-pill ${PILL_CLASSES[idx % PILL_CLASSES.length]}">${stat}</div>
       <div class="card-title">${STAT_LABELS[stat]}</div>
@@ -1019,6 +1189,24 @@ function updateMinRounds(val) {
 })();
 
 renderGrid('All');
+
+// Restore the scroll position after a playoffs-toggle reload, so ticking the
+// box doesn't visibly jump to the top and smooth-scroll back down. Runs right
+// after the grid gives the page its height, with behavior:'instant' to bypass
+// the site's html{scroll-behavior:smooth}.
+(function() {
+  let target = null;
+  try {
+    const y = sessionStorage.getItem('vct_scroll');
+    if (y !== null) { sessionStorage.removeItem('vct_scroll'); target = parseInt(y) || 0; }
+  } catch(e) {}
+  if (target === null) return;
+  let tries = 0;
+  (function attempt() {
+    window.scrollTo({top: target, behavior: 'instant'});
+    if (Math.abs(window.scrollY - target) > 2 && tries++ < 90) requestAnimationFrame(attempt);
+  })();
+})();
 
 // ── Player modal ──────────────────────────────────────────────────────────────
 
@@ -1328,6 +1516,8 @@ RANKING_HTML = """
   input[type=range].rounds-slider { -webkit-appearance:none; width:180px; height:4px; border-radius:99px; background:#f0ecf4; outline:none; cursor:pointer; vertical-align:middle; }
   input[type=range].rounds-slider::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--ink); cursor:pointer; }
   input[type=range].rounds-slider::-moz-range-thumb { width:18px; height:18px; border:none; border-radius:50%; background:var(--ink); cursor:pointer; }
+  /* On its own line under the %, so it can't clip at the table's right edge */
+  .num .fi-sub { display:block; font-size:.68rem; font-weight:500; color:var(--soft); margin-top:1px; }
   .no-results { text-align:center; padding:24px; color:var(--soft); font-size:.88rem; }
   tbody tr { cursor:pointer; }
   @keyframes modalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
@@ -1379,10 +1569,10 @@ RANKING_HTML = """
   <a href="/"><img src="/logo.svg" alt="Home" class="home-logo"></a>
 </div>
 <div class="page">
-  <a class="back" href="/vct/?event={{ event_id }}">&#8592; Back to dashboard</a>
+  <a class="back" href="/vct/?event={{ event_id }}{{ '&playoffs=1' if playoffs_on else '' }}">&#8592; Back to dashboard</a>
   <header>
     <h1>{{ stat_label }}</h1>
-    <p>{{ event.label }} &mdash; Full rankings</p>
+    <p>{{ event.label }}{{ ' Playoffs' if playoffs_on else '' }} &mdash; Full rankings</p>
   </header>
 
   {% if available_regions|length > 1 %}
@@ -1402,6 +1592,10 @@ RANKING_HTML = """
   <div class="rounds-wrap">
     <span class="rounds-label">Min rounds: <span class="rounds-val" id="rounds-val">{{ "50+" if ("International" in event.regions) else "100+" }}</span></span>
     <input type="range" class="rounds-slider" id="rounds-slider" min="{{ 50 if is_alltime else 0 }}" max="300" step="10" value="50" oninput="updateMinRounds(this.value)">
+      {% if stat == 'FIWR' %}
+    <span class="rounds-label" style="margin-left:26px">Min FI: <span class="rounds-val" id="fi-val">Any</span></span>
+    <input type="range" class="rounds-slider" id="fi-slider" min="0" max="150" step="5" value="0" oninput="updateMinFI(this.value)">
+    {% endif %}
   </div>
   <div class="table-wrap">
     <table>
@@ -1504,6 +1698,13 @@ function playerHue(name) {
   return s % 360;
 }
 
+let MIN_FI = 0;
+function updateMinFI(val) {
+  MIN_FI = parseInt(val) || 0;
+  document.getElementById('fi-val').textContent = MIN_FI === 0 ? 'Any' : MIN_FI + '+';
+  applyFilters();
+}
+
 let filteredPlayers = PLAYERS;
 // The region + min-rounds pool the ranks are numbered over. `rankedPool` is the
 // array (used to draw the modal distribution over the same population); its
@@ -1528,7 +1729,9 @@ function rowHTML(p, rank) {
        + `<td><div class="player-cell">${avatar}<div class="player-name-wrap"><div>${htmlEsc(p.Player)}</div>${eventTag}</div></div></td>`
        + `<td>${htmlEsc(p.Org)}</td>`
        + `<td><span class="badge">${htmlEsc(p.Region)}</span></td>`
-       + `<td class="num">${htmlEsc(p[CURRENT_STAT])}</td>`
+       + (CURRENT_STAT === 'FIWR'
+           ? `<td class="num">${htmlEsc(p[CURRENT_STAT])} <span class="fi-sub">${(parseFloat(p.FK)||0) + (parseFloat(p.FD)||0)} FIs</span></td>`
+           : `<td class="num">${htmlEsc(p[CURRENT_STAT])}</td>`)
        + `</tr>`;
 }
 
@@ -1577,6 +1780,8 @@ function applyFilters() {
   const ranked = PLAYERS.filter(p => {
     if (activeRegion !== 'All' && p.Region !== activeRegion) return false;
     if (minRounds > 0 && (parseInt(p.Rnd) || 0) < minRounds) return false;
+    if (typeof MIN_FI !== 'undefined' && MIN_FI > 0
+        && ((parseFloat(p.FK) || 0) + (parseFloat(p.FD) || 0)) < MIN_FI) return false;
     return true;
   });
   ranked.forEach((p, i) => { p._rank = i + 1; });
@@ -1853,6 +2058,10 @@ def _most_recent_event_with_data():
     for e in ALL_EVENTS:
         if list(e["regions"].keys()) == ["CN"]:
             continue
+        # ratings_only events (EWC + qualifiers) feed team ratings but never
+        # surface in player UIs — same rule as the dropdown and All-Time.
+        if e.get("ratings_only"):
+            continue
         if os.path.exists(os.path.join(data_dir, f"{e['id']}.csv")):
             return e
     return ALL_EVENTS[0]
@@ -1866,7 +2075,13 @@ def index():
     event_id = request.args.get("event", ALLTIME_ID)
     event = ALLTIME_EVENTS_BY_ID.get(event_id) or next((e for e in ALL_EVENTS if e["id"] == event_id), default_event)
 
-    cache = load_event(event)
+    playoffs_on = request.args.get("playoffs") == "1"
+    show_playoffs_toggle = _event_has_playoffs(event_id, event)
+    if playoffs_on and show_playoffs_toggle:
+        cache = _playoffs_alltime_dom() if event_id == ALLTIME_DOM_ID else _playoffs_event_df(event)
+    else:
+        playoffs_on = False
+        cache = load_event(event)
     data, available_regions = build_data(cache, event)
 
     return render_template_string(
@@ -1878,7 +2093,157 @@ def index():
         is_alltime=event_id in ALLTIME_IDS,
         events_by_year=get_events_by_year(),
         available_regions=available_regions,
+        playoffs_on=playoffs_on,
+        show_playoffs_toggle=show_playoffs_toggle,
     )
+
+
+_PLAYOFFS_DIR = os.path.join(DATA_DIR, "playoffs")
+_po_df_cache = {}   # event_id -> DataFrame
+
+
+def _playoffs_stats_url(u):
+    """Given a VLR event-stats URL, return the same page filtered to Playoffs:
+    the page's Stages board groups sub-series checkboxes per stage, and the
+    site filters by excluding series ids (?exclude=a.b.c). We exclude every
+    id belonging to a non-Playoffs group."""
+    soup = None
+    if _bypass_fetch is not None:
+        try:
+            soup = _bypass_fetch(u)
+        except Exception:
+            soup = None
+    if soup is None:
+        try:
+            soup = BeautifulSoup(requests.get(u, headers=HEADERS, timeout=15).text, "html.parser")
+        except Exception:
+            return None
+    groups = soup.select(".st-ss-group")
+    if not groups:
+        return None
+    exclude = []
+    saw_playoffs = False
+    for grp in groups:
+        lbl = grp.select_one(".st-ss-lbl span")
+        name = lbl.get_text(strip=True) if lbl else ""
+        if name.lower().startswith("playoff"):
+            saw_playoffs = True
+            continue
+        exclude += [i.get("value") for i in grp.select("input.st-ss") if i.get("value")]
+    if not saw_playoffs:
+        return None
+    if not exclude:
+        return u
+    sep = "&" if "?" in u else "?"
+    return f"{u}{sep}exclude={'.'.join(exclude)}"
+
+
+def _playoffs_event_df(event):
+    """Playoffs-only leaderboard for a completed domestic split, scraped from
+    VLR's own stage-filtered stats pages (so every column — CL% included — is
+    the real thing). Cached on disk under data/playoffs/ since the event is
+    over, plus in-process."""
+    event_id = event["id"]
+    if event_id in _po_df_cache:
+        return _po_df_cache[event_id]
+    path = os.path.join(_PLAYOFFS_DIR, f"{event_id}.csv")
+    if os.path.exists(path):
+        cache = pd.read_csv(path)
+    else:
+        dfs = []
+        for region_name, url in event["regions"].items():
+            u = url or (_resolve_url(event, region_name) if _resolve_url else None)
+            if not u:
+                continue
+            po_url = _playoffs_stats_url(u)
+            if not po_url:
+                continue
+            df = scrape_stats(region_name, po_url)
+            if not df.empty:
+                dfs.append(df)
+            time.sleep(0.3)
+        if not dfs:
+            return pd.DataFrame()
+        cache = pd.concat(dfs, ignore_index=True)
+        cache = cache.rename(columns={"R": "R2.0", "KMAX": "KMax"})
+        cache = cache.drop(columns=[c for c in ("Maps", "FK:FD") if c in cache.columns])
+        if "R2.0" in cache.columns:
+            r2 = pd.to_numeric(cache["R2.0"].astype(str).str.replace("%", ""), errors="coerce")
+            cache = cache[r2.notna() & (r2 > 0)].reset_index(drop=True)
+        if "Org" in cache.columns:
+            cache = cache[cache["Org"].isin(ORG_REGIONS)].reset_index(drop=True)
+        try:
+            os.makedirs(_PLAYOFFS_DIR, exist_ok=True)
+            cache.to_csv(path, index=False)
+        except Exception:
+            pass
+    if not cache.empty:
+        cache["HeadshotURL"] = cache["ProfileURL"].map(lambda u: _headshot_cache.get(u, ""))
+        cache = _add_derived_stats(cache)
+        cache = _add_rgt_playoffs(cache, event_id)
+    _po_df_cache[event_id] = cache
+    return cache
+
+
+def _add_rgt_playoffs(df, event_id):
+    """RGT against playoffs-scoped team round win %."""
+    try:
+        maps = pd.read_csv(os.path.join(DATA_DIR, "maps", f"{event_id}.csv"), dtype=str)
+        mr = pd.read_csv(os.path.join(DATA_DIR, "match_results.csv"), dtype=str)
+        ev = mr[mr["MatchID"].isin(set(maps["MatchID"]))]
+        po_ids = set(ev[(ev["MapNum"] == "all")
+                        & ev["MatchName"].str.startswith("Playoffs", na=False)]["MatchID"])
+        maps = maps[maps["MatchID"].isin(po_ids)]
+        rounds = {}
+        for _, r in ev[ev["MapNum"] != "all"].iterrows():
+            try:
+                a, b = str(r["Score"]).split("-")
+                rounds[(r["MatchID"], r["MapNum"])] = int(a) + int(b)
+            except Exception:
+                pass
+        return _add_rgt_from_maps(df, maps, rounds)
+    except Exception:
+        return df
+
+
+def _playoffs_alltime_dom():
+    """All-Time (Domestic Only) aggregate of each split's playoffs cut —
+    concatenates the per-event VLR playoff boards, tagged with their event."""
+    if ALLTIME_DOM_ID in _po_df_cache:
+        return _po_df_cache[ALLTIME_DOM_ID]
+    keep = _alltime_event_filter(ALLTIME_DOM_ID)
+    parts = []
+    for e in ALL_EVENTS:
+        if not keep(e) or not _event_has_playoffs(e["id"], e):
+            continue
+        sub = _playoffs_event_df(e)
+        if not sub.empty:
+            sub = sub.copy()
+            sub["Event"] = e["label"]
+            parts.append(sub)
+    cache = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+    _po_df_cache[ALLTIME_DOM_ID] = cache
+    return cache
+
+
+def _event_has_playoffs(event_id, event):
+    """Domestic splits with a Playoffs phase get the playoffs-only toggle,
+    and so does the All-Time (Domestic Only) aggregate built from them."""
+    if event_id == ALLTIME_DOM_ID:
+        return True
+    if event_id in ALLTIME_IDS or _is_international(event):
+        return False
+    maps_path = os.path.join(DATA_DIR, "maps", f"{event_id}.csv")
+    mr_path = os.path.join(DATA_DIR, "match_results.csv")
+    if not (os.path.exists(maps_path) and os.path.exists(mr_path)):
+        return False
+    try:
+        maps_ids = set(pd.read_csv(maps_path, dtype=str, usecols=["MatchID"])["MatchID"])
+        mr = pd.read_csv(mr_path, dtype=str, usecols=["MatchID", "MapNum", "MatchName"])
+        mr = mr[(mr["MapNum"] == "all") & mr["MatchID"].isin(maps_ids)]
+        return bool(mr["MatchName"].str.startswith("Playoffs", na=False).any())
+    except Exception:
+        return False
 
 
 @vct_bp.route("/ranking/<stat>")
@@ -1893,9 +2258,14 @@ def ranking(stat):
     event = ALLTIME_EVENTS_BY_ID.get(event_id) or next((e for e in ALL_EVENTS if e["id"] == event_id), ALL_EVENTS[0])
     active_region = request.args.get("region", "All")
 
-    cache = _event_cache.get(event_id)
-    if cache is None:
-        cache = load_event(event)
+    playoffs_on = (request.args.get("playoffs") == "1"
+                   and _event_has_playoffs(event_id, event))
+    if playoffs_on:
+        cache = _playoffs_alltime_dom() if event_id == ALLTIME_DOM_ID else _playoffs_event_df(event)
+    else:
+        cache = _event_cache.get(event_id)
+        if cache is None:
+            cache = load_event(event)
 
     is_multi = len(event["regions"]) > 1
     is_international = not is_multi and list(event["regions"].keys()) == ["International"]
@@ -1908,6 +2278,13 @@ def ranking(stat):
         available_regions = ["All"]
 
     players = get_all(cache, stat)
+
+    # RGT is a per-split stat, so its full list names the split on every row —
+    # single-event pages included (All-Time rows already carry Event).
+    if stat == "RGT":
+        for p in players:
+            if not p.get("Event"):
+                p["Event"] = event["label"]
 
     def _num(v):
         try:
@@ -1923,6 +2300,7 @@ def ranking(stat):
         RANKING_HTML,
         stat=stat,
         stat_label=STAT_LABELS[stat],
+        playoffs_on=playoffs_on,
         players_json=json.dumps(players),
         active_region=active_region,
         event=event,
