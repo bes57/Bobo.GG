@@ -13,6 +13,7 @@ from MastersLondonPreview import article_masters_london_bp
 from MastersLondonPlayoffsPreview import article_masters_london_playoffs_bp
 from AspasGreatestPrime import article_aspas_prime_bp
 from ChampionshipDNA import article_championship_dna_bp
+from Top10Shanghai import article_top10_shanghai_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 from MatchDataExplorer import match_data_bp
@@ -28,6 +29,7 @@ app.register_blueprint(article_masters_london_bp, url_prefix="/articles/masters-
 app.register_blueprint(article_masters_london_playoffs_bp, url_prefix="/articles/masters-london-playoffs-preview")
 app.register_blueprint(article_aspas_prime_bp, url_prefix="/articles/greatest-prime")
 app.register_blueprint(article_championship_dna_bp, url_prefix="/articles/championship-dna")
+app.register_blueprint(article_top10_shanghai_bp, url_prefix="/articles/top10-champions-shanghai")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 app.register_blueprint(match_data_bp, url_prefix="/match-data")
@@ -403,6 +405,11 @@ def _build_alpha_data():
 # article cards, and the /articles/ index). Add a new article here and every
 # page updates and re-sorts by date automatically.
 ARTICLES = [
+    {"href": "/articles/top10-champions-shanghai/",
+     "title": "Top 10 Players at Champions Shanghai",
+     "desc": "Counting down the ten best players heading into Champions Shanghai.",
+     "img": "/static/top10/cover.jpg", "date": "2026-09-16",
+     "cats": ["preview", "opinion"]},
     {"href": "/articles/championship-dna/",
      "title": "Championship DNA: Historical Trends To Note For Champions",
      "desc": "Understanding the indicators of a championship team - by the numbers, by the rosters, by the regions, and other miscellaneous trends.",
