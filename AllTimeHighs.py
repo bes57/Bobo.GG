@@ -56,6 +56,11 @@ STAT_COLS = {
     "Deaths":           "D",
     "Kill/Death Ratio": "K:D",
     "Assists":          "A",
+    "First Kills":      "FK",
+    "First Deaths":     "FD",
+    # Ratio derived in _rank_df (FK / FD, FD floored at 1); the base column
+    # keeps the availability checks working.
+    "FK/FD Ratio":      "FK",
     # Per-map normalizations — only meaningful for series formats. Computed
     # as raw_value / map_count, where map_count comes from the series'
     # MapNum="all" row in match_results.csv (Score "2-1" → 3 maps).
@@ -464,6 +469,9 @@ PAGE_HTML = """
         <option value="Kills">Kills</option>
         <option value="Deaths">Deaths</option>
         <option value="Assists">Assists</option>
+        <option value="First Kills">First Kills</option>
+        <option value="First Deaths">First Deaths</option>
+        <option value="FK/FD Ratio">FK/FD Ratio</option>
         <option value="Kills/Map">Kills/Map</option>
         <option value="Deaths/Map">Deaths/Map</option>
         <option value="Assists/Map">Assists/Map</option>
@@ -471,6 +479,12 @@ PAGE_HTML = """
         <option value="Deaths/Round">Deaths/Round</option>
         <option value="Assists/Round">Assists/Round</option>
       </select>
+      <div id="fk-group" style="display:none; text-align:center; margin-top:5px">
+        <span class="filter-label" style="display:block">Min FK: <span id="fk-val">3+</span></span>
+        <input type="range" id="f-minfk" min="0" max="15" step="1" value="3"
+               style="width:130px;accent-color:#7c4dd6"
+               oninput="onMinFkChange(this.value)">
+      </div>
     </div>
     <div class="filter-group">
       <span class="filter-label">Format</span>
@@ -532,7 +546,7 @@ const PER_MAP_STATS = new Set(["Kills/Map", "Deaths/Map", "Assists/Map"]);
 // Per-round stats work in every format (map and series alike), so unlike the
 // /Map stats they never restrict the Format dropdown.
 const PER_ROUND_STATS = new Set(["Kills/Round", "Deaths/Round", "Assists/Round"]);
-const DECIMAL_STATS = new Set(["VLR Rating", "Kills/Round", "Deaths/Round", "Assists/Round"]);
+const DECIMAL_STATS = new Set(["VLR Rating", "Kills/Round", "Deaths/Round", "Assists/Round", "FK/FD Ratio"]);
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -561,7 +575,17 @@ function onFormatChange() {
   fetchResults();
 }
 
+function syncFkGroup() {
+  const stat = document.getElementById('f-stat').value;
+  document.getElementById('fk-group').style.display = (stat === 'FK/FD Ratio') ? '' : 'none';
+}
+function onMinFkChange(v) {
+  const n = parseInt(v) || 0;
+  document.getElementById('fk-val').textContent = n === 0 ? 'Any' : n + '+';
+  fetchResults();
+}
 function onStatChange() {
+  syncFkGroup();
   const stat   = document.getElementById('f-stat').value;
   const fmtSel = document.getElementById('f-format');
   const isPerMap = PER_MAP_STATS.has(stat);
@@ -669,7 +693,10 @@ function fetchResults() {
   const context   = getContextValue();
 
   document.getElementById('stat-col-header').textContent = stat;
-  document.getElementById('results-body').innerHTML = '<tr><td colspan="7" class="empty">Loading&hellip;</td></tr>';
+  const _rb = document.getElementById('results-body');
+  const _holder = _rb.closest('table').parentElement;
+  if (_holder) _holder.style.minHeight = _holder.offsetHeight + 'px';
+  _rb.innerHTML = '<tr><td colspan="7" class="empty">Loading&hellip;</td></tr>';
 
   // Keep the address bar on the board you're actually looking at. The page has
   // always READ these params (applyUrlParams, for the home page's record
@@ -677,25 +704,29 @@ function fetchResults() {
   // filters you picked — a copied link, a bookmark or a reload all dropped you
   // back on the default board. replaceState rather than pushState: filter
   // changes shouldn't stack up as back-button history.
-  const qs = new URLSearchParams({direction, stat, format: fmt, year, context}).toString();
+  const qsParams = {direction, stat, format: fmt, year, context};
+  if (stat === 'FK/FD Ratio') qsParams.min_fk = document.getElementById('f-minfk').value;
+  const qs = new URLSearchParams(qsParams).toString();
   try { history.replaceState(null, '', location.pathname + '?' + qs); } catch (e) {}
 
   fetch(`/highs/api/results?${qs}`)
     .then(r => r.json())
     .then(data => {
       if (!data.length) {
+        if (_holder) _holder.style.minHeight = '';
         document.getElementById('results-body').innerHTML = '<tr><td colspan="7" class="empty">No data found for this combination.</td></tr>';
         return;
       }
       const showMap = document.getElementById('f-format').value === 'map';
       document.getElementById('map-col-header').style.display = showMap ? '' : 'none';
+      if (_holder) _holder.style.minHeight = '';
       document.getElementById('results-body').innerHTML = data.map((row, i) => {
         const avatar = row.headshot
           ? `<img class="avatar-img" src="${esc(row.headshot)}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar-ph',style:'background:'+${JSON.stringify(avatarColor(row.player))},textContent:${JSON.stringify((row.player||'').slice(0,2).toUpperCase())}}))">`
           : `<div class="avatar-ph" style="background:${avatarColor(row.player)}">${esc((row.player||'').slice(0,2).toUpperCase())}</div>`;
         const mapCell = showMap ? `<td>${esc(row.map_name||'')}</td>` : '';
         const curStat = document.getElementById('f-stat').value;
-        const isKD = curStat === 'Kill/Death Ratio';
+        const isKD = curStat === 'Kill/Death Ratio' || curStat === 'FK/FD Ratio';
         // VLR Rating and the per-round rates are conventionally shown to the
         // hundredths (1.00, 1.45 / 0.85 KPR).
         const valStr = (DECIMAL_STATS.has(curStat) && typeof row.value === 'number')
@@ -743,6 +774,7 @@ function fetchResults() {
     .catch((err) => {
       console.error('[highs] fetchResults failed:', err);
       const msg = err && err.message ? err.message : String(err || 'unknown');
+      if (_holder) _holder.style.minHeight = '';
       document.getElementById('results-body').innerHTML = `<tr><td colspan="7" class="empty">Failed to load results: ${esc(msg)}</td></tr>`;
     });
 }
@@ -838,6 +870,11 @@ function applyUrlParams() {
   setSel('f-format',    q.get('format'));
   setSel('f-stat',      q.get('stat'));
   setSel('f-year',      q.get('year'));
+  const mfk = q.get('min_fk');
+  if (mfk !== null) {
+    const el = document.getElementById('f-minfk');
+    if (el) { el.value = mfk; document.getElementById('fk-val').textContent = (parseInt(mfk)||0) === 0 ? 'Any' : mfk + '+'; }
+  }
   const ctx = (q.get('context')||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.ctx-cb').forEach(cb => { cb.checked = ctx.indexOf(cb.value) >= 0; });
   // Reconcile the format/stat option enabled-state with the chosen values.
@@ -852,6 +889,7 @@ function applyUrlParams() {
 }
 
 applyUrlParams();
+syncFkGroup();
 buildCustomDropdowns();
 updateCtxState();
 fetchResults();
@@ -902,13 +940,17 @@ def api_results():
     fmt       = request.args.get("format", "event")
     year      = request.args.get("year", "all")
     context   = request.args.get("context", "all")
-    df, col, is_kd = _rank_df(direction, stat_name, fmt, year, context)
+    try:
+        min_fk = max(0, int(request.args.get("min_fk", 0)))
+    except (TypeError, ValueError):
+        min_fk = 0
+    df, col, is_kd = _rank_df(direction, stat_name, fmt, year, context, min_fk=min_fk)
     if df is None or df.empty:
         return jsonify([])
     return jsonify(_format_entries(df, fmt, col, is_kd))
 
 
-def _rank_df(direction, stat_name, fmt, year, context):
+def _rank_df(direction, stat_name, fmt, year, context, min_fk=0):
     """Shared ranking core for one leaderboard cell. Returns
     (df_top50, value_col, is_kd) sorted best-first with a reset index (so row
     position == rank-1), or (None, None, None) when invalid/empty."""
@@ -1022,6 +1064,23 @@ def _rank_df(direction, stat_name, fmt, year, context):
         derived_col = f"__{col}_per_round"
         df[derived_col] = df[col] / df["Rounds"]
         col = derived_col
+
+    if stat_name == "FK/FD Ratio":
+        if "FD" not in df.columns:
+            return None, None, None
+        df = df.copy()
+        fk = pd.to_numeric(df["FK"], errors="coerce")
+        fd = pd.to_numeric(df["FD"], errors="coerce")
+        df = df[fk.notna() & fd.notna()]
+        fk, fd = fk[df.index], fd[df.index]
+        if min_fk > 0:
+            keep = fk >= min_fk
+            df, fk, fd = df[keep], fk[keep], fd[keep]
+        if df.empty:
+            return None, None, None
+        # FD floored at 1 so a zero-death map reads as FK/1 (K:D convention)
+        df["__fkfd"] = fk / fd.clip(lower=1)
+        col = "__fkfd"
 
     if year != "all":
         df = df[df["_year"] == int(year)]
@@ -1189,6 +1248,12 @@ def _format_entries(df, fmt, col, is_kd):
             try:
                 entry["kills"]  = int(row["K"])
                 entry["deaths"] = int(row["D"])
+            except Exception:
+                pass
+        if col == "__fkfd":
+            try:
+                entry["kills"]  = int(row["FK"])
+                entry["deaths"] = int(row["FD"])
             except Exception:
                 pass
 
