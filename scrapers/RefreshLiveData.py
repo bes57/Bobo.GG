@@ -359,12 +359,12 @@ def _existing_match_ids(event_csv_id):
     import pandas as pd
     p = os.path.join(ROOT, "data", "maps", f"{event_csv_id}.csv")
     if not os.path.exists(p):
-        return set()
+        return set(), set()   # first refresh of a brand-new event: nothing on disk yet
     try:
         df = pd.read_csv(p, usecols=["MatchID"])
         ids = set(df["MatchID"].dropna().astype(str).tolist())
     except Exception:
-        return set()
+        return set(), set()
     stale = set()
     try:
         import MatchStatsIntegrity as _msi

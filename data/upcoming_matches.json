@@ -1,31 +1,5 @@
 [
   {
-    "match_id": "753455",
-    "team_a": "Team Liquid",
-    "team_b": "Paper Rex",
-    "org_a": "TL",
-    "org_b": "PRX",
-    "date": "2026-09-24",
-    "datetime": "2026-09-24 09:00:00",
-    "region": "International",
-    "event": "2026 Champions",
-    "format": "bo3",
-    "match_name": "Opening (C) Group Stage"
-  },
-  {
-    "match_id": "753454",
-    "team_a": "TYLOO",
-    "team_b": "G2 Esports",
-    "org_a": "TYL",
-    "org_b": "G2",
-    "date": "2026-09-24",
-    "datetime": "2026-09-24 12:00:00",
-    "region": "International",
-    "event": "2026 Champions",
-    "format": "bo3",
-    "match_name": "Opening (C) Group Stage"
-  },
-  {
     "match_id": "753460",
     "team_a": "Nongshim RedForce",
     "team_b": "NRG",
@@ -84,7 +58,7 @@
     "org_a": "100T",
     "org_b": "T1",
     "date": "2026-09-27",
-    "datetime": "",
+    "datetime": "2026-09-27 09:00:00",
     "region": "International",
     "event": "2026 Champions",
     "format": "bo3",
@@ -97,10 +71,36 @@
     "org_a": "JDG",
     "org_b": "FUT",
     "date": "2026-09-27",
-    "datetime": "",
+    "datetime": "2026-09-27 12:00:00",
     "region": "International",
     "event": "2026 Champions",
     "format": "bo3",
     "match_name": "Opening (A) Group Stage"
+  },
+  {
+    "match_id": "753456",
+    "team_a": "G2 Esports",
+    "team_b": "Paper Rex",
+    "org_a": "G2",
+    "org_b": "PRX",
+    "date": "2026-09-29",
+    "datetime": "2026-09-29 09:00:00",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Winner's (C) Group Stage"
+  },
+  {
+    "match_id": "753457",
+    "team_a": "TYLOO",
+    "team_b": "Team Liquid",
+    "org_a": "TYL",
+    "org_b": "TL",
+    "date": "2026-10-01",
+    "datetime": "2026-10-01 09:00:00",
+    "region": "International",
+    "event": "2026 Champions",
+    "format": "bo3",
+    "match_name": "Elimination (C) Group Stage"
   }
 ]

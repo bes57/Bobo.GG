@@ -14907,3 +14907,17 @@ MatchID,step,team,action,map
 734308,5,100T,pick,Ascent
 734308,6,LOUD,pick,Summit
 734308,7,,remains,Haven
+753454,1,G2,ban,Summit
+753454,2,TYL,ban,Abyss
+753454,3,G2,pick,Lotus
+753454,4,TYL,pick,Sunset
+753454,5,G2,ban,Split
+753454,6,TYL,ban,Ascent
+753454,7,,remains,Haven
+753455,1,PRX,ban,Abyss
+753455,2,TL,ban,Sunset
+753455,3,PRX,pick,Ascent
+753455,4,TL,pick,Haven
+753455,5,PRX,ban,Summit
+753455,6,TL,ban,Split
+753455,7,,remains,Lotus
