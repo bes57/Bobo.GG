@@ -1,0 +1,578 @@
+{
+ "rows": [
+  {
+   "org": "100T",
+   "region": "Americas",
+   "sides": {
+    "atk": 0.5491,
+    "dfn": 0.5911,
+    "atk_w": 123,
+    "atk_n": 224,
+    "def_w": 133,
+    "def_n": 225
+   },
+   "benpom": {
+    "rank": 1,
+    "ok": true
+   },
+   "benpom15": {
+    "rank": 1,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "Asuna",
+    "rank": 1,
+    "ok": true
+   },
+   "rookie": {
+    "names": [
+     "Timotino",
+     "vora"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "NRG",
+   "region": "Americas",
+   "sides": {
+    "atk": 0.599,
+    "dfn": 0.4864,
+    "atk_w": 118,
+    "atk_n": 197,
+    "def_w": 125,
+    "def_n": 257
+   },
+   "benpom": {
+    "rank": 2,
+    "ok": true
+   },
+   "benpom15": {
+    "rank": 2,
+    "ok": true
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "brawk",
+    "rank": 4,
+    "ok": true
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "LOUD",
+   "region": "Americas",
+   "sides": {
+    "atk": 0.5628,
+    "dfn": 0.5018,
+    "atk_w": 206,
+    "atk_n": 366,
+    "def_w": 143,
+    "def_n": 285
+   },
+   "benpom": {
+    "rank": 5,
+    "ok": true
+   },
+   "benpom15": {
+    "rank": 5,
+    "ok": true
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "lukxo",
+    "rank": 7,
+    "ok": false
+   },
+   "rookie": {
+    "names": [
+     "Darker",
+     "erde",
+     "tkzin",
+     "DaviH"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "G2",
+   "region": "Americas",
+   "sides": {
+    "atk": 0.5455,
+    "dfn": 0.503,
+    "atk_w": 168,
+    "atk_n": 308,
+    "def_w": 168,
+    "def_n": 334
+   },
+   "benpom": {
+    "rank": 8,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 8,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "trent",
+    "rank": 5,
+    "ok": true
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "KC",
+   "region": "EMEA",
+   "sides": {
+    "atk": 0.6025,
+    "dfn": 0.5622,
+    "atk_w": 144,
+    "atk_n": 239,
+    "def_w": 122,
+    "def_n": 217
+   },
+   "benpom": {
+    "rank": 6,
+    "ok": true
+   },
+   "benpom15": {
+    "rank": 6,
+    "ok": true
+   },
+   "last5": {
+    "w": 5,
+    "l": 0,
+    "ok": true
+   },
+   "star": {
+    "player": "N4RRATE",
+    "rank": 2,
+    "ok": true
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "TL",
+   "region": "EMEA",
+   "sides": {
+    "atk": 0.4803,
+    "dfn": 0.6071,
+    "atk_w": 134,
+    "atk_n": 279,
+    "def_w": 170,
+    "def_n": 280
+   },
+   "benpom": {
+    "rank": 7,
+    "ok": true
+   },
+   "benpom15": {
+    "rank": 7,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "kamo",
+    "rank": 5,
+    "ok": true
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "VIT",
+   "region": "EMEA",
+   "sides": {
+    "atk": 0.5694,
+    "dfn": 0.4927,
+    "atk_w": 119,
+    "atk_n": 209,
+    "def_w": 101,
+    "def_n": 205
+   },
+   "benpom": {
+    "rank": 13,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 13,
+    "ok": true
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "Sayonara",
+    "rank": 3,
+    "ok": true
+   },
+   "rookie": {
+    "names": [
+     "Sayonara"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "FUT",
+   "region": "EMEA",
+   "sides": {
+    "atk": 0.5108,
+    "dfn": 0.4901,
+    "atk_w": 142,
+    "atk_n": 278,
+    "def_w": 148,
+    "def_n": 302
+   },
+   "benpom": {
+    "rank": 25,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 25,
+    "ok": false
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "yetujey",
+    "rank": 20,
+    "ok": false
+   },
+   "rookie": {
+    "names": [
+     "KROSTALY",
+     "s0pp"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "NS",
+   "region": "Pacific",
+   "sides": {
+    "atk": 0.5424,
+    "dfn": 0.5418,
+    "atk_w": 192,
+    "atk_n": 354,
+    "def_w": 175,
+    "def_n": 323
+   },
+   "benpom": {
+    "rank": 3,
+    "ok": true
+   },
+   "benpom15": {
+    "rank": 3,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "Xross",
+    "rank": 9,
+    "ok": false
+   },
+   "rookie": {
+    "names": [
+     "Xross"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "T1",
+   "region": "Pacific",
+   "sides": {
+    "atk": 0.5522,
+    "dfn": 0.5134,
+    "atk_w": 164,
+    "atk_n": 297,
+    "def_w": 153,
+    "def_n": 298
+   },
+   "benpom": {
+    "rank": 9,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 9,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "iZu",
+    "rank": 7,
+    "ok": false
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "PRX",
+   "region": "Pacific",
+   "sides": {
+    "atk": 0.5271,
+    "dfn": 0.5142,
+    "atk_w": 107,
+    "atk_n": 203,
+    "def_w": 109,
+    "def_n": 212
+   },
+   "benpom": {
+    "rank": 10,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 10,
+    "ok": true
+   },
+   "last5": {
+    "w": 2,
+    "l": 3,
+    "ok": false
+   },
+   "star": {
+    "player": "something",
+    "rank": 6,
+    "ok": true
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "GE",
+   "region": "Pacific",
+   "sides": {
+    "atk": 0.5212,
+    "dfn": 0.5457,
+    "atk_w": 160,
+    "atk_n": 307,
+    "def_w": 173,
+    "def_n": 317
+   },
+   "benpom": {
+    "rank": 11,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 11,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "xavi8k",
+    "rank": 5,
+    "ok": true
+   },
+   "rookie": {
+    "names": [
+     "xavi8k"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "TYL",
+   "region": "CN",
+   "sides": {
+    "atk": 0.5692,
+    "dfn": 0.544,
+    "atk_w": 185,
+    "atk_n": 325,
+    "def_w": 173,
+    "def_n": 318
+   },
+   "benpom": {
+    "rank": 12,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 12,
+    "ok": true
+   },
+   "last5": {
+    "w": 4,
+    "l": 1,
+    "ok": true
+   },
+   "star": {
+    "player": "slowly",
+    "rank": 2,
+    "ok": true
+   },
+   "rookie": {
+    "names": [
+     "Erv",
+     "splash"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "EDG",
+   "region": "CN",
+   "sides": {
+    "atk": 0.5022,
+    "dfn": 0.5432,
+    "atk_w": 113,
+    "atk_n": 225,
+    "def_w": 132,
+    "def_n": 243
+   },
+   "benpom": {
+    "rank": 24,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 24,
+    "ok": false
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "CHICHOO",
+    "rank": 6,
+    "ok": true
+   },
+   "rookie": {
+    "names": [],
+    "ok": false
+   }
+  },
+  {
+   "org": "JDG",
+   "region": "CN",
+   "sides": {
+    "atk": 0.5107,
+    "dfn": 0.4574,
+    "atk_w": 191,
+    "atk_n": 374,
+    "def_w": 161,
+    "def_n": 352
+   },
+   "benpom": {
+    "rank": 29,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 29,
+    "ok": false
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "zhe",
+    "rank": 22,
+    "ok": false
+   },
+   "rookie": {
+    "names": [
+     "crownfisher",
+     "zhe"
+    ],
+    "ok": true
+   }
+  },
+  {
+   "org": "XLG",
+   "region": "CN",
+   "sides": {
+    "atk": 0.4506,
+    "dfn": 0.5472,
+    "atk_w": 105,
+    "atk_n": 233,
+    "def_w": 145,
+    "def_n": 265
+   },
+   "benpom": {
+    "rank": 31,
+    "ok": false
+   },
+   "benpom15": {
+    "rank": 31,
+    "ok": false
+   },
+   "last5": {
+    "w": 3,
+    "l": 2,
+    "ok": true
+   },
+   "star": {
+    "player": "Lysoar",
+    "rank": 17,
+    "ok": false
+   },
+   "rookie": {
+    "names": [
+     "WsLeo"
+    ],
+    "ok": true
+   }
+  }
+ ],
+ "slots": 16,
+ "frozen": {
+  "as_of": "2026-09-17",
+  "note": "Pre-Champions snapshot (identical on the 2026-09-07 publish commit 24fb5c9 and the last pre-Champions commit 3953297). Rebuilt from those commits' data; do not regenerate from live hub data."
+ }
+}

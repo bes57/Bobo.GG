@@ -224,9 +224,22 @@ _champs_cache = {"key": None, "data": None}
 _vets_cache = {"vets": None}
 
 
+_CHAMPS_SNAPSHOT = os.path.join(_ROOT, "data", "enriched", "champs_checklist_snapshot.json")
+
+
 def _champs_checklist():
     """One row per Champions team: BenPom top-7, 3-2+ last five, top-6 rated
-    player in the previous split (2026 Stage 2), rookie on the roster."""
+    player in the previous split (2026 Stage 2), rookie on the roster.
+
+    FROZEN: the article was published 2026-09-07 and argues from the state of
+    the world *before* Champions, so the table is served from a static
+    pre-Champions snapshot (data/enriched/champs_checklist_snapshot.json).
+    The live computation below only runs if that file is missing."""
+    try:
+        with open(_CHAMPS_SNAPSHOT) as f:
+            return json.load(f)
+    except Exception:
+        pass
     try:
         from MapElo import _mhub_load
         hub = _mhub_load()
@@ -966,7 +979,7 @@ PAGE_HTML = """
 
       <p>Now you see why. KC are <em>so, so</em> close to being in the <em>&ldquo;Trophy Favorites&rdquo;</em> tier. Even if they aren&rsquo;t exactly within that mythical level, they&rsquo;re still placed the most impressively on this graph. Their domestic dominance is greater than any other team coming into Champions Shanghai, and that&rsquo;s not something to take for granted. It should not be a surprise if they win the whole event.</p>
 
-      <p>How about a team that history <em>frowns</em> upon?</p>
+      <p><b>How about a team that history <em>frowns</em> upon?</b></p>
 
       <div class="tn-head"><img src="/logos/PRX.png" alt="">Paper Rex</div>
 

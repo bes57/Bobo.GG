@@ -1,0 +1,985 @@
+{
+  "optimal": {
+    "basis": "map_ratings",
+    "veto": [
+      {
+        "side": "A",
+        "action": "ban",
+        "map": "Ascent",
+        "rating_a": 4.97,
+        "rating_b": 6.61,
+        "edge": -1.64
+      },
+      {
+        "side": "A",
+        "action": "ban",
+        "map": "Lotus",
+        "rating_a": 5.43,
+        "rating_b": 6.29,
+        "edge": -0.86
+      },
+      {
+        "side": "A",
+        "action": "pick",
+        "map": "Split",
+        "rating_a": 7.61,
+        "rating_b": 5.96,
+        "edge": 1.65
+      },
+      {
+        "side": "B",
+        "action": "pick",
+        "map": "Abyss",
+        "rating_a": 7.19,
+        "rating_b": 5.7,
+        "edge": 1.49
+      },
+      {
+        "side": "A",
+        "action": "pick",
+        "map": "Haven",
+        "rating_a": 6.49,
+        "rating_b": 4.93,
+        "edge": 1.56
+      },
+      {
+        "side": "B",
+        "action": "pick",
+        "map": "Summit",
+        "rating_a": 9.98,
+        "rating_b": 8.62,
+        "edge": 1.36
+      },
+      {
+        "side": "",
+        "action": "dec",
+        "map": "Sunset",
+        "rating_a": 6.07,
+        "rating_b": 5.88,
+        "edge": 0.19
+      }
+    ],
+    "map_ratings": {
+      "a": {
+        "Abyss": 7.19,
+        "Ascent": 4.97,
+        "Haven": 6.49,
+        "Lotus": 5.43,
+        "Split": 7.61,
+        "Summit": 9.98,
+        "Sunset": 6.07
+      },
+      "edge": {
+        "Abyss": 1.49,
+        "Ascent": -1.64,
+        "Haven": 1.56,
+        "Lotus": -0.86,
+        "Split": 1.65,
+        "Summit": 1.36,
+        "Sunset": 0.19
+      }
+    }
+  },
+  "as_of": "2026-10-17",
+  "snap_key": "after_champions",
+  "model": {
+    "beta": 0.127187,
+    "b_pick": 0.0959,
+    "gf_upper_logit": 0.25,
+    "xadj_a_minus_b": 0.1748
+  },
+  "top5": [
+    {
+      "rank": 1,
+      "org": "100T",
+      "region": "Americas",
+      "rating": 9.04,
+      "w": 64,
+      "l": 36
+    },
+    {
+      "rank": 2,
+      "org": "LOUD",
+      "region": "Americas",
+      "rating": 7.78,
+      "w": 39,
+      "l": 39
+    },
+    {
+      "rank": 3,
+      "org": "VIT",
+      "region": "EMEA",
+      "rating": 7.03,
+      "w": 56,
+      "l": 40
+    },
+    {
+      "rank": 4,
+      "org": "LEV",
+      "region": "Americas",
+      "rating": 6.62,
+      "w": 50,
+      "l": 37
+    },
+    {
+      "rank": 5,
+      "org": "G2",
+      "region": "Americas",
+      "rating": 6.55,
+      "w": 71,
+      "l": 46
+    }
+  ],
+  "gf": {
+    "a": "LOUD",
+    "b": "VIT",
+    "fmt": "bo5_gf",
+    "upper": "LOUD",
+    "pool": [
+      "Abyss",
+      "Ascent",
+      "Haven",
+      "Lotus",
+      "Split",
+      "Summit",
+      "Sunset"
+    ],
+    "rating_a": 7.7813,
+    "rating_b": 7.0265,
+    "pa": 0.6158,
+    "pa_without_gf_logit": 0.5552,
+    "veto": [
+      {
+        "side": "A",
+        "action": "ban",
+        "map": "Split",
+        "p": 0.3316
+      },
+      {
+        "side": "A",
+        "action": "ban",
+        "map": "Ascent",
+        "p": 0.4299
+      },
+      {
+        "side": "A",
+        "action": "pick",
+        "map": "Summit",
+        "p": 0.4306
+      },
+      {
+        "side": "B",
+        "action": "pick",
+        "map": "Lotus",
+        "p": 0.4923
+      },
+      {
+        "side": "A",
+        "action": "pick",
+        "map": "Sunset",
+        "p": 0.8001
+      },
+      {
+        "side": "B",
+        "action": "pick",
+        "map": "Abyss",
+        "p": 0.8626
+      },
+      {
+        "side": "",
+        "action": "dec",
+        "map": "Haven",
+        "p": 1.0
+      }
+    ],
+    "veto_seq_prob": 0.0209,
+    "maps": [
+      {
+        "map": "Sunset",
+        "p_play": 0.9763,
+        "wp_a": 0.5494
+      },
+      {
+        "map": "Summit",
+        "p_play": 0.913,
+        "wp_a": 0.5491
+      },
+      {
+        "map": "Abyss",
+        "p_play": 0.9076,
+        "wp_a": 0.5117
+      },
+      {
+        "map": "Lotus",
+        "p_play": 0.7169,
+        "wp_a": 0.5144
+      },
+      {
+        "map": "Haven",
+        "p_play": 0.6508,
+        "wp_a": 0.5311
+      },
+      {
+        "map": "Ascent",
+        "p_play": 0.445,
+        "wp_a": 0.5167
+      },
+      {
+        "map": "Split",
+        "p_play": 0.3903,
+        "wp_a": 0.5144
+      }
+    ],
+    "map_winpct": {
+      "a": {
+        "Abyss": 0.6,
+        "Ascent": 0.25,
+        "Haven": 0.667,
+        "Lotus": 0.5,
+        "Split": 0.667,
+        "Summit": 0.625,
+        "Sunset": 0.571
+      },
+      "b": {
+        "Abyss": 0.571,
+        "Ascent": 0.571,
+        "Haven": 0.5,
+        "Lotus": 0.667,
+        "Split": 0.571,
+        "Summit": 0.625,
+        "Sunset": 0.5
+      }
+    }
+  },
+  "chronicle": {
+    "player": "Chronicle",
+    "org": "VIT",
+    "event": "Champions Shanghai",
+    "neon": {
+      "w": 6,
+      "l": 3,
+      "n": 9,
+      "pct": 0.6667
+    },
+    "other": {
+      "w": 6,
+      "l": 2,
+      "n": 8,
+      "pct": 0.75
+    },
+    "maps": [
+      {
+        "match_id": "753449",
+        "map_num": "283166",
+        "map": "Abyss",
+        "opp": "GE",
+        "stage": "Group Stage: Opening (B)",
+        "agent": "harbor",
+        "agent_label": "Harbor",
+        "won": true,
+        "score": "13-10"
+      },
+      {
+        "match_id": "753449",
+        "map_num": "283167",
+        "map": "Ascent",
+        "opp": "GE",
+        "stage": "Group Stage: Opening (B)",
+        "agent": "chamber",
+        "agent_label": "Chamber",
+        "won": false,
+        "score": "9-13"
+      },
+      {
+        "match_id": "753449",
+        "map_num": "283168",
+        "map": "Summit",
+        "opp": "GE",
+        "stage": "Group Stage: Opening (B)",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": true,
+        "score": "13-11"
+      },
+      {
+        "match_id": "753451",
+        "map_num": "285206",
+        "map": "Ascent",
+        "opp": "LOUD",
+        "stage": "Group Stage: Winner's (B)",
+        "agent": "chamber",
+        "agent_label": "Chamber",
+        "won": true,
+        "score": "13-7"
+      },
+      {
+        "match_id": "753451",
+        "map_num": "285207",
+        "map": "Summit",
+        "opp": "LOUD",
+        "stage": "Group Stage: Winner's (B)",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": true,
+        "score": "19-17"
+      },
+      {
+        "match_id": "754731",
+        "map_num": "283268",
+        "map": "Split",
+        "opp": "NS",
+        "stage": "Playoffs: Upper Quarterfinals",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": true,
+        "score": "13-8"
+      },
+      {
+        "match_id": "754731",
+        "map_num": "283269",
+        "map": "Abyss",
+        "opp": "NS",
+        "stage": "Playoffs: Upper Quarterfinals",
+        "agent": "harbor",
+        "agent_label": "Harbor",
+        "won": false,
+        "score": "4-13"
+      },
+      {
+        "match_id": "754731",
+        "map_num": "283270",
+        "map": "Haven",
+        "opp": "NS",
+        "stage": "Playoffs: Upper Quarterfinals",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": true,
+        "score": "14-12"
+      },
+      {
+        "match_id": "754734",
+        "map_num": "283277",
+        "map": "Abyss",
+        "opp": "G2",
+        "stage": "Playoffs: Upper Semifinals",
+        "agent": "harbor",
+        "agent_label": "Harbor",
+        "won": true,
+        "score": "13-11"
+      },
+      {
+        "match_id": "754734",
+        "map_num": "283278",
+        "map": "Split",
+        "opp": "G2",
+        "stage": "Playoffs: Upper Semifinals",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": true,
+        "score": "13-4"
+      },
+      {
+        "match_id": "754736",
+        "map_num": "283283",
+        "map": "Lotus",
+        "opp": "LOUD",
+        "stage": "Playoffs: Upper Final",
+        "agent": "viper",
+        "agent_label": "Viper",
+        "won": true,
+        "score": "13-8"
+      },
+      {
+        "match_id": "754736",
+        "map_num": "283284",
+        "map": "Summit",
+        "opp": "LOUD",
+        "stage": "Playoffs: Upper Final",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": false,
+        "score": "5-13"
+      },
+      {
+        "match_id": "754736",
+        "map_num": "283285",
+        "map": "Haven",
+        "opp": "LOUD",
+        "stage": "Playoffs: Upper Final",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": false,
+        "score": "11-13"
+      },
+      {
+        "match_id": "754743",
+        "map_num": "283306",
+        "map": "Split",
+        "opp": "100T",
+        "stage": "Playoffs: Lower Final",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": false,
+        "score": "5-13"
+      },
+      {
+        "match_id": "754743",
+        "map_num": "283308",
+        "map": "Lotus",
+        "opp": "100T",
+        "stage": "Playoffs: Lower Final",
+        "agent": "viper",
+        "agent_label": "Viper",
+        "won": true,
+        "score": "13-11"
+      },
+      {
+        "match_id": "754743",
+        "map_num": "283309",
+        "map": "Ascent",
+        "opp": "100T",
+        "stage": "Playoffs: Lower Final",
+        "agent": "chamber",
+        "agent_label": "Chamber",
+        "won": true,
+        "score": "13-9"
+      },
+      {
+        "match_id": "754743",
+        "map_num": "286701",
+        "map": "Summit",
+        "opp": "100T",
+        "stage": "Playoffs: Lower Final",
+        "agent": "neon",
+        "agent_label": "Neon",
+        "won": true,
+        "score": "13-10"
+      }
+    ],
+    "other_agents": [
+      "Chamber",
+      "Harbor",
+      "Viper"
+    ]
+  },
+  "intl_events": {
+    "players": {
+      "Derke": {
+        "vlr_id": 5022,
+        "count": 12,
+        "titles": 2,
+        "first": "Masters Reykjav\u00edk",
+        "head": "https://owcdn.net/img/6977a70c4ff1b.png",
+        "events": [
+          {
+            "event": "Valorant Champions Tour Stage 2: Masters Reykjav\u00edk",
+            "short": "Masters Reykjav\u00edk",
+            "year": 2021,
+            "team": "FNATIC",
+            "placement": "Main Event - 2nd",
+            "href": "/event/353/valorant-champions-tour-stage-2-masters-reykjav-k"
+          },
+          {
+            "event": "Valorant Champions 2021",
+            "short": "Champions",
+            "year": 2021,
+            "team": "FNATIC",
+            "placement": "Playoffs - 5th-8th",
+            "href": "/event/449/valorant-champions-2021"
+          },
+          {
+            "event": "Valorant Champions Tour Stage 2: Masters Copenhagen",
+            "short": "Masters Copenhagen",
+            "year": 2022,
+            "team": "FNATIC",
+            "placement": "Playoffs - 4th",
+            "href": "/event/1014/valorant-champions-tour-stage-2-masters-copenhagen"
+          },
+          {
+            "event": "Valorant Champions 2022",
+            "short": "Champions",
+            "year": 2022,
+            "team": "FNATIC",
+            "placement": "Playoffs - 5th-6th",
+            "href": "/event/1015/valorant-champions-2022"
+          },
+          {
+            "event": "Champions Tour 2023: LOCK//IN S\u00e3o Paulo",
+            "short": "LOCK//IN S\u00e3o Paulo",
+            "year": 2023,
+            "team": "FNATIC",
+            "placement": "Playoffs - 1st",
+            "href": "/event/1188/champions-tour-2023-lock-in-s-o-paulo"
+          },
+          {
+            "event": "Champions Tour 2023: Masters Tokyo",
+            "short": "Masters Tokyo",
+            "year": 2023,
+            "team": "FNATIC",
+            "placement": "Playoffs - 1st",
+            "href": "/event/1494/champions-tour-2023-masters-tokyo"
+          },
+          {
+            "event": "Valorant Champions 2023",
+            "short": "Champions",
+            "year": 2023,
+            "team": "FNATIC",
+            "placement": "Playoffs - 4th",
+            "href": "/event/1657/valorant-champions-2023"
+          },
+          {
+            "event": "Champions Tour 2024: Masters Shanghai",
+            "short": "Masters Shanghai",
+            "year": 2024,
+            "team": "FNATIC",
+            "placement": "Playoffs - 7th-8th",
+            "href": "/event/1999/champions-tour-2024-masters-shanghai"
+          },
+          {
+            "event": "Valorant Champions 2024",
+            "short": "Champions",
+            "year": 2024,
+            "team": "FNATIC",
+            "placement": "Playoffs - 5th-6th",
+            "href": "/event/2097/valorant-champions-2024"
+          },
+          {
+            "event": "Valorant Masters Bangkok 2025",
+            "short": "Masters Bangkok",
+            "year": 2025,
+            "team": "Team Vitality",
+            "placement": "Playoffs - 4th",
+            "href": "/event/2281/valorant-masters-bangkok-2025"
+          },
+          {
+            "event": "Valorant Masters London 2026",
+            "short": "Masters London",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Playoffs - 4th",
+            "href": "/event/2765/valorant-masters-london-2026"
+          },
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "Chronicle": {
+        "vlr_id": 458,
+        "count": 11,
+        "titles": 3,
+        "first": "Masters Berlin",
+        "head": "https://owcdn.net/img/6977a6d8e354a.png",
+        "events": [
+          {
+            "event": "Valorant Champions Tour Stage 3: Masters Berlin",
+            "short": "Masters Berlin",
+            "year": 2021,
+            "team": "Gambit Esports",
+            "placement": "Playoffs - 1st",
+            "href": "/event/466/valorant-champions-tour-stage-3-masters-berlin"
+          },
+          {
+            "event": "Valorant Champions 2021",
+            "short": "Champions",
+            "year": 2021,
+            "team": "Gambit Esports",
+            "placement": "Playoffs - 2nd",
+            "href": "/event/449/valorant-champions-2021"
+          },
+          {
+            "event": "Champions Tour 2023: LOCK//IN S\u00e3o Paulo",
+            "short": "LOCK//IN S\u00e3o Paulo",
+            "year": 2023,
+            "team": "FNATIC",
+            "placement": "Playoffs - 1st",
+            "href": "/event/1188/champions-tour-2023-lock-in-s-o-paulo"
+          },
+          {
+            "event": "Champions Tour 2023: Masters Tokyo",
+            "short": "Masters Tokyo",
+            "year": 2023,
+            "team": "FNATIC",
+            "placement": "Playoffs - 1st",
+            "href": "/event/1494/champions-tour-2023-masters-tokyo"
+          },
+          {
+            "event": "Valorant Champions 2023",
+            "short": "Champions",
+            "year": 2023,
+            "team": "FNATIC",
+            "placement": "Playoffs - 4th",
+            "href": "/event/1657/valorant-champions-2023"
+          },
+          {
+            "event": "Champions Tour 2024: Masters Shanghai",
+            "short": "Masters Shanghai",
+            "year": 2024,
+            "team": "FNATIC",
+            "placement": "Playoffs - 7th-8th",
+            "href": "/event/1999/champions-tour-2024-masters-shanghai"
+          },
+          {
+            "event": "Valorant Champions 2024",
+            "short": "Champions",
+            "year": 2024,
+            "team": "FNATIC",
+            "placement": "Playoffs - 5th-6th",
+            "href": "/event/2097/valorant-champions-2024"
+          },
+          {
+            "event": "Valorant Masters Toronto 2025",
+            "short": "Masters Toronto",
+            "year": 2025,
+            "team": "FNATIC",
+            "placement": "Playoffs - 2nd",
+            "href": "/event/2282/valorant-masters-toronto-2025"
+          },
+          {
+            "event": "Valorant Champions 2025",
+            "short": "Champions",
+            "year": 2025,
+            "team": "FNATIC",
+            "placement": "Playoffs - 2nd",
+            "href": "/event/2283/valorant-champions-2025"
+          },
+          {
+            "event": "Valorant Masters London 2026",
+            "short": "Masters London",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Playoffs - 4th",
+            "href": "/event/2765/valorant-masters-london-2026"
+          },
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "Jamppi": {
+        "vlr_id": 9780,
+        "count": 9,
+        "titles": 0,
+        "first": "Masters Reykjav\u00edk",
+        "head": "https://owcdn.net/img/6977a6f130128.png",
+        "events": [
+          {
+            "event": "Valorant Champions Tour Stage 2: Masters Reykjav\u00edk",
+            "short": "Masters Reykjav\u00edk",
+            "year": 2021,
+            "team": "Team Liquid",
+            "placement": "Main Event - 4th",
+            "href": "/event/353/valorant-champions-tour-stage-2-masters-reykjav-k"
+          },
+          {
+            "event": "Valorant Champions 2021",
+            "short": "Champions",
+            "year": 2021,
+            "team": "Team Liquid",
+            "placement": "Playoffs - 3rd-4th",
+            "href": "/event/449/valorant-champions-2021"
+          },
+          {
+            "event": "Valorant Champions Tour Stage 1: Masters Reykjav\u00edk",
+            "short": "Masters Reykjav\u00edk",
+            "year": 2022,
+            "team": "Team Liquid",
+            "placement": "Playoffs - 7th-8th",
+            "href": "/event/926/valorant-champions-tour-stage-1-masters-reykjav-k"
+          },
+          {
+            "event": "Valorant Champions 2022",
+            "short": "Champions",
+            "year": 2022,
+            "team": "Team Liquid",
+            "placement": "Playoffs - 7th-8th",
+            "href": "/event/1015/valorant-champions-2022"
+          },
+          {
+            "event": "Champions Tour 2023: LOCK//IN S\u00e3o Paulo",
+            "short": "LOCK//IN S\u00e3o Paulo",
+            "year": 2023,
+            "team": "Team Liquid",
+            "placement": "Bracket Stage - 17th-32nd",
+            "href": "/event/1188/champions-tour-2023-lock-in-s-o-paulo"
+          },
+          {
+            "event": "Champions Tour 2023: Masters Tokyo",
+            "short": "Masters Tokyo",
+            "year": 2023,
+            "team": "Team Liquid",
+            "placement": "Playoffs - 5th-6th",
+            "href": "/event/1494/champions-tour-2023-masters-tokyo"
+          },
+          {
+            "event": "Valorant Champions 2023",
+            "short": "Champions",
+            "year": 2023,
+            "team": "Team Liquid",
+            "placement": "Group Stage - 13th-16th",
+            "href": "/event/1657/valorant-champions-2023"
+          },
+          {
+            "event": "Valorant Masters London 2026",
+            "short": "Masters London",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Playoffs - 4th",
+            "href": "/event/2765/valorant-masters-london-2026"
+          },
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "Sayonara": {
+        "vlr_id": 33902,
+        "count": 2,
+        "titles": 0,
+        "first": "Masters London",
+        "head": "https://owcdn.net/img/6977a7018811e.png",
+        "events": [
+          {
+            "event": "Valorant Masters London 2026",
+            "short": "Masters London",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Playoffs - 4th",
+            "href": "/event/2765/valorant-masters-london-2026"
+          },
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "PROFEK": {
+        "vlr_id": 5554,
+        "count": 2,
+        "titles": 0,
+        "first": "Masters London",
+        "head": "https://owcdn.net/img/6977a6e4ea727.png",
+        "events": [
+          {
+            "event": "Valorant Masters London 2026",
+            "short": "Masters London",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Playoffs - 4th",
+            "href": "/event/2765/valorant-masters-london-2026"
+          },
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "Team Vitality",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      }
+    },
+    "loud_players": {
+      "erde": {
+        "vlr_id": 29242,
+        "count": 1,
+        "titles": 0,
+        "first": "Champions",
+        "head": "/static/top10/erde.jpg",
+        "events": [
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "LOUD",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "Darker": {
+        "vlr_id": 10557,
+        "count": 1,
+        "titles": 0,
+        "first": "Champions",
+        "head": "https://owcdn.net/img/69e02450abf75.png",
+        "events": [
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "LOUD",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "lukxo": {
+        "vlr_id": 28716,
+        "count": 1,
+        "titles": 0,
+        "first": "Champions",
+        "head": "https://owcdn.net/img/69e023fe3a5b8.png",
+        "events": [
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "LOUD",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "tkzin": {
+        "vlr_id": 41224,
+        "count": 1,
+        "titles": 0,
+        "first": "Champions",
+        "head": "https://owcdn.net/img/69e655026b8a8.png",
+        "events": [
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "LOUD",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      },
+      "DaviH": {
+        "vlr_id": 10885,
+        "count": 1,
+        "titles": 0,
+        "first": "Champions",
+        "head": "https://owcdn.net/img/69a8be6cb643d.png",
+        "events": [
+          {
+            "event": "Valorant Champions 2026",
+            "short": "Champions",
+            "year": 2026,
+            "team": "LOUD",
+            "placement": "Grand Final",
+            "current": true
+          }
+        ]
+      }
+    },
+    "note": "VCT Masters/Champions/LOCK//IN since 2021, incl. Champions Shanghai 2026; 2021 regional Stage 1 Masters, EWC and off-season events excluded"
+  },
+  "loud_po": {
+    "org": "LOUD",
+    "matches": [
+      {
+        "match_id": "754733",
+        "stage": "Upper Quarterfinals",
+        "short": "Upper QF",
+        "opp": "PRX",
+        "won": true,
+        "score": "2-0"
+      },
+      {
+        "match_id": "754735",
+        "stage": "Upper Semifinals",
+        "short": "Upper SF",
+        "opp": "NRG",
+        "won": true,
+        "score": "2-1"
+      },
+      {
+        "match_id": "754736",
+        "stage": "Upper Final",
+        "short": "Upper Final",
+        "opp": "VIT",
+        "won": true,
+        "score": "2-1"
+      }
+    ],
+    "players": [
+      {
+        "player": "lukxo",
+        "ratings": {
+          "754733": 1.31,
+          "754735": 1.43,
+          "754736": 1.32
+        },
+        "avg": 1.353,
+        "top2_count": 3
+      },
+      {
+        "player": "erde",
+        "ratings": {
+          "754733": 1.36,
+          "754735": 1.37,
+          "754736": 1.29
+        },
+        "avg": 1.34,
+        "top2_count": 3
+      },
+      {
+        "player": "Darker",
+        "ratings": {
+          "754733": 0.97,
+          "754735": 0.84,
+          "754736": 1.07
+        },
+        "avg": 0.96,
+        "top2_count": 0
+      },
+      {
+        "player": "DaviH",
+        "ratings": {
+          "754733": 0.87,
+          "754735": 1.07,
+          "754736": 0.78
+        },
+        "avg": 0.907,
+        "top2_count": 0
+      },
+      {
+        "player": "tkzin",
+        "ratings": {
+          "754733": 0.89,
+          "754735": 0.87,
+          "754736": 0.92
+        },
+        "avg": 0.893,
+        "top2_count": 0
+      }
+    ],
+    "top2": {
+      "754733": [
+        "erde",
+        "lukxo"
+      ],
+      "754735": [
+        "lukxo",
+        "erde"
+      ],
+      "754736": [
+        "lukxo",
+        "erde"
+      ]
+    }
+  }
+}
