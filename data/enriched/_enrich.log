@@ -1,5 +1,8 @@
 [enrich] 0 match(es) to process (refresh=False)
 [enrich] done: 0 enriched, 0 tombstoned, 0 deferred, 0 failed
-[comps] 0 match(es) to collect
+[comps] 3 match(es) to collect
+  [1/3] 754743 · no agents yet — will retry
+  [2/3] 754736 · no agents yet — will retry
+  [3/3] 754742 · no agents yet — will retry
 [comps] done: 0 collected, 0 failed
-[enrich-new] 0 enriched, 0 comps, 0.0s
+[enrich-new] 0 enriched, 0 comps, 2.8s

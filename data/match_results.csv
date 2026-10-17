@@ -7787,3 +7787,111 @@ MatchID,MapNum,WinnerOrg,Score,MatchName
 753455,283185,TL,13-7,Group Stage: Opening (C)
 753455,283186,PRX,13-10,Group Stage: Opening (C)
 753455,all,PRX,2-1,Group Stage: Opening (C)
+753444,283151,100T,13-8,Group Stage: Opening (A)
+753444,283152,100T,13-9,Group Stage: Opening (A)
+753444,all,100T,2-0,Group Stage: Opening (A)
+753445,283154,FUT,13-1,Group Stage: Opening (A)
+753445,283155,FUT,13-10,Group Stage: Opening (A)
+753445,all,FUT,2-0,Group Stage: Opening (A)
+753446,283157,100T,13-5,Group Stage: Winner's (A)
+753446,283158,100T,13-10,Group Stage: Winner's (A)
+753446,all,100T,2-0,Group Stage: Winner's (A)
+753447,283160,T1,13-11,Group Stage: Elimination (A)
+753447,283161,JDG,13-3,Group Stage: Elimination (A)
+753447,283162,T1,13-5,Group Stage: Elimination (A)
+753447,all,T1,2-1,Group Stage: Elimination (A)
+753448,283163,T1,13-10,Group Stage: Decider (A)
+753448,283164,T1,13-10,Group Stage: Decider (A)
+753448,all,T1,2-0,Group Stage: Decider (A)
+753449,283166,VIT,13-10,Group Stage: Opening (B)
+753449,283167,GE,13-9,Group Stage: Opening (B)
+753449,283168,VIT,13-11,Group Stage: Opening (B)
+753449,all,VIT,2-1,Group Stage: Opening (B)
+753450,283169,LOUD,13-8,Group Stage: Opening (B)
+753450,283170,LOUD,13-5,Group Stage: Opening (B)
+753450,all,LOUD,2-0,Group Stage: Opening (B)
+753451,285206,VIT,13-7,Group Stage: Winner's (B)
+753451,285207,VIT,19-17,Group Stage: Winner's (B)
+753451,all,VIT,2-0,Group Stage: Winner's (B)
+753452,283175,GE,13-5,Group Stage: Elimination (B)
+753452,283176,GE,13-6,Group Stage: Elimination (B)
+753452,all,GE,2-0,Group Stage: Elimination (B)
+753453,283178,LOUD,13-8,Group Stage: Decider (B)
+753453,283179,LOUD,13-9,Group Stage: Decider (B)
+753453,all,LOUD,2-0,Group Stage: Decider (B)
+753456,283187,G2,13-9,Group Stage: Winner's (C)
+753456,283188,PRX,13-11,Group Stage: Winner's (C)
+753456,283189,PRX,13-9,Group Stage: Winner's (C)
+753456,all,PRX,2-1,Group Stage: Winner's (C)
+753457,283190,TL,13-8,Group Stage: Elimination (C)
+753457,283191,TYL,13-7,Group Stage: Elimination (C)
+753457,283192,TL,13-2,Group Stage: Elimination (C)
+753457,all,TL,2-1,Group Stage: Elimination (C)
+753458,283193,G2,13-10,Group Stage: Decider (C)
+753458,283194,G2,13-7,Group Stage: Decider (C)
+753458,all,G2,2-0,Group Stage: Decider (C)
+753459,283196,KC,13-3,Group Stage: Opening (D)
+753459,283197,KC,13-6,Group Stage: Opening (D)
+753459,all,KC,2-0,Group Stage: Opening (D)
+753460,283199,NRG,13-5,Group Stage: Opening (D)
+753460,283200,NRG,13-10,Group Stage: Opening (D)
+753460,all,NRG,2-0,Group Stage: Opening (D)
+753461,283202,KC,13-7,Group Stage: Winner's (D)
+753461,283203,NRG,13-11,Group Stage: Winner's (D)
+753461,283204,NRG,13-9,Group Stage: Winner's (D)
+753461,all,NRG,2-1,Group Stage: Winner's (D)
+753462,283205,NS,13-11,Group Stage: Elimination (D)
+753462,283206,NS,13-11,Group Stage: Elimination (D)
+753462,all,NS,2-0,Group Stage: Elimination (D)
+753463,283208,KC,13-9,Group Stage: Decider (D)
+753463,283209,NS,13-5,Group Stage: Decider (D)
+753463,283210,NS,13-6,Group Stage: Decider (D)
+753463,all,NS,2-1,Group Stage: Decider (D)
+754730,283265,G2,13-5,Playoffs: Upper Quarterfinals
+754730,283266,G2,13-11,Playoffs: Upper Quarterfinals
+754730,all,G2,2-0,Playoffs: Upper Quarterfinals
+754731,283268,VIT,13-8,Playoffs: Upper Quarterfinals
+754731,283269,NS,13-4,Playoffs: Upper Quarterfinals
+754731,283270,VIT,14-12,Playoffs: Upper Quarterfinals
+754731,all,VIT,2-1,Playoffs: Upper Quarterfinals
+754732,283271,NRG,13-11,Playoffs: Upper Quarterfinals
+754732,283272,NRG,13-7,Playoffs: Upper Quarterfinals
+754732,all,NRG,2-0,Playoffs: Upper Quarterfinals
+754733,283274,LOUD,13-9,Playoffs: Upper Quarterfinals
+754733,283275,LOUD,15-13,Playoffs: Upper Quarterfinals
+754733,all,LOUD,2-0,Playoffs: Upper Quarterfinals
+754734,283277,VIT,13-11,Playoffs: Upper Semifinals
+754734,283278,VIT,13-4,Playoffs: Upper Semifinals
+754734,all,VIT,2-0,Playoffs: Upper Semifinals
+754735,283280,LOUD,13-9,Playoffs: Upper Semifinals
+754735,283281,NRG,13-10,Playoffs: Upper Semifinals
+754735,283282,LOUD,13-3,Playoffs: Upper Semifinals
+754735,all,LOUD,2-1,Playoffs: Upper Semifinals
+754736,283283,VIT,13-8,Playoffs: Upper Final
+754736,283284,LOUD,13-5,Playoffs: Upper Final
+754736,283285,LOUD,13-11,Playoffs: Upper Final
+754736,all,LOUD,2-1,Playoffs: Upper Final
+754738,283291,100T,13-5,Playoffs: Lower Round 1
+754738,283292,NS,13-9,Playoffs: Lower Round 1
+754738,283293,100T,13-1,Playoffs: Lower Round 1
+754738,all,100T,2-1,Playoffs: Lower Round 1
+754739,283294,T1,13-7,Playoffs: Lower Round 1
+754739,283295,PRX,13-6,Playoffs: Lower Round 1
+754739,283296,T1,13-11,Playoffs: Lower Round 1
+754739,all,T1,2-1,Playoffs: Lower Round 1
+754740,283297,100T,14-12,Playoffs: Lower Round 2
+754740,283298,100T,13-4,Playoffs: Lower Round 2
+754740,all,100T,2-0,Playoffs: Lower Round 2
+754741,283300,G2,13-11,Playoffs: Lower Round 2
+754741,283301,T1,13-10,Playoffs: Lower Round 2
+754741,283302,G2,13-6,Playoffs: Lower Round 2
+754741,all,G2,2-1,Playoffs: Lower Round 2
+754742,283303,G2,13-10,Playoffs: Lower Round 3
+754742,283304,100T,13-10,Playoffs: Lower Round 3
+754742,283305,100T,13-7,Playoffs: Lower Round 3
+754742,all,100T,2-1,Playoffs: Lower Round 3
+754743,283306,100T,13-5,Playoffs: Lower Final
+754743,283308,VIT,13-11,Playoffs: Lower Final
+754743,283309,VIT,13-9,Playoffs: Lower Final
+754743,286701,VIT,13-10,Playoffs: Lower Final
+754743,all,VIT,3-1,Playoffs: Lower Final
