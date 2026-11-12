@@ -181,7 +181,7 @@ def scrape_stats(region, url):
         return pd.DataFrame()
     df = pd.DataFrame(rows, columns=col_names[:len(rows[0])])
     df.insert(0, "Region", region)
-    return df
+    return _normalize_first_kill_cols(df)
 
 def _scrape_event_live(event):
     """Scrape all regions for an event and return a cleaned DataFrame."""
@@ -341,10 +341,36 @@ def _add_rgt(df, event_id):
     return df
 
 
+def _normalize_first_kill_cols(df):
+    """VLR renamed the event-stats columns FKPR/FDPR to FK%/FD% (same number,
+    shown as a percent: 0.20 -> "20%") around Champions 2026. Everything here
+    keys on FKPR/FDPR, so restore those names, recomputing from the FK/FD/Rnd
+    counts for 2-decimal precision (the percent form only has whole points)."""
+    if df.empty:
+        return df
+    for new, old, cnt in (("FK%", "FKPR", "FK"), ("FD%", "FDPR", "FD")):
+        if old in df.columns:
+            continue
+        if {cnt, "Rnd"}.issubset(df.columns):
+            v = pd.to_numeric(df[cnt], errors="coerce") / pd.to_numeric(df["Rnd"], errors="coerce")
+        elif new in df.columns:
+            v = pd.to_numeric(df[new].astype(str).str.replace("%", "", regex=False), errors="coerce") / 100
+        else:
+            continue
+        vals = v.apply(lambda x: f"{x:.2f}" if pd.notna(x) else "")
+        if new in df.columns:
+            df.insert(df.columns.get_loc(new), old, vals)
+            df = df.drop(columns=[new])
+        else:
+            df[old] = vals
+    return df
+
+
 def _add_derived_stats(df):
     """Add FIPR (first interactions / round) and FIWR (first-blood win %)
     columns derived from FK / FD / Rnd. Safe no-op if columns missing.
     All first-interaction stats render to 2 decimal places for consistency."""
+    df = _normalize_first_kill_cols(df)
     if df.empty or not {"FK", "FD", "Rnd"}.issubset(df.columns):
         return df
     fk  = pd.to_numeric(df["FK"],  errors="coerce")
