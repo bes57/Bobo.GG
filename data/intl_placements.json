@@ -358,5 +358,51 @@
         "slug": "nrg"
       }
     ]
+  },
+  "2026_champions": {
+    "label": "Champions 2026",
+    "event_id": 2766,
+    "standings": [
+      {
+        "place": 1,
+        "team": "LOUD",
+        "slug": "loud"
+      },
+      {
+        "place": 2,
+        "team": "Team Vitality",
+        "slug": "team-vitality"
+      },
+      {
+        "place": 3,
+        "team": "100 Thieves",
+        "slug": "100-thieves"
+      },
+      {
+        "place": 4,
+        "team": "G2 Esports",
+        "slug": "g2-esports"
+      },
+      {
+        "place": 5,
+        "team": "NRG",
+        "slug": "nrg"
+      },
+      {
+        "place": 5,
+        "team": "T1",
+        "slug": "t1"
+      },
+      {
+        "place": 7,
+        "team": "Nongshim RedForce",
+        "slug": "nongshim-redforce"
+      },
+      {
+        "place": 7,
+        "team": "Paper Rex",
+        "slug": "paper-rex"
+      }
+    ]
   }
 }

@@ -1,8 +1,7 @@
-[enrich] 0 match(es) to process (refresh=False)
-[enrich] done: 0 enriched, 0 tombstoned, 0 deferred, 0 failed
-[comps] 3 match(es) to collect
-  [1/3] 754743 · no agents yet — will retry
-  [2/3] 754736 · no agents yet — will retry
-  [3/3] 754742 · no agents yet — will retry
+[enrich] 1 match(es) to process (refresh=False)
+  [1/1] 754737  · 4 map(s) LOUD vs VIT  (Valorant Champions 2026)
+[enrich] done: 1 enriched, 0 tombstoned, 0 deferred, 0 failed
+[csv] 2239 matches -> 118380 rounds, 8282 econ rows, 42180 player rows, 105475 matrix rows
+[comps] 4 match(es) to collect
 [comps] done: 0 collected, 0 failed
-[enrich-new] 0 enriched, 0 comps, 2.8s
+[enrich-new] 1 enriched, 0 comps, 7.4s

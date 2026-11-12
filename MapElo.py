@@ -120,7 +120,10 @@ def _compute_pyth_data():
     from MoreTestingMaybeFiles import ALL_EVENTS
 
     # Chronological list of regional events per year
-    regional_chron = [e for e in reversed(ALL_EVENTS) if 'International' not in e['regions']]
+    # ratings_only events (T2 / off-season / EWC — they exist to feed BenPom) are
+    # not VCT splits and must not show up as Pythagorean period filters.
+    regional_chron = [e for e in reversed(ALL_EVENTS)
+                      if 'International' not in e['regions'] and not e.get('ratings_only')]
 
     # Canonical split id: CN events fold into their regional counterpart so
     # the page shows ONE "Kickoff" / "Stage 1" / "Stage 2" filter per year
@@ -248,6 +251,7 @@ def _compute_pyth_data():
         '2025_stage2':           ('2025-07-14', '2025-08-24'),
         '2026_kickoff':          ('2026-01-07', '2026-02-09'),
         '2026_stage1':           ('2026-04-23', '2026-05-25'),
+        '2026_stage2':           ('2026-07-15', '2026-09-06'),
         '2023_lock_in':          ('2023-02-13', '2023-02-26'),
         '2023_masters_tokyo':    ('2023-06-11', '2023-06-25'),
         '2023_champions':        ('2023-08-06', '2023-08-26'),
@@ -258,6 +262,7 @@ def _compute_pyth_data():
         '2025_champions':        ('2025-08-07', '2025-08-24'),
         '2026_masters_santiago': ('2026-03-26', '2026-04-06'),
         '2026_masters_london':   ('2026-06-05', '2026-06-21'),
+        '2026_champions':        ('2026-09-24', '2026-10-18'),
     }
 
     INTL_EVENT_DATES = {
@@ -271,6 +276,7 @@ def _compute_pyth_data():
         '2025_champions':        ('Champions',          '2025'),
         '2026_masters_santiago': ('Masters Santiago',   '2026'),
         '2026_masters_london':   ('Masters London',     '2026'),
+        '2026_champions':        ('Champions',          '2026'),
     }
     # International events that fall between regional events, keyed by year
     INTL_EVENTS = {
@@ -303,6 +309,24 @@ def _compute_pyth_data():
         ]
         year_agg_rows = year_rows[year_rows['event_id'].isin(completed_ev_ids)]
         year_data = _build_team_stats(year_agg_rows, k, pdf)
+        # Year-long tables list full-season teams only. T2 sides that were
+        # invited into a single split (e.g. the 2026 Stage 2 expansion: FF,
+        # M80, ...) stay in that split's own table, and their games still count
+        # toward their opponents' records, but they get no year-long row.
+        if len(completed_ev_ids) > 1:
+            # i.e. drop orgs whose only split is a later one; a team that
+            # opened the season at Kickoff is a league team even if it left.
+            _splits_played = {}
+            for _eid in completed_ev_ids:
+                _er = year_agg_rows[year_agg_rows['event_id'] == _eid]
+                for _o in set(_er['winner']) | set(_er['loser']):
+                    _splits_played.setdefault(_o, []).append(_eid)
+            _first = completed_ev_ids[0]
+            year_data = [r for r in year_data
+                         if len(_splits_played.get(r['org'], [])) > 1
+                         or _splits_played.get(r['org']) == [_first]]
+            for _i, r in enumerate(year_data):
+                r['rank'] = _i + 1
         for r in year_data:
             r['year'] = int(year)
         data[y] = year_data
@@ -389,7 +413,7 @@ def _compute_pyth_data():
         'nongshim-redforce': 'NS', 'all-gamers': 'AG', 'bbl-esports': 'BBL',
         'gentle-mates': 'M8', 'furia': 'FUR',
         'fut-esports': 'FUT', 'dragon-ranger-gaming': 'DRG', 'fearx': 'FS',
-        'global-esports': 'GE',
+        'global-esports': 'GE', '100-thieves': '100T',
     }
     # Build org→place lookup per event
     intl_org_place = {}
