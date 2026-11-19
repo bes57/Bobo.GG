@@ -86,6 +86,8 @@ SNAP_EVENTS = {
     ('2025', 'after_bangkok'):    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok'],
     ('2025', 'before_toronto'):   ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1'],
     ('2025', 'after_toronto'):    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+    ('2025', 'before_ewc'):       ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+    ('2025', 'after_ewc'):        ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_ewc'],
     ('2025', 'before_champions'): ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2'],
     ('2025', 'after_champions'):  ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
 }
@@ -105,6 +107,8 @@ SNAP_POOL_EVENT = {
     ('2025', 'after_bangkok'):    '2025_masters_bangkok',
     ('2025', 'before_toronto'):   '2025_stage1',
     ('2025', 'after_toronto'):    '2025_masters_toronto',
+    ('2025', 'before_ewc'):       '2025_masters_toronto',
+    ('2025', 'after_ewc'):        '2025_ewc',
     ('2025', 'before_champions'): '2025_stage2',
     ('2025', 'after_champions'):  '2025_champions',
 }

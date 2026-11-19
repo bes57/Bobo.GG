@@ -254,6 +254,14 @@ def _short_label(label, year):
     return label.replace(f'{year} ', '', 1)
 
 
+def _is_snapshot_event(e):
+    """Events that get their own Before/After snapshot pair: internationals,
+    plus the Esports World Cup (a cross-regional LAN, even though it is a
+    ratings_only event and not a VCT international)."""
+    return ('International' in (e.get('regions') or {})
+            or e['id'].endswith('_ewc'))
+
+
 def _build_year_configs():
     """Dynamically generate snapshot configs from ALL_EVENTS.
 
@@ -285,11 +293,13 @@ def _build_year_configs():
         snapshots = {}
         cumulative = []
         last_event = events[-1]
-        last_is_intl = 'International' in (last_event.get('regions') or {})
+        last_is_intl = _is_snapshot_event(last_event)
         for e in events:
-            is_intl = 'International' in (e.get('regions') or {})
+            is_intl = _is_snapshot_event(e)
             short = _short_id(e['id'])
             short_label = _short_label(e['label'], e['year'])
+            if e['id'].endswith('_ewc'):
+                short_label = 'EWC'
             if is_intl:
                 if cumulative:
                     snapshots[f'before_{short}'] = {
@@ -326,6 +336,8 @@ def _build_year_configs():
 _HISTORICAL_YEAR_CONFIGS = {
     '2023': {
         'snapshots': {
+            'after_lock_in':    {'events': ['2023_lock_in'],
+                                 'label': 'After LOCK//IN'},
             'before_tokyo':     {'events': ['2023_lock_in'],
                                  'label': 'Before Masters Tokyo'},
             'after_tokyo':      {'events': ['2023_lock_in', '2023_masters_tokyo'],
@@ -364,6 +376,10 @@ _HISTORICAL_YEAR_CONFIGS = {
                                  'label': 'Before Masters Toronto'},
             'after_toronto':    {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
                                  'label': 'After Masters Toronto'},
+            'before_ewc':       {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+                                 'label': 'Before EWC'},
+            'after_ewc':        {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_ewc'],
+                                 'label': 'After EWC'},
             'before_champions': {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2'],
                                  'label': 'Before Champions'},
             'after_champions':  {'events': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
@@ -1760,14 +1776,40 @@ def main():
     if refresh_mode:
         globals()['MC_N_SIMS'] = 600
 
+    # Frozen years are reused verbatim, EXCEPT snapshots that exist in the
+    # config but not yet in the JSON (a newly added snapshot, e.g. before/after
+    # EWC). Those are built once here and then frozen like the rest. They need
+    # that year's games plus earlier internationals (the prior-intl anchor),
+    # which the current-year-only refresh load doesn't include.
+    backfill = {}
+    for _y in skip_years:
+        _have = (existing_ratings[_y].get('snapshots') or {})
+        _miss = [s for s in YEAR_CONFIGS[_y]['snapshots'] if s not in _have]
+        if _miss:
+            backfill[_y] = _miss
+    if backfill:
+        _need = set(INTL_EVENTS)
+        for _y, _miss in backfill.items():
+            for _s in _miss:
+                _need.update(YEAR_CONFIGS[_y]['snapshots'][_s]['events'])
+        # Separate list: the current-year rebuild must keep seeing exactly the
+        # games it always has in refresh mode, or its ratings would shift.
+        backfill_games = load_games(only_events=_need)
+        print(f'  [refresh] backfilling new snapshots: {backfill}')
+
+    _refresh_games = all_games
     ratings_out = {}
     for year, cfg in YEAR_CONFIGS.items():
-        if year in skip_years:
+        if year in skip_years and year not in backfill:
             ratings_out[year] = existing_ratings[year]
             continue
         snaps_out = {}
         snap_year = int(year)
         for snap_id, snap_cfg in cfg['snapshots'].items():
+            if year in skip_years and snap_id not in backfill[year]:
+                snaps_out[snap_id] = existing_ratings[year]['snapshots'][snap_id]
+                continue
+            all_games = backfill_games if year in skip_years else _refresh_games
             snap_games = [g for g in all_games if g['event_id'] in snap_cfg['events']]
             ref_date   = max(g['date'] for g in snap_games) if snap_games else datetime.now()
 

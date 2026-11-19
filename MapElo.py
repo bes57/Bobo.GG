@@ -688,6 +688,7 @@ _SNAPSHOT_EVENTS = {
     # FURIA/100T/SEN see their league play in "Recent Matches" instead of
     # only their LOCK//IN appearance.
     '2023': {
+        'after_lock_in':    ['2023_lock_in'],
         'before_tokyo':     ['2023_lock_in', '2023_league'],
         'after_tokyo':      ['2023_lock_in', '2023_league', '2023_masters_tokyo'],
         'before_champions': ['2023_lock_in', '2023_league', '2023_masters_tokyo'],
@@ -706,6 +707,8 @@ _SNAPSHOT_EVENTS = {
         'after_bangkok':    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok'],
         'before_toronto':   ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1'],
         'after_toronto':    ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+        'before_ewc':       ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto'],
+        'after_ewc':        ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_ewc'],
         'before_champions': ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2'],
         'after_champions':  ['2025_kickoff', '2025_china_kickoff', '2025_masters_bangkok', '2025_stage1', '2025_china_stage1', '2025_masters_toronto', '2025_stage2', '2025_china_stage2', '2025_champions'],
     },
@@ -4326,7 +4329,7 @@ function simTeamLabel(org, lbl){
 // repeats every year and is ambiguous. Map each year to its host city so a
 // snapshot reads "After Champions Seoul" instead. (Masters labels already carry
 // a unique location — Tokyo, Madrid, Shanghai, Bangkok, Toronto, London, ….)
-var CHAMPIONS_LOC = {'2023':'LA','2024':'Seoul','2025':'Paris'};
+var CHAMPIONS_LOC = {'2023':'LA','2024':'Seoul','2025':'Paris','2026':'Shanghai'};
 function prettySnapLabel(lbl, year){
   if(lbl && lbl.indexOf('Champions')>=0){
     var loc = CHAMPIONS_LOC[String(year)];
@@ -7046,6 +7049,8 @@ _HISTORICAL_SNAP_POOL_EVENTS = {
     "2025_after_bangkok":    ["2025_masters_bangkok"],
     "2025_before_toronto":   ["2025_stage1"],
     "2025_after_toronto":    ["2025_masters_toronto"],
+    "2025_before_ewc":       ["2025_masters_toronto"],
+    "2025_after_ewc":        ["2025_ewc"],
     "2025_before_champions": ["2025_stage2"],
     "2025_after_champions":  ["2025_champions"],
     "2024_before_madrid":    ["2024_kickoff"],
