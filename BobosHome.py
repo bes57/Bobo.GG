@@ -15,6 +15,7 @@ from AspasGreatestPrime import article_aspas_prime_bp
 from ChampionshipDNA import article_championship_dna_bp
 from Top10Shanghai import article_top10_shanghai_bp
 from ChampionsGrandFinalsPreview import article_gf_preview_bp
+from OffseasonMoves import article_offseason_moves_bp
 from MapElo import mapelo_bp
 from InternationalEvents import intl_bp
 from MatchDataExplorer import match_data_bp
@@ -32,6 +33,7 @@ app.register_blueprint(article_aspas_prime_bp, url_prefix="/articles/greatest-pr
 app.register_blueprint(article_championship_dna_bp, url_prefix="/articles/championship-dna")
 app.register_blueprint(article_top10_shanghai_bp, url_prefix="/articles/top10-champions-shanghai")
 app.register_blueprint(article_gf_preview_bp, url_prefix="/articles/champions-shanghai-grand-finals-preview")
+app.register_blueprint(article_offseason_moves_bp, url_prefix="/articles/offseason-moves")
 app.register_blueprint(mapelo_bp, url_prefix="/mapelo")
 app.register_blueprint(intl_bp, url_prefix="/intl")
 app.register_blueprint(match_data_bp, url_prefix="/match-data")
@@ -407,6 +409,11 @@ def _build_alpha_data():
 # article cards, and the /articles/ index). Add a new article here and every
 # page updates and re-sorts by date automatically.
 ARTICLES = [
+    {"href": "/articles/offseason-moves/",
+     "title": "The best, the worst, and the most surprising moves of the offseason",
+     "desc": "This signing of Erde and Lukxo may be the greatest 1-2 punch signing in the history of VCT",
+     "img": "/static/offseason/cover.jpg", "date": "2026-11-22",
+     "cats": ["opinion"]},
     {"href": "/articles/champions-shanghai-grand-finals-preview/",
      "title": "EMERGENCY ARTICLE: Previewing Champions Shanghai Grand Finals!",
      "desc": "With LOUD and Vitality locked in for the grand finals and 12 hours to go, let&#39;s discuss what to expect and lock in some predictions.",
