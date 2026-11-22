@@ -116,7 +116,7 @@ _THOUGHTS = [
     "TenZ is going to APAC?",
     "Crashies is playing with TenZ?",
     "Crashies is going to APAC?",
-    "T1 is keeping Buzz, Stax, and Izu?",
+    "T1 are keeping Buzz, Stax, and Izu?",
     "Buzz, Stax, and Izu are comming in English?",
     "Sacy is coming back?",
     "Sacy is going to APAC?",
